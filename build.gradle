@@ -32,7 +32,7 @@ plugins {
 group = "io.github.bbortt.event.planner"
 version = "1.0.0-SNAPSHOT"
 
-description = "Event Planner für das Oberländische Turnfest Frutigen 2021."
+description = "Event planning tool."
 
 sourceCompatibility=11
 targetCompatibility=11

@@ -11,13 +11,14 @@ notifications:
 
 addons:
   sonarcloud:
-    organization: 'bbortt-github'
+    organization: "bbortt-github"
     token:
-      secure: 'r80d5AzN1vc/C00mbNV+KEwGzscYJLYvadxqBh8iG/WjdoGgZ3MuZ/PNi55gl3C/C4J/U5haDUhQ0R70Jajhh2ptgJgYq8PZAmOyrrAQxFg1+iWh9IUhx7UUyP6lvAPw3H6ubMtpq7bAaiR/WUrHHWpkQs0e1+XD0Q955Y4lohN+TSlpSKbLpkdNMcO7z5Z+4Y4WeUScsOONQOAr3vYJBjX0/iRrshTLH6K5QLMRf9vcZwUCw2Y6xX+TgD2AYqqIKBUGEFsTHTcl7bxnSX+36QH9ktxmW0hxkD6q5ZtcAlc8qMQZL0AgQXDbCSsSPQ8quFruQ/WqkvgGjU2C93ax5SP+1EsRXGUnXwIw0IhKUs+v+QJulNTWxleXsoDMRVsG4V0DeHgx8wF8jvxCV/3VvJ3/tvipZAisMnKfVSQuFjAQROU/m4lW62lKFP3SNAZ+se5+m1P6dRVPKfZd2OY2t6RreOjBIhxTgZgZvg4e2eHOg5BuugQ6FPI4VJmAdoNJtDoaUGRLCdRviwsqxreLNRCcrA4j5KoZHWuYk/9S8CqP4cbzpA3qiH9iKe4DnaWrKFleUNw2XVQZH8nY8KtWLMaQkpZ4YjKpRmnBFs8XL5UrVuUUM0P1A07uou+KYCXipd624bskda2TfV2/YsoOdveyAKxjRQ7l/DitkmIDTyA='
+      secure: "YosySJDzEW8wpTSLDNlfSIchwqGDL8Am4qTtWllLc00CDTfFU0fe9pSnzUAsd9LUw38AfzwguwOfVgmoU0uGLqic5zTkEmfMcUz1N8vH/ukXPngRuzVRIUmDJ/+NzVShX1yHsfUGco7maFEPyeSt8xEz/gK281byzwCoTIUIMTel9e2n4SNxydhmKi8PdlP+6TIMpa4xqSkgKsiqH8+WaDWdjr/WTpop0j5tuFB8ymxsVZhAs+63zmJccbA52zOCMhbKD6NS5caijgmVppKqdGc4NIPme78DkyNCx9pPViIkX7QUXYWiQ30YWYfYM+KKaexCnO8UIgaiMzeQiXpLVfRgwRLBKq3cC3AvLR34cxQIl7xzHhli8GqozxBAvje+MlCnEx6yd4fm9pSIaKDyNs2zU12biiOoMTO82MVPLbIPRErI0LV+QafjGkUfvMiCTAtdd3nkVMq7cg/kENNsvGIOuYPNSIkITM8XAki0ksQx4owJGEIM70mDwmSs4GmY8DG1hqIq5TyRmAgbcGK6CB+FSiXoiI+C/NpNShKIiDcMl3BWIwdnK6c04MqVC3DKIIUgHOqTW/dmXbjACwAa5JZjCe5q7Mxn7x+f7eQuav/ha6FCT0pEsyaZfQ5BP6P60pgE0NzKS969Iqu/GFEuDvN5+BtsDkFXoE3Cb9uDz9U="
 
 script:
-  - ./gradlew dependencyUpdates
-  - ./gradlew -Pversion=$TRAVIS_BUILD_NUMBER -Pprod --no-daemon -i build jacocoTestReport sonarqube
+#  - ./gradlew dependencyUpdates
+#  - ./gradlew -Pversion=$TRAVIS_BUILD_NUMBER -Pprod --no-daemon -i build jacocoTestReport sonarqube
+  - ./gradlew -Pversion=$TRAVIS_BUILD_NUMBER -Pprod --no-daemon -i sonarqube
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
@@ -28,3 +29,4 @@ cache:
   - directories:
       - $HOME/.gradle/caches/
       - $HOME/.gradle/wrapper/
+      - $HOME/.sonar/cache
