@@ -32,7 +32,7 @@ plugins {
 group = "io.github.bbortt.event.planner"
 version = "1.0.0-SNAPSHOT"
 
-description = "Event planning tool."
+description = "Event Planning Tool."
 
 sourceCompatibility=11
 targetCompatibility=11
