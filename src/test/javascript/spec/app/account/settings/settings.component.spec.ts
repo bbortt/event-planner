@@ -48,6 +48,7 @@ describe('Component Tests', () => {
         firstName: 'John',
         lastName: 'Doe',
         email: 'john.doe@mail.com',
+        langKey: 'de',
       };
 
       // WHEN

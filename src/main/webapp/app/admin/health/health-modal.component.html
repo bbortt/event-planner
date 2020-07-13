@@ -1,6 +1,6 @@
 <div class="modal-header">
     <h4 class="modal-title" id="showHealthLabel" *ngIf="health">
-        <span class="text-capitalize">{{ health.key }}</span>
+        {{ 'health.indicator.' + health.key | translate }}
     </h4>
 
     <button aria-label="Close" data-dismiss="modal" class="close" type="button" (click)="dismiss()">
@@ -10,14 +10,14 @@
 
 <div class="modal-body pad">
     <div *ngIf="health">
-        <h5>Properties</h5>
+        <h5 jhiTranslate="health.details.properties">Properties</h5>
 
         <div class="table-responsive">
             <table class="table table-striped" aria-describedby="showHealthLabel">
                 <thead>
                     <tr>
-                        <th scope="col" class="text-left">Name</th>
-                        <th scope="col" class="text-left">Value</th>
+                        <th scope="col" class="text-left" jhiTranslate="health.details.name">Name</th>
+                        <th scope="col" class="text-left" jhiTranslate="health.details.value">Value</th>
                     </tr>
                 </thead>
                 <tbody>

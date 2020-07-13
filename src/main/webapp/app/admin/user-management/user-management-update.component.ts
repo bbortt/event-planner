@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
+import { LANGUAGES } from 'app/core/language/language.constants';
 import { User } from 'app/core/user/user.model';
 import { UserService } from 'app/core/user/user.service';
 
@@ -11,6 +12,7 @@ import { UserService } from 'app/core/user/user.service';
 })
 export class UserManagementUpdateComponent implements OnInit {
   user!: User;
+  languages = LANGUAGES;
   authorities: string[] = [];
   isSaving = false;
 
@@ -63,7 +65,6 @@ export class UserManagementUpdateComponent implements OnInit {
         () => this.onSaveError()
       );
     } else {
-      this.user.langKey = 'en';
       this.userService.create(this.user).subscribe(
         () => this.onSaveSuccess(),
         () => this.onSaveError()
