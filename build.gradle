@@ -25,16 +25,17 @@ plugins {
     id "org.liquibase.gradle"
     id "org.sonarqube"
     id "io.spring.nohttp"
+    id "com.github.ben-manes.versions" version "0.28.0"
     //jhipster-needle-gradle-plugins - JHipster will add additional gradle plugins here
 }
 
 group = "io.github.bbortt.event.planner"
-version = "0.0.1-SNAPSHOT"
+version = "1.0.0-SNAPSHOT"
 
-description = ""
+description = "Event planning tool."
 
-sourceCompatibility=1.8
-targetCompatibility=1.8
+sourceCompatibility=11
+targetCompatibility=11
 assert System.properties["java.specification.version"] == "1.8" || "11" || "12" || "13" || "14"
 
 apply from: "gradle/docker.gradle"
@@ -89,7 +90,7 @@ springBoot {
 
 test {
     useJUnitPlatform()
-    exclude "**/*IT*", "**/*IntTest*"
+    exclude "**/*IT*", "**/*IntTest*", "**/*IntegrationTest*"
 
     testLogging {
         events 'FAILED', 'SKIPPED'
@@ -104,7 +105,7 @@ task integrationTest(type: Test) {
     useJUnitPlatform()
     description = "Execute integration tests."
     group = "verification"
-    include "**/*IT*", "**/*IntTest*"
+    include "**/*IT*", "**/*IntTest*", "**/*IntegrationTest*"
 
     testLogging {
         events 'FAILED', 'SKIPPED'
@@ -299,7 +300,6 @@ wrapper {
     gradleVersion = "6.5"
 }
 
-
 if (project.hasProperty("nodeInstall")) {
     node {
         version = "${node_version}"
@@ -308,5 +308,6 @@ if (project.hasProperty("nodeInstall")) {
         download = true
     }
 }
+
 compileJava.dependsOn processResources
 processResources.dependsOn bootBuildInfo

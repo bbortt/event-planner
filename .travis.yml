@@ -1,0 +1,32 @@
+language: java
+jdk: openjdk11
+
+dist: bionic
+os: linux
+
+if: tag is blank
+
+notifications:
+  email: false
+
+addons:
+  sonarcloud:
+    organization: "bbortt-github"
+    token:
+      secure: "YosySJDzEW8wpTSLDNlfSIchwqGDL8Am4qTtWllLc00CDTfFU0fe9pSnzUAsd9LUw38AfzwguwOfVgmoU0uGLqic5zTkEmfMcUz1N8vH/ukXPngRuzVRIUmDJ/+NzVShX1yHsfUGco7maFEPyeSt8xEz/gK281byzwCoTIUIMTel9e2n4SNxydhmKi8PdlP+6TIMpa4xqSkgKsiqH8+WaDWdjr/WTpop0j5tuFB8ymxsVZhAs+63zmJccbA52zOCMhbKD6NS5caijgmVppKqdGc4NIPme78DkyNCx9pPViIkX7QUXYWiQ30YWYfYM+KKaexCnO8UIgaiMzeQiXpLVfRgwRLBKq3cC3AvLR34cxQIl7xzHhli8GqozxBAvje+MlCnEx6yd4fm9pSIaKDyNs2zU12biiOoMTO82MVPLbIPRErI0LV+QafjGkUfvMiCTAtdd3nkVMq7cg/kENNsvGIOuYPNSIkITM8XAki0ksQx4owJGEIM70mDwmSs4GmY8DG1hqIq5TyRmAgbcGK6CB+FSiXoiI+C/NpNShKIiDcMl3BWIwdnK6c04MqVC3DKIIUgHOqTW/dmXbjACwAa5JZjCe5q7Mxn7x+f7eQuav/ha6FCT0pEsyaZfQ5BP6P60pgE0NzKS969Iqu/GFEuDvN5+BtsDkFXoE3Cb9uDz9U="
+
+script:
+#  - ./gradlew dependencyUpdates
+#  - ./gradlew -Pversion=$TRAVIS_BUILD_NUMBER -Pprod --no-daemon -i build jacocoTestReport sonarqube
+  - ./gradlew -Pversion=$TRAVIS_BUILD_NUMBER -Pprod --no-daemon -i sonarqube
+
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -rf $HOME/.gradle/caches/*/plugin-resolution/
+
+cache:
+  - npm
+  - directories:
+      - $HOME/.gradle/caches/
+      - $HOME/.gradle/wrapper/
+      - $HOME/.sonar/cache

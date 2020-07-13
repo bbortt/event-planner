@@ -6,7 +6,7 @@ export const auditsRoute: Route = {
   path: '',
   component: AuditsComponent,
   data: {
-    pageTitle: 'Audits',
+    pageTitle: 'audits.title',
     defaultSort: 'auditEventDate,desc',
   },
 };

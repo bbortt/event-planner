@@ -1,9 +1,9 @@
 <div>
     <h2>
-        <span id="health-page-heading">Health Checks</span>
+        <span id="health-page-heading" jhiTranslate="health.title">Health Checks</span>
 
         <button class="btn btn-primary float-right" (click)="refresh()">
-            <fa-icon icon="sync"></fa-icon> <span>Refresh</span>
+            <fa-icon icon="sync"></fa-icon> <span jhiTranslate="health.refresh.button">Refresh</span>
         </button>
     </h2>
 
@@ -11,18 +11,18 @@
         <table id="healthCheck" class="table table-striped" aria-describedby="health-page-heading">
             <thead>
                 <tr>
-                    <th scope="col">Service Name</th>
-                    <th scope="col" class="text-center">Status</th>
-                    <th scope="col" class="text-center">Details</th>
+                    <th scope="col" jhiTranslate="health.table.service">Service Name</th>
+                    <th scope="col" class="text-center" jhiTranslate="health.table.status">Status</th>
+                    <th scope="col" class="text-center" jhiTranslate="health.details.details">Details</th>
                 </tr>
             </thead>
             <tbody *ngIf="health">
                 <tr *ngFor="let componentHealth of health.components | keys">
                     <td>
-                        <span class="text-capitalize">{{ componentHealth.key }}</span>
+                        {{ 'health.indicator.' + componentHealth.key | translate }}
                     </td>
                     <td class="text-center">
-                        <span class="badge" [ngClass]="getBadgeClass(componentHealth.value.status)">
+                        <span class="badge" [ngClass]="getBadgeClass(componentHealth.value.status)" jhiTranslate="{{ 'health.status.' + componentHealth.value.status }}">
                             {{ componentHealth.value.status }}
                         </span>
                     </td>
