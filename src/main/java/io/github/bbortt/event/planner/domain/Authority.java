@@ -20,9 +20,9 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 public class Authority implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    @Id
     @NotNull
     @Size(max = 50)
-    @Id
     @Column(length = 50)
     private String name;
 

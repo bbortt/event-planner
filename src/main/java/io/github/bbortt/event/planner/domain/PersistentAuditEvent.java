@@ -4,8 +4,19 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
-import javax.persistence.*;
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.MapKeyColumn;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 
 /**
  * Persist AuditEvent managed by the Spring Boot actuator.
@@ -18,9 +29,15 @@ public class PersistentAuditEvent implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
-    @SequenceGenerator(name = "sequenceGenerator")
     @Column(name = "event_id")
+    @GenericGenerator(
+        name = "persistent_audit_event_id_seq",
+        strategy = PostgreSQLConstants.SEQUENCE_GENERATOR_STRATEGY,
+        parameters = {
+            @Parameter(name = "sequence_name", value = "persistent_audit_event_id_seq"), @Parameter(name = "increment_size", value = "1"),
+        }
+    )
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "persistent_audit_event_id_seq")
     private Long id;
 
     @NotNull

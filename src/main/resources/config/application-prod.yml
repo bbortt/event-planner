@@ -42,9 +42,6 @@ spring:
   jpa:
     database-platform: io.github.jhipster.domain.util.FixedPostgreSQL10Dialect
     show-sql: false
-  # Replace by 'prod, faker' to add the faker context and have sample data loaded in production
-  liquibase:
-    contexts: prod
   mail:
     host: localhost
     port: 25
@@ -52,6 +49,9 @@ spring:
     password:
   thymeleaf:
     cache: true
+  flyway:
+    password: ${APPL_FLYWAY_PASSWORD:${spring.datasource.password}}
+    user: ${APPL_FLYWAY_USER:${spring.datasource.username}}
 
 # ===================================================================
 # To enable TLS in production, generate a certificate using:
