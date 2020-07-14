@@ -21,10 +21,9 @@ spring:
     name: eventPlanner
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:h2:mem:eventPlanner;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    name:
-    username:
-    password:
+    url: jdbc:postgresql://localhost:5432/event_planner_integration
+    username: event_planner
+    password: event_planner_password
     hikari:
       auto-commit: false
   jackson:

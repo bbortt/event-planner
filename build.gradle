@@ -142,9 +142,9 @@ liquibase {
     activities {
         main {
             driver "org.postgresql.Driver"
-            url "jdbc:postgresql://localhost:5432/eventPlanner"
-            username "eventPlanner"
-            password ""
+            url "jdbc:postgresql://localhost:5432/event_planner"
+            username "event_planner"
+            password "event_planner_password"
             changeLogFile "src/main/resources/config/liquibase/master.xml"
             defaultSchemaName ""
             logLevel "debug"
@@ -152,9 +152,9 @@ liquibase {
         }
         diffLog {
             driver "org.postgresql.Driver"
-            url "jdbc:postgresql://localhost:5432/eventPlanner"
-            username "eventPlanner"
-            password ""
+            url "jdbc:postgresql://localhost:5432/event_planner"
+            username "event_planner"
+            password "event_planner_password"
             changeLogFile project.ext.diffChangelogFile
             referenceUrl "hibernate:spring:io.github.bbortt.event.planner.domain?dialect=io.github.jhipster.domain.util.FixedPostgreSQL10Dialect&hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy&hibernate.implicit_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy"
             defaultSchemaName ""
