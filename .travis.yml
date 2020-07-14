@@ -11,6 +11,10 @@ notifications:
   email: false
 
 addons:
+  apt:
+    packages:
+      - postgresql-12
+      - postgresql-client-12
   sonarcloud:
     organization: 'bbortt-github'
     token:
@@ -24,6 +28,15 @@ jobs:
     # OpenJDK - Java 13 (latest)
     - env: MAIN_BUILD='false'
       jdk: openjdk13
+
+before_install:
+  - sudo sed -i 's/port = 5433/port = 5432/' /etc/postgresql/12/main/postgresql.conf
+  - sudo cp /etc/postgresql/{9.3,12}/main/pg_hba.conf
+  - sudo pg_ctlcluster 12 main restart
+
+before_script:
+  - psql -c "CREATE DATABASE event_planner_integration;" -U postgres
+  - psql -c "CREATE USER event_planner WITH PASSWORD 'event_planner_password';" -U postgres
 
 script:
   - if [[ "${MAIN_BUILD}" != "" && "${MAIN_BUILD}" == "true" ]]; then export GRADLE_COMMAND="build jacocoTestReport sonarqube"; else export GRADLE_COMMAND="check"; fi
