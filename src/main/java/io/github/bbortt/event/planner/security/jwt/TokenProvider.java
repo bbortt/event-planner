@@ -1,12 +1,17 @@
 package io.github.bbortt.event.planner.security.jwt;
 
 import io.github.jhipster.config.JHipsterProperties;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
@@ -21,17 +26,12 @@ import org.springframework.util.StringUtils;
 
 @Component
 public class TokenProvider {
-    private final Logger log = LoggerFactory.getLogger(TokenProvider.class);
-
     private static final String AUTHORITIES_KEY = "auth";
-
-    private Key key;
-
-    private long tokenValidityInMilliseconds;
-
-    private long tokenValidityInMillisecondsForRememberMe;
-
+    private final Logger log = LoggerFactory.getLogger(TokenProvider.class);
     private final JHipsterProperties jHipsterProperties;
+    private Key key;
+    private long tokenValidityInMilliseconds;
+    private long tokenValidityInMillisecondsForRememberMe;
 
     public TokenProvider(JHipsterProperties jHipsterProperties) {
         this.jHipsterProperties = jHipsterProperties;

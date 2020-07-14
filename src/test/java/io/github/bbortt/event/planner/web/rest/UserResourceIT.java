@@ -3,8 +3,13 @@ package io.github.bbortt.event.planner.web.rest;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasItems;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import io.github.bbortt.event.planner.EventPlannerApp;
 import io.github.bbortt.event.planner.domain.Authority;
@@ -15,7 +20,10 @@ import io.github.bbortt.event.planner.service.dto.UserDTO;
 import io.github.bbortt.event.planner.service.mapper.UserMapper;
 import io.github.bbortt.event.planner.web.rest.vm.ManagedUserVM;
 import java.time.Instant;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 import javax.persistence.EntityManager;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -77,17 +85,10 @@ public class UserResourceIT {
 
     private User user;
 
-    @BeforeEach
-    public void setup() {
-        cacheManager.getCache(UserRepository.USERS_BY_LOGIN_CACHE).clear();
-        cacheManager.getCache(UserRepository.USERS_BY_EMAIL_CACHE).clear();
-    }
-
     /**
      * Create a User.
      *
-     * This is a static method, as tests for other entities might also need it,
-     * if they test an entity which has a required relationship to the User entity.
+     * This is a static method, as tests for other entities might also need it, if they test an entity which has a required relationship to the User entity.
      */
     public static User createEntity(EntityManager em) {
         User user = new User();
@@ -100,6 +101,12 @@ public class UserResourceIT {
         user.setImageUrl(DEFAULT_IMAGEURL);
         user.setLangKey(DEFAULT_LANGKEY);
         return user;
+    }
+
+    @BeforeEach
+    public void setup() {
+        cacheManager.getCache(UserRepository.USERS_BY_LOGIN_CACHE).clear();
+        cacheManager.getCache(UserRepository.USERS_BY_EMAIL_CACHE).clear();
     }
 
     @BeforeEach

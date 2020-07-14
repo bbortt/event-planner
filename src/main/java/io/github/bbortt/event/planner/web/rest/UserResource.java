@@ -15,7 +15,8 @@ import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +27,14 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 /**
@@ -34,9 +42,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
  * <p>
  * This class accesses the {@link User} entity, and needs to fetch its collection of authorities.
  * <p>
- * For a normal use-case, it would be better to have an eager relationship between User and Authority,
- * and send everything to the client side: there would be no View Model and DTO, a lot less code, and an outer-join
- * which would be good for performance.
+ * For a normal use-case, it would be better to have an eager relationship between User and Authority, and send everything to the client side: there would be no View Model and DTO, a lot less code, and an outer-join which would be good for performance.
  * <p>
  * We use a View Model and a DTO for 3 reasons:
  * <ul>
@@ -57,15 +63,12 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RequestMapping("/api")
 public class UserResource {
     private final Logger log = LoggerFactory.getLogger(UserResource.class);
+    private final UserService userService;
+    private final UserRepository userRepository;
+    private final MailService mailService;
 
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
-
-    private final UserService userService;
-
-    private final UserRepository userRepository;
-
-    private final MailService mailService;
 
     public UserResource(UserService userService, UserRepository userRepository, MailService mailService) {
         this.userService = userService;
@@ -76,9 +79,7 @@ public class UserResource {
     /**
      * {@code POST  /users}  : Creates a new user.
      * <p>
-     * Creates a new user if the login and email are not already used, and sends an
-     * mail with an activation link.
-     * The user needs to be activated on creation.
+     * Creates a new user if the login and email are not already used, and sends an mail with an activation link. The user needs to be activated on creation.
      *
      * @param userDTO the user to create.
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new user, or with status {@code 400 (Bad Request)} if the login or email is already in use.
@@ -150,6 +151,7 @@ public class UserResource {
 
     /**
      * Gets a list of all roles.
+     *
      * @return a string list of all roles.
      */
     @GetMapping("/users/authorities")
