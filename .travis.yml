@@ -1,8 +1,9 @@
 language: java
-jdk: openjdk11
 
 dist: bionic
 os: linux
+
+install: skip
 
 if: tag is blank
 
@@ -11,14 +12,23 @@ notifications:
 
 addons:
   sonarcloud:
-    organization: "bbortt-github"
+    organization: 'bbortt-github'
     token:
-      secure: "YosySJDzEW8wpTSLDNlfSIchwqGDL8Am4qTtWllLc00CDTfFU0fe9pSnzUAsd9LUw38AfzwguwOfVgmoU0uGLqic5zTkEmfMcUz1N8vH/ukXPngRuzVRIUmDJ/+NzVShX1yHsfUGco7maFEPyeSt8xEz/gK281byzwCoTIUIMTel9e2n4SNxydhmKi8PdlP+6TIMpa4xqSkgKsiqH8+WaDWdjr/WTpop0j5tuFB8ymxsVZhAs+63zmJccbA52zOCMhbKD6NS5caijgmVppKqdGc4NIPme78DkyNCx9pPViIkX7QUXYWiQ30YWYfYM+KKaexCnO8UIgaiMzeQiXpLVfRgwRLBKq3cC3AvLR34cxQIl7xzHhli8GqozxBAvje+MlCnEx6yd4fm9pSIaKDyNs2zU12biiOoMTO82MVPLbIPRErI0LV+QafjGkUfvMiCTAtdd3nkVMq7cg/kENNsvGIOuYPNSIkITM8XAki0ksQx4owJGEIM70mDwmSs4GmY8DG1hqIq5TyRmAgbcGK6CB+FSiXoiI+C/NpNShKIiDcMl3BWIwdnK6c04MqVC3DKIIUgHOqTW/dmXbjACwAa5JZjCe5q7Mxn7x+f7eQuav/ha6FCT0pEsyaZfQ5BP6P60pgE0NzKS969Iqu/GFEuDvN5+BtsDkFXoE3Cb9uDz9U="
+      secure: 'GiBbIV9/Rf/scaC/gAqw5+gp1n2Lv2BMWiTge5gkHMJGz93QEIlfjuqDe2vfWYrFRa4fXZmYDjTn1ZdppRdvfV25UsN9udH4ItUyMtzdSoY4+XOdCYQ29e4sVVl+oo+m0A5x3KvnLIwIbWapHkNjNDz8vwpafYOEzJf6dIPzXvpjgYv6P4VZkEJPcw0O5DMYPLFe0zE11KFkdPczwdKdbDMuDZB+8VM/JuJcDw9Oz+B2j5TFlZeCj7sOq+ZMEKR72kaOr8yrH23FO/PTD/qwKKl0/0sJy66aPRaUwU0c5cIm5U0+/OEzPeTifFL3Xrk3uLlkWMREWhz5C5ehYItsQi+igMFUnhRxSq/KnoUqjiUs3RJ00QH/Xq+gxF28Yq51KmzXSMWHfgHnzK5ZVvOt1RHceK3tD0WaVpRtfYIuzoTsKUd/uBiGKIUk9EmJNsZBSmqsdbKV05Xwjun9m2lCGS9x8fKlL/z6Zf8rJlu5EWohhrx+XJlxvbs30qKfIo/8rCPaolSp5SghM4cNPmZ+P89I746sKbqsBAyH1E1FlDP1qwUgQbfX0+xNuSjRjm98f4vqd0yh+LRku+Hhtcmr7L3wGveB8EC0bjJ5o7uVRc6Z73oGylHrjAi47SmJDn6u5lU+UXl0HHZ+Uv9gQ2ENuBVKklo9H942YtBZN6xdwRE='
+
+jobs:
+  include:
+    # OracleJDK - Java 11 (lts, main build with Sonar)
+    - env: MAIN_BUILD='true'
+      jdk: openjdk11
+    # OpenJDK - Java 13 (latest)
+    - env: MAIN_BUILD='false'
+      jdk: openjdk13
 
 script:
-#  - ./gradlew dependencyUpdates
-#  - ./gradlew -Pversion=$TRAVIS_BUILD_NUMBER -Pprod --no-daemon -i build jacocoTestReport sonarqube
-  - ./gradlew -Pversion=$TRAVIS_BUILD_NUMBER -Pprod --no-daemon -i sonarqube
+  - if [[ "${MAIN_BUILD}" != "" && "${MAIN_BUILD}" == "true" ]]; then export GRADLE_COMMAND="build jacocoTestReport sonarqube"; else export GRADLE_COMMAND="check"; fi
+  - ./gradlew dependencyUpdates
+  - ./gradlew -Pversion=$TRAVIS_BUILD_NUMBER -Pprod --no-daemon -i ${GRADLE_COMMAND}
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
