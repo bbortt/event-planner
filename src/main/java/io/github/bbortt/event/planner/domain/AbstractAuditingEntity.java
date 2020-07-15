@@ -13,8 +13,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 /**
- * Base abstract class for entities which will hold definitions for created, last modified, created by,
- * last modified by attributes.
+ * Base abstract class for entities which will hold definitions for created, last modified, created by, last modified by attributes.
  */
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)

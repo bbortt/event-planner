@@ -3,15 +3,17 @@ package io.github.bbortt.event.planner.service.mapper;
 import io.github.bbortt.event.planner.domain.Authority;
 import io.github.bbortt.event.planner.domain.User;
 import io.github.bbortt.event.planner.service.dto.UserDTO;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 /**
  * Mapper for the entity {@link User} and its DTO called {@link UserDTO}.
  *
- * Normal mappers are generated using MapStruct, this one is hand-coded as MapStruct
- * support is still in beta, and requires a manual step with an IDE.
+ * Normal mappers are generated using MapStruct, this one is hand-coded as MapStruct support is still in beta, and requires a manual step with an IDE.
  */
 @Service
 public class UserMapper {

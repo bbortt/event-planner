@@ -7,17 +7,25 @@ import io.github.bbortt.event.planner.service.MailService;
 import io.github.bbortt.event.planner.service.UserService;
 import io.github.bbortt.event.planner.service.dto.PasswordChangeDTO;
 import io.github.bbortt.event.planner.service.dto.UserDTO;
-import io.github.bbortt.event.planner.web.rest.errors.*;
+import io.github.bbortt.event.planner.web.rest.errors.EmailAlreadyUsedException;
+import io.github.bbortt.event.planner.web.rest.errors.InvalidPasswordException;
+import io.github.bbortt.event.planner.web.rest.errors.LoginAlreadyUsedException;
 import io.github.bbortt.event.planner.web.rest.vm.KeyAndPasswordVM;
 import io.github.bbortt.event.planner.web.rest.vm.ManagedUserVM;
-import java.util.*;
+import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * REST controller for managing the current user's account.
@@ -25,26 +33,23 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api")
 public class AccountResource {
-
-    private static class AccountResourceException extends RuntimeException {
-
-        private AccountResourceException(String message) {
-            super(message);
-        }
-    }
-
     private final Logger log = LoggerFactory.getLogger(AccountResource.class);
-
     private final UserRepository userRepository;
-
     private final UserService userService;
-
     private final MailService mailService;
 
     public AccountResource(UserRepository userRepository, UserService userService, MailService mailService) {
         this.userRepository = userRepository;
         this.userService = userService;
         this.mailService = mailService;
+    }
+
+    private static boolean checkPasswordLength(String password) {
+        return (
+            !StringUtils.isEmpty(password) &&
+            password.length() >= ManagedUserVM.PASSWORD_MIN_LENGTH &&
+            password.length() <= ManagedUserVM.PASSWORD_MAX_LENGTH
+        );
     }
 
     /**
@@ -184,11 +189,10 @@ public class AccountResource {
         }
     }
 
-    private static boolean checkPasswordLength(String password) {
-        return (
-            !StringUtils.isEmpty(password) &&
-            password.length() >= ManagedUserVM.PASSWORD_MIN_LENGTH &&
-            password.length() <= ManagedUserVM.PASSWORD_MAX_LENGTH
-        );
+    private static class AccountResourceException extends RuntimeException {
+
+        private AccountResourceException(String message) {
+            super(message);
+        }
     }
 }

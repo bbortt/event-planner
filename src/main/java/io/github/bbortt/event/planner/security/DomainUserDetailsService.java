@@ -2,7 +2,8 @@ package io.github.bbortt.event.planner.security;
 
 import io.github.bbortt.event.planner.domain.User;
 import io.github.bbortt.event.planner.repository.UserRepository;
-import java.util.*;
+import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 import org.hibernate.validator.internal.constraintvalidators.hv.EmailValidator;
 import org.slf4j.Logger;

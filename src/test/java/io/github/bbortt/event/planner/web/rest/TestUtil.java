@@ -27,6 +27,8 @@ import org.springframework.format.support.FormattingConversionService;
 public final class TestUtil {
     private static final ObjectMapper mapper = createObjectMapper();
 
+    private TestUtil() {}
+
     private static ObjectMapper createObjectMapper() {
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.WRITE_DURATIONS_AS_TIMESTAMPS, false);
@@ -40,7 +42,6 @@ public final class TestUtil {
      *
      * @param object the object to convert.
      * @return the JSON byte array.
-     * @throws IOException
      */
     public static byte[] convertObjectToJsonBytes(Object object) throws IOException {
         return mapper.writeValueAsBytes(object);
@@ -59,36 +60,6 @@ public final class TestUtil {
             byteArray[i] = Byte.parseByte(data, 2);
         }
         return byteArray;
-    }
-
-    /**
-     * A matcher that tests that the examined string represents the same instant as the reference datetime.
-     */
-    public static class ZonedDateTimeMatcher extends TypeSafeDiagnosingMatcher<String> {
-        private final ZonedDateTime date;
-
-        public ZonedDateTimeMatcher(ZonedDateTime date) {
-            this.date = date;
-        }
-
-        @Override
-        protected boolean matchesSafely(String item, Description mismatchDescription) {
-            try {
-                if (!date.isEqual(ZonedDateTime.parse(item))) {
-                    mismatchDescription.appendText("was ").appendValue(item);
-                    return false;
-                }
-                return true;
-            } catch (DateTimeParseException e) {
-                mismatchDescription.appendText("was ").appendValue(item).appendText(", which could not be parsed as a ZonedDateTime");
-                return false;
-            }
-        }
-
-        @Override
-        public void describeTo(Description description) {
-            description.appendText("a String representing the same Instant as ").appendValue(date);
-        }
     }
 
     /**
@@ -121,6 +92,7 @@ public final class TestUtil {
 
     /**
      * Create a {@link FormattingConversionService} which use ISO date format, instead of the localized one.
+     *
      * @return the {@link FormattingConversionService}.
      */
     public static FormattingConversionService createFormattingConversionService() {
@@ -133,6 +105,7 @@ public final class TestUtil {
 
     /**
      * Makes a an executes a query to the EntityManager finding all stored objects.
+     *
      * @param <T> The type of objects to be searched
      * @param em The instance of the EntityManager
      * @param clss The class type to be searched
@@ -147,5 +120,33 @@ public final class TestUtil {
         return allQuery.getResultList();
     }
 
-    private TestUtil() {}
+    /**
+     * A matcher that tests that the examined string represents the same instant as the reference datetime.
+     */
+    public static class ZonedDateTimeMatcher extends TypeSafeDiagnosingMatcher<String> {
+        private final ZonedDateTime date;
+
+        public ZonedDateTimeMatcher(ZonedDateTime date) {
+            this.date = date;
+        }
+
+        @Override
+        protected boolean matchesSafely(String item, Description mismatchDescription) {
+            try {
+                if (!date.isEqual(ZonedDateTime.parse(item))) {
+                    mismatchDescription.appendText("was ").appendValue(item);
+                    return false;
+                }
+                return true;
+            } catch (DateTimeParseException e) {
+                mismatchDescription.appendText("was ").appendValue(item).appendText(", which could not be parsed as a ZonedDateTime");
+                return false;
+            }
+        }
+
+        @Override
+        public void describeTo(Description description) {
+            description.appendText("a String representing the same Instant as ").appendValue(date);
+        }
+    }
 }

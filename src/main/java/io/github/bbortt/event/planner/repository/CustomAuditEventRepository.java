@@ -4,7 +4,9 @@ import io.github.bbortt.event.planner.config.Constants;
 import io.github.bbortt.event.planner.config.audit.AuditEventConverter;
 import io.github.bbortt.event.planner.domain.PersistentAuditEvent;
 import java.time.Instant;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.actuate.audit.AuditEvent;
@@ -18,13 +20,11 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository
 public class CustomAuditEventRepository implements AuditEventRepository {
-    private static final String AUTHORIZATION_FAILURE = "AUTHORIZATION_FAILURE";
-
     /**
-     * Should be the same as in Liquibase migration.
+     * Should be the same as in Flyway migration.
      */
     protected static final int EVENT_DATA_COLUMN_MAX_LENGTH = 255;
-
+    private static final String AUTHORIZATION_FAILURE = "AUTHORIZATION_FAILURE";
     private final PersistenceAuditEventRepository persistenceAuditEventRepository;
 
     private final AuditEventConverter auditEventConverter;

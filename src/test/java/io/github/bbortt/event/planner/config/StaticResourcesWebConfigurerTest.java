@@ -1,8 +1,14 @@
 package io.github.bbortt.event.planner.config;
 
-import static io.github.bbortt.event.planner.config.StaticResourcesWebConfiguration.*;
+import static io.github.bbortt.event.planner.config.StaticResourcesWebConfiguration.RESOURCE_LOCATIONS;
+import static io.github.bbortt.event.planner.config.StaticResourcesWebConfiguration.RESOURCE_PATHS;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import io.github.jhipster.config.JHipsterDefaults;
 import io.github.jhipster.config.JHipsterProperties;
