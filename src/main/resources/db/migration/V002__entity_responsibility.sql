@@ -1,0 +1,5 @@
+CREATE TABLE responsibility
+(
+    id   BIGSERIAL PRIMARY KEY NOT NULL,
+    name CHARACTER VARYING(50)
+);

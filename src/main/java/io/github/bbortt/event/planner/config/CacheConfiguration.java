@@ -50,6 +50,7 @@ public class CacheConfiguration {
             createCache(cm, io.github.bbortt.event.planner.domain.User.class.getName());
             createCache(cm, io.github.bbortt.event.planner.domain.Authority.class.getName());
             createCache(cm, io.github.bbortt.event.planner.domain.User.class.getName() + ".authorities");
+            createCache(cm, io.github.bbortt.event.planner.domain.Responsibility.class.getName());
             // jhipster-needle-ehcache-add-entry
         };
     }
