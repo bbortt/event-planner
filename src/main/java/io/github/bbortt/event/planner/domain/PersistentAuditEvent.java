@@ -31,13 +31,14 @@ public class PersistentAuditEvent implements Serializable {
     @Id
     @Column(name = "event_id")
     @GenericGenerator(
-        name = "persistent_audit_event_id_seq",
+        name = "jhi_persistent_audit_event_event_id_seq",
         strategy = PostgreSQLConstants.SEQUENCE_GENERATOR_STRATEGY,
         parameters = {
-            @Parameter(name = "sequence_name", value = "persistent_audit_event_id_seq"), @Parameter(name = "increment_size", value = "1"),
+            @Parameter(name = "sequence_name", value = "jhi_persistent_audit_event_event_id_seq"),
+            @Parameter(name = "increment_size", value = "1"),
         }
     )
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "persistent_audit_event_id_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "jhi_persistent_audit_event_event_id_seq")
     private Long id;
 
     @NotNull
