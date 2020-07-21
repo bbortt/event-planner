@@ -1,0 +1,22 @@
+{
+  "eventPlannerApp": {
+    "responsibility": {
+      "home": {
+        "title": "Responsibilities",
+        "createLabel": "Responsibility erstellen",
+        "createOrEditLabel": "Responsibility erstellen oder bearbeiten",
+        "notFound": "No Responsibilities found"
+      },
+      "created": "Responsibility erstellt mit ID {{ param }}",
+      "updated": "Responsibility aktualisiert mit ID {{ param }}",
+      "deleted": "Responsibility gelöscht mit ID {{ param }}",
+      "delete": {
+        "question": "Soll Responsibility {{ id }} wirklich dauerhaft gelöscht werden?"
+      },
+      "detail": {
+        "title": "Responsibility"
+      },
+      "name": "Name"
+    }
+  }
+}
