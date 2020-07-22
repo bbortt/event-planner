@@ -2,21 +2,22 @@
   "eventPlannerApp": {
     "responsibility": {
       "home": {
-        "title": "Responsibilities",
-        "createLabel": "Responsibility erstellen",
-        "createOrEditLabel": "Responsibility erstellen oder bearbeiten",
-        "notFound": "No Responsibilities found"
+        "title": "Verantwortlichkeiten",
+        "createLabel": "Verantwortlichkeit erstellen",
+        "createOrEditLabel": "Verantwortlichkeit erstellen oder bearbeiten",
+        "notFound": "Keine Verantwortlichkeiten gefunden"
       },
-      "created": "Responsibility erstellt mit ID {{ param }}",
-      "updated": "Responsibility aktualisiert mit ID {{ param }}",
-      "deleted": "Responsibility gelöscht mit ID {{ param }}",
+      "created": "Verantwortlichkeit mit ID {{ param }} erstellt",
+      "updated": "Verantwortlichkeit mit ID {{ param }} aktualisiert",
+      "deleted": "Verantwortlichkeit mit ID {{ param }} gelöscht",
       "delete": {
-        "question": "Soll Responsibility {{ id }} wirklich dauerhaft gelöscht werden?"
+        "question": "Soll Verantwortlichkeit {{ id }} wirklich dauerhaft gelöscht werden?"
       },
       "detail": {
-        "title": "Responsibility"
+        "title": "Verantwortlichkeit"
       },
-      "name": "Name"
+      "name": "Name",
+      "project": "Projekt"
     }
   }
 }

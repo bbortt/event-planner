@@ -2,25 +2,25 @@
   "eventPlannerApp": {
     "project": {
       "home": {
-        "title": "Projects",
-        "createLabel": "Project erstellen",
-        "createOrEditLabel": "Project erstellen oder bearbeiten",
-        "notFound": "No Projects found"
+        "title": "Projekte",
+        "createLabel": "Projekt erstellen",
+        "createOrEditLabel": "Projekt erstellen oder bearbeiten",
+        "notFound": "Keine Projekte gefunden"
       },
-      "created": "Project erstellt mit ID {{ param }}",
-      "updated": "Project aktualisiert mit ID {{ param }}",
-      "deleted": "Project gelöscht mit ID {{ param }}",
+      "created": "Projekt mit ID {{ param }} erstellt",
+      "updated": "Projekt mit ID {{ param }} aktualisiert",
+      "deleted": "Projekt mit ID {{ param }} gelöscht",
       "delete": {
-        "question": "Soll Project {{ id }} wirklich dauerhaft gelöscht werden?"
+        "question": "Soll gelöscht {{ id }} wirklich dauerhaft gelöscht werden?"
       },
       "detail": {
-        "title": "Project"
+        "title": "gelöscht"
       },
       "name": "Name",
-      "description": "Description",
-      "startTime": "Start Time",
-      "endTime": "End Time",
-      "responsibility": "Responsibility"
+      "description": "Beschreibung",
+      "startTime": "Start Zeit",
+      "endTime": "End Zeit",
+      "responsibility": "Verantwortlichkeit"
     }
   }
 }

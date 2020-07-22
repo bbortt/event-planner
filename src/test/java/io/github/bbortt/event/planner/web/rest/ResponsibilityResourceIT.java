@@ -53,6 +53,16 @@ public class ResponsibilityResourceIT {
      */
     public static Responsibility createEntity(EntityManager em) {
         Responsibility responsibility = new Responsibility().name(DEFAULT_NAME);
+        // Add required entity
+        Project project;
+        if (TestUtil.findAll(em, Project.class).isEmpty()) {
+            project = ProjectResourceIT.createEntity(em);
+            em.persist(project);
+            em.flush();
+        } else {
+            project = TestUtil.findAll(em, Project.class).get(0);
+        }
+        responsibility.setProject(project);
         return responsibility;
     }
 
@@ -64,6 +74,16 @@ public class ResponsibilityResourceIT {
      */
     public static Responsibility createUpdatedEntity(EntityManager em) {
         Responsibility responsibility = new Responsibility().name(UPDATED_NAME);
+        // Add required entity
+        Project project;
+        if (TestUtil.findAll(em, Project.class).isEmpty()) {
+            project = ProjectResourceIT.createUpdatedEntity(em);
+            em.persist(project);
+            em.flush();
+        } else {
+            project = TestUtil.findAll(em, Project.class).get(0);
+        }
+        responsibility.setProject(project);
         return responsibility;
     }
 

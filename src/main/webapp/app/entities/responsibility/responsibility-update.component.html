@@ -30,6 +30,20 @@
                         </small>
                     </div>
                 </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="eventPlannerApp.responsibility.project" for="field_project">Project</label>
+                    <select class="form-control" id="field_project" name="project" formControlName="project">
+                        <option *ngIf="!editForm.get('project')!.value" [ngValue]="null" selected></option>
+                        <option [ngValue]="projectOption.id === editForm.get('project')!.value?.id ? editForm.get('project')!.value : projectOption" *ngFor="let projectOption of projects; trackBy: trackById">{{ projectOption.name }}</option>
+                    </select>
+                </div>
+                <div *ngIf="editForm.get('project')!.invalid && (editForm.get('project')!.dirty || editForm.get('project')!.touched)">
+                    <small class="form-text text-danger"
+                           *ngIf="editForm.get('project')?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                    </small>
+                </div>
             </div>
 
             <div>

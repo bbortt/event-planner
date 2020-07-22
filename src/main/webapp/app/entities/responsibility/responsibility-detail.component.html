@@ -12,6 +12,12 @@
                 <dd>
                     <span>{{ responsibility.name }}</span>
                 </dd>
+                <dt><span jhiTranslate="eventPlannerApp.responsibility.project">Project</span></dt>
+                <dd>
+                    <div *ngIf="responsibility.project">
+                        <a [routerLink]="['/project', responsibility.project?.id, 'view']">{{ responsibility.project?.name }}</a>
+                    </div>
+                </dd>
             </dl>
 
             <button type="submit"
