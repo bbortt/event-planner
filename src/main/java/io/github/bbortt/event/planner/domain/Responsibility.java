@@ -2,10 +2,19 @@ package io.github.bbortt.event.planner.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
-import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 
 /**
  * A Responsibility.
@@ -50,26 +59,26 @@ public class Responsibility implements Serializable {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public Responsibility name(String name) {
         this.name = name;
         return this;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public Project getProject() {
         return project;
     }
 
+    public void setProject(Project project) {
+        this.project = project;
+    }
+
     public Responsibility project(Project project) {
         this.project = project;
         return this;
-    }
-
-    public void setProject(Project project) {
-        this.project = project;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import io.github.bbortt.event.planner.EventPlannerApp;
+import io.github.bbortt.event.planner.domain.Project;
 import io.github.bbortt.event.planner.domain.Responsibility;
 import io.github.bbortt.event.planner.repository.ResponsibilityRepository;
 import io.github.bbortt.event.planner.service.ResponsibilityService;
