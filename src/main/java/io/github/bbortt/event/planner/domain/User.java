@@ -38,11 +38,11 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
     @Id
     @GenericGenerator(
-        name = "user_id_seq",
+        name = "jhi_user_id_seq",
         strategy = PostgreSQLConstants.SEQUENCE_GENERATOR_STRATEGY,
-        parameters = { @Parameter(name = "sequence_name", value = "user_id_seq"), @Parameter(name = "increment_size", value = "1") }
+        parameters = { @Parameter(name = "sequence_name", value = "jhi_user_id_seq"), @Parameter(name = "increment_size", value = "1") }
     )
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_id_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "jhi_user_id_seq")
     private Long id;
 
     @NotNull
