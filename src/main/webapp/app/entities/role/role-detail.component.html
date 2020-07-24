@@ -1,0 +1,24 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="role">
+            <h2><span jhiTranslate="eventPlannerApp.role.detail.title">Role</span> {{ role.id }}</h2>
+
+            <hr>
+
+            <jhi-alert-error></jhi-alert-error>
+
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="eventPlannerApp.role.name">Name</span></dt>
+                <dd>
+                    <span>{{ role.name }}</span>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+            </button>
+        </div>
+    </div>
+</div>

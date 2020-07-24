@@ -1,0 +1,22 @@
+{
+  "eventPlannerApp": {
+    "role": {
+      "home": {
+        "title": "Rollen",
+        "createLabel": "Rolle erstellen",
+        "createOrEditLabel": "Rolle erstellen oder bearbeiten",
+        "notFound": "Keine Rollen gefunden"
+      },
+      "created": "Rolle mit ID {{ param }} erstellt",
+      "updated": "Rolle mit ID {{ param }} aktualisiert",
+      "deleted": "Rolle mit ID {{ param }} gelöscht",
+      "delete": {
+        "question": "Soll Rolle {{ id }} wirklich dauerhaft gelöscht werden?"
+      },
+      "detail": {
+        "title": "Rolle"
+      },
+      "name": "Name"
+    }
+  }
+}
