@@ -16,7 +16,8 @@
       "detail": {
         "title": "Responsibility"
       },
-      "name": "Name"
+      "name": "Name",
+      "project": "Project"
     }
   }
 }

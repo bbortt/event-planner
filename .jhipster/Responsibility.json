@@ -1,7 +1,16 @@
 {
   "fluentMethods": true,
   "clientRootFolder": "",
-  "relationships": [],
+  "relationships": [
+    {
+      "relationshipName": "project",
+      "otherEntityName": "project",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": ["required"],
+      "otherEntityField": "name",
+      "otherEntityRelationshipName": "responsibility"
+    }
+  ],
   "fields": [
     {
       "fieldName": "name",
