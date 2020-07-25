@@ -5,6 +5,7 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.GenericGenerator;
 
 /**
  * A Role.
@@ -16,8 +17,15 @@ public class Role implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
-    @SequenceGenerator(name = "sequenceGenerator")
+    @GenericGenerator(
+        name = "role_id_seq",
+        strategy = PostgreSQLConstants.SEQUENCE_GENERATOR_STRATEGY,
+        parameters = {
+            @org.hibernate.annotations.Parameter(name = "sequence_name", value = "role_id_seq"),
+            @org.hibernate.annotations.Parameter(name = "increment_size", value = "1"),
+        }
+    )
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "role_id_seq")
     private Long id;
 
     @NotNull

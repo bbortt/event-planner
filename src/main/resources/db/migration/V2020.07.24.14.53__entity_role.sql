@@ -4,7 +4,7 @@ CREATE TABLE role
     name CHARACTER VARYING(50) UNIQUE
 );
 
-INSERT INTO role
+INSERT INTO role (name)
 VALUES ('ADMIN'),
        ('SECRETARY'),
        ('CONTRIBUTOR'),
