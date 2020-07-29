@@ -11,13 +11,13 @@ public class RoleTest {
     public void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(Role.class);
         Role role1 = new Role();
-        role1.setId(1L);
+        role1.setName("A");
         Role role2 = new Role();
-        role2.setId(role1.getId());
+        role2.setName(role1.getName());
         assertThat(role1).isEqualTo(role2);
-        role2.setId(2L);
+        role2.setName("B");
         assertThat(role1).isNotEqualTo(role2);
-        role1.setId(null);
+        role1.setName(null);
         assertThat(role1).isNotEqualTo(role2);
     }
 }

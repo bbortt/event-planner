@@ -71,9 +71,9 @@ export class RoleComponent implements OnInit, OnDestroy {
     }
   }
 
-  trackId(index: number, item: IRole): number {
+  trackId(index: number, item: IRole): string {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-    return item.id!;
+    return item.name!;
   }
 
   registerChangeInRoles(): void {

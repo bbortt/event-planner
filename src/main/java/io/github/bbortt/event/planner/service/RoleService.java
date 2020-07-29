@@ -50,22 +50,22 @@ public class RoleService {
     /**
      * Get one role by id.
      *
-     * @param id the id of the entity.
+     * @param name the id of the entity.
      * @return the entity.
      */
     @Transactional(readOnly = true)
-    public Optional<Role> findOne(Long id) {
-        log.debug("Request to get Role : {}", id);
-        return roleRepository.findById(id);
+    public Optional<Role> findOne(String name) {
+        log.debug("Request to get Role : {}", name);
+        return roleRepository.findById(name);
     }
 
     /**
      * Delete the role by id.
      *
-     * @param id the id of the entity.
+     * @param name the id of the entity.
      */
-    public void delete(Long id) {
-        log.debug("Request to delete Role : {}", id);
-        roleRepository.deleteById(id);
+    public void delete(String name) {
+        log.debug("Request to delete Role : {}", name);
+        roleRepository.deleteById(name);
     }
 }

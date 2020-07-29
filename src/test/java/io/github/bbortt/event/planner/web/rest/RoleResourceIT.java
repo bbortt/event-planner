@@ -80,10 +80,9 @@ public class RoleResourceIT {
 
         // Get all the roleList
         restRoleMockMvc
-            .perform(get("/api/roles?sort=id,desc"))
+            .perform(get("/api/roles?sort=name,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(role.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)));
     }
 
@@ -95,10 +94,9 @@ public class RoleResourceIT {
 
         // Get the role
         restRoleMockMvc
-            .perform(get("/api/roles/{id}", role.getId()))
+            .perform(get("/api/roles/{name}", role.getName()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.id").value(role.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME));
     }
 
@@ -106,6 +104,6 @@ public class RoleResourceIT {
     @Transactional
     public void getNonExistingRole() throws Exception {
         // Get the role
-        restRoleMockMvc.perform(get("/api/roles/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
+        restRoleMockMvc.perform(get("/api/roles/{name}", "CCCCCCCCCC")).andExpect(status().isNotFound());
     }
 }

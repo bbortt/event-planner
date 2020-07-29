@@ -56,10 +56,10 @@ public class RoleResource {
      * @param id the id of the role to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the role, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/roles/{id}")
-    public ResponseEntity<Role> getRole(@PathVariable Long id) {
-        log.debug("REST request to get Role : {}", id);
-        Optional<Role> role = roleService.findOne(id);
+    @GetMapping("/roles/{name}")
+    public ResponseEntity<Role> getRole(@PathVariable String name) {
+        log.debug("REST request to get Role : {}", name);
+        Optional<Role> role = roleService.findOne(name);
         return ResponseUtil.wrapOrNotFound(role);
     }
 }
