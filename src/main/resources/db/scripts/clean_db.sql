@@ -3,6 +3,7 @@
 --------------------------------------------------
 
 -- domain
+DROP TABLE invitation;
 DROP TABLE responsibility;
 DROP TABLE role;
 DROP TABLE project;

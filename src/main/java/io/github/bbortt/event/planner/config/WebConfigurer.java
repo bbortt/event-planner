@@ -43,7 +43,8 @@ public class WebConfigurer implements ServletContextInitializer, WebServerFactor
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
         if (env.getActiveProfiles().length != 0) {
-            log.info("Web application configuration, using profiles: {}", env.getActiveProfiles());
+            // prettier-ignore
+            log.info("Web application configuration, using profiles: {}", (Object[]) env.getActiveProfiles());
         }
 
         log.info("Web application fully configured");

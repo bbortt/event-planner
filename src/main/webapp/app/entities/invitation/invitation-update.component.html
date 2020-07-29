@@ -1,0 +1,102 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+            <h2 id="jhi-invitation-heading" jhiTranslate="eventPlannerApp.invitation.home.createOrEditLabel">Create or edit a Invitation</h2>
+
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+
+                <div class="form-group" [hidden]="!editForm.get('id')!.value">
+                    <label for="id" jhiTranslate="global.field.id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id" formControlName="id" readonly />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="eventPlannerApp.invitation.email" for="field_email">Email</label>
+                    <input type="text" class="form-control" name="email" id="field_email"
+                           formControlName="email"/>
+                    <div *ngIf="editForm.get('email')!.invalid && (editForm.get('email')!.dirty || editForm.get('email')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('email')?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('email')?.errors?.minlength" jhiTranslate="entity.validation.minlength" [translateValues]="{ min: 5 }">
+                        This field is required to be at least 5 characters.
+                        </small>
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('email')?.errors?.maxlength" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: 254 }">
+                        This field cannot be longer than 254 characters.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="eventPlannerApp.invitation.accepted" for="field_accepted">Accepted</label>
+                    <input type="checkbox" class="form-control" name="accepted" id="field_accepted"
+                           formControlName="accepted"/>
+                    <div *ngIf="editForm.get('accepted')!.invalid && (editForm.get('accepted')!.dirty || editForm.get('accepted')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('accepted')?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="eventPlannerApp.invitation.project" for="field_project">Project</label>
+                    <select class="form-control" id="field_project" name="project" formControlName="project">
+                        <option *ngIf="!editForm.get('project')!.value" [ngValue]="null" selected></option>
+                        <option [ngValue]="projectOption.id === editForm.get('project')!.value?.id ? editForm.get('project')!.value : projectOption" *ngFor="let projectOption of projects; trackBy: trackById">{{ projectOption.name }}</option>
+                    </select>
+                </div>
+                <div *ngIf="editForm.get('project')!.invalid && (editForm.get('project')!.dirty || editForm.get('project')!.touched)">
+                    <small class="form-text text-danger"
+                           *ngIf="editForm.get('project')?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="eventPlannerApp.invitation.user" for="field_user">User</label>
+                    <select class="form-control" id="field_user" name="user" formControlName="user">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="userOption.id === editForm.get('user')!.value?.id ? editForm.get('user')!.value : userOption" *ngFor="let userOption of users; trackBy: trackById">{{ userOption.login }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="eventPlannerApp.invitation.role" for="field_role">Role</label>
+                    <select class="form-control" id="field_role" name="role" formControlName="role">
+                        <option *ngIf="!editForm.get('role')!.value" [ngValue]="null" selected></option>
+                        <option [ngValue]="roleOption.name === editForm.get('role')!.value?.name ? editForm.get('role')!.value : roleOption" *ngFor="let roleOption of roles; trackBy: trackById">{{ roleOption.name }}</option>
+                    </select>
+                </div>
+                <div *ngIf="editForm.get('role')!.invalid && (editForm.get('role')!.dirty || editForm.get('role')!.touched)">
+                    <small class="form-text text-danger"
+                           *ngIf="editForm.get('role')?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="eventPlannerApp.invitation.responsibility" for="field_responsibility">Responsibility</label>
+                    <select class="form-control" id="field_responsibility" name="responsibility" formControlName="responsibility">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="responsibilityOption.id === editForm.get('responsibility')!.value?.id ? editForm.get('responsibility')!.value : responsibilityOption" *ngFor="let responsibilityOption of responsibilities; trackBy: trackById">{{ responsibilityOption.name }}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
+                    <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                </button>
+
+                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

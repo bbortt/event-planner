@@ -1,0 +1,27 @@
+{
+  "eventPlannerApp": {
+    "invitation": {
+      "home": {
+        "title": "Einladungen",
+        "createLabel": "Einladung erstellen",
+        "createOrEditLabel": "Einladung erstellen oder bearbeiten",
+        "notFound": "Keine Einladungen gefunden"
+      },
+      "created": "Einladung mit ID {{ param }} erstellt",
+      "updated": "Einladung mit ID {{ param }} aktualisiert",
+      "deleted": "Einladung mit ID {{ param }} gelöscht",
+      "delete": {
+        "question": "Soll Einladung {{ id }} wirklich dauerhaft gelöscht werden?"
+      },
+      "detail": {
+        "title": "Einladung"
+      },
+      "email": "Email",
+      "accepted": "Akzeptiert",
+      "project": "Project",
+      "user": "Benutzer",
+      "role": "Rolle",
+      "responsibility": "Verantwortung"
+    }
+  }
+}
