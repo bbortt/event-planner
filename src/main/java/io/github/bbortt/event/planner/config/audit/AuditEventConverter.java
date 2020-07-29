@@ -50,7 +50,8 @@ public class AuditEventConverter {
     }
 
     /**
-     * Internal conversion. This is needed to support the current SpringBoot actuator {@code AuditEventRepository} interface.
+     * Internal conversion. This is needed to support the current SpringBoot actuator {@code
+     * AuditEventRepository} interface.
      *
      * @param data the data to convert.
      * @return a map of {@link String}, {@link Object}.
@@ -67,7 +68,8 @@ public class AuditEventConverter {
     }
 
     /**
-     * Internal conversion. This method will allow to save additional data. By default, it will save the object as string.
+     * Internal conversion. This method will allow to save additional data. By default, it will save
+     * the object as string.
      *
      * @param data the data to convert.
      * @return a map of {@link String}, {@link String}.

@@ -87,8 +87,9 @@ public class UserResourceIT {
 
     /**
      * Create a User.
-     *
-     * This is a static method, as tests for other entities might also need it, if they test an entity which has a required relationship to the User entity.
+     * <p>
+     * This is a static method, as tests for other entities might also need it, if they test an
+     * entity which has a required relationship to the User entity.
      */
     public static User createEntity(EntityManager em) {
         User user = new User();

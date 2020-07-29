@@ -17,9 +17,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 /**
@@ -28,14 +34,12 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RestController
 @RequestMapping("/api")
 public class InvitationResource {
-    private final Logger log = LoggerFactory.getLogger(InvitationResource.class);
-
     private static final String ENTITY_NAME = "invitation";
+    private final Logger log = LoggerFactory.getLogger(InvitationResource.class);
+    private final InvitationService invitationService;
 
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
-
-    private final InvitationService invitationService;
 
     public InvitationResource(InvitationService invitationService) {
         this.invitationService = invitationService;
@@ -45,7 +49,8 @@ public class InvitationResource {
      * {@code POST  /invitations} : Create a new invitation.
      *
      * @param invitation the invitation to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new invitation, or with status {@code 400 (Bad Request)} if the invitation has already an ID.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new
+     * invitation, or with status {@code 400 (Bad Request)} if the invitation has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/invitations")
@@ -65,9 +70,9 @@ public class InvitationResource {
      * {@code PUT  /invitations} : Updates an existing invitation.
      *
      * @param invitation the invitation to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated invitation,
-     * or with status {@code 400 (Bad Request)} if the invitation is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the invitation couldn't be updated.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated
+     * invitation, or with status {@code 400 (Bad Request)} if the invitation is not valid, or with
+     * status {@code 500 (Internal Server Error)} if the invitation couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/invitations")
@@ -87,7 +92,8 @@ public class InvitationResource {
      * {@code GET  /invitations} : get all the invitations.
      *
      * @param pageable the pagination information.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of invitations in body.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of invitations
+     * in body.
      */
     @GetMapping("/invitations")
     public ResponseEntity<List<Invitation>> getAllInvitations(Pageable pageable) {
@@ -101,7 +107,8 @@ public class InvitationResource {
      * {@code GET  /invitations/:id} : get the "id" invitation.
      *
      * @param id the id of the invitation to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the invitation, or with status {@code 404 (Not Found)}.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the invitation,
+     * or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/invitations/{id}")
     public ResponseEntity<Invitation> getInvitation(@PathVariable Long id) {

@@ -2,8 +2,13 @@ package io.github.bbortt.event.planner.web.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import io.github.bbortt.event.planner.EventPlannerApp;
 import io.github.bbortt.event.planner.domain.Project;
@@ -48,9 +53,9 @@ public class ResponsibilityResourceIT {
 
     /**
      * Create an entity for this test.
-     *
-     * This is a static method, as tests for other entities might also need it,
-     * if they test an entity which requires the current entity.
+     * <p>
+     * This is a static method, as tests for other entities might also need it, if they test an
+     * entity which requires the current entity.
      */
     public static Responsibility createEntity(EntityManager em) {
         Responsibility responsibility = new Responsibility().name(DEFAULT_NAME);
@@ -69,9 +74,9 @@ public class ResponsibilityResourceIT {
 
     /**
      * Create an updated entity for this test.
-     *
-     * This is a static method, as tests for other entities might also need it,
-     * if they test an entity which requires the current entity.
+     * <p>
+     * This is a static method, as tests for other entities might also need it, if they test an
+     * entity which requires the current entity.
      */
     public static Responsibility createUpdatedEntity(EntityManager em) {
         Responsibility responsibility = new Responsibility().name(UPDATED_NAME);

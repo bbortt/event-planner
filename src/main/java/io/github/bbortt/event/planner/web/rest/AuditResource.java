@@ -36,7 +36,8 @@ public class AuditResource {
      * {@code GET /audits} : get a page of {@link AuditEvent}s.
      *
      * @param pageable the pagination information.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of {@link AuditEvent}s in body.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of {@link
+     * AuditEvent}s in body.
      */
     @GetMapping
     public ResponseEntity<List<AuditEvent>> getAll(Pageable pageable) {
@@ -46,12 +47,14 @@ public class AuditResource {
     }
 
     /**
-     * {@code GET  /audits} : get a page of {@link AuditEvent} between the {@code fromDate} and {@code toDate}.
+     * {@code GET  /audits} : get a page of {@link AuditEvent} between the {@code fromDate} and
+     * {@code toDate}.
      *
      * @param fromDate the start of the time period of {@link AuditEvent} to get.
-     * @param toDate the end of the time period of {@link AuditEvent} to get.
+     * @param toDate   the end of the time period of {@link AuditEvent} to get.
      * @param pageable the pagination information.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of {@link AuditEvent} in body.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of {@link
+     * AuditEvent} in body.
      */
     @GetMapping(params = { "fromDate", "toDate" })
     public ResponseEntity<List<AuditEvent>> getByDates(
@@ -71,7 +74,8 @@ public class AuditResource {
      * {@code GET  /audits/:id} : get an {@link AuditEvent} by id.
      *
      * @param id the id of the entity to get.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the {@link AuditEvent} in body, or status {@code 404 (Not Found)}.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the {@link AuditEvent} in
+     * body, or status {@code 404 (Not Found)}.
      */
     @GetMapping("/{id:.+}")
     public ResponseEntity<AuditEvent> get(@PathVariable Long id) {

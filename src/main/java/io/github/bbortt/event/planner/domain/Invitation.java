@@ -2,8 +2,17 @@ package io.github.bbortt.event.planner.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
-import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
@@ -71,13 +80,13 @@ public class Invitation implements Serializable {
         return email;
     }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public Invitation email(String email) {
         this.email = email;
         return this;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public Boolean isAccepted() {
@@ -97,17 +106,21 @@ public class Invitation implements Serializable {
         return project;
     }
 
+    public void setProject(Project project) {
+        this.project = project;
+    }
+
     public Invitation project(Project project) {
         this.project = project;
         return this;
     }
 
-    public void setProject(Project project) {
-        this.project = project;
-    }
-
     public User getUser() {
         return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Invitation user(User user) {
@@ -115,12 +128,12 @@ public class Invitation implements Serializable {
         return this;
     }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     public Role getRole() {
         return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     public Invitation role(Role role) {
@@ -128,21 +141,17 @@ public class Invitation implements Serializable {
         return this;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
     public Responsibility getResponsibility() {
         return responsibility;
+    }
+
+    public void setResponsibility(Responsibility responsibility) {
+        this.responsibility = responsibility;
     }
 
     public Invitation responsibility(Responsibility responsibility) {
         this.responsibility = responsibility;
         return this;
-    }
-
-    public void setResponsibility(Responsibility responsibility) {
-        this.responsibility = responsibility;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

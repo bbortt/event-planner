@@ -12,7 +12,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
 
 /**
- * Filters incoming requests and installs a Spring Security principal if a header corresponding to a valid user is found.
+ * Filters incoming requests and installs a Spring Security principal if a header corresponding to a
+ * valid user is found.
  */
 public class JWTFilter extends GenericFilterBean {
     public static final String AUTHORIZATION_HEADER = "Authorization";

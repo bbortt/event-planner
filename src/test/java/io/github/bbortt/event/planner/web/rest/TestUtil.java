@@ -63,7 +63,8 @@ public final class TestUtil {
     }
 
     /**
-     * Creates a matcher that matches when the examined string represents the same instant as the reference datetime.
+     * Creates a matcher that matches when the examined string represents the same instant as the
+     * reference datetime.
      *
      * @param date the reference datetime against which the examined string is checked.
      */
@@ -91,7 +92,8 @@ public final class TestUtil {
     }
 
     /**
-     * Create a {@link FormattingConversionService} which use ISO date format, instead of the localized one.
+     * Create a {@link FormattingConversionService} which use ISO date format, instead of the
+     * localized one.
      *
      * @return the {@link FormattingConversionService}.
      */
@@ -106,8 +108,8 @@ public final class TestUtil {
     /**
      * Makes a an executes a query to the EntityManager finding all stored objects.
      *
-     * @param <T> The type of objects to be searched
-     * @param em The instance of the EntityManager
+     * @param <T>  The type of objects to be searched
+     * @param em   The instance of the EntityManager
      * @param clss The class type to be searched
      * @return A list of all found objects
      */
@@ -121,7 +123,8 @@ public final class TestUtil {
     }
 
     /**
-     * A matcher that tests that the examined string represents the same instant as the reference datetime.
+     * A matcher that tests that the examined string represents the same instant as the reference
+     * datetime.
      */
     public static class ZonedDateTimeMatcher extends TypeSafeDiagnosingMatcher<String> {
         private final ZonedDateTime date;

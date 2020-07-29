@@ -3,8 +3,13 @@ package io.github.bbortt.event.planner.domain;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -32,17 +37,21 @@ public class Role implements Serializable {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public Role name(String name) {
         this.name = name;
         return this;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public Set<Invitation> getInvitations() {
         return invitations;
+    }
+
+    public void setInvitations(Set<Invitation> invitations) {
+        this.invitations = invitations;
     }
 
     public Role invitations(Set<Invitation> invitations) {
@@ -60,10 +69,6 @@ public class Role implements Serializable {
         this.invitations.remove(invitation);
         invitation.setRole(null);
         return this;
-    }
-
-    public void setInvitations(Set<Invitation> invitations) {
-        this.invitations = invitations;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

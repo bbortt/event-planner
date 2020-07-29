@@ -4,8 +4,17 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Parameter;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -56,17 +65,21 @@ public class Responsibility implements Serializable {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public Responsibility name(String name) {
         this.name = name;
         return this;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public Project getProject() {
         return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
     }
 
     public Responsibility project(Project project) {
@@ -74,12 +87,12 @@ public class Responsibility implements Serializable {
         return this;
     }
 
-    public void setProject(Project project) {
-        this.project = project;
-    }
-
     public Set<Invitation> getInvitations() {
         return invitations;
+    }
+
+    public void setInvitations(Set<Invitation> invitations) {
+        this.invitations = invitations;
     }
 
     public Responsibility invitations(Set<Invitation> invitations) {
@@ -97,10 +110,6 @@ public class Responsibility implements Serializable {
         this.invitations.remove(invitation);
         invitation.setResponsibility(null);
         return this;
-    }
-
-    public void setInvitations(Set<Invitation> invitations) {
-        this.invitations = invitations;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

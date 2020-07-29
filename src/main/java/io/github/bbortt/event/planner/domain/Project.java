@@ -4,8 +4,15 @@ import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -68,17 +75,21 @@ public class Project implements Serializable {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public Project name(String name) {
         this.name = name;
         return this;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getDescription() {
         return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Project description(String description) {
@@ -86,12 +97,12 @@ public class Project implements Serializable {
         return this;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public ZonedDateTime getStartTime() {
         return startTime;
+    }
+
+    public void setStartTime(ZonedDateTime startTime) {
+        this.startTime = startTime;
     }
 
     public Project startTime(ZonedDateTime startTime) {
@@ -99,12 +110,12 @@ public class Project implements Serializable {
         return this;
     }
 
-    public void setStartTime(ZonedDateTime startTime) {
-        this.startTime = startTime;
-    }
-
     public ZonedDateTime getEndTime() {
         return endTime;
+    }
+
+    public void setEndTime(ZonedDateTime endTime) {
+        this.endTime = endTime;
     }
 
     public Project endTime(ZonedDateTime endTime) {
@@ -112,12 +123,12 @@ public class Project implements Serializable {
         return this;
     }
 
-    public void setEndTime(ZonedDateTime endTime) {
-        this.endTime = endTime;
-    }
-
     public Set<Responsibility> getResponsibilities() {
         return responsibilities;
+    }
+
+    public void setResponsibilities(Set<Responsibility> responsibilities) {
+        this.responsibilities = responsibilities;
     }
 
     public Project responsibilities(Set<Responsibility> responsibilities) {
@@ -137,12 +148,12 @@ public class Project implements Serializable {
         return this;
     }
 
-    public void setResponsibilities(Set<Responsibility> responsibilities) {
-        this.responsibilities = responsibilities;
-    }
-
     public Set<Invitation> getInvitations() {
         return invitations;
+    }
+
+    public void setInvitations(Set<Invitation> invitations) {
+        this.invitations = invitations;
     }
 
     public Project invitations(Set<Invitation> invitations) {
@@ -160,10 +171,6 @@ public class Project implements Serializable {
         this.invitations.remove(invitation);
         invitation.setProject(null);
         return this;
-    }
-
-    public void setInvitations(Set<Invitation> invitations) {
-        this.invitations = invitations;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
