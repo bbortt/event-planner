@@ -1,5 +1,4 @@
 ALTER TABLE role
     DROP COLUMN id,
+    ALTER COLUMN name SET NOT NULL,
     ADD PRIMARY KEY (name);
-
-DROP SEQUENCE role_id_seq;
