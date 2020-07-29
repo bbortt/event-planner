@@ -9,6 +9,7 @@
         "main": "Entitäten",
         "responsibility": "Verantwortlichkeit",
         "project": "Projekt",
+        "role": "Rolle",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {
