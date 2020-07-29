@@ -20,14 +20,14 @@ describe('Service Tests', () => {
       service = injector.get(RoleService);
       httpMock = injector.get(HttpTestingController);
 
-      elemDefault = new Role(0, 'AAAAAAA');
+      elemDefault = new Role('AAAAAAA');
     });
 
     describe('Service methods', () => {
       it('should find an element', () => {
         const returnedFromService = Object.assign({}, elemDefault);
 
-        service.find(123).subscribe(resp => (expectedResult = resp.body));
+        service.find('AAAAAAA').subscribe(resp => (expectedResult = resp.body));
 
         const req = httpMock.expectOne({ method: 'GET' });
         req.flush(returnedFromService);
