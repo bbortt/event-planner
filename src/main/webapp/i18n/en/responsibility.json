@@ -17,7 +17,8 @@
         "title": "Responsibility"
       },
       "name": "Name",
-      "project": "Project"
+      "project": "Project",
+      "invitation": "Invitation"
     }
   }
 }

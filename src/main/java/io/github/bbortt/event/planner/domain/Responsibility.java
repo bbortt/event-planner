@@ -2,19 +2,12 @@ package io.github.bbortt.event.planner.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import java.util.HashSet;
+import java.util.Set;
+import javax.persistence.*;
+import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
 
 /**
  * A Responsibility.
@@ -41,10 +34,14 @@ public class Responsibility implements Serializable {
     @Column(name = "name", length = 50, nullable = false)
     private String name;
 
-    @NotNull
     @ManyToOne(optional = false)
+    @NotNull
     @JsonIgnoreProperties(value = "responsibilities", allowSetters = true)
     private Project project;
+
+    @OneToMany(mappedBy = "responsibility")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    private Set<Invitation> invitations = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -59,26 +56,51 @@ public class Responsibility implements Serializable {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public Responsibility name(String name) {
         this.name = name;
         return this;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Project getProject() {
         return project;
     }
 
+    public Responsibility project(Project project) {
+        this.project = project;
+        return this;
+    }
+
     public void setProject(Project project) {
         this.project = project;
     }
 
-    public Responsibility project(Project project) {
-        this.project = project;
+    public Set<Invitation> getInvitations() {
+        return invitations;
+    }
+
+    public Responsibility invitations(Set<Invitation> invitations) {
+        this.invitations = invitations;
         return this;
+    }
+
+    public Responsibility addInvitation(Invitation invitation) {
+        this.invitations.add(invitation);
+        invitation.setResponsibility(this);
+        return this;
+    }
+
+    public Responsibility removeInvitation(Invitation invitation) {
+        this.invitations.remove(invitation);
+        invitation.setResponsibility(null);
+        return this;
+    }
+
+    public void setInvitations(Set<Invitation> invitations) {
+        this.invitations = invitations;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
