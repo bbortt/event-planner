@@ -10,7 +10,7 @@ describe('Component Tests', () => {
   describe('Role Management Detail Component', () => {
     let comp: RoleDetailComponent;
     let fixture: ComponentFixture<RoleDetailComponent>;
-    const route = ({ data: of({ role: new Role(123) }) } as any) as ActivatedRoute;
+    const route = ({ data: of({ role: new Role('AAA') }) } as any) as ActivatedRoute;
 
     beforeEach(() => {
       TestBed.configureTestingModule({
@@ -30,7 +30,7 @@ describe('Component Tests', () => {
         comp.ngOnInit();
 
         // THEN
-        expect(comp.role).toEqual(jasmine.objectContaining({ id: 123 }));
+        expect(comp.role).toEqual(jasmine.objectContaining({ name: 'AAA' }));
       });
     });
   });
