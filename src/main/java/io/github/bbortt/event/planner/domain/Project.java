@@ -4,18 +4,10 @@ import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.persistence.*;
+import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.GenericGenerator;
 
 /**
  * A Project.
@@ -59,6 +51,10 @@ public class Project implements Serializable {
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Responsibility> responsibilities = new HashSet<>();
 
+    @OneToMany(mappedBy = "project")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    private Set<Invitation> invitations = new HashSet<>();
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
@@ -72,21 +68,17 @@ public class Project implements Serializable {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public Project name(String name) {
         this.name = name;
         return this;
     }
 
-    public String getDescription() {
-        return description;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public String getDescription() {
+        return description;
     }
 
     public Project description(String description) {
@@ -94,12 +86,12 @@ public class Project implements Serializable {
         return this;
     }
 
-    public ZonedDateTime getStartTime() {
-        return startTime;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public void setStartTime(ZonedDateTime startTime) {
-        this.startTime = startTime;
+    public ZonedDateTime getStartTime() {
+        return startTime;
     }
 
     public Project startTime(ZonedDateTime startTime) {
@@ -107,12 +99,12 @@ public class Project implements Serializable {
         return this;
     }
 
-    public ZonedDateTime getEndTime() {
-        return endTime;
+    public void setStartTime(ZonedDateTime startTime) {
+        this.startTime = startTime;
     }
 
-    public void setEndTime(ZonedDateTime endTime) {
-        this.endTime = endTime;
+    public ZonedDateTime getEndTime() {
+        return endTime;
     }
 
     public Project endTime(ZonedDateTime endTime) {
@@ -120,12 +112,12 @@ public class Project implements Serializable {
         return this;
     }
 
-    public Set<Responsibility> getResponsibilities() {
-        return responsibilities;
+    public void setEndTime(ZonedDateTime endTime) {
+        this.endTime = endTime;
     }
 
-    public void setResponsibilities(Set<Responsibility> responsibilities) {
-        this.responsibilities = responsibilities;
+    public Set<Responsibility> getResponsibilities() {
+        return responsibilities;
     }
 
     public Project responsibilities(Set<Responsibility> responsibilities) {
@@ -143,6 +135,35 @@ public class Project implements Serializable {
         this.responsibilities.remove(responsibility);
         responsibility.setProject(null);
         return this;
+    }
+
+    public void setResponsibilities(Set<Responsibility> responsibilities) {
+        this.responsibilities = responsibilities;
+    }
+
+    public Set<Invitation> getInvitations() {
+        return invitations;
+    }
+
+    public Project invitations(Set<Invitation> invitations) {
+        this.invitations = invitations;
+        return this;
+    }
+
+    public Project addInvitation(Invitation invitation) {
+        this.invitations.add(invitation);
+        invitation.setProject(this);
+        return this;
+    }
+
+    public Project removeInvitation(Invitation invitation) {
+        this.invitations.remove(invitation);
+        invitation.setProject(null);
+        return this;
+    }
+
+    public void setInvitations(Set<Invitation> invitations) {
+        this.invitations = invitations;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
