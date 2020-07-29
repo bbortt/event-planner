@@ -16,7 +16,8 @@
       "detail": {
         "title": "Rolle"
       },
-      "name": "Name"
+      "name": "Name",
+      "invitation": "Einladung"
     }
   }
 }
