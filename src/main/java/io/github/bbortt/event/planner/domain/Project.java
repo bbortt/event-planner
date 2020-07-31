@@ -15,6 +15,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 
 /**
  * A Project.
@@ -29,10 +31,7 @@ public class Project implements Serializable {
     @GenericGenerator(
         name = "project_id_seq",
         strategy = PostgreSQLConstants.SEQUENCE_GENERATOR_STRATEGY,
-        parameters = {
-            @org.hibernate.annotations.Parameter(name = "sequence_name", value = "project_id_seq"),
-            @org.hibernate.annotations.Parameter(name = "increment_size", value = "1"),
-        }
+        parameters = { @Parameter(name = "sequence_name", value = "project_id_seq"), @Parameter(name = "increment_size", value = "1") }
     )
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "project_id_seq")
     private Long id;
