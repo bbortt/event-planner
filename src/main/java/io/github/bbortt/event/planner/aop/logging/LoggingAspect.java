@@ -15,7 +15,7 @@ import org.springframework.core.env.Profiles;
 
 /**
  * Aspect for logging execution of service and repository Spring components.
- *
+ * <p>
  * By default, it only runs with the "dev" profile.
  */
 @Aspect

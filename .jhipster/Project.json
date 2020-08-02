@@ -7,6 +7,12 @@
       "otherEntityName": "responsibility",
       "relationshipType": "one-to-many",
       "otherEntityRelationshipName": "project"
+    },
+    {
+      "relationshipName": "invitation",
+      "otherEntityName": "invitation",
+      "relationshipType": "one-to-many",
+      "otherEntityRelationshipName": "project"
     }
   ],
   "fields": [

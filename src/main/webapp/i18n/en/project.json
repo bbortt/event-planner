@@ -20,7 +20,8 @@
       "description": "Description",
       "startTime": "Start Time",
       "endTime": "End Time",
-      "responsibility": "Responsibility"
+      "responsibility": "Responsibility",
+      "invitation": "Invitation"
     }
   }
 }

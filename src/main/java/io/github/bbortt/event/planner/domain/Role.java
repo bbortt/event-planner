@@ -1,11 +1,17 @@
 package io.github.bbortt.event.planner.domain;
 
 import java.io.Serializable;
-import javax.persistence.*;
-import javax.validation.constraints.*;
+import java.util.HashSet;
+import java.util.Set;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.GenericGenerator;
 
 /**
  * A Role.
@@ -22,9 +28,17 @@ public class Role implements Serializable {
     @Column(name = "name", length = 20, nullable = false, unique = true)
     private String name;
 
+    @OneToMany(mappedBy = "role")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    private Set<Invitation> invitations = new HashSet<>();
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Role name(String name) {
@@ -32,8 +46,29 @@ public class Role implements Serializable {
         return this;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public Set<Invitation> getInvitations() {
+        return invitations;
+    }
+
+    public void setInvitations(Set<Invitation> invitations) {
+        this.invitations = invitations;
+    }
+
+    public Role invitations(Set<Invitation> invitations) {
+        this.invitations = invitations;
+        return this;
+    }
+
+    public Role addInvitation(Invitation invitation) {
+        this.invitations.add(invitation);
+        invitation.setRole(this);
+        return this;
+    }
+
+    public Role removeInvitation(Invitation invitation) {
+        this.invitations.remove(invitation);
+        invitation.setRole(null);
+        return this;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

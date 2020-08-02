@@ -16,6 +16,7 @@ import javax.validation.constraints.Size;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 
 /**
  * A Project.
@@ -30,10 +31,7 @@ public class Project implements Serializable {
     @GenericGenerator(
         name = "project_id_seq",
         strategy = PostgreSQLConstants.SEQUENCE_GENERATOR_STRATEGY,
-        parameters = {
-            @org.hibernate.annotations.Parameter(name = "sequence_name", value = "project_id_seq"),
-            @org.hibernate.annotations.Parameter(name = "increment_size", value = "1"),
-        }
+        parameters = { @Parameter(name = "sequence_name", value = "project_id_seq"), @Parameter(name = "increment_size", value = "1") }
     )
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "project_id_seq")
     private Long id;
@@ -58,6 +56,10 @@ public class Project implements Serializable {
     @OneToMany(mappedBy = "project")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Responsibility> responsibilities = new HashSet<>();
+
+    @OneToMany(mappedBy = "project")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    private Set<Invitation> invitations = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -142,6 +144,31 @@ public class Project implements Serializable {
     public Project removeResponsibility(Responsibility responsibility) {
         this.responsibilities.remove(responsibility);
         responsibility.setProject(null);
+        return this;
+    }
+
+    public Set<Invitation> getInvitations() {
+        return invitations;
+    }
+
+    public void setInvitations(Set<Invitation> invitations) {
+        this.invitations = invitations;
+    }
+
+    public Project invitations(Set<Invitation> invitations) {
+        this.invitations = invitations;
+        return this;
+    }
+
+    public Project addInvitation(Invitation invitation) {
+        this.invitations.add(invitation);
+        invitation.setProject(this);
+        return this;
+    }
+
+    public Project removeInvitation(Invitation invitation) {
+        this.invitations.remove(invitation);
+        invitation.setProject(null);
         return this;
     }
 

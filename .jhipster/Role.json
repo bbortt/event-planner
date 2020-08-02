@@ -1,7 +1,14 @@
 {
   "fluentMethods": true,
   "clientRootFolder": "",
-  "relationships": [],
+  "relationships": [
+    {
+      "relationshipName": "invitation",
+      "otherEntityName": "invitation",
+      "relationshipType": "one-to-many",
+      "otherEntityRelationshipName": "role"
+    }
+  ],
   "fields": [
     {
       "fieldName": "name",

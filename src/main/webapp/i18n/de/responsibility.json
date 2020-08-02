@@ -17,7 +17,8 @@
         "title": "Verantwortlichkeit"
       },
       "name": "Name",
-      "project": "Projekt"
+      "project": "Projekt",
+      "invitation": "Einladung"
     }
   }
 }

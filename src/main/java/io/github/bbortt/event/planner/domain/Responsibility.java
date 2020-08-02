@@ -2,12 +2,15 @@ package io.github.bbortt.event.planner.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -41,10 +44,14 @@ public class Responsibility implements Serializable {
     @Column(name = "name", length = 50, nullable = false)
     private String name;
 
-    @NotNull
     @ManyToOne(optional = false)
+    @NotNull
     @JsonIgnoreProperties(value = "responsibilities", allowSetters = true)
     private Project project;
+
+    @OneToMany(mappedBy = "responsibility")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    private Set<Invitation> invitations = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -78,6 +85,31 @@ public class Responsibility implements Serializable {
 
     public Responsibility project(Project project) {
         this.project = project;
+        return this;
+    }
+
+    public Set<Invitation> getInvitations() {
+        return invitations;
+    }
+
+    public void setInvitations(Set<Invitation> invitations) {
+        this.invitations = invitations;
+    }
+
+    public Responsibility invitations(Set<Invitation> invitations) {
+        this.invitations = invitations;
+        return this;
+    }
+
+    public Responsibility addInvitation(Invitation invitation) {
+        this.invitations.add(invitation);
+        invitation.setResponsibility(this);
+        return this;
+    }
+
+    public Responsibility removeInvitation(Invitation invitation) {
+        this.invitations.remove(invitation);
+        invitation.setResponsibility(null);
         return this;
     }
 

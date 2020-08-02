@@ -9,6 +9,12 @@
       "relationshipValidateRules": ["required"],
       "otherEntityField": "name",
       "otherEntityRelationshipName": "responsibility"
+    },
+    {
+      "relationshipName": "invitation",
+      "otherEntityName": "invitation",
+      "relationshipType": "one-to-many",
+      "otherEntityRelationshipName": "responsibility"
     }
   ],
   "fields": [

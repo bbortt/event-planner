@@ -34,14 +34,12 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RestController
 @RequestMapping("/api")
 public class ResponsibilityResource {
-    private final Logger log = LoggerFactory.getLogger(ResponsibilityResource.class);
-
     private static final String ENTITY_NAME = "responsibility";
+    private final Logger log = LoggerFactory.getLogger(ResponsibilityResource.class);
+    private final ResponsibilityService responsibilityService;
 
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
-
-    private final ResponsibilityService responsibilityService;
 
     public ResponsibilityResource(ResponsibilityService responsibilityService) {
         this.responsibilityService = responsibilityService;
@@ -51,9 +49,7 @@ public class ResponsibilityResource {
      * {@code POST  /responsibilities} : Create a new responsibility.
      *
      * @param responsibility the responsibility to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new
-     * responsibility, or with status {@code 400 (Bad Request)} if the responsibility has already an
-     * ID.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new responsibility, or with status {@code 400 (Bad Request)} if the responsibility has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/responsibilities")
@@ -74,10 +70,7 @@ public class ResponsibilityResource {
      * {@code PUT  /responsibilities} : Updates an existing responsibility.
      *
      * @param responsibility the responsibility to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated
-     * responsibility, or with status {@code 400 (Bad Request)} if the responsibility is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the responsibility couldn't be
-     * updated.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated responsibility, or with status {@code 400 (Bad Request)} if the responsibility is not valid, or with status {@code 500 (Internal Server Error)} if the responsibility couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/responsibilities")
@@ -98,8 +91,7 @@ public class ResponsibilityResource {
      * {@code GET  /responsibilities} : get all the responsibilities.
      *
      * @param pageable the pagination information.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of
-     * responsibilities in body.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of responsibilities in body.
      */
     @GetMapping("/responsibilities")
     public ResponseEntity<List<Responsibility>> getAllResponsibilities(Pageable pageable) {
@@ -113,8 +105,7 @@ public class ResponsibilityResource {
      * {@code GET  /responsibilities/:id} : get the "id" responsibility.
      *
      * @param id the id of the responsibility to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the
-     * responsibility, or with status {@code 404 (Not Found)}.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the responsibility, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/responsibilities/{id}")
     public ResponseEntity<Responsibility> getResponsibility(@PathVariable Long id) {

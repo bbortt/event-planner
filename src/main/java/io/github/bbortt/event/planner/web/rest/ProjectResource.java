@@ -34,14 +34,12 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RestController
 @RequestMapping("/api")
 public class ProjectResource {
-    private final Logger log = LoggerFactory.getLogger(ProjectResource.class);
-
     private static final String ENTITY_NAME = "project";
+    private final Logger log = LoggerFactory.getLogger(ProjectResource.class);
+    private final ProjectService projectService;
 
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
-
-    private final ProjectService projectService;
 
     public ProjectResource(ProjectService projectService) {
         this.projectService = projectService;
@@ -71,9 +69,7 @@ public class ProjectResource {
      * {@code PUT  /projects} : Updates an existing project.
      *
      * @param project the project to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated project,
-     * or with status {@code 400 (Bad Request)} if the project is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the project couldn't be updated.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated project, or with status {@code 400 (Bad Request)} if the project is not valid, or with status {@code 500 (Internal Server Error)} if the project couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/projects")
