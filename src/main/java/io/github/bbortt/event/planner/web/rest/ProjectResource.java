@@ -49,8 +49,7 @@ public class ProjectResource {
      * {@code POST  /projects} : Create a new project.
      *
      * @param project the project to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new
-     * project, or with status {@code 400 (Bad Request)} if the project has already an ID.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new project, or with status {@code 400 (Bad Request)} if the project has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/projects")
@@ -70,9 +69,7 @@ public class ProjectResource {
      * {@code PUT  /projects} : Updates an existing project.
      *
      * @param project the project to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated
-     * project, or with status {@code 400 (Bad Request)} if the project is not valid, or with status
-     * {@code 500 (Internal Server Error)} if the project couldn't be updated.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated project, or with status {@code 400 (Bad Request)} if the project is not valid, or with status {@code 500 (Internal Server Error)} if the project couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/projects")
@@ -92,8 +89,7 @@ public class ProjectResource {
      * {@code GET  /projects} : get all the projects.
      *
      * @param pageable the pagination information.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of projects in
-     * body.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of projects in body.
      */
     @GetMapping("/projects")
     public ResponseEntity<List<Project>> getAllProjects(Pageable pageable) {
@@ -107,8 +103,7 @@ public class ProjectResource {
      * {@code GET  /projects/:id} : get the "id" project.
      *
      * @param id the id of the project to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the project, or
-     * with status {@code 404 (Not Found)}.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the project, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/projects/{id}")
     public ResponseEntity<Project> getProject(@PathVariable Long id) {

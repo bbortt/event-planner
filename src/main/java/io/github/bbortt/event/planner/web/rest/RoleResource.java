@@ -36,8 +36,7 @@ public class RoleResource {
      * {@code GET  /roles} : get all the roles.
      *
      * @param pageable the pagination information.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of roles in
-     * body.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of roles in body.
      */
     @GetMapping("/roles")
     public ResponseEntity<List<Role>> getAllRoles(Pageable pageable) {
@@ -51,8 +50,7 @@ public class RoleResource {
      * {@code GET  /roles/:id} : get the "id" role.
      *
      * @param id the id of the role to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the role, or
-     * with status {@code 404 (Not Found)}.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the role, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/roles/{name}")
     public ResponseEntity<Role> getRole(@PathVariable String name) {

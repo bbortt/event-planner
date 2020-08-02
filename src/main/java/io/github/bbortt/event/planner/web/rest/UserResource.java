@@ -42,9 +42,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
  * <p>
  * This class accesses the {@link User} entity, and needs to fetch its collection of authorities.
  * <p>
- * For a normal use-case, it would be better to have an eager relationship between User and
- * Authority, and send everything to the client side: there would be no View Model and DTO, a lot
- * less code, and an outer-join which would be good for performance.
+ * For a normal use-case, it would be better to have an eager relationship between User and Authority, and send everything to the client side: there would be no View Model and DTO, a lot less code, and an outer-join which would be good for performance.
  * <p>
  * We use a View Model and a DTO for 3 reasons:
  * <ul>
@@ -81,15 +79,12 @@ public class UserResource {
     /**
      * {@code POST  /users}  : Creates a new user.
      * <p>
-     * Creates a new user if the login and email are not already used, and sends an mail with an
-     * activation link. The user needs to be activated on creation.
+     * Creates a new user if the login and email are not already used, and sends an mail with an activation link. The user needs to be activated on creation.
      *
      * @param userDTO the user to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new
-     * user, or with status {@code 400 (Bad Request)} if the login or email is already in use.
-     * @throws URISyntaxException       if the Location URI syntax is incorrect.
-     * @throws BadRequestAlertException {@code 400 (Bad Request)} if the login or email is already
-     *                                  in use.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new user, or with status {@code 400 (Bad Request)} if the login or email is already in use.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     * @throws BadRequestAlertException {@code 400 (Bad Request)} if the login or email is already in use.
      */
     @PostMapping("/users")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
@@ -117,8 +112,7 @@ public class UserResource {
      * {@code PUT /users} : Updates an existing User.
      *
      * @param userDTO the user to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated
-     * user.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated user.
      * @throws EmailAlreadyUsedException {@code 400 (Bad Request)} if the email is already in use.
      * @throws LoginAlreadyUsedException {@code 400 (Bad Request)} if the login is already in use.
      */
@@ -170,8 +164,7 @@ public class UserResource {
      * {@code GET /users/:login} : get the "login" user.
      *
      * @param login the login of the user to find.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the "login"
-     * user, or with status {@code 404 (Not Found)}.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the "login" user, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/users/{login:" + Constants.LOGIN_REGEX + "}")
     public ResponseEntity<UserDTO> getUser(@PathVariable String login) {

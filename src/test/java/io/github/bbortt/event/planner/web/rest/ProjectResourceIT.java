@@ -67,8 +67,7 @@ public class ProjectResourceIT {
     /**
      * Create an entity for this test.
      * <p>
-     * This is a static method, as tests for other entities might also need it, if they test an
-     * entity which requires the current entity.
+     * This is a static method, as tests for other entities might also need it, if they test an entity which requires the current entity.
      */
     public static Project createEntity(EntityManager em) {
         Project project = new Project()
@@ -82,8 +81,7 @@ public class ProjectResourceIT {
     /**
      * Create an updated entity for this test.
      * <p>
-     * This is a static method, as tests for other entities might also need it, if they test an
-     * entity which requires the current entity.
+     * This is a static method, as tests for other entities might also need it, if they test an entity which requires the current entity.
      */
     public static Project createUpdatedEntity(EntityManager em) {
         Project project = new Project()

@@ -54,8 +54,7 @@ public class ResponsibilityResourceIT {
     /**
      * Create an entity for this test.
      * <p>
-     * This is a static method, as tests for other entities might also need it, if they test an
-     * entity which requires the current entity.
+     * This is a static method, as tests for other entities might also need it, if they test an entity which requires the current entity.
      */
     public static Responsibility createEntity(EntityManager em) {
         Responsibility responsibility = new Responsibility().name(DEFAULT_NAME);
@@ -75,8 +74,7 @@ public class ResponsibilityResourceIT {
     /**
      * Create an updated entity for this test.
      * <p>
-     * This is a static method, as tests for other entities might also need it, if they test an
-     * entity which requires the current entity.
+     * This is a static method, as tests for other entities might also need it, if they test an entity which requires the current entity.
      */
     public static Responsibility createUpdatedEntity(EntityManager em) {
         Responsibility responsibility = new Responsibility().name(UPDATED_NAME);

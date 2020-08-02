@@ -48,8 +48,7 @@ public class RoleResourceIT {
     /**
      * Create an entity for this test.
      * <p>
-     * This is a static method, as tests for other entities might also need it, if they test an
-     * entity which requires the current entity.
+     * This is a static method, as tests for other entities might also need it, if they test an entity which requires the current entity.
      */
     public static Role createEntity(EntityManager em) {
         Role role = new Role().name(DEFAULT_NAME);
@@ -59,8 +58,7 @@ public class RoleResourceIT {
     /**
      * Create an updated entity for this test.
      * <p>
-     * This is a static method, as tests for other entities might also need it, if they test an
-     * entity which requires the current entity.
+     * This is a static method, as tests for other entities might also need it, if they test an entity which requires the current entity.
      */
     public static Role createUpdatedEntity(EntityManager em) {
         Role role = new Role().name(UPDATED_NAME);
