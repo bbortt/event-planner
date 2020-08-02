@@ -17,31 +17,12 @@ public class Role implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GenericGenerator(
-        name = "role_id_seq",
-        strategy = PostgreSQLConstants.SEQUENCE_GENERATOR_STRATEGY,
-        parameters = {
-            @org.hibernate.annotations.Parameter(name = "sequence_name", value = "role_id_seq"),
-            @org.hibernate.annotations.Parameter(name = "increment_size", value = "1"),
-        }
-    )
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "role_id_seq")
-    private Long id;
-
     @NotNull
     @Size(min = 1, max = 20)
     @Column(name = "name", length = 20, nullable = false, unique = true)
     private String name;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
     }
@@ -65,7 +46,7 @@ public class Role implements Serializable {
         if (!(o instanceof Role)) {
             return false;
         }
-        return id != null && id.equals(((Role) o).id);
+        return name != null && name.equals(((Role) o).name);
     }
 
     @Override
@@ -77,8 +58,7 @@ public class Role implements Serializable {
     @Override
     public String toString() {
         return "Role{" +
-            "id=" + getId() +
-            ", name='" + getName() + "'" +
+            "name='" + getName() + "'" +
             "}";
     }
 }

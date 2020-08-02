@@ -22,12 +22,12 @@
             </thead>
             <tbody>
                 <tr *ngFor="let role of roles ;trackBy: trackId">
-                    <td><a [routerLink]="['/role', role.id, 'view']">{{ role.id }}</a></td>
+                    <td><a [routerLink]="['/role', role.name, 'view']">{{ role.name }}</a></td>
                     <td>{{ role.name }}</td>
                     <td class="text-right">
                         <div class="btn-group">
                             <button type="submit"
-                                    [routerLink]="['/role', role.id, 'view']"
+                                    [routerLink]="['/role', role.name, 'view']"
                                     class="btn btn-info btn-sm">
                                 <fa-icon icon="eye"></fa-icon>
                                 <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>

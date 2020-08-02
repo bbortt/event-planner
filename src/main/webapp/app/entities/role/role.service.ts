@@ -15,8 +15,8 @@ export class RoleService {
 
   constructor(protected http: HttpClient) {}
 
-  find(id: number): Observable<EntityResponseType> {
-    return this.http.get<IRole>(`${this.resourceUrl}/${id}`, { observe: 'response' });
+  find(name: string): Observable<EntityResponseType> {
+    return this.http.get<IRole>(`${this.resourceUrl}/${name}`, { observe: 'response' });
   }
 
   query(req?: any): Observable<EntityArrayResponseType> {
