@@ -12,6 +12,7 @@
         "role": "Rolle",
         "invitation": "Einladung",
         "location": "Lokalität",
+        "section": "Abschnitt",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {

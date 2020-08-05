@@ -16,6 +16,12 @@
       "relationshipType": "many-to-one",
       "otherEntityField": "name",
       "otherEntityRelationshipName": "location"
+    },
+    {
+      "relationshipName": "section",
+      "otherEntityName": "section",
+      "relationshipType": "one-to-many",
+      "otherEntityRelationshipName": "location"
     }
   ],
   "fields": [

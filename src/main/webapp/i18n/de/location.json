@@ -20,7 +20,8 @@
       "dateFrom": "Datum Von",
       "dateTo": "Datum Bis",
       "project": "Project",
-      "responsibility": "Verantwortlichkeit"
+      "responsibility": "Verantwortlichkeit",
+      "section": "Abschnitt"
     }
   }
 }

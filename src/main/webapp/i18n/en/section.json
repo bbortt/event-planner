@@ -1,0 +1,23 @@
+{
+  "eventPlannerApp": {
+    "section": {
+      "home": {
+        "title": "Sections",
+        "createLabel": "Create a new Section",
+        "createOrEditLabel": "Create or edit a Section",
+        "notFound": "No Sections found"
+      },
+      "created": "A new Section is created with identifier {{ param }}",
+      "updated": "A Section is updated with identifier {{ param }}",
+      "deleted": "A Section is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Section {{ id }}?"
+      },
+      "detail": {
+        "title": "Section"
+      },
+      "name": "Name",
+      "location": "Location"
+    }
+  }
+}

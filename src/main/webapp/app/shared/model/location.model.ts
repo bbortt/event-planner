@@ -1,6 +1,7 @@
 import { Moment } from 'moment';
 import { IProject } from 'app/shared/model/project.model';
 import { IResponsibility } from 'app/shared/model/responsibility.model';
+import { ISection } from 'app/shared/model/section.model';
 
 export interface ILocation {
   id?: number;
@@ -9,6 +10,7 @@ export interface ILocation {
   dateTo?: Moment;
   project?: IProject;
   responsibility?: IResponsibility;
+  sections?: ISection[];
 }
 
 export class Location implements ILocation {
@@ -18,6 +20,7 @@ export class Location implements ILocation {
     public dateFrom?: Moment,
     public dateTo?: Moment,
     public project?: IProject,
-    public responsibility?: IResponsibility
+    public responsibility?: IResponsibility,
+    public sections?: ISection[]
   ) {}
 }

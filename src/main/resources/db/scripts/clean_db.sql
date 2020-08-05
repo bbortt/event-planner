@@ -4,6 +4,8 @@
 
 -- domain
 DROP TABLE invitation;
+DROP TABLE section;
+DROP TABLE location;
 DROP TABLE responsibility;
 DROP TABLE role;
 DROP TABLE project;

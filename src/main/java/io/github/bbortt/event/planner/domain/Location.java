@@ -3,19 +3,22 @@ package io.github.bbortt.event.planner.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
 
 /**
  * A Location.
@@ -30,7 +33,10 @@ public class Location implements Serializable {
     @GenericGenerator(
         name = "location_id_seq",
         strategy = PostgreSQLConstants.SEQUENCE_GENERATOR_STRATEGY,
-        parameters = { @Parameter(name = "sequence_name", value = "location_id_seq"), @Parameter(name = "increment_size", value = "1") }
+        parameters = {
+            @org.hibernate.annotations.Parameter(name = "sequence_name", value = "location_id_seq"),
+            @org.hibernate.annotations.Parameter(name = "increment_size", value = "1"),
+        }
     )
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "location_id_seq")
     private Long id;
@@ -54,6 +60,10 @@ public class Location implements Serializable {
     @ManyToOne
     @JsonIgnoreProperties(value = "locations", allowSetters = true)
     private Responsibility responsibility;
+
+    @OneToMany(mappedBy = "location")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    private Set<Section> sections = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -126,6 +136,31 @@ public class Location implements Serializable {
 
     public Location responsibility(Responsibility responsibility) {
         this.responsibility = responsibility;
+        return this;
+    }
+
+    public Set<Section> getSections() {
+        return sections;
+    }
+
+    public void setSections(Set<Section> sections) {
+        this.sections = sections;
+    }
+
+    public Location sections(Set<Section> sections) {
+        this.sections = sections;
+        return this;
+    }
+
+    public Location addSection(Section section) {
+        this.sections.add(section);
+        section.setLocation(this);
+        return this;
+    }
+
+    public Location removeSection(Section section) {
+        this.sections.remove(section);
+        section.setLocation(null);
         return this;
     }
 
