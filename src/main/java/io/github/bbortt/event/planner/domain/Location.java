@@ -13,17 +13,22 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 
 /**
  * A Location.
  */
 @Entity
-@Table(name = "location")
+@Table(
+    name = "location",
+    uniqueConstraints = { @UniqueConstraint(name = "unique_location_per_project", columnNames = { "name", "project_id" }) }
+)
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Location implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -32,10 +37,7 @@ public class Location implements Serializable {
     @GenericGenerator(
         name = "location_id_seq",
         strategy = PostgreSQLConstants.SEQUENCE_GENERATOR_STRATEGY,
-        parameters = {
-            @org.hibernate.annotations.Parameter(name = "sequence_name", value = "location_id_seq"),
-            @org.hibernate.annotations.Parameter(name = "increment_size", value = "1"),
-        }
+        parameters = { @Parameter(name = "sequence_name", value = "location_id_seq"), @Parameter(name = "increment_size", value = "1") }
     )
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "location_id_seq")
     private Long id;
