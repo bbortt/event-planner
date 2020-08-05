@@ -11,6 +11,7 @@
         "project": "Project",
         "role": "Role",
         "invitation": "Invitation",
+        "location": "Location",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {
