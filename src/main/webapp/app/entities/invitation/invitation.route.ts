@@ -39,7 +39,7 @@ export const invitationRoute: Routes = [
     path: '',
     component: InvitationComponent,
     data: {
-      authorities: [Authority.USER],
+      authorities: [Authority.ADMIN],
       defaultSort: 'id,asc',
       pageTitle: 'eventPlannerApp.invitation.home.title',
     },
@@ -52,7 +52,7 @@ export const invitationRoute: Routes = [
       invitation: InvitationResolve,
     },
     data: {
-      authorities: [Authority.USER],
+      authorities: [Authority.ADMIN],
       pageTitle: 'eventPlannerApp.invitation.home.title',
     },
     canActivate: [UserRouteAccessService],
@@ -64,7 +64,7 @@ export const invitationRoute: Routes = [
       invitation: InvitationResolve,
     },
     data: {
-      authorities: [Authority.USER],
+      authorities: [Authority.ADMIN],
       pageTitle: 'eventPlannerApp.invitation.home.title',
     },
     canActivate: [UserRouteAccessService],
@@ -76,7 +76,7 @@ export const invitationRoute: Routes = [
       invitation: InvitationResolve,
     },
     data: {
-      authorities: [Authority.USER],
+      authorities: [Authority.ADMIN],
       pageTitle: 'eventPlannerApp.invitation.home.title',
     },
     canActivate: [UserRouteAccessService],
