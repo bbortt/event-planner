@@ -137,8 +137,8 @@
     "idexists": "Ein neuer {{entityName}} kann noch keine ID haben",
     "idnull": "Ungültige ID",
     "file": {
-      "could.not.extract": "Could not extract file",
-      "not.image": "File was expected to be an image but was found to be \"{{ fileType }}\""
+      "could.not.extract": "Date Typ konnte nicht ermittelt werden",
+      "not.image": "Bild-Datei erwartet aber \"{{ fileType }}\" gefunden"
     }
   },
   "footer": "Dies ist Ihre Fußzeile"

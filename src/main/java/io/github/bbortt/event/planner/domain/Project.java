@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -60,6 +61,10 @@ public class Project implements Serializable {
     @OneToMany(mappedBy = "project")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Invitation> invitations = new HashSet<>();
+
+    @OneToMany(mappedBy = "project")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    private Set<Location> locations = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -169,6 +174,31 @@ public class Project implements Serializable {
     public Project removeInvitation(Invitation invitation) {
         this.invitations.remove(invitation);
         invitation.setProject(null);
+        return this;
+    }
+
+    public Set<Location> getLocations() {
+        return locations;
+    }
+
+    public void setLocations(Set<Location> locations) {
+        this.locations = locations;
+    }
+
+    public Project locations(Set<Location> locations) {
+        this.locations = locations;
+        return this;
+    }
+
+    public Project addLocation(Location location) {
+        this.locations.add(location);
+        location.setProject(this);
+        return this;
+    }
+
+    public Project removeLocation(Location location) {
+        this.locations.remove(location);
+        location.setProject(null);
         return this;
     }
 

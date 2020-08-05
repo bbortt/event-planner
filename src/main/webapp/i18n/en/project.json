@@ -21,7 +21,8 @@
       "startTime": "Start Time",
       "endTime": "End Time",
       "responsibility": "Responsibility",
-      "invitation": "Invitation"
+      "invitation": "Invitation",
+      "location": "Location"
     }
   }
 }

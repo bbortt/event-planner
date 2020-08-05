@@ -15,6 +15,12 @@
       "otherEntityName": "invitation",
       "relationshipType": "one-to-many",
       "otherEntityRelationshipName": "responsibility"
+    },
+    {
+      "relationshipName": "location",
+      "otherEntityName": "location",
+      "relationshipType": "one-to-many",
+      "otherEntityRelationshipName": "responsibility"
     }
   ],
   "fields": [

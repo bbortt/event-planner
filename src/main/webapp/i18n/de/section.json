@@ -5,7 +5,7 @@
         "title": "Abschnitte",
         "createLabel": "Abschnitt erstellen",
         "createOrEditLabel": "Abschnitt erstellen oder bearbeiten",
-        "notFound": "No Abschnitte found"
+        "notFound": "Keine Abschnitte gefunden"
       },
       "created": "Abschnitt mit ID {{ param }} erstellt",
       "updated": "Abschnitt mit ID {{ param }} aktualisiert",

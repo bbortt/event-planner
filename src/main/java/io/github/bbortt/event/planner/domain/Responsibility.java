@@ -17,7 +17,6 @@ import javax.validation.constraints.Size;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
 
 /**
  * A Responsibility.
@@ -33,7 +32,8 @@ public class Responsibility implements Serializable {
         name = "responsibility_id_seq",
         strategy = PostgreSQLConstants.SEQUENCE_GENERATOR_STRATEGY,
         parameters = {
-            @Parameter(name = "sequence_name", value = "responsibility_id_seq"), @Parameter(name = "increment_size", value = "1"),
+            @org.hibernate.annotations.Parameter(name = "sequence_name", value = "responsibility_id_seq"),
+            @org.hibernate.annotations.Parameter(name = "increment_size", value = "1"),
         }
     )
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "responsibility_id_seq")
@@ -52,6 +52,10 @@ public class Responsibility implements Serializable {
     @OneToMany(mappedBy = "responsibility")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Invitation> invitations = new HashSet<>();
+
+    @OneToMany(mappedBy = "responsibility")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    private Set<Location> locations = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -110,6 +114,31 @@ public class Responsibility implements Serializable {
     public Responsibility removeInvitation(Invitation invitation) {
         this.invitations.remove(invitation);
         invitation.setResponsibility(null);
+        return this;
+    }
+
+    public Set<Location> getLocations() {
+        return locations;
+    }
+
+    public void setLocations(Set<Location> locations) {
+        this.locations = locations;
+    }
+
+    public Responsibility locations(Set<Location> locations) {
+        this.locations = locations;
+        return this;
+    }
+
+    public Responsibility addLocation(Location location) {
+        this.locations.add(location);
+        location.setResponsibility(this);
+        return this;
+    }
+
+    public Responsibility removeLocation(Location location) {
+        this.locations.remove(location);
+        location.setResponsibility(null);
         return this;
     }
 
