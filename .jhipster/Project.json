@@ -13,6 +13,12 @@
       "otherEntityName": "invitation",
       "relationshipType": "one-to-many",
       "otherEntityRelationshipName": "project"
+    },
+    {
+      "relationshipName": "location",
+      "otherEntityName": "location",
+      "relationshipType": "one-to-many",
+      "otherEntityRelationshipName": "project"
     }
   ],
   "fields": [

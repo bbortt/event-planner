@@ -5,10 +5,10 @@
         "title": "Projekte",
         "createLabel": "Projekt erstellen",
         "createOrEditLabel": "Projekt erstellen oder bearbeiten",
-        "notFound": "No Projekte found"
+        "notFound": "Keine Projekte gefunden"
       },
-      "created": "Projekt mit ID {{ param }} gelöscht",
-      "updated": "Projekt mit ID {{ param }} gelöscht",
+      "created": "Projekt mit ID {{ param }} erstellt",
+      "updated": "Projekt mit ID {{ param }} aktualisiert",
       "deleted": "Projekt mit ID {{ param }} gelöscht",
       "delete": {
         "question": "Soll Projekt {{ id }} wirklich dauerhaft gelöscht werden?"
@@ -21,7 +21,8 @@
       "startTime": "Start Zeit",
       "endTime": "End Zeit",
       "responsibility": "Verantwortlichkeit",
-      "invitation": "Einladung"
+      "invitation": "Einladung",
+      "location": "Lokalität"
     }
   }
 }

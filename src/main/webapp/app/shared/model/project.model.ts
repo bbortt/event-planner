@@ -1,6 +1,7 @@
 import { Moment } from 'moment';
 import { IResponsibility } from 'app/shared/model/responsibility.model';
 import { IInvitation } from 'app/shared/model/invitation.model';
+import { ILocation } from 'app/shared/model/location.model';
 
 export interface IProject {
   id?: number;
@@ -10,6 +11,7 @@ export interface IProject {
   endTime?: Moment;
   responsibilities?: IResponsibility[];
   invitations?: IInvitation[];
+  locations?: ILocation[];
 }
 
 export class Project implements IProject {
@@ -20,6 +22,7 @@ export class Project implements IProject {
     public startTime?: Moment,
     public endTime?: Moment,
     public responsibilities?: IResponsibility[],
-    public invitations?: IInvitation[]
+    public invitations?: IInvitation[],
+    public locations?: ILocation[]
   ) {}
 }

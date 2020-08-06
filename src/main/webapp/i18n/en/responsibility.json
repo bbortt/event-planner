@@ -18,7 +18,8 @@
       },
       "name": "Name",
       "project": "Project",
-      "invitation": "Invitation"
+      "invitation": "Invitation",
+      "location": "Location"
     }
   }
 }

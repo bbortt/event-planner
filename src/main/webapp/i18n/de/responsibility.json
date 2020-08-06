@@ -18,7 +18,8 @@
       },
       "name": "Name",
       "project": "Projekt",
-      "invitation": "Einladung"
+      "invitation": "Einladung",
+      "location": "Lokalität"
     }
   }
 }
