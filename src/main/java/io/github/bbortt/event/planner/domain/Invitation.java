@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -22,7 +23,10 @@ import org.hibernate.annotations.Parameter;
  * A Invitation.
  */
 @Entity
-@Table(name = "invitation")
+@Table(
+    name = "invitation",
+    uniqueConstraints = { @UniqueConstraint(name = "unique_invitation_per_project", columnNames = { "email", "project_id" }) }
+)
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Invitation implements Serializable {
     private static final long serialVersionUID = 1L;
