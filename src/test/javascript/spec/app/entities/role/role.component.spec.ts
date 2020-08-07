@@ -23,13 +23,13 @@ describe('Component Tests', () => {
             provide: ActivatedRoute,
             useValue: {
               data: of({
-                defaultSort: 'id,asc',
+                defaultSort: 'name,asc',
               }),
               queryParamMap: of(
                 convertToParamMap({
                   page: '1',
                   size: '1',
-                  sort: 'id,desc',
+                  sort: 'name,desc',
                 })
               ),
             },
@@ -90,21 +90,7 @@ describe('Component Tests', () => {
       const result = comp.sort();
 
       // THEN
-      expect(result).toEqual(['id,desc']);
-    });
-
-    it('should calculate the sort attribute for a non-id attribute', () => {
-      // INIT
-      comp.ngOnInit();
-
-      // GIVEN
-      comp.predicate = 'name';
-
-      // WHEN
-      const result = comp.sort();
-
-      // THEN
-      expect(result).toEqual(['name,desc', 'id']);
+      expect(result).toEqual(['name,desc']);
     });
   });
 });

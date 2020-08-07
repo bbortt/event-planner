@@ -39,7 +39,7 @@ export const projectRoute: Routes = [
     path: '',
     component: ProjectComponent,
     data: {
-      authorities: [Authority.USER],
+      authorities: [Authority.ADMIN],
       defaultSort: 'id,asc',
       pageTitle: 'eventPlannerApp.project.home.title',
     },
@@ -52,7 +52,7 @@ export const projectRoute: Routes = [
       project: ProjectResolve,
     },
     data: {
-      authorities: [Authority.USER],
+      authorities: [Authority.ADMIN],
       pageTitle: 'eventPlannerApp.project.home.title',
     },
     canActivate: [UserRouteAccessService],
@@ -64,7 +64,7 @@ export const projectRoute: Routes = [
       project: ProjectResolve,
     },
     data: {
-      authorities: [Authority.USER],
+      authorities: [Authority.ADMIN],
       pageTitle: 'eventPlannerApp.project.home.title',
     },
     canActivate: [UserRouteAccessService],
@@ -76,7 +76,7 @@ export const projectRoute: Routes = [
       project: ProjectResolve,
     },
     data: {
-      authorities: [Authority.USER],
+      authorities: [Authority.ADMIN],
       pageTitle: 'eventPlannerApp.project.home.title',
     },
     canActivate: [UserRouteAccessService],
