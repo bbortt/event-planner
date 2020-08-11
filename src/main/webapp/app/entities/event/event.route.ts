@@ -39,7 +39,7 @@ export const eventRoute: Routes = [
     path: '',
     component: EventComponent,
     data: {
-      authorities: [Authority.USER],
+      authorities: [Authority.ADMIN],
       defaultSort: 'id,asc',
       pageTitle: 'eventPlannerApp.event.home.title',
     },
@@ -52,7 +52,7 @@ export const eventRoute: Routes = [
       event: EventResolve,
     },
     data: {
-      authorities: [Authority.USER],
+      authorities: [Authority.ADMIN],
       pageTitle: 'eventPlannerApp.event.home.title',
     },
     canActivate: [UserRouteAccessService],
@@ -64,7 +64,7 @@ export const eventRoute: Routes = [
       event: EventResolve,
     },
     data: {
-      authorities: [Authority.USER],
+      authorities: [Authority.ADMIN],
       pageTitle: 'eventPlannerApp.event.home.title',
     },
     canActivate: [UserRouteAccessService],
@@ -76,7 +76,7 @@ export const eventRoute: Routes = [
       event: EventResolve,
     },
     data: {
-      authorities: [Authority.USER],
+      authorities: [Authority.ADMIN],
       pageTitle: 'eventPlannerApp.event.home.title',
     },
     canActivate: [UserRouteAccessService],
