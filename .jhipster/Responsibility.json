@@ -21,6 +21,12 @@
       "otherEntityName": "location",
       "relationshipType": "one-to-many",
       "otherEntityRelationshipName": "responsibility"
+    },
+    {
+      "relationshipName": "event",
+      "otherEntityName": "event",
+      "relationshipType": "one-to-many",
+      "otherEntityRelationshipName": "responsibility"
     }
   ],
   "fields": [

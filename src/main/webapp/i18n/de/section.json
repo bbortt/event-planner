@@ -17,7 +17,8 @@
         "title": "Abschnitt"
       },
       "name": "Name",
-      "location": "Lokalität"
+      "location": "Lokalität",
+      "event": "Ereignis"
     }
   }
 }

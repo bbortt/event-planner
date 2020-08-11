@@ -9,6 +9,14 @@
       "relationshipValidateRules": ["required"],
       "otherEntityField": "name",
       "otherEntityRelationshipName": "section"
+    },
+    {
+      "relationshipName": "event",
+      "otherEntityName": "event",
+      "relationshipType": "many-to-many",
+      "otherEntityField": "name",
+      "otherEntityRelationshipName": "section",
+      "ownerSide": false
     }
   ],
   "fields": [

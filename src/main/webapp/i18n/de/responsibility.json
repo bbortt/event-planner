@@ -19,7 +19,8 @@
       "name": "Name",
       "project": "Projekt",
       "invitation": "Einladung",
-      "location": "Lokalität"
+      "location": "Lokalität",
+      "event": "Ereignis"
     }
   }
 }

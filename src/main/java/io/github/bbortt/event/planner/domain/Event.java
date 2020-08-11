@@ -1,16 +1,27 @@
 package io.github.bbortt.event.planner.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 
 /**
  * A Event.
@@ -22,8 +33,12 @@ public class Event implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
-    @SequenceGenerator(name = "sequenceGenerator")
+    @GenericGenerator(
+        name = "event_id_seq",
+        strategy = PostgreSQLConstants.SEQUENCE_GENERATOR_STRATEGY,
+        parameters = { @Parameter(name = "sequence_name", value = "event_id_seq"), @Parameter(name = "increment_size", value = "1") }
+    )
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "event_id_seq")
     private Long id;
 
     @NotNull
@@ -75,17 +90,21 @@ public class Event implements Serializable {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public Event name(String name) {
         this.name = name;
         return this;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getDescription() {
         return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Event description(String description) {
@@ -93,12 +112,12 @@ public class Event implements Serializable {
         return this;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public ZonedDateTime getStartTime() {
         return startTime;
+    }
+
+    public void setStartTime(ZonedDateTime startTime) {
+        this.startTime = startTime;
     }
 
     public Event startTime(ZonedDateTime startTime) {
@@ -106,12 +125,12 @@ public class Event implements Serializable {
         return this;
     }
 
-    public void setStartTime(ZonedDateTime startTime) {
-        this.startTime = startTime;
-    }
-
     public ZonedDateTime getEndTime() {
         return endTime;
+    }
+
+    public void setEndTime(ZonedDateTime endTime) {
+        this.endTime = endTime;
     }
 
     public Event endTime(ZonedDateTime endTime) {
@@ -119,12 +138,12 @@ public class Event implements Serializable {
         return this;
     }
 
-    public void setEndTime(ZonedDateTime endTime) {
-        this.endTime = endTime;
-    }
-
     public Set<Section> getSections() {
         return sections;
+    }
+
+    public void setSections(Set<Section> sections) {
+        this.sections = sections;
     }
 
     public Event sections(Set<Section> sections) {
@@ -144,12 +163,12 @@ public class Event implements Serializable {
         return this;
     }
 
-    public void setSections(Set<Section> sections) {
-        this.sections = sections;
-    }
-
     public Responsibility getResponsibility() {
         return responsibility;
+    }
+
+    public void setResponsibility(Responsibility responsibility) {
+        this.responsibility = responsibility;
     }
 
     public Event responsibility(Responsibility responsibility) {
@@ -157,21 +176,17 @@ public class Event implements Serializable {
         return this;
     }
 
-    public void setResponsibility(Responsibility responsibility) {
-        this.responsibility = responsibility;
-    }
-
     public User getUser() {
         return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Event user(User user) {
         this.user = user;
         return this;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

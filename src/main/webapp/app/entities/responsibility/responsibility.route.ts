@@ -39,7 +39,7 @@ export const responsibilityRoute: Routes = [
     path: '',
     component: ResponsibilityComponent,
     data: {
-      authorities: [Authority.ADMIN],
+      authorities: [Authority.USER],
       defaultSort: 'id,asc',
       pageTitle: 'eventPlannerApp.responsibility.home.title',
     },
@@ -52,7 +52,7 @@ export const responsibilityRoute: Routes = [
       responsibility: ResponsibilityResolve,
     },
     data: {
-      authorities: [Authority.ADMIN],
+      authorities: [Authority.USER],
       pageTitle: 'eventPlannerApp.responsibility.home.title',
     },
     canActivate: [UserRouteAccessService],
@@ -64,7 +64,7 @@ export const responsibilityRoute: Routes = [
       responsibility: ResponsibilityResolve,
     },
     data: {
-      authorities: [Authority.ADMIN],
+      authorities: [Authority.USER],
       pageTitle: 'eventPlannerApp.responsibility.home.title',
     },
     canActivate: [UserRouteAccessService],
@@ -76,7 +76,7 @@ export const responsibilityRoute: Routes = [
       responsibility: ResponsibilityResolve,
     },
     data: {
-      authorities: [Authority.ADMIN],
+      authorities: [Authority.USER],
       pageTitle: 'eventPlannerApp.responsibility.home.title',
     },
     canActivate: [UserRouteAccessService],

@@ -17,7 +17,8 @@
         "title": "Section"
       },
       "name": "Name",
-      "location": "Location"
+      "location": "Location",
+      "event": "Event"
     }
   }
 }

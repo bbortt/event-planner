@@ -8,7 +8,6 @@
       "relationshipType": "many-to-many",
       "relationshipValidateRules": ["required"],
       "otherEntityField": "name",
-      "ownerSide": true,
       "otherEntityRelationshipName": "event"
     },
     {
@@ -24,7 +23,6 @@
       "otherEntityName": "user",
       "relationshipType": "many-to-one",
       "otherEntityField": "login",
-      "ownerSide": true,
       "otherEntityRelationshipName": "event"
     }
   ],
