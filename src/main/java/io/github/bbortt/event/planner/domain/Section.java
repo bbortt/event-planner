@@ -1,6 +1,5 @@
 package io.github.bbortt.event.planner.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.util.HashSet;
@@ -15,6 +14,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import org.hibernate.annotations.BatchSize;
@@ -27,18 +27,21 @@ import org.hibernate.annotations.Parameter;
  * A Section.
  */
 @Entity
-@Table(name = "section")
+@Table(
+    name = "section",
+    uniqueConstraints = { @UniqueConstraint(name = "unique_section_per_location", columnNames = { "name", "location_id" }) }
+)
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Section implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
     @GenericGenerator(
-        name = "event_id_seq",
+        name = "section_id_seq",
         strategy = PostgreSQLConstants.SEQUENCE_GENERATOR_STRATEGY,
-        parameters = { @Parameter(name = "section_id_seq", value = "event_id_seq"), @Parameter(name = "increment_size", value = "1") }
+        parameters = { @Parameter(name = "sequence_name", value = "section_id_seq"), @Parameter(name = "increment_size", value = "1") }
     )
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "event_id_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "section_id_seq")
     private Long id;
 
     @NotNull
@@ -51,15 +54,15 @@ public class Section implements Serializable {
     @JsonIgnoreProperties(value = "sections", allowSetters = true)
     private Location location;
 
-    @JsonIgnore
     @ManyToMany
     @JoinTable(
         name = "section_has_events",
         joinColumns = { @JoinColumn(name = "section_id", referencedColumnName = "id") },
         inverseJoinColumns = { @JoinColumn(name = "event_id", referencedColumnName = "id") }
     )
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @BatchSize(size = 20)
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    @JsonIgnoreProperties(value = "sections", allowSetters = true)
     private Set<Event> events = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

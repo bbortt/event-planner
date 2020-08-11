@@ -64,8 +64,9 @@ public class Event implements Serializable {
         joinColumns = { @JoinColumn(name = "event_id", referencedColumnName = "id") },
         inverseJoinColumns = { @JoinColumn(name = "section_id", referencedColumnName = "id") }
     )
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @BatchSize(size = 20)
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    @JsonIgnoreProperties(value = "events", allowSetters = true)
     private Set<Section> sections = new HashSet<>();
 
     @ManyToOne(optional = false)
@@ -74,6 +75,7 @@ public class Event implements Serializable {
     private Responsibility responsibility;
 
     @ManyToOne
+    @JoinColumn(name = "jhi_user_id")
     @JsonIgnoreProperties(value = "events", allowSetters = true)
     private User user;
 

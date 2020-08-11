@@ -8,7 +8,8 @@
       "relationshipType": "many-to-many",
       "relationshipValidateRules": ["required"],
       "otherEntityField": "name",
-      "otherEntityRelationshipName": "event"
+      "otherEntityRelationshipName": "event",
+      "ownerSide": true
     },
     {
       "relationshipName": "responsibility",

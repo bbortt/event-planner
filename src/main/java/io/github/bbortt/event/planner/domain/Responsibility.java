@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import org.hibernate.annotations.Cache;
@@ -23,7 +24,10 @@ import org.hibernate.annotations.Parameter;
  * A Responsibility.
  */
 @Entity
-@Table(name = "responsibility")
+@Table(
+    name = "responsibility",
+    uniqueConstraints = { @UniqueConstraint(name = "unique_responsibility_per_project", columnNames = { "name", "project_id" }) }
+)
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Responsibility implements Serializable {
     private static final long serialVersionUID = 1L;

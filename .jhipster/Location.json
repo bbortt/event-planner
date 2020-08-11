@@ -35,11 +35,12 @@
     {
       "fieldName": "dateFrom",
       "fieldType": "ZonedDateTime",
-      "fieldValidateRules": []
+      "fieldValidateRules": ["required"]
     },
     {
       "fieldName": "dateTo",
-      "fieldType": "ZonedDateTime"
+      "fieldType": "ZonedDateTime",
+      "fieldValidateRules": ["required"]
     }
   ],
   "changelogDate": "20200804081151",
