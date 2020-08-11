@@ -13,6 +13,7 @@
         "invitation": "Einladung",
         "location": "Lokalität",
         "section": "Abschnitt",
+        "event": "Ereignis",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {
