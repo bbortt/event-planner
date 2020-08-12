@@ -1,0 +1,58 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="event">
+            <h2><span jhiTranslate="eventPlannerApp.event.detail.title">Event</span> {{ event.id }}</h2>
+
+            <hr>
+
+            <jhi-alert-error></jhi-alert-error>
+
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="eventPlannerApp.event.name">Name</span></dt>
+                <dd>
+                    <span>{{ event.name }}</span>
+                </dd>
+                <dt><span jhiTranslate="eventPlannerApp.event.description">Description</span></dt>
+                <dd>
+                    <span>{{ event.description }}</span>
+                </dd>
+                <dt><span jhiTranslate="eventPlannerApp.event.startTime">Start Time</span></dt>
+                <dd>
+                    <span>{{ event.startTime }}</span>
+                </dd>
+                <dt><span jhiTranslate="eventPlannerApp.event.endTime">End Time</span></dt>
+                <dd>
+                    <span>{{ event.endTime }}</span>
+                </dd>
+                <dt><span jhiTranslate="eventPlannerApp.event.section">Section</span></dt>
+                <dd>
+                    <span *ngFor="let section of event.sections; let last = last">
+                        <a [routerLink]="['/section', section?.id, 'view']">{{ section.name }}</a>{{ last ? '' : ', ' }}
+                    </span>
+                </dd>
+                <dt><span jhiTranslate="eventPlannerApp.event.responsibility">Responsibility</span></dt>
+                <dd>
+                    <div *ngIf="event.responsibility">
+                        <a [routerLink]="['/responsibility', event.responsibility?.id, 'view']">{{ event.responsibility?.name }}</a>
+                    </div>
+                </dd>
+                <dt><span jhiTranslate="eventPlannerApp.event.user">User</span></dt>
+                <dd>
+                    {{ event.user?.login }}
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/event', event.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

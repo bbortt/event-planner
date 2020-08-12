@@ -1,0 +1,28 @@
+{
+  "EreignisPlannerApp": {
+    "Ereignis": {
+      "home": {
+        "title": "Ereignise",
+        "createLabel": "Ereignis erstellen",
+        "createOrEditLabel": "Ereignis erstellen oder bearbeiten",
+        "notFound": "Keine Ereignise gefunden"
+      },
+      "created": "Ereignis mit ID {{ param }} erstellt",
+      "updated": "Ereignis mit ID {{ param }} aktualisiert",
+      "deleted": "Ereignis mit ID {{ param }} gelöscht",
+      "delete": {
+        "question": "Soll Ereignis {{ id }} wirklich dauerhaft gelöscht werden?"
+      },
+      "detail": {
+        "title": "Ereignis"
+      },
+      "name": "Name",
+      "description": "Beschreibung",
+      "startTime": "Start Zeit",
+      "endTime": "End Zeit",
+      "section": "Abschnitt",
+      "responsibility": "Verantwortlichkeit",
+      "user": "Benutzer"
+    }
+  }
+}

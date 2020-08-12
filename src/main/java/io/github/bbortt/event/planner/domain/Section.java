@@ -2,16 +2,22 @@ package io.github.bbortt.event.planner.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
@@ -48,6 +54,17 @@ public class Section implements Serializable {
     @JsonIgnoreProperties(value = "sections", allowSetters = true)
     private Location location;
 
+    @ManyToMany
+    @JoinTable(
+        name = "section_has_events",
+        joinColumns = { @JoinColumn(name = "section_id", referencedColumnName = "id") },
+        inverseJoinColumns = { @JoinColumn(name = "event_id", referencedColumnName = "id") }
+    )
+    @BatchSize(size = 20)
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    @JsonIgnoreProperties(value = "sections", allowSetters = true)
+    private Set<Event> events = new HashSet<>();
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
@@ -80,6 +97,31 @@ public class Section implements Serializable {
 
     public Section location(Location location) {
         this.location = location;
+        return this;
+    }
+
+    public Set<Event> getEvents() {
+        return events;
+    }
+
+    public void setEvents(Set<Event> events) {
+        this.events = events;
+    }
+
+    public Section events(Set<Event> events) {
+        this.events = events;
+        return this;
+    }
+
+    public Section addEvent(Event event) {
+        this.events.add(event);
+        event.getSections().add(this);
+        return this;
+    }
+
+    public Section removeEvent(Event event) {
+        this.events.remove(event);
+        event.getSections().remove(this);
         return this;
     }
 

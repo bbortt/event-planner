@@ -36,12 +36,32 @@
                     <div class="d-flex">
                         <input id="field_dateFrom" type="datetime-local" class="form-control" name="dateFrom" formControlName="dateFrom" placeholder="YYYY-MM-DD HH:mm"/>
                     </div>
+                    <div *ngIf="editForm.get('dateFrom')!.invalid && (editForm.get('dateFrom')!.dirty || editForm.get('dateFrom')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('dateFrom')?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.get('dateFrom')?.errors?.ZonedDateTimelocal" jhiTranslate="entity.validation.ZonedDateTimelocal">
+                            This field should be a date and time.
+                        </small>
+                    </div>
                 </div>
 
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="eventPlannerApp.location.dateTo" for="field_dateTo">Date To</label>
                     <div class="d-flex">
                         <input id="field_dateTo" type="datetime-local" class="form-control" name="dateTo" formControlName="dateTo" placeholder="YYYY-MM-DD HH:mm"/>
+                    </div>
+                    <div *ngIf="editForm.get('dateTo')!.invalid && (editForm.get('dateTo')!.dirty || editForm.get('dateTo')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('dateTo')?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.get('dateTo')?.errors?.ZonedDateTimelocal" jhiTranslate="entity.validation.ZonedDateTimelocal">
+                            This field should be a date and time.
+                        </small>
                     </div>
                 </div>
 

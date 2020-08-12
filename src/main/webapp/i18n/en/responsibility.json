@@ -19,7 +19,8 @@
       "name": "Name",
       "project": "Project",
       "invitation": "Invitation",
-      "location": "Location"
+      "location": "Location",
+      "event": "Event"
     }
   }
 }

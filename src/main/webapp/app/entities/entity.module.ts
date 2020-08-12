@@ -28,6 +28,10 @@ import { RouterModule } from '@angular/router';
         path: 'section',
         loadChildren: () => import('./section/section.module').then(m => m.EventPlannerSectionModule),
       },
+      {
+        path: 'event',
+        loadChildren: () => import('./event/event.module').then(m => m.EventPlannerEventModule),
+      },
       /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
     ]),
   ],

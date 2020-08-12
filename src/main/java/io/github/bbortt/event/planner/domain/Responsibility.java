@@ -61,6 +61,10 @@ public class Responsibility implements Serializable {
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Location> locations = new HashSet<>();
 
+    @OneToMany(mappedBy = "responsibility")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    private Set<Event> events = new HashSet<>();
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
@@ -143,6 +147,31 @@ public class Responsibility implements Serializable {
     public Responsibility removeLocation(Location location) {
         this.locations.remove(location);
         location.setResponsibility(null);
+        return this;
+    }
+
+    public Set<Event> getEvents() {
+        return events;
+    }
+
+    public void setEvents(Set<Event> events) {
+        this.events = events;
+    }
+
+    public Responsibility events(Set<Event> events) {
+        this.events = events;
+        return this;
+    }
+
+    public Responsibility addEvent(Event event) {
+        this.events.add(event);
+        event.setResponsibility(this);
+        return this;
+    }
+
+    public Responsibility removeEvent(Event event) {
+        this.events.remove(event);
+        event.setResponsibility(null);
         return this;
     }
 

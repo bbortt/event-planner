@@ -47,10 +47,12 @@ public class Location implements Serializable {
     @Column(name = "name", length = 50, nullable = false)
     private String name;
 
-    @Column(name = "date_from")
+    @NotNull
+    @Column(name = "date_from", nullable = false)
     private ZonedDateTime dateFrom;
 
-    @Column(name = "date_to")
+    @NotNull
+    @Column(name = "date_to", nullable = false)
     private ZonedDateTime dateTo;
 
     @ManyToOne(optional = false)
