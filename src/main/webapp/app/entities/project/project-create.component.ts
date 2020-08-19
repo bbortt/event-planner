@@ -23,8 +23,8 @@ export class ProjectCreateComponent implements OnInit {
     description: [null, [Validators.minLength(1), Validators.maxLength(300)]],
     startTime: [null, [Validators.required]],
     endTime: [null, [Validators.required]],
+    selectedUser: [null, [Validators.required]],
   });
-  selectedUser?: IUser;
 
   constructor(
     private projectService: ProjectService,
@@ -60,7 +60,7 @@ export class ProjectCreateComponent implements OnInit {
     );
 
     if (this.accountService.hasAnyAuthority('ROLE_ADMIN')) {
-      newProject.user = this.selectedUser;
+      newProject.user = this.editForm.get(['selectedUser'])!.value;
     }
 
     return newProject;
@@ -82,7 +82,7 @@ export class ProjectCreateComponent implements OnInit {
     this.isSaving = false;
   }
 
-  userSelected(user: IUser): void {
-    this.selectedUser = user;
+  userSelected(selectedUser: IUser): void {
+    this.editForm.get(['selectedUser'])!.setValue(selectedUser);
   }
 }

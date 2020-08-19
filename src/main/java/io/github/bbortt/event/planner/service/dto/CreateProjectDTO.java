@@ -16,11 +16,10 @@ public class CreateProjectDTO {
     @NotNull
     private ZonedDateTime endTime;
 
-    @NotEmpty
     @Size(max = 300)
     private String description;
 
-    UserDTO user;
+    UserDTO user = new UserDTO();
 
     public String getName() {
         return name;
