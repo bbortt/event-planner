@@ -26,24 +26,6 @@ public class ProjectService {
     }
 
     /**
-     * Create a new project.
-     *
-     * @param createProjectDTO the DTO to create a project from.
-     * @return the persisted entity.
-     */
-    public Project create(CreateProjectDTO createProjectDTO) {
-        log.debug("Request to create Project from DTO : {}", createProjectDTO);
-
-        // TODO: Use mapstruct
-        Project project = new Project();
-        project = projectRepository.save(project);
-
-        // TODO: Create ADMIN Invitation
-
-        return project;
-    }
-
-    /**
      * Save a project.
      *
      * @param project the entity to save.
@@ -86,5 +68,23 @@ public class ProjectService {
     public void delete(Long id) {
         log.debug("Request to delete Project : {}", id);
         projectRepository.deleteById(id);
+    }
+
+    /**
+     * Create project with properties from DTO.
+     * @param createProjectDTO crate project DTO.
+     * @return saved project.
+     */
+    public Project create(CreateProjectDTO createProjectDTO) {
+        Project project = new Project()
+            .name(createProjectDTO.getName())
+            .description(createProjectDTO.getDescription())
+            .startTime(createProjectDTO.getStartTime())
+            .endTime(createProjectDTO.getEndTime());
+        project = projectRepository.save(project);
+
+        // TODO: Invitation from User
+
+        return project;
     }
 }

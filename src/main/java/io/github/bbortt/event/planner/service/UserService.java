@@ -340,4 +340,18 @@ public class UserService {
             Objects.requireNonNull(cacheManager.getCache(UserRepository.USERS_BY_EMAIL_CACHE)).evict(user.getEmail());
         }
     }
+
+    /**
+     * Find possible User by email or login containing.
+     * @param emailOrLogin partial email or login.
+     * @return list of possible Users.
+     */
+    @Transactional(readOnly = true)
+    public List<UserDTO> findByEmailOrLoginContaining(String emailOrLogin) {
+        return userRepository
+            .findDistinctTop10ByEmailContainingIgnoreCaseOrLoginContainingIgnoreCase(emailOrLogin, emailOrLogin)
+            .stream()
+            .map(UserDTO::new)
+            .collect(Collectors.toList());
+    }
 }

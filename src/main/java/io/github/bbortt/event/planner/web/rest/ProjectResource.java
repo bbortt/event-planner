@@ -18,7 +18,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -51,7 +50,7 @@ public class ProjectResource {
      */
     @PostMapping("/projects")
     public ResponseEntity<Project> createProject(@Valid @RequestBody CreateProjectDTO createProjectDTO) throws URISyntaxException {
-        log.debug("REST request to create Project from DTO : {}", createProjectDTO);
+        log.debug("REST request to save Project from DTO : {}", createProjectDTO);
         Project result = projectService.create(createProjectDTO);
         return ResponseEntity
             .created(new URI("/api/projects/" + result.getId()))

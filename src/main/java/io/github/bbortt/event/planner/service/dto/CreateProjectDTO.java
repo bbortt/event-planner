@@ -5,16 +5,10 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-/**
- * A DTO representing a new project with required information.
- */
 public class CreateProjectDTO {
-    @NotEmpty
-    @Size(max = 50)
+    @NotNull
+    @Size(min = 1, max = 50)
     private String name;
-
-    @Size(max = 300)
-    private String description;
 
     @NotNull
     private ZonedDateTime startTime;
@@ -22,6 +16,49 @@ public class CreateProjectDTO {
     @NotNull
     private ZonedDateTime endTime;
 
-    @Size(max = 254)
-    private String emailOrLogin;
+    @NotEmpty
+    @Size(max = 300)
+    private String description;
+
+    UserDTO user;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public ZonedDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(ZonedDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public ZonedDateTime getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(ZonedDateTime endTime) {
+        this.endTime = endTime;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public UserDTO getUser() {
+        return user;
+    }
+
+    public void setUser(UserDTO user) {
+        this.user = user;
+    }
 }

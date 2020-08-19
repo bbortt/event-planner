@@ -16,6 +16,7 @@ import io.github.jhipster.web.util.ResponseUtil;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import javax.validation.Valid;
 import org.slf4j.Logger;
@@ -34,6 +35,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -62,6 +64,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RestController
 @RequestMapping("/api")
 public class UserResource {
+    private static final String EMAIL_OR_LOGIN_KEY = "emailOrLogin";
+
     private final Logger log = LoggerFactory.getLogger(UserResource.class);
     private final UserService userService;
     private final UserRepository userRepository;
@@ -184,5 +188,20 @@ public class UserResource {
         log.debug("REST request to delete User: {}", login);
         userService.deleteUser(login);
         return ResponseEntity.noContent().headers(HeaderUtil.createAlert(applicationName, "userManagement.deleted", login)).build();
+    }
+
+    /**
+     * {@code POST /users/findByEmailOrLogin} : find possible User by login or email.
+     * @param map partial email or login via key {@code EMAIL_OR_LOGIN_KEY}.
+     * @return list of possible User.
+     */
+    @PostMapping("/users/findByEmailOrLogin")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
+    public ResponseEntity<List<UserDTO>> findByEmailOrLogin(@RequestBody Map<String, String> map) {
+        if (!map.containsKey(EMAIL_OR_LOGIN_KEY)) {
+            throw new BadRequestAlertException("Request parameter \"emailOrLogin\" not found!", "userManagement", "badRequest");
+        }
+
+        return ResponseEntity.ok(userService.findByEmailOrLoginContaining(map.get(EMAIL_OR_LOGIN_KEY)));
     }
 }

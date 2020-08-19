@@ -194,4 +194,29 @@ public class UserServiceIT {
         final Page<UserDTO> allManagedUsers = userService.getAllManagedUsers(pageable);
         assertThat(allManagedUsers.getContent().stream().noneMatch(user -> Constants.ANONYMOUS_USER.equals(user.getLogin()))).isTrue();
     }
+
+    @Test
+    @Transactional
+    public void assertThatFindUsersByEmailOrLoginContaining() {
+        User user1 = new User();
+        user1.setLogin("EinLogin");
+        user1.setEmail("email@ein-login.ch");
+        user1.setPassword(RandomStringUtils.random(60));
+        userRepository.save(user1);
+
+        User user2 = new User();
+        user2.setLogin("ZweiLogin");
+        user2.setEmail("email@zwei-login.ch");
+        user2.setPassword(RandomStringUtils.random(60));
+        userRepository.save(user2);
+
+        String testLoginIgnoreCase = "NL";
+        assertThat(userService.findByEmailOrLoginContaining(testLoginIgnoreCase)).hasSize(1);
+
+        String testEmailIgnoreCase = "@ZWEI";
+        assertThat(userService.findByEmailOrLoginContaining(testEmailIgnoreCase)).hasSize(1);
+
+        String testDistinct = "login.ch";
+        assertThat(userService.findByEmailOrLoginContaining(testDistinct)).hasSize(2);
+    }
 }

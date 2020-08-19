@@ -1,0 +1,38 @@
+<form [formGroup]="editForm">
+    <div class="form-group">
+        <label class="form-control-label" jhiTranslate="eventPlannerApp.project.emailOrLogin"
+               for="field_emailOrLogin">Email or login</label>
+        <input type="text" list="users" class="form-control" id="field_emailOrLogin"
+               name="emailOrLogin"
+               formControlName="emailOrLogin"/>
+        <datalist id="users" class="form-control">
+            <option *ngFor="let userOption of users; trackBy: trackById"
+                    [ngValue]="userOption.id === editForm.get('emailOrLogin')!.value?.id ? editForm.get('emailOrLogin')!.value : userOption">
+                {{ userOption.login?.indexOf(editForm.get('emailOrLogin')!.value) !== -1
+                ? userOption.login : userOption.email }}
+            </option>
+        </datalist>
+    </div>
+    <div
+        *ngIf="editForm?.get('emailOrLogin')!.invalid && (editForm?.get('emailOrLogin')!.dirty || editForm?.get('emailOrLogin')!.touched)">
+        <small class="form-text text-danger"
+               *ngIf="editForm?.get('emailOrLogin')?.errors?.required"
+               jhiTranslate="entity.validation.required">
+            This field is required.
+        </small>
+
+        <small class="form-text text-danger"
+               *ngIf="editForm?.get('emailOrLogin')?.errors?.maxlength"
+               jhiTranslate="entity.validation.maxlength"
+               [translateValues]="{ max: 254 }">
+            This field cannot be longer than 254 characters.
+        </small>
+
+        <small class="form-text text-danger"
+               *ngIf="editForm?.get('emailOrLogin')?.errors?.minlength"
+               jhiTranslate="entity.validation.minlength"
+               [translateValues]="{ min: 1 }">
+            This field is required to be at least 1 characters.
+        </small>
+    </div>
+</form>

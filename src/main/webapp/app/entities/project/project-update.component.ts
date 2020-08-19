@@ -29,12 +29,6 @@ export class ProjectUpdateComponent implements OnInit {
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ project }) => {
-      if (!project.id) {
-        const today = moment().startOf('day');
-        project.startTime = today;
-        project.endTime = today;
-      }
-
       this.updateForm(project);
     });
   }
@@ -56,11 +50,7 @@ export class ProjectUpdateComponent implements OnInit {
   save(): void {
     this.isSaving = true;
     const project = this.createFromForm();
-    if (project.id !== undefined) {
-      this.subscribeToSaveResponse(this.projectService.update(project));
-    } else {
-      this.subscribeToSaveResponse(this.projectService.create(project));
-    }
+    this.subscribeToSaveResponse(this.projectService.update(project));
   }
 
   private createFromForm(): IProject {
