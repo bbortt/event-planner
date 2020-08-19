@@ -4,7 +4,7 @@
       "home": {
         "title": "Projekte",
         "createLabel": "Projekt erstellen",
-        "createOrEditLabel": "Projekt erstellen oder bearbeiten",
+        "editLabel": "Projekt bearbeiten",
         "notFound": "Keine Projekte gefunden"
       },
       "created": "Projekt mit ID {{ param }} erstellt",
@@ -22,7 +22,8 @@
       "endTime": "End Zeit",
       "responsibility": "Verantwortlichkeit",
       "invitation": "Einladung",
-      "location": "Lokalität"
+      "location": "Lokalität",
+      "emailOrLogin": "E-Mail oder Login"
     }
   }
 }

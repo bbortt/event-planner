@@ -4,7 +4,7 @@
       "home": {
         "title": "Projects",
         "createLabel": "Create a new Project",
-        "createOrEditLabel": "Create or edit a Project",
+        "editLabel": "Edit a Project",
         "notFound": "No Projects found"
       },
       "created": "A new Project is created with identifier {{ param }}",
@@ -22,7 +22,8 @@
       "endTime": "End Time",
       "responsibility": "Responsibility",
       "invitation": "Invitation",
-      "location": "Location"
+      "location": "Location",
+      "emailOrLogin": "Email or login"
     }
   }
 }

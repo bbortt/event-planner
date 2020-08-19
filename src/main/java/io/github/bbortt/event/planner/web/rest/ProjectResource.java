@@ -2,6 +2,7 @@ package io.github.bbortt.event.planner.web.rest;
 
 import io.github.bbortt.event.planner.domain.Project;
 import io.github.bbortt.event.planner.service.ProjectService;
+import io.github.bbortt.event.planner.service.dto.CreateProjectDTO;
 import io.github.bbortt.event.planner.web.rest.errors.BadRequestAlertException;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
@@ -44,17 +45,14 @@ public class ProjectResource {
     /**
      * {@code POST  /projects} : Create a new project.
      *
-     * @param project the project to create.
+     * @param createProjectDTO the DTO to create a project from.
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new project, or with status {@code 400 (Bad Request)} if the project has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/projects")
-    public ResponseEntity<Project> createProject(@Valid @RequestBody Project project) throws URISyntaxException {
-        log.debug("REST request to save Project : {}", project);
-        if (project.getId() != null) {
-            throw new BadRequestAlertException("A new project cannot already have an ID", ENTITY_NAME, "idexists");
-        }
-        Project result = projectService.save(project);
+    public ResponseEntity<Project> createProject(@Valid @RequestBody CreateProjectDTO createProjectDTO) throws URISyntaxException {
+        log.debug("REST request to create Project from DTO : {}", createProjectDTO);
+        Project result = projectService.create(createProjectDTO);
         return ResponseEntity
             .created(new URI("/api/projects/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))

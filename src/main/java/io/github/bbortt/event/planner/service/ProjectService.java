@@ -2,6 +2,7 @@ package io.github.bbortt.event.planner.service;
 
 import io.github.bbortt.event.planner.domain.Project;
 import io.github.bbortt.event.planner.repository.ProjectRepository;
+import io.github.bbortt.event.planner.service.dto.CreateProjectDTO;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +23,24 @@ public class ProjectService {
 
     public ProjectService(ProjectRepository projectRepository) {
         this.projectRepository = projectRepository;
+    }
+
+    /**
+     * Create a new project.
+     *
+     * @param createProjectDTO the DTO to create a project from.
+     * @return the persisted entity.
+     */
+    public Project create(CreateProjectDTO createProjectDTO) {
+        log.debug("Request to create Project from DTO : {}", createProjectDTO);
+
+        // TODO: Use mapstruct
+        Project project = new Project();
+        project = projectRepository.save(project);
+
+        // TODO: Create ADMIN Invitation
+
+        return project;
     }
 
     /**

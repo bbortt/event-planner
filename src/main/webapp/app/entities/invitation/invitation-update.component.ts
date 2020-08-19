@@ -32,7 +32,6 @@ export class InvitationUpdateComponent implements OnInit {
   editForm = this.fb.group({
     id: [],
     email: [null, [Validators.required, Validators.minLength(5), Validators.maxLength(254), Validators.email]],
-    accepted: [null, [Validators.required]],
     project: [null, Validators.required],
     user: [],
     role: [null, Validators.required],
@@ -67,7 +66,6 @@ export class InvitationUpdateComponent implements OnInit {
     this.editForm.patchValue({
       id: invitation.id,
       email: invitation.email,
-      accepted: invitation.accepted,
       project: invitation.project,
       user: invitation.user,
       role: invitation.role,
@@ -94,7 +92,7 @@ export class InvitationUpdateComponent implements OnInit {
       ...new Invitation(),
       id: this.editForm.get(['id'])!.value,
       email: this.editForm.get(['email'])!.value,
-      accepted: this.editForm.get(['accepted'])!.value,
+      accepted: false,
       project: this.editForm.get(['project'])!.value,
       user: this.editForm.get(['user'])!.value,
       role: this.editForm.get(['role'])!.value,
