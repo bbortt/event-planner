@@ -2,16 +2,9 @@
     <div class="form-group">
         <label class="form-control-label" jhiTranslate="eventPlannerApp.project.emailOrLogin"
                for="field_emailOrLogin">Email or login</label>
-        <input type="text" list="users" class="form-control" id="field_emailOrLogin"
-               name="emailOrLogin"
+        <input type="text" class="form-control" id="field_emailOrLogin" name="emailOrLogin"
                formControlName="emailOrLogin"/>
-        <datalist id="users" class="form-control">
-            <option *ngFor="let userOption of users; trackBy: trackById"
-                    [ngValue]="userOption.id === editForm.get('emailOrLogin')!.value?.id ? editForm.get('emailOrLogin')!.value : userOption">
-                {{ userOption.login?.indexOf(editForm.get('emailOrLogin')!.value) !== -1
-                ? userOption.login : userOption.email }}
-            </option>
-        </datalist>
+        <div id="field_emailOrLogin_result"></div>
     </div>
     <div
         *ngIf="editForm?.get('emailOrLogin')!.invalid && (editForm?.get('emailOrLogin')!.dirty || editForm?.get('emailOrLogin')!.touched)">

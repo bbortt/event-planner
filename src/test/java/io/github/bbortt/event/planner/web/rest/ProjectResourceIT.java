@@ -3,13 +3,24 @@ package io.github.bbortt.event.planner.web.rest;
 import static io.github.bbortt.event.planner.web.rest.TestUtil.sameInstant;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import io.github.bbortt.event.planner.EventPlannerApp;
 import io.github.bbortt.event.planner.domain.Project;
+import io.github.bbortt.event.planner.domain.User;
+import io.github.bbortt.event.planner.repository.InvitationRepository;
 import io.github.bbortt.event.planner.repository.ProjectRepository;
+import io.github.bbortt.event.planner.repository.RoleRepository;
+import io.github.bbortt.event.planner.repository.UserRepository;
 import io.github.bbortt.event.planner.service.ProjectService;
+import io.github.bbortt.event.planner.service.dto.CreateProjectDTO;
+import io.github.bbortt.event.planner.service.dto.UserDTO;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
@@ -46,6 +57,15 @@ public class ProjectResourceIT {
     private static final ZonedDateTime UPDATED_END_TIME = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
+    private InvitationRepository invitationRepository;
+
+    @Autowired
     private ProjectRepository projectRepository;
 
     @Autowired
@@ -62,8 +82,7 @@ public class ProjectResourceIT {
     /**
      * Create an entity for this test.
      *
-     * This is a static method, as tests for other entities might also need it,
-     * if they test an entity which requires the current entity.
+     * This is a static method, as tests for other entities might also need it, if they test an entity which requires the current entity.
      */
     public static Project createEntity(EntityManager em) {
         Project project = new Project()
@@ -77,8 +96,7 @@ public class ProjectResourceIT {
     /**
      * Create an updated entity for this test.
      *
-     * This is a static method, as tests for other entities might also need it,
-     * if they test an entity which requires the current entity.
+     * This is a static method, as tests for other entities might also need it, if they test an entity which requires the current entity.
      */
     public static Project createUpdatedEntity(EntityManager em) {
         Project project = new Project()
@@ -96,11 +114,26 @@ public class ProjectResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser("TestUser")
     public void createProject() throws Exception {
+        User user = userRepository.save(UserResourceIT.createEntity(em));
+
         int databaseSizeBeforeCreate = projectRepository.findAll().size();
         // Create the Project
+        CreateProjectDTO createProjectDTO = new CreateProjectDTO();
+        createProjectDTO.setName(project.getName());
+        createProjectDTO.setDescription(project.getDescription());
+        createProjectDTO.setStartTime(project.getStartTime());
+        createProjectDTO.setEndTime(project.getEndTime());
+
+        UserDTO userDTO = new UserDTO();
+        userDTO.setId(user.getId());
+        createProjectDTO.setUser(userDTO);
+
         restProjectMockMvc
-            .perform(post("/api/projects").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(project)))
+            .perform(
+                post("/api/projects").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(createProjectDTO))
+            )
             .andExpect(status().isCreated());
 
         // Validate the Project in the database
@@ -111,24 +144,12 @@ public class ProjectResourceIT {
         assertThat(testProject.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
         assertThat(testProject.getStartTime()).isEqualTo(DEFAULT_START_TIME);
         assertThat(testProject.getEndTime()).isEqualTo(DEFAULT_END_TIME);
-    }
 
-    @Test
-    @Transactional
-    public void createProjectWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = projectRepository.findAll().size();
-
-        // Create the Project with an existing ID
-        project.setId(1L);
-
-        // An entity with an existing ID cannot be created, so this API call must fail
-        restProjectMockMvc
-            .perform(post("/api/projects").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(project)))
-            .andExpect(status().isBadRequest());
-
-        // Validate the Project in the database
-        List<Project> projectList = projectRepository.findAll();
-        assertThat(projectList).hasSize(databaseSizeBeforeCreate);
+        assertThat(invitationRepository.findAll())
+            .hasSize(1)
+            .first()
+            .hasFieldOrPropertyWithValue("project", testProject)
+            .hasFieldOrPropertyWithValue("role", roleRepository.roleAdmin());
     }
 
     @Test
