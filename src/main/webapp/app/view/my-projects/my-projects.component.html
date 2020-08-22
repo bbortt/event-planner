@@ -3,7 +3,6 @@
         <span jhiTranslate="eventPlannerApp.project.mine.title">My Projects</span>
 
         <button *jhiHasAnyAuthority="'ROLE_ADMIN'" [ngSwitch]="showAllProjects"
-                id="jh-create-entity"
                 class="btn btn-primary float-right" (click)="switchShowAllProjects()">
             <span *ngSwitchCase="false" jhiTranslate="eventPlannerApp.project.mine.enableAllLabel">
             Show all projects
@@ -22,20 +21,31 @@
         <span jhiTranslate="eventPlannerApp.project.home.notFound">No projects found</span>
     </div>
 
-    <div id="entities" *ngIf="projects && projects.length > 0">
-        <!-- TODO: Show projects in cards here!-->
+    <div id="entities" infinite-scroll (scrolled)="loadPage(page + 1)"
+         [infiniteScrollDisabled]="page >= links['last']" [infiniteScrollDistance]="0">
+        <div *ngFor="let projectRow of projects" class="row">
+            <div *ngFor="let project of projectRow;trackBy: trackId" class="col-md">
+                <a [routerLink]="['/project', project.id, 'view']">
+                    <div *ngIf="project.id" class="project-card">
+                        <h2>{{project.name}}</h2>
+                        <br/>
+                        <div class="project-card-description">
+                            {{project.description ? project.description
+                            : 'eventPlannerApp.project.mine.noDescription' | translate}}
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
     </div>
 
-    <div *ngIf="projects && projects.length > 0">
-        <div class="row justify-content-center">
-            <jhi-item-count [page]="page" [total]="totalItems"
-                            [itemsPerPage]="itemsPerPage"></jhi-item-count>
-        </div>
-
-        <div class="row justify-content-center">
-            <ngb-pagination [collectionSize]="totalItems" [(page)]="ngbPaginationPage"
-                            [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true"
-                            [boundaryLinks]="true" (pageChange)="loadPage($event)"></ngb-pagination>
-        </div>
+    <div class="row justify-content-center">
+        <button class="btn btn-primary" (click)="loadPage(page + 1)"
+                [disabled]="!loadMoreButtonEnabled">
+            <fa-icon [icon]="faArrowDown"></fa-icon>&nbsp;
+            <span jhiTranslate="eventPlannerApp.project.mine.loadMore">
+                LoadMore
+            </span>
+        </button>
     </div>
 </div>

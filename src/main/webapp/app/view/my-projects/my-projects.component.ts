@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HttpHeaders, HttpResponse } from '@angular/common/http';
-import { ActivatedRoute, Data, ParamMap, Router } from '@angular/router';
-import { combineLatest, Subscription } from 'rxjs';
-import { JhiEventManager } from 'ng-jhipster';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { JhiEventManager, JhiParseLinks } from 'ng-jhipster';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { IProject } from 'app/shared/model/project.model';
@@ -10,7 +10,7 @@ import { IProject } from 'app/shared/model/project.model';
 import { ProjectService } from 'app/entities/project/project.service';
 import { AccountService } from 'app/core/auth/account.service';
 
-import { ITEMS_PER_PAGE } from 'app/shared/constants/pagination.constants';
+import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'jhi-my-projects',
@@ -18,15 +18,18 @@ import { ITEMS_PER_PAGE } from 'app/shared/constants/pagination.constants';
   styleUrls: ['./my-projects.component.scss'],
 })
 export class MyProjectsComponent implements OnInit, OnDestroy {
-  projects?: IProject[];
-  showAllProjects = false;
+  projects: IProject[][];
   eventSubscriber?: Subscription;
-  totalItems = 0;
-  itemsPerPage = ITEMS_PER_PAGE;
-  page!: number;
-  predicate!: string;
-  ascending!: boolean;
-  ngbPaginationPage = 1;
+  itemsPerPage: number;
+  links: any;
+  page: number;
+  predicate: string;
+  ascending: boolean;
+
+  faArrowDown = faArrowDown;
+
+  showAllProjects = false;
+  loadMoreButtonEnabled = true;
 
   constructor(
     private projectService: ProjectService,
@@ -34,43 +37,44 @@ export class MyProjectsComponent implements OnInit, OnDestroy {
     private router: Router,
     private eventManager: JhiEventManager,
     private modalService: NgbModal,
-    private accountService: AccountService
-  ) {}
+    private accountService: AccountService,
+    protected parseLinks: JhiParseLinks
+  ) {
+    this.projects = [];
+    this.itemsPerPage = 3;
+    this.page = 0;
+    this.links = {
+      last: 0,
+    };
+    this.predicate = 'id';
+    this.ascending = true;
+  }
 
-  loadPage(page?: number, dontNavigate?: boolean): void {
-    const pageToLoad: number = page || this.page || 1;
-
+  loadAll(): void {
     this.projectService
       .query({
-        page: pageToLoad - 1,
+        page: this.page,
         size: this.itemsPerPage,
         sort: this.sort(),
-        showAll: this.accountService.hasAnyAuthority('ROLE_ADMIN') && this.showAllProjects,
+        loadAll: this.accountService.hasAnyAuthority('ROLE_ADMIN') && this.showAllProjects,
       })
-      .subscribe(
-        (res: HttpResponse<IProject[]>) => this.onSuccess(res.body, res.headers, pageToLoad, !dontNavigate),
-        () => this.onError()
-      );
+      .subscribe((res: HttpResponse<IProject[]>) => this.paginateSomeEntities(res.body, res.headers));
+  }
+
+  reset(): void {
+    this.page = 0;
+    this.projects = [];
+    this.loadAll();
+  }
+
+  loadPage(page: number): void {
+    this.page = page;
+    this.loadAll();
   }
 
   ngOnInit(): void {
-    this.handleNavigation();
-    this.registerChangeInProjects();
-  }
-
-  private handleNavigation(): void {
-    combineLatest(this.activatedRoute.data, this.activatedRoute.queryParamMap, (data: Data, params: ParamMap) => {
-      const page = params.get('page');
-      const pageNumber = page !== null ? +page : 1;
-      const sort = (params.get('sort') ?? data['defaultSort']).split(',');
-      const predicate = sort[0];
-      const ascending = sort[1] === 'asc';
-      if (pageNumber !== this.page || predicate !== this.predicate || ascending !== this.ascending) {
-        this.predicate = predicate;
-        this.ascending = ascending;
-        this.loadPage(pageNumber, true);
-      }
-    }).subscribe();
+    this.loadAll();
+    this.registerChangeInSomeEntities();
   }
 
   ngOnDestroy(): void {
@@ -84,8 +88,8 @@ export class MyProjectsComponent implements OnInit, OnDestroy {
     return item.id!;
   }
 
-  registerChangeInProjects(): void {
-    this.eventSubscriber = this.eventManager.subscribe('projectListModification', () => this.loadPage());
+  registerChangeInSomeEntities(): void {
+    this.eventSubscriber = this.eventManager.subscribe('myProjectsListModification', () => this.reset());
   }
 
   sort(): string[] {
@@ -96,29 +100,23 @@ export class MyProjectsComponent implements OnInit, OnDestroy {
     return result;
   }
 
-  private onSuccess(data: IProject[] | null, headers: HttpHeaders, page: number, navigate: boolean): void {
-    this.totalItems = Number(headers.get('X-Total-Count'));
-    this.page = page;
-    if (navigate) {
-      this.router.navigate(['/project'], {
-        queryParams: {
-          page: this.page,
-          size: this.itemsPerPage,
-          sort: this.predicate + ',' + (this.ascending ? 'asc' : 'desc'),
-          showAll: this.accountService.hasAnyAuthority('ROLE_ADMIN') && this.showAllProjects,
-        },
-      });
-    }
-    this.projects = data || [];
-    this.ngbPaginationPage = this.page;
-  }
+  protected paginateSomeEntities(newProjects: IProject[] | null, headers: HttpHeaders): void {
+    const headersLink = headers.get('link');
+    this.links = this.parseLinks.parse(headersLink ? headersLink : '');
+    if (newProjects && newProjects.length > 0) {
+      this.projects.push(newProjects);
 
-  private onError(): void {
-    this.ngbPaginationPage = this.page ?? 1;
+      while (this.projects[this.projects.length - 1].length % 3 !== 0) {
+        this.projects[this.projects.length - 1].push({});
+        this.loadMoreButtonEnabled = false;
+      }
+    } else {
+      this.loadMoreButtonEnabled = false;
+    }
   }
 
   switchShowAllProjects(): void {
     this.showAllProjects = !this.showAllProjects;
-    this.handleNavigation();
+    this.reset();
   }
 }

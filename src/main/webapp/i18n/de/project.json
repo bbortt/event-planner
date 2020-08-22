@@ -10,7 +10,9 @@
       "mine": {
         "title": "Meine Projekte",
         "enableAllLabel": "Alle Projekte anzeigen",
-        "disableAllLabel": "Meine Projekte anzeigen"
+        "disableAllLabel": "Meine Projekte anzeigen",
+        "noDescription": "Projekt hat keine Beschreibung",
+        "loadMore": "Mehr Projekte Laden"
       },
       "created": "Projekt mit ID {{ param }} erstellt",
       "updated": "Projekt mit ID {{ param }} aktualisiert",
