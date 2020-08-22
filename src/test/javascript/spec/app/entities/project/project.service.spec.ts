@@ -4,6 +4,7 @@ import * as moment from 'moment';
 import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 import { ProjectService } from 'app/entities/project/project.service';
 import { IProject, Project } from 'app/shared/model/project.model';
+import { CreateProject } from 'app/shared/model/dto/create-project.model';
 
 describe('Service Tests', () => {
   describe('Project Service', () => {
@@ -62,7 +63,7 @@ describe('Service Tests', () => {
           returnedFromService
         );
 
-        service.create(new Project()).subscribe(resp => (expectedResult = resp.body));
+        service.create(new CreateProject('test-name', moment(), moment())).subscribe(resp => (expectedResult = resp.body));
 
         const req = httpMock.expectOne({ method: 'POST' });
         req.flush(returnedFromService);
