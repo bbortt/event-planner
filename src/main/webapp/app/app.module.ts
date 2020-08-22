@@ -5,8 +5,8 @@ import './vendor';
 import { EventPlannerSharedModule } from 'app/shared/shared.module';
 import { EventPlannerCoreModule } from 'app/core/core.module';
 import { EventPlannerAppRoutingModule } from './app-routing.module';
-import { EventPlannerHomeModule } from './home/home.module';
 import { EventPlannerEntityModule } from './entities/entity.module';
+import { EventPlannerViewModule } from './view/view.module';
 // jhipster-needle-angular-add-module-import JHipster will add new module here
 import { MainComponent } from './layouts/main/main.component';
 import { NavbarComponent } from './layouts/navbar/navbar.component';
@@ -20,7 +20,7 @@ import { ErrorComponent } from './layouts/error/error.component';
     BrowserModule,
     EventPlannerSharedModule,
     EventPlannerCoreModule,
-    EventPlannerHomeModule,
+    EventPlannerViewModule,
     // jhipster-needle-angular-add-module JHipster will add new module here
     EventPlannerEntityModule,
     EventPlannerAppRoutingModule,

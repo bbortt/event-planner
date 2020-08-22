@@ -1,0 +1,15 @@
+<div class="row">
+    <div class="col-md-12">
+        <h1 class="display-4" jhiTranslate="home.title">Welcome, Event Planner!</h1>
+
+        <div [ngSwitch]="isAuthenticated()">
+            <div class="alert alert-warning" *ngSwitchCase="false">
+                <span jhiTranslate="global.messages.info.register.noaccount">You don't have an account yet?</span>&nbsp;
+                <a class="alert-link" routerLink="account/register"
+                   jhiTranslate="global.messages.info.register.link">Register a new account</a>
+            </div>
+
+            <jhi-my-projects *ngSwitchCase="true"></jhi-my-projects>
+        </div>
+    </div>
+</div>

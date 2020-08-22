@@ -1,0 +1,41 @@
+<div>
+    <h2 id="page-heading">
+        <span jhiTranslate="eventPlannerApp.project.mine.title">My Projects</span>
+
+        <button *jhiHasAnyAuthority="'ROLE_ADMIN'" [ngSwitch]="showAllProjects"
+                id="jh-create-entity"
+                class="btn btn-primary float-right" (click)="switchShowAllProjects()">
+            <span *ngSwitchCase="false" jhiTranslate="eventPlannerApp.project.mine.enableAllLabel">
+            Show all projects
+            </span>
+            <span *ngSwitchCase="true" jhiTranslate="eventPlannerApp.project.mine.disableAllLabel">
+            Show my projects
+            </span>
+        </button>
+    </h2>
+
+    <jhi-alert-error></jhi-alert-error>
+
+    <jhi-alert></jhi-alert>
+
+    <div class="alert alert-warning" id="no-result" *ngIf="projects?.length === 0">
+        <span jhiTranslate="eventPlannerApp.project.home.notFound">No projects found</span>
+    </div>
+
+    <div id="entities" *ngIf="projects && projects.length > 0">
+        <!-- TODO: Show projects in cards here!-->
+    </div>
+
+    <div *ngIf="projects && projects.length > 0">
+        <div class="row justify-content-center">
+            <jhi-item-count [page]="page" [total]="totalItems"
+                            [itemsPerPage]="itemsPerPage"></jhi-item-count>
+        </div>
+
+        <div class="row justify-content-center">
+            <ngb-pagination [collectionSize]="totalItems" [(page)]="ngbPaginationPage"
+                            [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true"
+                            [boundaryLinks]="true" (pageChange)="loadPage($event)"></ngb-pagination>
+        </div>
+    </div>
+</div>

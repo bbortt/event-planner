@@ -1,12 +1,12 @@
 import { Route } from '@angular/router';
 
-import { HomeComponent } from './home.component';
+import { HomeComponent } from './home/home.component';
 
-export const HOME_ROUTE: Route = {
+export const VIEW_ROUTE: Route = {
   path: '',
   component: HomeComponent,
   data: {
-    authorities: [],
+    defaultSort: 'id,asc',
     pageTitle: 'home.title',
   },
 };

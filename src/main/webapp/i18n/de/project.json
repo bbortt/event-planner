@@ -7,6 +7,11 @@
         "editLabel": "Projekt bearbeiten",
         "notFound": "Keine Projekte gefunden"
       },
+      "mine": {
+        "title": "Meine Projekte",
+        "enableAllLabel": "Alle Projekte anzeigen",
+        "disableAllLabel": "Meine Projekte anzeigen"
+      },
       "created": "Projekt mit ID {{ param }} erstellt",
       "updated": "Projekt mit ID {{ param }} aktualisiert",
       "deleted": "Projekt mit ID {{ param }} gelöscht",
