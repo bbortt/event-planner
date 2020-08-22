@@ -6,6 +6,8 @@
 DROP TABLE invitation;
 DROP TABLE section;
 DROP TABLE location;
+DROP TABLE event;
+DROP TABLE section_has_events;
 DROP TABLE responsibility;
 DROP TABLE role;
 DROP TABLE project;
