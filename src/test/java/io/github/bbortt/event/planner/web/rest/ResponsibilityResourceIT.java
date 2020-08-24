@@ -2,8 +2,13 @@ package io.github.bbortt.event.planner.web.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import io.github.bbortt.event.planner.EventPlannerApp;
 import io.github.bbortt.event.planner.domain.Project;
@@ -49,8 +54,7 @@ public class ResponsibilityResourceIT {
     /**
      * Create an entity for this test.
      *
-     * This is a static method, as tests for other entities might also need it,
-     * if they test an entity which requires the current entity.
+     * This is a static method, as tests for other entities might also need it, if they test an entity which requires the current entity.
      */
     public static Responsibility createEntity(EntityManager em) {
         Responsibility responsibility = new Responsibility().name(DEFAULT_NAME);
@@ -70,8 +74,7 @@ public class ResponsibilityResourceIT {
     /**
      * Create an updated entity for this test.
      *
-     * This is a static method, as tests for other entities might also need it,
-     * if they test an entity which requires the current entity.
+     * This is a static method, as tests for other entities might also need it, if they test an entity which requires the current entity.
      */
     public static Responsibility createUpdatedEntity(EntityManager em) {
         Responsibility responsibility = new Responsibility().name(UPDATED_NAME);
@@ -96,7 +99,8 @@ public class ResponsibilityResourceIT {
     @Test
     @Transactional
     public void createResponsibility() throws Exception {
-        int databaseSizeBeforeCreate = responsibilityRepository.findAll().size();
+        responsibilityRepository.deleteAll();
+
         // Create the Responsibility
         restResponsibilityMockMvc
             .perform(
@@ -108,8 +112,8 @@ public class ResponsibilityResourceIT {
 
         // Validate the Responsibility in the database
         List<Responsibility> responsibilityList = responsibilityRepository.findAll();
-        assertThat(responsibilityList).hasSize(databaseSizeBeforeCreate + 1);
-        Responsibility testResponsibility = responsibilityList.get(responsibilityList.size() - 1);
+        assertThat(responsibilityList).hasSize(1);
+        Responsibility testResponsibility = responsibilityList.get(0);
         assertThat(testResponsibility.getName()).isEqualTo(DEFAULT_NAME);
     }
 
@@ -218,7 +222,11 @@ public class ResponsibilityResourceIT {
         // Validate the Responsibility in the database
         List<Responsibility> responsibilityList = responsibilityRepository.findAll();
         assertThat(responsibilityList).hasSize(databaseSizeBeforeUpdate);
-        Responsibility testResponsibility = responsibilityList.get(responsibilityList.size() - 1);
+        Responsibility testResponsibility = responsibilityList
+            .stream()
+            .filter(responsibility -> updatedResponsibility.getId().equals(responsibility.getId()))
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("Cannot find updated responsibility!"));
         assertThat(testResponsibility.getName()).isEqualTo(UPDATED_NAME);
     }
 

@@ -3,8 +3,13 @@ package io.github.bbortt.event.planner.web.rest;
 import static io.github.bbortt.event.planner.web.rest.TestUtil.sameInstant;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import io.github.bbortt.event.planner.EventPlannerApp;
 import io.github.bbortt.event.planner.domain.Location;
@@ -60,8 +65,7 @@ public class LocationResourceIT {
     /**
      * Create an entity for this test.
      *
-     * This is a static method, as tests for other entities might also need it,
-     * if they test an entity which requires the current entity.
+     * This is a static method, as tests for other entities might also need it, if they test an entity which requires the current entity.
      */
     public static Location createEntity(EntityManager em) {
         Location location = new Location().name(DEFAULT_NAME).dateFrom(DEFAULT_DATE_FROM).dateTo(DEFAULT_DATE_TO);
@@ -81,8 +85,7 @@ public class LocationResourceIT {
     /**
      * Create an updated entity for this test.
      *
-     * This is a static method, as tests for other entities might also need it,
-     * if they test an entity which requires the current entity.
+     * This is a static method, as tests for other entities might also need it, if they test an entity which requires the current entity.
      */
     public static Location createUpdatedEntity(EntityManager em) {
         Location location = new Location().name(UPDATED_NAME).dateFrom(UPDATED_DATE_FROM).dateTo(UPDATED_DATE_TO);
@@ -107,7 +110,8 @@ public class LocationResourceIT {
     @Test
     @Transactional
     public void createLocation() throws Exception {
-        int databaseSizeBeforeCreate = locationRepository.findAll().size();
+        locationRepository.deleteAll();
+
         // Create the Location
         restLocationMockMvc
             .perform(post("/api/locations").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(location)))
@@ -115,8 +119,8 @@ public class LocationResourceIT {
 
         // Validate the Location in the database
         List<Location> locationList = locationRepository.findAll();
-        assertThat(locationList).hasSize(databaseSizeBeforeCreate + 1);
-        Location testLocation = locationList.get(locationList.size() - 1);
+        assertThat(locationList).hasSize(1);
+        Location testLocation = locationList.get(0);
         assertThat(testLocation.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testLocation.getDateFrom()).isEqualTo(DEFAULT_DATE_FROM);
         assertThat(testLocation.getDateTo()).isEqualTo(DEFAULT_DATE_TO);
@@ -255,7 +259,11 @@ public class LocationResourceIT {
         // Validate the Location in the database
         List<Location> locationList = locationRepository.findAll();
         assertThat(locationList).hasSize(databaseSizeBeforeUpdate);
-        Location testLocation = locationList.get(locationList.size() - 1);
+        Location testLocation = locationList
+            .stream()
+            .filter(location -> updatedLocation.getId().equals(location.getId()))
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("Cannot find updated location!"));
         assertThat(testLocation.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testLocation.getDateFrom()).isEqualTo(UPDATED_DATE_FROM);
         assertThat(testLocation.getDateTo()).isEqualTo(UPDATED_DATE_TO);
