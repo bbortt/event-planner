@@ -119,7 +119,7 @@ public class UserResourceIT {
     @Test
     @Transactional
     public void createUser() throws Exception {
-        int databaseSizeBeforeCreate = userRepository.findAll().size();
+        userRepository.deleteAll();
 
         // Create the User
         ManagedUserVM managedUserVM = new ManagedUserVM();
@@ -140,8 +140,8 @@ public class UserResourceIT {
         // Validate the User in the database
         assertPersistedUsers(
             users -> {
-                assertThat(users).hasSize(databaseSizeBeforeCreate + 1);
-                User testUser = users.get(users.size() - 1);
+                assertThat(users).hasSize(1);
+                User testUser = users.get(0);
                 assertThat(testUser.getLogin()).isEqualTo(DEFAULT_LOGIN);
                 assertThat(testUser.getFirstName()).isEqualTo(DEFAULT_FIRSTNAME);
                 assertThat(testUser.getLastName()).isEqualTo(DEFAULT_LASTNAME);
@@ -314,7 +314,11 @@ public class UserResourceIT {
         assertPersistedUsers(
             users -> {
                 assertThat(users).hasSize(databaseSizeBeforeUpdate);
-                User testUser = users.get(users.size() - 1);
+                User testUser = users
+                    .stream()
+                    .filter(user -> updatedUser.getId().equals(user.getId()))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException("Cannot find updated user!"));
                 assertThat(testUser.getFirstName()).isEqualTo(UPDATED_FIRSTNAME);
                 assertThat(testUser.getLastName()).isEqualTo(UPDATED_LASTNAME);
                 assertThat(testUser.getEmail()).isEqualTo(UPDATED_EMAIL);
@@ -358,7 +362,11 @@ public class UserResourceIT {
         assertPersistedUsers(
             users -> {
                 assertThat(users).hasSize(databaseSizeBeforeUpdate);
-                User testUser = users.get(users.size() - 1);
+                User testUser = users
+                    .stream()
+                    .filter(user -> updatedUser.getId().equals(user.getId()))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException("Cannot find updated user!"));
                 assertThat(testUser.getLogin()).isEqualTo(UPDATED_LOGIN);
                 assertThat(testUser.getFirstName()).isEqualTo(UPDATED_FIRSTNAME);
                 assertThat(testUser.getLastName()).isEqualTo(UPDATED_LASTNAME);

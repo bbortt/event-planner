@@ -3,8 +3,13 @@ package io.github.bbortt.event.planner.web.rest;
 import static io.github.bbortt.event.planner.web.rest.TestUtil.sameInstant;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import io.github.bbortt.event.planner.EventPlannerApp;
 import io.github.bbortt.event.planner.domain.Project;
@@ -62,8 +67,7 @@ public class ProjectResourceIT {
     /**
      * Create an entity for this test.
      *
-     * This is a static method, as tests for other entities might also need it,
-     * if they test an entity which requires the current entity.
+     * This is a static method, as tests for other entities might also need it, if they test an entity which requires the current entity.
      */
     public static Project createEntity(EntityManager em) {
         Project project = new Project()
@@ -77,8 +81,7 @@ public class ProjectResourceIT {
     /**
      * Create an updated entity for this test.
      *
-     * This is a static method, as tests for other entities might also need it,
-     * if they test an entity which requires the current entity.
+     * This is a static method, as tests for other entities might also need it, if they test an entity which requires the current entity.
      */
     public static Project createUpdatedEntity(EntityManager em) {
         Project project = new Project()
@@ -97,7 +100,8 @@ public class ProjectResourceIT {
     @Test
     @Transactional
     public void createProject() throws Exception {
-        int databaseSizeBeforeCreate = projectRepository.findAll().size();
+        projectRepository.deleteAll();
+
         // Create the Project
         restProjectMockMvc
             .perform(post("/api/projects").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(project)))
@@ -105,8 +109,8 @@ public class ProjectResourceIT {
 
         // Validate the Project in the database
         List<Project> projectList = projectRepository.findAll();
-        assertThat(projectList).hasSize(databaseSizeBeforeCreate + 1);
-        Project testProject = projectList.get(projectList.size() - 1);
+        assertThat(projectList).hasSize(1);
+        Project testProject = projectList.get(0);
         assertThat(testProject.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testProject.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
         assertThat(testProject.getStartTime()).isEqualTo(DEFAULT_START_TIME);
@@ -248,7 +252,11 @@ public class ProjectResourceIT {
         // Validate the Project in the database
         List<Project> projectList = projectRepository.findAll();
         assertThat(projectList).hasSize(databaseSizeBeforeUpdate);
-        Project testProject = projectList.get(projectList.size() - 1);
+        Project testProject = projectList
+            .stream()
+            .filter(project -> updatedProject.getId().equals(project.getId()))
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("Cannot find updated project!"));
         assertThat(testProject.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testProject.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
         assertThat(testProject.getStartTime()).isEqualTo(UPDATED_START_TIME);
