@@ -116,9 +116,10 @@ public class ProjectResourceIT {
     @Transactional
     @WithMockUser("TestUser")
     public void createProject() throws Exception {
+        projectRepository.deleteAll();
+
         User user = userRepository.save(UserResourceIT.createEntity(em));
 
-        int databaseSizeBeforeCreate = projectRepository.findAll().size();
         // Create the Project
         CreateProjectDTO createProjectDTO = new CreateProjectDTO();
         createProjectDTO.setName(project.getName());
@@ -138,8 +139,8 @@ public class ProjectResourceIT {
 
         // Validate the Project in the database
         List<Project> projectList = projectRepository.findAll();
-        assertThat(projectList).hasSize(databaseSizeBeforeCreate + 1);
-        Project testProject = projectList.get(projectList.size() - 1);
+        assertThat(projectList).hasSize(1);
+        Project testProject = projectList.get(0);
         assertThat(testProject.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testProject.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
         assertThat(testProject.getStartTime()).isEqualTo(DEFAULT_START_TIME);
@@ -269,7 +270,11 @@ public class ProjectResourceIT {
         // Validate the Project in the database
         List<Project> projectList = projectRepository.findAll();
         assertThat(projectList).hasSize(databaseSizeBeforeUpdate);
-        Project testProject = projectList.get(projectList.size() - 1);
+        Project testProject = projectList
+            .stream()
+            .filter(project -> updatedProject.getId().equals(project.getId()))
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("Cannot find updated project!"));
         assertThat(testProject.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testProject.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
         assertThat(testProject.getStartTime()).isEqualTo(UPDATED_START_TIME);

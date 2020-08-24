@@ -123,7 +123,8 @@ public class InvitationResourceIT {
     @Test
     @Transactional
     public void createInvitation() throws Exception {
-        int databaseSizeBeforeCreate = invitationRepository.findAll().size();
+        invitationRepository.deleteAll();
+
         // Create the Invitation
         restInvitationMockMvc
             .perform(
@@ -133,8 +134,8 @@ public class InvitationResourceIT {
 
         // Validate the Invitation in the database
         List<Invitation> invitationList = invitationRepository.findAll();
-        assertThat(invitationList).hasSize(databaseSizeBeforeCreate + 1);
-        Invitation testInvitation = invitationList.get(invitationList.size() - 1);
+        assertThat(invitationList).hasSize(1);
+        Invitation testInvitation = invitationList.get(0);
         assertThat(testInvitation.getEmail()).isEqualTo(DEFAULT_EMAIL);
         assertThat(testInvitation.isAccepted()).isEqualTo(DEFAULT_ACCEPTED);
     }
@@ -261,7 +262,11 @@ public class InvitationResourceIT {
         // Validate the Invitation in the database
         List<Invitation> invitationList = invitationRepository.findAll();
         assertThat(invitationList).hasSize(databaseSizeBeforeUpdate);
-        Invitation testInvitation = invitationList.get(invitationList.size() - 1);
+        Invitation testInvitation = invitationList
+            .stream()
+            .filter(invitation -> updatedInvitation.getId().equals(invitation.getId()))
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("Cannot find updated invitation!"));
         assertThat(testInvitation.getEmail()).isEqualTo(UPDATED_EMAIL);
         assertThat(testInvitation.isAccepted()).isEqualTo(UPDATED_ACCEPTED);
     }
