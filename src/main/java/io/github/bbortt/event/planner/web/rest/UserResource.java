@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,6 +35,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -64,8 +67,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RestController
 @RequestMapping("/api")
 public class UserResource {
-    private static final String EMAIL_OR_LOGIN_KEY = "emailOrLogin";
-
     private final Logger log = LoggerFactory.getLogger(UserResource.class);
     private final UserService userService;
     private final UserRepository userRepository;
@@ -192,16 +193,26 @@ public class UserResource {
 
     /**
      * {@code POST /users/findByEmailOrLogin} : find possible User by login or email.
-     * @param map partial email or login via key {@code EMAIL_OR_LOGIN_KEY}.
+     * @param findByEmailOrLogin partial email or login.
      * @return list of possible User.
      */
     @PostMapping("/users/findByEmailOrLogin")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
-    public ResponseEntity<List<UserDTO>> findByEmailOrLogin(@RequestBody Map<String, String> map) {
-        if (!map.containsKey(EMAIL_OR_LOGIN_KEY)) {
-            throw new BadRequestAlertException("Request parameter \"emailOrLogin\" not found!", "userManagement", "badRequest");
+    public ResponseEntity<List<UserDTO>> findByEmailOrLogin(@Valid @RequestBody FindByEmailOrLogin findByEmailOrLogin) {
+        return ResponseEntity.ok(userService.findByEmailOrLoginContaining(findByEmailOrLogin.getEmailOrLogin()));
+    }
+
+    private static class FindByEmailOrLogin {
+        @NotNull
+        @Size(min = 1, max = 254)
+        String emailOrLogin;
+
+        public String getEmailOrLogin() {
+            return emailOrLogin;
         }
 
-        return ResponseEntity.ok(userService.findByEmailOrLoginContaining(map.get(EMAIL_OR_LOGIN_KEY)));
+        public void setEmailOrLogin(String emailOrLogin) {
+            this.emailOrLogin = emailOrLogin;
+        }
     }
 }

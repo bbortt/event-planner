@@ -7,6 +7,7 @@ import io.github.bbortt.event.planner.repository.InvitationRepository;
 import io.github.bbortt.event.planner.repository.ProjectRepository;
 import io.github.bbortt.event.planner.repository.RoleRepository;
 import io.github.bbortt.event.planner.repository.UserRepository;
+import io.github.bbortt.event.planner.security.AuthoritiesConstants;
 import io.github.bbortt.event.planner.security.SecurityUtils;
 import io.github.bbortt.event.planner.service.dto.CreateProjectDTO;
 import io.github.bbortt.event.planner.service.dto.UserDTO;
@@ -61,9 +62,21 @@ public class ProjectService {
      * @return the list of entities.
      */
     @Transactional(readOnly = true)
-    public Page<Project> findAll(Pageable pageable) {
-        log.debug("Request to get all Projects");
-        return projectRepository.findAll(pageable);
+    public Page<Project> findMineOrAll(Pageable pageable, Boolean loadAll) {
+        if (loadAll) {
+            if (!SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.ADMIN)) {
+                throw new IllegalArgumentException("You're not allowed to see all projects!");
+            }
+
+            log.debug("Request to get all Projects");
+            return projectRepository.findAll(pageable);
+        }
+
+        log.debug("Request to get my Projects");
+        return projectRepository.findMine(
+            SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new IllegalArgumentException("Cannot find current user login!")),
+            pageable
+        );
     }
 
     /**

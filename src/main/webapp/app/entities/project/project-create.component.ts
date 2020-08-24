@@ -10,6 +10,7 @@ import { ProjectService } from './project.service';
 import { IUser } from '../../core/user/user.model';
 import { AccountService } from '../../core/auth/account.service';
 import { CreateProject, ICreateProject } from '../../shared/model/dto/create-project.model';
+import { Authority } from '../../shared/constants/authority.constants';
 
 @Component({
   selector: 'jhi-project-create',
@@ -59,7 +60,7 @@ export class ProjectCreateComponent implements OnInit {
       this.editForm.get(['description'])!.value
     );
 
-    if (this.accountService.hasAnyAuthority('ROLE_ADMIN')) {
+    if (this.accountService.hasAnyAuthority(Authority.ADMIN)) {
       newProject.user = this.editForm.get(['selectedUser'])!.value;
     }
 

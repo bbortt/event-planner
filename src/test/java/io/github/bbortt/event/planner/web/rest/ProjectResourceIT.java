@@ -206,7 +206,7 @@ public class ProjectResourceIT {
 
     @Test
     @Transactional
-    public void getAllProjects() throws Exception {
+    public void getProjects() throws Exception {
         // Initialize the database
         projectRepository.saveAndFlush(project);
 

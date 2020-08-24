@@ -89,9 +89,14 @@ public class ProjectResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of projects in body.
      */
     @GetMapping("/projects")
-    public ResponseEntity<List<Project>> getAllProjects(Pageable pageable) {
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<List<Project>> getProjects(
+        Pageable pageable,
+        @RequestParam(name = "loadAll", required = false) Optional<Boolean> loadAll
+    ) {
         log.debug("REST request to get a page of Projects");
-        Page<Project> page = projectService.findAll(pageable);
+
+        Page<Project> page = projectService.findMineOrAll(pageable, loadAll.orElse(Boolean.FALSE));
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }

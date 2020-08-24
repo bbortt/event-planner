@@ -11,6 +11,7 @@ import { ProjectService } from 'app/entities/project/project.service';
 import { AccountService } from 'app/core/auth/account.service';
 
 import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
+import { Authority } from 'app/shared/constants/authority.constants';
 
 @Component({
   selector: 'jhi-my-projects',
@@ -56,7 +57,7 @@ export class MyProjectsComponent implements OnInit, OnDestroy {
         page: this.page,
         size: this.itemsPerPage,
         sort: this.sort(),
-        loadAll: this.accountService.hasAnyAuthority('ROLE_ADMIN') && this.showAllProjects,
+        loadAll: this.accountService.hasAnyAuthority(Authority.ADMIN) && this.showAllProjects,
       })
       .subscribe((res: HttpResponse<IProject[]>) => this.paginateSomeEntities(res.body, res.headers));
   }
