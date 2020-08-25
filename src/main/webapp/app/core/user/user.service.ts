@@ -36,4 +36,8 @@ export class UserService {
   authorities(): Observable<string[]> {
     return this.http.get<string[]>(SERVER_API_URL + 'api/users/authorities');
   }
+
+  findByEmailOrLogin(emailOrLogin: string): Observable<IUser[]> {
+    return this.http.post<IUser[]>(SERVER_API_URL + 'api/users/findByEmailOrLogin', { emailOrLogin });
+  }
 }

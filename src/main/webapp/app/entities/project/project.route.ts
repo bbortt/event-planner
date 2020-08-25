@@ -11,6 +11,7 @@ import { ProjectService } from './project.service';
 import { ProjectComponent } from './project.component';
 import { ProjectDetailComponent } from './project-detail.component';
 import { ProjectUpdateComponent } from './project-update.component';
+import { ProjectCreateComponent } from './project-create.component';
 
 @Injectable({ providedIn: 'root' })
 export class ProjectResolve implements Resolve<IProject> {
@@ -59,7 +60,7 @@ export const projectRoute: Routes = [
   },
   {
     path: 'new',
-    component: ProjectUpdateComponent,
+    component: ProjectCreateComponent,
     resolve: {
       project: ProjectResolve,
     },

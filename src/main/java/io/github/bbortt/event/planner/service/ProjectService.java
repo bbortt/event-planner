@@ -1,7 +1,15 @@
 package io.github.bbortt.event.planner.service;
 
+import io.github.bbortt.event.planner.domain.Invitation;
 import io.github.bbortt.event.planner.domain.Project;
+import io.github.bbortt.event.planner.domain.User;
+import io.github.bbortt.event.planner.repository.InvitationRepository;
 import io.github.bbortt.event.planner.repository.ProjectRepository;
+import io.github.bbortt.event.planner.repository.RoleRepository;
+import io.github.bbortt.event.planner.repository.UserRepository;
+import io.github.bbortt.event.planner.security.SecurityUtils;
+import io.github.bbortt.event.planner.service.dto.CreateProjectDTO;
+import io.github.bbortt.event.planner.service.dto.UserDTO;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,10 +26,21 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProjectService {
     private final Logger log = LoggerFactory.getLogger(ProjectService.class);
 
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     private final ProjectRepository projectRepository;
+    private final InvitationRepository invitationRepository;
 
-    public ProjectService(ProjectRepository projectRepository) {
+    public ProjectService(
+        UserRepository userRepository,
+        RoleRepository roleRepository,
+        ProjectRepository projectRepository,
+        InvitationRepository invitationRepository
+    ) {
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
         this.projectRepository = projectRepository;
+        this.invitationRepository = invitationRepository;
     }
 
     /**
@@ -67,5 +86,59 @@ public class ProjectService {
     public void delete(Long id) {
         log.debug("Request to delete Project : {}", id);
         projectRepository.deleteById(id);
+    }
+
+    /**
+     * Create project with properties from DTO.
+     *
+     * @param createProjectDTO crate project DTO.
+     * @return saved project.
+     */
+    public Project create(CreateProjectDTO createProjectDTO) {
+        Project project = new Project()
+            .name(createProjectDTO.getName())
+            .description(createProjectDTO.getDescription())
+            .startTime(createProjectDTO.getStartTime())
+            .endTime(createProjectDTO.getEndTime());
+        project = projectRepository.save(project);
+
+        User userFromDto = userFromDto(createProjectDTO.getUser());
+        Invitation invitation = new Invitation()
+            .email(userFromDto.getEmail())
+            .user(userFromDto)
+            .project(project)
+            .role(roleRepository.roleAdmin())
+            .accepted(true);
+        invitationRepository.save(invitation);
+
+        return projectRepository
+            .findById(project.getId())
+            .orElseThrow(() -> new IllegalArgumentException("Error while persisting project!"));
+    }
+
+    /**
+     * Read existing user from {@code UserDTO} or security context.
+     *
+     * @param userDTO the {@code UserDTO}.
+     * @return the creator of the project.
+     */
+    private User userFromDto(UserDTO userDTO) {
+        OptionalUserHolder optionalUserHolder = new OptionalUserHolder();
+
+        Optional<Long> userIdFromDTO = Optional.ofNullable(userDTO.getId());
+        userIdFromDTO.ifPresent(userId -> optionalUserHolder.optionalUser = userRepository.findById(userId));
+
+        if (optionalUserHolder.optionalUser.isEmpty()) {
+            Optional<String> currentUserLogin = SecurityUtils.getCurrentUserLogin();
+            currentUserLogin.ifPresent(userLogin -> optionalUserHolder.optionalUser = userRepository.findOneByLogin(userLogin));
+        }
+
+        return optionalUserHolder.optionalUser.orElseThrow(() -> new IllegalArgumentException("Cannot assign user! No login available!"));
+    }
+
+    private class OptionalUserHolder {
+        Optional<User> optionalUser = Optional.empty();
+
+        OptionalUserHolder() {}
     }
 }

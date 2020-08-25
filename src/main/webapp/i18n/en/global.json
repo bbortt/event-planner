@@ -129,6 +129,7 @@
     }
   },
   "error": {
+    "badRequest": "Bad request",
     "internalServerError": "Internal server error",
     "server.not.reachable": "Server not reachable",
     "url.not.found": "Not found",

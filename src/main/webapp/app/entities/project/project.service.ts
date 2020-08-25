@@ -7,6 +7,7 @@ import * as moment from 'moment';
 import { SERVER_API_URL } from 'app/app.constants';
 import { createRequestOption } from 'app/shared/util/request-util';
 import { IProject } from 'app/shared/model/project.model';
+import { ICreateProject } from '../../shared/model/dto/create-project.model';
 
 type EntityResponseType = HttpResponse<IProject>;
 type EntityArrayResponseType = HttpResponse<IProject[]>;
@@ -17,10 +18,10 @@ export class ProjectService {
 
   constructor(protected http: HttpClient) {}
 
-  create(project: IProject): Observable<EntityResponseType> {
+  create(project: ICreateProject): Observable<EntityResponseType> {
     const copy = this.convertDateFromClient(project);
     return this.http
-      .post<IProject>(this.resourceUrl, copy, { observe: 'response' })
+      .post<ICreateProject>(this.resourceUrl, copy, { observe: 'response' })
       .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
   }
 
