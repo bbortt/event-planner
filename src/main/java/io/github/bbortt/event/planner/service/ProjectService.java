@@ -62,7 +62,7 @@ public class ProjectService {
      * @return the list of entities.
      */
     @Transactional(readOnly = true)
-    public Page<Project> findMineOrAll(Pageable pageable, Boolean loadAll) {
+    public Page<Project> findMineOrAll(Boolean loadAll, Pageable pageable) {
         if (loadAll) {
             if (!SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.ADMIN)) {
                 throw new IllegalArgumentException("You're not allowed to see all projects!");
@@ -72,11 +72,11 @@ public class ProjectService {
             return projectRepository.findAll(pageable);
         }
 
-        log.debug("Request to get my Projects");
-        return projectRepository.findMine(
-            SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new IllegalArgumentException("Cannot find current user login!")),
-            pageable
-        );
+        String login = SecurityUtils
+            .getCurrentUserLogin()
+            .orElseThrow(() -> new IllegalArgumentException("Cannot find current user login!"));
+        log.debug("Request to get Projects for user {}", login);
+        return projectRepository.findMine(login, pageable);
     }
 
     /**

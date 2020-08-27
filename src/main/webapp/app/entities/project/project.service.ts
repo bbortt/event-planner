@@ -74,10 +74,4 @@ export class ProjectService {
     }
     return res;
   }
-
-  findAllMyProjects(): Observable<EntityResponseType> {
-    return this.http
-      .get<IProject>(`${this.resourceUrl}`, { observe: 'response' })
-      .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
-  }
 }

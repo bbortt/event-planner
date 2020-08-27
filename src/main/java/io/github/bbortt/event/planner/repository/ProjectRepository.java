@@ -1,6 +1,7 @@
 package io.github.bbortt.event.planner.repository;
 
 import io.github.bbortt.event.planner.domain.Project;
+import javax.validation.constraints.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -27,5 +28,5 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
         "  on i.jhi_user_id = u.id" +
         "    where u.login = :currentUserLogin"
     )
-    Page<Project> findMine(@Param("currentUserLogin") String currentUserLogin, Pageable pageable);
+    Page<Project> findMine(@NotNull @Param("currentUserLogin") String currentUserLogin, Pageable pageable);
 }

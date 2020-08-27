@@ -2,7 +2,6 @@ package io.github.bbortt.event.planner.web.rest;
 
 import static io.github.bbortt.event.planner.web.rest.TestUtil.sameInstant;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -81,8 +80,9 @@ public class ProjectResourceIT {
 
     /**
      * Create an entity for this test.
-     *
-     * This is a static method, as tests for other entities might also need it, if they test an entity which requires the current entity.
+     * <p>
+     * This is a static method, as tests for other entities might also need it, if they test an
+     * entity which requires the current entity.
      */
     public static Project createEntity(EntityManager em) {
         Project project = new Project()
@@ -95,8 +95,9 @@ public class ProjectResourceIT {
 
     /**
      * Create an updated entity for this test.
-     *
-     * This is a static method, as tests for other entities might also need it, if they test an entity which requires the current entity.
+     * <p>
+     * This is a static method, as tests for other entities might also need it, if they test an
+     * entity which requires the current entity.
      */
     public static Project createUpdatedEntity(EntityManager em) {
         Project project = new Project()
@@ -202,24 +203,6 @@ public class ProjectResourceIT {
 
         List<Project> projectList = projectRepository.findAll();
         assertThat(projectList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
-    public void getProjects() throws Exception {
-        // Initialize the database
-        projectRepository.saveAndFlush(project);
-
-        // Get all the projectList
-        restProjectMockMvc
-            .perform(get("/api/projects?sort=id,desc"))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(project.getId().intValue())))
-            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
-            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
-            .andExpect(jsonPath("$.[*].startTime").value(hasItem(sameInstant(DEFAULT_START_TIME))))
-            .andExpect(jsonPath("$.[*].endTime").value(hasItem(sameInstant(DEFAULT_END_TIME))));
     }
 
     @Test
