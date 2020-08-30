@@ -41,6 +41,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
         page: pageToLoad - 1,
         size: this.itemsPerPage,
         sort: this.sort(),
+        loadAll: true,
       })
       .subscribe(
         (res: HttpResponse<IProject[]>) => this.onSuccess(res.body, res.headers, pageToLoad, !dontNavigate),
@@ -105,6 +106,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
           page: this.page,
           size: this.itemsPerPage,
           sort: this.predicate + ',' + (this.ascending ? 'asc' : 'desc'),
+          loadAll: true,
         },
       });
     }
