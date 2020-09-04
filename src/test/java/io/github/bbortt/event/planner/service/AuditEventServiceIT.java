@@ -2,7 +2,7 @@ package io.github.bbortt.event.planner.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import io.github.bbortt.event.planner.EventPlannerApp;
+import io.github.bbortt.event.planner.AbstractApplicationContextAwareIT;
 import io.github.bbortt.event.planner.domain.PersistentAuditEvent;
 import io.github.bbortt.event.planner.repository.PersistenceAuditEventRepository;
 import io.github.jhipster.config.JHipsterProperties;
@@ -11,15 +11,13 @@ import java.time.temporal.ChronoUnit;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Integration tests for {@link AuditEventService}.
  */
-@SpringBootTest(classes = EventPlannerApp.class)
 @Transactional
-public class AuditEventServiceIT {
+public class AuditEventServiceIT extends AbstractApplicationContextAwareIT {
     @Autowired
     private AuditEventService auditEventService;
 

@@ -3,7 +3,7 @@ package io.github.bbortt.event.planner.security;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-import io.github.bbortt.event.planner.EventPlannerApp;
+import io.github.bbortt.event.planner.AbstractApplicationContextAwareIT;
 import io.github.bbortt.event.planner.domain.User;
 import io.github.bbortt.event.planner.repository.UserRepository;
 import java.util.Locale;
@@ -11,7 +11,6 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,9 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * Integrations tests for {@link DomainUserDetailsService}.
  */
-@SpringBootTest(classes = EventPlannerApp.class)
 @Transactional
-public class DomainUserDetailsServiceIT {
+public class DomainUserDetailsServiceIT extends AbstractApplicationContextAwareIT {
     private static final String USER_ONE_LOGIN = "test-user-one";
     private static final String USER_ONE_EMAIL = "test-user-one@localhost";
     private static final String USER_TWO_LOGIN = "test-user-two";
