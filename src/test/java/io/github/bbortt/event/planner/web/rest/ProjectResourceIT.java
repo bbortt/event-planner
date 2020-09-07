@@ -10,7 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import io.github.bbortt.event.planner.EventPlannerApp;
+import io.github.bbortt.event.planner.AbstractApplicationContextAwareIT;
 import io.github.bbortt.event.planner.domain.Project;
 import io.github.bbortt.event.planner.domain.User;
 import io.github.bbortt.event.planner.repository.InvitationRepository;
@@ -29,8 +29,6 @@ import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -39,10 +37,8 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * Integration tests for the {@link ProjectResource} REST controller.
  */
-@SpringBootTest(classes = EventPlannerApp.class)
-@AutoConfigureMockMvc
 @WithMockUser
-public class ProjectResourceIT {
+public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
 
@@ -81,8 +77,7 @@ public class ProjectResourceIT {
     /**
      * Create an entity for this test.
      * <p>
-     * This is a static method, as tests for other entities might also need it, if they test an
-     * entity which requires the current entity.
+     * This is a static method, as tests for other entities might also need it, if they test an entity which requires the current entity.
      */
     public static Project createEntity(EntityManager em) {
         Project project = new Project()
@@ -96,8 +91,7 @@ public class ProjectResourceIT {
     /**
      * Create an updated entity for this test.
      * <p>
-     * This is a static method, as tests for other entities might also need it, if they test an
-     * entity which requires the current entity.
+     * This is a static method, as tests for other entities might also need it, if they test an entity which requires the current entity.
      */
     public static Project createUpdatedEntity(EntityManager em) {
         Project project = new Project()

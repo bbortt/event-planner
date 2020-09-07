@@ -8,7 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import io.github.bbortt.event.planner.EventPlannerApp;
+import io.github.bbortt.event.planner.AbstractApplicationContextAwareIT;
 import io.github.bbortt.event.planner.config.Constants;
 import io.github.bbortt.event.planner.domain.User;
 import io.github.bbortt.event.planner.repository.AuthorityRepository;
@@ -27,8 +27,6 @@ import java.util.Set;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -38,10 +36,8 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * Integration tests for the {@link AccountResource} REST controller.
  */
-@AutoConfigureMockMvc
 @WithMockUser(value = TEST_USER_LOGIN)
-@SpringBootTest(classes = EventPlannerApp.class)
-public class AccountResourceIT {
+public class AccountResourceIT extends AbstractApplicationContextAwareIT {
     static final String TEST_USER_LOGIN = "test";
 
     @Autowired
