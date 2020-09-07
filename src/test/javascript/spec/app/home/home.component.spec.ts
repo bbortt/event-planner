@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, async } from '@angular/core/testing';
 
 import { EventPlannerTestModule } from '../../test.module';
-import { HomeComponent } from 'app/home/home.component';
+import { HomeComponent } from 'app/view/home/home.component';
 import { AccountService } from 'app/core/auth/account.service';
 import { LoginModalService } from 'app/core/login/login-modal.service';
 
@@ -26,14 +26,6 @@ describe('Component Tests', () => {
       comp = fixture.componentInstance;
       accountService = TestBed.get(AccountService);
       loginModalService = TestBed.get(LoginModalService);
-    });
-
-    it('Should call accountService.getAuthenticationState on init', () => {
-      // WHEN
-      comp.ngOnInit();
-
-      // THEN
-      expect(accountService.getAuthenticationState).toHaveBeenCalled();
     });
 
     it('Should call accountService.isAuthenticated when it checks authentication', () => {

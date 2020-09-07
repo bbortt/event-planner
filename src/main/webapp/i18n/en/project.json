@@ -7,6 +7,13 @@
         "editLabel": "Edit a Project",
         "notFound": "No Projects found"
       },
+      "mine": {
+        "title": "My Projects",
+        "enableAllLabel": "Show all projects",
+        "disableAllLabel": "Show my projects",
+        "noDescription": "Project does not have a description",
+        "loadMore": "Load more projects"
+      },
       "created": "A new Project is created with identifier {{ param }}",
       "updated": "A Project is updated with identifier {{ param }}",
       "deleted": "A Project is deleted with identifier {{ param }}",

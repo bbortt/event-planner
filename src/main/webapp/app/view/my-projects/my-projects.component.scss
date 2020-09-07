@@ -1,0 +1,21 @@
+.row {
+  margin-bottom: 2vh;
+
+  a {
+    text-decoration: none;
+  }
+
+  .project-card {
+    padding: 1vw;
+
+    border: 1px solid black;
+    border-radius: 5px;
+
+    .project-card-description {
+      width: 100%;
+      padding: 0.5vh;
+      border-radius: 5px;
+      background-color: lightgrey;
+    }
+  }
+}

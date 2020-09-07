@@ -85,13 +85,19 @@ public class ProjectResource {
     /**
      * {@code GET  /projects} : get all the projects.
      *
+     * @param loadAll loads projects for current user by default.
      * @param pageable the pagination information.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of projects in body.
      */
     @GetMapping("/projects")
-    public ResponseEntity<List<Project>> getAllProjects(Pageable pageable) {
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<List<Project>> getProjects(
+        @RequestParam(name = "loadAll", required = false) Optional<Boolean> loadAll,
+        Pageable pageable
+    ) {
         log.debug("REST request to get a page of Projects");
-        Page<Project> page = projectService.findAll(pageable);
+
+        Page<Project> page = projectService.findMineOrAll(loadAll.orElse(Boolean.FALSE), pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }

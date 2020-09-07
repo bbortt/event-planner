@@ -1,0 +1,67 @@
+<div>
+    <h2 id="page-heading">
+        <span jhiTranslate="eventPlannerApp.project.mine.title">My Projects</span>
+
+        <div class="btn-group float-right">
+            <button *jhiHasAnyAuthority="'ROLE_ADMIN'" [ngSwitch]="showAllProjects"
+                    id="btn-show-all-projects"
+                    class="btn btn-info" (click)="switchShowAllProjects()">
+                <fa-icon icon="eye"></fa-icon>
+                <span *ngSwitchCase="false"
+                      jhiTranslate="eventPlannerApp.project.mine.enableAllLabel">
+                    Show all projects
+                </span>
+                <span *ngSwitchCase="true"
+                      jhiTranslate="eventPlannerApp.project.mine.disableAllLabel">
+                    Show my projects
+                </span>
+            </button>
+
+            <button id="jh-create-entity" [routerLink]="[{outlets: {modal: 'create-project'}}]"
+                    class="btn btn-primary jh-create-entity create-project">
+                <fa-icon icon="plus"></fa-icon>
+                <span jhiTranslate="eventPlannerApp.project.home.createLabel">
+                    Create a new Project
+                </span>
+            </button>
+        </div>
+    </h2>
+
+    <jhi-alert-error></jhi-alert-error>
+
+    <jhi-alert></jhi-alert>
+
+    <br/>
+
+    <div class="alert alert-warning" id="no-result" *ngIf="projects?.length === 0">
+        <span jhiTranslate="eventPlannerApp.project.home.notFound">No projects found</span>
+    </div>
+
+    <div id="entities" infinite-scroll (scrolled)="loadPage(page + 1)"
+         [infiniteScrollDisabled]="page >= links['last']" [infiniteScrollDistance]="0">
+        <div *ngFor="let projectRow of projects" class="row">
+            <div *ngFor="let project of projectRow;trackBy: trackId" class="col-md">
+                <a [routerLink]="['/project', project.id, 'view']">
+                    <div *ngIf="project.id" class="project-card">
+                        <h2>{{project.name}}</h2>
+                        <br/>
+                        <div class="project-card-description">
+                            {{project.description ? project.description
+                            : 'eventPlannerApp.project.mine.noDescription' | translate}}
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <button class="btn btn-primary" (click)="loadPage(page + 1)"
+                [disabled]="!loadMoreButtonEnabled">
+            <fa-icon [icon]="faArrowDown"></fa-icon>&nbsp;
+            <span jhiTranslate="eventPlannerApp.project.mine.loadMore">
+                LoadMore
+            </span>
+        </button>
+    </div>
+</div>

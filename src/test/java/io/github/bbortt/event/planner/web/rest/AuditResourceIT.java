@@ -8,7 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import io.github.bbortt.event.planner.EventPlannerApp;
+import io.github.bbortt.event.planner.AbstractApplicationContextAwareIT;
 import io.github.bbortt.event.planner.domain.PersistentAuditEvent;
 import io.github.bbortt.event.planner.repository.PersistenceAuditEventRepository;
 import io.github.bbortt.event.planner.security.AuthoritiesConstants;
@@ -16,8 +16,6 @@ import java.time.Instant;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -26,11 +24,9 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * Integration tests for the {@link AuditResource} REST controller.
  */
-@AutoConfigureMockMvc
-@WithMockUser(authorities = AuthoritiesConstants.ADMIN)
-@SpringBootTest(classes = EventPlannerApp.class)
 @Transactional
-public class AuditResourceIT {
+@WithMockUser(authorities = AuthoritiesConstants.ADMIN)
+public class AuditResourceIT extends AbstractApplicationContextAwareIT {
     private static final String SAMPLE_PRINCIPAL = "SAMPLE_PRINCIPAL";
     private static final String SAMPLE_TYPE = "SAMPLE_TYPE";
     private static final Instant SAMPLE_TIMESTAMP = Instant.parse("2015-08-04T10:11:30Z");

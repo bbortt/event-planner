@@ -1,10 +1,12 @@
 import { TestBed, getTestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import * as moment from 'moment';
-import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 import { ProjectService } from 'app/entities/project/project.service';
 import { IProject, Project } from 'app/shared/model/project.model';
 import { CreateProject } from 'app/shared/model/dto/create-project.model';
+
+import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
+
+import * as moment from 'moment';
 
 describe('Service Tests', () => {
   describe('Project Service', () => {

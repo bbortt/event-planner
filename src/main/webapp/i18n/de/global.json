@@ -54,11 +54,6 @@
     },
     "messages": {
       "info": {
-        "authenticated": {
-          "prefix": "Wenn Sie sich ",
-          "link": "anmelden",
-          "suffix": " möchten, versuchen Sie es mit <br/>- Administrator (Name=\"admin\" und Passwort=\"admin\")<br/>- Benutzer (Name=\"user\" und Passwort=\"user\")."
-        },
         "register": {
           "noaccount": "Sie haben noch keinen Zugang?",
           "link": "Registrieren Sie sich"

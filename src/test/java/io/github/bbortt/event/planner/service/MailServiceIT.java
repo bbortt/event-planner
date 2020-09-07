@@ -8,7 +8,7 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 
-import io.github.bbortt.event.planner.EventPlannerApp;
+import io.github.bbortt.event.planner.AbstractApplicationContextAwareIT;
 import io.github.bbortt.event.planner.config.Constants;
 import io.github.bbortt.event.planner.domain.User;
 import io.github.jhipster.config.JHipsterProperties;
@@ -33,7 +33,6 @@ import org.mockito.Captor;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.MessageSource;
 import org.springframework.mail.MailSendException;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -42,8 +41,7 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 /**
  * Integration tests for {@link MailService}.
  */
-@SpringBootTest(classes = EventPlannerApp.class)
-public class MailServiceIT {
+public class MailServiceIT extends AbstractApplicationContextAwareIT {
     private static final String[] languages = {
         "de",
         "en",

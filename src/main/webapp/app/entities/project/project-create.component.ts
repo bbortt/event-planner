@@ -1,23 +1,27 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import * as moment from 'moment';
-import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 import { IProject } from 'app/shared/model/project.model';
 import { ProjectService } from './project.service';
 import { IUser } from '../../core/user/user.model';
 import { AccountService } from '../../core/auth/account.service';
 import { CreateProject, ICreateProject } from '../../shared/model/dto/create-project.model';
+import { Authority } from '../../shared/constants/authority.constants';
+
+import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
+
+import * as moment from 'moment';
 
 @Component({
   selector: 'jhi-project-create',
   templateUrl: './project-create.component.html',
 })
-export class ProjectCreateComponent implements OnInit {
-  isSaving = false;
+export class ProjectCreateComponent {
+  cancelEnabled = true;
 
+  isSaving = false;
   editForm = this.fb.group({
     name: [null, [Validators.required, Validators.minLength(1), Validators.maxLength(50)]],
     description: [null, [Validators.minLength(1), Validators.maxLength(300)]],
@@ -32,14 +36,6 @@ export class ProjectCreateComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private fb: FormBuilder
   ) {}
-
-  ngOnInit(): void {
-    this.activatedRoute.data.subscribe(({ project }) => {
-      const today = moment().startOf('day');
-      project.startTime = today;
-      project.endTime = today;
-    });
-  }
 
   previousState(): void {
     window.history.back();
@@ -59,7 +55,7 @@ export class ProjectCreateComponent implements OnInit {
       this.editForm.get(['description'])!.value
     );
 
-    if (this.accountService.hasAnyAuthority('ROLE_ADMIN')) {
+    if (this.accountService.hasAnyAuthority(Authority.ADMIN)) {
       newProject.user = this.editForm.get(['selectedUser'])!.value;
     }
 

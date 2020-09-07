@@ -3,7 +3,7 @@ package io.github.bbortt.event.planner.repository;
 import static io.github.bbortt.event.planner.repository.CustomAuditEventRepository.EVENT_DATA_COLUMN_MAX_LENGTH;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import io.github.bbortt.event.planner.EventPlannerApp;
+import io.github.bbortt.event.planner.AbstractApplicationContextAwareIT;
 import io.github.bbortt.event.planner.config.Constants;
 import io.github.bbortt.event.planner.config.audit.AuditEventConverter;
 import io.github.bbortt.event.planner.domain.PersistentAuditEvent;
@@ -17,7 +17,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.audit.AuditEvent;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
@@ -26,9 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * Integration tests for {@link CustomAuditEventRepository}.
  */
-@SpringBootTest(classes = EventPlannerApp.class)
 @Transactional
-public class CustomAuditEventRepositoryIT {
+public class CustomAuditEventRepositoryIT extends AbstractApplicationContextAwareIT {
     @Autowired
     private PersistenceAuditEventRepository persistenceAuditEventRepository;
 

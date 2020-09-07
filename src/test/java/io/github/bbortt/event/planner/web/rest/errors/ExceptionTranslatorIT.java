@@ -6,11 +6,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import io.github.bbortt.event.planner.EventPlannerApp;
+import io.github.bbortt.event.planner.AbstractApplicationContextAwareIT;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -19,9 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
  * Integration tests {@link ExceptionTranslator} controller advice.
  */
 @WithMockUser
-@AutoConfigureMockMvc
-@SpringBootTest(classes = EventPlannerApp.class)
-public class ExceptionTranslatorIT {
+public class ExceptionTranslatorIT extends AbstractApplicationContextAwareIT {
     @Autowired
     private MockMvc mockMvc;
 
