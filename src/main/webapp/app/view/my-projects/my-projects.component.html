@@ -2,15 +2,29 @@
     <h2 id="page-heading">
         <span jhiTranslate="eventPlannerApp.project.mine.title">My Projects</span>
 
-        <button *jhiHasAnyAuthority="'ROLE_ADMIN'" [ngSwitch]="showAllProjects"
-                class="btn btn-primary float-right" (click)="switchShowAllProjects()">
-            <span *ngSwitchCase="false" jhiTranslate="eventPlannerApp.project.mine.enableAllLabel">
-            Show all projects
-            </span>
-            <span *ngSwitchCase="true" jhiTranslate="eventPlannerApp.project.mine.disableAllLabel">
-            Show my projects
-            </span>
-        </button>
+        <div class="btn-group float-right">
+            <button *jhiHasAnyAuthority="'ROLE_ADMIN'" [ngSwitch]="showAllProjects"
+                    id="btn-show-all-projects"
+                    class="btn btn-info" (click)="switchShowAllProjects()">
+                <fa-icon icon="eye"></fa-icon>
+                <span *ngSwitchCase="false"
+                      jhiTranslate="eventPlannerApp.project.mine.enableAllLabel">
+                    Show all projects
+                </span>
+                <span *ngSwitchCase="true"
+                      jhiTranslate="eventPlannerApp.project.mine.disableAllLabel">
+                    Show my projects
+                </span>
+            </button>
+
+            <button id="jh-create-entity" [routerLink]="[{outlets: {modal: 'create-project'}}]"
+                    class="btn btn-primary jh-create-entity create-project">
+                <fa-icon icon="plus"></fa-icon>
+                <span jhiTranslate="eventPlannerApp.project.home.createLabel">
+                    Create a new Project
+                </span>
+            </button>
+        </div>
     </h2>
 
     <jhi-alert-error></jhi-alert-error>

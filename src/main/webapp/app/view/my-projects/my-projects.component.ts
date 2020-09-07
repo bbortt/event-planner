@@ -33,13 +33,13 @@ export class MyProjectsComponent implements OnInit, OnDestroy {
   loadMoreButtonEnabled = true;
 
   constructor(
-    private projectService: ProjectService,
-    private activatedRoute: ActivatedRoute,
     private router: Router,
+    private activatedRoute: ActivatedRoute,
     private eventManager: JhiEventManager,
     private modalService: NgbModal,
+    private projectService: ProjectService,
     private accountService: AccountService,
-    protected parseLinks: JhiParseLinks
+    private parseLinks: JhiParseLinks
   ) {
     this.projects = [];
     this.itemsPerPage = 3;
@@ -51,10 +51,22 @@ export class MyProjectsComponent implements OnInit, OnDestroy {
     this.ascending = true;
   }
 
-  loadAll(): void {
+  ngOnInit(): void {
+    this.loadPage(this.page);
+    this.registerChangeInSomeEntities();
+  }
+
+  ngOnDestroy(): void {
+    if (this.eventSubscriber) {
+      this.eventManager.destroy(this.eventSubscriber);
+    }
+  }
+
+  loadPage(page: number): void {
+    this.page = page;
     this.projectService
       .query({
-        page: this.page,
+        page,
         size: this.itemsPerPage,
         sort: this.sort(),
         loadAll: this.accountService.hasAnyAuthority(Authority.ADMIN) && this.showAllProjects,
@@ -63,24 +75,11 @@ export class MyProjectsComponent implements OnInit, OnDestroy {
   }
 
   reset(): void {
-    this.page = 0;
     this.projects = [];
-    this.loadAll();
-  }
+    const lastPage = this.page;
 
-  loadPage(page: number): void {
-    this.page = page;
-    this.loadAll();
-  }
-
-  ngOnInit(): void {
-    this.loadAll();
-    this.registerChangeInSomeEntities();
-  }
-
-  ngOnDestroy(): void {
-    if (this.eventSubscriber) {
-      this.eventManager.destroy(this.eventSubscriber);
+    for (let i = 0; i <= lastPage; i++) {
+      this.loadPage(i);
     }
   }
 
@@ -101,7 +100,7 @@ export class MyProjectsComponent implements OnInit, OnDestroy {
     return result;
   }
 
-  protected paginateSomeEntities(newProjects: IProject[] | null, headers: HttpHeaders): void {
+  private paginateSomeEntities(newProjects: IProject[] | null, headers: HttpHeaders): void {
     const headersLink = headers.get('link');
     this.links = this.parseLinks.parse(headersLink ? headersLink : '');
     if (newProjects && newProjects.length > 0) {

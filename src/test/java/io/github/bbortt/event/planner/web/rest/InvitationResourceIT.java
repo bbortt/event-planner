@@ -10,7 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import io.github.bbortt.event.planner.EventPlannerApp;
+import io.github.bbortt.event.planner.AbstractApplicationContextAwareIT;
 import io.github.bbortt.event.planner.domain.Invitation;
 import io.github.bbortt.event.planner.domain.Project;
 import io.github.bbortt.event.planner.domain.Role;
@@ -21,8 +21,6 @@ import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -31,10 +29,8 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * Integration tests for the {@link InvitationResource} REST controller.
  */
-@SpringBootTest(classes = EventPlannerApp.class)
-@AutoConfigureMockMvc
 @WithMockUser
-public class InvitationResourceIT {
+public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
     private static final String DEFAULT_EMAIL = "default@event.planner";
     private static final String UPDATED_EMAIL = "update@event.planner";
 
