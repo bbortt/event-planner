@@ -195,7 +195,7 @@ docker-compose -f src/main/docker/postgresql.yml down
 Or if you have no docker-compose available simply run:
 
 ```
-docker run --name=event-planner-postgres -e POSTGRES_USER=event_planner -e POSTGRES_PASSWORD=event_planner_password -p 5432:5432 postgres
+docker run --name=event-planner-postgres -e POSTGRES_USER=event_planner -e POSTGRES_PASSWORD=event_planner_password -p 5432:5432 postgres:12.3-alpine
 ```
 
 You can also fully dockerize your application and all the services that it depends on.

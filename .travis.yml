@@ -44,6 +44,9 @@ script:
   - ./gradlew dependencyUpdates
   - ./gradlew -Pversion=$TRAVIS_BUILD_NUMBER -Pprod --no-daemon -i ${GRADLE_COMMAND}
 
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
+
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -rf $HOME/.gradle/caches/*/plugin-resolution/
