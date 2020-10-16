@@ -2,3 +2,11 @@
   padding-top: 3vh;
   padding-bottom: 3vh;
 }
+
+.cdk-overlay-container {
+  z-index: 1100 !important;
+}
+
+html {
+  display: none;
+}

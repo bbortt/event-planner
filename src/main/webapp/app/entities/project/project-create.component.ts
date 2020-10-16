@@ -8,8 +8,8 @@ import { ProjectService } from './project.service';
 import { IUser } from '../../core/user/user.model';
 import { AccountService } from '../../core/auth/account.service';
 import { CreateProject, ICreateProject } from '../../shared/model/dto/create-project.model';
-import { AUTHORITY_ADMIN } from '../../shared/constants/authority.constants';
 
+import { AUTHORITY_ADMIN } from '../../shared/constants/authority.constants';
 import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 
 import * as moment from 'moment';
@@ -29,6 +29,8 @@ export class ProjectCreateComponent {
     endTime: [null, [Validators.required]],
     selectedUser: [null, [Validators.required]],
   });
+
+  startMoment = moment();
 
   constructor(
     private projectService: ProjectService,

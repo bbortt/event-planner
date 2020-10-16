@@ -63,9 +63,14 @@
                            jhiTranslate="eventPlannerApp.project.startTime" for="field_startTime">Start
                         Time</label>
                     <div class="d-flex">
-                        <input id="field_startTime" type="datetime-local" class="form-control"
-                               name="startTime" formControlName="startTime"
-                               placeholder="YYYY-MM-DD HH:mm"/>
+                        <input type="text" class="form-control" name="startTime"
+                               id="field_startTime"
+                               formControlName="start" [matDatetimepicker]="startTimePicker"
+                               required autocomplete="false">
+                        <!--                        <mat-datetimepicker-toggle-->
+                        <!--                            [for]="startTimePicker"></mat-datetimepicker-toggle>-->
+                        <mat-datetimepicker #startTimePicker type="datetime"
+                                            [openOnFocus]="true"></mat-datetimepicker>
                     </div>
                     <div
                         *ngIf="editForm.get('startTime')!.invalid && (editForm.get('startTime')!.dirty || editForm.get('startTime')!.touched)">
@@ -118,7 +123,8 @@
             </div>
 
             <div>
-                <button *ngIf="cancelEnabled" type="button" id="cancel-save" class="btn btn-secondary"
+                <button *ngIf="cancelEnabled" type="button" id="cancel-save"
+                        class="btn btn-secondary"
                         (click)="previousState()">
                     <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
                 </button>
