@@ -25,6 +25,8 @@ task webpack(type: NpmTask, dependsOn: "npmInstall") {
     environment = [APP_VERSION: project.version]
 }
 
+webpack.dependsOn webpack_test
+
 processResources {
     inputs.property('version', version)
     inputs.property('springProfiles', profiles)
@@ -38,6 +40,5 @@ processResources {
     }
 }
 
-test.dependsOn webpack_test
 processResources.dependsOn webpack
 bootJar.dependsOn processResources

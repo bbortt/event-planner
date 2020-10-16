@@ -101,6 +101,8 @@ test {
     reports.html.enabled = false
 }
 
+bootJar.dependsOn test
+
 task integrationTest(type: Test) {
     useJUnitPlatform()
     description = "Execute integration tests."
@@ -128,9 +130,10 @@ task flywayCleanIntegrationTest(type: org.flywaydb.gradle.task.FlywayCleanTask) 
         password = "${flyway_it_password}"
     }
 }
-integrationTest.dependsOn flywayCleanIntegrationTest
 
+integrationTest.dependsOn flywayCleanIntegrationTest
 check.dependsOn integrationTest
+
 task testReport(type: TestReport) {
     destinationDir = file("$buildDir/reports/tests")
     reportOn test
