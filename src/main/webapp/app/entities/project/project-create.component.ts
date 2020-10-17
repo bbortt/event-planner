@@ -27,7 +27,7 @@ export class ProjectCreateComponent {
     description: [null, [Validators.minLength(1), Validators.maxLength(300)]],
     startTime: [null, [Validators.required]],
     endTime: [null, [Validators.required]],
-    selectedUser: [null, [Validators.required]],
+    selectedUser: [null, []],
   });
 
   constructor(
@@ -35,7 +35,11 @@ export class ProjectCreateComponent {
     private accountService: AccountService,
     private activatedRoute: ActivatedRoute,
     private fb: FormBuilder
-  ) {}
+  ) {
+    if (this.accountService.hasAnyAuthority(Authority.ADMIN)) {
+      this.editForm.get(['selectedUser'])!.setValidators(Validators.required);
+    }
+  }
 
   previousState(): void {
     window.history.back();
