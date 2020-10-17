@@ -36,7 +36,7 @@ export class ProjectCreateComponent {
     private activatedRoute: ActivatedRoute,
     private fb: FormBuilder
   ) {
-    if (this.accountService.hasAnyAuthority(Authority.ADMIN)) {
+    if (this.accountService.hasAnyAuthority(AUTHORITY_ADMIN)) {
       this.editForm.get(['selectedUser'])!.setValidators(Validators.required);
     }
   }
