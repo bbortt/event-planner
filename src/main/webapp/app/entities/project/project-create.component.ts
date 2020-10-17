@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -10,7 +10,6 @@ import { AccountService } from '../../core/auth/account.service';
 import { CreateProject, ICreateProject } from '../../shared/model/dto/create-project.model';
 
 import { AUTHORITY_ADMIN } from '../../shared/constants/authority.constants';
-import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 
 import * as moment from 'moment';
 
@@ -18,7 +17,7 @@ import * as moment from 'moment';
   selector: 'jhi-project-create',
   templateUrl: './project-create.component.html',
 })
-export class ProjectCreateComponent {
+export class ProjectCreateComponent implements OnInit {
   cancelEnabled = true;
 
   isSaving = false;
@@ -31,6 +30,7 @@ export class ProjectCreateComponent {
   });
 
   startMoment = moment();
+  endMoment = moment();
 
   constructor(
     private projectService: ProjectService,
@@ -41,6 +41,13 @@ export class ProjectCreateComponent {
     if (this.accountService.hasAnyAuthority(AUTHORITY_ADMIN)) {
       this.editForm.get(['selectedUser'])!.setValidators(Validators.required);
     }
+  }
+
+  ngOnInit(): void {
+    this.editForm.get('startTime')!.valueChanges.subscribe((startTime: moment.Moment) => {
+      this.endMoment = startTime;
+      this.editForm.get('endTime')!.setValue(startTime);
+    });
   }
 
   previousState(): void {
@@ -56,8 +63,8 @@ export class ProjectCreateComponent {
   private createFromForm(): ICreateProject {
     const newProject = new CreateProject(
       this.editForm.get(['name'])!.value,
-      moment(this.editForm.get(['startTime'])!.value, DATE_TIME_FORMAT),
-      moment(this.editForm.get(['endTime'])!.value, DATE_TIME_FORMAT),
+      this.editForm.get(['startTime'])!.value,
+      this.editForm.get(['endTime'])!.value,
       this.editForm.get(['description'])!.value
     );
 

@@ -20,8 +20,8 @@
     "@angular/core": "10.1.6",
     "@angular/forms": "10.1.6",
     "@angular/localize": "10.1.6",
-    "@angular/material": "10.2.2",
-    "@angular/material-moment-adapter": "^10.2.5",
+    "@angular/material": "10.2.5",
+    "@angular/material-moment-adapter": "10.2.5",
     "@angular/platform-browser": "10.1.6",
     "@angular/platform-browser-dynamic": "10.1.6",
     "@angular/router": "10.1.6",
@@ -135,8 +135,7 @@
     "webpack:prod": "npm run cleanup && npm run webpack:prod:main && npm run clean-www",
     "webpack-dev-server": "node --max_old_space_size=4096 node_modules/webpack-dev-server/bin/webpack-dev-server.js",
     "webpack:test": "npm run test",
-    "webpack": "node --max_old_space_size=4096 node_modules/webpack/bin/webpack.js",
-    "postinstall": "ngcc"
+    "webpack": "node --max_old_space_size=4096 node_modules/webpack/bin/webpack.js"
   },
   "jestSonar": {
     "reportPath": "build/test-results/jest",
