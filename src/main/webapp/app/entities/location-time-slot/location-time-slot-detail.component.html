@@ -1,0 +1,40 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="locationTimeSlot">
+            <h2><span jhiTranslate="eventPlannerApp.locationTimeSlot.detail.title">Location Time Slot</span> {{ locationTimeSlot.id }}</h2>
+
+            <hr>
+
+            <jhi-alert-error></jhi-alert-error>
+
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="eventPlannerApp.locationTimeSlot.startTime">Start Time</span></dt>
+                <dd>
+                    <span>{{ locationTimeSlot.startTime }}</span>
+                </dd>
+                <dt><span jhiTranslate="eventPlannerApp.locationTimeSlot.endTime">End Time</span></dt>
+                <dd>
+                    <span>{{ locationTimeSlot.endTime }}</span>
+                </dd>
+                <dt><span jhiTranslate="eventPlannerApp.locationTimeSlot.location">Location</span></dt>
+                <dd>
+                    <div *ngIf="locationTimeSlot.location">
+                        <a [routerLink]="['/location', locationTimeSlot.location?.id, 'view']">{{ locationTimeSlot.location?.name }}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/location-time-slot', locationTimeSlot.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+            </button>
+        </div>
+    </div>
+</div>
