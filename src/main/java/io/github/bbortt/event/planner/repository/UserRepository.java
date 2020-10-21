@@ -1,7 +1,7 @@
 package io.github.bbortt.event.planner.repository;
 
 import io.github.bbortt.event.planner.domain.User;
-import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.cache.annotation.Cacheable;
@@ -22,7 +22,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findOneByActivationKey(String activationKey);
 
-    List<User> findAllByActivatedIsFalseAndActivationKeyIsNotNullAndCreatedDateBefore(Instant dateTime);
+    List<User> findAllByActivatedIsFalseAndActivationKeyIsNotNullAndCreatedDateBefore(ZonedDateTime dateTime);
 
     Optional<User> findOneByResetKey(String resetKey);
 

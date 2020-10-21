@@ -2,6 +2,7 @@ package io.github.bbortt.event.planner.repository;
 
 import io.github.bbortt.event.planner.domain.PersistentAuditEvent;
 import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,7 +16,7 @@ public interface PersistenceAuditEventRepository extends JpaRepository<Persisten
 
     List<PersistentAuditEvent> findByPrincipalAndAuditEventDateAfterAndAuditEventType(String principal, Instant after, String type);
 
-    Page<PersistentAuditEvent> findAllByAuditEventDateBetween(Instant fromDate, Instant toDate, Pageable pageable);
+    Page<PersistentAuditEvent> findAllByAuditEventDateBetween(ZonedDateTime fromDate, ZonedDateTime toDate, Pageable pageable);
 
-    List<PersistentAuditEvent> findByAuditEventDateBefore(Instant before);
+    List<PersistentAuditEvent> findByAuditEventDateBefore(ZonedDateTime before);
 }

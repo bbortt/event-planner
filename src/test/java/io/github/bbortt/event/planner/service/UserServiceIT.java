@@ -9,8 +9,8 @@ import io.github.bbortt.event.planner.domain.User;
 import io.github.bbortt.event.planner.repository.UserRepository;
 import io.github.bbortt.event.planner.service.dto.UserDTO;
 import io.github.jhipster.security.RandomUtil;
-import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
@@ -30,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Transactional
 public class UserServiceIT extends AbstractApplicationContextAwareIT {
+
     private static final String DEFAULT_LOGIN = "johndoe";
 
     private static final String DEFAULT_EMAIL = "johndoe@localhost";
@@ -100,7 +101,7 @@ public class UserServiceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     public void assertThatResetKeyMustNotBeOlderThan24Hours() {
-        Instant daysAgo = Instant.now().minus(25, ChronoUnit.HOURS);
+        ZonedDateTime daysAgo = ZonedDateTime.now().minus(25, ChronoUnit.HOURS);
         String resetKey = RandomUtil.generateResetKey();
         user.setActivated(true);
         user.setResetDate(daysAgo);
@@ -115,7 +116,7 @@ public class UserServiceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     public void assertThatResetKeyMustBeValid() {
-        Instant daysAgo = Instant.now().minus(25, ChronoUnit.HOURS);
+        ZonedDateTime daysAgo = ZonedDateTime.now().minus(25, ChronoUnit.HOURS);
         user.setActivated(true);
         user.setResetDate(daysAgo);
         user.setResetKey("1234");
@@ -130,7 +131,7 @@ public class UserServiceIT extends AbstractApplicationContextAwareIT {
     @Transactional
     public void assertThatUserCanResetPassword() {
         String oldPassword = user.getPassword();
-        Instant daysAgo = Instant.now().minus(2, ChronoUnit.HOURS);
+        ZonedDateTime daysAgo = ZonedDateTime.now().minus(2, ChronoUnit.HOURS);
         String resetKey = RandomUtil.generateResetKey();
         user.setActivated(true);
         user.setResetDate(daysAgo);
@@ -149,14 +150,14 @@ public class UserServiceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     public void assertThatNotActivatedUsersWithNotNullActivationKeyCreatedBefore3DaysAreDeleted() {
-        Instant now = Instant.now();
+        ZonedDateTime now = ZonedDateTime.now();
         when(dateTimeProvider.getNow()).thenReturn(Optional.of(now.minus(4, ChronoUnit.DAYS)));
         user.setActivated(false);
         user.setActivationKey(RandomStringUtils.random(20));
         User dbUser = userRepository.saveAndFlush(user);
         dbUser.setCreatedDate(now.minus(4, ChronoUnit.DAYS));
         userRepository.saveAndFlush(user);
-        Instant threeDaysAgo = now.minus(3, ChronoUnit.DAYS);
+        ZonedDateTime threeDaysAgo = now.minus(3, ChronoUnit.DAYS);
         List<User> users = userRepository.findAllByActivatedIsFalseAndActivationKeyIsNotNullAndCreatedDateBefore(threeDaysAgo);
         assertThat(users).isNotEmpty();
         userService.removeNotActivatedUsers();
@@ -167,13 +168,13 @@ public class UserServiceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     public void assertThatNotActivatedUsersWithNullActivationKeyCreatedBefore3DaysAreNotDeleted() {
-        Instant now = Instant.now();
+        ZonedDateTime now = ZonedDateTime.now();
         when(dateTimeProvider.getNow()).thenReturn(Optional.of(now.minus(4, ChronoUnit.DAYS)));
         user.setActivated(false);
         User dbUser = userRepository.saveAndFlush(user);
         dbUser.setCreatedDate(now.minus(4, ChronoUnit.DAYS));
         userRepository.saveAndFlush(user);
-        Instant threeDaysAgo = now.minus(3, ChronoUnit.DAYS);
+        ZonedDateTime threeDaysAgo = now.minus(3, ChronoUnit.DAYS);
         List<User> users = userRepository.findAllByActivatedIsFalseAndActivationKeyIsNotNullAndCreatedDateBefore(threeDaysAgo);
         assertThat(users).isEmpty();
         userService.removeNotActivatedUsers();

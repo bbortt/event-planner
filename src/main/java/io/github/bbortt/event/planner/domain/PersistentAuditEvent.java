@@ -2,6 +2,7 @@ package io.github.bbortt.event.planner.domain;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import javax.persistence.CollectionTable;
@@ -26,6 +27,7 @@ import org.hibernate.annotations.Parameter;
 @Entity
 @Table(name = "jhi_persistent_audit_event")
 public class PersistentAuditEvent implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -46,7 +48,7 @@ public class PersistentAuditEvent implements Serializable {
     private String principal;
 
     @Column(name = "event_date")
-    private Instant auditEventDate;
+    private ZonedDateTime auditEventDate;
 
     @Column(name = "event_type")
     private String auditEventType;
@@ -74,10 +76,10 @@ public class PersistentAuditEvent implements Serializable {
     }
 
     public Instant getAuditEventDate() {
-        return auditEventDate;
+        return auditEventDate.toInstant();
     }
 
-    public void setAuditEventDate(Instant auditEventDate) {
+    public void setAuditEventDate(ZonedDateTime auditEventDate) {
         this.auditEventDate = auditEventDate;
     }
 

@@ -7,7 +7,7 @@ import io.github.bbortt.event.planner.AbstractApplicationContextAwareIT;
 import io.github.bbortt.event.planner.config.Constants;
 import io.github.bbortt.event.planner.config.audit.AuditEventConverter;
 import io.github.bbortt.event.planner.domain.PersistentAuditEvent;
-import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Transactional
 public class CustomAuditEventRepositoryIT extends AbstractApplicationContextAwareIT {
+
     @Autowired
     private PersistenceAuditEventRepository persistenceAuditEventRepository;
 
@@ -39,7 +40,7 @@ public class CustomAuditEventRepositoryIT extends AbstractApplicationContextAwar
     public void setup() {
         customAuditEventRepository = new CustomAuditEventRepository(persistenceAuditEventRepository, auditEventConverter);
         persistenceAuditEventRepository.deleteAll();
-        Instant oneHourAgo = Instant.now().minusSeconds(3600);
+        ZonedDateTime oneHourAgo = ZonedDateTime.now().minusSeconds(3600);
 
         PersistentAuditEvent testUserEvent = new PersistentAuditEvent();
         testUserEvent.setPrincipal("test-user");

@@ -25,6 +25,7 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -46,6 +47,7 @@ import org.springframework.transaction.annotation.Transactional;
 @WithMockUser
 @ExtendWith(MockitoExtension.class)
 public class EventResourceIT extends AbstractApplicationContextAwareIT {
+
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
 

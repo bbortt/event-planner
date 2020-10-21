@@ -6,7 +6,7 @@ import io.github.bbortt.event.planner.AbstractApplicationContextAwareIT;
 import io.github.bbortt.event.planner.domain.PersistentAuditEvent;
 import io.github.bbortt.event.planner.repository.PersistenceAuditEventRepository;
 import io.github.jhipster.config.JHipsterProperties;
-import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Transactional
 public class AuditEventServiceIT extends AbstractApplicationContextAwareIT {
+
     @Autowired
     private AuditEventService auditEventService;
 
@@ -36,19 +37,21 @@ public class AuditEventServiceIT extends AbstractApplicationContextAwareIT {
     @BeforeEach
     public void init() {
         auditEventOld = new PersistentAuditEvent();
-        auditEventOld.setAuditEventDate(Instant.now().minus(jHipsterProperties.getAuditEvents().getRetentionPeriod() + 1, ChronoUnit.DAYS));
+        auditEventOld.setAuditEventDate(
+            ZonedDateTime.now().minus(jHipsterProperties.getAuditEvents().getRetentionPeriod() + 1, ChronoUnit.DAYS)
+        );
         auditEventOld.setPrincipal("test-user-old");
         auditEventOld.setAuditEventType("test-type");
 
         auditEventWithinRetention = new PersistentAuditEvent();
         auditEventWithinRetention.setAuditEventDate(
-            Instant.now().minus(jHipsterProperties.getAuditEvents().getRetentionPeriod() - 1, ChronoUnit.DAYS)
+            ZonedDateTime.now().minus(jHipsterProperties.getAuditEvents().getRetentionPeriod() - 1, ChronoUnit.DAYS)
         );
         auditEventWithinRetention.setPrincipal("test-user-retention");
         auditEventWithinRetention.setAuditEventType("test-type");
 
         auditEventNew = new PersistentAuditEvent();
-        auditEventNew.setAuditEventDate(Instant.now());
+        auditEventNew.setAuditEventDate(ZonedDateTime.now());
         auditEventNew.setPrincipal("test-user-new");
         auditEventNew.setAuditEventType("test-type");
     }

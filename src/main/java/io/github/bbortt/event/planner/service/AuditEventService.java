@@ -3,7 +3,7 @@ package io.github.bbortt.event.planner.service;
 import io.github.bbortt.event.planner.config.audit.AuditEventConverter;
 import io.github.bbortt.event.planner.repository.PersistenceAuditEventRepository;
 import io.github.jhipster.config.JHipsterProperties;
-import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class AuditEventService {
+
     private final Logger log = LoggerFactory.getLogger(AuditEventService.class);
 
     private final JHipsterProperties jHipsterProperties;
@@ -49,7 +50,9 @@ public class AuditEventService {
     @Scheduled(cron = "0 0 12 * * ?")
     public void removeOldAuditEvents() {
         persistenceAuditEventRepository
-            .findByAuditEventDateBefore(Instant.now().minus(jHipsterProperties.getAuditEvents().getRetentionPeriod(), ChronoUnit.DAYS))
+            .findByAuditEventDateBefore(
+                ZonedDateTime.now().minus(jHipsterProperties.getAuditEvents().getRetentionPeriod(), ChronoUnit.DAYS)
+            )
             .forEach(
                 auditEvent -> {
                     log.debug("Deleting audit data {}", auditEvent);
@@ -64,7 +67,7 @@ public class AuditEventService {
     }
 
     @Transactional(readOnly = true)
-    public Page<AuditEvent> findByDates(Instant fromDate, Instant toDate, Pageable pageable) {
+    public Page<AuditEvent> findByDates(ZonedDateTime fromDate, ZonedDateTime toDate, Pageable pageable) {
         return persistenceAuditEventRepository
             .findAllByAuditEventDateBetween(fromDate, toDate, pageable)
             .map(auditEventConverter::convertToAuditEvent);

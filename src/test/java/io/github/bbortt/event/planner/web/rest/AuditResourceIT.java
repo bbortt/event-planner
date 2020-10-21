@@ -12,7 +12,7 @@ import io.github.bbortt.event.planner.AbstractApplicationContextAwareIT;
 import io.github.bbortt.event.planner.domain.PersistentAuditEvent;
 import io.github.bbortt.event.planner.repository.PersistenceAuditEventRepository;
 import io.github.bbortt.event.planner.security.AuthoritiesConstants;
-import java.time.Instant;
+import java.time.ZonedDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +27,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @WithMockUser(authorities = AuthoritiesConstants.ADMIN)
 public class AuditResourceIT extends AbstractApplicationContextAwareIT {
+
     private static final String SAMPLE_PRINCIPAL = "SAMPLE_PRINCIPAL";
     private static final String SAMPLE_TYPE = "SAMPLE_TYPE";
-    private static final Instant SAMPLE_TIMESTAMP = Instant.parse("2015-08-04T10:11:30Z");
+    private static final ZonedDateTime SAMPLE_TIMESTAMP = ZonedDateTime.parse("2015-08-04T10:11:30Z");
     private static final long SECONDS_PER_DAY = 60 * 60 * 24;
 
     @Autowired

@@ -19,7 +19,7 @@ import io.github.bbortt.event.planner.security.AuthoritiesConstants;
 import io.github.bbortt.event.planner.service.dto.UserDTO;
 import io.github.bbortt.event.planner.service.mapper.UserMapper;
 import io.github.bbortt.event.planner.web.rest.vm.ManagedUserVM;
-import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -41,6 +41,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @WithMockUser(authorities = AuthoritiesConstants.ADMIN)
 public class UserResourceIT extends AbstractApplicationContextAwareIT {
+
     private static final String DEFAULT_LOGIN = "johndoe";
     private static final String UPDATED_LOGIN = "jhipster";
 
@@ -533,9 +534,9 @@ public class UserResourceIT extends AbstractApplicationContextAwareIT {
     public void testUserToUserDTO() {
         user.setId(DEFAULT_ID);
         user.setCreatedBy(DEFAULT_LOGIN);
-        user.setCreatedDate(Instant.now());
+        user.setCreatedDate(ZonedDateTime.now());
         user.setLastModifiedBy(DEFAULT_LOGIN);
-        user.setLastModifiedDate(Instant.now());
+        user.setLastModifiedDate(ZonedDateTime.now());
         Set<Authority> authorities = new HashSet<>();
         Authority authority = new Authority();
         authority.setName(AuthoritiesConstants.USER);
