@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
-import { Resolve, ActivatedRouteSnapshot, Routes, Router } from '@angular/router';
-import { Observable, of, EMPTY } from 'rxjs';
+import { ActivatedRouteSnapshot, Resolve, Router, Routes } from '@angular/router';
+import { EMPTY, Observable, of } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
 
-import { Authority } from 'app/shared/constants/authority.constants';
+import { AUTHORITY_ADMIN } from 'app/shared/constants/authority.constants';
 import { UserRouteAccessService } from 'app/core/auth/user-route-access-service';
 import { IResponsibility, Responsibility } from 'app/shared/model/responsibility.model';
 import { ResponsibilityService } from './responsibility.service';
@@ -39,7 +39,7 @@ export const responsibilityRoute: Routes = [
     path: '',
     component: ResponsibilityComponent,
     data: {
-      authorities: [Authority.ADMIN],
+      authorities: [AUTHORITY_ADMIN],
       defaultSort: 'id,asc',
       pageTitle: 'eventPlannerApp.responsibility.home.title',
     },
@@ -52,7 +52,7 @@ export const responsibilityRoute: Routes = [
       responsibility: ResponsibilityResolve,
     },
     data: {
-      authorities: [Authority.ADMIN],
+      authorities: [AUTHORITY_ADMIN],
       pageTitle: 'eventPlannerApp.responsibility.home.title',
     },
     canActivate: [UserRouteAccessService],
@@ -64,7 +64,7 @@ export const responsibilityRoute: Routes = [
       responsibility: ResponsibilityResolve,
     },
     data: {
-      authorities: [Authority.ADMIN],
+      authorities: [AUTHORITY_ADMIN],
       pageTitle: 'eventPlannerApp.responsibility.home.title',
     },
     canActivate: [UserRouteAccessService],
@@ -76,7 +76,7 @@ export const responsibilityRoute: Routes = [
       responsibility: ResponsibilityResolve,
     },
     data: {
-      authorities: [Authority.ADMIN],
+      authorities: [AUTHORITY_ADMIN],
       pageTitle: 'eventPlannerApp.responsibility.home.title',
     },
     canActivate: [UserRouteAccessService],

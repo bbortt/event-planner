@@ -1,12 +1,11 @@
 version: '2'
 services:
-  eventplanner-postgresql:
-    image: postgres:12.3
+  event-planner-postgresql:
+    image: postgres:13-alpine
     # volumes:
     #     - ~/volumes/jhipster/eventPlanner/postgresql/:/var/lib/postgresql/data/
     environment:
       - POSTGRES_USER=event_planner
       - POSTGRES_PASSWORD=event_planner_password
-      - POSTGRES_HOST_AUTH_METHOD=trust
     ports:
       - 5432:5432

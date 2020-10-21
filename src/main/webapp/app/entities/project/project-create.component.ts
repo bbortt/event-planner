@@ -8,7 +8,7 @@ import { ProjectService } from './project.service';
 import { IUser } from '../../core/user/user.model';
 import { AccountService } from '../../core/auth/account.service';
 import { CreateProject, ICreateProject } from '../../shared/model/dto/create-project.model';
-import { Authority } from '../../shared/constants/authority.constants';
+import { AUTHORITY_ADMIN } from '../../shared/constants/authority.constants';
 
 import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 
@@ -36,7 +36,7 @@ export class ProjectCreateComponent {
     private activatedRoute: ActivatedRoute,
     private fb: FormBuilder
   ) {
-    if (this.accountService.hasAnyAuthority(Authority.ADMIN)) {
+    if (this.accountService.hasAnyAuthority(AUTHORITY_ADMIN)) {
       this.editForm.get(['selectedUser'])!.setValidators(Validators.required);
     }
   }
@@ -59,7 +59,7 @@ export class ProjectCreateComponent {
       this.editForm.get(['description'])!.value
     );
 
-    if (this.accountService.hasAnyAuthority(Authority.ADMIN)) {
+    if (this.accountService.hasAnyAuthority(AUTHORITY_ADMIN)) {
       newProject.user = this.editForm.get(['selectedUser'])!.value;
     }
 
