@@ -32,6 +32,10 @@ import { RouterModule } from '@angular/router';
         path: 'event',
         loadChildren: () => import('./event/event.module').then(m => m.EventPlannerEventModule),
       },
+      {
+        path: 'location-time-slot',
+        loadChildren: () => import('./location-time-slot/location-time-slot.module').then(m => m.EventPlannerLocationTimeSlotModule),
+      },
       /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
     ]),
   ],

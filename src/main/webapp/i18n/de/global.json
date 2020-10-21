@@ -14,6 +14,7 @@
         "location": "Lokalität",
         "section": "Abschnitt",
         "event": "Ereignis",
+        "locationTimeSlot": "Lokalitäts-Zeiten",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {
