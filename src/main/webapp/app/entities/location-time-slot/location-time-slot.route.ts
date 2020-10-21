@@ -4,7 +4,6 @@ import { Resolve, ActivatedRouteSnapshot, Routes, Router } from '@angular/router
 import { Observable, of, EMPTY } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
 
-import { Authority } from 'app/shared/constants/authority.constants';
 import { UserRouteAccessService } from 'app/core/auth/user-route-access-service';
 import { ILocationTimeSlot, LocationTimeSlot } from 'app/shared/model/location-time-slot.model';
 import { LocationTimeSlotService } from './location-time-slot.service';
@@ -39,7 +38,6 @@ export const locationTimeSlotRoute: Routes = [
     path: '',
     component: LocationTimeSlotComponent,
     data: {
-      authorities: [Authority.ADMIN],
       defaultSort: 'id,asc',
       pageTitle: 'eventPlannerApp.locationTimeSlot.home.title',
     },
@@ -52,7 +50,6 @@ export const locationTimeSlotRoute: Routes = [
       locationTimeSlot: LocationTimeSlotResolve,
     },
     data: {
-      authorities: [Authority.ADMIN],
       pageTitle: 'eventPlannerApp.locationTimeSlot.home.title',
     },
     canActivate: [UserRouteAccessService],
@@ -64,7 +61,6 @@ export const locationTimeSlotRoute: Routes = [
       locationTimeSlot: LocationTimeSlotResolve,
     },
     data: {
-      authorities: [Authority.ADMIN],
       pageTitle: 'eventPlannerApp.locationTimeSlot.home.title',
     },
     canActivate: [UserRouteAccessService],
@@ -76,7 +72,6 @@ export const locationTimeSlotRoute: Routes = [
       locationTimeSlot: LocationTimeSlotResolve,
     },
     data: {
-      authorities: [Authority.ADMIN],
       pageTitle: 'eventPlannerApp.locationTimeSlot.home.title',
     },
     canActivate: [UserRouteAccessService],

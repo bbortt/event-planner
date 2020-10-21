@@ -3,7 +3,7 @@ import { HttpResponse } from '@angular/common/http';
 import { ActivatedRouteSnapshot, Resolve, Router, Routes } from '@angular/router';
 import { EMPTY, Observable, of } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
-import { AUTHORITY_ADMIN } from 'app/shared/constants/authority.constants';
+
 import { UserRouteAccessService } from 'app/core/auth/user-route-access-service';
 import { IProject, Project } from 'app/shared/model/project.model';
 import { ProjectService } from './project.service';
@@ -39,7 +39,6 @@ export const projectRoute: Routes = [
     path: '',
     component: ProjectComponent,
     data: {
-      authorities: [AUTHORITY_ADMIN],
       defaultSort: 'id,asc',
       pageTitle: 'eventPlannerApp.project.home.title',
     },
@@ -52,7 +51,6 @@ export const projectRoute: Routes = [
       project: ProjectResolve,
     },
     data: {
-      authorities: [AUTHORITY_ADMIN],
       pageTitle: 'eventPlannerApp.project.home.title',
     },
     canActivate: [UserRouteAccessService],
@@ -64,7 +62,6 @@ export const projectRoute: Routes = [
       project: ProjectResolve,
     },
     data: {
-      authorities: [AUTHORITY_ADMIN],
       pageTitle: 'eventPlannerApp.project.home.title',
     },
     canActivate: [UserRouteAccessService],
@@ -76,7 +73,6 @@ export const projectRoute: Routes = [
       project: ProjectResolve,
     },
     data: {
-      authorities: [AUTHORITY_ADMIN],
       pageTitle: 'eventPlannerApp.project.home.title',
     },
     canActivate: [UserRouteAccessService],
