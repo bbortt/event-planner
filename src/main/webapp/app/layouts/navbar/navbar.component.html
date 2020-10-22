@@ -86,6 +86,12 @@
                             <span jhiTranslate="global.menu.entities.event">Event</span>
                         </a>
                     </li>
+                    <li>
+                        <a class="dropdown-item" routerLink="location-time-slot" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+                            <span jhiTranslate="global.menu.entities.locationTimeSlot">Location Time Slot</span>
+                        </a>
+                    </li>
                     <!-- jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here -->
                 </ul>
             </li>

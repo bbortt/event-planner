@@ -68,6 +68,10 @@ public class Location implements Serializable {
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Section> sections = new HashSet<>();
 
+    @OneToMany(mappedBy = "location")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    private Set<LocationTimeSlot> locationTimeSlots = new HashSet<>();
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
@@ -164,6 +168,26 @@ public class Location implements Serializable {
     public Location removeSection(Section section) {
         this.sections.remove(section);
         section.setLocation(null);
+        return this;
+    }
+
+    public Set<LocationTimeSlot> getLocationTimeSlots() {
+        return locationTimeSlots;
+    }
+
+    public void setLocationTimeSlots(Set<LocationTimeSlot> locationTimeSlots) {
+        this.locationTimeSlots = locationTimeSlots;
+    }
+
+    public Location addLocationTimeSlot(LocationTimeSlot locationTimeSlot) {
+        this.locationTimeSlots.add(locationTimeSlot);
+        locationTimeSlot.setLocation(this);
+        return this;
+    }
+
+    public Location removeLocationTimeSlot(LocationTimeSlot locationTimeSlot) {
+        this.locationTimeSlots.remove(locationTimeSlot);
+        locationTimeSlot.setLocation(null);
         return this;
     }
 

@@ -1,0 +1,24 @@
+{
+  "eventPlannerApp": {
+    "locationTimeSlot": {
+      "home": {
+        "title": "Lokalitäts Zeiträume",
+        "createLabel": "Lokalitäts Zeitraum erstellen",
+        "createOrEditLabel": "Lokalitäts Zeitraum erstellen oder bearbeiten",
+        "notFound": "Keine Lokalitäts Zeiträume gefunden"
+      },
+      "created": "Lokalitäts Zeitraum mit ID {{ param }} erstellt",
+      "updated": "Lokalitäts Zeitraum mit ID {{ param }} aktualisiert",
+      "deleted": "Lokalitäts Zeitraum mit ID {{ param }} gelöscht",
+      "delete": {
+        "question": "Soll Lokalitäts Zeitraum {{ id }} wirklich dauerhaft gelöscht werden?"
+      },
+      "detail": {
+        "title": "Lokalitäts Zeitraum"
+      },
+      "startTime": "Start Zeit",
+      "endTime": "End Zeit",
+      "location": "Lokalität"
+    }
+  }
+}

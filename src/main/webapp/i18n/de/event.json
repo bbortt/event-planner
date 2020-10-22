@@ -1,6 +1,6 @@
 {
-  "EreignisPlannerApp": {
-    "Ereignis": {
+  "eventPlannerApp": {
+    "event": {
       "home": {
         "title": "Ereignise",
         "createLabel": "Ereignis erstellen",
