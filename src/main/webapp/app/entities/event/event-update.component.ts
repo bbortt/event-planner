@@ -52,7 +52,7 @@ export class EventUpdateComponent implements OnInit {
     this.activatedRoute.data.subscribe(({ event }) => {
       if (!event.id) {
         const today = moment().startOf('day');
-        event.startTime = today;
+        event.startMoment = today;
         event.endTime = today;
       }
 
