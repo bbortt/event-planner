@@ -19,6 +19,8 @@ import io.github.bbortt.event.planner.security.AuthoritiesConstants;
 import io.github.bbortt.event.planner.service.dto.UserDTO;
 import io.github.bbortt.event.planner.service.mapper.UserMapper;
 import io.github.bbortt.event.planner.web.rest.vm.ManagedUserVM;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.HashSet;
@@ -298,9 +300,9 @@ public class UserResourceIT extends AbstractApplicationContextAwareIT {
         managedUserVM.setImageUrl(UPDATED_IMAGEURL);
         managedUserVM.setLangKey(UPDATED_LANGKEY);
         managedUserVM.setCreatedBy(updatedUser.getCreatedBy());
-        managedUserVM.setCreatedDate(updatedUser.getCreatedDate());
+        managedUserVM.setCreatedDate(ZonedDateTime.ofInstant(updatedUser.getCreatedDate(), ZoneId.systemDefault()));
         managedUserVM.setLastModifiedBy(updatedUser.getLastModifiedBy());
-        managedUserVM.setLastModifiedDate(updatedUser.getLastModifiedDate());
+        managedUserVM.setLastModifiedDate(ZonedDateTime.ofInstant(updatedUser.getLastModifiedDate(), ZoneId.systemDefault()));
         managedUserVM.setAuthorities(Collections.singleton(AuthoritiesConstants.USER));
 
         restUserMockMvc
@@ -346,9 +348,9 @@ public class UserResourceIT extends AbstractApplicationContextAwareIT {
         managedUserVM.setImageUrl(UPDATED_IMAGEURL);
         managedUserVM.setLangKey(UPDATED_LANGKEY);
         managedUserVM.setCreatedBy(updatedUser.getCreatedBy());
-        managedUserVM.setCreatedDate(updatedUser.getCreatedDate());
+        managedUserVM.setCreatedDate(ZonedDateTime.ofInstant(updatedUser.getCreatedDate(), ZoneId.systemDefault()));
         managedUserVM.setLastModifiedBy(updatedUser.getLastModifiedBy());
-        managedUserVM.setLastModifiedDate(updatedUser.getLastModifiedDate());
+        managedUserVM.setLastModifiedDate(ZonedDateTime.ofInstant(updatedUser.getLastModifiedDate(), ZoneId.systemDefault()));
         managedUserVM.setAuthorities(Collections.singleton(AuthoritiesConstants.USER));
 
         restUserMockMvc
@@ -405,9 +407,9 @@ public class UserResourceIT extends AbstractApplicationContextAwareIT {
         managedUserVM.setImageUrl(updatedUser.getImageUrl());
         managedUserVM.setLangKey(updatedUser.getLangKey());
         managedUserVM.setCreatedBy(updatedUser.getCreatedBy());
-        managedUserVM.setCreatedDate(updatedUser.getCreatedDate());
+        managedUserVM.setCreatedDate(ZonedDateTime.ofInstant(updatedUser.getCreatedDate(), ZoneId.systemDefault()));
         managedUserVM.setLastModifiedBy(updatedUser.getLastModifiedBy());
-        managedUserVM.setLastModifiedDate(updatedUser.getLastModifiedDate());
+        managedUserVM.setLastModifiedDate(ZonedDateTime.ofInstant(updatedUser.getLastModifiedDate(), ZoneId.systemDefault()));
         managedUserVM.setAuthorities(Collections.singleton(AuthoritiesConstants.USER));
 
         restUserMockMvc
@@ -446,9 +448,9 @@ public class UserResourceIT extends AbstractApplicationContextAwareIT {
         managedUserVM.setImageUrl(updatedUser.getImageUrl());
         managedUserVM.setLangKey(updatedUser.getLangKey());
         managedUserVM.setCreatedBy(updatedUser.getCreatedBy());
-        managedUserVM.setCreatedDate(updatedUser.getCreatedDate());
+        managedUserVM.setCreatedDate(ZonedDateTime.ofInstant(updatedUser.getCreatedDate(), ZoneId.systemDefault()));
         managedUserVM.setLastModifiedBy(updatedUser.getLastModifiedBy());
-        managedUserVM.setLastModifiedDate(updatedUser.getLastModifiedDate());
+        managedUserVM.setLastModifiedDate(ZonedDateTime.ofInstant(updatedUser.getLastModifiedDate(), ZoneId.systemDefault()));
         managedUserVM.setAuthorities(Collections.singleton(AuthoritiesConstants.USER));
 
         restUserMockMvc
@@ -534,9 +536,9 @@ public class UserResourceIT extends AbstractApplicationContextAwareIT {
     public void testUserToUserDTO() {
         user.setId(DEFAULT_ID);
         user.setCreatedBy(DEFAULT_LOGIN);
-        user.setCreatedDate(ZonedDateTime.now());
+        user.setCreatedDate(Instant.now());
         user.setLastModifiedBy(DEFAULT_LOGIN);
-        user.setLastModifiedDate(ZonedDateTime.now());
+        user.setLastModifiedDate(Instant.now());
         Set<Authority> authorities = new HashSet<>();
         Authority authority = new Authority();
         authority.setName(AuthoritiesConstants.USER);
@@ -554,9 +556,9 @@ public class UserResourceIT extends AbstractApplicationContextAwareIT {
         assertThat(userDTO.getImageUrl()).isEqualTo(DEFAULT_IMAGEURL);
         assertThat(userDTO.getLangKey()).isEqualTo(DEFAULT_LANGKEY);
         assertThat(userDTO.getCreatedBy()).isEqualTo(DEFAULT_LOGIN);
-        assertThat(userDTO.getCreatedDate()).isEqualTo(user.getCreatedDate());
+        assertThat(userDTO.getCreatedDate().toInstant()).isEqualTo(user.getCreatedDate());
         assertThat(userDTO.getLastModifiedBy()).isEqualTo(DEFAULT_LOGIN);
-        assertThat(userDTO.getLastModifiedDate()).isEqualTo(user.getLastModifiedDate());
+        assertThat(userDTO.getLastModifiedDate().toInstant()).isEqualTo(user.getLastModifiedDate());
         assertThat(userDTO.getAuthorities()).containsExactly(AuthoritiesConstants.USER);
         assertThat(userDTO.toString()).isNotNull();
     }

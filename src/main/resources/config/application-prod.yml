@@ -50,8 +50,8 @@ spring:
   thymeleaf:
     cache: true
   flyway:
-    password: ${APPL_FLYWAY_PASSWORD:${spring.datasource.password}}
     user: ${APPL_FLYWAY_USER:${spring.datasource.username}}
+    password: ${APPL_FLYWAY_PASSWORD:${spring.datasource.password}}
 
 # ===================================================================
 # To enable TLS in production, generate a certificate using:

@@ -11,6 +11,7 @@ DROP TABLE section_has_events;
 DROP TABLE responsibility;
 DROP TABLE role;
 DROP TABLE project;
+DROP TABLE location_time_slot;
 
 -- JHipster entities
 DROP TABLE jhi_persistent_audit_evt_data;

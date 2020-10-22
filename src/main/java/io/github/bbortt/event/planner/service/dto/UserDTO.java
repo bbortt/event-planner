@@ -3,6 +3,7 @@ package io.github.bbortt.event.planner.service.dto;
 import io.github.bbortt.event.planner.config.Constants;
 import io.github.bbortt.event.planner.domain.Authority;
 import io.github.bbortt.event.planner.domain.User;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -65,9 +66,9 @@ public class UserDTO {
         this.imageUrl = user.getImageUrl();
         this.langKey = user.getLangKey();
         this.createdBy = user.getCreatedBy();
-        this.createdDate = user.getCreatedDate();
+        this.createdDate = ZonedDateTime.ofInstant(user.getCreatedDate(), ZoneId.systemDefault());
         this.lastModifiedBy = user.getLastModifiedBy();
-        this.lastModifiedDate = user.getLastModifiedDate();
+        this.lastModifiedDate = ZonedDateTime.ofInstant(user.getLastModifiedDate(), ZoneId.systemDefault());
         this.authorities = user.getAuthorities().stream().map(Authority::getName).collect(Collectors.toSet());
     }
 
