@@ -3,9 +3,9 @@ package io.github.bbortt.event.planner.web.rest;
 import io.github.bbortt.event.planner.service.AuditEventService;
 import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 import org.springframework.boot.actuate.audit.AuditEvent;
 import org.springframework.data.domain.Page;
@@ -26,6 +26,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RestController
 @RequestMapping("/management/audits")
 public class AuditResource {
+
     private final AuditEventService auditEventService;
 
     public AuditResource(AuditEventService auditEventService) {
@@ -59,8 +60,8 @@ public class AuditResource {
         @RequestParam(value = "toDate") LocalDate toDate,
         Pageable pageable
     ) {
-        Instant from = fromDate.atStartOfDay(ZoneId.systemDefault()).toInstant();
-        Instant to = toDate.atStartOfDay(ZoneId.systemDefault()).plusDays(1).toInstant();
+        ZonedDateTime from = fromDate.atStartOfDay(ZoneId.systemDefault());
+        ZonedDateTime to = toDate.atStartOfDay(ZoneId.systemDefault()).plusDays(1);
 
         Page<AuditEvent> page = auditEventService.findByDates(from, to, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);

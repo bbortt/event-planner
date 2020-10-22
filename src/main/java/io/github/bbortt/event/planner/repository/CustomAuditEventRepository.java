@@ -4,6 +4,8 @@ import io.github.bbortt.event.planner.config.Constants;
 import io.github.bbortt.event.planner.config.audit.AuditEventConverter;
 import io.github.bbortt.event.planner.domain.PersistentAuditEvent;
 import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository
 public class CustomAuditEventRepository implements AuditEventRepository {
+
     /**
      * Should be the same as in Flyway migration.
      */
@@ -56,7 +59,7 @@ public class CustomAuditEventRepository implements AuditEventRepository {
             PersistentAuditEvent persistentAuditEvent = new PersistentAuditEvent();
             persistentAuditEvent.setPrincipal(event.getPrincipal());
             persistentAuditEvent.setAuditEventType(event.getType());
-            persistentAuditEvent.setAuditEventDate(event.getTimestamp());
+            persistentAuditEvent.setAuditEventDate(ZonedDateTime.ofInstant(event.getTimestamp(), ZoneId.systemDefault()));
             Map<String, String> eventData = auditEventConverter.convertDataToStrings(event.getData());
             persistentAuditEvent.setData(truncate(eventData));
             persistenceAuditEventRepository.save(persistentAuditEvent);

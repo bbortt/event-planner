@@ -19,7 +19,7 @@ import io.github.bbortt.event.planner.service.dto.PasswordChangeDTO;
 import io.github.bbortt.event.planner.service.dto.UserDTO;
 import io.github.bbortt.event.planner.web.rest.vm.KeyAndPasswordVM;
 import io.github.bbortt.event.planner.web.rest.vm.ManagedUserVM;
-import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
@@ -38,6 +38,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @WithMockUser(value = TEST_USER_LOGIN)
 public class AccountResourceIT extends AbstractApplicationContextAwareIT {
+
     static final String TEST_USER_LOGIN = "test";
 
     @Autowired
@@ -698,7 +699,7 @@ public class AccountResourceIT extends AbstractApplicationContextAwareIT {
         user.setPassword(RandomStringUtils.random(60));
         user.setLogin("finish-password-reset");
         user.setEmail("finish-password-reset@example.com");
-        user.setResetDate(Instant.now().plusSeconds(60));
+        user.setResetDate(ZonedDateTime.now().plusSeconds(60));
         user.setResetKey("reset key");
         userRepository.saveAndFlush(user);
 
@@ -725,7 +726,7 @@ public class AccountResourceIT extends AbstractApplicationContextAwareIT {
         user.setPassword(RandomStringUtils.random(60));
         user.setLogin("finish-password-reset-too-small");
         user.setEmail("finish-password-reset-too-small@example.com");
-        user.setResetDate(Instant.now().plusSeconds(60));
+        user.setResetDate(ZonedDateTime.now().plusSeconds(60));
         user.setResetKey("reset key too small");
         userRepository.saveAndFlush(user);
 

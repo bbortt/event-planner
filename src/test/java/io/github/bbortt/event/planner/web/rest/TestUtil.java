@@ -25,6 +25,7 @@ import org.springframework.format.support.FormattingConversionService;
  * Utility class for testing REST controllers.
  */
 public final class TestUtil {
+
     private static final ObjectMapper mapper = createObjectMapper();
 
     private TestUtil() {}
@@ -124,6 +125,7 @@ public final class TestUtil {
      * A matcher that tests that the examined string represents the same instant as the reference datetime.
      */
     public static class ZonedDateTimeMatcher extends TypeSafeDiagnosingMatcher<String> {
+
         private final ZonedDateTime date;
 
         public ZonedDateTimeMatcher(ZonedDateTime date) {
@@ -146,7 +148,7 @@ public final class TestUtil {
 
         @Override
         public void describeTo(Description description) {
-            description.appendText("a String representing the same Instant as ").appendValue(date);
+            description.appendText("a String representing the same ZonedDateTime as ").appendValue(date);
         }
     }
 }
