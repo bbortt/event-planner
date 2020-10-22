@@ -4,7 +4,6 @@ import { ActivatedRouteSnapshot, Resolve, Router, Routes } from '@angular/router
 import { EMPTY, Observable, of } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
 
-import { AUTHORITY_ADMIN } from 'app/shared/constants/authority.constants';
 import { UserRouteAccessService } from 'app/core/auth/user-route-access-service';
 import { Event, IEvent } from 'app/shared/model/event.model';
 import { EventService } from './event.service';
@@ -39,7 +38,6 @@ export const eventRoute: Routes = [
     path: '',
     component: EventComponent,
     data: {
-      authorities: [AUTHORITY_ADMIN],
       defaultSort: 'id,asc',
       pageTitle: 'eventPlannerApp.event.home.title',
     },
@@ -52,7 +50,6 @@ export const eventRoute: Routes = [
       event: EventResolve,
     },
     data: {
-      authorities: [AUTHORITY_ADMIN],
       pageTitle: 'eventPlannerApp.event.home.title',
     },
     canActivate: [UserRouteAccessService],
@@ -64,7 +61,6 @@ export const eventRoute: Routes = [
       event: EventResolve,
     },
     data: {
-      authorities: [AUTHORITY_ADMIN],
       pageTitle: 'eventPlannerApp.event.home.title',
     },
     canActivate: [UserRouteAccessService],
@@ -76,7 +72,6 @@ export const eventRoute: Routes = [
       event: EventResolve,
     },
     data: {
-      authorities: [AUTHORITY_ADMIN],
       pageTitle: 'eventPlannerApp.event.home.title',
     },
     canActivate: [UserRouteAccessService],

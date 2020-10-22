@@ -4,7 +4,6 @@ import { ActivatedRouteSnapshot, Resolve, Router, Routes } from '@angular/router
 import { EMPTY, Observable, of } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
 
-import { AUTHORITY_ADMIN } from 'app/shared/constants/authority.constants';
 import { UserRouteAccessService } from 'app/core/auth/user-route-access-service';
 import { IRole, Role } from 'app/shared/model/role.model';
 import { RoleService } from './role.service';
@@ -38,7 +37,6 @@ export const roleRoute: Routes = [
     path: '',
     component: RoleComponent,
     data: {
-      authorities: [AUTHORITY_ADMIN],
       defaultSort: 'name,asc',
       pageTitle: 'eventPlannerApp.role.home.title',
     },
@@ -51,7 +49,6 @@ export const roleRoute: Routes = [
       role: RoleResolve,
     },
     data: {
-      authorities: [AUTHORITY_ADMIN],
       pageTitle: 'eventPlannerApp.role.home.title',
     },
     canActivate: [UserRouteAccessService],
