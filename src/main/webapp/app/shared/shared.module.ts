@@ -6,10 +6,18 @@ import { AlertErrorComponent } from './alert/alert-error.component';
 import { LoginModalComponent } from './login/login.component';
 import { HasAnyAuthorityDirective } from './auth/has-any-authority.directive';
 import { ComponentsModule } from 'app/shared/components/components.module';
+import { HasAnyRoleDirective } from 'app/shared/auth/has-any-role.directive';
 
 @NgModule({
   imports: [ComponentsModule, EventPlannerSharedLibsModule],
-  declarations: [FindLanguageFromKeyPipe, AlertComponent, AlertErrorComponent, LoginModalComponent, HasAnyAuthorityDirective],
+  declarations: [
+    FindLanguageFromKeyPipe,
+    AlertComponent,
+    AlertErrorComponent,
+    LoginModalComponent,
+    HasAnyAuthorityDirective,
+    HasAnyRoleDirective,
+  ],
   entryComponents: [LoginModalComponent],
   exports: [
     EventPlannerSharedLibsModule,
@@ -18,6 +26,7 @@ import { ComponentsModule } from 'app/shared/components/components.module';
     AlertErrorComponent,
     LoginModalComponent,
     HasAnyAuthorityDirective,
+    HasAnyRoleDirective,
     ComponentsModule,
   ],
 })
