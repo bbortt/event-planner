@@ -23,6 +23,10 @@
       "detail": {
         "title": "Project"
       },
+      "overview": {
+        "title": "Project",
+        "tabTitle": "Event Planner | Configure Project"
+      },
       "name": "Name",
       "description": "Description",
       "startTime": "Start Time",

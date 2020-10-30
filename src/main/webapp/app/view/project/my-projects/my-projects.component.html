@@ -41,7 +41,7 @@
          [infiniteScrollDisabled]="page >= links['last']" [infiniteScrollDistance]="0">
         <div *ngFor="let projectRow of projects" class="row">
             <div *ngFor="let project of projectRow;trackBy: trackId" class="col-md">
-                <a [routerLink]="['/project', project.id, 'view']">
+                <a [routerLink]="['/project', project.id]">
                     <div *ngIf="project.id" class="project-card">
                         <h2>{{project.name}}</h2>
                         <br/>

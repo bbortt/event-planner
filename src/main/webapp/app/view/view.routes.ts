@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 
-import { HomeComponent } from './home/home.component';
-import { CreateProjectModalComponent } from 'app/view/my-projects/create-project/create-project-modal.component';
+import { HomeComponent } from './home.component';
+import { CreateProjectModalComponent } from 'app/view/project/create-project/create-project-modal.component';
 
 export const VIEW_ROUTES: Routes = [
   {
@@ -11,6 +11,10 @@ export const VIEW_ROUTES: Routes = [
       defaultSort: 'id,asc',
       pageTitle: 'home.title',
     },
+  },
+  {
+    path: 'project',
+    loadChildren: () => import('./project/project.module').then(m => m.EventPlannerProjectModule),
   },
   {
     path: 'create-project',
