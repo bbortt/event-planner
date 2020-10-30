@@ -5,6 +5,7 @@ import io.github.bbortt.event.planner.domain.Authority;
 import io.github.bbortt.event.planner.domain.User;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.validation.constraints.Email;
@@ -52,6 +53,8 @@ public class UserDTO {
 
     private Set<String> authorities;
 
+    private Map<Long, String> rolesPerProject;
+
     public UserDTO() {
         // Empty constructor needed for Jackson.
     }
@@ -70,6 +73,11 @@ public class UserDTO {
         this.lastModifiedBy = user.getLastModifiedBy();
         this.lastModifiedDate = ZonedDateTime.ofInstant(user.getLastModifiedDate(), ZoneId.systemDefault());
         this.authorities = user.getAuthorities().stream().map(Authority::getName).collect(Collectors.toSet());
+        this.rolesPerProject =
+            user
+                .getInvitations()
+                .stream()
+                .collect(Collectors.toMap(invitation -> invitation.getProject().getId(), invitation -> invitation.getRole().getName()));
     }
 
     public Long getId() {
@@ -176,6 +184,14 @@ public class UserDTO {
         this.authorities = authorities;
     }
 
+    public Map<Long, String> getRolesPerProject() {
+        return rolesPerProject;
+    }
+
+    public void setRolesPerProject(Map<Long, String> rolesPerProject) {
+        this.rolesPerProject = rolesPerProject;
+    }
+
     // prettier-ignore
     @Override
     public String toString() {
@@ -192,6 +208,7 @@ public class UserDTO {
             ", lastModifiedBy='" + lastModifiedBy + '\'' +
             ", lastModifiedDate=" + lastModifiedDate +
             ", authorities=" + authorities +
+            ", rolesPerProject="+ rolesPerProject +
             "}";
     }
 }

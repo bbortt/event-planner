@@ -43,6 +43,18 @@ export class AccountService {
     return this.userIdentity.authorities.some((authority: string) => authorities.includes(authority));
   }
 
+  hasAnyRole(projectId: number, roles: string[] | string): boolean {
+    if (!this.userIdentity || !this.userIdentity.authorities) {
+      return false;
+    }
+    if (!Array.isArray(roles)) {
+      roles = [roles];
+    }
+
+    const projectRole = this.userIdentity.rolesPerProject[projectId];
+    return !!projectRole && roles.some((role: string) => projectRole === role);
+  }
+
   identity(force?: boolean): Observable<Account | null> {
     if (!this.accountCache$ || force || !this.isAuthenticated()) {
       this.accountCache$ = this.fetch().pipe(
