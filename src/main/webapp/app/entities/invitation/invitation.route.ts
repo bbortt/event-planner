@@ -4,7 +4,7 @@ import { ActivatedRouteSnapshot, Resolve, Router, Routes } from '@angular/router
 import { EMPTY, Observable, of } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
 
-import { UserRouteAccessService } from 'app/core/auth/user-route-access-service';
+import { UserRouteAuthorityAccessService } from 'app/core/auth/user-route-authority-access-service';
 import { IInvitation, Invitation } from 'app/shared/model/invitation.model';
 import { InvitationService } from './invitation.service';
 import { InvitationComponent } from './invitation.component';
@@ -41,7 +41,7 @@ export const invitationRoute: Routes = [
       defaultSort: 'id,asc',
       pageTitle: 'eventPlannerApp.invitation.home.title',
     },
-    canActivate: [UserRouteAccessService],
+    canActivate: [UserRouteAuthorityAccessService],
   },
   {
     path: ':id/view',
@@ -52,7 +52,7 @@ export const invitationRoute: Routes = [
     data: {
       pageTitle: 'eventPlannerApp.invitation.home.title',
     },
-    canActivate: [UserRouteAccessService],
+    canActivate: [UserRouteAuthorityAccessService],
   },
   {
     path: 'new',
@@ -63,7 +63,7 @@ export const invitationRoute: Routes = [
     data: {
       pageTitle: 'eventPlannerApp.invitation.home.title',
     },
-    canActivate: [UserRouteAccessService],
+    canActivate: [UserRouteAuthorityAccessService],
   },
   {
     path: ':id/edit',
@@ -74,6 +74,6 @@ export const invitationRoute: Routes = [
     data: {
       pageTitle: 'eventPlannerApp.invitation.home.title',
     },
-    canActivate: [UserRouteAccessService],
+    canActivate: [UserRouteAuthorityAccessService],
   },
 ];

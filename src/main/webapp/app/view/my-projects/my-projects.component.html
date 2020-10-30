@@ -41,7 +41,8 @@
          [infiniteScrollDisabled]="page >= links['last']" [infiniteScrollDistance]="0">
         <div *ngFor="let projectRow of projects" class="row">
             <div *ngFor="let project of projectRow;trackBy: trackId" class="col-md">
-                <a [routerLink]="['/project', project.id]">
+                <a  *jhiHasAnyAuthority="'ROLE_USER'"
+                    [routerLink]="['/project', project.id, 'screenplay']">
                     <div *ngIf="project.id" class="project-card">
                         <h2>{{project.name}}</h2>
                         <br/>
@@ -51,6 +52,32 @@
                         </div>
                     </div>
                 </a>
+
+                <div  *jhiHasAnyAuthority="'ROLE_ADMIN'">
+                <div  *ngIf="project.id" class="project-card">
+                    <h2>{{project.name}}</h2>
+                    <br/>
+                    <div class="project-card-description">
+                        {{project.description ? project.description
+                        : 'eventPlannerApp.project.mine.noDescription' | translate}}
+                    </div>
+                    <br/>
+                        <button id="jh-screenplay-{{project.id}}" [routerLink]="['project',project.id,'screenplay']"
+                            class="btn btn-negative">
+                        <fa-icon [icon]="faBook"></fa-icon>
+                        <span jhiTranslate="eventPlannerApp.project.home.screenplayLabel">
+                            Screenplay
+                        </span>
+                    </button>
+                    <button id="jh-settings-{{project.id}}" [routerLink]="['project',project.id]"
+                            class="btn btn-negative">
+                        <fa-icon [icon]="faCog"></fa-icon>
+                        <span jhiTranslate="eventPlannerApp.project.home.settingsLabel">
+                            Settings
+                        </span>
+                    </button>
+                </div>
+                </div>
             </div>
         </div>
     </div>

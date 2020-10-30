@@ -4,7 +4,7 @@ import { ActivatedRouteSnapshot, Resolve, Router, Routes } from '@angular/router
 import { EMPTY, Observable, of } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
 
-import { UserRouteAccessService } from 'app/core/auth/user-route-access-service';
+import { UserRouteAuthorityAccessService } from 'app/core/auth/user-route-authority-access-service';
 import { IProject, Project } from 'app/shared/model/project.model';
 import { ProjectService } from './project.service';
 import { ProjectComponent } from './project.component';
@@ -42,7 +42,7 @@ export const projectRoute: Routes = [
       defaultSort: 'id,asc',
       pageTitle: 'eventPlannerApp.project.home.title',
     },
-    canActivate: [UserRouteAccessService],
+    canActivate: [UserRouteAuthorityAccessService],
   },
   {
     path: ':id/view',
@@ -53,7 +53,7 @@ export const projectRoute: Routes = [
     data: {
       pageTitle: 'eventPlannerApp.project.home.title',
     },
-    canActivate: [UserRouteAccessService],
+    canActivate: [UserRouteAuthorityAccessService],
   },
   {
     path: 'new',
@@ -64,7 +64,7 @@ export const projectRoute: Routes = [
     data: {
       pageTitle: 'eventPlannerApp.project.home.title',
     },
-    canActivate: [UserRouteAccessService],
+    canActivate: [UserRouteAuthorityAccessService],
   },
   {
     path: ':id/edit',
@@ -75,6 +75,6 @@ export const projectRoute: Routes = [
     data: {
       pageTitle: 'eventPlannerApp.project.home.title',
     },
-    canActivate: [UserRouteAccessService],
+    canActivate: [UserRouteAuthorityAccessService],
   },
 ];

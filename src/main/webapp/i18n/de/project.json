@@ -5,6 +5,8 @@
         "title": "Projekte",
         "createLabel": "Projekt erstellen",
         "editLabel": "Projekt bearbeiten",
+        "screenplayLabel": "Drehbuch",
+        "settingsLabel": "Einstellungen",
         "notFound": "Keine Projekte gefunden"
       },
       "mine": {
@@ -26,6 +28,10 @@
       "overview": {
         "title": "Projekt",
         "tabTitle": "Event Planer | Project Konfigurieren"
+      },
+      "screenplay": {
+        "title": "Drehbuch",
+        "tabTitle": "Event Planner | Drehbuch"
       },
       "name": "Name",
       "description": "Beschreibung",

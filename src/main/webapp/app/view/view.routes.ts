@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 
 import { HomeComponent } from './home.component';
-import { CreateProjectModalComponent } from 'app/view/project/create-project/create-project-modal.component';
+import { CreateProjectModalComponent } from 'app/view/create-project/create-project-modal.component';
 
 export const VIEW_ROUTES: Routes = [
   {

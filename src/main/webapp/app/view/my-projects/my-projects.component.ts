@@ -10,7 +10,7 @@ import { IProject } from 'app/shared/model/project.model';
 import { ProjectService } from 'app/entities/project/project.service';
 import { AccountService } from 'app/core/auth/account.service';
 
-import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
+import { faArrowDown, faBook, faCog } from '@fortawesome/free-solid-svg-icons';
 import { AUTHORITY_ADMIN } from 'app/shared/constants/authority.constants';
 
 @Component({
@@ -28,6 +28,8 @@ export class MyProjectsComponent implements OnInit, OnDestroy {
   ascending: boolean;
 
   faArrowDown = faArrowDown;
+  faBook = faBook;
+  faCog = faCog;
 
   showAllProjects = false;
   loadMoreButtonEnabled = true;

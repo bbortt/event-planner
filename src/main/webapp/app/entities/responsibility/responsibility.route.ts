@@ -4,7 +4,7 @@ import { ActivatedRouteSnapshot, Resolve, Router, Routes } from '@angular/router
 import { EMPTY, Observable, of } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
 
-import { UserRouteAccessService } from 'app/core/auth/user-route-access-service';
+import { UserRouteAuthorityAccessService } from 'app/core/auth/user-route-authority-access-service';
 import { IResponsibility, Responsibility } from 'app/shared/model/responsibility.model';
 import { ResponsibilityService } from './responsibility.service';
 import { ResponsibilityComponent } from './responsibility.component';
@@ -41,7 +41,7 @@ export const responsibilityRoute: Routes = [
       defaultSort: 'id,asc',
       pageTitle: 'eventPlannerApp.responsibility.home.title',
     },
-    canActivate: [UserRouteAccessService],
+    canActivate: [UserRouteAuthorityAccessService],
   },
   {
     path: ':id/view',
@@ -52,7 +52,7 @@ export const responsibilityRoute: Routes = [
     data: {
       pageTitle: 'eventPlannerApp.responsibility.home.title',
     },
-    canActivate: [UserRouteAccessService],
+    canActivate: [UserRouteAuthorityAccessService],
   },
   {
     path: 'new',
@@ -63,7 +63,7 @@ export const responsibilityRoute: Routes = [
     data: {
       pageTitle: 'eventPlannerApp.responsibility.home.title',
     },
-    canActivate: [UserRouteAccessService],
+    canActivate: [UserRouteAuthorityAccessService],
   },
   {
     path: ':id/edit',
@@ -74,6 +74,6 @@ export const responsibilityRoute: Routes = [
     data: {
       pageTitle: 'eventPlannerApp.responsibility.home.title',
     },
-    canActivate: [UserRouteAccessService],
+    canActivate: [UserRouteAuthorityAccessService],
   },
 ];

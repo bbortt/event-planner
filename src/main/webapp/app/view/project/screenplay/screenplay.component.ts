@@ -4,11 +4,11 @@ import { ActivatedRoute } from '@angular/router';
 import { Project } from 'app/shared/model/project.model';
 
 @Component({
-  selector: 'jhi-project',
-  templateUrl: './project.component.html',
-  styleUrls: ['project.component.scss'],
+  selector: 'jhi-screenplay',
+  templateUrl: './screenplay.component.html',
+  styleUrls: ['screenplay.component.scss'],
 })
-export class ProjectComponent implements OnInit {
+export class ScreenplayComponent implements OnInit {
   project?: Project;
 
   constructor(private activatedRoute: ActivatedRoute) {}

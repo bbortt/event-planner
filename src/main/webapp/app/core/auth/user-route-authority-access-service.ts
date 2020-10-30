@@ -8,7 +8,7 @@ import { LoginModalService } from 'app/core/login/login-modal.service';
 import { StateStorageService } from './state-storage.service';
 
 @Injectable({ providedIn: 'root' })
-export class UserRouteAccessService implements CanActivate {
+export class UserRouteAuthorityAccessService implements CanActivate {
   constructor(
     private router: Router,
     private loginModalService: LoginModalService,
