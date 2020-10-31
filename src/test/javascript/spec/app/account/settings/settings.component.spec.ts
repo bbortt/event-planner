@@ -22,6 +22,7 @@ describe('Component Tests', () => {
       login: 'john',
       authorities: [],
       imageUrl: '',
+      rolesPerProject: new Map(),
     };
 
     beforeEach(async(() => {
