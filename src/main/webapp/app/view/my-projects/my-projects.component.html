@@ -43,12 +43,14 @@
             <div *ngFor="let project of projectRow;trackBy: trackId" class="col-md">
                 <div *ngIf="project.id">
                     <a *jhiHasAnyRole="{projectId: project.id, roles: viewerRoles}"
-                       [routerLink]="['/project', project.id, 'screenplay']" class="project-card">
-                        <h2>{{project.name}}</h2>
-                        <br/>
-                        <div class="project-card-description">
-                            {{project.description ? project.description
-                            : 'eventPlannerApp.project.mine.noDescription' | translate}}
+                       [routerLink]="['/project', project.id, 'screenplay']">
+                        <div class="project-card">
+                            <h2>{{project.name}}</h2>
+                            <br/>
+                            <div class="project-card-description">
+                                {{project.description ? project.description
+                                : 'eventPlannerApp.project.mine.noDescription' | translate}}
+                            </div>
                         </div>
                     </a>
 
