@@ -25,9 +25,14 @@
       "detail": {
         "title": "Projekt"
       },
-      "overview": {
+      "admin": {
         "title": "Projekt",
-        "tabTitle": "Event Planer | Project Konfigurieren"
+        "tabTitle": "Event Planer | Project Konfigurieren",
+        "navbar": {
+          "locations": "Lokalitäten",
+          "users": "Benutzer",
+          "responsibilities": "Verantwortlichkeiten"
+        }
       },
       "screenplay": {
         "title": "Drehbuch",
