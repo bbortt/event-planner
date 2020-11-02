@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Project } from 'app/shared/model/project.model';
 
 @Component({
-  selector: 'jhi-project',
+  selector: 'app-project',
   templateUrl: './project.component.html',
   styleUrls: ['project.component.scss'],
 })

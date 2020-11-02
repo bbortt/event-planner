@@ -15,7 +15,7 @@ import { AccountService } from 'app/core/auth/account.service';
  * ```
  */
 @Directive({
-  selector: '[jhiHasAnyRole]',
+  selector: '[appHasAnyRole]',
 })
 export class HasAnyRoleDirective implements OnDestroy {
   private projectId?: number;
@@ -25,7 +25,7 @@ export class HasAnyRoleDirective implements OnDestroy {
   constructor(private accountService: AccountService, private templateRef: TemplateRef<any>, private viewContainerRef: ViewContainerRef) {}
 
   @Input()
-  set jhiHasAnyRole(hasAnyRole: { projectId: number; roles: string | string[] }) {
+  set appHasAnyRole(hasAnyRole: { projectId: number; roles: string | string[] }) {
     this.projectId = hasAnyRole.projectId;
     this.roles = typeof hasAnyRole.roles === 'string' ? [hasAnyRole.roles] : hasAnyRole.roles;
     this.updateView();

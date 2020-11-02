@@ -16,7 +16,7 @@ import { AUTHORITY_ADMIN } from 'app/shared/constants/authority.constants';
 import { ROLE_ADMIN, ROLE_CONTRIBUTOR, ROLE_SECRETARY, ROLE_VIEWER } from 'app/shared/constants/role.constants';
 
 @Component({
-  selector: 'jhi-my-projects',
+  selector: 'app-my-projects',
   templateUrl: './my-projects.component.html',
   styleUrls: ['./my-projects.component.scss'],
 })
