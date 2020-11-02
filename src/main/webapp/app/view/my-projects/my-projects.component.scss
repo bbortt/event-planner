@@ -1,21 +1,26 @@
 .row {
   margin-bottom: 2vh;
 
-  a {
-    text-decoration: none;
-  }
+  .col-md > div {
+    height: 100%;
 
-  .project-card {
-    padding: 1vw;
+    a {
+      text-decoration: none;
+    }
 
-    border: 1px solid black;
-    border-radius: 5px;
+    .project-card {
+      height: 100%;
+      padding: 1vw;
 
-    .project-card-description {
-      width: 100%;
-      padding: 0.5vh;
+      border: 1px solid black;
       border-radius: 5px;
-      background-color: lightgrey;
+
+      .project-card-description {
+        width: 100%;
+        padding: 0.5vh;
+        border-radius: 5px;
+        background-color: lightgrey;
+      }
     }
   }
 }

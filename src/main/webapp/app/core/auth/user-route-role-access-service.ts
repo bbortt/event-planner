@@ -6,15 +6,13 @@ import { map } from 'rxjs/operators';
 import { AccountService } from 'app/core/auth/account.service';
 import { StateStorageService } from './state-storage.service';
 
-import { AUTHORITY_ADMIN } from 'app/shared/constants/authority.constants';
-
 @Injectable({ providedIn: 'root' })
 export class UserRouteRoleAccessService implements CanActivate {
   constructor(private router: Router, private accountService: AccountService, private stateStorageService: StateStorageService) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
     const roles = route.data['roles'];
-    const projectId = route.params['id'];
+    const projectId = route.params['projectId'];
     // We need to call the checkRoles / and so the accountService.identity() function, to ensure,
     // that the client has a principal too, if they already logged in by the server.
     // This could happen on a page refresh.
@@ -29,9 +27,6 @@ export class UserRouteRoleAccessService implements CanActivate {
         }
 
         if (account) {
-          if (this.accountService.hasAnyAuthority(AUTHORITY_ADMIN)) {
-            return true;
-          }
           if (this.accountService.hasAnyRole(projectId, roles)) {
             return true;
           }
