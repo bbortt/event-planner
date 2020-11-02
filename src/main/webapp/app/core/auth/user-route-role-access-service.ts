@@ -29,12 +29,10 @@ export class UserRouteRoleAccessService implements CanActivate {
         }
 
         if (account) {
-          const hasAnyAuthority = this.accountService.hasAnyAuthority(AUTHORITY_ADMIN);
-          if (hasAnyAuthority) {
+          if (this.accountService.hasAnyAuthority(AUTHORITY_ADMIN)) {
             return true;
           }
-          const hasAnyRoleInProject = this.accountService.hasAnyRole(projectId, roles);
-          if (hasAnyRoleInProject) {
+          if (this.accountService.hasAnyRole(projectId, roles)) {
             return true;
           }
           if (isDevMode()) {

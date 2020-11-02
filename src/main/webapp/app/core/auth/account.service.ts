@@ -44,7 +44,7 @@ export class AccountService {
   }
 
   hasAnyRole(projectId: number, roles: string[] | string): boolean {
-    if (!this.userIdentity || !this.userIdentity.authorities) {
+    if (!this.userIdentity || !this.userIdentity.rolePerProject) {
       return false;
     }
     if (!Array.isArray(roles)) {
