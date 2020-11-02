@@ -23,7 +23,7 @@ function accountWithAuthorities(authorities: string[]): Account {
     lastName: '',
     login: '',
     imageUrl: '',
-    rolesPerProject: new Map(),
+    rolePerProject: new Map(),
   };
 }
 

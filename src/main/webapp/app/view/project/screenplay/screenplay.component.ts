@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Project } from 'app/shared/model/project.model';
 
 @Component({
-  selector: 'jhi-screenplay',
+  selector: 'app-screenplay',
   templateUrl: './screenplay.component.html',
   styleUrls: ['screenplay.component.scss'],
 })

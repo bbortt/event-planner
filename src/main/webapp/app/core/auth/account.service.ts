@@ -9,6 +9,7 @@ import { StateStorageService } from 'app/core/auth/state-storage.service';
 
 import { SERVER_API_URL } from 'app/app.constants';
 import { Account } from 'app/core/user/account.model';
+import { AUTHORITY_ADMIN } from 'app/shared/constants/authority.constants';
 
 @Injectable({ providedIn: 'root' })
 export class AccountService {
@@ -44,14 +45,17 @@ export class AccountService {
   }
 
   hasAnyRole(projectId: number, roles: string[] | string): boolean {
-    if (!this.userIdentity || !this.userIdentity.authorities) {
+    if (!this.userIdentity || !this.userIdentity.rolePerProject) {
       return false;
+    }
+    if (this.hasAnyAuthority(AUTHORITY_ADMIN)) {
+      return true;
     }
     if (!Array.isArray(roles)) {
       roles = [roles];
     }
 
-    const projectRole = this.userIdentity.rolesPerProject[projectId];
+    const projectRole = this.userIdentity.rolePerProject[projectId];
     return !!projectRole && roles.some((role: string) => projectRole === role);
   }
 

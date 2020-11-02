@@ -17,9 +17,9 @@ export class ProjectResolve implements Resolve<IProject> {
   constructor(private service: ProjectService, private router: Router) {}
 
   resolve(route: ActivatedRouteSnapshot): Observable<IProject> | Observable<never> {
-    const id = route.params['id'];
-    if (id) {
-      return this.service.find(id).pipe(
+    const projectId = route.params['projectId'];
+    if (projectId) {
+      return this.service.find(projectId).pipe(
         flatMap((project: HttpResponse<Project>) => {
           if (project.body) {
             return of(project.body);
