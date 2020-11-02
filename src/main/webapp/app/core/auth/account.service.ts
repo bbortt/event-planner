@@ -51,7 +51,7 @@ export class AccountService {
       roles = [roles];
     }
 
-    const projectRole = this.userIdentity.rolesPerProject[projectId];
+    const projectRole = this.userIdentity.rolePerProject[projectId];
     return !!projectRole && roles.some((role: string) => projectRole === role);
   }
 

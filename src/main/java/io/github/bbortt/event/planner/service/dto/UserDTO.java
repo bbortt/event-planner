@@ -53,7 +53,7 @@ public class UserDTO {
 
     private Set<String> authorities;
 
-    private Map<Long, String> rolesPerProject;
+    private Map<Long, String> rolePerProject;
 
     public UserDTO() {
         // Empty constructor needed for Jackson.
@@ -73,7 +73,7 @@ public class UserDTO {
         this.lastModifiedBy = user.getLastModifiedBy();
         this.lastModifiedDate = ZonedDateTime.ofInstant(user.getLastModifiedDate(), ZoneId.systemDefault());
         this.authorities = user.getAuthorities().stream().map(Authority::getName).collect(Collectors.toSet());
-        this.rolesPerProject =
+        this.rolePerProject =
             user
                 .getInvitations()
                 .stream()
@@ -184,12 +184,12 @@ public class UserDTO {
         this.authorities = authorities;
     }
 
-    public Map<Long, String> getRolesPerProject() {
-        return rolesPerProject;
+    public Map<Long, String> getRolePerProject() {
+        return rolePerProject;
     }
 
-    public void setRolesPerProject(Map<Long, String> rolesPerProject) {
-        this.rolesPerProject = rolesPerProject;
+    public void setRolePerProject(Map<Long, String> rolePerProject) {
+        this.rolePerProject = rolePerProject;
     }
 
     // prettier-ignore
@@ -208,7 +208,7 @@ public class UserDTO {
             ", lastModifiedBy='" + lastModifiedBy + '\'' +
             ", lastModifiedDate=" + lastModifiedDate +
             ", authorities=" + authorities +
-            ", rolesPerProject="+ rolesPerProject +
+            ", rolePerProject="+ rolePerProject +
             "}";
     }
 }
