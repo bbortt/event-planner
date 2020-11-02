@@ -10,7 +10,7 @@ import { ROLE_ADMIN, ROLE_SECRETARY } from 'app/shared/constants/role.constants'
 
 export const PROJECT_ROUTES: Routes = [
   {
-    path: ':id',
+    path: ':projectId',
     component: ProjectComponent,
     data: {
       defaultSort: 'id,asc',
@@ -23,7 +23,7 @@ export const PROJECT_ROUTES: Routes = [
     },
   },
   {
-    path: ':id/screenplay',
+    path: ':projectId/screenplay',
     component: ScreenplayComponent,
     data: {
       pageTitle: 'eventPlannerApp.project.screenplay.tabTitle',
