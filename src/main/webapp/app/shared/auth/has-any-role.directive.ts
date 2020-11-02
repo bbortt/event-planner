@@ -28,7 +28,7 @@ export class HasAnyRoleDirective implements OnInit, OnDestroy {
   constructor(private accountService: AccountService, private templateRef: TemplateRef<any>, private viewContainerRef: ViewContainerRef) {}
 
   @Input()
-  set appHasAnyRole(hasAnyRole: { projectId: number; roles: string | string[] } /* TODO: else */) {
+  set appHasAnyRole(hasAnyRole: { projectId: number; roles: string | string[] }) {
     this.projectId = hasAnyRole.projectId;
     this.roles = typeof hasAnyRole.roles === 'string' ? [hasAnyRole.roles] : hasAnyRole.roles;
   }
