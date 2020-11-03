@@ -1,0 +1,16 @@
+.description {
+  width: 100%;
+  padding: 1vh 1vw;
+  border: 2px solid black;
+  border-radius: 5px;
+}
+
+.navbar-nav {
+  .nav-item {
+    text-align: center;
+  }
+
+  .nav-item.active {
+    border-bottom: 2px solid black;
+  }
+}

@@ -1,4 +1,12 @@
-<div>
+<div *ngIf="project">
+    <h2 id="page-heading">
+        <span jhiTranslate="eventPlannerApp.project.admin.title">Project</span>
+        <i>{{project.name}}</i>
+    </h2>
+
+    <div class="description">{{project.description}}</div>
+    <br/>
+
     <app-project-navbar></app-project-navbar>
 
     <br/>
