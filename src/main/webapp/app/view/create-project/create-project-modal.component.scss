@@ -9,7 +9,7 @@ $theme: mat-light-theme($app-primary, $app-accent, $app-warn);
 
 @include angular-material-theme($theme);
 
-@import '~@mat-datetimepicker/core/datetimepicker/datetimepicker-theme.scss';
+@import '~@mat-datetimepicker/core/datetimepicker/datetimepicker-theme';
 @include mat-datetimepicker-theme($theme);
 
 .modal-content {

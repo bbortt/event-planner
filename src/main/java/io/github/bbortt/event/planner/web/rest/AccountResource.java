@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api")
 public class AccountResource {
+
     private final Logger log = LoggerFactory.getLogger(AccountResource.class);
     private final UserRepository userRepository;
     private final UserService userService;

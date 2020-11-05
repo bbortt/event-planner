@@ -192,4 +192,12 @@ ui bootstrap tweaks
   white-space: nowrap;
 }
 
+/* ==========================================================================
+custom button style
+========================================================================== */
+.btn-negative {
+  border: 3px solid black;
+  padding: 0.5rem 1rem;
+}
+
 /* jhipster-needle-scss-add-main JHipster will add new css style */

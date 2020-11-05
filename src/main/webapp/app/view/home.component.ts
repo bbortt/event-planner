@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 
-import { LoginModalService } from '../../core/login/login-modal.service';
-import { AccountService } from '../../core/auth/account.service';
+import { LoginModalService } from '../core/login/login-modal.service';
+import { AccountService } from '../core/auth/account.service';
 
 @Component({
-  selector: 'jhi-home',
+  selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['home.component.scss'],
 })

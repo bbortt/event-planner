@@ -5,6 +5,8 @@
         "title": "Projects",
         "createLabel": "Create a new Project",
         "editLabel": "Edit a Project",
+        "screenplayLabel": "Screenplay",
+        "settingsLabel": "Settings",
         "notFound": "No Projects found"
       },
       "mine": {
@@ -22,6 +24,14 @@
       },
       "detail": {
         "title": "Project"
+      },
+      "overview": {
+        "title": "Project",
+        "tabTitle": "Event Planner | Configure Project"
+      },
+      "screenplay": {
+        "title": "Screenplay",
+        "tabTitle": "Event Planner | Screenplay"
       },
       "name": "Name",
       "description": "Description",

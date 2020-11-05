@@ -41,16 +41,47 @@
          [infiniteScrollDisabled]="page >= links['last']" [infiniteScrollDistance]="0">
         <div *ngFor="let projectRow of projects" class="row">
             <div *ngFor="let project of projectRow;trackBy: trackId" class="col-md">
-                <a [routerLink]="['/project', project.id, 'view']">
-                    <div *ngIf="project.id" class="project-card">
+                <div *ngIf="project.id">
+                    <div *appHasAnyRole="{ projectId: project.id, roles: adminRoles}; else readOnlyProjectCard"
+                         class="project-card">
                         <h2>{{project.name}}</h2>
                         <br/>
                         <div class="project-card-description">
                             {{project.description ? project.description
                             : 'eventPlannerApp.project.mine.noDescription' | translate}}
                         </div>
+                        <br/>
+                        <button id="jh-screenplay-{{project.id}}"
+                                [routerLink]="['project',project.id,'screenplay']"
+                                class="btn btn-negative">
+                            <fa-icon [icon]="faBook"></fa-icon>
+                            <span jhiTranslate="eventPlannerApp.project.home.screenplayLabel">
+                            Screenplay
+                        </span>
+                        </button>
+                        <button id="jh-settings-{{project.id}}"
+                                [routerLink]="['project',project.id]"
+                                class="btn btn-negative">
+                            <fa-icon [icon]="faCog"></fa-icon>
+                            <span jhiTranslate="eventPlannerApp.project.home.settingsLabel">
+                            Settings
+                        </span>
+                        </button>
                     </div>
-                </a>
+
+                    <ng-template #readOnlyProjectCard>
+                        <a [routerLink]="['/project', project.id, 'screenplay']">
+                            <div class="project-card">
+                                <h2>{{project.name}}</h2>
+                                <br/>
+                                <div class="project-card-description">
+                                    {{project.description ? project.description
+                                    : 'eventPlannerApp.project.mine.noDescription' | translate}}
+                                </div>
+                            </div>
+                        </a>
+                    </ng-template>
+                </div>
             </div>
         </div>
     </div>
