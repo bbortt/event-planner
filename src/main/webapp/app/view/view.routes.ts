@@ -8,7 +8,6 @@ export const VIEW_ROUTES: Routes = [
     path: '',
     component: HomeComponent,
     data: {
-      defaultSort: 'id,asc',
       pageTitle: 'home.title',
     },
   },
