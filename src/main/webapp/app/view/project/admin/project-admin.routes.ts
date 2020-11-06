@@ -12,6 +12,7 @@ import { UserRouteRoleAccessService } from 'app/core/auth/user-route-role-access
 export const PROJECT_ADMIN_ROUTES: Routes = [
   {
     path: '',
+    pathMatch: 'exact',
     component: ProjectAdminComponent,
     data: {
       pageTitle: 'eventPlannerApp.project.admin.tabTitle',
@@ -39,8 +40,8 @@ export const PROJECT_ADMIN_ROUTES: Routes = [
       {
         path: 'responsibilities',
         component: ResponsibilitiesComponent,
-        data: {
-          defaultSort: 'id,asc',
+        resolve: {
+          project: ProjectResolve,
         },
       },
     ],

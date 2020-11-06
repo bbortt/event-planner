@@ -14,7 +14,11 @@ export class ProjectAdminComponent implements OnInit {
   constructor(private router: Router, private activatedRoute: ActivatedRoute) {}
 
   ngOnInit(): void {
-    this.activatedRoute.data.subscribe(({ project }) => (this.project = project));
-    this.router.navigate(['locations'], { relativeTo: this.activatedRoute.parent });
+    this.activatedRoute.data.subscribe(({ project }) => {
+      this.project = project;
+      if (this.router.isActive(`/project/${(project as Project).id!}/admin`, true)) {
+        this.router.navigate(['locations'], { relativeTo: this.activatedRoute.parent });
+      }
+    });
   }
 }
