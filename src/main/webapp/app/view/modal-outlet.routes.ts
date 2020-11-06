@@ -4,6 +4,7 @@ import { ResponsibilityResolve } from 'app/entities/responsibility/responsibilit
 
 import { CreateProjectModalComponent } from 'app/view/create-project/create-project-modal.component';
 import { ResponsibilityModalComponent } from 'app/view/project/admin/responsibilities/responsibility-modal.component';
+import { ProjectResolve } from 'app/entities/project/project.route';
 
 export const MODAL_OUTLET_ROUTES: Routes = [
   {
@@ -12,14 +13,18 @@ export const MODAL_OUTLET_ROUTES: Routes = [
     outlet: 'modal',
   },
   {
-    path: 'responsibilities/new',
+    path: 'projects/:projectId/responsibilities/new',
     component: ResponsibilityModalComponent,
+    resolve: {
+      project: ProjectResolve,
+    },
     outlet: 'modal',
   },
   {
-    path: 'responsibilities/:id/edit',
+    path: 'projects/:projectId/responsibilities/:id/edit',
     component: ResponsibilityModalComponent,
     resolve: {
+      project: ProjectResolve,
       responsibility: ResponsibilityResolve,
     },
     outlet: 'modal',

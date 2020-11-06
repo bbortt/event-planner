@@ -19,14 +19,17 @@ export class ResponsibilityModalComponent implements AfterViewInit, OnDestroy {
   constructor(private modalService: NgbModal, private eventManager: JhiEventManager, private activatedRoute: ActivatedRoute) {}
 
   ngAfterViewInit(): void {
-    this.activatedRoute.data.subscribe(({ responsibility }) => {
+    this.activatedRoute.data.subscribe(({ project, responsibility }) => {
       this.modalRef = this.modalService.open(ResponsibilityUpdateComponent, {
         beforeDismiss(): boolean {
           window.history.back();
           return true;
         },
       });
-      (this.modalRef.componentInstance as ResponsibilityUpdateComponent).updateForm(responsibility ? responsibility : new Responsibility());
+      (this.modalRef.componentInstance as ResponsibilityUpdateComponent).updateForm(
+        project,
+        responsibility ? responsibility : new Responsibility()
+      );
     });
   }
 

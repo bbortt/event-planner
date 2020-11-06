@@ -21,15 +21,17 @@ export class ResponsibilityUpdateComponent {
   editForm = this.fb.group({
     id: [],
     name: [null, [Validators.required, Validators.minLength(1), Validators.maxLength(50)]],
+    project: [],
   });
 
   constructor(protected responsibilityService: ResponsibilityService, private fb: FormBuilder) {}
 
-  public updateForm(responsibility: IResponsibility): void {
+  public updateForm(project: IProject, responsibility: IResponsibility): void {
     this.isNew = !responsibility.id;
     this.editForm.patchValue({
       id: responsibility.id,
       name: responsibility.name,
+      project,
     });
   }
 
@@ -52,6 +54,7 @@ export class ResponsibilityUpdateComponent {
       ...new Responsibility(),
       id: this.editForm.get(['id'])!.value,
       name: this.editForm.get(['name'])!.value,
+      project: this.editForm.get(['project'])!.value,
     };
   }
 
