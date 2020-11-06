@@ -2,7 +2,7 @@
     <nav class="navbar navbar-light bg-light">
         <ul class="navbar-nav w-100 flex-row align-items-stretch">
             <li *ngFor="let link of navLinks" class="nav-item w-100" routerLinkActive="active"
-                [routerLinkActiveOptions]="{ exact: true }">
+                [routerLinkActiveOptions]="{ exact: false }">
                 <a class="nav-link" routerLink="{{link.routerLink}}">
                     <span>
                         <fa-icon [icon]="link.icon"></fa-icon>

@@ -5,14 +5,14 @@ import { combineLatest, Subscription } from 'rxjs';
 import { JhiEventManager } from 'ng-jhipster';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
+import { IProject } from 'app/shared/model/project.model';
 import { IResponsibility } from 'app/shared/model/responsibility.model';
 
 import { ProjectService } from 'app/entities/project/project.service';
 
-import { ResponsibilityDeleteDialogComponent } from '../../../../entities/responsibility/responsibility-delete-dialog.component';
+import { ResponsibilityDeleteDialogComponent } from 'app/entities/responsibility/responsibility-delete-dialog.component';
 
 import { ITEMS_PER_PAGE } from 'app/shared/constants/pagination.constants';
-import { Project } from 'app/shared/model/project.model';
 
 @Component({
   selector: 'app-project-responsibilities',
@@ -20,7 +20,7 @@ import { Project } from 'app/shared/model/project.model';
   styleUrls: ['responsibilities.component.scss'],
 })
 export class ResponsibilitiesComponent implements OnInit, OnDestroy {
-  project?: Project;
+  project?: IProject;
   responsibilities?: IResponsibility[];
 
   eventSubscriber?: Subscription;
@@ -41,9 +41,6 @@ export class ResponsibilitiesComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    // eslint-disable-next-line no-console
-    console.log(' this.activatedRoute: ', this.activatedRoute);
-
     this.activatedRoute.data.subscribe(({ project }) => {
       this.project = project;
       this.handleNavigation();
