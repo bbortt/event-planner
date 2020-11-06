@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'jhi-project-users',
+  selector: 'app-project-users',
   templateUrl: './users.component.html',
   styleUrls: ['users.component.scss'],
 })
