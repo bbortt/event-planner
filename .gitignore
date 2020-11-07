@@ -63,6 +63,7 @@ local.properties
 *.ipr
 *.ids
 *.orig
+src/main/generated
 classes/
 out/
 
