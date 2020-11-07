@@ -25,23 +25,14 @@ export const PROJECT_ADMIN_ROUTES: Routes = [
       {
         path: 'locations',
         component: ProjectLocationsComponent,
-        data: {
-          defaultSort: 'id,asc',
-        },
       },
       {
         path: 'users',
         component: ProjectUsersComponent,
-        data: {
-          defaultSort: 'id,asc',
-        },
       },
       {
         path: 'responsibilities',
         component: ProjectResponsibilitiesComponent,
-        data: {
-          defaultSort: 'id,asc',
-        },
       },
     ],
   },

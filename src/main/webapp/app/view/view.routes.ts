@@ -16,7 +16,7 @@ export const VIEW_ROUTES: Routes = [
     loadChildren: () => import('./project/project.module').then(m => m.EventPlannerProjectModule),
   },
   {
-    path: 'create-project',
+    path: 'projects/create',
     component: CreateProjectModalComponent,
     outlet: 'modal',
   },
