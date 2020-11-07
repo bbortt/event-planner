@@ -12,11 +12,6 @@ $theme: mat-light-theme($app-primary, $app-accent, $app-warn);
 @import '~@mat-datetimepicker/core/datetimepicker/datetimepicker-theme';
 @include mat-datetimepicker-theme($theme);
 
-.modal-content {
-  padding-top: 3vh;
-  padding-bottom: 3vh;
-}
-
 .cdk-overlay-container {
   z-index: 1100 !important;
 }
