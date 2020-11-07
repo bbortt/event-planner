@@ -16,10 +16,10 @@ import { ITEMS_PER_PAGE } from 'app/shared/constants/pagination.constants';
 
 @Component({
   selector: 'app-project-responsibilities',
-  templateUrl: './responsibilities.component.html',
-  styleUrls: ['responsibilities.component.scss'],
+  templateUrl: './project-responsibilities.component.html',
+  styleUrls: ['project-responsibilities.component.scss'],
 })
-export class ResponsibilitiesComponent implements OnInit, OnDestroy {
+export class ProjectResponsibilitiesComponent implements OnInit, OnDestroy {
   project?: IProject;
   responsibilities?: IResponsibility[];
 

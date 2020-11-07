@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 
@@ -11,10 +10,10 @@ import { ResponsibilityService } from 'app/entities/responsibility/responsibilit
 
 @Component({
   selector: 'app-responsibility-update',
-  templateUrl: './responsibility-update.component.html',
-  styleUrls: ['./responsibility-update.component.scss'],
+  templateUrl: './project-responsibility-update.component.html',
+  styleUrls: ['./project-responsibility-update.component.scss'],
 })
-export class ResponsibilityUpdateComponent {
+export class ProjectResponsibilityUpdateComponent {
   isSaving = false;
 
   isNew = false;

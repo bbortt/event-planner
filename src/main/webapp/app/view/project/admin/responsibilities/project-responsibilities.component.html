@@ -4,7 +4,7 @@
 
         <button id="jh-create-entity"
                 class="btn btn-primary float-right jh-create-entity create-responsibility"
-                [routerLink]="['', {outlets: {modal: ['projects', project.id, 'responsibilities', 'new']}}]">
+                [routerLink]="['', {outlets: {modal: ['projects', project!.id, 'responsibilities', 'new']}}]">
             <fa-icon icon="plus"></fa-icon>
             <span jhiTranslate="eventPlannerApp.responsibility.home.createLabel">
             Create a new Responsibility
@@ -22,7 +22,7 @@
     </div>
 
     <div class="table-responsive" id="entities"
-         *ngIf="responsibilities && responsibilities.length > 0">
+         *ngIf="project && responsibilities && responsibilities.length > 0">
         <table class="table table-striped" aria-describedby="page-heading">
             <thead>
             <tr>
