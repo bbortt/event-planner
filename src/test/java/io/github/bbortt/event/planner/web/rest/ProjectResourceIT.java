@@ -12,9 +12,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import io.github.bbortt.event.planner.AbstractApplicationContextAwareIT;
 import io.github.bbortt.event.planner.domain.Project;
+import io.github.bbortt.event.planner.domain.Responsibility;
 import io.github.bbortt.event.planner.domain.User;
 import io.github.bbortt.event.planner.repository.InvitationRepository;
 import io.github.bbortt.event.planner.repository.ProjectRepository;
+import io.github.bbortt.event.planner.repository.ResponsibilityRepository;
 import io.github.bbortt.event.planner.repository.RoleRepository;
 import io.github.bbortt.event.planner.repository.UserRepository;
 import io.github.bbortt.event.planner.service.ProjectService;
@@ -64,6 +66,9 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
 
     @Autowired
     private ProjectRepository projectRepository;
+
+    @Autowired
+    private ResponsibilityRepository responsibilityRepository;
 
     @Autowired
     private ProjectService projectService;
@@ -217,6 +222,37 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
             .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION))
             .andExpect(jsonPath("$.startTime").value(sameInstant(DEFAULT_START_TIME)))
             .andExpect(jsonPath("$.endTime").value(sameInstant(DEFAULT_END_TIME)));
+    }
+
+    @Test
+    @Transactional
+    public void getResponsibilitiesPerProject() throws Exception {
+        // Test data
+        final String responsibility2Name = "Responsibility1";
+        final String responsibility3Name = "Responsibility2";
+
+        // Initialize the database
+        Project project1 = projectRepository.saveAndFlush(createEntity(em));
+        Project project2 = projectRepository.saveAndFlush(createEntity(em));
+
+        responsibilityRepository.saveAndFlush(ResponsibilityResourceIT.createEntity(em).project(project1));
+        Responsibility responsibility2 = responsibilityRepository.saveAndFlush(
+            ResponsibilityResourceIT.createEntity(em).name(responsibility2Name).project(project2)
+        );
+        Responsibility responsibility3 = responsibilityRepository.saveAndFlush(
+            ResponsibilityResourceIT.createEntity(em).name(responsibility3Name).project(project2)
+        );
+
+        // Get the project
+        restProjectMockMvc
+            .perform(get("/api/projects/{id}/responsibilities", project2.getId()))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.length()").value(2))
+            .andExpect(jsonPath("$[0].id").value(responsibility2.getId()))
+            .andExpect(jsonPath("$[0].name").value(responsibility2.getName()))
+            .andExpect(jsonPath("$[1].id").value(responsibility3.getId()))
+            .andExpect(jsonPath("$[1].name").value(responsibility3.getName()));
     }
 
     @Test
