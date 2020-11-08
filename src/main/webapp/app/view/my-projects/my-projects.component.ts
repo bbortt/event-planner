@@ -54,7 +54,7 @@ export class MyProjectsComponent implements OnInit, OnDestroy {
     this.links = {
       last: 0,
     };
-    this.predicate = 'id';
+    this.predicate = 'startTime';
     this.ascending = true;
   }
 

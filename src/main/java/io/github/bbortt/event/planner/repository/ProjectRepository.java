@@ -16,16 +16,15 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, Long> {
     @Query(
-        nativeQuery = true,
-        value = "select p.* from project p" +
-        " left join invitation i" +
-        "  on p.id = i.project_id" +
-        " left join jhi_user u" +
-        "  on i.jhi_user_id = u.id" +
+        value = "select p from Project p" +
+        " left join Invitation i" +
+        "  on p = i.project" +
+        " left join User u" +
+        "  on i.user = u" +
         "    where u.login = :currentUserLogin",
-        countQuery = "select count(i.id) from invitation i" +
-        " left join jhi_user u" +
-        "  on i.jhi_user_id = u.id" +
+        countQuery = "select count(i.id) from Invitation i" +
+        " left join User u" +
+        "  on i.user = u" +
         "    where u.login = :currentUserLogin"
     )
     Page<Project> findMine(@NotNull @Param("currentUserLogin") String currentUserLogin, Pageable pageable);
