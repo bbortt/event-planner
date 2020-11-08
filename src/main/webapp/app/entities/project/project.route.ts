@@ -17,7 +17,15 @@ export class ProjectResolve implements Resolve<IProject> {
   constructor(private service: ProjectService, private router: Router) {}
 
   resolve(route: ActivatedRouteSnapshot): Observable<IProject> | Observable<never> {
-    const projectId = route.params['projectId'];
+    let projectId = route.params['projectId'];
+
+    // Search recursively for Route.children
+    let parent = route.parent;
+    while (!projectId && parent) {
+      projectId = parent.params['projectId'];
+      parent = parent.parent;
+    }
+
     if (projectId) {
       return this.service.find(projectId).pipe(
         flatMap((project: HttpResponse<Project>) => {

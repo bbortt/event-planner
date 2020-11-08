@@ -4,7 +4,7 @@ import { CreateProjectModalComponent } from 'app/view/create-project/create-proj
 
 export const MODAL_OUTLET_ROUTES: Routes = [
   {
-    path: 'create-project',
+    path: 'projects/create',
     component: CreateProjectModalComponent,
     outlet: 'modal',
   },

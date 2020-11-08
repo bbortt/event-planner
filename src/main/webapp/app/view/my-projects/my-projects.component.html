@@ -17,7 +17,7 @@
                 </span>
             </button>
 
-            <button id="jh-create-entity" [routerLink]="[{outlets: {modal: 'create-project'}}]"
+            <button id="jh-create-entity" [routerLink]="[{outlets: {modal: ['projects', 'create']}}]"
                     class="btn btn-primary jh-create-entity create-project">
                 <fa-icon icon="plus"></fa-icon>
                 <span jhiTranslate="eventPlannerApp.project.home.createLabel">
