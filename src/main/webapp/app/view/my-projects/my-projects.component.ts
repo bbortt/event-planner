@@ -12,8 +12,9 @@ import { AccountService } from 'app/core/auth/account.service';
 
 import { faArrowDown, faBook, faCog } from '@fortawesome/free-solid-svg-icons';
 
+import { ITEMS_PER_PAGE } from 'app/shared/constants/pagination.constants';
 import { AUTHORITY_ADMIN } from 'app/shared/constants/authority.constants';
-import { ROLE_ADMIN, ROLE_CONTRIBUTOR, ROLE_SECRETARY, ROLE_VIEWER } from 'app/shared/constants/role.constants';
+import { ROLE_ADMIN, ROLE_SECRETARY } from 'app/shared/constants/role.constants';
 
 @Component({
   selector: 'app-my-projects',
@@ -34,7 +35,6 @@ export class MyProjectsComponent implements OnInit, OnDestroy {
   faCog = faCog;
 
   adminRoles = [ROLE_ADMIN, ROLE_SECRETARY];
-  viewerRoles = [ROLE_CONTRIBUTOR, ROLE_VIEWER];
 
   showAllProjects = false;
   loadMoreButtonEnabled = true;
@@ -49,7 +49,7 @@ export class MyProjectsComponent implements OnInit, OnDestroy {
     private parseLinks: JhiParseLinks
   ) {
     this.projects = [];
-    this.itemsPerPage = 3;
+    this.itemsPerPage = ITEMS_PER_PAGE;
     this.page = 0;
     this.links = {
       last: 0,

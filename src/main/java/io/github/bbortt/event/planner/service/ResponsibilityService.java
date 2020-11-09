@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class ResponsibilityService {
+
     private final Logger log = LoggerFactory.getLogger(ResponsibilityService.class);
 
     private final ResponsibilityRepository responsibilityRepository;
@@ -67,5 +68,17 @@ public class ResponsibilityService {
     public void delete(Long id) {
         log.debug("Request to delete Responsibility : {}", id);
         responsibilityRepository.deleteById(id);
+    }
+
+    /**
+     * Find all Responsibilities for the given Project.
+     *
+     * @param projectId the id of the project to retrieve responsibilities for.
+     * @param pageable the pagination information.
+     * @return the list of entities.
+     */
+    public Page<Responsibility> findAllByProjectId(Long projectId, Pageable pageable) {
+        log.debug("Request to get all Responsibilities for Project {}", projectId);
+        return responsibilityRepository.findAllByProjectId(projectId, pageable);
     }
 }
