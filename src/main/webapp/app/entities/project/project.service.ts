@@ -6,14 +6,11 @@ import * as moment from 'moment';
 
 import { SERVER_API_URL } from 'app/app.constants';
 import { createRequestOption } from 'app/shared/util/request-util';
-import { IProject, Project } from 'app/shared/model/project.model';
+import { IProject } from 'app/shared/model/project.model';
 import { ICreateProject } from 'app/shared/model/dto/create-project.model';
-import { IResponsibility } from 'app/shared/model/responsibility.model';
 
 type EntityResponseType = HttpResponse<IProject>;
 type EntityArrayResponseType = HttpResponse<IProject[]>;
-
-type ResponsibilityArrayResponseType = HttpResponse<IResponsibility[]>;
 
 @Injectable({ providedIn: 'root' })
 export class ProjectService {
@@ -46,14 +43,6 @@ export class ProjectService {
     return this.http
       .get<IProject[]>(this.resourceUrl, { params: options, observe: 'response' })
       .pipe(map((res: EntityArrayResponseType) => this.convertDateArrayFromServer(res)));
-  }
-
-  responsibilities(project: Project, req?: any): Observable<ResponsibilityArrayResponseType> {
-    const options = createRequestOption(req);
-    return this.http.get<IResponsibility[]>(`${this.resourceUrl}/${project.id!}/responsibilities`, {
-      params: options,
-      observe: 'response',
-    });
   }
 
   delete(id: number): Observable<HttpResponse<{}>> {

@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { SERVER_API_URL } from 'app/app.constants';
 import { createRequestOption } from 'app/shared/util/request-util';
 import { IResponsibility } from 'app/shared/model/responsibility.model';
+import { IProject } from 'app/shared/model/project.model';
 
 type EntityResponseType = HttpResponse<IResponsibility>;
 type EntityArrayResponseType = HttpResponse<IResponsibility[]>;
@@ -30,6 +31,14 @@ export class ResponsibilityService {
   query(req?: any): Observable<EntityArrayResponseType> {
     const options = createRequestOption(req);
     return this.http.get<IResponsibility[]>(this.resourceUrl, { params: options, observe: 'response' });
+  }
+
+  findAllByProject(project: IProject, req?: any): Observable<EntityArrayResponseType> {
+    const options = createRequestOption(req);
+    return this.http.get<IResponsibility[]>(`${this.resourceUrl}/${project.id!}/responsibilities`, {
+      params: options,
+      observe: 'response',
+    });
   }
 
   delete(id: number): Observable<HttpResponse<{}>> {
