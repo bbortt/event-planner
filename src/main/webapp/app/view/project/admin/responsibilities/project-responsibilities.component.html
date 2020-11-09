@@ -2,14 +2,18 @@
     <h3 id="page-heading">
         <span jhiTranslate="eventPlannerApp.responsibility.home.title">Responsibilities</span>
 
-        <button id="jh-create-entity"
-                class="btn btn-primary float-right jh-create-entity create-responsibility"
-                [routerLink]="['', {outlets: {modal: ['projects', project!.id, 'responsibilities', 'new']}}]">
-            <fa-icon icon="plus"></fa-icon>
-            <span jhiTranslate="eventPlannerApp.responsibility.home.createLabel">
+        <div class="float-right">
+            <app-frontend-search class="float-left" [filter]="this.filterData()"></app-frontend-search>
+
+            <button id="jh-create-entity"
+                    class="btn btn-primary jh-create-entity create-responsibility"
+                    [routerLink]="['', {outlets: {modal: ['projects', project!.id, 'responsibilities', 'new']}}]">
+                <fa-icon icon="plus"></fa-icon>
+                <span jhiTranslate="eventPlannerApp.responsibility.home.createLabel">
             Create a new Responsibility
             </span>
-        </button>
+            </button>
+        </div>
     </h3>
 
     <jhi-alert-error></jhi-alert-error>
@@ -26,7 +30,8 @@
         <table class="table table-striped" aria-describedby="page-heading">
             <thead>
             <tr>
-                <th scope="col"><span jhiTranslate="eventPlannerApp.responsibility.name">Name</span>
+                <th scope="col">
+                    <span jhiTranslate="eventPlannerApp.responsibility.name">Name</span>
                 </th>
                 <th scope="col"></th>
             </tr>
