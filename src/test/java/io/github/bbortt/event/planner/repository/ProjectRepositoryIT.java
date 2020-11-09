@@ -1,9 +1,7 @@
 package io.github.bbortt.event.planner.repository;
 
 import io.github.bbortt.event.planner.AbstractApplicationContextAwareIT;
-import io.github.bbortt.event.planner.domain.Invitation;
 import io.github.bbortt.event.planner.domain.Project;
-import java.util.stream.Collectors;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,13 +17,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Sql({ "classpath:db/scripts/ProjectRepositoryIT_before.sql" })
 @Sql(value = { "classpath:db/scripts/ProjectRepositoryIT_after.sql" }, executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
 public class ProjectRepositoryIT extends AbstractApplicationContextAwareIT {
-    static final String TEST_USER_1 = "ProjectRepositoryIT-user-1";
 
-    static final String PROJECT_1_NAME = "ProjectRepositoryIT-project-1";
-    static final String PROJECT_2_NAME = "ProjectRepositoryIT-project-2";
+    private static final String TEST_USER_1 = "ProjectRepositoryIT-user-1";
+
+    private static final String PROJECT_1_NAME = "ProjectRepositoryIT-project-1";
+    private static final String PROJECT_2_NAME = "ProjectRepositoryIT-project-2";
 
     @Autowired
-    ProjectRepository projectRepository;
+    private ProjectRepository projectRepository;
 
     @Test
     @Transactional
@@ -35,6 +34,7 @@ public class ProjectRepositoryIT extends AbstractApplicationContextAwareIT {
     }
 
     @Test
+    @Transactional
     public void findMineQueryRespectsPageable() {
         PageRequest pageRequest = PageRequest.of(0, 1, Sort.by(Direction.ASC, "name"));
 
