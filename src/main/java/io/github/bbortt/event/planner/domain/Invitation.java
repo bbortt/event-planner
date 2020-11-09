@@ -14,8 +14,6 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
@@ -27,8 +25,8 @@ import org.hibernate.annotations.Parameter;
     name = "invitation",
     uniqueConstraints = { @UniqueConstraint(name = "unique_invitation_per_project", columnNames = { "email", "project_id" }) }
 )
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Invitation implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     @Id

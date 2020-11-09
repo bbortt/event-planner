@@ -5,9 +5,6 @@ import java.io.Serializable;
 import java.time.ZonedDateTime;
 import javax.persistence.*;
 import javax.validation.constraints.*;
-import org.checkerframework.common.aliasing.qual.Unique;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 
 /**
@@ -20,8 +17,8 @@ import org.hibernate.annotations.GenericGenerator;
         @UniqueConstraint(name = "unique_time_slot_per_location", columnNames = { "location_id", "start_time", "end_time" }),
     }
 )
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class LocationTimeSlot implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     @Id
