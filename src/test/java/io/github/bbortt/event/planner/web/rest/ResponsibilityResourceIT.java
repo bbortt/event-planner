@@ -11,12 +11,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import io.github.bbortt.event.planner.AbstractApplicationContextAwareIT;
+import io.github.bbortt.event.planner.domain.Invitation;
 import io.github.bbortt.event.planner.domain.Project;
 import io.github.bbortt.event.planner.domain.Responsibility;
+import io.github.bbortt.event.planner.domain.User;
+import io.github.bbortt.event.planner.repository.AuthorityRepository;
+import io.github.bbortt.event.planner.repository.InvitationRepository;
 import io.github.bbortt.event.planner.repository.ResponsibilityRepository;
+import io.github.bbortt.event.planner.repository.RoleRepository;
+import io.github.bbortt.event.planner.security.AuthoritiesConstants;
 import io.github.bbortt.event.planner.service.ResponsibilityService;
+import java.util.Collections;
 import java.util.List;
 import javax.persistence.EntityManager;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +38,10 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @WithMockUser
 public class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT {
+
+    private static final String TEST_USER_LOGIN = "responsibilityresourceit-login";
+    private static final String TEST_ADMIN_LOGIN = "responsibilityresourceit-admin";
+
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
 
@@ -38,6 +50,15 @@ public class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT 
 
     @Autowired
     private ResponsibilityService responsibilityService;
+
+    @Autowired
+    private AuthorityRepository authorityRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
+    private InvitationRepository invitationRepository;
 
     @Autowired
     private EntityManager em;
@@ -90,10 +111,31 @@ public class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT 
     @BeforeEach
     public void initTest() {
         responsibility = createEntity(em);
+
+        User user = UserResourceIT.createEntity(em);
+        user.setLogin(TEST_USER_LOGIN);
+        user.setAuthorities(Collections.singleton(authorityRepository.findById(AuthoritiesConstants.USER).get()));
+        em.persist(user);
+
+        User admin = UserResourceIT.createEntity(em);
+        admin.setLogin(TEST_ADMIN_LOGIN);
+        admin.setAuthorities(Collections.singleton(authorityRepository.findById(AuthoritiesConstants.ADMIN).get()));
+        em.persist(admin);
+
+        Invitation invitation = InvitationResourceIT
+            .createEntity(em)
+            .accepted(Boolean.TRUE)
+            .project(responsibility.getProject())
+            .user(user)
+            .role(roleRepository.roleAdmin());
+        em.persist(invitation);
+
+        em.flush();
     }
 
     @Test
     @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     public void createResponsibility() throws Exception {
         responsibilityRepository.deleteAll();
 
@@ -115,6 +157,7 @@ public class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT 
 
     @Test
     @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     public void createResponsibilityWithExistingId() throws Exception {
         int databaseSizeBeforeCreate = responsibilityRepository.findAll().size();
 
@@ -158,7 +201,8 @@ public class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT 
 
     @Test
     @Transactional
-    public void getAllResponsibilities() throws Exception {
+    @WithMockUser(value = TEST_ADMIN_LOGIN, roles = { "ADMIN" })
+    public void getAllResponsibilitiesIsForAdminsOnly() throws Exception {
         // Initialize the database
         responsibilityRepository.saveAndFlush(responsibility);
 
@@ -173,6 +217,18 @@ public class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT 
 
     @Test
     @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
+    public void getAllResponsibilitiesDeniedForUsers() throws Exception {
+        // Initialize the database
+        responsibilityRepository.saveAndFlush(responsibility);
+
+        // Get all the responsibilityList
+        restResponsibilityMockMvc.perform(get("/api/responsibilities?sort=id,desc")).andExpect(status().isForbidden());
+    }
+
+    @Test
+    @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     public void getResponsibility() throws Exception {
         // Initialize the database
         responsibilityRepository.saveAndFlush(responsibility);
@@ -188,6 +244,7 @@ public class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT 
 
     @Test
     @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     public void getNonExistingResponsibility() throws Exception {
         // Get the responsibility
         restResponsibilityMockMvc.perform(get("/api/responsibilities/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
@@ -195,6 +252,7 @@ public class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT 
 
     @Test
     @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     public void updateResponsibility() throws Exception {
         // Initialize the database
         responsibilityService.save(responsibility);
@@ -228,6 +286,7 @@ public class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT 
 
     @Test
     @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     public void updateNonExistingResponsibility() throws Exception {
         int databaseSizeBeforeUpdate = responsibilityRepository.findAll().size();
 
@@ -247,6 +306,7 @@ public class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT 
 
     @Test
     @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     public void deleteResponsibility() throws Exception {
         // Initialize the database
         responsibilityService.save(responsibility);
