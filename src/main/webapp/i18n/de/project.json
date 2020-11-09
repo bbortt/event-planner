@@ -13,7 +13,7 @@
         "title": "Meine Projekte",
         "enableAllLabel": "Alle Projekte anzeigen",
         "disableAllLabel": "Meine Projekte anzeigen",
-        "noDescription": "Projekt hat keine Beschreibung",
+        "noDescription": "Projekt hat keine Beschreibung.",
         "loadMore": "Mehr Projekte Laden"
       },
       "created": "Projekt mit ID {{ param }} erstellt",

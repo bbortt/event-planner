@@ -5,7 +5,7 @@ import { JhiEventManager } from 'ng-jhipster';
 import { ProjectCreateComponent } from 'app/entities/project/project-create.component';
 
 @Component({
-  templateUrl: './create-project-modal.component.html',
+  template: '',
   styleUrls: ['./create-project-modal.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })

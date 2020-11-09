@@ -7,7 +7,7 @@ import * as moment from 'moment';
 import { SERVER_API_URL } from 'app/app.constants';
 import { createRequestOption } from 'app/shared/util/request-util';
 import { IProject } from 'app/shared/model/project.model';
-import { ICreateProject } from '../../shared/model/dto/create-project.model';
+import { ICreateProject } from 'app/shared/model/dto/create-project.model';
 
 type EntityResponseType = HttpResponse<IProject>;
 type EntityArrayResponseType = HttpResponse<IProject[]>;
