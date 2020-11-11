@@ -1,6 +1,8 @@
 package io.github.bbortt.event.planner.web.rest;
 
 import io.github.bbortt.event.planner.domain.Responsibility;
+import io.github.bbortt.event.planner.security.AuthoritiesConstants;
+import io.github.bbortt.event.planner.security.RolesConstants;
 import io.github.bbortt.event.planner.service.ResponsibilityService;
 import io.github.bbortt.event.planner.web.rest.errors.BadRequestAlertException;
 import io.github.jhipster.web.util.HeaderUtil;
@@ -17,9 +19,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 /**
@@ -28,6 +37,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RestController
 @RequestMapping("/api")
 public class ResponsibilityResource {
+
     private final Logger log = LoggerFactory.getLogger(ResponsibilityResource.class);
 
     private static final String ENTITY_NAME = "responsibility";
@@ -49,6 +59,13 @@ public class ResponsibilityResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/responsibilities")
+    @PreAuthorize(
+        "@responsibilityService.hasAccessToResponsibility(#responsibility, \"" +
+        RolesConstants.ADMIN +
+        "\", \"" +
+        RolesConstants.SECRETARY +
+        "\")"
+    )
     public ResponseEntity<Responsibility> createResponsibility(@Valid @RequestBody Responsibility responsibility)
         throws URISyntaxException {
         log.debug("REST request to save Responsibility : {}", responsibility);
@@ -66,12 +83,17 @@ public class ResponsibilityResource {
      * {@code PUT  /responsibilities} : Updates an existing responsibility.
      *
      * @param responsibility the responsibility to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated responsibility,
-     * or with status {@code 400 (Bad Request)} if the responsibility is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the responsibility couldn't be updated.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated responsibility, or with status {@code 400 (Bad Request)} if the responsibility is not valid, or with status {@code 500 (Internal Server Error)} if the responsibility couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/responsibilities")
+    @PreAuthorize(
+        "@responsibilityService.hasAccessToResponsibility(#responsibility, \"" +
+        RolesConstants.ADMIN +
+        "\", \"" +
+        RolesConstants.SECRETARY +
+        "\")"
+    )
     public ResponseEntity<Responsibility> updateResponsibility(@Valid @RequestBody Responsibility responsibility)
         throws URISyntaxException {
         log.debug("REST request to update Responsibility : {}", responsibility);
@@ -92,6 +114,7 @@ public class ResponsibilityResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of responsibilities in body.
      */
     @GetMapping("/responsibilities")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<List<Responsibility>> getAllResponsibilities(Pageable pageable) {
         log.debug("REST request to get a page of Responsibilities");
         Page<Responsibility> page = responsibilityService.findAll(pageable);
@@ -106,6 +129,9 @@ public class ResponsibilityResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the responsibility, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/responsibilities/{id}")
+    @PreAuthorize(
+        "@responsibilityService.hasAccessToResponsibility(#id, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")"
+    )
     public ResponseEntity<Responsibility> getResponsibility(@PathVariable Long id) {
         log.debug("REST request to get Responsibility : {}", id);
         Optional<Responsibility> responsibility = responsibilityService.findOne(id);
@@ -119,6 +145,9 @@ public class ResponsibilityResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/responsibilities/{id}")
+    @PreAuthorize(
+        "@responsibilityService.hasAccessToResponsibility(#id, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")"
+    )
     public ResponseEntity<Void> deleteResponsibility(@PathVariable Long id) {
         log.debug("REST request to delete Responsibility : {}", id);
         responsibilityService.delete(id);
