@@ -90,8 +90,8 @@ export class ProjectResponsibilitiesComponent implements OnInit, OnDestroy {
   }
 
   filterData(searchString: string): void {
-    this.responsibilities = this.loadedResponsibilities!.filter(
-      (responsibility: IResponsibility) => responsibility.name?.indexOf(searchString) !== -1
+    this.responsibilities = this.loadedResponsibilities!.filter((responsibility: IResponsibility) =>
+      responsibility.name?.includes(searchString)
     );
   }
 

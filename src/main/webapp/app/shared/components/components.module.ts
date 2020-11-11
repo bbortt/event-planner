@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
-import { FrontendSearchComponent } from 'app/shared/components/frontend-search/frontend-search.component';
+import { ClientsideFilterComponent } from 'app/shared/components/clientside-filter/clientside-filter.component';
 import { UserByEmailOrLoginComponent } from 'app/shared/components/user-by-email-or-login/user-by-email-or-login.component';
 import { EventPlannerSharedLibsModule } from 'app/shared/shared-libs.module';
 
 @NgModule({
-  declarations: [FrontendSearchComponent, UserByEmailOrLoginComponent],
+  declarations: [ClientsideFilterComponent, UserByEmailOrLoginComponent],
   imports: [EventPlannerSharedLibsModule],
-  exports: [FrontendSearchComponent, UserByEmailOrLoginComponent],
+  exports: [ClientsideFilterComponent, UserByEmailOrLoginComponent],
 })
 export class ComponentsModule {}

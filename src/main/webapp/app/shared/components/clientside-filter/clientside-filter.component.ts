@@ -2,32 +2,27 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { FormControl } from '@angular/forms';
 
 import { Subject } from 'rxjs';
-import { debounce, takeUntil } from 'rxjs/operators';
+import { debounceTime, takeUntil } from 'rxjs/operators';
 import { DEFAULT_DEBOUNCE } from 'app/app.constants';
 
 @Component({
   selector: 'app-frontend-search',
-  templateUrl: './frontend-search.component.html',
-  styleUrls: ['./frontend-search.component.scss'],
+  templateUrl: './clientside-filter.component.html',
+  styleUrls: ['./clientside-filter.component.scss'],
 })
-export class FrontendSearchComponent implements OnInit, OnDestroy {
+export class ClientsideFilterComponent implements OnInit, OnDestroy {
   @Input()
   placeholder?: string;
 
   @Output()
   valueChange = new EventEmitter<string>();
 
-  searchForm: FormControl = new FormControl();
+  searchControl = new FormControl();
 
   private destroy$ = new Subject<void>();
 
   ngOnInit(): void {
-    this.searchForm.valueChanges
-      .pipe(
-        takeUntil(this.destroy$),
-        debounce(() => DEFAULT_DEBOUNCE)
-      )
-      .subscribe(searchValue => this.valueChange.emit(searchValue));
+    this.searchControl.valueChanges.pipe(debounceTime(DEFAULT_DEBOUNCE), takeUntil(this.destroy$)).subscribe(this.valueChange);
   }
 
   ngOnDestroy(): void {

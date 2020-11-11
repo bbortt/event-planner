@@ -2,7 +2,7 @@ import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewEncapsulation }
 import { FormBuilder, Validators } from '@angular/forms';
 
 import { Subject } from 'rxjs';
-import { debounce, takeUntil } from 'rxjs/operators';
+import { debounceTime, takeUntil } from 'rxjs/operators';
 
 import { UserService } from 'app/core/user/user.service';
 import { IRole } from 'app/shared/model/role.model';
@@ -37,10 +37,7 @@ export class UserByEmailOrLoginComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.editForm
       .get('emailOrLogin')!
-      .valueChanges.pipe(
-        takeUntil(this.destroy$),
-        debounce(() => DEFAULT_DEBOUNCE)
-      )
+      .valueChanges.pipe(takeUntil(this.destroy$), debounceTime(DEFAULT_DEBOUNCE))
       .subscribe((value: string) => this.updateSelectedValueOrSearch(value));
 
     // Initialize autocomplete, prepare jquery-ui
