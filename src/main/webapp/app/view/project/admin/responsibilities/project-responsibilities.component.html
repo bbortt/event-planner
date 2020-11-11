@@ -3,7 +3,8 @@
         <span jhiTranslate="eventPlannerApp.responsibility.home.title">Responsibilities</span>
 
         <div class="float-right">
-            <app-frontend-search class="float-left" [filter]="this.filterData()"></app-frontend-search>
+            <app-frontend-search class="float-left"
+                                 (valueChange)="this.filterData($event)"></app-frontend-search>
 
             <button id="jh-create-entity"
                     class="btn btn-primary jh-create-entity create-responsibility"
@@ -16,17 +17,18 @@
         </div>
     </h3>
 
+    <br/>
+
     <jhi-alert-error></jhi-alert-error>
 
     <jhi-alert></jhi-alert>
 
-    <div class="alert alert-warning" id="no-result" *ngIf="responsibilities?.length === 0">
+    <div class="alert alert-warning" id="no-result" *ngIf="loadedResponsibilities?.length === 0">
         <span
             jhiTranslate="eventPlannerApp.responsibility.home.notFound">No responsibilities found</span>
     </div>
 
-    <div class="table-responsive" id="entities"
-         *ngIf="project && responsibilities && responsibilities.length > 0">
+    <div class="table-responsive" id="entities" *ngIf="project && responsibilities">
         <table class="table table-striped" aria-describedby="page-heading">
             <thead>
             <tr>

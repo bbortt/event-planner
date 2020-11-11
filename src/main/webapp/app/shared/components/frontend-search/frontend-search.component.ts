@@ -1,5 +1,5 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { FormControl } from '@angular/forms';
 
 import { Subject } from 'rxjs';
 import { debounce, takeUntil } from 'rxjs/operators';
@@ -14,25 +14,20 @@ export class FrontendSearchComponent implements OnInit, OnDestroy {
   @Input()
   placeholder?: string;
 
-  @Input()
-  filter?: (search: string) => void;
+  @Output()
+  valueChange = new EventEmitter<string>();
 
-  searchForm = this.fb.group({
-    search: [],
-  });
+  searchForm: FormControl = new FormControl();
 
   private destroy$ = new Subject<void>();
 
-  constructor(private fb: FormBuilder) {}
-
   ngOnInit(): void {
-    this.searchForm
-      .get('search')!
-      .valueChanges.pipe(
+    this.searchForm.valueChanges
+      .pipe(
         takeUntil(this.destroy$),
         debounce(() => DEFAULT_DEBOUNCE)
       )
-      .subscribe(searchString => this.filter!(searchString));
+      .subscribe(searchValue => this.valueChange.emit(searchValue));
   }
 
   ngOnDestroy(): void {

@@ -1,6 +1,2 @@
-<form name="editForm" role="form" novalidate  [formGroup]="searchForm">
-    <div class="form-group">
-        <input type="text" class="form-control" id="search" name="search" formControlName="search"
-               placeholder="{{this.placeholder ? this.placeholder : 'global.form.search' | translate}}"/>
-    </div>
-</form>
+<input type="text" class="form-control" id="search" name="search" [formControl]="searchForm"
+       placeholder="{{this.placeholder ? this.placeholder : 'global.form.search' | translate}}"/>

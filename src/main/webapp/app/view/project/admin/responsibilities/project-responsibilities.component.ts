@@ -21,7 +21,7 @@ import { ITEMS_PER_PAGE } from 'app/shared/constants/pagination.constants';
 })
 export class ProjectResponsibilitiesComponent implements OnInit, OnDestroy {
   project?: IProject;
-  private loadedResponsibilities?: IResponsibility[];
+  loadedResponsibilities?: IResponsibility[];
   responsibilities?: IResponsibility[];
 
   eventSubscriber?: Subscription;
@@ -89,14 +89,10 @@ export class ProjectResponsibilitiesComponent implements OnInit, OnDestroy {
     this.eventSubscriber = this.eventManager.subscribe('responsibilityListModification', () => this.loadPage());
   }
 
-  filterData(): (searchString: string) => void {
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    const ref = this;
-    return (searchString: string) => {
-      ref.responsibilities = ref.loadedResponsibilities!.filter(
-        (responsibility: IResponsibility) => responsibility.name?.indexOf(searchString) !== -1
-      );
-    };
+  filterData(searchString: string): void {
+    this.responsibilities = this.loadedResponsibilities!.filter(
+      (responsibility: IResponsibility) => responsibility.name?.indexOf(searchString) !== -1
+    );
   }
 
   delete(responsibility: IResponsibility): void {
