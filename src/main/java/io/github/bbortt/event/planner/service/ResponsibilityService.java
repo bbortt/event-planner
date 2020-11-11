@@ -2,11 +2,18 @@ package io.github.bbortt.event.planner.service;
 
 import io.github.bbortt.event.planner.domain.Responsibility;
 import io.github.bbortt.event.planner.repository.ResponsibilityRepository;
+import io.github.bbortt.event.planner.repository.RoleRepository;
+import io.github.bbortt.event.planner.security.AuthoritiesConstants;
+import io.github.bbortt.event.planner.security.SecurityUtils;
+import java.util.Arrays;
 import java.util.Optional;
+import javassist.NotFoundException;
+import javax.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,9 +27,11 @@ public class ResponsibilityService {
     private final Logger log = LoggerFactory.getLogger(ResponsibilityService.class);
 
     private final ResponsibilityRepository responsibilityRepository;
+    private final RoleRepository roleRepository;
 
-    public ResponsibilityService(ResponsibilityRepository responsibilityRepository) {
+    public ResponsibilityService(ResponsibilityRepository responsibilityRepository, RoleRepository roleRepository) {
         this.responsibilityRepository = responsibilityRepository;
+        this.roleRepository = roleRepository;
     }
 
     /**
@@ -80,5 +89,38 @@ public class ResponsibilityService {
     public Page<Responsibility> findAllByProjectId(Long projectId, Pageable pageable) {
         log.debug("Request to get all Responsibilities for Project {}", projectId);
         return responsibilityRepository.findAllByProjectId(projectId, pageable);
+    }
+
+    /**
+     * Checks if the current user has access to the `Project` linked to the given `Responsibility`, identified by id. The project access must be given by any of the `roles`. Example usage: `@PreAuthorize("@responsibilityService.hasAccessToResponsibility(#responsibility, 'ADMIN', 'SECRETARY')")`
+     *
+     * @param responsibilityId the id of the responsibility with a linked project to check.
+     * @param roles to look out for.
+     * @return true if the project access has any of the roles.
+     */
+    @PreAuthorize("isAuthenticated()")
+    public boolean hasAccessToResponsibility(Long responsibilityId, String... roles) {
+        Optional<Responsibility> responsibility = findOne(responsibilityId);
+        return responsibility.map(value -> hasAccessToResponsibility(value, roles)).orElse(true);
+    }
+
+    /**
+     * Checks if the current user has access to the `Project` linked to the given `Responsibility`. The project access must be given by any of the `roles`. Example usage: `@PreAuthorize("@responsibilityService.hasAccessToResponsibility(#responsibility, 'ADMIN', 'SECRETARY')")`
+     *
+     * @param responsibility the entity with a linked project to check.
+     * @param roles to look out for.
+     * @return true if the project access has any of the roles.
+     */
+    @Transactional(readOnly = true)
+    @PreAuthorize("isAuthenticated()")
+    public boolean hasAccessToResponsibility(Responsibility responsibility, String... roles) {
+        return (
+            SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.ADMIN) ||
+            roleRepository.hasAnyRoleInProject(
+                responsibility.getProject(),
+                SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new IllegalArgumentException("No user Login found!")),
+                Arrays.asList(roles)
+            )
+        );
     }
 }

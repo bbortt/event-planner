@@ -12,7 +12,6 @@ import org.springframework.stereotype.Repository;
 /**
  * Spring Data  repository for the Project entity.
  */
-@SuppressWarnings("unused")
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, Long> {
     @Query(
