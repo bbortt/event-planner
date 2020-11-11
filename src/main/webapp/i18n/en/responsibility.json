@@ -4,6 +4,7 @@
       "home": {
         "title": "Responsibilities",
         "createLabel": "Create a new Responsibility",
+        "editLabel": "Edit Responsibility",
         "createOrEditLabel": "Create or edit a Responsibility",
         "notFound": "No Responsibilities found"
       },

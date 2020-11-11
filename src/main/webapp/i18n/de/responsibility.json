@@ -4,6 +4,7 @@
       "home": {
         "title": "Verantwortlichkeiten",
         "createLabel": "Verantwortlichkeit erstellen",
+        "editLabel": "Verantwortlichkeit bearbeiten",
         "createOrEditLabel": "Verantwortlichkeit erstellen oder bearbeiten",
         "notFound": "Keine Verantwortlichkeiten gefunden"
       },

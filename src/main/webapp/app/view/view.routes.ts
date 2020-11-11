@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 
 import { HomeComponent } from './home.component';
 
-import { MODAL_OUTLET_ROUTES } from 'app/view/modal-outlets.routes';
+import { MODAL_OUTLET_ROUTES } from 'app/view/modal-outlet.routes';
 
 export const VIEW_ROUTES: Routes = [
   {
