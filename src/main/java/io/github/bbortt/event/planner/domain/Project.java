@@ -13,8 +13,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
@@ -23,8 +21,8 @@ import org.hibernate.annotations.Parameter;
  */
 @Entity
 @Table(name = "project")
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Project implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -54,15 +52,12 @@ public class Project implements Serializable {
     private ZonedDateTime endTime;
 
     @OneToMany(mappedBy = "project")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Responsibility> responsibilities = new HashSet<>();
 
     @OneToMany(mappedBy = "project")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Invitation> invitations = new HashSet<>();
 
     @OneToMany(mappedBy = "project")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Location> locations = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

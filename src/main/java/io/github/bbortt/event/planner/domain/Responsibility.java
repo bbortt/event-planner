@@ -15,8 +15,6 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
@@ -28,8 +26,8 @@ import org.hibernate.annotations.Parameter;
     name = "responsibility",
     uniqueConstraints = { @UniqueConstraint(name = "unique_responsibility_per_project", columnNames = { "name", "project_id" }) }
 )
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Responsibility implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -54,15 +52,12 @@ public class Responsibility implements Serializable {
     private Project project;
 
     @OneToMany(mappedBy = "responsibility")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Invitation> invitations = new HashSet<>();
 
     @OneToMany(mappedBy = "responsibility")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Location> locations = new HashSet<>();
 
     @OneToMany(mappedBy = "responsibility")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Event> events = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

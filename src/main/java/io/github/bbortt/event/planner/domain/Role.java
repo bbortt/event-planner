@@ -10,16 +10,14 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A Role.
  */
 @Entity
 @Table(name = "role")
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Role implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -29,7 +27,6 @@ public class Role implements Serializable {
     private String name;
 
     @OneToMany(mappedBy = "role")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Invitation> invitations = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
