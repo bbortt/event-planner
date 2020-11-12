@@ -6,7 +6,7 @@ import { debounceTime, takeUntil } from 'rxjs/operators';
 import { DEFAULT_DEBOUNCE } from 'app/app.constants';
 
 @Component({
-  selector: 'app-frontend-search',
+  selector: 'app-clientside-filter',
   templateUrl: './clientside-filter.component.html',
   styleUrls: ['./clientside-filter.component.scss'],
 })

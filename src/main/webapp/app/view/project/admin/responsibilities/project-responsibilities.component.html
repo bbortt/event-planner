@@ -3,8 +3,8 @@
         <span jhiTranslate="eventPlannerApp.responsibility.home.title">Responsibilities</span>
 
         <div class="float-right">
-            <app-frontend-search class="float-left"
-                                 (valueChange)="this.filterData($event)"></app-frontend-search>
+            <app-clientside-filter id="responsibilities-clientside-filter" class="float-left"
+                                 (valueChange)="this.filterData($event)"></app-clientside-filter>
 
             <button id="jh-create-entity"
                     class="btn btn-primary jh-create-entity create-responsibility"
