@@ -91,7 +91,7 @@ export class ProjectResponsibilitiesComponent implements OnInit, OnDestroy {
 
   filterData(searchString: string): void {
     this.responsibilities = this.loadedResponsibilities!.filter((responsibility: IResponsibility) =>
-      responsibility.name?.includes(searchString)
+      responsibility.name?.toLowerCase().includes(searchString.toLowerCase())
     );
   }
 
