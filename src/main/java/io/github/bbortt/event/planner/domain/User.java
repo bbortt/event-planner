@@ -25,8 +25,6 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.BatchSize;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
@@ -35,7 +33,6 @@ import org.hibernate.annotations.Parameter;
  */
 @Entity
 @Table(name = "jhi_user")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class User extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -107,12 +104,10 @@ public class User extends AbstractAuditingEntity implements Serializable {
         inverseJoinColumns = { @JoinColumn(name = "authority_name", referencedColumnName = "name") }
     )
     @BatchSize(size = 20)
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @JsonIgnoreProperties(value = "users", allowSetters = true)
     private Set<Authority> authorities = new HashSet<>();
 
     @OneToMany(mappedBy = "user")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Invitation> invitations = new HashSet<>();
 
     public Long getId() {

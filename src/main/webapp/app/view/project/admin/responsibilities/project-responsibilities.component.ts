@@ -8,7 +8,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { IProject } from 'app/shared/model/project.model';
 import { IResponsibility } from 'app/shared/model/responsibility.model';
 
-import { ProjectService } from 'app/entities/project/project.service';
+import { ResponsibilityService } from 'app/entities/responsibility/responsibility.service';
 
 import { ResponsibilityDeleteDialogComponent } from 'app/entities/responsibility/responsibility-delete-dialog.component';
 
@@ -34,7 +34,7 @@ export class ProjectResponsibilitiesComponent implements OnInit, OnDestroy {
   ngbPaginationPage = 1;
 
   constructor(
-    protected projectService: ProjectService,
+    protected responsibilityService: ResponsibilityService,
     protected activatedRoute: ActivatedRoute,
     protected router: Router,
     protected eventManager: JhiEventManager,
@@ -68,8 +68,8 @@ export class ProjectResponsibilitiesComponent implements OnInit, OnDestroy {
   loadPage(page?: number, dontNavigate?: boolean): void {
     const pageToLoad: number = page || this.page || 1;
 
-    this.projectService
-      .responsibilities(this.project!, {
+    this.responsibilityService
+      .findAllByProject(this.project!, {
         page: pageToLoad - 1,
         size: this.itemsPerPage,
         sort: this.sort(),

@@ -18,8 +18,6 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import org.hibernate.annotations.BatchSize;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
@@ -28,8 +26,8 @@ import org.hibernate.annotations.Parameter;
  */
 @Entity
 @Table(name = "event")
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Event implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -65,7 +63,6 @@ public class Event implements Serializable {
         inverseJoinColumns = { @JoinColumn(name = "section_id", referencedColumnName = "id") }
     )
     @BatchSize(size = 20)
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @JsonIgnoreProperties(value = "events", allowSetters = true)
     private Set<Section> sections = new HashSet<>();
 

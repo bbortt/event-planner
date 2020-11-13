@@ -18,8 +18,6 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import org.hibernate.annotations.BatchSize;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
@@ -31,8 +29,8 @@ import org.hibernate.annotations.Parameter;
     name = "section",
     uniqueConstraints = { @UniqueConstraint(name = "unique_section_per_location", columnNames = { "name", "location_id" }) }
 )
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Section implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -61,7 +59,6 @@ public class Section implements Serializable {
         inverseJoinColumns = { @JoinColumn(name = "event_id", referencedColumnName = "id") }
     )
     @BatchSize(size = 20)
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @JsonIgnoreProperties(value = "sections", allowSetters = true)
     private Set<Event> events = new HashSet<>();
 
