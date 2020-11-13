@@ -29,7 +29,6 @@
       "admin": {
         "main": "Administration",
         "userManagement": "User management",
-        "tracker": "User tracker",
         "audits": "Audits",
         "jhipster-needle-menu-add-admin-element": "JHipster will add additional menu entries here (do not translate!)"
       },
