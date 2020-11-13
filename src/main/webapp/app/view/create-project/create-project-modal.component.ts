@@ -2,7 +2,7 @@ import { AfterViewInit, Component, OnDestroy, ViewEncapsulation } from '@angular
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
 
-import { ProjectCreateComponent } from 'app/entities/project/project-create.component';
+import { ProjectCreateComponent } from 'app/view/create-project/project-create.component';
 
 @Component({
   template: '',

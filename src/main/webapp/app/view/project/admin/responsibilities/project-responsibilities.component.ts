@@ -10,7 +10,7 @@ import { IResponsibility } from 'app/shared/model/responsibility.model';
 
 import { ResponsibilityService } from 'app/entities/responsibility/responsibility.service';
 
-import { ResponsibilityDeleteDialogComponent } from 'app/entities/responsibility/responsibility-delete-dialog.component';
+import { ProjectResponsibilityDeleteDialogComponent } from 'app/view/project/admin/responsibilities/project-responsibility-delete-dialog.component';
 
 import { ITEMS_PER_PAGE } from 'app/shared/constants/pagination.constants';
 
@@ -96,10 +96,7 @@ export class ProjectResponsibilitiesComponent implements OnInit, OnDestroy {
   }
 
   delete(responsibility: IResponsibility): void {
-    const modalRef = this.modalService.open(ResponsibilityDeleteDialogComponent, {
-      size: 'lg',
-      backdrop: 'static',
-    });
+    const modalRef = this.modalService.open(ProjectResponsibilityDeleteDialogComponent, { size: 'lg', backdrop: 'static' });
     modalRef.componentInstance.responsibility = responsibility;
   }
 
