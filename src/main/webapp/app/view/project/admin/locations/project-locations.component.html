@@ -1,5 +1,72 @@
 <div>
     <h3 id="page-heading">
-        <span jhiTranslate="eventPlannerApp.project.admin.navbar.locations">Locations</span>
+        <span jhiTranslate="eventPlannerApp.location.home.title">Location</span>
+
+        <button id="jh-create-entity"
+                class="btn btn-primary float-right jh-create-entity create-responsibility"
+                [routerLink]="['', {outlets: {modal: ['projects', project!.id, 'locations', 'new']}}]">
+            <fa-icon icon="plus"></fa-icon>
+            <span jhiTranslate="eventPlannerApp.location.home.createLabel">
+            Create a new Location
+            </span>
+        </button>
     </h3>
+
+    <jhi-alert-error></jhi-alert-error>
+
+    <jhi-alert></jhi-alert>
+
+    <!-- Frage, warum wird die Warnung nicht angezeigt? -->
+    <div class="alert alert-warning" id="no-result" *ngIf="locations?.length === 0">
+        <span
+            jhiTranslate="eventPlannerApp.location.home.notFound">No locations found</span>
+    </div>
+
+    <div class="table-responsive" id="entities"
+         *ngIf="project && locations && locations.length > 0">
+        <table class="table table-striped" aria-describedby="page-heading">
+            <thead>
+            <tr>
+                <th scope="col"><span jhiTranslate="eventPlannerApp.location.name">Name</span>
+                </th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let location of locations ;trackBy: trackId">
+                <td>{{ location.name }}</td>
+                <td class="text-right">
+                    <div class="btn-group">
+                        <button type="submit"
+                                [routerLink]="['', {outlets: {modal: ['projects', project.id, 'locations', locations.id, 'edit']}}]"
+                                class="btn btn-primary btn-sm">
+                            <fa-icon icon="pencil-alt"></fa-icon>
+                            <span class="d-none d-md-inline"
+                                  jhiTranslate="entity.action.edit">Edit</span>
+                        </button>
+
+                        <button type="submit" (click)="delete(location)"
+                                class="btn btn-danger btn-sm">
+                            <fa-icon icon="times"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div *ngIf="locations && locations.length > 0">
+        <div class="row justify-content-center">
+            <jhi-item-count [page]="page" [total]="totalItems"
+                            [itemsPerPage]="itemsPerPage"></jhi-item-count>
+        </div>
+
+        <div class="row justify-content-center">
+            <ngb-pagination [collectionSize]="totalItems" [(page)]="ngbPaginationPage"
+                            [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true"
+                            [boundaryLinks]="true" (pageChange)="loadPage($event)"></ngb-pagination>
+        </div>
+    </div>
 </div>
