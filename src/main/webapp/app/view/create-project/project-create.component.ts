@@ -4,7 +4,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { IProject } from 'app/shared/model/project.model';
-import { ProjectService } from './project.service';
+import { ProjectService } from 'app/entities/project/project.service';
 import { IUser } from '../../core/user/user.model';
 import { AccountService } from '../../core/auth/account.service';
 import { CreateProject, ICreateProject } from '../../shared/model/dto/create-project.model';
