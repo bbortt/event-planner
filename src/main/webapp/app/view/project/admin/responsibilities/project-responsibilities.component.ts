@@ -21,6 +21,7 @@ import { ITEMS_PER_PAGE } from 'app/shared/constants/pagination.constants';
 })
 export class ProjectResponsibilitiesComponent implements OnInit, OnDestroy {
   project?: IProject;
+  loadedResponsibilities?: IResponsibility[];
   responsibilities?: IResponsibility[];
 
   eventSubscriber?: Subscription;
@@ -88,8 +89,17 @@ export class ProjectResponsibilitiesComponent implements OnInit, OnDestroy {
     this.eventSubscriber = this.eventManager.subscribe('responsibilityListModification', () => this.loadPage());
   }
 
+  filterData(searchString: string): void {
+    this.responsibilities = this.loadedResponsibilities!.filter((responsibility: IResponsibility) =>
+      responsibility.name?.toLowerCase().includes(searchString.toLowerCase())
+    );
+  }
+
   delete(responsibility: IResponsibility): void {
-    const modalRef = this.modalService.open(ResponsibilityDeleteDialogComponent, { size: 'lg', backdrop: 'static' });
+    const modalRef = this.modalService.open(ResponsibilityDeleteDialogComponent, {
+      size: 'lg',
+      backdrop: 'static',
+    });
     modalRef.componentInstance.responsibility = responsibility;
   }
 
@@ -113,7 +123,8 @@ export class ProjectResponsibilitiesComponent implements OnInit, OnDestroy {
         },
       });
     }
-    this.responsibilities = data || [];
+    this.loadedResponsibilities = data || [];
+    this.responsibilities = this.loadedResponsibilities;
     this.ngbPaginationPage = this.page;
   }
 
