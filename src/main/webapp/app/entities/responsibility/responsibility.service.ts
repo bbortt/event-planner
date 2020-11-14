@@ -35,7 +35,7 @@ export class ResponsibilityService {
 
   findAllByProject(project: IProject, req?: any): Observable<EntityArrayResponseType> {
     const options = createRequestOption(req);
-    return this.http.get<IResponsibility[]>(`${this.resourceUrl}/${project.id!}/responsibilities`, {
+    return this.http.get<IResponsibility[]>(`${this.resourceUrl}/project/${project.id!}`, {
       params: options,
       observe: 'response',
     });

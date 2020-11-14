@@ -1,9 +1,7 @@
 package io.github.bbortt.event.planner.web.rest;
 
 import io.github.bbortt.event.planner.domain.Project;
-import io.github.bbortt.event.planner.domain.Responsibility;
 import io.github.bbortt.event.planner.service.ProjectService;
-import io.github.bbortt.event.planner.service.ResponsibilityService;
 import io.github.bbortt.event.planner.service.dto.CreateProjectDTO;
 import io.github.bbortt.event.planner.web.rest.errors.BadRequestAlertException;
 import io.github.jhipster.web.util.HeaderUtil;
@@ -22,7 +20,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 /**
@@ -40,11 +46,9 @@ public class ProjectResource {
     private String applicationName;
 
     private final ProjectService projectService;
-    private final ResponsibilityService responsibilityService;
 
-    public ProjectResource(ProjectService projectService, ResponsibilityService responsibilityService) {
+    public ProjectResource(ProjectService projectService) {
         this.projectService = projectService;
-        this.responsibilityService = responsibilityService;
     }
 
     /**
@@ -69,9 +73,7 @@ public class ProjectResource {
      * {@code PUT  /projects} : Updates an existing project.
      *
      * @param project the project to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated project,
-     * or with status {@code 400 (Bad Request)} if the project is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the project couldn't be updated.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated project, or with status {@code 400 (Bad Request)} if the project is not valid, or with status {@code 500 (Internal Server Error)} if the project couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/projects")
@@ -134,22 +136,5 @@ public class ProjectResource {
             .noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
-    }
-
-    /**
-     * {@code GET  /projects} : get all the projects.
-     *
-     * @param id the id of the project to retrieve responsibilities for.
-     * @param pageable the pagination information.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of projects in body.
-     */
-    @GetMapping("/projects/{id}/responsibilities")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<Responsibility>> getProjects(@PathVariable Long id, Pageable pageable) {
-        log.debug("REST request to get a page of Responsibilities for Project {}", id);
-
-        Page<Responsibility> page = responsibilityService.findAllByProjectId(id, pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
-        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 }
