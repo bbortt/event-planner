@@ -3,14 +3,14 @@ import { HttpResponse } from '@angular/common/http';
 import { ActivatedRouteSnapshot, Resolve, Router } from '@angular/router';
 import { EMPTY, Observable, of } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
-import { ILocationTimeSlot, LocationTimeSlot } from 'app/shared/model/location-time-slot.model';
+import { LocationTimeSlot } from 'app/shared/model/location-time-slot.model';
 import { LocationTimeSlotService } from './location-time-slot.service';
 
 @Injectable({ providedIn: 'root' })
-export class LocationTimeSlotTimeSlotResolve implements Resolve<ILocationTimeSlot> {
+export class LocationTimeSlotTimeSlotResolve implements Resolve<LocationTimeSlot> {
   constructor(private service: LocationTimeSlotService, private router: Router) {}
 
-  resolve(route: ActivatedRouteSnapshot): Observable<ILocationTimeSlot> | Observable<never> {
+  resolve(route: ActivatedRouteSnapshot): Observable<LocationTimeSlot> | Observable<never> {
     let locationTimeSlotId = route.params['locationTimeSlotId'];
 
     // Search recursively for Route.children
@@ -33,6 +33,6 @@ export class LocationTimeSlotTimeSlotResolve implements Resolve<ILocationTimeSlo
       );
     }
 
-    return of(new LocationTimeSlot());
+    return of({});
   }
 }

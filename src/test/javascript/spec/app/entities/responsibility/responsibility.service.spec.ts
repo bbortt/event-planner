@@ -1,15 +1,15 @@
-import { TestBed, getTestBed } from '@angular/core/testing';
+import { getTestBed, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { ResponsibilityService } from 'app/entities/responsibility/responsibility.service';
-import { IResponsibility, Responsibility } from 'app/shared/model/responsibility.model';
+import { Responsibility } from 'app/shared/model/responsibility.model';
 
 describe('Service Tests', () => {
   describe('Responsibility Service', () => {
     let injector: TestBed;
     let service: ResponsibilityService;
     let httpMock: HttpTestingController;
-    let elemDefault: IResponsibility;
-    let expectedResult: IResponsibility | IResponsibility[] | boolean | null;
+    let elemDefault: Responsibility;
+    let expectedResult: Responsibility | Responsibility[] | boolean | null;
 
     beforeEach(() => {
       TestBed.configureTestingModule({
@@ -20,7 +20,10 @@ describe('Service Tests', () => {
       service = injector.get(ResponsibilityService);
       httpMock = injector.get(HttpTestingController);
 
-      elemDefault = new Responsibility(0, 'AAAAAAA');
+      elemDefault = {
+        id: 0,
+        name: 'AAAAAAA',
+      };
     });
 
     describe('Service methods', () => {
@@ -44,7 +47,7 @@ describe('Service Tests', () => {
 
         const expected = Object.assign({}, returnedFromService);
 
-        service.create(new Responsibility()).subscribe(resp => (expectedResult = resp.body));
+        service.create({}).subscribe(resp => (expectedResult = resp.body));
 
         const req = httpMock.expectOne({ method: 'POST' });
         req.flush(returnedFromService);

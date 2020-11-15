@@ -1,4 +1,4 @@
-export interface IUser {
+export interface User {
   id?: any;
   login?: string;
   firstName?: string;
@@ -12,22 +12,4 @@ export interface IUser {
   lastModifiedBy?: string;
   lastModifiedDate?: Date;
   password?: string;
-}
-
-export class User implements IUser {
-  constructor(
-    public id?: any,
-    public login?: string,
-    public firstName?: string,
-    public lastName?: string,
-    public email?: string,
-    public activated?: boolean,
-    public langKey?: string,
-    public authorities?: string[],
-    public createdBy?: string,
-    public createdDate?: Date,
-    public lastModifiedBy?: string,
-    public lastModifiedDate?: Date,
-    public password?: string
-  ) {}
 }

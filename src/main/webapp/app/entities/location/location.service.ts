@@ -6,10 +6,10 @@ import * as moment from 'moment';
 
 import { SERVER_API_URL } from 'app/app.constants';
 import { createRequestOption } from 'app/shared/util/request-util';
-import { ILocation } from 'app/shared/model/location.model';
+import { Location } from 'app/shared/model/location.model';
 
-type EntityResponseType = HttpResponse<ILocation>;
-type EntityArrayResponseType = HttpResponse<ILocation[]>;
+type EntityResponseType = HttpResponse<Location>;
+type EntityArrayResponseType = HttpResponse<Location[]>;
 
 @Injectable({ providedIn: 'root' })
 export class LocationService {
@@ -17,30 +17,30 @@ export class LocationService {
 
   constructor(protected http: HttpClient) {}
 
-  create(location: ILocation): Observable<EntityResponseType> {
+  create(location: Location): Observable<EntityResponseType> {
     const copy = this.convertDateFromClient(location);
     return this.http
-      .post<ILocation>(this.resourceUrl, copy, { observe: 'response' })
+      .post<Location>(this.resourceUrl, copy, { observe: 'response' })
       .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
   }
 
-  update(location: ILocation): Observable<EntityResponseType> {
+  update(location: Location): Observable<EntityResponseType> {
     const copy = this.convertDateFromClient(location);
     return this.http
-      .put<ILocation>(this.resourceUrl, copy, { observe: 'response' })
+      .put<Location>(this.resourceUrl, copy, { observe: 'response' })
       .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
   }
 
   find(id: number): Observable<EntityResponseType> {
     return this.http
-      .get<ILocation>(`${this.resourceUrl}/${id}`, { observe: 'response' })
+      .get<Location>(`${this.resourceUrl}/${id}`, { observe: 'response' })
       .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
   }
 
   query(req?: any): Observable<EntityArrayResponseType> {
     const options = createRequestOption(req);
     return this.http
-      .get<ILocation[]>(this.resourceUrl, { params: options, observe: 'response' })
+      .get<Location[]>(this.resourceUrl, { params: options, observe: 'response' })
       .pipe(map((res: EntityArrayResponseType) => this.convertDateArrayFromServer(res)));
   }
 
@@ -48,8 +48,8 @@ export class LocationService {
     return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
   }
 
-  protected convertDateFromClient(location: ILocation): ILocation {
-    const copy: ILocation = Object.assign({}, location, {
+  protected convertDateFromClient(location: Location): Location {
+    const copy: Location = Object.assign({}, location, {
       dateFrom: location.dateFrom && location.dateFrom.isValid() ? location.dateFrom.toJSON() : undefined,
       dateTo: location.dateTo && location.dateTo.isValid() ? location.dateTo.toJSON() : undefined,
     });
@@ -66,7 +66,7 @@ export class LocationService {
 
   protected convertDateArrayFromServer(res: EntityArrayResponseType): EntityArrayResponseType {
     if (res.body) {
-      res.body.forEach((location: ILocation) => {
+      res.body.forEach((location: Location) => {
         location.dateFrom = location.dateFrom ? moment(location.dateFrom) : undefined;
         location.dateTo = location.dateTo ? moment(location.dateTo) : undefined;
       });

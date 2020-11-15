@@ -6,10 +6,10 @@ import * as moment from 'moment';
 
 import { SERVER_API_URL } from 'app/app.constants';
 import { createRequestOption } from 'app/shared/util/request-util';
-import { IEvent } from 'app/shared/model/event.model';
+import { Event } from 'app/shared/model/event.model';
 
-type EntityResponseType = HttpResponse<IEvent>;
-type EntityArrayResponseType = HttpResponse<IEvent[]>;
+type EntityResponseType = HttpResponse<Event>;
+type EntityArrayResponseType = HttpResponse<Event[]>;
 
 @Injectable({ providedIn: 'root' })
 export class EventService {
@@ -17,30 +17,30 @@ export class EventService {
 
   constructor(protected http: HttpClient) {}
 
-  create(event: IEvent): Observable<EntityResponseType> {
+  create(event: Event): Observable<EntityResponseType> {
     const copy = this.convertDateFromClient(event);
     return this.http
-      .post<IEvent>(this.resourceUrl, copy, { observe: 'response' })
+      .post<Event>(this.resourceUrl, copy, { observe: 'response' })
       .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
   }
 
-  update(event: IEvent): Observable<EntityResponseType> {
+  update(event: Event): Observable<EntityResponseType> {
     const copy = this.convertDateFromClient(event);
     return this.http
-      .put<IEvent>(this.resourceUrl, copy, { observe: 'response' })
+      .put<Event>(this.resourceUrl, copy, { observe: 'response' })
       .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
   }
 
   find(id: number): Observable<EntityResponseType> {
     return this.http
-      .get<IEvent>(`${this.resourceUrl}/${id}`, { observe: 'response' })
+      .get<Event>(`${this.resourceUrl}/${id}`, { observe: 'response' })
       .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
   }
 
   query(req?: any): Observable<EntityArrayResponseType> {
     const options = createRequestOption(req);
     return this.http
-      .get<IEvent[]>(this.resourceUrl, { params: options, observe: 'response' })
+      .get<Event[]>(this.resourceUrl, { params: options, observe: 'response' })
       .pipe(map((res: EntityArrayResponseType) => this.convertDateArrayFromServer(res)));
   }
 
@@ -48,8 +48,8 @@ export class EventService {
     return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
   }
 
-  protected convertDateFromClient(event: IEvent): IEvent {
-    const copy: IEvent = Object.assign({}, event, {
+  protected convertDateFromClient(event: Event): Event {
+    const copy: Event = Object.assign({}, event, {
       startTime: event.startTime && event.startTime.isValid() ? event.startTime.toJSON() : undefined,
       endTime: event.endTime && event.endTime.isValid() ? event.endTime.toJSON() : undefined,
     });
@@ -66,7 +66,7 @@ export class EventService {
 
   protected convertDateArrayFromServer(res: EntityArrayResponseType): EntityArrayResponseType {
     if (res.body) {
-      res.body.forEach((event: IEvent) => {
+      res.body.forEach((event: Event) => {
         event.startTime = event.startTime ? moment(event.startTime) : undefined;
         event.endTime = event.endTime ? moment(event.endTime) : undefined;
       });

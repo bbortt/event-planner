@@ -1,15 +1,15 @@
-import { TestBed, getTestBed } from '@angular/core/testing';
+import { getTestBed, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { InvitationService } from 'app/entities/invitation/invitation.service';
-import { IInvitation, Invitation } from 'app/shared/model/invitation.model';
+import { Invitation } from 'app/shared/model/invitation.model';
 
 describe('Service Tests', () => {
   describe('Invitation Service', () => {
     let injector: TestBed;
     let service: InvitationService;
     let httpMock: HttpTestingController;
-    let elemDefault: IInvitation;
-    let expectedResult: IInvitation | IInvitation[] | boolean | null;
+    let elemDefault: Invitation;
+    let expectedResult: Invitation | Invitation[] | boolean | null;
 
     beforeEach(() => {
       TestBed.configureTestingModule({
@@ -20,7 +20,11 @@ describe('Service Tests', () => {
       service = injector.get(InvitationService);
       httpMock = injector.get(HttpTestingController);
 
-      elemDefault = new Invitation(0, 'AAAAAAA', false);
+      elemDefault = {
+        id: 0,
+        email: 'AAAAAAA',
+        accepted: false,
+      };
     });
 
     describe('Service methods', () => {
@@ -44,7 +48,7 @@ describe('Service Tests', () => {
 
         const expected = Object.assign({}, returnedFromService);
 
-        service.create(new Invitation()).subscribe(resp => (expectedResult = resp.body));
+        service.create({}).subscribe(resp => (expectedResult = resp.body));
 
         const req = httpMock.expectOne({ method: 'POST' });
         req.flush(returnedFromService);

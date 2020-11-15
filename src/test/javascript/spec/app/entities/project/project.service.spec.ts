@@ -1,8 +1,8 @@
-import { TestBed, getTestBed } from '@angular/core/testing';
+import { getTestBed, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { ProjectService } from 'app/entities/project/project.service';
-import { IProject, Project } from 'app/shared/model/project.model';
-import { CreateProject } from 'app/shared/model/dto/create-project.model';
+import { Project } from 'app/shared/model/project.model';
+import { ICreateProject } from 'app/shared/model/dto/create-project.model';
 
 import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 
@@ -13,8 +13,8 @@ describe('Service Tests', () => {
     let injector: TestBed;
     let service: ProjectService;
     let httpMock: HttpTestingController;
-    let elemDefault: IProject;
-    let expectedResult: IProject | IProject[] | boolean | null;
+    let elemDefault: Project;
+    let expectedResult: Project | Project[] | boolean | null;
     let currentDate: moment.Moment;
 
     beforeEach(() => {
@@ -27,7 +27,13 @@ describe('Service Tests', () => {
       httpMock = injector.get(HttpTestingController);
       currentDate = moment();
 
-      elemDefault = new Project(0, 'AAAAAAA', 'AAAAAAA', currentDate, currentDate);
+      elemDefault = {
+        id: 0,
+        name: 'AAAAAAA',
+        description: 'AAAAAAA',
+        startTime: currentDate,
+        endTime: currentDate,
+      };
     });
 
     describe('Service methods', () => {
@@ -65,7 +71,13 @@ describe('Service Tests', () => {
           returnedFromService
         );
 
-        service.create(new CreateProject('test-name', moment(), moment())).subscribe(resp => (expectedResult = resp.body));
+        service
+          .create({
+            name: 'test-name',
+            startTime: moment(),
+            endTime: moment(),
+          })
+          .subscribe(resp => (expectedResult = resp.body));
 
         const req = httpMock.expectOne({ method: 'POST' });
         req.flush(returnedFromService);

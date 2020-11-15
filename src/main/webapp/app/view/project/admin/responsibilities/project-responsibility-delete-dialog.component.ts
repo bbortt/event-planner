@@ -2,14 +2,14 @@ import { Component } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
 
-import { IResponsibility } from 'app/shared/model/responsibility.model';
+import { Responsibility } from 'app/shared/model/responsibility.model';
 import { ResponsibilityService } from 'app/entities/responsibility/responsibility.service';
 
 @Component({
   templateUrl: './project-responsibility-delete-dialog.component.html',
 })
 export class ProjectResponsibilityDeleteDialogComponent {
-  responsibility?: IResponsibility;
+  responsibility?: Responsibility;
 
   constructor(
     protected responsibilityService: ResponsibilityService,

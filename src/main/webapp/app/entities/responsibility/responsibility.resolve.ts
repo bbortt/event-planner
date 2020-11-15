@@ -3,14 +3,14 @@ import { HttpResponse } from '@angular/common/http';
 import { ActivatedRouteSnapshot, Resolve, Router } from '@angular/router';
 import { EMPTY, Observable, of } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
-import { IResponsibility, Responsibility } from 'app/shared/model/responsibility.model';
+import { Responsibility } from 'app/shared/model/responsibility.model';
 import { ResponsibilityService } from './responsibility.service';
 
 @Injectable({ providedIn: 'root' })
-export class ResponsibilityResolve implements Resolve<IResponsibility> {
+export class ResponsibilityResolve implements Resolve<Responsibility> {
   constructor(private service: ResponsibilityService, private router: Router) {}
 
-  resolve(route: ActivatedRouteSnapshot): Observable<IResponsibility> | Observable<never> {
+  resolve(route: ActivatedRouteSnapshot): Observable<Responsibility> | Observable<never> {
     let responsibilityId = route.params['responsibilityId'];
 
     // Search recursively for Route.children
@@ -33,6 +33,6 @@ export class ResponsibilityResolve implements Resolve<IResponsibility> {
       );
     }
 
-    return of(new Responsibility());
+    return of({});
   }
 }

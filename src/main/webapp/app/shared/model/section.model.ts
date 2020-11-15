@@ -1,13 +1,9 @@
-import { ILocation } from 'app/shared/model/location.model';
-import { IEvent } from 'app/shared/model/event.model';
+import { Location } from 'app/shared/model/location.model';
+import { Event } from 'app/shared/model/event.model';
 
-export interface ISection {
+export interface Section {
   id?: number;
   name?: string;
-  location?: ILocation;
-  events?: IEvent[];
-}
-
-export class Section implements ISection {
-  constructor(public id?: number, public name?: string, public location?: ILocation, public events?: IEvent[]) {}
+  location?: Location;
+  events?: Event[];
 }

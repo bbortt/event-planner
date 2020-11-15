@@ -4,11 +4,11 @@ import { Observable } from 'rxjs';
 
 import { SERVER_API_URL } from 'app/app.constants';
 import { createRequestOption } from 'app/shared/util/request-util';
-import { IResponsibility } from 'app/shared/model/responsibility.model';
-import { IProject } from 'app/shared/model/project.model';
+import { Responsibility } from 'app/shared/model/responsibility.model';
+import { Project } from 'app/shared/model/project.model';
 
-type EntityResponseType = HttpResponse<IResponsibility>;
-type EntityArrayResponseType = HttpResponse<IResponsibility[]>;
+type EntityResponseType = HttpResponse<Responsibility>;
+type EntityArrayResponseType = HttpResponse<Responsibility[]>;
 
 @Injectable({ providedIn: 'root' })
 export class ResponsibilityService {
@@ -16,26 +16,26 @@ export class ResponsibilityService {
 
   constructor(protected http: HttpClient) {}
 
-  create(responsibility: IResponsibility): Observable<EntityResponseType> {
-    return this.http.post<IResponsibility>(this.resourceUrl, responsibility, { observe: 'response' });
+  create(responsibility: Responsibility): Observable<EntityResponseType> {
+    return this.http.post<Responsibility>(this.resourceUrl, responsibility, { observe: 'response' });
   }
 
-  update(responsibility: IResponsibility): Observable<EntityResponseType> {
-    return this.http.put<IResponsibility>(this.resourceUrl, responsibility, { observe: 'response' });
+  update(responsibility: Responsibility): Observable<EntityResponseType> {
+    return this.http.put<Responsibility>(this.resourceUrl, responsibility, { observe: 'response' });
   }
 
   find(id: number): Observable<EntityResponseType> {
-    return this.http.get<IResponsibility>(`${this.resourceUrl}/${id}`, { observe: 'response' });
+    return this.http.get<Responsibility>(`${this.resourceUrl}/${id}`, { observe: 'response' });
   }
 
   query(req?: any): Observable<EntityArrayResponseType> {
     const options = createRequestOption(req);
-    return this.http.get<IResponsibility[]>(this.resourceUrl, { params: options, observe: 'response' });
+    return this.http.get<Responsibility[]>(this.resourceUrl, { params: options, observe: 'response' });
   }
 
-  findAllByProject(project: IProject, req?: any): Observable<EntityArrayResponseType> {
+  findAllByProject(project: Project, req?: any): Observable<EntityArrayResponseType> {
     const options = createRequestOption(req);
-    return this.http.get<IResponsibility[]>(`${this.resourceUrl}/project/${project.id!}`, {
+    return this.http.get<Responsibility[]>(`${this.resourceUrl}/project/${project.id!}`, {
       params: options,
       observe: 'response',
     });

@@ -6,10 +6,10 @@ import * as moment from 'moment';
 
 import { SERVER_API_URL } from 'app/app.constants';
 import { createRequestOption } from 'app/shared/util/request-util';
-import { ILocationTimeSlot } from 'app/shared/model/location-time-slot.model';
+import { LocationTimeSlot } from 'app/shared/model/location-time-slot.model';
 
-type EntityResponseType = HttpResponse<ILocationTimeSlot>;
-type EntityArrayResponseType = HttpResponse<ILocationTimeSlot[]>;
+type EntityResponseType = HttpResponse<LocationTimeSlot>;
+type EntityArrayResponseType = HttpResponse<LocationTimeSlot[]>;
 
 @Injectable({ providedIn: 'root' })
 export class LocationTimeSlotService {
@@ -17,30 +17,30 @@ export class LocationTimeSlotService {
 
   constructor(protected http: HttpClient) {}
 
-  create(locationTimeSlot: ILocationTimeSlot): Observable<EntityResponseType> {
+  create(locationTimeSlot: LocationTimeSlot): Observable<EntityResponseType> {
     const copy = this.convertDateFromClient(locationTimeSlot);
     return this.http
-      .post<ILocationTimeSlot>(this.resourceUrl, copy, { observe: 'response' })
+      .post<LocationTimeSlot>(this.resourceUrl, copy, { observe: 'response' })
       .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
   }
 
-  update(locationTimeSlot: ILocationTimeSlot): Observable<EntityResponseType> {
+  update(locationTimeSlot: LocationTimeSlot): Observable<EntityResponseType> {
     const copy = this.convertDateFromClient(locationTimeSlot);
     return this.http
-      .put<ILocationTimeSlot>(this.resourceUrl, copy, { observe: 'response' })
+      .put<LocationTimeSlot>(this.resourceUrl, copy, { observe: 'response' })
       .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
   }
 
   find(id: number): Observable<EntityResponseType> {
     return this.http
-      .get<ILocationTimeSlot>(`${this.resourceUrl}/${id}`, { observe: 'response' })
+      .get<LocationTimeSlot>(`${this.resourceUrl}/${id}`, { observe: 'response' })
       .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
   }
 
   query(req?: any): Observable<EntityArrayResponseType> {
     const options = createRequestOption(req);
     return this.http
-      .get<ILocationTimeSlot[]>(this.resourceUrl, { params: options, observe: 'response' })
+      .get<LocationTimeSlot[]>(this.resourceUrl, { params: options, observe: 'response' })
       .pipe(map((res: EntityArrayResponseType) => this.convertDateArrayFromServer(res)));
   }
 
@@ -48,8 +48,8 @@ export class LocationTimeSlotService {
     return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
   }
 
-  protected convertDateFromClient(locationTimeSlot: ILocationTimeSlot): ILocationTimeSlot {
-    const copy: ILocationTimeSlot = Object.assign({}, locationTimeSlot, {
+  protected convertDateFromClient(locationTimeSlot: LocationTimeSlot): LocationTimeSlot {
+    const copy: LocationTimeSlot = Object.assign({}, locationTimeSlot, {
       startTime: locationTimeSlot.startTime && locationTimeSlot.startTime.isValid() ? locationTimeSlot.startTime.toJSON() : undefined,
       endTime: locationTimeSlot.endTime && locationTimeSlot.endTime.isValid() ? locationTimeSlot.endTime.toJSON() : undefined,
     });
@@ -66,7 +66,7 @@ export class LocationTimeSlotService {
 
   protected convertDateArrayFromServer(res: EntityArrayResponseType): EntityArrayResponseType {
     if (res.body) {
-      res.body.forEach((locationTimeSlot: ILocationTimeSlot) => {
+      res.body.forEach((locationTimeSlot: LocationTimeSlot) => {
         locationTimeSlot.startTime = locationTimeSlot.startTime ? moment(locationTimeSlot.startTime) : undefined;
         locationTimeSlot.endTime = locationTimeSlot.endTime ? moment(locationTimeSlot.endTime) : undefined;
       });

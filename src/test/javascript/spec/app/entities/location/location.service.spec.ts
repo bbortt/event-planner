@@ -1,17 +1,17 @@
-import { TestBed, getTestBed } from '@angular/core/testing';
+import { getTestBed, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import * as moment from 'moment';
 import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 import { LocationService } from 'app/entities/location/location.service';
-import { ILocation, Location } from 'app/shared/model/location.model';
+import { Location } from 'app/shared/model/location.model';
 
 describe('Service Tests', () => {
   describe('Location Service', () => {
     let injector: TestBed;
     let service: LocationService;
     let httpMock: HttpTestingController;
-    let elemDefault: ILocation;
-    let expectedResult: ILocation | ILocation[] | boolean | null;
+    let elemDefault: Location;
+    let expectedResult: Location | Location[] | boolean | null;
     let currentDate: moment.Moment;
 
     beforeEach(() => {
@@ -24,7 +24,12 @@ describe('Service Tests', () => {
       httpMock = injector.get(HttpTestingController);
       currentDate = moment();
 
-      elemDefault = new Location(0, 'AAAAAAA', currentDate, currentDate);
+      elemDefault = {
+        id: 0,
+        name: 'AAAAAAA',
+        dateFrom: currentDate,
+        dateTo: currentDate,
+      };
     });
 
     describe('Service methods', () => {
@@ -62,7 +67,7 @@ describe('Service Tests', () => {
           returnedFromService
         );
 
-        service.create(new Location()).subscribe(resp => (expectedResult = resp.body));
+        service.create({}).subscribe(resp => (expectedResult = resp.body));
 
         const req = httpMock.expectOne({ method: 'POST' });
         req.flush(returnedFromService);

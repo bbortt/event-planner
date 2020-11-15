@@ -5,8 +5,8 @@ import { combineLatest, Subscription } from 'rxjs';
 import { JhiEventManager } from 'ng-jhipster';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { IProject } from 'app/shared/model/project.model';
-import { IResponsibility } from 'app/shared/model/responsibility.model';
+import { Project } from 'app/shared/model/project.model';
+import { Responsibility } from 'app/shared/model/responsibility.model';
 
 import { ResponsibilityService } from 'app/entities/responsibility/responsibility.service';
 
@@ -20,9 +20,9 @@ import { ITEMS_PER_PAGE } from 'app/shared/constants/pagination.constants';
   styleUrls: ['project-responsibilities.component.scss'],
 })
 export class ProjectResponsibilitiesComponent implements OnInit, OnDestroy {
-  project?: IProject;
-  loadedResponsibilities?: IResponsibility[];
-  responsibilities?: IResponsibility[];
+  project?: Project;
+  loadedResponsibilities?: Responsibility[];
+  responsibilities?: Responsibility[];
 
   eventSubscriber?: Subscription;
 
@@ -75,12 +75,12 @@ export class ProjectResponsibilitiesComponent implements OnInit, OnDestroy {
         sort: this.sort(),
       })
       .subscribe(
-        (res: HttpResponse<IResponsibility[]>) => this.onSuccess(res.body, res.headers, pageToLoad, !dontNavigate),
+        (res: HttpResponse<Responsibility[]>) => this.onSuccess(res.body, res.headers, pageToLoad, !dontNavigate),
         () => this.onError()
       );
   }
 
-  trackId(index: number, item: IResponsibility): number {
+  trackId(index: number, item: Responsibility): number {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
     return item.id!;
   }
@@ -90,12 +90,12 @@ export class ProjectResponsibilitiesComponent implements OnInit, OnDestroy {
   }
 
   filterData(searchString: string): void {
-    this.responsibilities = this.loadedResponsibilities!.filter((responsibility: IResponsibility) =>
+    this.responsibilities = this.loadedResponsibilities!.filter((responsibility: Responsibility) =>
       responsibility.name?.toLowerCase().includes(searchString.toLowerCase())
     );
   }
 
-  delete(responsibility: IResponsibility): void {
+  delete(responsibility: Responsibility): void {
     const modalRef = this.modalService.open(ProjectResponsibilityDeleteDialogComponent, { size: 'lg', backdrop: 'static' });
     modalRef.componentInstance.responsibility = responsibility;
   }
@@ -108,7 +108,7 @@ export class ProjectResponsibilitiesComponent implements OnInit, OnDestroy {
     return result;
   }
 
-  protected onSuccess(data: IResponsibility[] | null, headers: HttpHeaders, page: number, navigate: boolean): void {
+  protected onSuccess(data: Responsibility[] | null, headers: HttpHeaders, page: number, navigate: boolean): void {
     this.totalItems = Number(headers.get('X-Total-Count'));
     this.page = page;
     if (navigate) {
