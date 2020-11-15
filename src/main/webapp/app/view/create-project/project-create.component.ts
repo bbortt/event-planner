@@ -1,29 +1,28 @@
-import { Component, OnInit } from '@angular/core';
-import { HttpResponse } from '@angular/common/http';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
-import { IProject } from 'app/shared/model/project.model';
+import { Subject } from 'rxjs';
 import { ProjectService } from 'app/entities/project/project.service';
-import { IUser } from '../../core/user/user.model';
-import { AccountService } from '../../core/auth/account.service';
-import { CreateProject, ICreateProject } from '../../shared/model/dto/create-project.model';
+import { IUser } from 'app/core/user/user.model';
+import { AccountService } from 'app/core/auth/account.service';
+import { CreateProject, ICreateProject } from 'app/shared/model/dto/create-project.model';
 
-import { AUTHORITY_ADMIN } from '../../shared/constants/authority.constants';
+import { AUTHORITY_ADMIN } from 'app/shared/constants/authority.constants';
 
+import { switchMap, takeUntil } from 'rxjs/operators';
 import * as moment from 'moment';
 
 @Component({
-  selector: 'jhi-project-create',
+  selector: 'app-project-create',
   templateUrl: './project-create.component.html',
 })
-export class ProjectCreateComponent implements OnInit {
+export class ProjectCreateComponent implements OnInit, OnDestroy {
   cancelEnabled = true;
 
   isSaving = false;
   editForm = this.fb.group({
-    name: [null, [Validators.required, Validators.minLength(1), Validators.maxLength(50)]],
-    description: [null, [Validators.minLength(1), Validators.maxLength(300)]],
+    name: [null, [Validators.required, Validators.maxLength(50)]],
+    description: [null, [Validators.maxLength(300)]],
     startTime: [null, [Validators.required]],
     endTime: [null, [Validators.required]],
     selectedUser: [null, []],
@@ -31,6 +30,8 @@ export class ProjectCreateComponent implements OnInit {
 
   startMoment = moment();
   endMoment = moment();
+
+  private destroy$ = new Subject();
 
   constructor(
     private projectService: ProjectService,
@@ -50,6 +51,10 @@ export class ProjectCreateComponent implements OnInit {
     });
   }
 
+  public ngOnDestroy(): void {
+    this.destroy$.next();
+  }
+
   previousState(): void {
     window.history.back();
   }
@@ -57,7 +62,16 @@ export class ProjectCreateComponent implements OnInit {
   save(): void {
     this.isSaving = true;
     const project = this.createFromForm();
-    this.subscribeToSaveResponse(this.projectService.create(project));
+    this.projectService
+      .create(project)
+      .pipe(
+        switchMap(() => this.accountService.identity(true)), // Since we save the role per project on the account we need to refetch the account details after creating a project.
+        takeUntil(this.destroy$)
+      )
+      .subscribe(() => {
+        this.isSaving = false;
+        this.previousState();
+      });
   }
 
   private createFromForm(): ICreateProject {
@@ -73,22 +87,6 @@ export class ProjectCreateComponent implements OnInit {
     }
 
     return newProject;
-  }
-
-  protected subscribeToSaveResponse(result: Observable<HttpResponse<IProject>>): void {
-    result.subscribe(
-      () => this.onSaveSuccess(),
-      () => this.onSaveError()
-    );
-  }
-
-  protected onSaveSuccess(): void {
-    this.isSaving = false;
-    this.previousState();
-  }
-
-  protected onSaveError(): void {
-    this.isSaving = false;
   }
 
   userSelected(selectedUser: IUser): void {
