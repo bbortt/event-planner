@@ -11,11 +11,14 @@ import io.github.bbortt.event.planner.security.AuthoritiesConstants;
 import io.github.bbortt.event.planner.security.SecurityUtils;
 import io.github.bbortt.event.planner.service.dto.CreateProjectDTO;
 import io.github.bbortt.event.planner.service.dto.UserDTO;
+import java.util.Arrays;
 import java.util.Optional;
+import javax.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class ProjectService {
+
     private final Logger log = LoggerFactory.getLogger(ProjectService.class);
 
     private final UserRepository userRepository;
@@ -129,6 +133,22 @@ public class ProjectService {
             .orElseThrow(() -> new IllegalArgumentException("Error while persisting project!"));
     }
 
+    @Transactional(readOnly = true)
+    @PreAuthorize("isAuthenticated()")
+    public boolean hasAccessToProject(Long projectId, String... roles) {
+        if (SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.ADMIN)) {
+            return true;
+        }
+
+        return roleRepository.hasAnyRoleInProject(
+            projectRepository
+                .findById(projectId)
+                .orElseThrow(() -> new EntityNotFoundException("Project with id " + projectId + " not found")),
+            SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new IllegalArgumentException("No user Login found!")),
+            Arrays.asList(roles)
+        );
+    }
+
     /**
      * Read existing user from {@code UserDTO} or security context.
      *
@@ -150,6 +170,7 @@ public class ProjectService {
     }
 
     private class OptionalUserHolder {
+
         Optional<User> optionalUser = Optional.empty();
 
         OptionalUserHolder() {}
