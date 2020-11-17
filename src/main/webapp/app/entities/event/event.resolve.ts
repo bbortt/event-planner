@@ -3,14 +3,14 @@ import { HttpResponse } from '@angular/common/http';
 import { ActivatedRouteSnapshot, Resolve, Router } from '@angular/router';
 import { EMPTY, Observable, of } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
-import { Event, IEvent } from 'app/shared/model/event.model';
+import { Event } from 'app/shared/model/event.model';
 import { EventService } from './event.service';
 
 @Injectable({ providedIn: 'root' })
-export class EventResolve implements Resolve<IEvent> {
+export class EventResolve implements Resolve<Event> {
   constructor(private service: EventService, private router: Router) {}
 
-  resolve(route: ActivatedRouteSnapshot): Observable<IEvent> | Observable<never> {
+  resolve(route: ActivatedRouteSnapshot): Observable<Event> | Observable<never> {
     let eventId = route.params['eventId'];
 
     // Search recursively for Route.children
@@ -33,6 +33,6 @@ export class EventResolve implements Resolve<IEvent> {
       );
     }
 
-    return of(new Event());
+    return of({});
   }
 }

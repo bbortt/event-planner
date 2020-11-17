@@ -3,9 +3,9 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
 import { ProjectService } from 'app/entities/project/project.service';
-import { IUser } from 'app/core/user/user.model';
+import { User } from 'app/core/user/user.model';
 import { AccountService } from 'app/core/auth/account.service';
-import { CreateProject, ICreateProject } from 'app/shared/model/dto/create-project.model';
+import { ICreateProject } from 'app/shared/model/dto/create-project.model';
 
 import { AUTHORITY_ADMIN } from 'app/shared/constants/authority.constants';
 
@@ -75,12 +75,12 @@ export class ProjectCreateComponent implements OnInit, OnDestroy {
   }
 
   private createFromForm(): ICreateProject {
-    const newProject = new CreateProject(
-      this.editForm.get(['name'])!.value,
-      this.editForm.get(['startTime'])!.value,
-      this.editForm.get(['endTime'])!.value,
-      this.editForm.get(['description'])!.value
-    );
+    const newProject: ICreateProject = {
+      name: this.editForm.get(['name'])!.value,
+      startTime: this.editForm.get(['startTime'])!.value,
+      endTime: this.editForm.get(['endTime'])!.value,
+      description: this.editForm.get(['description'])!.value,
+    };
 
     if (this.accountService.hasAnyAuthority(AUTHORITY_ADMIN)) {
       newProject.user = this.editForm.get(['selectedUser'])!.value;
@@ -89,7 +89,7 @@ export class ProjectCreateComponent implements OnInit, OnDestroy {
     return newProject;
   }
 
-  userSelected(selectedUser: IUser): void {
+  userSelected(selectedUser: User): void {
     this.editForm.get(['selectedUser'])!.setValue(selectedUser);
   }
 }

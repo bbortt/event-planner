@@ -3,14 +3,14 @@ import { HttpResponse } from '@angular/common/http';
 import { ActivatedRouteSnapshot, Resolve, Router } from '@angular/router';
 import { EMPTY, Observable, of } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
-import { IInvitation, Invitation } from 'app/shared/model/invitation.model';
+import { Invitation } from 'app/shared/model/invitation.model';
 import { InvitationService } from './invitation.service';
 
 @Injectable({ providedIn: 'root' })
-export class InvitationResolve implements Resolve<IInvitation> {
+export class InvitationResolve implements Resolve<Invitation> {
   constructor(private service: InvitationService, private router: Router) {}
 
-  resolve(route: ActivatedRouteSnapshot): Observable<IInvitation> | Observable<never> {
+  resolve(route: ActivatedRouteSnapshot): Observable<Invitation> | Observable<never> {
     let invitationId = route.params['invitationId'];
 
     // Search recursively for Route.children
@@ -33,6 +33,6 @@ export class InvitationResolve implements Resolve<IInvitation> {
       );
     }
 
-    return of(new Invitation());
+    return of({});
   }
 }

@@ -5,15 +5,15 @@ import { Subject } from 'rxjs';
 import { debounceTime, takeUntil } from 'rxjs/operators';
 
 import { UserService } from 'app/core/user/user.service';
-import { IRole } from 'app/shared/model/role.model';
-import { IUser } from 'app/core/user/user.model';
+import { Role } from 'app/shared/model/role.model';
+import { User } from 'app/core/user/user.model';
 
 import * as $ from 'jquery';
 import 'jquery-ui/ui/widgets/autocomplete';
 
 import { DEFAULT_DEBOUNCE } from 'app/app.constants';
 
-type SelectableEntity = IUser;
+type SelectableEntity = User;
 
 @Component({
   selector: 'app-user-by-email-or-login',
@@ -23,9 +23,9 @@ type SelectableEntity = IUser;
 })
 export class UserByEmailOrLoginComponent implements OnInit, OnDestroy {
   @Output()
-  userSelected = new EventEmitter<IUser>();
+  userSelected = new EventEmitter<User>();
 
-  users: IUser[] = [];
+  users: User[] = [];
   editForm = this.formBuilder.group({
     emailOrLogin: [null, [Validators.required, Validators.minLength(1), Validators.maxLength(254)]],
   });
@@ -68,12 +68,12 @@ export class UserByEmailOrLoginComponent implements OnInit, OnDestroy {
     }
   }
 
-  findUserByLoginOrEmailFromList(value: string): IUser | undefined {
-    return this.users.find((user: IUser) => user.login === value || user.email === value);
+  findUserByLoginOrEmailFromList(value: string): User | undefined {
+    return this.users.find((user: User) => user.login === value || user.email === value);
   }
 
   refreshUsers(value: string): void {
-    this.userService.findByEmailOrLogin(value).subscribe((users: IUser[]) => {
+    this.userService.findByEmailOrLogin(value).subscribe((users: User[]) => {
       this.users = users;
 
       this.autocompleteUsingSource(this.users.map(user => (user.login?.includes(value) ? user.login : user.email)));
@@ -85,6 +85,6 @@ export class UserByEmailOrLoginComponent implements OnInit, OnDestroy {
       return item['id'];
     }
 
-    return (item as IRole).name;
+    return (item as Role).name;
   }
 }

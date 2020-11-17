@@ -3,14 +3,14 @@ import { HttpResponse } from '@angular/common/http';
 import { ActivatedRouteSnapshot, Resolve, Router } from '@angular/router';
 import { EMPTY, Observable, of } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
-import { ILocation, Location } from 'app/shared/model/location.model';
+import { Location } from 'app/shared/model/location.model';
 import { LocationService } from './location.service';
 
 @Injectable({ providedIn: 'root' })
-export class LocationResolve implements Resolve<ILocation> {
+export class LocationResolve implements Resolve<Location> {
   constructor(private service: LocationService, private router: Router) {}
 
-  resolve(route: ActivatedRouteSnapshot): Observable<ILocation> | Observable<never> {
+  resolve(route: ActivatedRouteSnapshot): Observable<Location> | Observable<never> {
     let locationId = route.params['locationId'];
 
     // Search recursively for Route.children
@@ -33,6 +33,6 @@ export class LocationResolve implements Resolve<ILocation> {
       );
     }
 
-    return of(new Location());
+    return of({});
   }
 }

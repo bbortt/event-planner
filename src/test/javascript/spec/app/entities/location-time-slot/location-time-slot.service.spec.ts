@@ -1,17 +1,17 @@
-import { TestBed, getTestBed } from '@angular/core/testing';
+import { getTestBed, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import * as moment from 'moment';
 import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 import { LocationTimeSlotService } from 'app/entities/location-time-slot/location-time-slot.service';
-import { ILocationTimeSlot, LocationTimeSlot } from 'app/shared/model/location-time-slot.model';
+import { LocationTimeSlot } from 'app/shared/model/location-time-slot.model';
 
 describe('Service Tests', () => {
   describe('LocationTimeSlot Service', () => {
     let injector: TestBed;
     let service: LocationTimeSlotService;
     let httpMock: HttpTestingController;
-    let elemDefault: ILocationTimeSlot;
-    let expectedResult: ILocationTimeSlot | ILocationTimeSlot[] | boolean | null;
+    let elemDefault: LocationTimeSlot;
+    let expectedResult: LocationTimeSlot | LocationTimeSlot[] | boolean | null;
     let currentDate: moment.Moment;
 
     beforeEach(() => {
@@ -24,7 +24,11 @@ describe('Service Tests', () => {
       httpMock = injector.get(HttpTestingController);
       currentDate = moment();
 
-      elemDefault = new LocationTimeSlot(0, currentDate, currentDate);
+      elemDefault = {
+        id: 0,
+        startTime: currentDate,
+        endTime: currentDate,
+      };
     });
 
     describe('Service methods', () => {
@@ -62,7 +66,7 @@ describe('Service Tests', () => {
           returnedFromService
         );
 
-        service.create(new LocationTimeSlot()).subscribe(resp => (expectedResult = resp.body));
+        service.create({}).subscribe(resp => (expectedResult = resp.body));
 
         const req = httpMock.expectOne({ method: 'POST' });
         req.flush(returnedFromService);

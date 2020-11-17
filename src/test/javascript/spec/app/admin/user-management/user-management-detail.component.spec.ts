@@ -5,14 +5,25 @@ import { of } from 'rxjs';
 import { AUTHORITY_USER } from 'app/shared/constants/authority.constants';
 import { EventPlannerTestModule } from '../../../test.module';
 import { UserManagementDetailComponent } from 'app/admin/user-management/user-management-detail.component';
-import { User } from 'app/core/user/user.model';
 
 describe('Component Tests', () => {
   describe('User Management Detail Component', () => {
     let comp: UserManagementDetailComponent;
     let fixture: ComponentFixture<UserManagementDetailComponent>;
     const route: ActivatedRoute = ({
-      data: of({ user: new User(1, 'user', 'first', 'last', 'first@last.com', true, 'en', [AUTHORITY_USER], 'admin') }),
+      data: of({
+        user: {
+          id: 1,
+          login: 'user',
+          firstName: 'first',
+          lastName: 'last',
+          email: 'first@last.com',
+          activated: true,
+          langKey: 'en',
+          authorities: [AUTHORITY_USER],
+          createdBy: 'admin',
+        },
+      }),
     } as any) as ActivatedRoute;
 
     beforeEach(async(() => {

@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs';
 import { JhiEventManager, JhiParseLinks } from 'ng-jhipster';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { IProject } from 'app/shared/model/project.model';
+import { Project } from 'app/shared/model/project.model';
 
 import { ProjectService } from 'app/entities/project/project.service';
 import { AccountService } from 'app/core/auth/account.service';
@@ -22,7 +22,7 @@ import { ROLE_ADMIN, ROLE_SECRETARY } from 'app/shared/constants/role.constants'
   styleUrls: ['./my-projects.component.scss'],
 })
 export class MyProjectsComponent implements OnInit, OnDestroy {
-  projects: IProject[][];
+  projects: Project[][];
   eventSubscriber?: Subscription;
   itemsPerPage: number;
   links: any;
@@ -78,7 +78,7 @@ export class MyProjectsComponent implements OnInit, OnDestroy {
         sort: this.sort(),
         loadAll: this.accountService.hasAnyAuthority(AUTHORITY_ADMIN) && this.showAllProjects,
       })
-      .subscribe((res: HttpResponse<IProject[]>) => this.paginateSomeEntities(res.body, res.headers));
+      .subscribe((res: HttpResponse<Project[]>) => this.paginateSomeEntities(res.body, res.headers));
   }
 
   reset(): void {
@@ -90,7 +90,7 @@ export class MyProjectsComponent implements OnInit, OnDestroy {
     }
   }
 
-  trackId(index: number, item: IProject): number {
+  trackId(index: number, item: Project): number {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
     return item.id!;
   }
@@ -107,7 +107,7 @@ export class MyProjectsComponent implements OnInit, OnDestroy {
     return result;
   }
 
-  private paginateSomeEntities(newProjects: IProject[] | null, headers: HttpHeaders): void {
+  private paginateSomeEntities(newProjects: Project[] | null, headers: HttpHeaders): void {
     const headersLink = headers.get('link');
     this.links = this.parseLinks.parse(headersLink ? headersLink : '');
     if (newProjects && newProjects.length > 0) {

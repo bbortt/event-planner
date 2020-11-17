@@ -3,14 +3,14 @@ import { HttpResponse } from '@angular/common/http';
 import { ActivatedRouteSnapshot, Resolve, Router } from '@angular/router';
 import { EMPTY, Observable, of } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
-import { IRole, Role } from 'app/shared/model/role.model';
+import { Role } from 'app/shared/model/role.model';
 import { RoleService } from './role.service';
 
 @Injectable({ providedIn: 'root' })
-export class RoleResolve implements Resolve<IRole> {
+export class RoleResolve implements Resolve<Role> {
   constructor(private service: RoleService, private router: Router) {}
 
-  resolve(route: ActivatedRouteSnapshot): Observable<IRole> | Observable<never> {
+  resolve(route: ActivatedRouteSnapshot): Observable<Role> | Observable<never> {
     let roleId = route.params['roleId'];
 
     // Search recursively for Route.children
@@ -33,6 +33,6 @@ export class RoleResolve implements Resolve<IRole> {
       );
     }
 
-    return of(new Role());
+    return of({});
   }
 }
