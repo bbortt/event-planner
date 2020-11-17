@@ -21,7 +21,7 @@ export const MODAL_OUTLET_ROUTES: Routes = [
     outlet: 'modal',
   },
   {
-    path: 'projects/:projectId/responsibilities/:id/edit',
+    path: 'projects/:projectId/responsibilities/:responsibilityId/edit',
     component: ProjectResponsibilityModalComponent,
     resolve: {
       project: ProjectResolve,

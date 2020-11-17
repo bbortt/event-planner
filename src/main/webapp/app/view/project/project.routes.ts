@@ -11,7 +11,7 @@ export const PROJECT_ROUTES: Routes = [
   {
     path: ':projectId',
     pathMatch: 'full',
-    redirectTo: ':id/admin',
+    redirectTo: ':projectId/admin',
   },
   {
     path: ':projectId/admin',
