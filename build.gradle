@@ -30,7 +30,7 @@ plugins {
 }
 
 group = "io.github.bbortt.event.planner"
-version = "1.0.0-SNAPSHOT"
+version = "${version}"
 
 description = "Event Planning Tool."
 
@@ -200,6 +200,7 @@ dependencies {
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-hibernate5"
     implementation "com.fasterxml.jackson.core:jackson-annotations"
     implementation "com.fasterxml.jackson.core:jackson-databind"
+    implementation "com.google.cloud.sql:postgres-socket-factory:${postgres_socket_factory_version}"
     implementation "org.hibernate:hibernate-core"
     implementation "com.zaxxer:HikariCP"
     implementation "javax.transaction:javax.transaction-api"

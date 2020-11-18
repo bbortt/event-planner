@@ -23,10 +23,14 @@ addons:
 jobs:
   include:
     # OracleJDK - Java 11 (lts, main build with Sonar)
-    - env: MAIN_BUILD='true'
+    - env:
+        - MAIN_BUILD='true'
+        - BUILD_VERSION=$TRAVIS_BUILD_NUMBER
       jdk: openjdk11
     # OpenJDK - Java 13 (latest)
-    - env: MAIN_BUILD='false'
+    - env:
+        - MAIN_BUILD='false'
+        - BUILD_VERSION='0.0.1-SNAPSHOT'
       jdk: openjdk13
 
 before_install:
@@ -42,7 +46,7 @@ before_script:
 script:
   - if [[ "${MAIN_BUILD}" != "" && "${MAIN_BUILD}" == "true" ]]; then export GRADLE_COMMAND="build jacocoTestReport sonarqube"; else export GRADLE_COMMAND="check"; fi
   - ./gradlew dependencyUpdates
-  - ./gradlew -Pversion=$TRAVIS_BUILD_NUMBER -Pprod --no-daemon -i ${GRADLE_COMMAND}
+  - ./gradlew -Pversion=$BUILD_VERSION -Pprod --no-daemon -i ${GRADLE_COMMAND}
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
