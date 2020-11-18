@@ -152,3 +152,6 @@ Desktop.ini
 # Google App Engine
 ######################
 app.yml
+app-*.yml
+*.key.json
+*.tar
