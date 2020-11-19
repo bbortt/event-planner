@@ -12,7 +12,7 @@ notifications:
 
 env:
   global:
-    - secure: 'g8kwGfTgAiv5Ysp0grK4Rfrrm8+g9VM/6oONcWycW4o1v+k79oLOyd/+JB1c3xGwAs73u8AKO52wwaiUnAudoJMik+KcanvS5dOsXlHEaWpnl3Ujj64t594IV8yTxPNFKCGyupHGOiErATR3QJUOiD7ThQi4nLuJb0nyyxaXH/RLVJ2o+6Yl5D9T8qD4ZJ6kuz5ZnFpL4TW2B3feAhU6T1OFM70jlE6sT8YDE6deXSLVqKucPBa6pe+Pdol4tnmLQ9SRiSCfSGNNYcvDh6GHaCFHs92BthIWCKn/QMIN/AT4i+AFARdW1MNMf4TuTP3D8UEoDjIV+hhUog7b9q0dTHzx1t4x8vPhFlsHf/wrA5jVD/l61ak3D0CbS2eKnKkca5bA1z0phcbliCG0I4ruQxK9AerqTj3V05qW0W+Vh46mZ8KV0OWwfCH1F8DA43zzt3KP0L8FxHGFvCS7X+sfp2phf+/yUATwJ8/qRDXmNVw7Sxkx3E1fVYDrYYpYkwFTeIsRVM3aaWx069gDV+8wd15cd3zrecwPGjI+z8UOWPcVXwmJS3jcOpFaxwkEeNnTnz9DAx3lqtV3ssbrmNrtklOx9S9/Y3Gw8QiJdlWTAjetKpvLXqx6biSaCzk4QtThW62FzZMyu+V1YfxeyKXtyJnLEPVUE8JjiirSWUlcvfA='
+    - secure: 'tB0ltTbDaJTTntOQLWRSHqSW1yRMoL8Fceb7pNpcVWZ0z7QfSreC4eeYqZNGjMfnlaSOASIUaX5XJ53p9y+ZS8cdVbBiNf5lXKA2yWMxxWhevE0jXGTcpMay+OCCpv90V2bjXjx3+DgmW6d2jKJUEqu8z3u2VG4rvNJiACranf7eUocBbbzKGlAp4gMymWde+Ytu/Dpso5d2v3A6uriZNagYZNv2tUD2262uEv4MZVx+bG9+wkFbLEAoI1OvyLtjG9J5fNHUiDDCm0gEqvOuJ5zYJj36Og5z5mdFDZ/JVAzDN+eVIuN82SQzYVVDqibQB6FFkXUTajJ300U/iSG2QqkgEgFx0YiuHNjSPSmKii/96vaPy++v4vBgy5LQj3IggWLn3Rb7597+4sNL16eCACfhY8+XkqpMF7tv90ybJYUslA0F1s3p8GnvCfGsRhfTmn8pS+yEOcGEw3TViUoNj9VjgWvPIHefWtiJRcacbFxqIcUUMaskd7t20HL3ivHNC1Lm3fqMhXIvmgXpXDajIdg6OuuiZDIfBBZUAHngH6fUwuVpxS7B9fq41iWgPxNFjG5SYkxNSkGQq46t6VJHXO+t+mzlR6XI8nA5m3pBE/WuMURic/T80CznKoztoNF1rkyKO5inemapEPVf+qAajRyNVt9B4IB1NSff4XFeIzA='
       # ^^ GAE_PROJECT_ID
 
 services:
@@ -32,23 +32,23 @@ jobs:
   include:
     # OpenJDK - Java 11 (lts, main build with Sonar)
     - env:
-        - MAIN_BUILD='true'
+        - MAIN_BUILD="true"
         - BUILD_VERSION=$TRAVIS_BUILD_NUMBER
       jdk: openjdk11
     # OpenJDK - Java 13 (latest)
     - env:
-        - MAIN_BUILD='false'
-        - BUILD_VERSION='0.0.1-SNAPSHOT'
+        - MAIN_BUILD="false"
+        - BUILD_VERSION="0.0.1-SNAPSHOT"
       jdk: openjdk13
 
 before_install:
-  - sudo sed -i 's/port = 5433/port = 5432/' /etc/postgresql/12/main/postgresql.conf
+  - sudo sed -i "s/port = 5433/port = 5432/" /etc/postgresql/12/main/postgresql.conf
   - sudo cp /etc/postgresql/{9.3,12}/main/pg_hba.conf
   - sudo pg_ctlcluster 12 main restart
 
 before_script:
   - psql -c "CREATE DATABASE event_planner_integration;" -U postgres
-  - psql -c "CREATE USER event_planner WITH PASSWORD 'event_planner_password';" -U postgres
+  - psql -c "CREATE USER event_planner WITH PASSWORD "event_planner_password";" -U postgres
   - psql -c "GRANT ALL PRIVILEGES ON DATABASE event_planner_integration TO event_planner;" -U postgres
 
 script:
