@@ -73,7 +73,7 @@ cache:
       - $HOME/google-cloud-sdk/
 
 before_deploy:
-  - openssl aes-256-cbc -K $encrypted_ec01188e2adb_key -iv $encrypted_ec01188e2adb_iv -in gae.tar.enc -out gae.tar -d
+  - openssl enc -aes-256-cbc -d -base64 -k $GAE_TAR_KEY -S $GAE_TAR_SALT -iv "D142327B0FF7E582D5658EB38EDB3234" -iter 10000 -in gae.tar.enc -out gae.tar
   - tar xvf gae.tar
   - .travis/install_gcloud_sdk.sh
   - gcloud auth activate-service-account --key-file travis-ci-service-account.key.json
@@ -85,5 +85,6 @@ deploy:
     .travis/docker_push_gcr.sh $GAE_PROJECT_ID $TRAVIS_BUILD_NUMBER &&
     .travis/gae_deploy_env.sh canary $GAE_PROJECT_ID $TRAVIS_BUILD_NUMBER
   on:
+    repo: bbortt/event-planner
     branch: canary
     condition: $MAIN_BUILD = "true"
