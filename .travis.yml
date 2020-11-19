@@ -86,3 +86,4 @@ deploy:
     repo: bbortt/event-planner
     branch: canary
     condition: $MAIN_BUILD = "true"
+  skip_cleanup: true
