@@ -30,7 +30,7 @@ addons:
 
 jobs:
   include:
-    # OracleJDK - Java 11 (lts, main build with Sonar)
+    # OpenJDK - Java 11 (lts, main build with Sonar)
     - env:
         - MAIN_BUILD='true'
         - BUILD_VERSION=$TRAVIS_BUILD_NUMBER
@@ -81,9 +81,7 @@ before_deploy:
 
 deploy:
   provider: script
-  script: |
-    .travis/docker_push_gcr.sh $GAE_PROJECT_ID $TRAVIS_BUILD_NUMBER &&
-    .travis/gae_deploy_env.sh canary $GAE_PROJECT_ID $TRAVIS_BUILD_NUMBER
+  script: .travis/deploy_env.sh canary $GAE_PROJECT_ID $TRAVIS_BUILD_NUMBER
   on:
     repo: bbortt/event-planner
     branch: canary
