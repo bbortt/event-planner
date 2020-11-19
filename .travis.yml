@@ -10,6 +10,14 @@ if: tag is blank
 notifications:
   email: false
 
+env:
+  global:
+    - secure: 'g8kwGfTgAiv5Ysp0grK4Rfrrm8+g9VM/6oONcWycW4o1v+k79oLOyd/+JB1c3xGwAs73u8AKO52wwaiUnAudoJMik+KcanvS5dOsXlHEaWpnl3Ujj64t594IV8yTxPNFKCGyupHGOiErATR3QJUOiD7ThQi4nLuJb0nyyxaXH/RLVJ2o+6Yl5D9T8qD4ZJ6kuz5ZnFpL4TW2B3feAhU6T1OFM70jlE6sT8YDE6deXSLVqKucPBa6pe+Pdol4tnmLQ9SRiSCfSGNNYcvDh6GHaCFHs92BthIWCKn/QMIN/AT4i+AFARdW1MNMf4TuTP3D8UEoDjIV+hhUog7b9q0dTHzx1t4x8vPhFlsHf/wrA5jVD/l61ak3D0CbS2eKnKkca5bA1z0phcbliCG0I4ruQxK9AerqTj3V05qW0W+Vh46mZ8KV0OWwfCH1F8DA43zzt3KP0L8FxHGFvCS7X+sfp2phf+/yUATwJ8/qRDXmNVw7Sxkx3E1fVYDrYYpYkwFTeIsRVM3aaWx069gDV+8wd15cd3zrecwPGjI+z8UOWPcVXwmJS3jcOpFaxwkEeNnTnz9DAx3lqtV3ssbrmNrtklOx9S9/Y3Gw8QiJdlWTAjetKpvLXqx6biSaCzk4QtThW62FzZMyu+V1YfxeyKXtyJnLEPVUE8JjiirSWUlcvfA='
+      # ^^ GAE_PROJECT_ID
+
+services:
+  - docker
+
 addons:
   apt:
     packages:
@@ -44,12 +52,14 @@ before_script:
   - psql -c "GRANT ALL PRIVILEGES ON DATABASE event_planner_integration TO event_planner;" -U postgres
 
 script:
-  - if [[ "${MAIN_BUILD}" != "" && "${MAIN_BUILD}" == "true" ]]; then export GRADLE_COMMAND="build jacocoTestReport sonarqube"; else export GRADLE_COMMAND="check"; fi
+  - if [[ "${MAIN_BUILD}" == "true" ]]; then export GRADLE_COMMAND="build jacocoTestReport sonarqube"; else export GRADLE_COMMAND="check"; fi
   - ./gradlew dependencyUpdates
   - ./gradlew -Pversion=$BUILD_VERSION -Pprod --no-daemon -i ${GRADLE_COMMAND}
 
 after_success:
-  - bash <(curl -s https://codecov.io/bash)
+  - test $MAIN_BUILD = "true" &&
+    bash <(curl -s https://codecov.io/bash) &&
+    docker build . --build-arg JAR_FILE=event-planner-$TRAVIS_BUILD_NUMBER.jar --tag gcr.io/$GAE_PROJECT_ID/event-planner:$TRAVIS_BUILD_NUMBER
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
@@ -61,3 +71,17 @@ cache:
       - $HOME/.gradle/caches/
       - $HOME/.gradle/wrapper/
       - $HOME/.sonar/cache
+      - $HOME/google-cloud-sdk/
+
+before_deploy:
+  - openssl aes-256-cbc -K $encrypted_ec01188e2adb_key -iv $encrypted_ec01188e2adb_iv -in gae.tar.enc -out gae.tar -d
+  - tar xvf gae.tar
+  - .travis/install_gcloud_sdk.sh
+  - gcloud auth activate-service-account --key-file travis-ci-service-account.key.json
+  - gcloud config set project $GAE_PROJECT_ID
+
+deploy:
+  provider: script
+  script: |
+    .travis/docker_push_gcr.sh $GAE_PROJECT_ID $TRAVIS_BUILD_NUMBER &&
+    .travis/gae_deploy_env.sh canary $GAE_PROJECT_ID $TRAVIS_BUILD_NUMBER
