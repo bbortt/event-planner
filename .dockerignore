@@ -1,0 +1,6 @@
+# Ignore everything
+**
+
+# Include build information
+!build/libs/
+!Dockerfile
