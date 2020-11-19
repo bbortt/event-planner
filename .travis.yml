@@ -84,3 +84,6 @@ deploy:
   script: |
     .travis/docker_push_gcr.sh $GAE_PROJECT_ID $TRAVIS_BUILD_NUMBER &&
     .travis/gae_deploy_env.sh canary $GAE_PROJECT_ID $TRAVIS_BUILD_NUMBER
+  on:
+    branch: canary
+    condition: $MAIN_BUILD = "true"
