@@ -77,7 +77,6 @@ before_deploy:
   - tar xvf gae.tar
   - .travis/install_gcloud_sdk.sh
   - gcloud auth activate-service-account --key-file travis-ci-service-account.key.json
-  - gcloud config set project $GAE_PROJECT_ID
 
 deploy:
   provider: script
