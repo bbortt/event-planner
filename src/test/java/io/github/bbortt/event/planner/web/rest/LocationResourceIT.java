@@ -1,6 +1,5 @@
 package io.github.bbortt.event.planner.web.rest;
 
-import static io.github.bbortt.event.planner.web.rest.TestUtil.sameInstant;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -16,11 +15,6 @@ import io.github.bbortt.event.planner.domain.Location;
 import io.github.bbortt.event.planner.domain.Project;
 import io.github.bbortt.event.planner.repository.LocationRepository;
 import io.github.bbortt.event.planner.service.LocationService;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
-import java.time.ZonedDateTime;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;

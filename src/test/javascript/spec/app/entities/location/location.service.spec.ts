@@ -1,6 +1,5 @@
 import { getTestBed, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 import { LocationService } from 'app/entities/location/location.service';
 import { Location } from 'app/shared/model/location.model';
 
