@@ -4,8 +4,8 @@ import { Observable } from 'rxjs';
 
 import { SERVER_API_URL } from 'app/app.constants';
 import { createRequestOption } from 'app/shared/util/request-util';
-import { ILocation, Location } from 'app/shared/model/location.model';
-import { IProject } from 'app/shared/model/project.model';
+import { Location } from 'app/shared/model/location.model';
+import { Project } from 'app/shared/model/project.model';
 
 type EntityResponseType = HttpResponse<Location>;
 type EntityArrayResponseType = HttpResponse<Location[]>;
@@ -33,9 +33,9 @@ export class LocationService {
     return this.http.get<Location[]>(this.resourceUrl, { params: options, observe: 'response' });
   }
 
-  findAllByProject(project: IProject, req?: any): Observable<EntityArrayResponseType> {
+  findAllByProject(project: Project, req?: any): Observable<EntityArrayResponseType> {
     const options = createRequestOption(req);
-    return this.http.get<ILocation[]>(`${this.resourceUrl}/project/${project.id!}`, {
+    return this.http.get<Location[]>(`${this.resourceUrl}/project/${project.id!}`, {
       params: options,
       observe: 'response',
     });

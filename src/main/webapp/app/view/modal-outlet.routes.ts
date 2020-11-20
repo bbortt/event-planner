@@ -6,7 +6,7 @@ import { CreateProjectModalComponent } from 'app/view/create-project/create-proj
 import { ProjectResponsibilityModalComponent } from 'app/view/project/admin/responsibilities/project-responsibility-modal.component';
 
 import { ProjectLocationModalComponent } from 'app/view/project/admin/locations/project-location-modal.component';
-import { LocationResolve } from 'app/entities/location/location.route';
+import { LocationResolve } from 'app/entities/location/location.resolve';
 
 export const MODAL_OUTLET_ROUTES: Routes = [
   {

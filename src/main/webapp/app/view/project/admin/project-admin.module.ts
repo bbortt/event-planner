@@ -14,6 +14,7 @@ import { ProjectUsersComponent } from 'app/view/project/admin/users/project-user
 
 import { PROJECT_ADMIN_ROUTES } from './project-admin.routes';
 import { ProjectLocationModalComponent } from 'app/view/project/admin/locations/project-location-modal.component';
+import { ProjectLocationDeleteDialogComponent } from 'app/view/project/admin/locations/project-location-delete-dialog.component';
 
 @NgModule({
   imports: [EventPlannerSharedModule, RouterModule.forChild(PROJECT_ADMIN_ROUTES)],
@@ -23,6 +24,7 @@ import { ProjectLocationModalComponent } from 'app/view/project/admin/locations/
     ProjectLocationsComponent,
     ProjectLocationUpdateComponent,
     ProjectLocationModalComponent,
+    ProjectLocationDeleteDialogComponent,
     ProjectResponsibilitiesComponent,
     ProjectResponsibilityUpdateComponent,
     ProjectResponsibilityDeleteDialogComponent,

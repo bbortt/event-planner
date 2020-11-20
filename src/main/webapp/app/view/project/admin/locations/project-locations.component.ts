@@ -5,12 +5,11 @@ import { combineLatest, Subscription } from 'rxjs';
 import { JhiEventManager } from 'ng-jhipster';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { IProject } from 'app/shared/model/project.model';
-import { ILocation } from 'app/shared/model/location.model';
+import { Project } from 'app/shared/model/project.model';
+import { Location } from 'app/shared/model/location.model';
 
 import { LocationService } from 'app/entities/location/location.service';
-
-import { LocationDeleteDialogComponent } from 'app/entities/location/location-delete-dialog.component';
+import { ProjectLocationDeleteDialogComponent } from 'app/view/project/admin/locations/project-location-delete-dialog.component';
 
 import { ITEMS_PER_PAGE } from 'app/shared/constants/pagination.constants';
 
@@ -20,8 +19,8 @@ import { ITEMS_PER_PAGE } from 'app/shared/constants/pagination.constants';
   styleUrls: ['project-locations.component.scss'],
 })
 export class ProjectLocationsComponent implements OnInit, OnDestroy {
-  project?: IProject;
-  locations?: ILocation[];
+  project?: Project;
+  locations?: Location[];
 
   eventSubscriber?: Subscription;
 
@@ -74,12 +73,12 @@ export class ProjectLocationsComponent implements OnInit, OnDestroy {
         sort: this.sort(),
       })
       .subscribe(
-        (res: HttpResponse<ILocation[]>) => this.onSuccess(res.body, res.headers, pageToLoad, !dontNavigate),
+        (res: HttpResponse<Location[]>) => this.onSuccess(res.body, res.headers, pageToLoad, !dontNavigate),
         () => this.onError()
       );
   }
 
-  trackId(index: number, item: ILocation): number {
+  trackId(index: number, item: Location): number {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
     return item.id!;
   }
@@ -88,8 +87,8 @@ export class ProjectLocationsComponent implements OnInit, OnDestroy {
     this.eventSubscriber = this.eventManager.subscribe('locationListModification', () => this.loadPage());
   }
 
-  delete(location: ILocation): void {
-    const modalRef = this.modalService.open(LocationDeleteDialogComponent, { size: 'lg', backdrop: 'static' });
+  delete(location: Location): void {
+    const modalRef = this.modalService.open(ProjectLocationDeleteDialogComponent, { size: 'lg', backdrop: 'static' });
     modalRef.componentInstance.location = location;
   }
 
@@ -101,7 +100,7 @@ export class ProjectLocationsComponent implements OnInit, OnDestroy {
     return result;
   }
 
-  protected onSuccess(data: ILocation[] | null, headers: HttpHeaders, page: number, navigate: boolean): void {
+  protected onSuccess(data: Location[] | null, headers: HttpHeaders, page: number, navigate: boolean): void {
     this.totalItems = Number(headers.get('X-Total-Count'));
     this.page = page;
     if (navigate) {
