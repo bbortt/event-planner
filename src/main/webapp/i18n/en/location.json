@@ -17,8 +17,6 @@
         "title": "Location"
       },
       "name": "Name",
-      "dateFrom": "Date From",
-      "dateTo": "Date To",
       "project": "Project",
       "responsibility": "Responsibility",
       "section": "Section"

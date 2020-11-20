@@ -2,7 +2,6 @@ package io.github.bbortt.event.planner.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
-import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Column;
@@ -45,14 +44,6 @@ public class Location implements Serializable {
     @Column(name = "name", length = 50, nullable = false)
     private String name;
 
-    @NotNull
-    @Column(name = "date_from", nullable = false)
-    private ZonedDateTime dateFrom;
-
-    @NotNull
-    @Column(name = "date_to", nullable = false)
-    private ZonedDateTime dateTo;
-
     @ManyToOne(optional = false)
     @NotNull
     @JsonIgnoreProperties(value = "locations", allowSetters = true)
@@ -87,32 +78,6 @@ public class Location implements Serializable {
 
     public Location name(String name) {
         this.name = name;
-        return this;
-    }
-
-    public ZonedDateTime getDateFrom() {
-        return dateFrom;
-    }
-
-    public void setDateFrom(ZonedDateTime dateFrom) {
-        this.dateFrom = dateFrom;
-    }
-
-    public Location dateFrom(ZonedDateTime dateFrom) {
-        this.dateFrom = dateFrom;
-        return this;
-    }
-
-    public ZonedDateTime getDateTo() {
-        return dateTo;
-    }
-
-    public void setDateTo(ZonedDateTime dateTo) {
-        this.dateTo = dateTo;
-    }
-
-    public Location dateTo(ZonedDateTime dateTo) {
-        this.dateTo = dateTo;
         return this;
     }
 
@@ -211,8 +176,6 @@ public class Location implements Serializable {
         return "Location{" +
             "id=" + getId() +
             ", name='" + getName() + "'" +
-            ", dateFrom='" + getDateFrom() + "'" +
-            ", dateTo='" + getDateTo() + "'" +
             "}";
     }
 }
