@@ -16,7 +16,6 @@
 
     <jhi-alert></jhi-alert>
 
-    <!-- Frage, warum wird die Warnung nicht angezeigt? -->
     <div class="alert alert-warning" id="no-result" *ngIf="locations?.length === 0">
         <span
             jhiTranslate="eventPlannerApp.location.home.notFound">No locations found</span>
@@ -27,18 +26,18 @@
         <table class="table table-striped" aria-describedby="page-heading">
             <thead>
             <tr>
-                <th scope="col"><span jhiTranslate="eventPlannerApp.location.name">Name</span>
-                </th>
-                <th scope="col"></th>
+                <th scope="col"><span jhiTranslate="eventPlannerApp.location.name">Name</span></th>
+                <th scope="col"><span jhiTranslate="eventPlannerApp.location.responsibility">Responsibility</span></th>
             </tr>
             </thead>
             <tbody>
             <tr *ngFor="let location of locations ;trackBy: trackId">
                 <td>{{ location.name }}</td>
+                <td>{{ location.responsibility?.name }}</td>
                 <td class="text-right">
                     <div class="btn-group">
                         <button type="submit"
-                                [routerLink]="['', {outlets: {modal: ['projects', project.id, 'locations', locations.id, 'edit']}}]"
+                                [routerLink]="['', {outlets: {modal: ['projects', project.id, 'locations', location.id, 'edit']}}]"
                                 class="btn btn-primary btn-sm">
                             <fa-icon icon="pencil-alt"></fa-icon>
                             <span class="d-none d-md-inline"

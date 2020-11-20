@@ -1,32 +1,48 @@
 import { Component } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { FormBuilder, Validators } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 
 import { IProject } from 'app/shared/model/project.model';
 import { ILocation, Location } from 'app/shared/model/location.model';
 
 import { LocationService } from 'app/entities/location/location.service';
+import { IResponsibility } from 'app/shared/model/responsibility.model';
+import { ResponsibilityService } from 'app/entities/responsibility/responsibility.service';
+import { filter, map, switchMap } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-responsibility-update',
-  templateUrl: './project-responsibility-update.component.html',
-  styleUrls: ['./project-responsibility-update.component.scss'],
+  selector: 'app-location-update',
+  templateUrl: './project-location-update.component.html',
+  styleUrls: ['./project-location-update.component.scss'],
 })
 export class ProjectLocationUpdateComponent {
   isSaving = false;
-
   isNew = false;
+  responsibilities?: IResponsibility[];
+  project$ = new Subject<IProject>();
   editForm = this.fb.group({
     id: [],
     name: [null, [Validators.required, Validators.minLength(1), Validators.maxLength(50)]],
     project: [],
   });
 
-  constructor(protected locationService: LocationService, private fb: FormBuilder) {}
+  constructor(protected locationService: LocationService, private fb: FormBuilder, private responsibilityService: ResponsibilityService) {
+    this.project$
+      .pipe(
+        switchMap(project =>
+          this.responsibilityService.findAllByProject(project).pipe(
+            map(response => response.body as IResponsibility[]),
+            filter<IResponsibility[]>(Boolean)
+          )
+        )
+      )
+      .subscribe(responsibilities => (this.responsibilities = responsibilities));
+  }
 
   public updateForm(project: IProject, location: ILocation): void {
     this.isNew = !location.id;
+    this.project$.next(project);
     this.editForm.patchValue({
       id: location.id,
       name: location.name,
@@ -50,7 +66,6 @@ export class ProjectLocationUpdateComponent {
 
   private createFromForm(): ILocation {
     return {
-      // Frage, was macht "..."
       ...new Location(),
       id: this.editForm.get(['id'])!.value,
       name: this.editForm.get(['name'])!.value,

@@ -28,6 +28,9 @@ export const PROJECT_ADMIN_ROUTES: Routes = [
       {
         path: 'locations',
         component: ProjectLocationsComponent,
+        resolve: {
+          project: ProjectResolve,
+        },
       },
       {
         path: 'users',

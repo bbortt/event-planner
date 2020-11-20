@@ -1,3 +1,5 @@
+<ng-container *ngFor="let responsibility of responsibilities"><h2>{{responsibility.name}}</h2></ng-container>
+
 <div class="row justify-content-center">
     <div class="col-8">
         <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
@@ -24,6 +26,13 @@
                            for="field_name">Name</label>
                     <input type="text" class="form-control" name="name" id="field_name"
                            formControlName="name"/>
+                    <label class="form-control-label"
+                           jhiTranslate="eventPlannerApp.location.responsibility"
+                           for="field_responsibility">Responsibility</label>
+                    <input type="text" class="form-control" name="responsibility" id="field_responsibility"
+                           formControlName="Responsibility"/>
+
+
                     <div
                         *ngIf="editForm.get('name')!.invalid && (editForm.get('name')!.dirty || editForm.get('name')!.touched)">
                         <small class="form-text text-danger"

@@ -35,7 +35,7 @@ export class LocationService {
 
   findAllByProject(project: IProject, req?: any): Observable<EntityArrayResponseType> {
     const options = createRequestOption(req);
-    return this.http.get<ILocation[]>(`${this.resourceUrl}/${project.id!}/locations`, {
+    return this.http.get<ILocation[]>(`${this.resourceUrl}/project/${project.id!}`, {
       params: options,
       observe: 'response',
     });
