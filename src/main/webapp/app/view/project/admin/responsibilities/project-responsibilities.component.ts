@@ -5,12 +5,12 @@ import { combineLatest, Subscription } from 'rxjs';
 import { JhiEventManager } from 'ng-jhipster';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { IProject } from 'app/shared/model/project.model';
-import { IResponsibility } from 'app/shared/model/responsibility.model';
+import { Project } from 'app/shared/model/project.model';
+import { Responsibility } from 'app/shared/model/responsibility.model';
 
 import { ResponsibilityService } from 'app/entities/responsibility/responsibility.service';
 
-import { ResponsibilityDeleteDialogComponent } from 'app/entities/responsibility/responsibility-delete-dialog.component';
+import { ProjectResponsibilityDeleteDialogComponent } from 'app/view/project/admin/responsibilities/project-responsibility-delete-dialog.component';
 
 import { ITEMS_PER_PAGE } from 'app/shared/constants/pagination.constants';
 
@@ -20,8 +20,9 @@ import { ITEMS_PER_PAGE } from 'app/shared/constants/pagination.constants';
   styleUrls: ['project-responsibilities.component.scss'],
 })
 export class ProjectResponsibilitiesComponent implements OnInit, OnDestroy {
-  project?: IProject;
-  responsibilities?: IResponsibility[];
+  project?: Project;
+  loadedResponsibilities?: Responsibility[];
+  responsibilities?: Responsibility[];
 
   eventSubscriber?: Subscription;
 
@@ -74,12 +75,12 @@ export class ProjectResponsibilitiesComponent implements OnInit, OnDestroy {
         sort: this.sort(),
       })
       .subscribe(
-        (res: HttpResponse<IResponsibility[]>) => this.onSuccess(res.body, res.headers, pageToLoad, !dontNavigate),
+        (res: HttpResponse<Responsibility[]>) => this.onSuccess(res.body, res.headers, pageToLoad, !dontNavigate),
         () => this.onError()
       );
   }
 
-  trackId(index: number, item: IResponsibility): number {
+  trackId(index: number, item: Responsibility): number {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
     return item.id!;
   }
@@ -88,8 +89,14 @@ export class ProjectResponsibilitiesComponent implements OnInit, OnDestroy {
     this.eventSubscriber = this.eventManager.subscribe('responsibilityListModification', () => this.loadPage());
   }
 
-  delete(responsibility: IResponsibility): void {
-    const modalRef = this.modalService.open(ResponsibilityDeleteDialogComponent, { size: 'lg', backdrop: 'static' });
+  filterData(searchString: string): void {
+    this.responsibilities = this.loadedResponsibilities!.filter((responsibility: Responsibility) =>
+      responsibility.name?.toLowerCase().includes(searchString.toLowerCase())
+    );
+  }
+
+  delete(responsibility: Responsibility): void {
+    const modalRef = this.modalService.open(ProjectResponsibilityDeleteDialogComponent, { size: 'lg', backdrop: 'static' });
     modalRef.componentInstance.responsibility = responsibility;
   }
 
@@ -101,7 +108,7 @@ export class ProjectResponsibilitiesComponent implements OnInit, OnDestroy {
     return result;
   }
 
-  protected onSuccess(data: IResponsibility[] | null, headers: HttpHeaders, page: number, navigate: boolean): void {
+  protected onSuccess(data: Responsibility[] | null, headers: HttpHeaders, page: number, navigate: boolean): void {
     this.totalItems = Number(headers.get('X-Total-Count'));
     this.page = page;
     if (navigate) {
@@ -113,7 +120,8 @@ export class ProjectResponsibilitiesComponent implements OnInit, OnDestroy {
         },
       });
     }
-    this.responsibilities = data || [];
+    this.loadedResponsibilities = data || [];
+    this.responsibilities = this.loadedResponsibilities;
     this.ngbPaginationPage = this.page;
   }
 

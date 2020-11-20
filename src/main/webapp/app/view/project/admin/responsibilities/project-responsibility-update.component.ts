@@ -3,8 +3,8 @@ import { HttpResponse } from '@angular/common/http';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 
-import { IProject } from 'app/shared/model/project.model';
-import { IResponsibility, Responsibility } from 'app/shared/model/responsibility.model';
+import { Project } from 'app/shared/model/project.model';
+import { Responsibility } from 'app/shared/model/responsibility.model';
 
 import { ResponsibilityService } from 'app/entities/responsibility/responsibility.service';
 
@@ -25,7 +25,7 @@ export class ProjectResponsibilityUpdateComponent {
 
   constructor(protected responsibilityService: ResponsibilityService, private fb: FormBuilder) {}
 
-  public updateForm(project: IProject, responsibility: IResponsibility): void {
+  public updateForm(project: Project, responsibility: Responsibility): void {
     this.isNew = !responsibility.id;
     this.editForm.patchValue({
       id: responsibility.id,
@@ -48,16 +48,15 @@ export class ProjectResponsibilityUpdateComponent {
     }
   }
 
-  private createFromForm(): IResponsibility {
+  private createFromForm(): Responsibility {
     return {
-      ...new Responsibility(),
       id: this.editForm.get(['id'])!.value,
       name: this.editForm.get(['name'])!.value,
       project: this.editForm.get(['project'])!.value,
     };
   }
 
-  protected subscribeToSaveResponse(result: Observable<HttpResponse<IResponsibility>>): void {
+  protected subscribeToSaveResponse(result: Observable<HttpResponse<Responsibility>>): void {
     result.subscribe(
       () => this.onSaveSuccess(),
       () => this.onSaveError()
@@ -73,7 +72,7 @@ export class ProjectResponsibilityUpdateComponent {
     this.isSaving = false;
   }
 
-  trackById(index: number, item: IProject): any {
+  trackById(index: number, item: Project): any {
     return item.id;
   }
 }

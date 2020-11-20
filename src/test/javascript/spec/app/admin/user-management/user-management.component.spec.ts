@@ -37,7 +37,7 @@ describe('Component Tests', () => {
           spyOn(service, 'query').and.returnValue(
             of(
               new HttpResponse({
-                body: [new User(123)],
+                body: [{ id: 123 }],
                 headers,
               })
             )
@@ -60,7 +60,7 @@ describe('Component Tests', () => {
         fakeAsync(() => {
           // GIVEN
           const headers = new HttpHeaders().append('link', 'link;link');
-          const user = new User(123);
+          const user = { id: 123 };
           spyOn(service, 'query').and.returnValue(
             of(
               new HttpResponse({

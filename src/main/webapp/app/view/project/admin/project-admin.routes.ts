@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 
-import { ProjectResolve } from 'app/entities/project/project.route';
+import { ProjectResolve } from 'app/entities/project/project.resolve';
 
 import { UserRouteRoleAccessService } from 'app/core/auth/user-route-role-access-service';
 

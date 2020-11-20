@@ -4,8 +4,6 @@ import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
 
-import { Responsibility } from 'app/shared/model/responsibility.model';
-
 import { ProjectResponsibilityUpdateComponent } from 'app/view/project/admin/responsibilities/project-responsibility-update.component';
 
 @Component({
@@ -24,10 +22,7 @@ export class ProjectResponsibilityModalComponent implements AfterViewInit, OnDes
           return true;
         },
       });
-      (this.modalRef.componentInstance as ProjectResponsibilityUpdateComponent).updateForm(
-        project,
-        responsibility ? responsibility : new Responsibility()
-      );
+      (this.modalRef.componentInstance as ProjectResponsibilityUpdateComponent).updateForm(project, responsibility ? responsibility : {});
     });
   }
 

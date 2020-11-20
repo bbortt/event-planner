@@ -17,13 +17,16 @@ import io.github.bbortt.event.planner.domain.Responsibility;
 import io.github.bbortt.event.planner.domain.User;
 import io.github.bbortt.event.planner.repository.AuthorityRepository;
 import io.github.bbortt.event.planner.repository.InvitationRepository;
+import io.github.bbortt.event.planner.repository.ProjectRepository;
 import io.github.bbortt.event.planner.repository.ResponsibilityRepository;
 import io.github.bbortt.event.planner.repository.RoleRepository;
+import io.github.bbortt.event.planner.repository.UserRepository;
 import io.github.bbortt.event.planner.security.AuthoritiesConstants;
 import io.github.bbortt.event.planner.service.ResponsibilityService;
 import java.util.Collections;
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -58,7 +61,7 @@ public class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT 
     private RoleRepository roleRepository;
 
     @Autowired
-    private InvitationRepository invitationRepository;
+    private ProjectRepository projectRepository;
 
     @Autowired
     private EntityManager em;
@@ -67,6 +70,9 @@ public class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT 
     private MockMvc restResponsibilityMockMvc;
 
     private Responsibility responsibility;
+
+    @Autowired
+    private UserRepository userRepository;
 
     /**
      * Create an entity for this test.
@@ -321,5 +327,48 @@ public class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT 
         // Validate the database contains one less item
         List<Responsibility> responsibilityList = responsibilityRepository.findAll();
         assertThat(responsibilityList).hasSize(databaseSizeBeforeDelete - 1);
+    }
+
+    @Test
+    @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
+    public void getResponsibilitiesPerProject() throws Exception {
+        // Test data
+        final String responsibility2Name = "Responsibility1";
+        final String responsibility3Name = "Responsibility2";
+
+        // Initialize the database
+        Project project1 = projectRepository.saveAndFlush(ProjectResourceIT.createEntity(em));
+        Project project2 = projectRepository.saveAndFlush(ProjectResourceIT.createEntity(em));
+
+        User user = userRepository
+            .findOneByLogin(TEST_USER_LOGIN)
+            .orElseThrow(() -> new EntityNotFoundException("User with login " + TEST_USER_LOGIN + " not found"));
+        em.persist(
+            InvitationResourceIT.createEntity(em).accepted(Boolean.TRUE).project(project1).user(user).role(roleRepository.roleAdmin())
+        );
+        em.persist(
+            InvitationResourceIT.createEntity(em).accepted(Boolean.TRUE).project(project2).user(user).role(roleRepository.roleAdmin())
+        );
+        em.flush();
+
+        responsibilityRepository.saveAndFlush(ResponsibilityResourceIT.createEntity(em).project(project1));
+        Responsibility responsibility2 = responsibilityRepository.saveAndFlush(
+            ResponsibilityResourceIT.createEntity(em).name(responsibility2Name).project(project2)
+        );
+        Responsibility responsibility3 = responsibilityRepository.saveAndFlush(
+            ResponsibilityResourceIT.createEntity(em).name(responsibility3Name).project(project2)
+        );
+
+        // Get the project
+        restResponsibilityMockMvc
+            .perform(get("/api/responsibilities/project/{projectId}", project2.getId()))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.length()").value(2))
+            .andExpect(jsonPath("$[0].id").value(responsibility2.getId()))
+            .andExpect(jsonPath("$[0].name").value(responsibility2.getName()))
+            .andExpect(jsonPath("$[1].id").value(responsibility3.getId()))
+            .andExpect(jsonPath("$[1].name").value(responsibility3.getName()));
     }
 }

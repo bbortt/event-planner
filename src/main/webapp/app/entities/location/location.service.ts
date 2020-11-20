@@ -4,11 +4,11 @@ import { Observable } from 'rxjs';
 
 import { SERVER_API_URL } from 'app/app.constants';
 import { createRequestOption } from 'app/shared/util/request-util';
-import { ILocation } from 'app/shared/model/location.model';
+import { ILocation, Location } from 'app/shared/model/location.model';
 import { IProject } from 'app/shared/model/project.model';
 
-type EntityResponseType = HttpResponse<ILocation>;
-type EntityArrayResponseType = HttpResponse<ILocation[]>;
+type EntityResponseType = HttpResponse<Location>;
+type EntityArrayResponseType = HttpResponse<Location[]>;
 
 @Injectable({ providedIn: 'root' })
 export class LocationService {
@@ -16,21 +16,21 @@ export class LocationService {
 
   constructor(protected http: HttpClient) {}
 
-  create(location: ILocation): Observable<EntityResponseType> {
-    return this.http.post<ILocation>(this.resourceUrl, location, { observe: 'response' });
+  create(location: Location): Observable<EntityResponseType> {
+    return this.http.post<Location>(this.resourceUrl, location, { observe: 'response' });
   }
 
-  update(location: ILocation): Observable<EntityResponseType> {
-    return this.http.put<ILocation>(this.resourceUrl, location, { observe: 'response' });
+  update(location: Location): Observable<EntityResponseType> {
+    return this.http.put<Location>(this.resourceUrl, location, { observe: 'response' });
   }
 
   find(id: number): Observable<EntityResponseType> {
-    return this.http.get<ILocation>(`${this.resourceUrl}/${id}`, { observe: 'response' });
+    return this.http.get<Location>(`${this.resourceUrl}/${id}`, { observe: 'response' });
   }
 
   query(req?: any): Observable<EntityArrayResponseType> {
     const options = createRequestOption(req);
-    return this.http.get<ILocation[]>(this.resourceUrl, { params: options, observe: 'response' });
+    return this.http.get<Location[]>(this.resourceUrl, { params: options, observe: 'response' });
   }
 
   findAllByProject(project: IProject, req?: any): Observable<EntityArrayResponseType> {

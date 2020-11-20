@@ -1,15 +1,15 @@
-import { TestBed, getTestBed } from '@angular/core/testing';
+import { getTestBed, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { SectionService } from 'app/entities/section/section.service';
-import { ISection, Section } from 'app/shared/model/section.model';
+import { Section } from 'app/shared/model/section.model';
 
 describe('Service Tests', () => {
   describe('Section Service', () => {
     let injector: TestBed;
     let service: SectionService;
     let httpMock: HttpTestingController;
-    let elemDefault: ISection;
-    let expectedResult: ISection | ISection[] | boolean | null;
+    let elemDefault: Section;
+    let expectedResult: Section | Section[] | boolean | null;
 
     beforeEach(() => {
       TestBed.configureTestingModule({
@@ -20,7 +20,10 @@ describe('Service Tests', () => {
       service = injector.get(SectionService);
       httpMock = injector.get(HttpTestingController);
 
-      elemDefault = new Section(0, 'AAAAAAA');
+      elemDefault = {
+        id: 0,
+        name: 'AAAAAAA',
+      };
     });
 
     describe('Service methods', () => {
@@ -44,7 +47,7 @@ describe('Service Tests', () => {
 
         const expected = Object.assign({}, returnedFromService);
 
-        service.create(new Section()).subscribe(resp => (expectedResult = resp.body));
+        service.create({}).subscribe(resp => (expectedResult = resp.body));
 
         const req = httpMock.expectOne({ method: 'POST' });
         req.flush(returnedFromService);

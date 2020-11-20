@@ -17,8 +17,6 @@
         "title": "Lokalität"
       },
       "name": "Name",
-      "dateFrom": "Datum Von",
-      "dateTo": "Datum Bis",
       "project": "Project",
       "responsibility": "Verantwortlichkeit",
       "section": "Abschnitt"

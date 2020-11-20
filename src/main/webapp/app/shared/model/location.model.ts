@@ -1,26 +1,11 @@
-import { Moment } from 'moment';
-import { IProject } from 'app/shared/model/project.model';
-import { IResponsibility } from 'app/shared/model/responsibility.model';
-import { ISection } from 'app/shared/model/section.model';
+import { Project } from 'app/shared/model/project.model';
+import { Responsibility } from 'app/shared/model/responsibility.model';
+import { Section } from 'app/shared/model/section.model';
 
-export interface ILocation {
+export interface Location {
   id?: number;
   name?: string;
-  dateFrom?: Moment;
-  dateTo?: Moment;
-  project?: IProject;
-  responsibility?: IResponsibility;
-  sections?: ISection[];
-}
-
-export class Location implements ILocation {
-  constructor(
-    public id?: number,
-    public name?: string,
-    public dateFrom?: Moment,
-    public dateTo?: Moment,
-    public project?: IProject,
-    public responsibility?: IResponsibility,
-    public sections?: ISection[]
-  ) {}
+  project?: Project;
+  responsibility?: Responsibility;
+  sections?: Section[];
 }

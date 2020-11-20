@@ -1,10 +1,10 @@
 import { Routes } from '@angular/router';
-
-import { ResponsibilityResolve } from 'app/entities/responsibility/responsibility.route';
+import { ProjectResolve } from 'app/entities/project/project.resolve';
+import { ResponsibilityResolve } from 'app/entities/responsibility/responsibility.resolve';
 
 import { CreateProjectModalComponent } from 'app/view/create-project/create-project-modal.component';
 import { ProjectResponsibilityModalComponent } from 'app/view/project/admin/responsibilities/project-responsibility-modal.component';
-import { ProjectResolve } from 'app/entities/project/project.route';
+
 import { ProjectLocationModalComponent } from 'app/view/project/admin/locations/project-location-modal.component';
 import { LocationResolve } from 'app/entities/location/location.route';
 
@@ -23,7 +23,7 @@ export const MODAL_OUTLET_ROUTES: Routes = [
     outlet: 'modal',
   },
   {
-    path: 'projects/:projectId/responsibilities/:id/edit',
+    path: 'projects/:projectId/responsibilities/:responsibilityId/edit',
     component: ProjectResponsibilityModalComponent,
     resolve: {
       project: ProjectResolve,

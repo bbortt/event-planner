@@ -147,3 +147,11 @@ Desktop.ini
 # ESLint
 ######################
 .eslintcache
+
+######################
+# Google App Engine
+######################
+app.yml
+app-*.yml
+*.key.json
+*.tar

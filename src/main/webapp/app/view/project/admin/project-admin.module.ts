@@ -9,6 +9,7 @@ import { ProjectLocationsComponent } from 'app/view/project/admin/locations/proj
 import { ProjectLocationUpdateComponent } from 'app/view/project/admin/locations/project-location-update.component';
 import { ProjectResponsibilitiesComponent } from 'app/view/project/admin/responsibilities/project-responsibilities.component';
 import { ProjectResponsibilityUpdateComponent } from 'app/view/project/admin/responsibilities/project-responsibility-update.component';
+import { ProjectResponsibilityDeleteDialogComponent } from 'app/view/project/admin/responsibilities/project-responsibility-delete-dialog.component';
 import { ProjectUsersComponent } from 'app/view/project/admin/users/project-users.component';
 
 import { PROJECT_ADMIN_ROUTES } from './project-admin.routes';
@@ -24,6 +25,7 @@ import { ProjectLocationModalComponent } from 'app/view/project/admin/locations/
     ProjectLocationModalComponent,
     ProjectResponsibilitiesComponent,
     ProjectResponsibilityUpdateComponent,
+    ProjectResponsibilityDeleteDialogComponent,
     ProjectUsersComponent,
   ],
   entryComponents: [ProjectAdminComponent],

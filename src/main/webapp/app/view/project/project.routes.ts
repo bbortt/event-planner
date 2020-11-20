@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 
-import { ProjectResolve } from 'app/entities/project/project.route';
+import { ProjectResolve } from 'app/entities/project/project.resolve';
 import { UserRouteRoleAccessService } from 'app/core/auth/user-route-role-access-service';
 
 import { ScreenplayComponent } from 'app/view/project/screenplay/screenplay.component';
@@ -11,7 +11,7 @@ export const PROJECT_ROUTES: Routes = [
   {
     path: ':projectId',
     pathMatch: 'full',
-    redirectTo: ':id/admin',
+    redirectTo: ':projectId/admin',
   },
   {
     path: ':projectId/admin',

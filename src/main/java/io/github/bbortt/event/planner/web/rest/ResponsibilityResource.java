@@ -3,6 +3,7 @@ package io.github.bbortt.event.planner.web.rest;
 import io.github.bbortt.event.planner.domain.Responsibility;
 import io.github.bbortt.event.planner.security.AuthoritiesConstants;
 import io.github.bbortt.event.planner.security.RolesConstants;
+import io.github.bbortt.event.planner.service.ProjectService;
 import io.github.bbortt.event.planner.service.ResponsibilityService;
 import io.github.bbortt.event.planner.web.rest.errors.BadRequestAlertException;
 import io.github.jhipster.web.util.HeaderUtil;
@@ -46,9 +47,11 @@ public class ResponsibilityResource {
     private String applicationName;
 
     private final ResponsibilityService responsibilityService;
+    private final ProjectService projectService;
 
-    public ResponsibilityResource(ResponsibilityService responsibilityService) {
+    public ResponsibilityResource(ResponsibilityService responsibilityService, ProjectService projectService) {
         this.responsibilityService = responsibilityService;
+        this.projectService = projectService;
     }
 
     /**
@@ -136,6 +139,14 @@ public class ResponsibilityResource {
         log.debug("REST request to get Responsibility : {}", id);
         Optional<Responsibility> responsibility = responsibilityService.findOne(id);
         return ResponseUtil.wrapOrNotFound(responsibility);
+    }
+
+    @GetMapping("/responsibilities/project/{projectId}")
+    @PreAuthorize("@projectService.hasAccessToProject(#projectId, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")")
+    public ResponseEntity<List<Responsibility>> getResponsibilitiesByProjectId(@PathVariable Long projectId, Pageable pageable) {
+        Page<Responsibility> page = responsibilityService.findAllByProjectId(projectId, pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     /**

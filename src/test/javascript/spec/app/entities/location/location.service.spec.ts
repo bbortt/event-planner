@@ -1,18 +1,15 @@
-import { TestBed, getTestBed } from '@angular/core/testing';
+import { getTestBed, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import * as moment from 'moment';
-import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 import { LocationService } from 'app/entities/location/location.service';
-import { ILocation, Location } from 'app/shared/model/location.model';
+import { Location } from 'app/shared/model/location.model';
 
 describe('Service Tests', () => {
   describe('Location Service', () => {
     let injector: TestBed;
     let service: LocationService;
     let httpMock: HttpTestingController;
-    let elemDefault: ILocation;
-    let expectedResult: ILocation | ILocation[] | boolean | null;
-    let currentDate: moment.Moment;
+    let elemDefault: Location;
+    let expectedResult: Location | Location[] | boolean | null;
 
     beforeEach(() => {
       TestBed.configureTestingModule({
@@ -22,47 +19,25 @@ describe('Service Tests', () => {
       injector = getTestBed();
       service = injector.get(LocationService);
       httpMock = injector.get(HttpTestingController);
-      currentDate = moment();
 
-      elemDefault = new Location(0, 'AAAAAAA', currentDate, currentDate);
+      elemDefault = {
+        id: 0,
+        name: 'AAAAAAA',
+      };
     });
 
     describe('Service methods', () => {
-      it('should find an element', () => {
-        const returnedFromService = Object.assign(
-          {
-            dateFrom: currentDate.format(DATE_TIME_FORMAT),
-            dateTo: currentDate.format(DATE_TIME_FORMAT),
-          },
-          elemDefault
-        );
-
-        service.find(123).subscribe(resp => (expectedResult = resp.body));
-
-        const req = httpMock.expectOne({ method: 'GET' });
-        req.flush(returnedFromService);
-        expect(expectedResult).toMatchObject(elemDefault);
-      });
-
       it('should create a Location', () => {
         const returnedFromService = Object.assign(
           {
             id: 0,
-            dateFrom: currentDate.format(DATE_TIME_FORMAT),
-            dateTo: currentDate.format(DATE_TIME_FORMAT),
           },
           elemDefault
         );
 
-        const expected = Object.assign(
-          {
-            dateFrom: currentDate,
-            dateTo: currentDate,
-          },
-          returnedFromService
-        );
+        const expected = Object.assign({}, returnedFromService);
 
-        service.create(new Location()).subscribe(resp => (expectedResult = resp.body));
+        service.create({}).subscribe(resp => (expectedResult = resp.body));
 
         const req = httpMock.expectOne({ method: 'POST' });
         req.flush(returnedFromService);
@@ -73,19 +48,11 @@ describe('Service Tests', () => {
         const returnedFromService = Object.assign(
           {
             name: 'BBBBBB',
-            dateFrom: currentDate.format(DATE_TIME_FORMAT),
-            dateTo: currentDate.format(DATE_TIME_FORMAT),
           },
           elemDefault
         );
 
-        const expected = Object.assign(
-          {
-            dateFrom: currentDate,
-            dateTo: currentDate,
-          },
-          returnedFromService
-        );
+        const expected = Object.assign({}, returnedFromService);
 
         service.update(expected).subscribe(resp => (expectedResult = resp.body));
 
@@ -98,19 +65,11 @@ describe('Service Tests', () => {
         const returnedFromService = Object.assign(
           {
             name: 'BBBBBB',
-            dateFrom: currentDate.format(DATE_TIME_FORMAT),
-            dateTo: currentDate.format(DATE_TIME_FORMAT),
           },
           elemDefault
         );
 
-        const expected = Object.assign(
-          {
-            dateFrom: currentDate,
-            dateTo: currentDate,
-          },
-          returnedFromService
-        );
+        const expected = Object.assign({}, returnedFromService);
 
         service.query().subscribe(resp => (expectedResult = resp.body));
 

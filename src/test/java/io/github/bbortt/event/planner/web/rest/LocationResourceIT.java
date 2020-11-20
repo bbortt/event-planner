@@ -1,6 +1,5 @@
 package io.github.bbortt.event.planner.web.rest;
 
-import static io.github.bbortt.event.planner.web.rest.TestUtil.sameInstant;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -16,11 +15,6 @@ import io.github.bbortt.event.planner.domain.Location;
 import io.github.bbortt.event.planner.domain.Project;
 import io.github.bbortt.event.planner.repository.LocationRepository;
 import io.github.bbortt.event.planner.service.LocationService;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
-import java.time.ZonedDateTime;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,12 +33,6 @@ public class LocationResourceIT extends AbstractApplicationContextAwareIT {
 
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
-
-    private static final ZonedDateTime DEFAULT_DATE_FROM = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
-    private static final ZonedDateTime UPDATED_DATE_FROM = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
-
-    private static final ZonedDateTime DEFAULT_DATE_TO = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
-    private static final ZonedDateTime UPDATED_DATE_TO = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
 
     @Autowired
     private LocationRepository locationRepository;
@@ -66,7 +54,7 @@ public class LocationResourceIT extends AbstractApplicationContextAwareIT {
      * This is a static method, as tests for other entities might also need it, if they test an entity which requires the current entity.
      */
     public static Location createEntity(EntityManager em) {
-        Location location = new Location().name(DEFAULT_NAME).dateFrom(DEFAULT_DATE_FROM).dateTo(DEFAULT_DATE_TO);
+        Location location = new Location().name(DEFAULT_NAME);
         // Add required entity
         Project project;
         if (TestUtil.findAll(em, Project.class).isEmpty()) {
@@ -86,7 +74,7 @@ public class LocationResourceIT extends AbstractApplicationContextAwareIT {
      * This is a static method, as tests for other entities might also need it, if they test an entity which requires the current entity.
      */
     public static Location createUpdatedEntity(EntityManager em) {
-        Location location = new Location().name(UPDATED_NAME).dateFrom(UPDATED_DATE_FROM).dateTo(UPDATED_DATE_TO);
+        Location location = new Location().name(UPDATED_NAME);
         // Add required entity
         Project project;
         if (TestUtil.findAll(em, Project.class).isEmpty()) {
@@ -120,8 +108,6 @@ public class LocationResourceIT extends AbstractApplicationContextAwareIT {
         assertThat(locationList).hasSize(1);
         Location testLocation = locationList.get(0);
         assertThat(testLocation.getName()).isEqualTo(DEFAULT_NAME);
-        assertThat(testLocation.getDateFrom()).isEqualTo(DEFAULT_DATE_FROM);
-        assertThat(testLocation.getDateTo()).isEqualTo(DEFAULT_DATE_TO);
     }
 
     @Test
@@ -161,40 +147,6 @@ public class LocationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    public void checkDateFromIsRequired() throws Exception {
-        int databaseSizeBeforeTest = locationRepository.findAll().size();
-        // set the field null
-        location.setDateFrom(null);
-
-        // Create the Location, which fails.
-
-        restLocationMockMvc
-            .perform(post("/api/locations").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(location)))
-            .andExpect(status().isBadRequest());
-
-        List<Location> locationList = locationRepository.findAll();
-        assertThat(locationList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
-    public void checkDateToIsRequired() throws Exception {
-        int databaseSizeBeforeTest = locationRepository.findAll().size();
-        // set the field null
-        location.setDateTo(null);
-
-        // Create the Location, which fails.
-
-        restLocationMockMvc
-            .perform(post("/api/locations").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(location)))
-            .andExpect(status().isBadRequest());
-
-        List<Location> locationList = locationRepository.findAll();
-        assertThat(locationList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
     public void getAllLocations() throws Exception {
         // Initialize the database
         locationRepository.saveAndFlush(location);
@@ -205,9 +157,7 @@ public class LocationResourceIT extends AbstractApplicationContextAwareIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(location.getId().intValue())))
-            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
-            .andExpect(jsonPath("$.[*].dateFrom").value(hasItem(sameInstant(DEFAULT_DATE_FROM))))
-            .andExpect(jsonPath("$.[*].dateTo").value(hasItem(sameInstant(DEFAULT_DATE_TO))));
+            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)));
     }
 
     @Test
@@ -222,9 +172,7 @@ public class LocationResourceIT extends AbstractApplicationContextAwareIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(location.getId().intValue()))
-            .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
-            .andExpect(jsonPath("$.dateFrom").value(sameInstant(DEFAULT_DATE_FROM)))
-            .andExpect(jsonPath("$.dateTo").value(sameInstant(DEFAULT_DATE_TO)));
+            .andExpect(jsonPath("$.name").value(DEFAULT_NAME));
     }
 
     @Test
@@ -246,7 +194,7 @@ public class LocationResourceIT extends AbstractApplicationContextAwareIT {
         Location updatedLocation = locationRepository.findById(location.getId()).get();
         // Disconnect from session so that the updates on updatedLocation are not directly saved in db
         em.detach(updatedLocation);
-        updatedLocation.name(UPDATED_NAME).dateFrom(UPDATED_DATE_FROM).dateTo(UPDATED_DATE_TO);
+        updatedLocation.name(UPDATED_NAME);
 
         restLocationMockMvc
             .perform(
@@ -263,8 +211,6 @@ public class LocationResourceIT extends AbstractApplicationContextAwareIT {
             .findFirst()
             .orElseThrow(() -> new IllegalArgumentException("Cannot find updated location!"));
         assertThat(testLocation.getName()).isEqualTo(UPDATED_NAME);
-        assertThat(testLocation.getDateFrom()).isEqualTo(UPDATED_DATE_FROM);
-        assertThat(testLocation.getDateTo()).isEqualTo(UPDATED_DATE_TO);
     }
 
     @Test

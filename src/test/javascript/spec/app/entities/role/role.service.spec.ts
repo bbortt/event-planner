@@ -1,15 +1,15 @@
-import { TestBed, getTestBed } from '@angular/core/testing';
+import { getTestBed, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { RoleService } from 'app/entities/role/role.service';
-import { IRole, Role } from 'app/shared/model/role.model';
+import { Role } from 'app/shared/model/role.model';
 
 describe('Service Tests', () => {
   describe('Role Service', () => {
     let injector: TestBed;
     let service: RoleService;
     let httpMock: HttpTestingController;
-    let elemDefault: IRole;
-    let expectedResult: IRole | IRole[] | boolean | null;
+    let elemDefault: Role;
+    let expectedResult: Role | Role[] | boolean | null;
 
     beforeEach(() => {
       TestBed.configureTestingModule({
@@ -20,7 +20,9 @@ describe('Service Tests', () => {
       service = injector.get(RoleService);
       httpMock = injector.get(HttpTestingController);
 
-      elemDefault = new Role('AAAAAAA');
+      elemDefault = {
+        name: 'AAAAAAA',
+      };
     });
 
     describe('Service methods', () => {
