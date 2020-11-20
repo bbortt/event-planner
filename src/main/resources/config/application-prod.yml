@@ -33,9 +33,9 @@ spring:
       enabled: false
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: ${APPL_JDBC_URL:${APPL_JDBC_USERNAME}}
+    url: ${APPL_JDBC_URL:${spring.datasource.username}}
     username: ${APPL_JDBC_USERNAME}
-    password: ${APPL_JDBC_PASSWORD:${APPL_JDBC_USERNAME}}
+    password: ${APPL_JDBC_PASSWORD:${spring.datasource.username}}
     hikari:
       poolName: Hikari
       auto-commit: false
@@ -43,10 +43,16 @@ spring:
     database-platform: io.github.jhipster.domain.util.FixedPostgreSQL10Dialect
     show-sql: false
   mail:
-    host: localhost
-    port: 25
-    username:
-    password:
+    host: ${APPL_MAIL_HOST}
+    port: ${APPL_MAIL_PORT:25}
+    username: ${APPL_MAIL_USERNAME}
+    password: ${APPL_MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          ssl.enable: true
+          ssl.trust: ${spring.mail.host}
   thymeleaf:
     cache: true
   flyway:

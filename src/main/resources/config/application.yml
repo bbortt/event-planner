@@ -141,7 +141,7 @@ jhipster:
   #     allow-credentials: true
   #     max-age: 1800
   mail:
-    from: eventPlanner@localhost
+    from: ${APPL_MAIL_SENDER:${spring.mail.username}}
   swagger:
     default-include-pattern: /api/.*
     title: eventPlanner API
