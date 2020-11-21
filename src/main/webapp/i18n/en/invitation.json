@@ -18,6 +18,8 @@
       },
       "email": "Email",
       "accepted": "Accepted",
+      "accepted.yes": "Yes",
+      "accepted.no": "No",
       "project": "Project",
       "user": "User",
       "role": "Role",

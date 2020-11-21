@@ -18,6 +18,8 @@
       },
       "email": "Email",
       "accepted": "Akzeptiert",
+      "accepted.yes": "Ja",
+      "accepted.no": "Nein",
       "project": "Project",
       "user": "Benutzer",
       "role": "Rolle",

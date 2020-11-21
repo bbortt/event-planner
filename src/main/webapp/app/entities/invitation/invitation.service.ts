@@ -35,4 +35,9 @@ export class InvitationService {
   delete(id: number): Observable<HttpResponse<{}>> {
     return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
   }
+
+  findAllByProjectId(projectId: number, req?: any): Observable<HttpResponse<Invitation[]>> {
+    const options = createRequestOption(req);
+    return this.http.get<Invitation[]>(`${this.resourceUrl}/project/${projectId}`, { params: options, observe: 'response' });
+  }
 }

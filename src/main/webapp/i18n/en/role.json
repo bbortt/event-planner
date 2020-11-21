@@ -17,7 +17,11 @@
         "title": "Role"
       },
       "name": "Name",
-      "invitation": "Invitation"
+      "invitation": "Invitation",
+      "admin": "Project Administrator",
+      "secretary": "Secretary",
+      "contributor": "Contributor",
+      "viewer": "Viewer"
     }
   }
 }
