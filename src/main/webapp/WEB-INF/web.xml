@@ -10,4 +10,13 @@
         <mime-type>text/html;charset=utf-8</mime-type>
     </mime-mapping>
 
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>HTTPS</web-resource-name>
+            <url-pattern>/*</url-pattern>
+        </web-resource-collection>
+        <user-data-constraint>
+            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+        </user-data-constraint>
+    </security-constraint>
 </web-app>
