@@ -9,7 +9,6 @@ import { Location } from 'app/shared/model/location.model';
 import { LocationService } from 'app/entities/location/location.service';
 import { Responsibility } from 'app/shared/model/responsibility.model';
 import { ResponsibilityService } from 'app/entities/responsibility/responsibility.service';
-import { map, startWith } from 'rxjs/operators';
 
 @Component({
   selector: 'app-location-update',
@@ -19,8 +18,9 @@ import { map, startWith } from 'rxjs/operators';
 export class ProjectLocationUpdateComponent implements OnInit {
   isSaving = false;
   isNew = false;
-  responsibilities?: Responsibility[];
-  filteredResponsibilities?: Observable<Responsibility[]>;
+  project?: Project;
+  responsibilities: Responsibility[] = [];
+  //filteredResponsibilities?: Observable<Responsibility[]>;
   editForm = this.fb.group({
     id: [],
     name: [null, [Validators.required, Validators.maxLength(50)]],
@@ -31,11 +31,11 @@ export class ProjectLocationUpdateComponent implements OnInit {
   constructor(protected locationService: LocationService, private fb: FormBuilder, private responsibilityService: ResponsibilityService) {}
 
   ngOnInit(): void {
-    this.filteredResponsibilities = this.editForm.get('responsibility')!.valueChanges.pipe(
-      startWith(''),
-      map(value => (typeof value === 'string' ? value : value.name)),
-      map(name => this.filter(name))
-    );
+    /* this.filteredResponsibilities = this.editForm.get('responsibility')!.valueChanges.pipe(
+       startWith(''),
+       map(value => (typeof value === 'string' ? value : value.name)),
+       map(name => this.filter(name))
+     );*/
   }
 
   filter(name: string): Responsibility[] {
