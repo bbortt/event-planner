@@ -15,9 +15,10 @@ import { ProjectUsersComponent } from 'app/view/project/admin/users/project-user
 import { PROJECT_ADMIN_ROUTES } from './project-admin.routes';
 import { ProjectLocationModalComponent } from 'app/view/project/admin/locations/project-location-modal.component';
 import { ProjectLocationDeleteDialogComponent } from 'app/view/project/admin/locations/project-location-delete-dialog.component';
+import { NgxAutocompleteModule } from '@bbortt/ngx-autocomplete';
 
 @NgModule({
-  imports: [EventPlannerSharedModule, RouterModule.forChild(PROJECT_ADMIN_ROUTES)],
+  imports: [EventPlannerSharedModule, RouterModule.forChild(PROJECT_ADMIN_ROUTES), NgxAutocompleteModule],
   declarations: [
     ProjectAdminComponent,
     ProjectNavbarComponent,

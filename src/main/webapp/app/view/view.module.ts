@@ -7,6 +7,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { DatetimeAdapter, MatDatetimepickerModule } from '@mat-datetimepicker/core';
 import { MatMomentDatetimeModule, MomentDatetimeAdapter } from '@mat-datetimepicker/moment';
 
+import { NgxAutocompleteModule } from '@bbortt/ngx-autocomplete';
+
 import { HomeComponent } from './home.component';
 import { MyProjectsComponent } from 'app/view/my-projects/my-projects.component';
 
@@ -22,6 +24,7 @@ import { VIEW_ROUTES } from './view.routes';
     MatDatepickerModule,
     MatDatetimepickerModule,
     MatMomentDatetimeModule,
+    NgxAutocompleteModule,
     RouterModule.forChild(VIEW_ROUTES),
   ],
   providers: [

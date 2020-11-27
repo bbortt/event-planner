@@ -38,7 +38,7 @@ export class ProjectLocationUpdateComponent implements OnInit {
     );
   }
 
-  private filter(name: string): Responsibility[] {
+  filter(name: string): Responsibility[] {
     const filterValue = name.toLowerCase();
 
     if (!this.responsibilities) {
@@ -52,7 +52,6 @@ export class ProjectLocationUpdateComponent implements OnInit {
     this.isNew = !location.id;
     this.responsibilityService.findAllByProject(project).subscribe(responsibilities => {
       this.responsibilities = responsibilities.body || [];
-      this.ngOnInit();
     });
 
     this.editForm.patchValue({
@@ -75,10 +74,6 @@ export class ProjectLocationUpdateComponent implements OnInit {
     } else {
       this.subscribeToSaveResponse(this.locationService.create(location));
     }
-  }
-
-  displayFn(responsibility: Responsibility): string {
-    return responsibility && responsibility.name ? responsibility.name : '';
   }
 
   private createFromForm(): Location {

@@ -43,21 +43,26 @@
                     </div>
                 </div>
 
-                <mat-form-field>
-                    <input id="field_option"
-                           type="text"
-                           aria-label="option"
-                           matInput
-                           [matAutocomplete]="auto1"
-                           formControlName="responsibility"
-                    />
-                    <mat-autocomplete #auto1="matAutocomplete" [displayWith]="displayFn">
-                        <mat-option *ngFor="let responsibility of filteredResponsibilities | async" [value]="responsibility">
-                            {{responsibility.name}}
-                        </mat-option>
-                    </mat-autocomplete>
-                </mat-form-field>
+                <label for="field-responsibility"> Responsibility </label>
+                <ngx-autocomplete
+                    name="responsibility"
+                    id="field-responsibility"
+                    formControlName="responsibility"
+                    [options]="responsibilities"
+                    propertyAccessor="name"
+                    (autocompleteChanges)="filter($event)"
+                ></ngx-autocomplete>
 
+                <div
+                    *ngIf="
+                        editForm.get('responsibility')!.invalid &&
+                        (editForm.get('responsibility')!.dirty || editForm.get('responsibility')!.touched)
+                      "
+                >
+                    <small *ngIf="editForm.get('responsibility')?.errors?.required">
+                        This field is required.
+                    </small>
+                </div>
 
                 <div>
                     <button type="button" id="cancel-save" class="btn btn-secondary"
