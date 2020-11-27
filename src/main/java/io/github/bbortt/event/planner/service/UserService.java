@@ -322,7 +322,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public List<UserDTO> findByEmailOrLoginContaining(String emailOrLogin) {
         return userRepository
-            .findDistinctTop10ByEmailContainingIgnoreCaseOrLoginContainingIgnoreCase(emailOrLogin, emailOrLogin)
+            .findTop5ByEmailContainingIgnoreCaseOrLoginContainingIgnoreCase(emailOrLogin, emailOrLogin)
             .stream()
             .map(UserDTO::new)
             .collect(Collectors.toList());

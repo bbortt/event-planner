@@ -1,11 +1,12 @@
 import { NgModule } from '@angular/core';
-import { ClientsideFilterComponent } from 'app/shared/components/clientside-filter/clientside-filter.component';
-import { UserByEmailOrLoginComponent } from 'app/shared/components/user-by-email-or-login/user-by-email-or-login.component';
+
 import { EventPlannerSharedLibsModule } from 'app/shared/shared-libs.module';
 
+import { ClientsideFilterComponent } from 'app/shared/components/clientside-filter/clientside-filter.component';
+
 @NgModule({
-  declarations: [ClientsideFilterComponent, UserByEmailOrLoginComponent],
+  declarations: [ClientsideFilterComponent],
   imports: [EventPlannerSharedLibsModule],
-  exports: [ClientsideFilterComponent, UserByEmailOrLoginComponent],
+  exports: [ClientsideFilterComponent],
 })
 export class ComponentsModule {}

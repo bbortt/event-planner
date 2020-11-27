@@ -1,6 +1,5 @@
 import { AfterViewInit, Component, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { JhiEventManager } from 'ng-jhipster';
 
 import { ProjectCreateComponent } from 'app/view/create-project/project-create.component';
 
@@ -12,7 +11,7 @@ import { ProjectCreateComponent } from 'app/view/create-project/project-create.c
 export class CreateProjectModalComponent implements AfterViewInit, OnDestroy {
   private modalRef?: NgbModalRef;
 
-  constructor(private modalService: NgbModal, private eventManager: JhiEventManager) {}
+  constructor(private modalService: NgbModal) {}
 
   ngAfterViewInit(): void {
     this.modalRef = this.modalService.open(ProjectCreateComponent, {
@@ -28,7 +27,5 @@ export class CreateProjectModalComponent implements AfterViewInit, OnDestroy {
     if (this.modalRef) {
       this.modalRef.close();
     }
-
-    this.eventManager.broadcast('myProjectsListModification');
   }
 }

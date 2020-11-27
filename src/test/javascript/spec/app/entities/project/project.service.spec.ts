@@ -2,7 +2,6 @@ import { getTestBed, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { ProjectService } from 'app/entities/project/project.service';
 import { Project } from 'app/shared/model/project.model';
-import { ICreateProject } from 'app/shared/model/dto/create-project.model';
 
 import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 
