@@ -207,4 +207,32 @@ custom modal styling
   padding-top: 3vh;
   padding-bottom: 3vh;
 }
+
+/* ==========================================================================
+@bbortt/ngx-autocomplete styles
+========================================================================== */
+@import '~bootstrap/scss/bootstrap';
+
+ngx-autocomplete {
+  .ngx-autocomplete-input {
+    @extend .form-control;
+  }
+
+  .ngx-autocomplete-container {
+    border-radius: $border-radius;
+    background-color: $body-bg;
+
+    .ngx-autocomplete-option {
+      border-radius: 0;
+
+      @extend .form-control;
+
+      &-active {
+        color: $dropdown-link-hover-color;
+        background-color: $dropdown-link-hover-bg;
+      }
+    }
+  }
+}
+
 /* jhipster-needle-scss-add-main JHipster will add new css style */
