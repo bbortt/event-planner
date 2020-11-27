@@ -7,9 +7,12 @@ import { LoginModalComponent } from './login/login.component';
 import { HasAnyAuthorityDirective } from './auth/has-any-authority.directive';
 import { ComponentsModule } from 'app/shared/components/components.module';
 import { HasAnyRoleDirective } from 'app/shared/auth/has-any-role.directive';
+import { MatAutocomplete, MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 @NgModule({
-  imports: [ComponentsModule, EventPlannerSharedLibsModule],
+  imports: [ComponentsModule, EventPlannerSharedLibsModule, MatAutocompleteModule, MatFormFieldModule, MatInputModule],
   declarations: [
     FindLanguageFromKeyPipe,
     AlertComponent,
@@ -28,6 +31,10 @@ import { HasAnyRoleDirective } from 'app/shared/auth/has-any-role.directive';
     HasAnyAuthorityDirective,
     HasAnyRoleDirective,
     ComponentsModule,
+    MatAutocompleteModule,
+    MatAutocomplete,
+    MatFormFieldModule,
+    MatInputModule,
   ],
 })
 export class EventPlannerSharedModule {}

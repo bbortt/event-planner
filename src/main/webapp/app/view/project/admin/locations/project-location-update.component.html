@@ -26,12 +26,6 @@
                            for="field_name">Name</label>
                     <input type="text" class="form-control" name="name" id="field_name"
                            formControlName="name"/>
-                    <label class="form-control-label"
-                           jhiTranslate="eventPlannerApp.location.responsibility"
-                           for="field_responsibility">Responsibility</label>
-                    <input type="text" class="form-control" name="responsibility" id="field_responsibility"
-                           formControlName="Responsibility"/>
-
 
                     <div
                         *ngIf="editForm.get('name')!.invalid && (editForm.get('name')!.dirty || editForm.get('name')!.touched)">
@@ -41,12 +35,6 @@
                             This field is required.
                         </small>
                         <small class="form-text text-danger"
-                               *ngIf="editForm.get('name')?.errors?.minlength"
-                               jhiTranslate="entity.validation.minlength"
-                               [translateValues]="{ min: 1 }">
-                            This field is required to be at least 1 characters.
-                        </small>
-                        <small class="form-text text-danger"
                                *ngIf="editForm.get('name')?.errors?.maxlength"
                                jhiTranslate="entity.validation.maxlength"
                                [translateValues]="{ max: 50 }">
@@ -54,18 +42,34 @@
                         </small>
                     </div>
                 </div>
-            </div>
 
-            <div>
-                <button type="button" id="cancel-save" class="btn btn-secondary"
-                        (click)="previousState()">
-                    <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
-                </button>
+                <mat-form-field>
+                    <input id="field_option"
+                           type="text"
+                           aria-label="option"
+                           matInput
+                           [matAutocomplete]="auto1"
+                           formControlName="responsibility"
+                    />
+                    <mat-autocomplete #auto1="matAutocomplete" [displayWith]="displayFn">
+                        <mat-option *ngFor="let responsibility of filteredResponsibilities | async" [value]="responsibility">
+                            {{responsibility.name}}
+                        </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
 
-                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving"
-                        class="btn btn-primary">
-                    <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
-                </button>
+
+                <div>
+                    <button type="button" id="cancel-save" class="btn btn-secondary"
+                            (click)="previousState()">
+                        <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                    </button>
+
+                    <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving"
+                            class="btn btn-primary">
+                        <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                    </button>
+                </div>
             </div>
         </form>
     </div>

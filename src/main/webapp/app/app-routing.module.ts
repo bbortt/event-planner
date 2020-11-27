@@ -5,8 +5,6 @@ import { UserRouteAuthorityAccessService } from 'app/core/auth/user-route-author
 
 import { errorRoute } from './layouts/error/error.route';
 import { navbarRoute } from './layouts/navbar/navbar.route';
-
-import { DEBUG_INFO_ENABLED } from 'app/app.constants';
 import { AUTHORITY_ADMIN } from 'app/shared/constants/authority.constants';
 
 const LAYOUT_ROUTES = [navbarRoute, ...errorRoute];
@@ -29,7 +27,7 @@ const LAYOUT_ROUTES = [navbarRoute, ...errorRoute];
         },
         ...LAYOUT_ROUTES,
       ],
-      { enableTracing: DEBUG_INFO_ENABLED, preloadingStrategy: PreloadAllModules }
+      { preloadingStrategy: PreloadAllModules }
     ),
   ],
   exports: [RouterModule],

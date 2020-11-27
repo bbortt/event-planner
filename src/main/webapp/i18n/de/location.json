@@ -4,6 +4,7 @@
       "home": {
         "title": "Lokalitäten",
         "createLabel": "Lokalität erstellen",
+        "editLabel": "Lokalität bearbeiten",
         "createOrEditLabel": "Lokalität erstellen oder bearbeiten",
         "notFound": "Keine Lokalitäten gefunden"
       },

@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { EventPlannerSharedModule } from '../shared/shared.module';
 
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatDatetimepickerModule, DatetimeAdapter } from '@mat-datetimepicker/core';
+import { DatetimeAdapter, MatDatetimepickerModule } from '@mat-datetimepicker/core';
 import { MatMomentDatetimeModule, MomentDatetimeAdapter } from '@mat-datetimepicker/moment';
 
 import { HomeComponent } from './home.component';

@@ -40,7 +40,7 @@ export const MODAL_OUTLET_ROUTES: Routes = [
     outlet: 'modal',
   },
   {
-    path: 'projects/:projectId/locations/:id/edit',
+    path: 'projects/:projectId/locations/:locationId/edit',
     component: ProjectLocationModalComponent,
     resolve: {
       project: ProjectResolve,

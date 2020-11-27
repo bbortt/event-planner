@@ -4,6 +4,7 @@
       "home": {
         "title": "Locations",
         "createLabel": "Create a new Location",
+        "editLabel": "Edit Location",
         "createOrEditLabel": "Create or edit a Location",
         "notFound": "No Locations found"
       },

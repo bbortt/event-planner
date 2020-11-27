@@ -4,8 +4,6 @@ import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
 
-import { Location } from 'app/shared/model/location.model';
-
 import { ProjectLocationUpdateComponent } from 'app/view/project/admin/locations/project-location-update.component';
 
 @Component({
@@ -24,7 +22,7 @@ export class ProjectLocationModalComponent implements AfterViewInit, OnDestroy {
           return true;
         },
       });
-      (this.modalRef.componentInstance as ProjectLocationUpdateComponent).updateForm(project, location ? location : new Location());
+      (this.modalRef.componentInstance as ProjectLocationUpdateComponent).updateForm(project, location ? location : {});
     });
   }
 
