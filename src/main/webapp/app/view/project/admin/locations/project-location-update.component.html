@@ -23,7 +23,9 @@
                            jhiTranslate="eventPlannerApp.location.name"
                            for="field_name">Name</label>
                     <input type="text" class="form-control" name="name" id="field_name"
-                           formControlName="name"/>
+                           formControlName="name"
+                           autocomplete="off"
+                    />
 
                     <div
                         *ngIf="editForm.get('name')!.invalid && (editForm.get('name')!.dirty || editForm.get('name')!.touched)">
@@ -48,7 +50,9 @@
                     formControlName="responsibility"
                     [options]="filteredResponsibilities"
                     propertyAccessor="name"
+                    [placeholder]="'global.form.search' | translate"
                     (autocompleteChanges)="filter($event)"
+                    autocomplete="off"
                 ></ngx-autocomplete>
 
                 <div *ngIf="editForm.get('responsibility')!.invalid &&
