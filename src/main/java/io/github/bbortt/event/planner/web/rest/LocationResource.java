@@ -117,7 +117,7 @@ public class LocationResource {
 
     @GetMapping("/locations/project/{projectId}")
     public ResponseEntity<List<Location>> getLocationsByProjectId(@PathVariable Long projectId, Pageable pageable) {
-        log.debug("Rest Request to get Location by projectId {}", projectId);
+        log.debug("Rest Request to get Locations by projectId {}", projectId);
         Page<Location> page = locationService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());

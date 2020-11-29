@@ -1,5 +1,3 @@
-<!--<ng-container *ngFor="let responsibility of responsibilities"><h2>{{responsibility.name}}</h2></ng-container>-->
-
 <div class="row justify-content-center">
     <div class="col-8">
         <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
@@ -48,17 +46,13 @@
                     name="responsibility"
                     id="field-responsibility"
                     formControlName="responsibility"
-                    [options]="responsibilities"
+                    [options]="filteredResponsibilities"
                     propertyAccessor="name"
                     (autocompleteChanges)="filter($event)"
                 ></ngx-autocomplete>
 
-                <div
-                    *ngIf="
-                        editForm.get('responsibility')!.invalid &&
-                        (editForm.get('responsibility')!.dirty || editForm.get('responsibility')!.touched)
-                      "
-                >
+                <div *ngIf="editForm.get('responsibility')!.invalid &&
+                        (editForm.get('responsibility')!.dirty || editForm.get('responsibility')!.touched)">
                     <small *ngIf="editForm.get('responsibility')?.errors?.required">
                         This field is required.
                     </small>

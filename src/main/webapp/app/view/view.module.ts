@@ -2,12 +2,10 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { EventPlannerSharedModule } from '../shared/shared.module';
-
+import { NgxAutocompleteModule } from '@bbortt/ngx-autocomplete';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { DatetimeAdapter, MatDatetimepickerModule } from '@mat-datetimepicker/core';
 import { MatMomentDatetimeModule, MomentDatetimeAdapter } from '@mat-datetimepicker/moment';
-
-import { NgxAutocompleteModule } from '@bbortt/ngx-autocomplete';
 
 import { HomeComponent } from './home.component';
 import { MyProjectsComponent } from 'app/view/my-projects/my-projects.component';

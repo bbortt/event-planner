@@ -79,7 +79,6 @@ export class ProjectLocationsComponent implements OnInit, OnDestroy {
   }
 
   trackId(index: number, item: Location): number {
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
     return item.id!;
   }
 

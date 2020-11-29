@@ -20,7 +20,7 @@ export class ProjectLocationUpdateComponent implements OnInit {
   isNew = false;
   project?: Project;
   responsibilities: Responsibility[] = [];
-  //filteredResponsibilities?: Observable<Responsibility[]>;
+  filteredResponsibilities: Responsibility[] = [];
   editForm = this.fb.group({
     id: [],
     name: [null, [Validators.required, Validators.maxLength(50)]],
@@ -30,22 +30,18 @@ export class ProjectLocationUpdateComponent implements OnInit {
 
   constructor(protected locationService: LocationService, private fb: FormBuilder, private responsibilityService: ResponsibilityService) {}
 
-  ngOnInit(): void {
-    /* this.filteredResponsibilities = this.editForm.get('responsibility')!.valueChanges.pipe(
-       startWith(''),
-       map(value => (typeof value === 'string' ? value : value.name)),
-       map(name => this.filter(name))
-     );*/
-  }
+  ngOnInit(): void {}
 
-  filter(name: string): Responsibility[] {
+  filter(name: string): void {
     const filterValue = name.toLowerCase();
 
     if (!this.responsibilities) {
-      return [] as Responsibility[];
+      this.filteredResponsibilities = [] as Responsibility[];
     }
 
-    return this.responsibilities.filter(responsibility => responsibility.name!.toLowerCase().includes(filterValue));
+    this.filteredResponsibilities = this.responsibilities.filter(responsibility =>
+      responsibility.name!.toLowerCase().includes(filterValue)
+    );
   }
 
   public updateForm(project: Project, location: Location): void {
