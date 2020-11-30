@@ -8,8 +8,7 @@ import { ProjectAdminComponent } from 'app/view/project/admin/project-admin.comp
 import { ProjectLocationsComponent } from 'app/view/project/admin/locations/project-locations.component';
 import { ProjectResponsibilitiesComponent } from 'app/view/project/admin/responsibilities/project-responsibilities.component';
 import { ProjectUsersComponent } from 'app/view/project/admin/users/project-users.component';
-
-import { ROLE_ADMIN, ROLE_SECRETARY } from 'app/shared/constants/role.constants';
+import { ADMIN, SECRETARY } from 'app/shared/constants/role.constants';
 
 export const PROJECT_ADMIN_ROUTES: Routes = [
   {
@@ -18,7 +17,7 @@ export const PROJECT_ADMIN_ROUTES: Routes = [
     component: ProjectAdminComponent,
     data: {
       pageTitle: 'eventPlannerApp.project.admin.tabTitle',
-      roles: [ROLE_ADMIN, ROLE_SECRETARY],
+      roles: [ADMIN.name, SECRETARY.name],
     },
     canActivate: [UserRouteRoleAccessService],
     resolve: {
@@ -35,6 +34,9 @@ export const PROJECT_ADMIN_ROUTES: Routes = [
       {
         path: 'users',
         component: ProjectUsersComponent,
+        resolve: {
+          project: ProjectResolve,
+        },
       },
       {
         path: 'responsibilities',

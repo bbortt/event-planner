@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class InvitationService {
+
     private final Logger log = LoggerFactory.getLogger(InvitationService.class);
 
     private final InvitationRepository invitationRepository;
@@ -67,5 +68,9 @@ public class InvitationService {
     public void delete(Long id) {
         log.debug("Request to delete Invitation : {}", id);
         invitationRepository.deleteById(id);
+    }
+
+    public Page<Invitation> findAllByProjectId(Long projectId, Pageable pageable) {
+        return invitationRepository.findAllByProjectId(projectId, pageable);
     }
 }

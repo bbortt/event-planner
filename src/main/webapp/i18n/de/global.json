@@ -31,9 +31,10 @@
       "newpassword.placeholder": "Neues Passwort",
       "confirmpassword.label": "Neues Passwort bestätigen",
       "confirmpassword.placeholder": "Bestätigen Sie Ihr neues Passwort",
-      "email.label": "Email Adresse",
+      "email.label": "E-Mail-Adresse",
       "email.placeholder": "Ihre Email Adresse",
-      "search": "Suchen"
+      "search": "Suchen",
+      "role.label": "Rolle"
     },
     "messages": {
       "info": {
@@ -83,7 +84,8 @@
       "edit": "Bearbeiten",
       "open": "Öffnen",
       "save": "Speichern",
-      "view": "Details"
+      "view": "Details",
+      "inviteuser": "Benutzer einladen"
     },
     "detail": {
       "field": "Feld",
@@ -102,7 +104,8 @@
       "maxbytes": "Dieses Feld sollte nicht mehr als {{max}} bytes haben.",
       "pattern": "Dieses Feld muss das Muster {{pattern}} erfüllen.",
       "number": "Dieses Feld muss eine Zahl sein.",
-      "datetimelocal": "Dieses Feld muss eine Datums- und Zeitangabe enthalten."
+      "datetimelocal": "Dieses Feld muss eine Datums- und Zeitangabe enthalten.",
+      "email": "Bitte gib eine gültige Email-Adresse ein."
     }
   },
   "error": {

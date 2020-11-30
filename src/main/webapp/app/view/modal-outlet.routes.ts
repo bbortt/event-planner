@@ -5,6 +5,7 @@ import { LocationResolve } from 'app/entities/location/location.resolve';
 
 import { CreateProjectModalComponent } from 'app/view/create-project/create-project-modal.component';
 import { ProjectResponsibilityModalComponent } from 'app/view/project/admin/responsibilities/project-responsibility-modal.component';
+import { ProjectUserModalComponent } from 'app/view/project/admin/users/project-user-modal.component';
 
 import { ProjectLocationModalComponent } from 'app/view/project/admin/locations/project-location-modal.component';
 
@@ -28,6 +29,14 @@ export const MODAL_OUTLET_ROUTES: Routes = [
     resolve: {
       project: ProjectResolve,
       responsibility: ResponsibilityResolve,
+    },
+    outlet: 'modal',
+  },
+  {
+    path: 'projects/:projectId/users/invite',
+    component: ProjectUserModalComponent,
+    resolve: {
+      project: ProjectResolve,
     },
     outlet: 'modal',
   },
