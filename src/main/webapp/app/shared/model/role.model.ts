@@ -1,6 +1,6 @@
 import { Invitation } from 'app/shared/model/invitation.model';
 
 export interface Role {
-  name?: string;
+  name: string;
   invitations?: Invitation[];
 }

@@ -31,9 +31,10 @@
       "newpassword.placeholder": "New password",
       "confirmpassword.label": "New password confirmation",
       "confirmpassword.placeholder": "Confirm the new password",
-      "email.label": "Email",
+      "email.label": "Email address",
       "email.placeholder": "Your email",
-      "search": "Search"
+      "search": "Search",
+      "role.label": "Role"
     },
     "messages": {
       "info": {
@@ -83,7 +84,8 @@
       "edit": "Edit",
       "open": "Open",
       "save": "Save",
-      "view": "View"
+      "view": "View",
+      "inviteuser": "Invite user"
     },
     "detail": {
       "field": "Field",
@@ -103,7 +105,8 @@
       "pattern": "This field should follow pattern for {{ pattern }}.",
       "number": "This field should be a number.",
       "datetimelocal": "This field should be a date and time.",
-      "patternLogin": "This field can only contain letters, digits and e-mail addresses."
+      "patternLogin": "This field can only contain letters, digits and e-mail addresses.",
+      "email": "Please enter a valid email address."
     }
   },
   "error": {

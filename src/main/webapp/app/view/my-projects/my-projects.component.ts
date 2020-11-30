@@ -14,7 +14,7 @@ import { faArrowDown, faBook, faCog } from '@fortawesome/free-solid-svg-icons';
 
 import { ITEMS_PER_PAGE } from 'app/shared/constants/pagination.constants';
 import { AUTHORITY_ADMIN } from 'app/shared/constants/authority.constants';
-import { ROLE_ADMIN, ROLE_SECRETARY } from 'app/shared/constants/role.constants';
+import { ADMIN, SECRETARY } from 'app/shared/constants/role.constants';
 
 @Component({
   selector: 'app-my-projects',
@@ -34,7 +34,7 @@ export class MyProjectsComponent implements OnInit, OnDestroy {
   faBook = faBook;
   faCog = faCog;
 
-  adminRoles = [ROLE_ADMIN, ROLE_SECRETARY];
+  adminRoles = [ADMIN.name, SECRETARY.name];
 
   showAllProjects = false;
   loadMoreButtonEnabled = true;
