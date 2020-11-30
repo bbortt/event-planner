@@ -2,7 +2,7 @@
     <h2 id="page-heading">
         <span jhiTranslate="eventPlannerApp.project.mine.title">My Projects</span>
 
-        <div class="btn-group float-right">
+        <div class="float-right">
             <button *jhiHasAnyAuthority="'ROLE_ADMIN'" [ngSwitch]="showAllProjects"
                     id="btn-show-all-projects"
                     class="btn btn-info" (click)="switchShowAllProjects()">
@@ -40,15 +40,20 @@
     <div id="entities" infinite-scroll (scrolled)="loadPage(page + 1)"
          [infiniteScrollDisabled]="page >= links['last']" [infiniteScrollDistance]="0">
         <div *ngFor="let projectRow of projects" class="row justify-content-center">
-            <div *ngFor="let project of projectRow;trackBy: trackId" class="project-card col-xs-12 col-sm-4">
+            <div *ngFor="let project of projectRow;trackBy: trackId"
+                 class="project-card col-xs-12 col-sm-4">
                 <div *ngIf="project.id">
-                    <div *appHasAnyRole="{ projectId: project.id, roles: adminRoles}; else readOnlyProjectCard"
-                         class="project-card-content d-flex flex-column">
+                    <div
+                        *appHasAnyRole="{ projectId: project.id, roles: adminRoles}; else readOnlyProjectCard"
+                        class="project-card-content d-flex flex-column">
                         <h2>{{project.name}}</h2>
                         <div class="project-card-description mb-auto">
-                            {{project.description ? project.description
-                            : 'eventPlannerApp.project.mine.noDescription' | translate}}
+                            <i>
+                                {{project.description ? project.description
+                                    : 'eventPlannerApp.project.mine.noDescription' | translate}}
+                            </i>
                         </div>
+
                         <div class="project-card-navigation">
                             <button id="jh-screenplay-{{project.id}}"
                                     [routerLink]="['project', project.id, 'screenplay']"

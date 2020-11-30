@@ -1,5 +1,9 @@
 #page-heading {
   display: flow-root;
+
+  #btn-show-all-projects {
+    margin-right: 1vw;
+  }
 }
 
 .project-card > div {
@@ -19,17 +23,9 @@
     border: 1px solid black;
     border-radius: 5px;
 
-    .project-card-description {
-      width: 100%;
-      padding: 0.5vh;
-      border-radius: 5px;
-      background-color: lightgrey;
-    }
-
     .project-card-navigation > button {
-      padding: 0;
-      padding-top: 1vh;
-      padding-right: 1vw;
+      margin-top: 1vh;
+      margin-right: 1vw;
     }
   }
 }
