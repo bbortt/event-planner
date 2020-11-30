@@ -25,6 +25,8 @@
     "createdBy": "Erstellt von",
     "createdDate": "Erstellt am",
     "lastModifiedBy": "Bearbeitet von",
-    "lastModifiedDate": "Zuletzt bearbeitet"
+    "lastModifiedDate": "Zuletzt bearbeitet",
+    "invite": "Benutzer einladen",
+    "acceptedInvitation": "Einladung akzeptiert?"
   }
 }
