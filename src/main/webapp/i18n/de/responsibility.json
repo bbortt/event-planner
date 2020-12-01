@@ -12,7 +12,7 @@
       "updated": "Verantwortlichkeit mit ID {{ param }} aktualisiert",
       "deleted": "Verantwortlichkeit mit ID {{ param }} gelöscht",
       "delete": {
-        "question": "Soll Verantwortlichkeit {{ id }} wirklich dauerhaft gelöscht werden?"
+        "question": "Soll Verantwortlichkeit {{ name }} wirklich dauerhaft gelöscht werden?"
       },
       "detail": {
         "title": "Verantwortlichkeit"

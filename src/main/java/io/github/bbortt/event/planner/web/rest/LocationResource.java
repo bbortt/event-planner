@@ -17,9 +17,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 /**
@@ -28,6 +34,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RestController
 @RequestMapping("/api")
 public class LocationResource {
+
     private final Logger log = LoggerFactory.getLogger(LocationResource.class);
 
     private static final String ENTITY_NAME = "location";
@@ -65,9 +72,7 @@ public class LocationResource {
      * {@code PUT  /locations} : Updates an existing location.
      *
      * @param location the location to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated location,
-     * or with status {@code 400 (Bad Request)} if the location is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the location couldn't be updated.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated location, or with status {@code 400 (Bad Request)} if the location is not valid, or with status {@code 500 (Internal Server Error)} if the location couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/locations")
@@ -108,6 +113,14 @@ public class LocationResource {
         log.debug("REST request to get Location : {}", id);
         Optional<Location> location = locationService.findOne(id);
         return ResponseUtil.wrapOrNotFound(location);
+    }
+
+    @GetMapping("/locations/project/{projectId}")
+    public ResponseEntity<List<Location>> getLocationsByProjectId(@PathVariable Long projectId, Pageable pageable) {
+        log.debug("Rest Request to get Locations by projectId {}", projectId);
+        Page<Location> page = locationService.findAll(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     /**

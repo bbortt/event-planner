@@ -4,6 +4,7 @@
       "home": {
         "title": "Locations",
         "createLabel": "Create a new Location",
+        "editLabel": "Edit Location",
         "createOrEditLabel": "Create or edit a Location",
         "notFound": "No Locations found"
       },
@@ -11,7 +12,7 @@
       "updated": "A Location is updated with identifier {{ param }}",
       "deleted": "A Location is deleted with identifier {{ param }}",
       "delete": {
-        "question": "Are you sure you want to delete Location {{ id }}?"
+        "question": "Are you sure you want to delete Location {{ name }}?"
       },
       "detail": {
         "title": "Location"

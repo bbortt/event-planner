@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class LocationService {
+
     private final Logger log = LoggerFactory.getLogger(LocationService.class);
 
     private final LocationRepository locationRepository;
@@ -67,5 +68,9 @@ public class LocationService {
     public void delete(Long id) {
         log.debug("Request to delete Location : {}", id);
         locationRepository.deleteById(id);
+    }
+
+    public Page<Location> findAllByProjectId(Long projectId, Pageable pageable) {
+        return locationRepository.findAllByProjectId(projectId, pageable);
     }
 }

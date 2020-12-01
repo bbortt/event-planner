@@ -4,6 +4,7 @@
       "home": {
         "title": "Lokalitäten",
         "createLabel": "Lokalität erstellen",
+        "editLabel": "Lokalität bearbeiten",
         "createOrEditLabel": "Lokalität erstellen oder bearbeiten",
         "notFound": "Keine Lokalitäten gefunden"
       },
@@ -11,7 +12,7 @@
       "updated": "Lokalität mit ID {{ param }} aktualisiert",
       "deleted": "Lokalität mit ID {{ param }} gelöscht",
       "delete": {
-        "question": "Soll Lokalität {{ id }} wirklich dauerhaft gelöscht werden?"
+        "question": "Soll Lokalität {{ name }} wirklich dauerhaft gelöscht werden?"
       },
       "detail": {
         "title": "Lokalität"

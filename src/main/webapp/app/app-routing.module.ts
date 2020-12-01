@@ -27,9 +27,7 @@ const LAYOUT_ROUTES = [navbarRoute, ...errorRoute];
         },
         ...LAYOUT_ROUTES,
       ],
-      {
-        preloadingStrategy: PreloadAllModules,
-      }
+      { preloadingStrategy: PreloadAllModules }
     ),
   ],
   exports: [RouterModule],
