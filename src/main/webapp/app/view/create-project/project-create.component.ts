@@ -1,20 +1,29 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+
+import { JhiEventManager } from 'ng-jhipster';
+
 import { Subject } from 'rxjs';
+import { switchMap, takeUntil } from 'rxjs/operators';
+
 import { ProjectService } from 'app/entities/project/project.service';
-import { User } from 'app/core/user/user.model';
 import { AccountService } from 'app/core/auth/account.service';
 import { ICreateProject } from 'app/shared/model/dto/create-project.model';
 
 import { AUTHORITY_ADMIN } from 'app/shared/constants/authority.constants';
 
-import { switchMap, takeUntil } from 'rxjs/operators';
 import * as moment from 'moment';
+import { DEFAULT_DEBOUNCE } from 'app/app.constants';
+import { UserService } from 'app/core/user/user.service';
+import { User } from 'app/core/user/user.model';
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-project-create',
   templateUrl: './project-create.component.html',
+  styleUrls: ['./project-create.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class ProjectCreateComponent implements OnInit, OnDestroy {
   cancelEnabled = true;
@@ -31,17 +40,24 @@ export class ProjectCreateComponent implements OnInit, OnDestroy {
   startMoment = moment();
   endMoment = moment();
 
+  filteredUsers: User[] = [];
+  defaultDebounce = DEFAULT_DEBOUNCE;
+
   private destroy$ = new Subject();
 
   constructor(
     private projectService: ProjectService,
     private accountService: AccountService,
+    private userService: UserService,
     private activatedRoute: ActivatedRoute,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private eventManager: JhiEventManager
   ) {
-    if (this.accountService.hasAnyAuthority(AUTHORITY_ADMIN)) {
-      this.editForm.get(['selectedUser'])!.setValidators(Validators.required);
-    }
+    this.accountService.identity().subscribe(() => {
+      if (this.accountService.hasAnyAuthority(AUTHORITY_ADMIN)) {
+        this.editForm.get(['selectedUser'])!.setValidators(Validators.required);
+      }
+    });
   }
 
   ngOnInit(): void {
@@ -53,6 +69,25 @@ export class ProjectCreateComponent implements OnInit, OnDestroy {
 
   public ngOnDestroy(): void {
     this.destroy$.next();
+  }
+
+  filterUsersByLoginOrEmail(value: string): void {
+    if (!value) {
+      this.initalLoad();
+      return;
+    }
+
+    this.userService.findByEmailOrLogin(value).subscribe((users: User[]) => (this.filteredUsers = users));
+  }
+
+  initalLoad(): void {
+    this.userService
+      .query({
+        page: 0,
+        size: 5,
+        sort: ['login,asc', 'email,asc'],
+      })
+      .subscribe((res: HttpResponse<User[]>) => (this.filteredUsers = res.body || []));
   }
 
   previousState(): void {
@@ -70,6 +105,7 @@ export class ProjectCreateComponent implements OnInit, OnDestroy {
       )
       .subscribe(() => {
         this.isSaving = false;
+        this.eventManager.broadcast('myProjectsListModification');
         this.previousState();
       });
   }
@@ -87,9 +123,5 @@ export class ProjectCreateComponent implements OnInit, OnDestroy {
     }
 
     return newProject;
-  }
-
-  userSelected(selectedUser: User): void {
-    this.editForm.get(['selectedUser'])!.setValue(selectedUser);
   }
 }

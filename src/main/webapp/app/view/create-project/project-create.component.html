@@ -1,4 +1,4 @@
-<div class="row justify-content-center">
+<div class="row justify-content-center" id="project-create-component">
     <div class="col-8">
         <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
             <h2 id="jhi-project-heading" jhiTranslate="eventPlannerApp.project.home.createLabel">
@@ -11,7 +11,7 @@
                     <label class="form-control-label" jhiTranslate="eventPlannerApp.project.name"
                            for="field_name">Name</label>
                     <input type="text" class="form-control" name="name" id="field_name"
-                           formControlName="name"/>
+                           formControlName="name" autocomplete="off"/>
                     <div
                         *ngIf="editForm.get('name')!.invalid && (editForm.get('name')!.dirty || editForm.get('name')!.touched)">
                         <small class="form-text text-danger"
@@ -39,8 +39,7 @@
                            jhiTranslate="eventPlannerApp.project.description"
                            for="field_description">Description</label>
                     <input type="text" class="form-control" name="description"
-                           id="field_description"
-                           formControlName="description"/>
+                           id="field_description" formControlName="description" autocomplete="off"/>
                     <div
                         *ngIf="editForm.get('description')!.invalid && (editForm.get('description')!.dirty || editForm.get('description')!.touched)">
                         <small class="form-text text-danger"
@@ -112,15 +111,24 @@
                     </div>
                 </div>
 
-                <app-user-by-email-or-login (userSelected)="userSelected($event)"
-                                            *jhiHasAnyAuthority="'ROLE_ADMIN'"></app-user-by-email-or-login>
-                <div
-                    *ngIf="editForm.get('selectedUser')!.invalid && (editForm.get('selectedUser')!.dirty || editForm.get('selectedUser')!.touched)">
-                    <small class="form-text text-danger"
-                           *ngIf="editForm.get('selectedUser')?.errors?.required"
-                           jhiTranslate="entity.validation.required">
-                        This field is required.
-                    </small>
+                <div class="form-group">
+                    <label class="form-control-label"
+                           jhiTranslate="eventPlannerApp.project.emailOrLogin"
+                           for="field_selectedUser">Email or login</label>
+                    <ngx-autocomplete inputName="field_selectedUser" inputId="field_selectedUser"
+                                      formControlName="selectedUser" [options]="filteredUsers"
+                                      propertyAccessor="email"
+                                      [placeholder]="'global.form.search' | translate"
+                                      [debounceTime]="defaultDebounce"
+                                      (autocompleteChanges)="filterUsersByLoginOrEmail($event)"></ngx-autocomplete>
+                    <div
+                        *ngIf="editForm.get('selectedUser')!.invalid && (editForm.get('selectedUser')!.dirty || editForm.get('selectedUser')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('selectedUser')?.errors?.required"
+                               jhiTranslate="entity.validation.required">
+                            This field is required.
+                        </small>
+                    </div>
                 </div>
             </div>
 

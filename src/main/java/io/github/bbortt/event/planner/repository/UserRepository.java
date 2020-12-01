@@ -33,5 +33,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Page<User> findAllByLoginNot(Pageable pageable, String login);
 
-    List<User> findDistinctTop10ByEmailContainingIgnoreCaseOrLoginContainingIgnoreCase(String email, String login);
+    List<User> findTop5ByEmailContainingIgnoreCaseOrLoginContainingIgnoreCase(String email, String login);
 }
