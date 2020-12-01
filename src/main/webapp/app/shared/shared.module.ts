@@ -7,11 +7,13 @@ import { LoginModalComponent } from './login/login.component';
 import { HasAnyAuthorityDirective } from './auth/has-any-authority.directive';
 import { ComponentsModule } from 'app/shared/components/components.module';
 import { HasAnyRoleDirective } from 'app/shared/auth/has-any-role.directive';
+import { I18nRolePipe } from 'app/shared/util/i18n-role.pipe';
 
 @NgModule({
   imports: [ComponentsModule, EventPlannerSharedLibsModule],
   declarations: [
     FindLanguageFromKeyPipe,
+    I18nRolePipe,
     AlertComponent,
     AlertErrorComponent,
     LoginModalComponent,
@@ -22,6 +24,7 @@ import { HasAnyRoleDirective } from 'app/shared/auth/has-any-role.directive';
   exports: [
     EventPlannerSharedLibsModule,
     FindLanguageFromKeyPipe,
+    I18nRolePipe,
     AlertComponent,
     AlertErrorComponent,
     LoginModalComponent,

@@ -316,6 +316,7 @@ public class UserService {
 
     /**
      * Find possible User by email or login containing.
+     *
      * @param emailOrLogin partial email or login.
      * @return list of possible Users.
      */

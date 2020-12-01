@@ -5,10 +5,10 @@ import { Responsibility } from 'app/shared/model/responsibility.model';
 
 export interface Invitation {
   id?: number;
-  email?: string;
-  accepted?: boolean;
-  project?: Project;
+  email: string;
+  accepted: boolean;
+  project: Project;
   user?: User;
-  role?: Role;
+  role: Role;
   responsibility?: Responsibility;
 }

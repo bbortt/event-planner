@@ -12,6 +12,7 @@ import { ProjectResponsibilityDeleteDialogComponent } from 'app/view/project/adm
 import { ProjectUsersComponent } from 'app/view/project/admin/users/project-users.component';
 
 import { PROJECT_ADMIN_ROUTES } from './project-admin.routes';
+import { ProjectUserInviteComponent } from 'app/view/project/admin/users/project-user-invite.component';
 
 @NgModule({
   imports: [EventPlannerSharedModule, RouterModule.forChild(PROJECT_ADMIN_ROUTES)],
@@ -23,6 +24,7 @@ import { PROJECT_ADMIN_ROUTES } from './project-admin.routes';
     ProjectResponsibilityUpdateComponent,
     ProjectResponsibilityDeleteDialogComponent,
     ProjectUsersComponent,
+    ProjectUserInviteComponent,
   ],
   entryComponents: [ProjectAdminComponent],
 })
