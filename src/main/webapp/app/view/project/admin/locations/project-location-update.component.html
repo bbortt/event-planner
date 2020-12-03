@@ -44,24 +44,26 @@
                     </div>
                 </div>
 
-                <label for="field-responsibility"> Responsibility </label>
-                <ngx-autocomplete
-                    name="responsibility"
-                    id="field-responsibility"
-                    formControlName="responsibility"
-                    [options]="filteredResponsibilities"
-                    propertyAccessor="name"
-                    [placeholder]="'global.form.search' | translate"
-                    (autocompleteChanges)="filter($event)"
-                    autocomplete="off"
-                ></ngx-autocomplete>
+                <div class="form-group">
+                    <label for="field-responsibility"> Responsibility </label>
+                    <ngx-autocomplete
+                        name="responsibility"
+                        id="field-responsibility"
+                        formControlName="responsibility"
+                        [options]="filteredResponsibilities"
+                        propertyAccessor="name"
+                        [placeholder]="'global.form.search' | translate"
+                        (autocompleteChanges)="filter($event)"
+                        autocomplete="off"
+                    ></ngx-autocomplete>
 
-                <div *ngIf="editForm.get('responsibility')!.invalid &&
+                    <div *ngIf="editForm.get('responsibility')!.invalid &&
                         (editForm.get('responsibility')!.dirty
                                 || editForm.get('responsibility')!.touched)">
-                    <small *ngIf="editForm.get('responsibility')?.errors?.required">
-                        This field is required.
-                    </small>
+                        <small *ngIf="editForm.get('responsibility')?.errors?.required">
+                            This field is required.
+                        </small>
+                    </div>
                 </div>
 
                 <div>

@@ -117,6 +117,7 @@ Custom alerts for notification
 .alerts {
   .alert {
     text-overflow: ellipsis;
+
     pre {
       background: none;
       border: none;
@@ -125,22 +126,28 @@ Custom alerts for notification
       padding: 0;
       margin: 0;
     }
+
     .popover pre {
       font-size: 10px;
     }
   }
+
   .jhi-toast {
     position: fixed;
     width: 100%;
+
     &.left {
       left: 5px;
     }
+
     &.right {
       right: 5px;
     }
+
     &.top {
       top: 55px;
     }
+
     &.bottom {
       bottom: 55px;
     }
@@ -156,6 +163,18 @@ Custom alerts for notification
 /* ==========================================================================
 entity detail page css
 ========================================================================== */
+.table-responsive {
+  .btn-group {
+    .btn {
+      margin-right: 1vh;
+    }
+
+    .btn:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
 .row.jh-entity-details > {
   dd {
     margin-bottom: 15px;
@@ -167,6 +186,7 @@ entity detail page css
     dt {
       margin-bottom: 15px;
     }
+
     dd {
       border-bottom: 1px solid #eee;
       padding-left: 180px;
@@ -206,6 +226,11 @@ custom modal styling
 .modal-content {
   padding-top: 3vh;
   padding-bottom: 3vh;
+}
+
+.modal-header,
+.modal-footer {
+  border: unset !important;
 }
 
 /* ==========================================================================
