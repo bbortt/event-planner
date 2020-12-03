@@ -34,10 +34,10 @@ export class UserService {
   }
 
   authorities(): Observable<string[]> {
-    return this.http.get<string[]>(`${this.resourceUrl}/users/authorities`);
+    return this.http.get<string[]>(`${this.resourceUrl}/authorities`);
   }
 
   findByEmailOrLogin(emailOrLogin: string): Observable<User[]> {
-    return this.http.post<User[]>(`${this.resourceUrl}/users/findByEmailOrLogin`, { emailOrLogin });
+    return this.http.post<User[]>(`${this.resourceUrl}/findByEmailOrLogin`, { emailOrLogin });
   }
 }
