@@ -1,26 +1,31 @@
-.row {
-  margin-bottom: 2vh;
+#page-heading {
+  display: flow-root;
 
-  .col-md > div {
+  #btn-show-all-projects {
+    margin-right: 1vw;
+  }
+}
+
+.project-card > div {
+  height: 100%;
+  padding-bottom: 2vh;
+
+  a {
+    color: #212529;
+    font-weight: normal;
+    text-decoration: none;
+  }
+
+  .project-card-content {
     height: 100%;
+    padding: 1vw;
 
-    a {
-      text-decoration: none;
-    }
+    border: 1px solid black;
+    border-radius: 5px;
 
-    .project-card {
-      height: 100%;
-      padding: 1vw;
-
-      border: 1px solid black;
-      border-radius: 5px;
-
-      .project-card-description {
-        width: 100%;
-        padding: 0.5vh;
-        border-radius: 5px;
-        background-color: lightgrey;
-      }
+    .project-card-navigation > button {
+      margin-top: 1vh;
+      margin-right: 1vw;
     }
   }
 }
