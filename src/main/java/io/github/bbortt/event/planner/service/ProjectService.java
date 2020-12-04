@@ -12,6 +12,7 @@ import io.github.bbortt.event.planner.security.SecurityUtils;
 import io.github.bbortt.event.planner.service.dto.CreateProjectDTO;
 import io.github.bbortt.event.planner.service.dto.UserDTO;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Optional;
 import javax.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
@@ -21,6 +22,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.zalando.problem.Status;
+import org.zalando.problem.violations.ConstraintViolationProblem;
+import org.zalando.problem.violations.Violation;
 
 /**
  * Service Implementation for managing {@link Project}.
@@ -117,6 +121,14 @@ public class ProjectService {
             .description(createProjectDTO.getDescription())
             .startTime(createProjectDTO.getStartTime())
             .endTime(createProjectDTO.getEndTime());
+
+        if (project.getStartTime().isAfter(project.getEndTime())) {
+            throw new ConstraintViolationProblem(
+                Status.BAD_REQUEST,
+                Collections.singletonList(new Violation("endTime", "endTime may not occur before startTime!"))
+            );
+        }
+
         project = projectRepository.save(project);
 
         User userFromDto = userFromDto(createProjectDTO.getUser());
