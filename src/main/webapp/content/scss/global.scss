@@ -215,9 +215,13 @@ ui bootstrap tweaks
 /* ==========================================================================
 custom button style
 ========================================================================== */
-.btn-negative {
-  border: 3px solid black;
+.btn.btn-negative {
+  border: 2px solid #000;
   padding: 0.5rem 1rem;
+}
+
+.btn.btn-negative:hover {
+  background-color: #c9c9c9;
 }
 
 /* ==========================================================================
