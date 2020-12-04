@@ -1,8 +1,20 @@
 <div *ngIf="project">
-    <h2 id="page-heading">
-        <span jhiTranslate="eventPlannerApp.project.admin.title">Project</span>
-        <i>{{project.name}}</i>
-    </h2>
+    <div class="float-left">
+        <h2 id="page-heading">
+            <span jhiTranslate="eventPlannerApp.project.admin.title">Project</span>
+            <i>{{project.name}}</i>
+        </h2>
+    </div>
+
+    <div class="float-right">
+        <button type="submit"
+                [routerLink]="['', {outlets: {modal: ['projects', project.id, 'edit']}}]"
+                class="btn btn-primary btn-sm">
+            <fa-icon icon="pencil-alt"></fa-icon>
+            <span class="d-none d-md-inline"
+                  jhiTranslate="entity.action.edit">Edit</span>
+        </button>
+    </div>
 
     <div *ngIf="project.description" class="description">{{project.description}}</div>
     <br/>

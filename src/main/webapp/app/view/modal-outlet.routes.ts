@@ -8,11 +8,20 @@ import { ProjectResponsibilityModalComponent } from 'app/view/project/admin/resp
 import { ProjectUserModalComponent } from 'app/view/project/admin/users/project-user-modal.component';
 
 import { ProjectLocationModalComponent } from 'app/view/project/admin/locations/project-location-modal.component';
+import { ProjectAdminUpdateComponent } from 'app/view/project/admin/project-admin-update.component';
 
 export const MODAL_OUTLET_ROUTES: Routes = [
   {
     path: 'projects/new',
     component: CreateProjectModalComponent,
+    outlet: 'modal',
+  },
+  {
+    path: 'projects/:projectId/edit',
+    component: ProjectAdminUpdateComponent,
+    resolve: {
+      project: ProjectResolve,
+    },
     outlet: 'modal',
   },
   {
