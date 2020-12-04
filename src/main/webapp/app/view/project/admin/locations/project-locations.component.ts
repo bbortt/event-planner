@@ -87,7 +87,7 @@ export class ProjectLocationsComponent implements OnInit, OnDestroy {
   }
 
   delete(location: Location): void {
-    const modalRef = this.modalService.open(ProjectLocationDeleteDialogComponent, { size: 'lg', backdrop: 'static' });
+    const modalRef = this.modalService.open(ProjectLocationDeleteDialogComponent, { backdrop: 'static' });
     modalRef.componentInstance.location = location;
   }
 
