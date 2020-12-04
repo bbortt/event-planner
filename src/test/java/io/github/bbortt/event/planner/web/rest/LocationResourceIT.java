@@ -56,9 +56,6 @@ public class LocationResourceIT extends AbstractApplicationContextAwareIT {
     @Autowired
     private RoleRepository roleRepository;
 
-    //    @Autowired
-    //    private ProjectRepository projectRepository;
-
     @Autowired
     private EntityManager em;
 
