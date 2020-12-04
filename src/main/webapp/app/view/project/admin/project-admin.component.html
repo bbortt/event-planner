@@ -1,15 +1,28 @@
 <div *ngIf="project">
     <h2 id="page-heading">
-        <span jhiTranslate="eventPlannerApp.project.admin.title">Project</span>
-        <i>{{project.name}}</i>
+        <span>{{project.name}}</span>
+
+        <button id="jh-screenplay-{{project.id}}"
+                [routerLink]="['/project', project.id, 'screenplay']"
+                class="btn btn-negative float-right">
+            <fa-icon [icon]="faBook"></fa-icon>
+            <span jhiTranslate="eventPlannerApp.project.home.screenplayLabel">
+                Screenplay
+            </span>
+        </button>
     </h2>
 
+    <div class="btn-group ml-auto">
+
+    </div>
+
     <div *ngIf="project.description" class="description">{{project.description}}</div>
-    <br/>
+
+    <br />
 
     <app-project-navbar></app-project-navbar>
 
-    <br/>
+    <br />
 
     <router-outlet></router-outlet>
 </div>

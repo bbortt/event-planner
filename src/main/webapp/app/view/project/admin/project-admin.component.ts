@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { faBook } from '@fortawesome/free-solid-svg-icons';
+
 import { Project } from 'app/shared/model/project.model';
 
 @Component({
@@ -9,6 +11,8 @@ import { Project } from 'app/shared/model/project.model';
   styleUrls: ['project-admin.component.scss'],
 })
 export class ProjectAdminComponent implements OnInit {
+  faBook = faBook;
+
   project?: Project;
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute) {}
