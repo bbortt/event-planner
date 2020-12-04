@@ -238,6 +238,11 @@ custom modal styling
 ========================================================================== */
 @import '~bootstrap/scss/bootstrap';
 
+ngx-autocomplete.ng-invalid {
+  // Do not show the red line, because it is in the wrong place due to the bug
+  border-left: unset;
+}
+
 ngx-autocomplete {
   .ngx-autocomplete-input {
     @extend .form-control;
