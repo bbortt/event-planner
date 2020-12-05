@@ -2,7 +2,10 @@
   "eventPlannerApp": {
     "project": {
       "screenplay": {
-        "tabTitle": "Event Planner | Drehbuch"
+        "tabTitle": "Event Planner | Drehbuch",
+        "sections": {
+          "notFound": "Für diese Location wurden keine Sektionen gefunden"
+        }
       }
     }
   }

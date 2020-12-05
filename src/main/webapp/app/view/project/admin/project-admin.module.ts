@@ -10,13 +10,13 @@ import { ProjectLocationsComponent } from 'app/view/project/admin/locations/proj
 import { ProjectLocationUpdateComponent } from 'app/view/project/admin/locations/project-location-update.component';
 import { ProjectLocationModalComponent } from 'app/view/project/admin/locations/project-location-modal.component';
 import { ProjectLocationDeleteDialogComponent } from 'app/view/project/admin/locations/project-location-delete-dialog.component';
+import { ProjectUsersComponent } from 'app/view/project/admin/users/project-users.component';
+import { ProjectUserInviteComponent } from 'app/view/project/admin/users/project-user-invite.component';
 import { ProjectResponsibilitiesComponent } from 'app/view/project/admin/responsibilities/project-responsibilities.component';
 import { ProjectResponsibilityUpdateComponent } from 'app/view/project/admin/responsibilities/project-responsibility-update.component';
 import { ProjectResponsibilityDeleteDialogComponent } from 'app/view/project/admin/responsibilities/project-responsibility-delete-dialog.component';
-import { ProjectUsersComponent } from 'app/view/project/admin/users/project-users.component';
 
 import { PROJECT_ADMIN_ROUTES } from './project-admin.routes';
-import { ProjectUserInviteComponent } from 'app/view/project/admin/users/project-user-invite.component';
 
 @NgModule({
   imports: [EventPlannerSharedModule, NgxAutocompleteModule, RouterModule.forChild(PROJECT_ADMIN_ROUTES)],
@@ -27,11 +27,11 @@ import { ProjectUserInviteComponent } from 'app/view/project/admin/users/project
     ProjectLocationUpdateComponent,
     ProjectLocationModalComponent,
     ProjectLocationDeleteDialogComponent,
+    ProjectUsersComponent,
+    ProjectUserInviteComponent,
     ProjectResponsibilitiesComponent,
     ProjectResponsibilityUpdateComponent,
     ProjectResponsibilityDeleteDialogComponent,
-    ProjectUsersComponent,
-    ProjectUserInviteComponent,
   ],
   entryComponents: [ProjectAdminComponent],
 })
