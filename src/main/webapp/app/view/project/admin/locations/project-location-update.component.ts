@@ -33,6 +33,11 @@ export class ProjectLocationUpdateComponent implements OnInit {
   ngOnInit(): void {}
 
   filter(name: string): void {
+    if (!name) {
+      this.filteredResponsibilities = this.responsibilities;
+      return;
+    }
+
     const filterValue = name.toLowerCase();
 
     if (!this.responsibilities) {
