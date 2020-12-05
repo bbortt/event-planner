@@ -13,12 +13,6 @@
             <div>
                 <jhi-alert-error></jhi-alert-error>
 
-                <div class="form-group" [hidden]="!editForm.get('id')!.value">
-                    <label for="id" jhiTranslate="global.field.id">ID</label>
-                    <input type="text" class="form-control" id="id" name="id" formControlName="id"
-                           readonly/>
-                </div>
-
                 <div class="form-group">
                     <label class="form-control-label"
                            jhiTranslate="eventPlannerApp.location.name"
@@ -44,24 +38,30 @@
                     </div>
                 </div>
 
-                <label for="field-responsibility"> Responsibility </label>
-                <ngx-autocomplete
-                    name="responsibility"
-                    id="field-responsibility"
-                    formControlName="responsibility"
-                    [options]="filteredResponsibilities"
-                    propertyAccessor="name"
-                    [placeholder]="'global.form.search' | translate"
-                    (autocompleteChanges)="filter($event)"
-                    autocomplete="off"
-                ></ngx-autocomplete>
+                <div class="form-group">
+                    <label class="form-control-label"
+                           jhiTranslate="eventPlannerApp.location.responsibility"
+                           for="field-responsibility"> Responsibility </label>
+                    <ngx-autocomplete
+                        name="responsibility"
+                        id="field-responsibility"
+                        formControlName="responsibility"
+                        [options]="filteredResponsibilities"
+                        propertyAccessor="name"
+                        [placeholder]="'global.form.search' | translate"
+                        (autocompleteChanges)="filter($event)"
+                        autocomplete="off"
+                    ></ngx-autocomplete>
 
-                <div *ngIf="editForm.get('responsibility')!.invalid &&
+                    <div *ngIf="editForm.get('responsibility')!.invalid &&
                         (editForm.get('responsibility')!.dirty
                                 || editForm.get('responsibility')!.touched)">
-                    <small *ngIf="editForm.get('responsibility')?.errors?.required">
-                        This field is required.
-                    </small>
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('responsibility')?.errors?.required"
+                               jhiTranslate="entity.validation.required">
+                            This field is required.
+                        </small>
+                    </div>
                 </div>
 
                 <div>
