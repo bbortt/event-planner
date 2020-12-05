@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
@@ -12,7 +12,7 @@ import * as moment from 'moment';
   templateUrl: './project-admin-update.component.html',
   styleUrls: ['./project-admin-update.component.scss'],
 })
-export class ProjectAdminUpdateComponent {
+export class ProjectAdminUpdateComponent implements OnInit {
   isSaving = false;
 
   editForm = this.fb.group({
@@ -22,7 +22,6 @@ export class ProjectAdminUpdateComponent {
     startTime: [null, [Validators.required]],
     endTime: [null, [Validators.required]],
     selectedUser: [null, []],
-    project: [], // Braucht es evtl nicht
   });
 
   startMoment = moment();
@@ -30,14 +29,20 @@ export class ProjectAdminUpdateComponent {
 
   constructor(protected projectService: ProjectService, private fb: FormBuilder) {}
 
+  ngOnInit(): void {
+    this.editForm.get('startTime')!.valueChanges.subscribe((startTime: moment.Moment) => {
+      this.endMoment = startTime;
+      this.editForm.get('endTime')!.setValue(startTime);
+    });
+  }
+
   public updateForm(project: Project): void {
     this.editForm.patchValue({
       id: project.id,
       name: project.name,
+      description: project.description,
       startTime: project.startTime,
       endTime: project.endTime,
-      description: project.description,
-      project,
     });
   }
 
@@ -53,6 +58,7 @@ export class ProjectAdminUpdateComponent {
 
   private createFromForm(): Project {
     return {
+      id: this.editForm.get(['id'])!.value,
       name: this.editForm.get(['name'])!.value,
       startTime: this.editForm.get(['startTime'])!.value,
       endTime: this.editForm.get(['endTime'])!.value,
@@ -74,9 +80,5 @@ export class ProjectAdminUpdateComponent {
 
   protected onSaveError(): void {
     this.isSaving = false;
-  }
-
-  trackById(index: number, item: Project): any {
-    return item.id;
   }
 }

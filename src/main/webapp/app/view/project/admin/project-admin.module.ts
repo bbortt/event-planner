@@ -5,7 +5,7 @@ import { NgxAutocompleteModule } from '@bbortt/ngx-autocomplete';
 import { EventPlannerSharedModule } from 'app/shared/shared.module';
 import { ProjectAdminComponent } from 'app/view/project/admin/project-admin.component';
 import { ProjectAdminUpdateComponent } from 'app/view/project/admin/project-admin-update.component';
-import { ProjectAdminModalComponent } from 'app/view/project/admin/project-admin-modal.component';
+import { ProjectAdminUpdateModalComponent } from 'app/view/project/admin/project-admin-update-modal.component';
 import { ProjectNavbarComponent } from 'app/view/project/admin/navbar/project-navbar.component';
 
 import { ProjectLocationsComponent } from 'app/view/project/admin/locations/project-locations.component';
@@ -25,7 +25,7 @@ import { MatDatetimepickerModule } from '@mat-datetimepicker/core';
   imports: [EventPlannerSharedModule, NgxAutocompleteModule, RouterModule.forChild(PROJECT_ADMIN_ROUTES), MatDatetimepickerModule],
   declarations: [
     ProjectAdminComponent,
-    ProjectAdminModalComponent,
+    ProjectAdminUpdateModalComponent,
     ProjectAdminUpdateComponent,
     ProjectNavbarComponent,
     ProjectLocationsComponent,

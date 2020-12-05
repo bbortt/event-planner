@@ -9,12 +9,14 @@
     <div class="float-right">
         <button type="submit"
                 [routerLink]="['', {outlets: {modal: ['projects', project.id, 'edit']}}]"
-                class="btn btn-primary btn-sm">
+                class="btn btn-primary btn-md">
             <fa-icon icon="pencil-alt"></fa-icon>
             <span class="d-none d-md-inline"
                   jhiTranslate="entity.action.edit">Edit</span>
         </button>
     </div>
+
+    <div class="time">{{ project.startTime | date:'longDate' }} - {{ project.endTime | date:'longDate' }}</div>
 
     <div *ngIf="project.description" class="description">{{project.description}}</div>
     <br/>

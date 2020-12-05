@@ -8,7 +8,7 @@ import { ProjectResponsibilityModalComponent } from 'app/view/project/admin/resp
 import { ProjectUserModalComponent } from 'app/view/project/admin/users/project-user-modal.component';
 
 import { ProjectLocationModalComponent } from 'app/view/project/admin/locations/project-location-modal.component';
-import { ProjectAdminUpdateComponent } from 'app/view/project/admin/project-admin-update.component';
+import { ProjectAdminUpdateModalComponent } from 'app/view/project/admin/project-admin-update-modal.component';
 
 export const MODAL_OUTLET_ROUTES: Routes = [
   {
@@ -18,7 +18,7 @@ export const MODAL_OUTLET_ROUTES: Routes = [
   },
   {
     path: 'projects/:projectId/edit',
-    component: ProjectAdminUpdateComponent,
+    component: ProjectAdminUpdateModalComponent,
     resolve: {
       project: ProjectResolve,
     },

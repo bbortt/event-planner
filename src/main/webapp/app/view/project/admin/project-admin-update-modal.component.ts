@@ -8,8 +8,9 @@ import { ProjectAdminUpdateComponent } from 'app/view/project/admin/project-admi
 
 @Component({
   template: '',
+  styleUrls: ['./project-admin-update-modal.component.scss'],
 })
-export class ProjectAdminModalComponent implements AfterViewInit, OnDestroy {
+export class ProjectAdminUpdateModalComponent implements AfterViewInit, OnDestroy {
   private modalRef?: NgbModalRef;
 
   constructor(private modalService: NgbModal, private eventManager: JhiEventManager, private activatedRoute: ActivatedRoute) {}
@@ -31,7 +32,6 @@ export class ProjectAdminModalComponent implements AfterViewInit, OnDestroy {
       this.modalRef.close();
     }
 
-    // Wie lautet der entsprechender Event?
-    // this.eventManager.broadcast('responsibilityListModification');
+    this.eventManager.broadcast('projectDataModification');
   }
 }
