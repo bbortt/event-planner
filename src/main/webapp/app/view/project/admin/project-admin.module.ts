@@ -3,10 +3,11 @@ import { RouterModule } from '@angular/router';
 import { NgxAutocompleteModule } from '@bbortt/ngx-autocomplete';
 
 import { EventPlannerSharedModule } from 'app/shared/shared.module';
+
 import { ProjectAdminComponent } from 'app/view/project/admin/project-admin.component';
 import { ProjectAdminUpdateComponent } from 'app/view/project/admin/project-admin-update.component';
 import { ProjectAdminUpdateModalComponent } from 'app/view/project/admin/project-admin-update-modal.component';
-import { ProjectNavbarComponent } from 'app/view/project/admin/navbar/project-navbar.component';
+import { ProjectAdminNavbarComponent } from 'app/view/project/admin/navbar/project-admin-navbar.component';
 
 import { ProjectLocationsComponent } from 'app/view/project/admin/locations/project-locations.component';
 import { ProjectLocationUpdateComponent } from 'app/view/project/admin/locations/project-location-update.component';
@@ -15,21 +16,23 @@ import { ProjectLocationDeleteDialogComponent } from 'app/view/project/admin/loc
 import { ProjectSectionUpdateComponent } from 'app/view/project/admin/locations/sections/project-section-update.component';
 import { ProjectSectionDeleteDialogComponent } from 'app/view/project/admin/locations/sections/project-section-delete-dialog.component';
 import { ProjectSectionModalComponent } from 'app/view/project/admin/locations/sections/project-section-modal.component';
+
+import { ProjectUsersComponent } from 'app/view/project/admin/users/project-users.component';
+import { ProjectUserInviteComponent } from 'app/view/project/admin/users/project-user-invite.component';
+
 import { ProjectResponsibilitiesComponent } from 'app/view/project/admin/responsibilities/project-responsibilities.component';
 import { ProjectResponsibilityUpdateComponent } from 'app/view/project/admin/responsibilities/project-responsibility-update.component';
 import { ProjectResponsibilityDeleteDialogComponent } from 'app/view/project/admin/responsibilities/project-responsibility-delete-dialog.component';
-import { ProjectUsersComponent } from 'app/view/project/admin/users/project-users.component';
 
 import { PROJECT_ADMIN_ROUTES } from './project-admin.routes';
-import { ProjectUserInviteComponent } from 'app/view/project/admin/users/project-user-invite.component';
 
 @NgModule({
   imports: [EventPlannerSharedModule, NgxAutocompleteModule, RouterModule.forChild(PROJECT_ADMIN_ROUTES)],
   declarations: [
     ProjectAdminComponent,
-    ProjectAdminUpdateModalComponent,
     ProjectAdminUpdateComponent,
-    ProjectNavbarComponent,
+    ProjectAdminUpdateModalComponent,
+    ProjectAdminNavbarComponent,
     ProjectLocationsComponent,
     ProjectLocationUpdateComponent,
     ProjectLocationModalComponent,
@@ -37,11 +40,11 @@ import { ProjectUserInviteComponent } from 'app/view/project/admin/users/project
     ProjectSectionUpdateComponent,
     ProjectSectionModalComponent,
     ProjectSectionDeleteDialogComponent,
+    ProjectUsersComponent,
+    ProjectUserInviteComponent,
     ProjectResponsibilitiesComponent,
     ProjectResponsibilityUpdateComponent,
     ProjectResponsibilityDeleteDialogComponent,
-    ProjectUsersComponent,
-    ProjectUserInviteComponent,
   ],
   entryComponents: [ProjectAdminComponent],
 })
