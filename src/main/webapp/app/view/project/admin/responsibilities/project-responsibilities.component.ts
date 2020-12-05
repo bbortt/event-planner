@@ -96,7 +96,7 @@ export class ProjectResponsibilitiesComponent implements OnInit, OnDestroy {
   }
 
   delete(responsibility: Responsibility): void {
-    const modalRef = this.modalService.open(ProjectResponsibilityDeleteDialogComponent, { size: 'lg', backdrop: 'static' });
+    const modalRef = this.modalService.open(ProjectResponsibilityDeleteDialogComponent, { backdrop: 'static' });
     modalRef.componentInstance.responsibility = responsibility;
   }
 
