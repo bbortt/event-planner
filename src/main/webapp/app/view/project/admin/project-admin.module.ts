@@ -4,7 +4,7 @@ import { NgxAutocompleteModule } from '@bbortt/ngx-autocomplete';
 
 import { EventPlannerSharedModule } from 'app/shared/shared.module';
 import { ProjectAdminComponent } from 'app/view/project/admin/project-admin.component';
-import { ProjectNavbarComponent } from 'app/view/project/admin/navbar/project-navbar.component';
+import { ProjectAdminNavbarComponent } from 'app/view/project/admin/navbar/project-admin-navbar.component';
 
 import { ProjectLocationsComponent } from 'app/view/project/admin/locations/project-locations.component';
 import { ProjectLocationUpdateComponent } from 'app/view/project/admin/locations/project-location-update.component';
@@ -22,7 +22,7 @@ import { PROJECT_ADMIN_ROUTES } from './project-admin.routes';
   imports: [EventPlannerSharedModule, NgxAutocompleteModule, RouterModule.forChild(PROJECT_ADMIN_ROUTES)],
   declarations: [
     ProjectAdminComponent,
-    ProjectNavbarComponent,
+    ProjectAdminNavbarComponent,
     ProjectLocationsComponent,
     ProjectLocationUpdateComponent,
     ProjectLocationModalComponent,
