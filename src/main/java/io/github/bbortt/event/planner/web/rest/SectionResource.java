@@ -17,9 +17,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 /**
@@ -28,6 +34,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RestController
 @RequestMapping("/api")
 public class SectionResource {
+
     private final Logger log = LoggerFactory.getLogger(SectionResource.class);
 
     private static final String ENTITY_NAME = "section";
@@ -65,9 +72,7 @@ public class SectionResource {
      * {@code PUT  /sections} : Updates an existing section.
      *
      * @param section the section to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated section,
-     * or with status {@code 400 (Bad Request)} if the section is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the section couldn't be updated.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated section, or with status {@code 400 (Bad Request)} if the section is not valid, or with status {@code 500 (Internal Server Error)} if the section couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/sections")

@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { SERVER_API_URL } from 'app/app.constants';
 import { createRequestOption } from 'app/shared/util/request-util';
 import { Section } from 'app/shared/model/section.model';
+import { Location } from 'app/shared/model/location.model';
 
 type EntityResponseType = HttpResponse<Section>;
 type EntityArrayResponseType = HttpResponse<Section[]>;
@@ -25,6 +26,14 @@ export class SectionService {
 
   find(id: number): Observable<EntityResponseType> {
     return this.http.get<Section>(`${this.resourceUrl}/${id}`, { observe: 'response' });
+  }
+
+  findAllByLocation(location: Location, req?: any): Observable<EntityArrayResponseType> {
+    const options = createRequestOption(req);
+    return this.http.get<Section[]>(`${this.resourceUrl}/location/${location.id!}`, {
+      params: options,
+      observe: 'response',
+    });
   }
 
   query(req?: any): Observable<EntityArrayResponseType> {

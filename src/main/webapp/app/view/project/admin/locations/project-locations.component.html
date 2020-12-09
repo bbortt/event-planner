@@ -20,52 +20,45 @@
         <span
             jhiTranslate="eventPlannerApp.location.home.notFound">No locations found</span>
     </div>
+    <div id="entities" *ngIf="project && locations && locations.length > 0">
+        <div class="row">
+            <div *ngFor="let location of locations" class="location-card col-xs-12 col-sm-4">
+                <div>
+                    <div class="location-card-content d-flex flex-column">
+                        <h2>{{location.name}}</h2>
+                        <div class="location-card-responsibility mb-auto">
+                            <i>
+                                <span jhiTranslate="eventPlannerApp.location.responsibility">Responsibility</span>: {{location.responsibility!.name}}
+                            </i>
 
-    <div class="table-responsive" id="entities"
-         *ngIf="project && locations && locations.length > 0">
-        <table class="table table-striped" aria-describedby="page-heading">
-            <thead>
-            <tr>
-                <th scope="col"><span jhiTranslate="eventPlannerApp.location.name">Name</span></th>
-                <th scope="col"><span jhiTranslate="eventPlannerApp.location.responsibility">Responsibility</span></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr *ngFor="let location of locations ;trackBy: trackId">
-                <td>{{ location.name }}</td>
-                <td>{{ location.responsibility?.name }}</td>
-                <td class="text-right">
-                    <div class="btn-group">
-                        <button type="submit"
-                                [routerLink]="['', {outlets: {modal: ['projects', project.id, 'locations', location.id, 'edit']}}]"
-                                class="btn btn-primary btn-sm">
-                            <fa-icon icon="pencil-alt"></fa-icon>
-                            <span class="d-none d-md-inline"
-                                  jhiTranslate="entity.action.edit">Edit</span>
-                        </button>
+                        </div>
+                        <div class="location-card-section">
+                            <ul>
+                                <li *ngFor="let section of location.sections">
+                                    {{section}}
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="location-card-navigation">
+                            <div class="btn-group">
+                                <button type="submit"
+                                        [routerLink]="['', {outlets: {modal: ['projects', project.id, 'locations', location.id, 'edit']}}]"
+                                        class="btn btn-primary btn-sm">
+                                    <fa-icon icon="pencil-alt"></fa-icon>
+                                    <span class="d-none d-md-inline"
+                                          jhiTranslate="entity.action.edit">Edit</span>
+                                </button>
 
-                        <button type="submit" (click)="delete(location)"
-                                class="btn btn-danger btn-sm">
-                            <fa-icon icon="times"></fa-icon>
-                            <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
-                        </button>
+                                <button type="submit" (click)="delete(location)"
+                                        class="btn btn-danger btn-sm">
+                                    <fa-icon icon="times"></fa-icon>
+                                    <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <div *ngIf="locations && locations.length > 0">
-        <div class="row justify-content-center">
-            <jhi-item-count [page]="page" [total]="totalItems"
-                            [itemsPerPage]="itemsPerPage"></jhi-item-count>
-        </div>
-
-        <div class="row justify-content-center">
-            <ngb-pagination [collectionSize]="totalItems" [(page)]="ngbPaginationPage"
-                            [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true"
-                            [boundaryLinks]="true" (pageChange)="loadPage($event)"></ngb-pagination>
+                </div>
+            </div>
         </div>
     </div>
 </div>
