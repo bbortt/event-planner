@@ -1,8 +1,10 @@
 <div>
     <h2 id="page-heading">
         <span>{{project?.name}}</span>
+        <small jhiTranslate="eventPlannerApp.project.home.screenplayLabel">Screenplay</small>
 
-        <button id="jh-settings-{{project?.id}}"
+        <button *appHasAnyRole="{ projectId: project!.id, roles: adminRoles}"
+                id="jh-settings-{{project?.id}}"
                 [routerLink]="['/project', project?.id, 'admin']"
                 class="btn btn-negative float-right">
             <fa-icon [icon]="faCog"></fa-icon>

@@ -1,6 +1,7 @@
 <div *ngIf="project">
     <h2 id="page-heading">
         <span>{{project.name}}</span>
+        <span jhiTranslate="eventPlannerApp.project.home.settingsLabel">Settings</span>
 
         <button id="jh-screenplay-{{project.id}}"
                 [routerLink]="['/project', project.id, 'screenplay']"

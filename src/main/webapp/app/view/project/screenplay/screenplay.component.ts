@@ -1,13 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { HttpResponse } from '@angular/common/http';
 
 import { faCog } from '@fortawesome/free-solid-svg-icons';
 
+import { Location } from 'app/shared/model/location.model';
 import { Project } from 'app/shared/model/project.model';
 
 import { LocationService } from 'app/entities/location/location.service';
-import { Location } from 'app/shared/model/location.model';
-import { HttpResponse } from '@angular/common/http';
+
+import { ADMIN, SECRETARY } from 'app/shared/constants/role.constants';
 
 @Component({
   selector: 'app-screenplay',
@@ -19,6 +21,8 @@ export class ScreenplayComponent implements OnInit {
 
   project?: Project;
   locations?: Location[];
+
+  adminRoles = [ADMIN.name, SECRETARY.name];
 
   constructor(private locationService: LocationService, private activatedRoute: ActivatedRoute) {}
 
