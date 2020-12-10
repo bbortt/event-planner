@@ -80,7 +80,7 @@ export class ProjectCreateComponent implements OnInit, OnDestroy {
     this.userService.findByEmailOrLogin(value).subscribe((users: User[]) => (this.filteredUsers = users));
   }
 
-  initalLoad(): void {
+  private initalLoad(): void {
     this.userService
       .query({
         page: 0,
