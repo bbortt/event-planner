@@ -70,7 +70,15 @@ public class InvitationService {
         invitationRepository.deleteById(id);
     }
 
+    /**
+     * Find all Invitations for the given project.
+     *
+     * @param projectId the id of the project to retrieve invitations for.
+     * @param pageable  the pagination information.
+     * @return the list of entities.
+     */
     public Page<Invitation> findAllByProjectId(Long projectId, Pageable pageable) {
+        log.debug("Request to get all Invitations for Project {}", projectId);
         return invitationRepository.findAllByProjectId(projectId, pageable);
     }
 }
