@@ -58,60 +58,60 @@
                         </small>
                     </div>
                 </div>
+                <!--
+              <div class="form-group">
+                  <label class="form-control-label"
+                         jhiTranslate="eventPlannerApp.project.startTime" for="field_startTime">Start
+                      Time</label>
+                  <div class="d-flex">
+                      <input type="text" class="form-control" name="startTime"
+                             id="field_startTime" formControlName="startTime"
+                             placeholder="dd.MM.yyyy HH:mm" [matDatetimepicker]="startTimePicker"
+                             [min]="startMoment"
+                             required autocomplete="false">
+                      <mat-datetimepicker #startTimePicker type="datetime" [timeInterval]="5"
+                                          [openOnFocus]="true"></mat-datetimepicker>
+                  </div>
+                  <div
+                      *ngIf="editForm.get('startTime')!.invalid && (editForm.get('startTime')!.dirty || editForm.get('startTime')!.touched)">
+                      <small class="form-text text-danger"
+                             *ngIf="editForm.get('startTime')?.errors?.required"
+                             jhiTranslate="entity.validation.required">
+                          This field is required.
+                      </small>
+                      <small class="form-text text-danger"
+                             [hidden]="!editForm.get('startTime')?.errors?.ZonedDateTimelocal"
+                             jhiTranslate="entity.validation.ZonedDateTimelocal">
+                          This field should be a date and time.
+                      </small>
+                  </div>
+              </div>
 
-                <div class="form-group">
-                    <label class="form-control-label"
-                           jhiTranslate="eventPlannerApp.project.startTime" for="field_startTime">Start
-                        Time</label>
-                    <div class="d-flex">
-                        <input type="text" class="form-control" name="startTime"
-                               id="field_startTime" formControlName="startTime"
-                               placeholder="dd.MM.yyyy HH:mm" [matDatetimepicker]="startTimePicker"
-                               [min]="startMoment"
-                               required autocomplete="false">
-                        <mat-datetimepicker #startTimePicker type="datetime" [timeInterval]="5"
-                                            [openOnFocus]="true"></mat-datetimepicker>
-                    </div>
-                    <div
-                        *ngIf="editForm.get('startTime')!.invalid && (editForm.get('startTime')!.dirty || editForm.get('startTime')!.touched)">
-                        <small class="form-text text-danger"
-                               *ngIf="editForm.get('startTime')?.errors?.required"
-                               jhiTranslate="entity.validation.required">
-                            This field is required.
-                        </small>
-                        <small class="form-text text-danger"
-                               [hidden]="!editForm.get('startTime')?.errors?.ZonedDateTimelocal"
-                               jhiTranslate="entity.validation.ZonedDateTimelocal">
-                            This field should be a date and time.
-                        </small>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="eventPlannerApp.project.endTime"
-                           for="field_endTime">End Time</label>
-                    <div class="d-flex">
-                        <input type="text" class="form-control" name="endTime"
-                               id="field_endTime" formControlName="endTime"
-                               placeholder="dd.MM.yyyy HH:mm" [matDatetimepicker]="endTimePicker"
-                               [min]="endMoment" required autocomplete="false">
-                        <mat-datetimepicker #endTimePicker type="datetime" [timeInterval]="5"
-                                            [openOnFocus]="true"></mat-datetimepicker>
-                    </div>
-                    <div
-                        *ngIf="editForm.get('endTime')!.invalid && (editForm.get('endTime')!.dirty || editForm.get('endTime')!.touched)">
-                        <small class="form-text text-danger"
-                               *ngIf="editForm.get('endTime')?.errors?.required"
-                               jhiTranslate="entity.validation.required">
-                            This field is required.
-                        </small>
-                        <small class="form-text text-danger"
-                               [hidden]="!editForm.get('endTime')?.errors?.ZonedDateTimelocal"
-                               jhiTranslate="entity.validation.ZonedDateTimelocal">
-                            This field should be a date and time.
-                        </small>
-                    </div>
-                </div>
+              <div class="form-group">
+                  <label class="form-control-label" jhiTranslate="eventPlannerApp.project.endTime"
+                         for="field_endTime">End Time</label>
+                  <div class="d-flex">
+                      <input type="text" class="form-control" name="endTime"
+                             id="field_endTime" formControlName="endTime"
+                             placeholder="dd.MM.yyyy HH:mm" [matDatetimepicker]="endTimePicker"
+                             [min]="endMoment" required autocomplete="false">
+                      <mat-datetimepicker #endTimePicker type="datetime" [timeInterval]="5"
+                                          [openOnFocus]="true"></mat-datetimepicker>
+                  </div>
+                  <div
+                      *ngIf="editForm.get('endTime')!.invalid && (editForm.get('endTime')!.dirty || editForm.get('endTime')!.touched)">
+                      <small class="form-text text-danger"
+                             *ngIf="editForm.get('endTime')?.errors?.required"
+                             jhiTranslate="entity.validation.required">
+                          This field is required.
+                      </small>
+                      <small class="form-text text-danger"
+                             [hidden]="!editForm.get('endTime')?.errors?.ZonedDateTimelocal"
+                             jhiTranslate="entity.validation.ZonedDateTimelocal">
+                          This field should be a date and time.
+                      </small>
+                  </div>
+              </div> -->
             </div>
 
             <div>

@@ -1,18 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 
 import { Project } from 'app/shared/model/project.model';
 import { ProjectService } from 'app/entities/project/project.service';
-import * as moment from 'moment';
 
 @Component({
   selector: 'app-project-update',
   templateUrl: './project-admin-update.component.html',
   styleUrls: ['./project-admin-update.component.scss'],
 })
-export class ProjectAdminUpdateComponent implements OnInit {
+export class ProjectAdminUpdateComponent {
   isSaving = false;
 
   editForm = this.fb.group({
@@ -21,20 +20,9 @@ export class ProjectAdminUpdateComponent implements OnInit {
     description: [null, [Validators.maxLength(300)]],
     startTime: [null, [Validators.required]],
     endTime: [null, [Validators.required]],
-    selectedUser: [null, []],
   });
 
-  startMoment = moment();
-  endMoment = moment();
-
   constructor(protected projectService: ProjectService, private fb: FormBuilder) {}
-
-  ngOnInit(): void {
-    this.editForm.get('startTime')!.valueChanges.subscribe((startTime: moment.Moment) => {
-      this.endMoment = startTime;
-      this.editForm.get('endTime')!.setValue(startTime);
-    });
-  }
 
   public updateForm(project: Project): void {
     this.editForm.patchValue({
@@ -60,9 +48,9 @@ export class ProjectAdminUpdateComponent implements OnInit {
     return {
       id: this.editForm.get(['id'])!.value,
       name: this.editForm.get(['name'])!.value,
+      description: this.editForm.get(['description'])!.value,
       startTime: this.editForm.get(['startTime'])!.value,
       endTime: this.editForm.get(['endTime'])!.value,
-      description: this.editForm.get(['description'])!.value,
     };
   }
 

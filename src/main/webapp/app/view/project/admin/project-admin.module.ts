@@ -22,7 +22,7 @@ import { ProjectUserInviteComponent } from 'app/view/project/admin/users/project
 import { MatDatetimepickerModule } from '@mat-datetimepicker/core';
 
 @NgModule({
-  imports: [EventPlannerSharedModule, NgxAutocompleteModule, RouterModule.forChild(PROJECT_ADMIN_ROUTES), MatDatetimepickerModule],
+  imports: [EventPlannerSharedModule, NgxAutocompleteModule, MatDatetimepickerModule, RouterModule.forChild(PROJECT_ADMIN_ROUTES)],
   declarations: [
     ProjectAdminComponent,
     ProjectAdminUpdateModalComponent,

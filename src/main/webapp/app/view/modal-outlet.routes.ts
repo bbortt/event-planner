@@ -4,11 +4,10 @@ import { ResponsibilityResolve } from 'app/entities/responsibility/responsibilit
 import { LocationResolve } from 'app/entities/location/location.resolve';
 
 import { CreateProjectModalComponent } from 'app/view/create-project/create-project-modal.component';
+import { ProjectAdminUpdateModalComponent } from 'app/view/project/admin/project-admin-update-modal.component';
 import { ProjectResponsibilityModalComponent } from 'app/view/project/admin/responsibilities/project-responsibility-modal.component';
 import { ProjectUserModalComponent } from 'app/view/project/admin/users/project-user-modal.component';
-
 import { ProjectLocationModalComponent } from 'app/view/project/admin/locations/project-location-modal.component';
-import { ProjectAdminUpdateModalComponent } from 'app/view/project/admin/project-admin-update-modal.component';
 
 export const MODAL_OUTLET_ROUTES: Routes = [
   {

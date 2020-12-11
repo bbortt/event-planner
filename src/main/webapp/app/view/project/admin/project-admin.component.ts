@@ -1,9 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { Project } from 'app/shared/model/project.model';
 import { Subscription } from 'rxjs';
+
 import { JhiEventManager } from 'ng-jhipster';
+
+import { Project } from 'app/shared/model/project.model';
 import { ProjectService } from 'app/entities/project/project.service';
 
 @Component({
@@ -39,6 +41,6 @@ export class ProjectAdminComponent implements OnInit, OnDestroy {
   }
 
   private loadProject(): void {
-    this.projectService.find(this.project!.id!).subscribe(project => (this.project = project.body as Project));
+    this.projectService.find(this.project!.id!).subscribe(response => (this.project = response.body as Project));
   }
 }
