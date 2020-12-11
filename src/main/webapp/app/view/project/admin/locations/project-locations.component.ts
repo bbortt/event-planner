@@ -79,7 +79,7 @@ export class ProjectLocationsComponent implements OnInit, OnDestroy {
   }
 
   trackId(index: number, item: Location): number {
-    return item.id;
+    return item.id!;
   }
 
   registerChangeInLocations(): void {
