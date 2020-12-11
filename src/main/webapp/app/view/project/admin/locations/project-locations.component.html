@@ -25,7 +25,16 @@
             <div *ngFor="let location of locations" class="location-card col-xs-12 col-sm-4">
                 <div>
                     <div class="location-card-content d-flex flex-column">
-                        <h2>{{location.name}}</h2>
+                        <h2>{{location.name}}
+
+                            <button
+                                class="btn btn-primary float-right jh-create-entity create-section"
+                                [routerLink]="['', {outlets: {modal: ['projects', project.id, 'locations', location.id, 'sections', 'new']}}]">
+                                <fa-icon icon="plus"></fa-icon>
+                                <span jhiTranslate="eventPlannerApp.section.home.createLabel">Create a new Section</span>
+                            </button>
+                        </h2>
+
                         <div class="location-card-responsibility mb-auto">
                             <i>
                                 <span jhiTranslate="eventPlannerApp.location.responsibility">Responsibility</span>: {{location.responsibility.name}}
@@ -36,6 +45,21 @@
                             <ul>
                                 <li *ngFor="let section of location.sections">
                                     {{section.name}}
+
+                                    <div class="btn-group float-right clearfix">
+                                        <button type="submit"
+                                                [routerLink]="['', {outlets: {modal: ['projects', project.id, 'locations', location.id, 'sections', section.id, 'edit']}}]"
+                                                class="btn btn-primary btn-sm">
+                                            <fa-icon icon="pencil-alt"></fa-icon>
+                                            <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                                        </button>
+
+                                        <button type="submit" (click)="delete(section)"
+                                                class="btn btn-danger btn-sm">
+                                            <fa-icon icon="times"></fa-icon>
+                                            <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                                        </button>
+                                    </div>
                                 </li>
                             </ul>
                         </div>
@@ -43,14 +67,14 @@
                             <div class="btn-group">
                                 <button type="submit"
                                         [routerLink]="['', {outlets: {modal: ['projects', project.id, 'locations', location.id, 'edit']}}]"
-                                        class="btn btn-primary btn-sm">
+                                        class="btn btn-primary btn-md">
                                     <fa-icon icon="pencil-alt"></fa-icon>
                                     <span class="d-none d-md-inline"
                                           jhiTranslate="entity.action.edit">Edit</span>
                                 </button>
 
                                 <button type="submit" (click)="delete(location)"
-                                        class="btn btn-danger btn-sm">
+                                        class="btn btn-danger btn-md">
                                     <fa-icon icon="times"></fa-icon>
                                     <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
                                 </button>

@@ -19,9 +19,25 @@
     border: 2px solid black;
     border-radius: 5px;
 
-    .location-card-navigation > button {
-      margin-top: 1vh;
-      margin-right: 1vw;
+    .btn-group {
+      .btn {
+        margin-right: 1vh;
+      }
+
+      .btn:last-child {
+        margin-right: 0;
+      }
+    }
+
+    ul li {
+      padding: 0.5vh 0;
+    }
+
+    .location-card-navigation {
+      .btn-group > button {
+        margin-top: 1vh;
+        margin-right: 1vw;
+      }
     }
   }
 }
