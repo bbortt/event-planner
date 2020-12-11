@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { HttpHeaders, HttpResponse } from '@angular/common/http';
-import { ActivatedRoute, Data, ParamMap, Router } from '@angular/router';
-import { combineLatest, Subscription } from 'rxjs';
+import { HttpResponse } from '@angular/common/http';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { JhiEventManager } from 'ng-jhipster';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -10,8 +10,6 @@ import { Location } from 'app/shared/model/location.model';
 
 import { LocationService } from 'app/entities/location/location.service';
 import { ProjectLocationDeleteDialogComponent } from 'app/view/project/admin/locations/project-location-delete-dialog.component';
-
-import { ITEMS_PER_PAGE } from 'app/shared/constants/pagination.constants';
 
 @Component({
   selector: 'app-project-locations',
@@ -24,12 +22,8 @@ export class ProjectLocationsComponent implements OnInit, OnDestroy {
 
   eventSubscriber?: Subscription;
 
-  totalItems = 0;
-  itemsPerPage = ITEMS_PER_PAGE;
-  page!: number;
   predicate = 'name';
   ascending = true;
-  ngbPaginationPage = 1;
 
   constructor(
     protected locationService: LocationService,
@@ -42,7 +36,7 @@ export class ProjectLocationsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ project }) => {
       this.project = project;
-      this.handleNavigation();
+      this.loadPage();
       this.registerChangeInLocations();
     });
   }
@@ -53,37 +47,12 @@ export class ProjectLocationsComponent implements OnInit, OnDestroy {
     }
   }
 
-  protected handleNavigation(): void {
-    combineLatest(this.activatedRoute.data, this.activatedRoute.queryParamMap, (data: Data, params: ParamMap) => {
-      const page = params.get('page');
-      const pageNumber = page !== null ? +page : 1;
-      if (pageNumber !== this.page) {
-        this.loadPage(pageNumber, true);
-      }
-    }).subscribe();
-  }
-
-  loadPage(page?: number, dontNavigate?: boolean): void {
-    const pageToLoad: number = page || this.page || 1;
-
-    this.locationService
-      .findAllByProject(this.project!, {
-        page: pageToLoad - 1,
-        size: this.itemsPerPage,
-        sort: this.sort(),
-      })
-      .subscribe(
-        (res: HttpResponse<Location[]>) => this.onSuccess(res.body, res.headers, pageToLoad, !dontNavigate),
-        () => this.onError()
-      );
-  }
-
-  trackId(index: number, item: Location): number {
-    return item.id!;
-  }
-
   registerChangeInLocations(): void {
     this.eventSubscriber = this.eventManager.subscribe('locationListModification', () => this.loadPage());
+  }
+
+  loadPage(): void {
+    this.locationService.findAllByProject(this.project!).subscribe((res: HttpResponse<Location[]>) => this.onSuccess(res.body));
   }
 
   delete(location: Location): void {
@@ -99,23 +68,12 @@ export class ProjectLocationsComponent implements OnInit, OnDestroy {
     return result;
   }
 
-  protected onSuccess(data: Location[] | null, headers: HttpHeaders, page: number, navigate: boolean): void {
-    this.totalItems = Number(headers.get('X-Total-Count'));
-    this.page = page;
-    if (navigate) {
-      this.router.navigate(['/project', this.project!.id!, 'admin', 'locations'], {
-        queryParams: {
-          page: this.page,
-          size: this.itemsPerPage,
-          sort: this.predicate + ',' + (this.ascending ? 'asc' : 'desc'),
-        },
-      });
-    }
+  protected onSuccess(data: Location[] | null): void {
+    this.router.navigate(['/project', this.project!.id!, 'admin', 'locations'], {
+      queryParams: {
+        sort: this.predicate + ',' + (this.ascending ? 'asc' : 'desc'),
+      },
+    });
     this.locations = data || [];
-    this.ngbPaginationPage = this.page;
-  }
-
-  protected onError(): void {
-    this.ngbPaginationPage = this.page ?? 1;
   }
 }

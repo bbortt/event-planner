@@ -28,14 +28,14 @@
                         <h2>{{location.name}}</h2>
                         <div class="location-card-responsibility mb-auto">
                             <i>
-                                <span jhiTranslate="eventPlannerApp.location.responsibility">Responsibility</span>: {{location.responsibility!.name}}
+                                <span jhiTranslate="eventPlannerApp.location.responsibility">Responsibility</span>: {{location.responsibility.name}}
                             </i>
 
                         </div>
                         <div class="location-card-section">
                             <ul>
                                 <li *ngFor="let section of location.sections">
-                                    {{section}}
+                                    {{section.name}}
                                 </li>
                             </ul>
                         </div>
