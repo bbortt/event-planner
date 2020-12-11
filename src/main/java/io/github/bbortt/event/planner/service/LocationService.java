@@ -3,6 +3,7 @@ package io.github.bbortt.event.planner.service;
 import io.github.bbortt.event.planner.domain.Location;
 import io.github.bbortt.event.planner.repository.LocationRepository;
 import io.github.bbortt.event.planner.repository.SectionRepository;
+import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,11 +22,9 @@ public class LocationService {
     private final Logger log = LoggerFactory.getLogger(LocationService.class);
 
     private final LocationRepository locationRepository;
-    private final SectionRepository sectionRepository;
 
-    public LocationService(LocationRepository locationRepository, SectionRepository sectionRepository) {
+    public LocationService(LocationRepository locationRepository) {
         this.locationRepository = locationRepository;
-        this.sectionRepository = sectionRepository;
     }
 
     /**
@@ -77,23 +76,10 @@ public class LocationService {
      * Find all Locations for the given project.
      *
      * @param projectId the project to retrieve locations for.
-     * @param pageable  the pagination information.
      * @return the list of entities.
      */
-    public Page<Location> findAllByProjectId(Long projectId, Pageable pageable) {
+    public List<Location> findAllByProjectId(Long projectId) {
         log.debug("Request to get all Locations for Project {}", projectId);
-        return locationRepository.findAllByProjectId(projectId, pageable).map(this::fetchSections);
-    }
-
-    /**
-     * Resolve section entity graph based on given location.
-     *
-     * @param location the location.
-     * @return the enriched location.
-     */
-    private Location fetchSections(Location location) {
-        log.debug("Enrich location {} with sections", location.getId());
-        location.sections(sectionRepository.findAllByLocationId(location.getId()));
-        return location;
+        return locationRepository.findAllByProjectId(projectId);
     }
 }
