@@ -21,7 +21,7 @@ export class ProjectSectionUpdateComponent implements OnInit {
   editForm = this.fb.group({
     id: [],
     name: [null, [Validators.required, Validators.maxLength(50)]],
-    locationId: [],
+    location: [],
   });
 
   constructor(protected sectionService: SectionService, private fb: FormBuilder) {}
@@ -61,7 +61,7 @@ export class ProjectSectionUpdateComponent implements OnInit {
     };
   }
 
-  protected subscribeToSaveResponse(result: Observable<HttpResponse<Location>>): void {
+  protected subscribeToSaveResponse(result: Observable<HttpResponse<Section>>): void {
     result.subscribe(
       () => this.onSaveSuccess(),
       () => this.onSaveError()

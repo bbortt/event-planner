@@ -10,6 +10,8 @@ import { Location } from 'app/shared/model/location.model';
 
 import { LocationService } from 'app/entities/location/location.service';
 import { ProjectLocationDeleteDialogComponent } from 'app/view/project/admin/locations/project-location-delete-dialog.component';
+import { Section } from 'app/shared/model/section.model';
+import { ProjectSectionDeleteDialogComponent } from 'app/view/project/admin/locations/sections/project-section-delete-dialog.component';
 
 @Component({
   selector: 'app-project-locations',
@@ -38,6 +40,7 @@ export class ProjectLocationsComponent implements OnInit, OnDestroy {
       this.project = project;
       this.loadPage();
       this.registerChangeInLocations();
+      this.registerChangeInSections();
     });
   }
 
@@ -51,13 +54,22 @@ export class ProjectLocationsComponent implements OnInit, OnDestroy {
     this.eventSubscriber = this.eventManager.subscribe('locationListModification', () => this.loadPage());
   }
 
+  registerChangeInSections(): void {
+    this.eventSubscriber = this.eventManager.subscribe('sectionListModification', () => this.loadPage());
+  }
+
   loadPage(): void {
     this.locationService.findAllByProject(this.project!).subscribe((res: HttpResponse<Location[]>) => this.onSuccess(res.body));
   }
 
-  delete(location: Location): void {
+  deleteLocation(location: Location): void {
     const modalRef = this.modalService.open(ProjectLocationDeleteDialogComponent, { backdrop: 'static' });
     modalRef.componentInstance.location = location;
+  }
+
+  deleteSection(section: Section): void {
+    const modalRef = this.modalService.open(ProjectSectionDeleteDialogComponent, { backdrop: 'static' });
+    modalRef.componentInstance.section = section;
   }
 
   sort(): string[] {
