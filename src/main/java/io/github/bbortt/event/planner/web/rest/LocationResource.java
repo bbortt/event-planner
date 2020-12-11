@@ -52,7 +52,8 @@ public class LocationResource {
      * {@code POST  /locations} : Create a new location.
      *
      * @param location the location to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new location, or with status {@code 400 (Bad Request)} if the location has already an ID.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new
+     * location, or with status {@code 400 (Bad Request)} if the location has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/locations")
@@ -72,7 +73,9 @@ public class LocationResource {
      * {@code PUT  /locations} : Updates an existing location.
      *
      * @param location the location to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated location, or with status {@code 400 (Bad Request)} if the location is not valid, or with status {@code 500 (Internal Server Error)} if the location couldn't be updated.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated
+     * location, or with status {@code 400 (Bad Request)} if the location is not valid, or with
+     * status {@code 500 (Internal Server Error)} if the location couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/locations")
@@ -92,7 +95,8 @@ public class LocationResource {
      * {@code GET  /locations} : get all the locations.
      *
      * @param pageable the pagination information.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of locations in body.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of locations in
+     * body.
      */
     @GetMapping("/locations")
     public ResponseEntity<List<Location>> getAllLocations(Pageable pageable) {
@@ -106,7 +110,8 @@ public class LocationResource {
      * {@code GET  /locations/:id} : get the "id" location.
      *
      * @param id the id of the location to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the location, or with status {@code 404 (Not Found)}.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the location,
+     * or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/locations/{id}")
     public ResponseEntity<Location> getLocation(@PathVariable Long id) {
@@ -116,11 +121,10 @@ public class LocationResource {
     }
 
     @GetMapping("/locations/project/{projectId}")
-    public ResponseEntity<List<Location>> getLocationsByProjectId(@PathVariable Long projectId, Pageable pageable) {
+    public ResponseEntity<List<Location>> getLocationsByProjectId(@PathVariable Long projectId) {
         log.debug("Rest Request to get Locations by projectId {}", projectId);
-        Page<Location> page = locationService.findAllByProjectId(projectId, pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
-        return ResponseEntity.ok().headers(headers).body(page.getContent());
+        List<Location> locations = locationService.findAllByProjectId(projectId);
+        return ResponseEntity.ok(locations);
     }
 
     /**

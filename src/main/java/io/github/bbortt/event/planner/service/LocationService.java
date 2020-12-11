@@ -2,6 +2,8 @@ package io.github.bbortt.event.planner.service;
 
 import io.github.bbortt.event.planner.domain.Location;
 import io.github.bbortt.event.planner.repository.LocationRepository;
+import io.github.bbortt.event.planner.repository.SectionRepository;
+import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,7 +72,14 @@ public class LocationService {
         locationRepository.deleteById(id);
     }
 
-    public Page<Location> findAllByProjectId(Long projectId, Pageable pageable) {
-        return locationRepository.findAllByProjectId(projectId, pageable);
+    /**
+     * Find all Locations for the given project.
+     *
+     * @param projectId the project to retrieve locations for.
+     * @return the list of entities.
+     */
+    public List<Location> findAllByProjectId(Long projectId) {
+        log.debug("Request to get all Locations for Project {}", projectId);
+        return locationRepository.findAllByProjectId(projectId);
     }
 }
