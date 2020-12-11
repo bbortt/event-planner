@@ -11,18 +11,14 @@ import { LocationService } from 'app/entities/location/location.service';
 export class ProjectLocationDeleteDialogComponent {
   location?: Location;
 
-  constructor(
-    protected responsibilityService: LocationService,
-    public activeModal: NgbActiveModal,
-    protected eventManager: JhiEventManager
-  ) {}
+  constructor(protected locationService: LocationService, public activeModal: NgbActiveModal, protected eventManager: JhiEventManager) {}
 
   cancel(): void {
     this.activeModal.dismiss();
   }
 
   confirmDelete(id: number): void {
-    this.responsibilityService.delete(id).subscribe(() => {
+    this.locationService.delete(id).subscribe(() => {
       this.eventManager.broadcast('locationListModification');
       this.activeModal.close();
     });
