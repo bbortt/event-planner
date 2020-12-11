@@ -4,3 +4,4 @@
 # Include build information
 !build/libs/
 !Dockerfile
+!src/main/docker
