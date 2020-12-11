@@ -1,0 +1,46 @@
+version: 2.1
+
+orbs:
+  secrethub: secrethub/cli@1.1.0
+
+jobs:
+  build_canary:
+    docker:
+      - image: cimg/openjdk:11.0-browsers
+      - image: circleci/postgres:13.1
+        environment:
+          POSTGRES_DB: event_planner_integration
+          POSTGRES_USER: event_planner
+          POSTGRES_PASSWORD: event_planner_password
+    environment:
+      GIT_SHORT_HASH: ${CIRCLE_SHA1:0:7}
+      GAE_TAR_KEY: secrethub://bbortt/event-planner/circleci/canary/gae/tar-key
+      GAE_TAR_SALT: secrethub://bbortt/event-planner/circleci/canary/gae/tar-salt
+      GAE_PROJECT_ID: secrethub://bbortt/event-planner/circleci/canary/gae/project-id
+    shell: secrethub run -- /bin/bash
+    steps:
+      - checkout
+      - restore_cache:
+          key: gradledeps-{{ checksum "build.gradle" }}
+      - restore_cache:
+          key: nodemodules-{{ checksum "package-lock.json" }}
+      - run: ./gradlew -Pversion=$CIRCLE_BUILD_NUM -Pprod -PnodeInstall --no-daemon -i bootJar
+      - save_cache:
+          key: gradledeps-{{ checksum "build.gradle" }}
+          paths:
+            - ~/.gradle/caches
+            - ~/.gradle/wrapper
+      - save_cache:
+          key: nodemodules-{{ checksum "package-lock.json" }}
+          paths:
+            - ./node_modules
+      - setup_remote_docker
+      - secrethub/install
+      - run: docker build . --build-arg JAR_FILE=event-planner-$CIRCLE_BUILD_NUM.jar --tag gcr.io/$GAE_PROJECT_ID/event-planner:$CIRCLE_BUILD_NUM
+      - run: .circleci/install_gcloud_sdk.sh $CIRCLE_BRANCH $GAE_PROJECT_ID
+      - run: .circleci/deploy_env.sh $CIRCLE_BRANCH $CIRCLE_BUILD_NUM
+
+workflows:
+  release_canary:
+    jobs:
+      - build_canary

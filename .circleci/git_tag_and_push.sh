@@ -9,9 +9,8 @@
 # Requires the following environment variables:
 #   $GITHUB_TOKEN    The GitHub authentication token.
 
-git config --local user.name "Travis CI"
-git config --local user.email "builds@travis-ci.com"
+git config --local user.name "Circle CI"
+git config --local user.email "builds@circle-ci.com"
 
-git tag $TRAVIS_BUILD_NUMBER
-
+git tag $1
 git push --quiet https://${GITHUB_TOKEN}@github.com/bbortt/event-planner.git $1

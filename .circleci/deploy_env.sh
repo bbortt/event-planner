@@ -5,15 +5,15 @@
 # > Must be started from within the root directory!
 #
 # Publish and deploy event-planner. Environment based (`canary` or `release`).
-# Usage: `.travis/deploy_env.sh <environment> <project-name> <build-number>`
+# Usage: `.circleci/deploy_env.sh <environment> <build-number>`
 
 set -ex
 
 # `./tag_and_push <build-number>`
-.travis/git_tag_and_push.sh $3
+.circleci/git_tag_and_push.sh $2
 
-# `./docker_push_gcr.sh <project-name> <tag-name>`
-.travis/docker_push_gcr.sh $2 $3
+# `./docker_push_gcr.sh <docker-tag>`
+.circleci/docker_push_gcr.sh $2
 
-# `./gae_deploy_env.sh <environment> <project-name> <docker-tag>`
-.travis/gae_deploy_env.sh $1 $2 $3
+# `./gae_deploy_env.sh <environment> <build-number>
+.circleci/gae_deploy_env.sh $1 $2
