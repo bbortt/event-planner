@@ -10,6 +10,9 @@ import { ProjectUserModalComponent } from 'app/view/project/admin/users/project-
 import { ProjectLocationModalComponent } from 'app/view/project/admin/locations/project-location-modal.component';
 import { ProjectSectionModalComponent } from 'app/view/project/admin/locations/sections/project-section-modal.component';
 
+import { UserRouteRoleAccessService } from 'app/core/auth/user-route-role-access-service';
+import { ADMIN, SECRETARY } from 'app/shared/constants/role.constants';
+
 export const MODAL_OUTLET_ROUTES: Routes = [
   {
     path: 'projects/new',
@@ -61,6 +64,10 @@ export const MODAL_OUTLET_ROUTES: Routes = [
   {
     path: 'projects/:projectId/locations/:locationId/sections/new',
     component: ProjectSectionModalComponent,
+    data: {
+      roles: [ADMIN.name, SECRETARY.name],
+    },
+    canActivate: [UserRouteRoleAccessService],
     resolve: {
       project: ProjectResolve,
       location: LocationResolve,
@@ -70,6 +77,10 @@ export const MODAL_OUTLET_ROUTES: Routes = [
   {
     path: 'projects/:projectId/locations/:locationId/sections/:sectionId/edit',
     component: ProjectSectionModalComponent,
+    data: {
+      roles: [ADMIN.name, SECRETARY.name],
+    },
+    canActivate: [UserRouteRoleAccessService],
     resolve: {
       project: ProjectResolve,
       location: LocationResolve,
