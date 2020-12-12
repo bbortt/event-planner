@@ -3,7 +3,6 @@ import { HttpResponse } from '@angular/common/http';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 
-import { Project } from 'app/shared/model/project.model';
 import { Location } from 'app/shared/model/location.model';
 import { Section } from 'app/shared/model/section.model';
 import { SectionService } from 'app/entities/section/section.service';
@@ -16,7 +15,6 @@ import { SectionService } from 'app/entities/section/section.service';
 export class ProjectSectionUpdateComponent implements OnInit {
   isSaving = false;
   isNew = false;
-  project?: Project;
 
   editForm = this.fb.group({
     id: [],
@@ -28,14 +26,13 @@ export class ProjectSectionUpdateComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  public updateForm(project: Project, location: Location, section: Section): void {
+  public updateForm(location: Location, section: Section): void {
     this.isNew = !section.id;
 
     this.editForm.patchValue({
       id: section.id,
       name: section.name,
       location,
-      project,
     });
   }
 
@@ -46,7 +43,7 @@ export class ProjectSectionUpdateComponent implements OnInit {
   save(): void {
     this.isSaving = true;
     const section = this.createFromForm();
-    if (section.id !== undefined) {
+    if (section.id) {
       this.subscribeToSaveResponse(this.sectionService.update(section));
     } else {
       this.subscribeToSaveResponse(this.sectionService.create(section));
@@ -75,9 +72,5 @@ export class ProjectSectionUpdateComponent implements OnInit {
 
   protected onSaveError(): void {
     this.isSaving = false;
-  }
-
-  trackById(index: number, item: Project): any {
-    return item.id;
   }
 }

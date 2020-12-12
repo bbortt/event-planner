@@ -69,7 +69,6 @@ export const MODAL_OUTLET_ROUTES: Routes = [
     },
     canActivate: [UserRouteRoleAccessService],
     resolve: {
-      project: ProjectResolve,
       location: LocationResolve,
     },
     outlet: 'modal',
@@ -82,7 +81,6 @@ export const MODAL_OUTLET_ROUTES: Routes = [
     },
     canActivate: [UserRouteRoleAccessService],
     resolve: {
-      project: ProjectResolve,
       location: LocationResolve,
       section: SectionResolve,
     },

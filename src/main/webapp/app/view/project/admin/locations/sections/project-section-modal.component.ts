@@ -14,18 +14,14 @@ export class ProjectSectionModalComponent implements AfterViewInit, OnDestroy {
   constructor(private modalService: NgbModal, private eventManager: JhiEventManager, private activatedRoute: ActivatedRoute) {}
 
   ngAfterViewInit(): void {
-    this.activatedRoute.data.subscribe(({ project, location, section }) => {
-      this.modalRef = this.modalService.open(ProjectSectionModalComponent, {
+    this.activatedRoute.data.subscribe(({ location, section }) => {
+      this.modalRef = this.modalService.open(ProjectSectionUpdateComponent, {
         beforeDismiss(): boolean {
           window.history.back();
           return true;
         },
       });
-      (this.modalRef.componentInstance as ProjectSectionUpdateComponent).updateForm(
-        project,
-        location ? location : {},
-        section ? section : {}
-      );
+      (this.modalRef.componentInstance as ProjectSectionUpdateComponent).updateForm(location ? location : {}, section ? section : {});
     });
   }
 
