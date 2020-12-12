@@ -4,6 +4,7 @@
       "home": {
         "title": "Abschnitte",
         "createLabel": "Abschnitt erstellen",
+        "editLabel": "Abschnitt bearbeiten",
         "createOrEditLabel": "Abschnitt erstellen oder bearbeiten",
         "notFound": "Keine Abschnitte gefunden"
       },
