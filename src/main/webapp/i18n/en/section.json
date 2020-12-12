@@ -4,6 +4,7 @@
       "home": {
         "title": "Sections",
         "createLabel": "Create a new Section",
+        "editLabel": "Edit Section",
         "createOrEditLabel": "Create or edit a Section",
         "notFound": "No Sections found"
       },
