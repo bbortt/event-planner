@@ -18,8 +18,8 @@ export class ProjectAdminUpdateComponent {
     id: [],
     name: [null, [Validators.required, Validators.maxLength(50)]],
     description: [null, [Validators.maxLength(300)]],
-    startTime: [null, [Validators.required]],
-    endTime: [null, [Validators.required]],
+    startTime: [],
+    endTime: [],
   });
 
   constructor(protected projectService: ProjectService, private fb: FormBuilder) {}
