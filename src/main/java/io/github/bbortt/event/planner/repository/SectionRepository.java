@@ -7,6 +7,5 @@ import org.springframework.stereotype.Repository;
 /**
  * Spring Data  repository for the Section entity.
  */
-@SuppressWarnings("unused")
 @Repository
 public interface SectionRepository extends JpaRepository<Section, Long> {}
