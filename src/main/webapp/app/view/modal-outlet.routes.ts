@@ -4,10 +4,12 @@ import { ResponsibilityResolve } from 'app/entities/responsibility/responsibilit
 import { LocationResolve } from 'app/entities/location/location.resolve';
 
 import { CreateProjectModalComponent } from 'app/view/create-project/create-project-modal.component';
+import { ProjectAdminUpdateModalComponent } from 'app/view/project/admin/project-admin-update-modal.component';
 import { ProjectResponsibilityModalComponent } from 'app/view/project/admin/responsibilities/project-responsibility-modal.component';
 import { ProjectUserModalComponent } from 'app/view/project/admin/users/project-user-modal.component';
-
 import { ProjectLocationModalComponent } from 'app/view/project/admin/locations/project-location-modal.component';
+import { ADMIN, SECRETARY } from 'app/shared/constants/role.constants';
+import { UserRouteRoleAccessService } from 'app/core/auth/user-route-role-access-service';
 
 export const MODAL_OUTLET_ROUTES: Routes = [
   {
@@ -16,8 +18,24 @@ export const MODAL_OUTLET_ROUTES: Routes = [
     outlet: 'modal',
   },
   {
+    path: 'projects/:projectId/edit',
+    component: ProjectAdminUpdateModalComponent,
+    data: {
+      roles: [ADMIN.name, SECRETARY.name],
+    },
+    canActivate: [UserRouteRoleAccessService],
+    resolve: {
+      project: ProjectResolve,
+    },
+    outlet: 'modal',
+  },
+  {
     path: 'projects/:projectId/responsibilities/new',
     component: ProjectResponsibilityModalComponent,
+    data: {
+      roles: [ADMIN.name, SECRETARY.name],
+    },
+    canActivate: [UserRouteRoleAccessService],
     resolve: {
       project: ProjectResolve,
     },
@@ -26,6 +44,10 @@ export const MODAL_OUTLET_ROUTES: Routes = [
   {
     path: 'projects/:projectId/responsibilities/:responsibilityId/edit',
     component: ProjectResponsibilityModalComponent,
+    data: {
+      roles: [ADMIN.name, SECRETARY.name],
+    },
+    canActivate: [UserRouteRoleAccessService],
     resolve: {
       project: ProjectResolve,
       responsibility: ResponsibilityResolve,
@@ -35,6 +57,10 @@ export const MODAL_OUTLET_ROUTES: Routes = [
   {
     path: 'projects/:projectId/users/invite',
     component: ProjectUserModalComponent,
+    data: {
+      roles: [ADMIN.name, SECRETARY.name],
+    },
+    canActivate: [UserRouteRoleAccessService],
     resolve: {
       project: ProjectResolve,
     },
@@ -43,6 +69,10 @@ export const MODAL_OUTLET_ROUTES: Routes = [
   {
     path: 'projects/:projectId/locations/new',
     component: ProjectLocationModalComponent,
+    data: {
+      roles: [ADMIN.name, SECRETARY.name],
+    },
+    canActivate: [UserRouteRoleAccessService],
     resolve: {
       project: ProjectResolve,
     },
@@ -51,6 +81,10 @@ export const MODAL_OUTLET_ROUTES: Routes = [
   {
     path: 'projects/:projectId/locations/:locationId/edit',
     component: ProjectLocationModalComponent,
+    data: {
+      roles: [ADMIN.name, SECRETARY.name],
+    },
+    canActivate: [UserRouteRoleAccessService],
     resolve: {
       project: ProjectResolve,
       location: LocationResolve,
