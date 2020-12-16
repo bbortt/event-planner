@@ -25,19 +25,6 @@
       "detail": {
         "title": "Projekt"
       },
-      "admin": {
-        "title": "Projekt",
-        "tabTitle": "Event Planer | Project Konfigurieren",
-        "navbar": {
-          "locations": "Lokalitäten",
-          "users": "Benutzer",
-          "responsibilities": "Verantwortlichkeiten"
-        }
-      },
-      "screenplay": {
-        "title": "Drehbuch",
-        "tabTitle": "Event Planner | Drehbuch"
-      },
       "name": "Name",
       "description": "Beschreibung",
       "startTime": "Start Zeit",

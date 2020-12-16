@@ -8,12 +8,16 @@ import { JhiEventManager } from 'ng-jhipster';
 import { Project } from 'app/shared/model/project.model';
 import { ProjectService } from 'app/entities/project/project.service';
 
+import { faBook } from '@fortawesome/free-solid-svg-icons';
+
 @Component({
   selector: 'app-project-admin',
   templateUrl: './project-admin.component.html',
   styleUrls: ['project-admin.component.scss'],
 })
 export class ProjectAdminComponent implements OnInit, OnDestroy {
+  faBook = faBook;
+
   project?: Project;
   eventSubscriber?: Subscription;
 

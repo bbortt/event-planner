@@ -25,19 +25,6 @@
       "detail": {
         "title": "Project"
       },
-      "admin": {
-        "title": "Project",
-        "tabTitle": "Event Planner | Configure Project",
-        "navbar": {
-          "locations": "Locations",
-          "users": "Users",
-          "responsibilities": "Responsibilities"
-        }
-      },
-      "screenplay": {
-        "title": "Screenplay",
-        "tabTitle": "Event Planner | Screenplay"
-      },
       "name": "Name",
       "description": "Description",
       "startTime": "Start Time",

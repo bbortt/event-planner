@@ -4,8 +4,8 @@ import { Section } from 'app/shared/model/section.model';
 
 export interface Location {
   id?: number;
-  name?: string;
-  project?: Project;
+  name: string;
+  project: Project;
   responsibility?: Responsibility;
   sections?: Section[];
 }
