@@ -38,8 +38,9 @@
                     <label class="form-control-label"
                            jhiTranslate="eventPlannerApp.project.description"
                            for="field_description">Description</label>
-                    <input type="text" class="form-control" name="description"
-                           id="field_description" formControlName="description" autocomplete="off"/>
+                    <textarea type="text" class="form-control" name="description"
+                              id="field_description" formControlName="description" autocomplete="off">
+                    </textarea>
                     <div
                         *ngIf="editForm.get('description')!.invalid && (editForm.get('description')!.dirty || editForm.get('description')!.touched)">
                         <small class="form-text text-danger"
