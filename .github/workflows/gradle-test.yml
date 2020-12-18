@@ -1,4 +1,4 @@
-name: Gradle CI
+name: Unit Test
 on:
   push:
     tags-ignore:
