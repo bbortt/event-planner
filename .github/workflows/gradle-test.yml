@@ -24,4 +24,4 @@ jobs:
         with:
           java-version: 11
       - name: Build with Gradle
-        run: ./gradlew -Pprod --no-daemon -i dependencyUpdates check
+        run: ./gradlew -Pprod --no-daemon -i dependencyUpdates build

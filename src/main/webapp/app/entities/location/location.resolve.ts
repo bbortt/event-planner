@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { ActivatedRouteSnapshot, Resolve, Router } from '@angular/router';
-import { EMPTY, Observable, of } from 'rxjs';
+import { EMPTY, NEVER, Observable, of } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
 import { Location } from 'app/shared/model/location.model';
 import { LocationService } from './location.service';
@@ -33,6 +33,6 @@ export class LocationResolve implements Resolve<Location> {
       );
     }
 
-    return of({});
+    return NEVER;
   }
 }

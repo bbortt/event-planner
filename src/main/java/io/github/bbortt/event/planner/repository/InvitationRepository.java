@@ -11,7 +11,6 @@ import org.springframework.stereotype.Repository;
 /**
  * Spring Data  repository for the Invitation entity.
  */
-@SuppressWarnings("unused")
 @Repository
 public interface InvitationRepository extends JpaRepository<Invitation, Long> {
     @Query("select invitation from Invitation invitation where invitation.user.login = ?#{principal.username}")

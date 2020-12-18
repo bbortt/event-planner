@@ -4,7 +4,7 @@
       "home": {
         "title": "Projects",
         "createLabel": "Create a new Project",
-        "editLabel": "Edit a Project",
+        "editLabel": "Edit Project",
         "screenplayLabel": "Screenplay",
         "settingsLabel": "Settings",
         "notFound": "No Projects found"
@@ -24,19 +24,6 @@
       },
       "detail": {
         "title": "Project"
-      },
-      "admin": {
-        "title": "Project",
-        "tabTitle": "Event Planner | Configure Project",
-        "navbar": {
-          "locations": "Locations",
-          "users": "Users",
-          "responsibilities": "Responsibilities"
-        }
-      },
-      "screenplay": {
-        "title": "Screenplay",
-        "tabTitle": "Event Planner | Screenplay"
       },
       "name": "Name",
       "description": "Description",

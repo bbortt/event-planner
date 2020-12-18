@@ -1,7 +1,10 @@
 package io.github.bbortt.event.planner.web.rest;
 
 import io.github.bbortt.event.planner.domain.Location;
+import io.github.bbortt.event.planner.security.AuthoritiesConstants;
+import io.github.bbortt.event.planner.security.RolesConstants;
 import io.github.bbortt.event.planner.service.LocationService;
+import io.github.bbortt.event.planner.service.ProjectService;
 import io.github.bbortt.event.planner.web.rest.errors.BadRequestAlertException;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
@@ -18,6 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,20 +47,22 @@ public class LocationResource {
     private String applicationName;
 
     private final LocationService locationService;
+    private final ProjectService projectService;
 
-    public LocationResource(LocationService locationService) {
+    public LocationResource(LocationService locationService, ProjectService projectService) {
         this.locationService = locationService;
+        this.projectService = projectService;
     }
 
     /**
      * {@code POST  /locations} : Create a new location.
      *
      * @param location the location to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new
-     * location, or with status {@code 400 (Bad Request)} if the location has already an ID.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new location, or with status {@code 400 (Bad Request)} if the location has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/locations")
+    @PreAuthorize("@locationService.hasAccessToLocation(#location, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")")
     public ResponseEntity<Location> createLocation(@Valid @RequestBody Location location) throws URISyntaxException {
         log.debug("REST request to save Location : {}", location);
         if (location.getId() != null) {
@@ -73,12 +79,11 @@ public class LocationResource {
      * {@code PUT  /locations} : Updates an existing location.
      *
      * @param location the location to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated
-     * location, or with status {@code 400 (Bad Request)} if the location is not valid, or with
-     * status {@code 500 (Internal Server Error)} if the location couldn't be updated.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated location, or with status {@code 400 (Bad Request)} if the location is not valid, or with status {@code 500 (Internal Server Error)} if the location couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/locations")
+    @PreAuthorize("@locationService.hasAccessToLocation(#location, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")")
     public ResponseEntity<Location> updateLocation(@Valid @RequestBody Location location) throws URISyntaxException {
         log.debug("REST request to update Location : {}", location);
         if (location.getId() == null) {
@@ -95,10 +100,10 @@ public class LocationResource {
      * {@code GET  /locations} : get all the locations.
      *
      * @param pageable the pagination information.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of locations in
-     * body.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of locations in body.
      */
     @GetMapping("/locations")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<List<Location>> getAllLocations(Pageable pageable) {
         log.debug("REST request to get a page of Locations");
         Page<Location> page = locationService.findAll(pageable);
@@ -110,10 +115,10 @@ public class LocationResource {
      * {@code GET  /locations/:id} : get the "id" location.
      *
      * @param id the id of the location to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the location,
-     * or with status {@code 404 (Not Found)}.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the location, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/locations/{id}")
+    @PreAuthorize("@locationService.hasAccessToLocation(#id, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")")
     public ResponseEntity<Location> getLocation(@PathVariable Long id) {
         log.debug("REST request to get Location : {}", id);
         Optional<Location> location = locationService.findOne(id);
@@ -121,6 +126,7 @@ public class LocationResource {
     }
 
     @GetMapping("/locations/project/{projectId}")
+    @PreAuthorize("@projectService.hasAccessToProject(#projectId, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")")
     public ResponseEntity<List<Location>> getLocationsByProjectId(@PathVariable Long projectId) {
         log.debug("Rest Request to get Locations by projectId {}", projectId);
         List<Location> locations = locationService.findAllByProjectId(projectId);
@@ -134,6 +140,7 @@ public class LocationResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/locations/{id}")
+    @PreAuthorize("@locationService.hasAccessToLocation(#id, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")")
     public ResponseEntity<Void> deleteLocation(@PathVariable Long id) {
         log.debug("REST request to delete Location : {}", id);
         locationService.delete(id);
