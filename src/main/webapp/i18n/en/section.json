@@ -4,6 +4,7 @@
       "home": {
         "title": "Sections",
         "createLabel": "Create a new Section",
+        "editLabel": "Edit Section",
         "createOrEditLabel": "Create or edit a Section",
         "notFound": "No Sections found"
       },
@@ -11,7 +12,7 @@
       "updated": "A Section is updated with identifier {{ param }}",
       "deleted": "A Section is deleted with identifier {{ param }}",
       "delete": {
-        "question": "Are you sure you want to delete Section {{ id }}?"
+        "question": "Are you sure you want to delete Section {{ name }}?"
       },
       "detail": {
         "title": "Section"

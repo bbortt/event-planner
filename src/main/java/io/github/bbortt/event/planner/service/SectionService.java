@@ -1,7 +1,9 @@
 package io.github.bbortt.event.planner.service;
 
+import io.github.bbortt.event.planner.domain.Location;
 import io.github.bbortt.event.planner.domain.Section;
 import io.github.bbortt.event.planner.repository.SectionRepository;
+import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class SectionService {
+
     private final Logger log = LoggerFactory.getLogger(SectionService.class);
 
     private final SectionRepository sectionRepository;
@@ -36,18 +39,6 @@ public class SectionService {
     }
 
     /**
-     * Get all the sections.
-     *
-     * @param pageable the pagination information.
-     * @return the list of entities.
-     */
-    @Transactional(readOnly = true)
-    public Page<Section> findAll(Pageable pageable) {
-        log.debug("Request to get all Sections");
-        return sectionRepository.findAll(pageable);
-    }
-
-    /**
      * Get one section by id.
      *
      * @param id the id of the entity.
@@ -57,6 +48,17 @@ public class SectionService {
     public Optional<Section> findOne(Long id) {
         log.debug("Request to get Section : {}", id);
         return sectionRepository.findById(id);
+    }
+
+    /**
+     * Get all the sections.
+     *
+     * @return the list of entities.
+     */
+    @Transactional(readOnly = true)
+    public List<Section> findAll() {
+        log.debug("Request to get all Sections");
+        return sectionRepository.findAll();
     }
 
     /**

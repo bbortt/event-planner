@@ -1,15 +1,20 @@
 import { Routes } from '@angular/router';
+
 import { ProjectResolve } from 'app/entities/project/project.resolve';
 import { ResponsibilityResolve } from 'app/entities/responsibility/responsibility.resolve';
 import { LocationResolve } from 'app/entities/location/location.resolve';
+import { SectionResolve } from 'app/entities/section/section.resolve';
+
+import { UserRouteRoleAccessService } from 'app/core/auth/user-route-role-access-service';
 
 import { CreateProjectModalComponent } from 'app/view/create-project/create-project-modal.component';
 import { ProjectAdminUpdateModalComponent } from 'app/view/project/admin/project-admin-update-modal.component';
 import { ProjectResponsibilityModalComponent } from 'app/view/project/admin/responsibilities/project-responsibility-modal.component';
 import { ProjectUserModalComponent } from 'app/view/project/admin/users/project-user-modal.component';
 import { ProjectLocationModalComponent } from 'app/view/project/admin/locations/project-location-modal.component';
+import { ProjectSectionModalComponent } from 'app/view/project/admin/locations/sections/project-section-modal.component';
+
 import { ADMIN, SECRETARY } from 'app/shared/constants/role.constants';
-import { UserRouteRoleAccessService } from 'app/core/auth/user-route-role-access-service';
 
 export const MODAL_OUTLET_ROUTES: Routes = [
   {
@@ -88,6 +93,31 @@ export const MODAL_OUTLET_ROUTES: Routes = [
     resolve: {
       project: ProjectResolve,
       location: LocationResolve,
+    },
+    outlet: 'modal',
+  },
+  {
+    path: 'projects/:projectId/locations/:locationId/sections/new',
+    component: ProjectSectionModalComponent,
+    data: {
+      roles: [ADMIN.name, SECRETARY.name],
+    },
+    canActivate: [UserRouteRoleAccessService],
+    resolve: {
+      location: LocationResolve,
+    },
+    outlet: 'modal',
+  },
+  {
+    path: 'projects/:projectId/locations/:locationId/sections/:sectionId/edit',
+    component: ProjectSectionModalComponent,
+    data: {
+      roles: [ADMIN.name, SECRETARY.name],
+    },
+    canActivate: [UserRouteRoleAccessService],
+    resolve: {
+      location: LocationResolve,
+      section: SectionResolve,
     },
     outlet: 'modal',
   },

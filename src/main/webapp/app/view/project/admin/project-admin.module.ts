@@ -12,6 +12,9 @@ import { ProjectLocationsComponent } from 'app/view/project/admin/locations/proj
 import { ProjectLocationUpdateComponent } from 'app/view/project/admin/locations/project-location-update.component';
 import { ProjectLocationModalComponent } from 'app/view/project/admin/locations/project-location-modal.component';
 import { ProjectLocationDeleteDialogComponent } from 'app/view/project/admin/locations/project-location-delete-dialog.component';
+import { ProjectSectionUpdateComponent } from 'app/view/project/admin/locations/sections/project-section-update.component';
+import { ProjectSectionDeleteDialogComponent } from 'app/view/project/admin/locations/sections/project-section-delete-dialog.component';
+import { ProjectSectionModalComponent } from 'app/view/project/admin/locations/sections/project-section-modal.component';
 import { ProjectResponsibilitiesComponent } from 'app/view/project/admin/responsibilities/project-responsibilities.component';
 import { ProjectResponsibilityUpdateComponent } from 'app/view/project/admin/responsibilities/project-responsibility-update.component';
 import { ProjectResponsibilityDeleteDialogComponent } from 'app/view/project/admin/responsibilities/project-responsibility-delete-dialog.component';
@@ -19,10 +22,9 @@ import { ProjectUsersComponent } from 'app/view/project/admin/users/project-user
 
 import { PROJECT_ADMIN_ROUTES } from './project-admin.routes';
 import { ProjectUserInviteComponent } from 'app/view/project/admin/users/project-user-invite.component';
-import { MatDatetimepickerModule } from '@mat-datetimepicker/core';
 
 @NgModule({
-  imports: [EventPlannerSharedModule, NgxAutocompleteModule, MatDatetimepickerModule, RouterModule.forChild(PROJECT_ADMIN_ROUTES)],
+  imports: [EventPlannerSharedModule, NgxAutocompleteModule, RouterModule.forChild(PROJECT_ADMIN_ROUTES)],
   declarations: [
     ProjectAdminComponent,
     ProjectAdminUpdateModalComponent,
@@ -32,6 +34,9 @@ import { MatDatetimepickerModule } from '@mat-datetimepicker/core';
     ProjectLocationUpdateComponent,
     ProjectLocationModalComponent,
     ProjectLocationDeleteDialogComponent,
+    ProjectSectionUpdateComponent,
+    ProjectSectionModalComponent,
+    ProjectSectionDeleteDialogComponent,
     ProjectResponsibilitiesComponent,
     ProjectResponsibilityUpdateComponent,
     ProjectResponsibilityDeleteDialogComponent,

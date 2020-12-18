@@ -1,12 +1,12 @@
 package io.github.bbortt.event.planner.service;
 
 import io.github.bbortt.event.planner.domain.Location;
-import io.github.bbortt.event.planner.domain.Responsibility;
 import io.github.bbortt.event.planner.repository.LocationRepository;
 import io.github.bbortt.event.planner.repository.RoleRepository;
 import io.github.bbortt.event.planner.security.AuthoritiesConstants;
 import io.github.bbortt.event.planner.security.SecurityUtils;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,22 +79,21 @@ public class LocationService {
     }
 
     /**
-     * Get all the locations for a specific project.
+     * Find all Locations for the given project.
      *
-     * @param projectId the project id.
-     * @param pageable the pagination information.
+     * @param projectId the project to retrieve locations for.
      * @return the list of entities.
      */
-    public Page<Location> findAllByProjectId(Long projectId, Pageable pageable) {
-        log.debug("Request to delete Location : {}", projectId);
-        return locationRepository.findAllByProjectId(projectId, pageable);
+    public List<Location> findAllByProjectId(Long projectId) {
+        log.debug("Request to get all Locations for Project {}", projectId);
+        return locationRepository.findAllByProjectId(projectId);
     }
 
     /**
      * Checks if the current user has access to the `Project` linked to the given `Location`, identified by id. The project access must be given by any of the `roles`. Example usage: `@PreAuthorize("@locationService.hasAccessToLocation(#location, 'ADMIN', 'SECRETARY')")`
      *
      * @param locationId the id of the location with a linked project to check.
-     * @param roles to look out for.
+     * @param roles      to look out for.
      * @return true if the project access has any of the roles.
      */
     @PreAuthorize("isAuthenticated()")
@@ -107,7 +106,7 @@ public class LocationService {
      * Checks if the current user has access to the `Project` linked to the given `Location`. The project access must be given by any of the `roles`. Example usage: `@PreAuthorize("@locationService.hasAccessToLocation(#location, 'ADMIN', 'SECRETARY')")`
      *
      * @param location the entity with a linked project to check.
-     * @param roles to look out for.
+     * @param roles    to look out for.
      * @return true if the project access has any of the roles.
      */
     @Transactional(readOnly = true)
