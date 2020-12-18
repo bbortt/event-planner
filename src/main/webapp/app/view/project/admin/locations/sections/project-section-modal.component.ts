@@ -2,7 +2,9 @@ import { AfterViewInit, Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+
 import { JhiEventManager } from 'ng-jhipster';
+
 import { ProjectSectionUpdateComponent } from 'app/view/project/admin/locations/sections/project-section-update.component';
 
 @Component({

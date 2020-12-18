@@ -1,8 +1,11 @@
 import { Routes } from '@angular/router';
+
 import { ProjectResolve } from 'app/entities/project/project.resolve';
 import { ResponsibilityResolve } from 'app/entities/responsibility/responsibility.resolve';
 import { LocationResolve } from 'app/entities/location/location.resolve';
 import { SectionResolve } from 'app/entities/section/section.resolve';
+
+import { UserRouteRoleAccessService } from 'app/core/auth/user-route-role-access-service';
 
 import { CreateProjectModalComponent } from 'app/view/create-project/create-project-modal.component';
 import { ProjectAdminUpdateModalComponent } from 'app/view/project/admin/project-admin-update-modal.component';
@@ -11,7 +14,6 @@ import { ProjectUserModalComponent } from 'app/view/project/admin/users/project-
 import { ProjectLocationModalComponent } from 'app/view/project/admin/locations/project-location-modal.component';
 import { ProjectSectionModalComponent } from 'app/view/project/admin/locations/sections/project-section-modal.component';
 
-import { UserRouteRoleAccessService } from 'app/core/auth/user-route-role-access-service';
 import { ADMIN, SECRETARY } from 'app/shared/constants/role.constants';
 
 export const MODAL_OUTLET_ROUTES: Routes = [

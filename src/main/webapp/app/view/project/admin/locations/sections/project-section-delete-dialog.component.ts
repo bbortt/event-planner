@@ -2,8 +2,9 @@ import { Component } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
 
-import { Section } from 'app/shared/model/section.model';
 import { SectionService } from 'app/entities/section/section.service';
+
+import { Section } from 'app/shared/model/section.model';
 
 @Component({
   templateUrl: './project-section-delete-dialog.component.html',

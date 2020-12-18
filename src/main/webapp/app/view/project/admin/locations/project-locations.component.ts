@@ -5,12 +5,13 @@ import { Subscription } from 'rxjs';
 import { JhiEventManager } from 'ng-jhipster';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { Project } from 'app/shared/model/project.model';
-import { Location } from 'app/shared/model/location.model';
-
 import { LocationService } from 'app/entities/location/location.service';
-import { ProjectLocationDeleteDialogComponent } from 'app/view/project/admin/locations/project-location-delete-dialog.component';
+
+import { Location } from 'app/shared/model/location.model';
+import { Project } from 'app/shared/model/project.model';
 import { Section } from 'app/shared/model/section.model';
+
+import { ProjectLocationDeleteDialogComponent } from 'app/view/project/admin/locations/project-location-delete-dialog.component';
 import { ProjectSectionDeleteDialogComponent } from 'app/view/project/admin/locations/sections/project-section-delete-dialog.component';
 
 @Component({
