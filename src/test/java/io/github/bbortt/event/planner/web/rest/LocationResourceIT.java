@@ -11,10 +11,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import io.github.bbortt.event.planner.AbstractApplicationContextAwareIT;
+import io.github.bbortt.event.planner.domain.Invitation;
 import io.github.bbortt.event.planner.domain.Location;
 import io.github.bbortt.event.planner.domain.Project;
+import io.github.bbortt.event.planner.domain.User;
+import io.github.bbortt.event.planner.repository.AuthorityRepository;
 import io.github.bbortt.event.planner.repository.LocationRepository;
+import io.github.bbortt.event.planner.repository.ProjectRepository;
+import io.github.bbortt.event.planner.repository.RoleRepository;
+import io.github.bbortt.event.planner.security.AuthoritiesConstants;
 import io.github.bbortt.event.planner.service.LocationService;
+import java.util.Collections;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,6 +38,9 @@ import org.springframework.transaction.annotation.Transactional;
 @WithMockUser
 public class LocationResourceIT extends AbstractApplicationContextAwareIT {
 
+    private static final String TEST_USER_LOGIN = "locationresourceit-login";
+    private static final String TEST_ADMIN_LOGIN = "locationresourceit-admin";
+
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
 
@@ -39,6 +49,12 @@ public class LocationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Autowired
     private LocationService locationService;
+
+    @Autowired
+    private AuthorityRepository authorityRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     @Autowired
     private EntityManager em;
@@ -91,10 +107,31 @@ public class LocationResourceIT extends AbstractApplicationContextAwareIT {
     @BeforeEach
     public void initTest() {
         location = createEntity(em);
+
+        User user = UserResourceIT.createEntity(em);
+        user.setLogin(TEST_USER_LOGIN);
+        user.setAuthorities(Collections.singleton(authorityRepository.findById(AuthoritiesConstants.USER).get()));
+        em.persist(user);
+
+        User admin = UserResourceIT.createEntity(em);
+        admin.setLogin(TEST_ADMIN_LOGIN);
+        admin.setAuthorities(Collections.singleton(authorityRepository.findById(AuthoritiesConstants.ADMIN).get()));
+        em.persist(admin);
+
+        Invitation invitation = InvitationResourceIT
+            .createEntity(em)
+            .accepted(Boolean.TRUE)
+            .project(location.getProject())
+            .user(user)
+            .role(roleRepository.roleAdmin());
+        em.persist(invitation);
+
+        em.flush();
     }
 
     @Test
     @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     public void createLocation() throws Exception {
         locationRepository.deleteAll();
 
@@ -112,6 +149,7 @@ public class LocationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     public void createLocationWithExistingId() throws Exception {
         int databaseSizeBeforeCreate = locationRepository.findAll().size();
 
@@ -147,21 +185,18 @@ public class LocationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    public void getAllLocations() throws Exception {
+    @WithMockUser(TEST_USER_LOGIN)
+    public void getAllLocationsDeniedForUsers() throws Exception {
         // Initialize the database
         locationRepository.saveAndFlush(location);
 
         // Get all the locationList
-        restLocationMockMvc
-            .perform(get("/api/locations?sort=id,desc"))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(location.getId().intValue())))
-            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)));
+        restLocationMockMvc.perform(get("/api/locations?sort=id,desc")).andExpect(status().isForbidden());
     }
 
     @Test
     @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     public void getLocation() throws Exception {
         // Initialize the database
         locationRepository.saveAndFlush(location);
@@ -177,6 +212,7 @@ public class LocationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     public void getNonExistingLocation() throws Exception {
         // Get the location
         restLocationMockMvc.perform(get("/api/locations/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
@@ -184,6 +220,7 @@ public class LocationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     public void updateLocation() throws Exception {
         // Initialize the database
         locationService.save(location);
@@ -215,6 +252,7 @@ public class LocationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     public void updateNonExistingLocation() throws Exception {
         int databaseSizeBeforeUpdate = locationRepository.findAll().size();
 
@@ -230,6 +268,7 @@ public class LocationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     public void deleteLocation() throws Exception {
         // Initialize the database
         locationService.save(location);

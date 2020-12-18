@@ -47,11 +47,9 @@ public class ResponsibilityResource {
     private String applicationName;
 
     private final ResponsibilityService responsibilityService;
-    private final ProjectService projectService;
 
-    public ResponsibilityResource(ResponsibilityService responsibilityService, ProjectService projectService) {
+    public ResponsibilityResource(ResponsibilityService responsibilityService) {
         this.responsibilityService = responsibilityService;
-        this.projectService = projectService;
     }
 
     /**
@@ -143,10 +141,9 @@ public class ResponsibilityResource {
 
     @GetMapping("/responsibilities/project/{projectId}")
     @PreAuthorize("@projectService.hasAccessToProject(#projectId, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")")
-    public ResponseEntity<List<Responsibility>> getResponsibilitiesByProjectId(@PathVariable Long projectId, Pageable pageable) {
-        Page<Responsibility> page = responsibilityService.findAllByProjectId(projectId, pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
-        return ResponseEntity.ok().headers(headers).body(page.getContent());
+    public ResponseEntity<List<Responsibility>> getResponsibilitiesByProjectId(@PathVariable Long projectId) {
+        List<Responsibility> responsibilities = responsibilityService.findAllByProjectId(projectId);
+        return ResponseEntity.ok(responsibilities);
     }
 
     /**

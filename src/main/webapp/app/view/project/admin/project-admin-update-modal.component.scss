@@ -1,0 +1,17 @@
+@import '~@angular/material/theming';
+@include mat-core();
+
+$app-primary: mat-palette($mat-indigo);
+$app-accent: mat-palette($mat-pink);
+$app-warn: mat-palette($mat-red);
+
+$theme: mat-light-theme($app-primary, $app-accent, $app-warn);
+
+@include angular-material-theme($theme);
+
+@import '~@mat-datetimepicker/core/datetimepicker/datetimepicker-theme';
+@include mat-datetimepicker-theme($theme);
+
+.cdk-overlay-container {
+  z-index: 1100 !important;
+}
