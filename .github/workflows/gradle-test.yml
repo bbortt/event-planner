@@ -1,6 +1,8 @@
 name: Unit Test
 on:
   push:
+    branches:
+      - '*'
     tags-ignore:
       - '*'
 jobs:
