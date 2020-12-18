@@ -121,7 +121,8 @@
                                       propertyAccessor="email"
                                       [placeholder]="'global.form.search' | translate"
                                       [debounceTime]="defaultDebounce"
-                                      (autocompleteChanges)="filterUsersByLoginOrEmail($event)"></ngx-autocomplete>
+                                      (autocompleteChanges)="filterUsersByLoginOrEmail($event)"
+                                      autocomplete="off"></ngx-autocomplete>
                     <div
                         *ngIf="editForm.get('selectedUser')!.invalid && (editForm.get('selectedUser')!.dirty || editForm.get('selectedUser')!.touched)">
                         <small class="form-text text-danger"
