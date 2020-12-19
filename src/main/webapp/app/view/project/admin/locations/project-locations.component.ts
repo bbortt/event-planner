@@ -5,12 +5,13 @@ import { Subscription } from 'rxjs';
 import { JhiEventManager } from 'ng-jhipster';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { Project } from 'app/shared/model/project.model';
-import { Location } from 'app/shared/model/location.model';
-
 import { LocationService } from 'app/entities/location/location.service';
-import { ProjectLocationDeleteDialogComponent } from 'app/view/project/admin/locations/project-location-delete-dialog.component';
+
+import { Location } from 'app/shared/model/location.model';
+import { Project } from 'app/shared/model/project.model';
 import { Section } from 'app/shared/model/section.model';
+
+import { ProjectLocationDeleteDialogComponent } from 'app/view/project/admin/locations/project-location-delete-dialog.component';
 import { ProjectSectionDeleteDialogComponent } from 'app/view/project/admin/locations/sections/project-section-delete-dialog.component';
 
 @Component({
@@ -24,7 +25,7 @@ export class ProjectLocationsComponent implements OnInit, OnDestroy {
 
   eventSubscriber?: Subscription;
 
-  predicate = 'name';
+  sortBy = 'name';
   ascending = true;
 
   constructor(
@@ -38,7 +39,7 @@ export class ProjectLocationsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ project }) => {
       this.project = project;
-      this.loadPage();
+      this.loadLocations();
       this.registerChangeInLocations();
       this.registerChangeInSections();
     });
@@ -50,15 +51,15 @@ export class ProjectLocationsComponent implements OnInit, OnDestroy {
     }
   }
 
-  registerChangeInLocations(): void {
-    this.eventSubscriber = this.eventManager.subscribe('locationListModification', () => this.loadPage());
+  private registerChangeInLocations(): void {
+    this.eventSubscriber = this.eventManager.subscribe('locationListModification', () => this.loadLocations());
   }
 
-  registerChangeInSections(): void {
-    this.eventSubscriber = this.eventManager.subscribe('sectionListModification', () => this.loadPage());
+  private registerChangeInSections(): void {
+    this.eventSubscriber = this.eventManager.subscribe('sectionListModification', () => this.loadLocations());
   }
 
-  loadPage(): void {
+  private loadLocations(): void {
     this.locationService.findAllByProject(this.project!).subscribe((res: HttpResponse<Location[]>) => this.onSuccess(res.body));
   }
 
@@ -73,8 +74,8 @@ export class ProjectLocationsComponent implements OnInit, OnDestroy {
   }
 
   sort(): string[] {
-    const result = [this.predicate + ',' + (this.ascending ? 'asc' : 'desc')];
-    if (this.predicate !== 'id') {
+    const result = [this.sortBy + ',' + (this.ascending ? 'asc' : 'desc')];
+    if (this.sortBy !== 'id') {
       result.push('id');
     }
     return result;
@@ -83,7 +84,7 @@ export class ProjectLocationsComponent implements OnInit, OnDestroy {
   protected onSuccess(data: Location[] | null): void {
     this.router.navigate(['/project', this.project!.id!, 'admin', 'locations'], {
       queryParams: {
-        sort: this.predicate + ',' + (this.ascending ? 'asc' : 'desc'),
+        sort: this.sortBy + ',' + (this.ascending ? 'asc' : 'desc'),
       },
     });
     this.locations = data || [];

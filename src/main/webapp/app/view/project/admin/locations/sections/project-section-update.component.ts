@@ -3,9 +3,10 @@ import { HttpResponse } from '@angular/common/http';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 
+import { SectionService } from 'app/entities/section/section.service';
+
 import { Location } from 'app/shared/model/location.model';
 import { Section } from 'app/shared/model/section.model';
-import { SectionService } from 'app/entities/section/section.service';
 
 @Component({
   selector: 'app-section-update',

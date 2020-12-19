@@ -6,9 +6,8 @@ import io.github.bbortt.event.planner.repository.RoleRepository;
 import io.github.bbortt.event.planner.security.AuthoritiesConstants;
 import io.github.bbortt.event.planner.security.SecurityUtils;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
-import javassist.NotFoundException;
-import javax.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -83,19 +82,21 @@ public class ResponsibilityService {
      * Find all Responsibilities for the given Project.
      *
      * @param projectId the id of the project to retrieve responsibilities for.
-     * @param pageable the pagination information.
      * @return the list of entities.
      */
-    public Page<Responsibility> findAllByProjectId(Long projectId, Pageable pageable) {
+    public List<Responsibility> findAllByProjectId(Long projectId) {
         log.debug("Request to get all Responsibilities for Project {}", projectId);
-        return responsibilityRepository.findAllByProjectId(projectId, pageable);
+        return responsibilityRepository.findAllByProjectId(projectId);
     }
 
     /**
-     * Checks if the current user has access to the `Project` linked to the given `Responsibility`, identified by id. The project access must be given by any of the `roles`. Example usage: `@PreAuthorize("@responsibilityService.hasAccessToResponsibility(#responsibility, 'ADMIN', 'SECRETARY')")`
+     * Checks if the current user has access to the `Project` linked to the given `Responsibility`,
+     * identified by id. The project access must be given by any of the `roles`. Example usage:
+     * `@PreAuthorize("@responsibilityService.hasAccessToResponsibility(#responsibility, 'ADMIN',
+     * 'SECRETARY')")`
      *
      * @param responsibilityId the id of the responsibility with a linked project to check.
-     * @param roles to look out for.
+     * @param roles            to look out for.
      * @return true if the project access has any of the roles.
      */
     @PreAuthorize("isAuthenticated()")
@@ -105,10 +106,13 @@ public class ResponsibilityService {
     }
 
     /**
-     * Checks if the current user has access to the `Project` linked to the given `Responsibility`. The project access must be given by any of the `roles`. Example usage: `@PreAuthorize("@responsibilityService.hasAccessToResponsibility(#responsibility, 'ADMIN', 'SECRETARY')")`
+     * Checks if the current user has access to the `Project` linked to the given `Responsibility`.
+     * The project access must be given by any of the `roles`. Example usage:
+     * `@PreAuthorize("@responsibilityService.hasAccessToResponsibility(#responsibility, 'ADMIN',
+     * 'SECRETARY')")`
      *
      * @param responsibility the entity with a linked project to check.
-     * @param roles to look out for.
+     * @param roles          to look out for.
      * @return true if the project access has any of the roles.
      */
     @Transactional(readOnly = true)

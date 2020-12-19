@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { HttpHeaders, HttpResponse } from '@angular/common/http';
-import { ActivatedRoute, Data, ParamMap, Router } from '@angular/router';
-import { combineLatest, Subscription } from 'rxjs';
+import { HttpResponse } from '@angular/common/http';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { JhiEventManager } from 'ng-jhipster';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -11,8 +11,6 @@ import { Responsibility } from 'app/shared/model/responsibility.model';
 import { ResponsibilityService } from 'app/entities/responsibility/responsibility.service';
 
 import { ProjectResponsibilityDeleteDialogComponent } from 'app/view/project/admin/responsibilities/project-responsibility-delete-dialog.component';
-
-import { ITEMS_PER_PAGE } from 'app/shared/constants/pagination.constants';
 
 @Component({
   selector: 'app-project-responsibilities',
@@ -26,13 +24,6 @@ export class ProjectResponsibilitiesComponent implements OnInit, OnDestroy {
 
   eventSubscriber?: Subscription;
 
-  totalItems = 0;
-  itemsPerPage = ITEMS_PER_PAGE;
-  page!: number;
-  predicate = 'name';
-  ascending = true;
-  ngbPaginationPage = 1;
-
   constructor(
     protected responsibilityService: ResponsibilityService,
     protected activatedRoute: ActivatedRoute,
@@ -44,7 +35,7 @@ export class ProjectResponsibilitiesComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ project }) => {
       this.project = project;
-      this.handleNavigation();
+      this.loadResponsibilities();
       this.registerChangeInResponsibilities();
     });
   }
@@ -55,29 +46,11 @@ export class ProjectResponsibilitiesComponent implements OnInit, OnDestroy {
     }
   }
 
-  protected handleNavigation(): void {
-    combineLatest(this.activatedRoute.data, this.activatedRoute.queryParamMap, (data: Data, params: ParamMap) => {
-      const page = params.get('page');
-      const pageNumber = page !== null ? +page : 1;
-      if (pageNumber !== this.page) {
-        this.loadPage(pageNumber, true);
-      }
-    }).subscribe();
-  }
-
-  loadPage(page?: number, dontNavigate?: boolean): void {
-    const pageToLoad: number = page || this.page || 1;
-
-    this.responsibilityService
-      .findAllByProject(this.project!, {
-        page: pageToLoad - 1,
-        size: this.itemsPerPage,
-        sort: this.sort(),
-      })
-      .subscribe(
-        (res: HttpResponse<Responsibility[]>) => this.onSuccess(res.body, res.headers, pageToLoad, !dontNavigate),
-        () => this.onError()
-      );
+  loadResponsibilities(): void {
+    this.responsibilityService.findAllByProject(this.project!).subscribe((response: HttpResponse<Responsibility[]>) => {
+      this.loadedResponsibilities = response.body || [];
+      this.responsibilities = this.loadedResponsibilities;
+    });
   }
 
   trackId(index: number, item: Responsibility): number {
@@ -86,7 +59,7 @@ export class ProjectResponsibilitiesComponent implements OnInit, OnDestroy {
   }
 
   registerChangeInResponsibilities(): void {
-    this.eventSubscriber = this.eventManager.subscribe('responsibilityListModification', () => this.loadPage());
+    this.eventSubscriber = this.eventManager.subscribe('responsibilityListModification', () => this.loadResponsibilities());
   }
 
   filterData(searchString: string): void {
@@ -98,34 +71,5 @@ export class ProjectResponsibilitiesComponent implements OnInit, OnDestroy {
   delete(responsibility: Responsibility): void {
     const modalRef = this.modalService.open(ProjectResponsibilityDeleteDialogComponent, { backdrop: 'static' });
     modalRef.componentInstance.responsibility = responsibility;
-  }
-
-  sort(): string[] {
-    const result = [this.predicate + ',' + (this.ascending ? 'asc' : 'desc')];
-    if (this.predicate !== 'id') {
-      result.push('id');
-    }
-    return result;
-  }
-
-  protected onSuccess(data: Responsibility[] | null, headers: HttpHeaders, page: number, navigate: boolean): void {
-    this.totalItems = Number(headers.get('X-Total-Count'));
-    this.page = page;
-    if (navigate) {
-      this.router.navigate(['/project', this.project!.id!, 'admin', 'responsibilities'], {
-        queryParams: {
-          page: this.page,
-          size: this.itemsPerPage,
-          sort: this.predicate + ',' + (this.ascending ? 'asc' : 'desc'),
-        },
-      });
-    }
-    this.loadedResponsibilities = data || [];
-    this.responsibilities = this.loadedResponsibilities;
-    this.ngbPaginationPage = this.page;
-  }
-
-  protected onError(): void {
-    this.ngbPaginationPage = this.page ?? 1;
   }
 }
