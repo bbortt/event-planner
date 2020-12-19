@@ -20,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
  * Service Implementation for managing {@link Responsibility}.
  */
 @Service
-@Transactional
 public class ResponsibilityService {
 
     private final Logger log = LoggerFactory.getLogger(ResponsibilityService.class);
@@ -39,6 +38,7 @@ public class ResponsibilityService {
      * @param responsibility the entity to save.
      * @return the persisted entity.
      */
+    @Transactional
     public Responsibility save(Responsibility responsibility) {
         log.debug("Request to save Responsibility : {}", responsibility);
         return responsibilityRepository.save(responsibility);
@@ -73,6 +73,7 @@ public class ResponsibilityService {
      *
      * @param id the id of the entity.
      */
+    @Transactional
     public void delete(Long id) {
         log.debug("Request to delete Responsibility : {}", id);
         responsibilityRepository.deleteById(id);
@@ -84,6 +85,7 @@ public class ResponsibilityService {
      * @param projectId the id of the project to retrieve responsibilities for.
      * @return the list of entities.
      */
+    @Transactional(readOnly = true)
     public List<Responsibility> findAllByProjectId(Long projectId) {
         log.debug("Request to get all Responsibilities for Project {}", projectId);
         return responsibilityRepository.findAllByProjectId(projectId);
@@ -99,6 +101,7 @@ public class ResponsibilityService {
      * @param roles            to look out for.
      * @return true if the project access has any of the roles.
      */
+    @Transactional(readOnly = true)
     @PreAuthorize("isAuthenticated()")
     public boolean hasAccessToResponsibility(Long responsibilityId, String... roles) {
         Optional<Responsibility> responsibility = findOne(responsibilityId);

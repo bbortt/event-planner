@@ -30,7 +30,6 @@ import org.zalando.problem.violations.Violation;
  * Service Implementation for managing {@link Project}.
  */
 @Service
-@Transactional
 public class ProjectService {
 
     private final Logger log = LoggerFactory.getLogger(ProjectService.class);
@@ -58,6 +57,7 @@ public class ProjectService {
      * @param project the entity to save.
      * @return the persisted entity.
      */
+    @Transactional
     public Project save(Project project) {
         log.debug("Request to save Project : {}", project);
         return projectRepository.save(project);
@@ -104,6 +104,7 @@ public class ProjectService {
      *
      * @param id the id of the entity.
      */
+    @Transactional
     public void delete(Long id) {
         log.debug("Request to delete Project : {}", id);
         projectRepository.deleteById(id);
@@ -115,6 +116,7 @@ public class ProjectService {
      * @param createProjectDTO crate project DTO.
      * @return saved project.
      */
+    @Transactional
     public Project create(CreateProjectDTO createProjectDTO) {
         Project project = new Project()
             .name(createProjectDTO.getName())
@@ -167,6 +169,7 @@ public class ProjectService {
      * @param userDTO the {@code UserDTO}.
      * @return the creator of the project.
      */
+    @Transactional(readOnly = true)
     private User userFromDto(UserDTO userDTO) {
         OptionalUserHolder optionalUserHolder = new OptionalUserHolder();
 

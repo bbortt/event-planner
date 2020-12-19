@@ -20,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
  * Service Implementation for managing {@link Location}.
  */
 @Service
-@Transactional
 public class LocationService {
 
     private final Logger log = LoggerFactory.getLogger(LocationService.class);
@@ -39,6 +38,7 @@ public class LocationService {
      * @param location the entity to save.
      * @return the persisted entity.
      */
+    @Transactional
     public Location save(Location location) {
         log.debug("Request to save Location : {}", location);
         return locationRepository.save(location);
@@ -73,6 +73,7 @@ public class LocationService {
      *
      * @param id the id of the entity.
      */
+    @Transactional
     public void delete(Long id) {
         log.debug("Request to delete Location : {}", id);
         locationRepository.deleteById(id);
@@ -84,6 +85,7 @@ public class LocationService {
      * @param projectId the project to retrieve locations for.
      * @return the list of entities.
      */
+    @Transactional(readOnly = true)
     public List<Location> findAllByProjectId(Long projectId) {
         log.debug("Request to get all Locations for Project {}", projectId);
         return locationRepository.findAllByProjectId(projectId);
@@ -93,9 +95,10 @@ public class LocationService {
      * Checks if the current user has access to the `Project` linked to the given `Location`, identified by id. The project access must be given by any of the `roles`. Example usage: `@PreAuthorize("@locationService.hasAccessToLocation(#location, 'ADMIN', 'SECRETARY')")`
      *
      * @param locationId the id of the location with a linked project to check.
-     * @param roles      to look out for.
+     * @param roles to look out for.
      * @return true if the project access has any of the roles.
      */
+    @Transactional(readOnly = true)
     @PreAuthorize("isAuthenticated()")
     public boolean hasAccessToLocation(Long locationId, String... roles) {
         Optional<Location> location = findOne(locationId);
@@ -106,7 +109,7 @@ public class LocationService {
      * Checks if the current user has access to the `Project` linked to the given `Location`. The project access must be given by any of the `roles`. Example usage: `@PreAuthorize("@locationService.hasAccessToLocation(#location, 'ADMIN', 'SECRETARY')")`
      *
      * @param location the entity with a linked project to check.
-     * @param roles    to look out for.
+     * @param roles to look out for.
      * @return true if the project access has any of the roles.
      */
     @Transactional(readOnly = true)

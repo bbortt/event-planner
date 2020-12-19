@@ -30,7 +30,6 @@ import org.springframework.transaction.annotation.Transactional;
  * Service class for managing users.
  */
 @Service
-@Transactional
 public class UserService {
 
     private final Logger log = LoggerFactory.getLogger(UserService.class);
@@ -47,6 +46,7 @@ public class UserService {
         this.authorityRepository = authorityRepository;
     }
 
+    @Transactional
     public Optional<User> activateRegistration(String key) {
         log.debug("Activating user for activation key {}", key);
         return userRepository
@@ -62,6 +62,7 @@ public class UserService {
             );
     }
 
+    @Transactional
     public Optional<User> completePasswordReset(String newPassword, String key) {
         log.debug("Reset user password for reset key {}", key);
         return userRepository
@@ -77,6 +78,7 @@ public class UserService {
             );
     }
 
+    @Transactional
     public Optional<User> requestPasswordReset(String mail) {
         return userRepository
             .findOneByEmailIgnoreCase(mail)
@@ -90,6 +92,7 @@ public class UserService {
             );
     }
 
+    @Transactional
     public User registerUser(UserDTO userDTO, String password) {
         userRepository
             .findOneByLogin(userDTO.getLogin().toLowerCase())
@@ -135,6 +138,7 @@ public class UserService {
         return newUser;
     }
 
+    @Transactional
     private boolean removeNonActivatedUser(User existingUser) {
         if (existingUser.getActivated()) {
             return false;
@@ -144,6 +148,7 @@ public class UserService {
         return true;
     }
 
+    @Transactional
     public User createUser(UserDTO userDTO) {
         User user = new User();
         user.setLogin(userDTO.getLogin().toLowerCase());
@@ -184,6 +189,7 @@ public class UserService {
      * @param userDTO user to update.
      * @return updated user.
      */
+    @Transactional
     public Optional<UserDTO> updateUser(UserDTO userDTO) {
         return Optional
             .of(userRepository.findById(userDTO.getId()))
@@ -216,6 +222,7 @@ public class UserService {
             .map(UserDTO::new);
     }
 
+    @Transactional
     public void deleteUser(String login) {
         userRepository
             .findOneByLogin(login)
@@ -236,6 +243,7 @@ public class UserService {
      * @param langKey language key.
      * @param imageUrl image URL of user.
      */
+    @Transactional
     public void updateUser(String firstName, String lastName, String email, String langKey, String imageUrl) {
         SecurityUtils
             .getCurrentUserLogin()
@@ -292,6 +300,7 @@ public class UserService {
      * <p>
      * This is scheduled to get fired everyday, at 01:00 (am).
      */
+    @Transactional
     @Scheduled(cron = "0 0 1 * * ?")
     public void removeNotActivatedUsers() {
         userRepository

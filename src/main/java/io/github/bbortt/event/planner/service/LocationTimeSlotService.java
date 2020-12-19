@@ -14,8 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
  * Service Implementation for managing {@link LocationTimeSlot}.
  */
 @Service
-@Transactional
 public class LocationTimeSlotService {
+
     private final Logger log = LoggerFactory.getLogger(LocationTimeSlotService.class);
 
     private final LocationTimeSlotRepository locationTimeSlotRepository;
@@ -30,6 +30,7 @@ public class LocationTimeSlotService {
      * @param locationTimeSlot the entity to save.
      * @return the persisted entity.
      */
+    @Transactional
     public LocationTimeSlot save(LocationTimeSlot locationTimeSlot) {
         log.debug("Request to save LocationTimeSlot : {}", locationTimeSlot);
         return locationTimeSlotRepository.save(locationTimeSlot);
@@ -64,6 +65,7 @@ public class LocationTimeSlotService {
      *
      * @param id the id of the entity.
      */
+    @Transactional
     public void delete(Long id) {
         log.debug("Request to delete LocationTimeSlot : {}", id);
         locationTimeSlotRepository.deleteById(id);
