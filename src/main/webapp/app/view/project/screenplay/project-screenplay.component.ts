@@ -10,7 +10,7 @@ import { Project } from 'app/shared/model/project.model';
 import { LocationService } from 'app/entities/location/location.service';
 import { NgbPanelChangeEvent } from '@ng-bootstrap/ng-bootstrap';
 
-const ROUTE_PARAM_NAME = 'activeIds';
+const ROUTE_PARAM_NAME = 'activeLocations';
 
 @Component({
   selector: 'app-screenplay',
@@ -23,7 +23,7 @@ export class ProjectScreenplayComponent implements OnInit {
   project?: Project;
   locations?: Location[];
 
-  activeIds: string[] = [];
+  activeLocations: string[] = [];
 
   constructor(private locationService: LocationService, private router: Router, private activatedRoute: ActivatedRoute) {}
 
@@ -47,13 +47,13 @@ export class ProjectScreenplayComponent implements OnInit {
         if (!(activeIds instanceof Array)) {
           activeIds = [activeIds];
         }
-        this.activeIds = activeIds;
+        this.activeLocations = activeIds;
       }
     });
   }
 
   reset(): void {
-    this.activeIds = [];
+    this.activeLocations = [];
     this.pushParams();
   }
 
@@ -61,22 +61,22 @@ export class ProjectScreenplayComponent implements OnInit {
     const { panelId } = event;
 
     if (event.nextState) {
-      this.activeIds.push(panelId);
+      this.activeLocations.push(panelId);
     } else {
-      this.activeIds.splice(this.activeIds.indexOf(panelId), 1);
+      this.activeLocations.splice(this.activeLocations.indexOf(panelId), 1);
     }
 
     this.pushParams();
   }
 
   isActiveId(id: string): boolean {
-    return this.activeIds.includes(id);
+    return this.activeLocations.includes(id);
   }
 
   private pushParams(): void {
     this.router.navigate(['.'], {
       relativeTo: this.activatedRoute,
-      queryParams: { [ROUTE_PARAM_NAME]: JSON.stringify(this.activeIds) },
+      queryParams: { [ROUTE_PARAM_NAME]: JSON.stringify(this.activeLocations) },
     });
   }
 }
