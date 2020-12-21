@@ -1,6 +1,7 @@
 <div>
     <h2 id="page-heading">
         <span>{{project?.name}}</span>
+        <small jhiTranslate="eventPlannerApp.project.home.screenplayLabel">Screenplay</small>
 
         <button id="jh-settings-{{project?.id}}"
                 [routerLink]="['/project', project?.id, 'admin']"
@@ -12,7 +13,7 @@
         </button>
     </h2>
 
-    <br/>
+    <br />
 
     <app-project-screenplay-filter></app-project-screenplay-filter>
 
@@ -35,7 +36,7 @@
             </ng-template>
             <ng-template ngbPanelContent>
                 <app-project-screenplay-location [location]="location"
-                                                 *ngIf="isActiveId('location-'+location.id)"></app-project-screenplay-location>
+                                                 *ngIf="isActiveId('location-' + location.id)"></app-project-screenplay-location>
             </ng-template>
         </ngb-panel>
     </ngb-accordion>
