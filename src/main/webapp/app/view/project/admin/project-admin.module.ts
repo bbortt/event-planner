@@ -31,9 +31,9 @@ import { PROJECT_ADMIN_ROUTES } from './project-admin.routes';
   imports: [EventPlannerSharedModule, NgxAutocompleteModule, RouterModule.forChild(PROJECT_ADMIN_ROUTES)],
   declarations: [
     ProjectAdminComponent,
-    ProjectAdminNavbarComponent,
     ProjectAdminUpdateModalComponent,
     ProjectAdminUpdateComponent,
+    ProjectAdminNavbarComponent,
     ProjectLocationsComponent,
     ProjectLocationUpdateComponent,
     ProjectLocationModalComponent,
