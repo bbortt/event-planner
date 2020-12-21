@@ -33,6 +33,11 @@ export class ProjectLocationUpdateComponent implements OnInit {
   ngOnInit(): void {}
 
   filter(name: string): void {
+    if (!name) {
+      this.initialLoad();
+      return;
+    }
+
     const filterValue = name.toLowerCase();
 
     if (!this.responsibilities) {
@@ -42,6 +47,10 @@ export class ProjectLocationUpdateComponent implements OnInit {
     this.filteredResponsibilities = this.responsibilities.filter(responsibility =>
       responsibility.name!.toLowerCase().includes(filterValue)
     );
+  }
+
+  private initialLoad(): void {
+    this.filteredResponsibilities = this.responsibilities;
   }
 
   public updateForm(project: Project, location: Location): void {

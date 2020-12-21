@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
  * Service Implementation for managing {@link Invitation}.
  */
 @Service
-@Transactional
 public class InvitationService {
 
     private final Logger log = LoggerFactory.getLogger(InvitationService.class);
@@ -31,6 +30,7 @@ public class InvitationService {
      * @param invitation the entity to save.
      * @return the persisted entity.
      */
+    @Transactional
     public Invitation save(Invitation invitation) {
         log.debug("Request to save Invitation : {}", invitation);
         return invitationRepository.save(invitation);
@@ -65,12 +65,22 @@ public class InvitationService {
      *
      * @param id the id of the entity.
      */
+    @Transactional
     public void delete(Long id) {
         log.debug("Request to delete Invitation : {}", id);
         invitationRepository.deleteById(id);
     }
 
+    /**
+     * Find all Invitations for the given project.
+     *
+     * @param projectId the id of the project to retrieve invitations for.
+     * @param pageable  the pagination information.
+     * @return the list of entities.
+     */
+    @Transactional(readOnly = true)
     public Page<Invitation> findAllByProjectId(Long projectId, Pageable pageable) {
+        log.debug("Request to get all Invitations for Project {}", projectId);
         return invitationRepository.findAllByProjectId(projectId, pageable);
     }
 }

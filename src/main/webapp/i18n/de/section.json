@@ -4,6 +4,7 @@
       "home": {
         "title": "Abschnitte",
         "createLabel": "Abschnitt erstellen",
+        "editLabel": "Abschnitt bearbeiten",
         "createOrEditLabel": "Abschnitt erstellen oder bearbeiten",
         "notFound": "Keine Abschnitte gefunden"
       },
@@ -11,7 +12,7 @@
       "updated": "Abschnitt mit ID {{ param }} aktualisiert",
       "deleted": "Abschnitt mit ID {{ param }} gelöscht",
       "delete": {
-        "question": "Soll Abschnitt {{ id }} wirklich dauerhaft gelöscht werden?"
+        "question": "Soll Abschnitt {{ name }} wirklich dauerhaft gelöscht werden?"
       },
       "detail": {
         "title": "Abschnitt"

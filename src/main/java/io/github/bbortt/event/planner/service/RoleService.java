@@ -14,8 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
  * Service Implementation for managing {@link Role}.
  */
 @Service
-@Transactional
 public class RoleService {
+
     private final Logger log = LoggerFactory.getLogger(RoleService.class);
 
     private final RoleRepository roleRepository;
@@ -30,6 +30,7 @@ public class RoleService {
      * @param role the entity to save.
      * @return the persisted entity.
      */
+    @Transactional
     public Role save(Role role) {
         log.debug("Request to save Role : {}", role);
         return roleRepository.save(role);
@@ -64,6 +65,7 @@ public class RoleService {
      *
      * @param name the id of the entity.
      */
+    @Transactional
     public void delete(String name) {
         log.debug("Request to delete Role : {}", name);
         roleRepository.deleteById(name);

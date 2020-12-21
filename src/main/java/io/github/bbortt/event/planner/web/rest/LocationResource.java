@@ -127,11 +127,10 @@ public class LocationResource {
 
     @GetMapping("/locations/project/{projectId}")
     @PreAuthorize("@projectService.hasAccessToProject(#projectId, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")")
-    public ResponseEntity<List<Location>> getLocationsByProjectId(@PathVariable Long projectId, Pageable pageable) {
+    public ResponseEntity<List<Location>> getLocationsByProjectId(@PathVariable Long projectId) {
         log.debug("Rest Request to get Locations by projectId {}", projectId);
-        Page<Location> page = locationService.findAllByProjectId(projectId, pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
-        return ResponseEntity.ok().headers(headers).body(page.getContent());
+        List<Location> locations = locationService.findAllByProjectId(projectId);
+        return ResponseEntity.ok(locations);
     }
 
     /**

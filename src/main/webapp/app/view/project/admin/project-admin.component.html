@@ -1,16 +1,32 @@
 <div *ngIf="project">
     <h2 id="page-heading">
         <span>{{project.name}}</span>
+        <small jhiTranslate="eventPlannerApp.project.home.settingsLabel">Settings</small>
 
-        <button id="jh-screenplay-{{project.id}}"
-                [routerLink]="['/project', project.id, 'screenplay']"
-                class="btn btn-negative float-right">
-            <fa-icon [icon]="faBook"></fa-icon>
-            <span jhiTranslate="eventPlannerApp.project.home.screenplayLabel">
-                Screenplay
-            </span>
-        </button>
+        <div class="float-right">
+            <button type="submit"
+                    id="btn-edit-project"
+                    [routerLink]="['', {outlets: {modal: ['projects', project.id, 'edit']}}]"
+                    class="btn btn-negative btn-md">
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span jhiTranslate="entity.action.edit">
+                    Edit
+                </span>
+            </button>
+
+            <button id="jh-screenplay-{{project.id}}"
+                    [routerLink]="['/project', project.id, 'screenplay']"
+                    class="btn btn-negative btn-md">
+                <fa-icon [icon]="faBook"></fa-icon>
+                <span jhiTranslate="eventPlannerApp.project.home.screenplayLabel">
+                    Screenplay
+                </span>
+            </button>
+        </div>
     </h2>
+
+    <div class="time">{{ project.startTime | date:'longDate' }}
+        - {{ project.endTime | date:'longDate' }}</div>
 
     <div *ngIf="project.description" class="description">{{project.description}}</div>
 
