@@ -73,20 +73,7 @@ export class ProjectLocationsComponent implements OnInit, OnDestroy {
     modalRef.componentInstance.section = section;
   }
 
-  sort(): string[] {
-    const result = [this.sortBy + ',' + (this.ascending ? 'asc' : 'desc')];
-    if (this.sortBy !== 'id') {
-      result.push('id');
-    }
-    return result;
-  }
-
   protected onSuccess(data: Location[] | null): void {
-    this.router.navigate(['/project', this.project!.id!, 'admin', 'locations'], {
-      queryParams: {
-        sort: this.sortBy + ',' + (this.ascending ? 'asc' : 'desc'),
-      },
-    });
     this.locations = data || [];
   }
 }

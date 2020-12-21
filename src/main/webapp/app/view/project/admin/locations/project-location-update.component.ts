@@ -1,7 +1,10 @@
 import { Component } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { FormBuilder, Validators } from '@angular/forms';
+
 import { Observable } from 'rxjs';
+
+import { JhiEventManager } from 'ng-jhipster';
 
 import { Project } from 'app/shared/model/project.model';
 import { Location } from 'app/shared/model/location.model';
@@ -16,8 +19,8 @@ import { ResponsibilityService } from 'app/entities/responsibility/responsibilit
   styleUrls: ['./project-location-update.component.scss'],
 })
 export class ProjectLocationUpdateComponent {
-  isSaving = false;
   isNew = false;
+  isSaving = false;
 
   project?: Project;
 
@@ -31,12 +34,18 @@ export class ProjectLocationUpdateComponent {
     project: [],
   });
 
-  constructor(protected locationService: LocationService, private fb: FormBuilder, private responsibilityService: ResponsibilityService) {}
+  constructor(
+    protected locationService: LocationService,
+    private eventManager: JhiEventManager,
+    private fb: FormBuilder,
+    private responsibilityService: ResponsibilityService
+  ) {}
 
   public updateForm(project: Project, location: Location): void {
     this.isNew = !location.id;
     this.responsibilityService.findAllByProject(project).subscribe(responsibilities => {
       this.responsibilities = responsibilities.body || [];
+      this.filteredResponsibilities = this.responsibilities;
     });
 
     this.editForm.patchValue({
@@ -48,15 +57,6 @@ export class ProjectLocationUpdateComponent {
   }
 
   public filter(searchString: string): void {
-    if (!searchString) {
-      this.initialLoad();
-      return;
-    }
-
-    if (!this.responsibilities) {
-      this.filteredResponsibilities = [] as Responsibility[];
-    }
-
     this.filteredResponsibilities = this.responsibilities.filter(responsibility =>
       responsibility.name!.toLowerCase().includes(searchString.toLowerCase())
     );
@@ -73,11 +73,14 @@ export class ProjectLocationUpdateComponent {
   save(): void {
     this.isSaving = true;
     const location = this.createFromForm();
+
     if (location.id !== undefined) {
       this.subscribeToSaveResponse(this.locationService.update(location));
     } else {
       this.subscribeToSaveResponse(this.locationService.create(location));
     }
+
+    this.eventManager.broadcast('locationListModification');
   }
 
   private createFromForm(): Location {

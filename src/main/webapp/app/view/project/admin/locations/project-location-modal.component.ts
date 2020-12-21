@@ -2,7 +2,6 @@ import { AfterViewInit, Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { JhiEventManager } from 'ng-jhipster';
 
 import { ProjectLocationUpdateComponent } from 'app/view/project/admin/locations/project-location-update.component';
 
@@ -12,7 +11,7 @@ import { ProjectLocationUpdateComponent } from 'app/view/project/admin/locations
 export class ProjectLocationModalComponent implements AfterViewInit, OnDestroy {
   private modalRef?: NgbModalRef;
 
-  constructor(private modalService: NgbModal, private eventManager: JhiEventManager, private activatedRoute: ActivatedRoute) {}
+  constructor(private modalService: NgbModal, private activatedRoute: ActivatedRoute) {}
 
   ngAfterViewInit(): void {
     this.activatedRoute.data.subscribe(({ project, location }) => {
@@ -30,7 +29,5 @@ export class ProjectLocationModalComponent implements AfterViewInit, OnDestroy {
     if (this.modalRef) {
       this.modalRef.close();
     }
-
-    this.eventManager.broadcast('locationListModification');
   }
 }
