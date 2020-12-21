@@ -14,8 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
  * Service Implementation for managing {@link Event}.
  */
 @Service
-@Transactional
 public class EventService {
+
     private final Logger log = LoggerFactory.getLogger(EventService.class);
 
     private final EventRepository eventRepository;
@@ -30,6 +30,7 @@ public class EventService {
      * @param event the entity to save.
      * @return the persisted entity.
      */
+    @Transactional
     public Event save(Event event) {
         log.debug("Request to save Event : {}", event);
         return eventRepository.save(event);
@@ -73,6 +74,7 @@ public class EventService {
      *
      * @param id the id of the entity.
      */
+    @Transactional
     public void delete(Long id) {
         log.debug("Request to delete Event : {}", id);
         eventRepository.deleteById(id);

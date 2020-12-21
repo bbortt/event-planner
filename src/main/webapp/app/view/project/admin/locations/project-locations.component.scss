@@ -1,0 +1,43 @@
+#entities {
+  margin-top: 2vh;
+}
+
+.location-card > div {
+  height: 100%;
+  padding-bottom: 2vh;
+
+  a {
+    color: #212529;
+    font-weight: normal;
+    text-decoration: none;
+  }
+
+  .location-card-content {
+    height: 100%;
+    padding: 1vw;
+
+    border: 2px solid black;
+    border-radius: 5px;
+
+    .btn-group {
+      .btn {
+        margin-right: 1vh;
+      }
+
+      .btn:last-child {
+        margin-right: 0;
+      }
+    }
+
+    ul li {
+      padding: 0.5vh 0;
+    }
+
+    .location-card-navigation {
+      .btn-group > button {
+        margin-top: 1vh;
+        margin-right: 1vw;
+      }
+    }
+  }
+}

@@ -14,8 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
  * Service Implementation for managing {@link Section}.
  */
 @Service
-@Transactional
 public class SectionService {
+
     private final Logger log = LoggerFactory.getLogger(SectionService.class);
 
     private final SectionRepository sectionRepository;
@@ -30,6 +30,7 @@ public class SectionService {
      * @param section the entity to save.
      * @return the persisted entity.
      */
+    @Transactional
     public Section save(Section section) {
         log.debug("Request to save Section : {}", section);
         return sectionRepository.save(section);
@@ -64,6 +65,7 @@ public class SectionService {
      *
      * @param id the id of the entity.
      */
+    @Transactional
     public void delete(Long id) {
         log.debug("Request to delete Section : {}", id);
         sectionRepository.deleteById(id);

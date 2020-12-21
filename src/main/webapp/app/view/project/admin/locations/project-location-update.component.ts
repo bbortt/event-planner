@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
@@ -15,12 +15,15 @@ import { ResponsibilityService } from 'app/entities/responsibility/responsibilit
   templateUrl: './project-location-update.component.html',
   styleUrls: ['./project-location-update.component.scss'],
 })
-export class ProjectLocationUpdateComponent implements OnInit {
+export class ProjectLocationUpdateComponent {
   isSaving = false;
   isNew = false;
+
   project?: Project;
+
   responsibilities: Responsibility[] = [];
   filteredResponsibilities: Responsibility[] = [];
+
   editForm = this.fb.group({
     id: [],
     name: [null, [Validators.required, Validators.maxLength(50)]],
@@ -29,25 +32,6 @@ export class ProjectLocationUpdateComponent implements OnInit {
   });
 
   constructor(protected locationService: LocationService, private fb: FormBuilder, private responsibilityService: ResponsibilityService) {}
-
-  ngOnInit(): void {}
-
-  filter(name: string): void {
-    if (!name) {
-      this.filteredResponsibilities = this.responsibilities;
-      return;
-    }
-
-    const filterValue = name.toLowerCase();
-
-    if (!this.responsibilities) {
-      this.filteredResponsibilities = [] as Responsibility[];
-    }
-
-    this.filteredResponsibilities = this.responsibilities.filter(responsibility =>
-      responsibility.name!.toLowerCase().includes(filterValue)
-    );
-  }
 
   public updateForm(project: Project, location: Location): void {
     this.isNew = !location.id;
@@ -61,6 +45,25 @@ export class ProjectLocationUpdateComponent implements OnInit {
       responsibility: location.responsibility,
       project,
     });
+  }
+
+  public filter(searchString: string): void {
+    if (!searchString) {
+      this.initialLoad();
+      return;
+    }
+
+    if (!this.responsibilities) {
+      this.filteredResponsibilities = [] as Responsibility[];
+    }
+
+    this.filteredResponsibilities = this.responsibilities.filter(responsibility =>
+      responsibility.name!.toLowerCase().includes(searchString.toLowerCase())
+    );
+  }
+
+  private initialLoad(): void {
+    this.filteredResponsibilities = this.responsibilities;
   }
 
   previousState(): void {
@@ -100,9 +103,5 @@ export class ProjectLocationUpdateComponent implements OnInit {
 
   protected onSaveError(): void {
     this.isSaving = false;
-  }
-
-  trackById(index: number, item: Project): any {
-    return item.id;
   }
 }

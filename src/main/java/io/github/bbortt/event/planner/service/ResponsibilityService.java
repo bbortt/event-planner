@@ -6,9 +6,8 @@ import io.github.bbortt.event.planner.repository.RoleRepository;
 import io.github.bbortt.event.planner.security.AuthoritiesConstants;
 import io.github.bbortt.event.planner.security.SecurityUtils;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
-import javassist.NotFoundException;
-import javax.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -21,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
  * Service Implementation for managing {@link Responsibility}.
  */
 @Service
-@Transactional
 public class ResponsibilityService {
 
     private final Logger log = LoggerFactory.getLogger(ResponsibilityService.class);
@@ -40,6 +38,7 @@ public class ResponsibilityService {
      * @param responsibility the entity to save.
      * @return the persisted entity.
      */
+    @Transactional
     public Responsibility save(Responsibility responsibility) {
         log.debug("Request to save Responsibility : {}", responsibility);
         return responsibilityRepository.save(responsibility);
@@ -74,6 +73,7 @@ public class ResponsibilityService {
      *
      * @param id the id of the entity.
      */
+    @Transactional
     public void delete(Long id) {
         log.debug("Request to delete Responsibility : {}", id);
         responsibilityRepository.deleteById(id);
@@ -83,21 +83,25 @@ public class ResponsibilityService {
      * Find all Responsibilities for the given Project.
      *
      * @param projectId the id of the project to retrieve responsibilities for.
-     * @param pageable the pagination information.
      * @return the list of entities.
      */
-    public Page<Responsibility> findAllByProjectId(Long projectId, Pageable pageable) {
+    @Transactional(readOnly = true)
+    public List<Responsibility> findAllByProjectId(Long projectId) {
         log.debug("Request to get all Responsibilities for Project {}", projectId);
-        return responsibilityRepository.findAllByProjectId(projectId, pageable);
+        return responsibilityRepository.findAllByProjectId(projectId);
     }
 
     /**
-     * Checks if the current user has access to the `Project` linked to the given `Responsibility`, identified by id. The project access must be given by any of the `roles`. Example usage: `@PreAuthorize("@responsibilityService.hasAccessToResponsibility(#responsibility, 'ADMIN', 'SECRETARY')")`
+     * Checks if the current user has access to the `Project` linked to the given `Responsibility`,
+     * identified by id. The project access must be given by any of the `roles`. Example usage:
+     * `@PreAuthorize("@responsibilityService.hasAccessToResponsibility(#responsibility, 'ADMIN',
+     * 'SECRETARY')")`
      *
      * @param responsibilityId the id of the responsibility with a linked project to check.
-     * @param roles to look out for.
+     * @param roles            to look out for.
      * @return true if the project access has any of the roles.
      */
+    @Transactional(readOnly = true)
     @PreAuthorize("isAuthenticated()")
     public boolean hasAccessToResponsibility(Long responsibilityId, String... roles) {
         Optional<Responsibility> responsibility = findOne(responsibilityId);
@@ -105,10 +109,13 @@ public class ResponsibilityService {
     }
 
     /**
-     * Checks if the current user has access to the `Project` linked to the given `Responsibility`. The project access must be given by any of the `roles`. Example usage: `@PreAuthorize("@responsibilityService.hasAccessToResponsibility(#responsibility, 'ADMIN', 'SECRETARY')")`
+     * Checks if the current user has access to the `Project` linked to the given `Responsibility`.
+     * The project access must be given by any of the `roles`. Example usage:
+     * `@PreAuthorize("@responsibilityService.hasAccessToResponsibility(#responsibility, 'ADMIN',
+     * 'SECRETARY')")`
      *
      * @param responsibility the entity with a linked project to check.
-     * @param roles to look out for.
+     * @param roles          to look out for.
      * @return true if the project access has any of the roles.
      */
     @Transactional(readOnly = true)
