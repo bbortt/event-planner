@@ -27,7 +27,7 @@
         <span jhiTranslate="eventPlannerApp.event.home.notFound">No Locations found</span>
     </div>
 
-    <ngb-accordion [activeIds]="activeLocations" (panelChange)="onPanelChange($event)">
+    <ngb-accordion id="locations-accordion" [activeIds]="activeLocations" (panelChange)="onPanelChange($event)">
         <ngb-panel *ngFor="let location of locations" id="location-{{location.id}}">
             <ng-template ngbPanelTitle>
                 <div class="d-flex align-items-left">
