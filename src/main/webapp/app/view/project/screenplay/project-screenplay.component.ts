@@ -31,13 +31,9 @@ export class ProjectScreenplayComponent implements OnInit {
     this.activatedRoute.data.subscribe(({ project }) => {
       this.project = project;
 
-      this.locationService
-        .findAllByProject(project, {
-          unpaged: true,
-        })
-        .subscribe((response: HttpResponse<Location[]>) => {
-          this.locations = response.body || [];
-        });
+      this.locationService.findAllByProject(this.project!).subscribe((response: HttpResponse<Location[]>) => {
+        this.locations = response.body || [];
+      });
     });
 
     this.activatedRoute.queryParams.subscribe((params: Params) => {
