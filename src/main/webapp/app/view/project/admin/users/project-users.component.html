@@ -2,12 +2,12 @@
     <h3 id="page-heading">
         <span jhiTranslate="eventPlannerApp.project.admin.navbar.users"></span>
 
-        <div class="float-right">
+        <div class="float-right clearfix">
             <app-clientside-filter id="users-clientside-filter" class="float-left"
                                    (valueChange)="filterData($event)"></app-clientside-filter>
 
             <button id="jh-create-entity"
-                    class="btn btn-negative btn-blue jh-create-entity invite-user"
+                    class="btn btn-negative btn-green jh-create-entity invite-user"
                     [routerLink]="['', {outlets: {modal: ['projects', projectId, 'users', 'invite']}}]">
                 <fa-icon icon="plus"></fa-icon>
                 <span jhiTranslate="userManagement.invite"></span>

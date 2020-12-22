@@ -3,7 +3,7 @@
         <span jhiTranslate="eventPlannerApp.location.home.title">Location</span>
 
         <button id="jh-create-entity"
-                class="btn btn-green btn-negative float-right jh-create-entity create-location"
+                class="btn btn-green btn-negative float-right clearfix jh-create-entity create-location"
                 [routerLink]="['', {outlets: {modal: ['projects', project!.id, 'locations', 'new']}}]">
             <fa-icon icon="plus"></fa-icon>
             <span jhiTranslate="eventPlannerApp.location.home.createLabel">
@@ -11,6 +11,8 @@
             </span>
         </button>
     </h3>
+
+    <br/>
 
     <jhi-alert-error></jhi-alert-error>
 
@@ -33,7 +35,7 @@
 
                             <button
                                 [routerLink]="['', {outlets: {modal: ['projects', project.id, 'locations', location.id, 'sections', 'new']}}]"
-                                class="btn btn-green btn-sm float-right jh-create-entity create-section"
+                                class="btn btn-green btn-sm float-right clearfix jh-create-entity create-section"
                                 data-toggle="tooltip"
                                 data-placement="bottom"
                                 title="{{ 'eventPlannerApp.section.home.createLabel' | translate }}">

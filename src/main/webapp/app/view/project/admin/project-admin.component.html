@@ -3,7 +3,7 @@
         <span>{{project.name}}</span>
         <small jhiTranslate="eventPlannerApp.project.home.settingsLabel">Settings</small>
 
-        <div class="float-right">
+        <div class="float-right clearfix">
             <button type="submit"
                     id="btn-edit-project"
                     [routerLink]="['', {outlets: {modal: ['projects', project.id, 'edit']}}]"

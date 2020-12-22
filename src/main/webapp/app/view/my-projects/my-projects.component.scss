@@ -1,9 +1,5 @@
 #page-heading {
   display: flow-root;
-
-  #btn-show-all-projects {
-    margin-right: 1vw;
-  }
 }
 
 .project-card > div {
@@ -23,9 +19,8 @@
     border: 2px solid black;
     border-radius: 5px;
 
-    .project-card-navigation > button {
+    .project-card-navigation {
       margin-top: 1vh;
-      margin-right: 1vw;
     }
   }
 }

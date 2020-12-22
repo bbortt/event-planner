@@ -163,18 +163,6 @@ Custom alerts for notification
 /* ==========================================================================
 entity detail page css
 ========================================================================== */
-.table-responsive {
-  .btn-group {
-    .btn {
-      margin-right: 1vh;
-    }
-
-    .btn:last-child {
-      margin-right: 0;
-    }
-  }
-}
-
 .row.jh-entity-details > {
   dd {
     margin-bottom: 15px;
@@ -238,6 +226,17 @@ custom button style
 .btn.btn-gray:hover {
   color: #fff;
   background-color: #6c757d;
+}
+
+.btn-group {
+  .btn {
+    margin-right: 1vh;
+    border-radius: $border-radius !important;
+  }
+
+  .btn:last-child {
+    margin-right: 0;
+  }
 }
 
 /* ==========================================================================

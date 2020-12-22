@@ -2,7 +2,7 @@
     <h2 id="page-heading">
         <span jhiTranslate="eventPlannerApp.project.mine.title">My Projects</span>
 
-        <div class="float-right">
+        <div class="btn-group float-right clearfix">
             <button *jhiHasAnyAuthority="'ROLE_ADMIN'" [ngSwitch]="showAllProjects"
                     id="btn-show-all-projects"
                     class="btn btn-negative btn-gray" (click)="switchShowAllProjects()">
@@ -31,7 +31,7 @@
 
     <jhi-alert></jhi-alert>
 
-    <br/>
+    <br />
 
     <div class="alert alert-warning" id="no-result" *ngIf="projects?.length === 0">
         <span jhiTranslate="eventPlannerApp.project.home.notFound">No projects found</span>
@@ -55,22 +55,26 @@
                         </div>
 
                         <div class="project-card-navigation">
-                            <button id="jh-screenplay-{{project.id}}"
-                                    [routerLink]="['project', project.id, 'screenplay']"
-                                    class="btn btn-negative btn-gray">
-                                <fa-icon [icon]="faBook"></fa-icon>
-                                <span jhiTranslate="eventPlannerApp.project.home.screenplayLabel">
+                            <div class="btn-group">
+                                <button id="jh-screenplay-{{project.id}}"
+                                        [routerLink]="['project', project.id, 'screenplay']"
+                                        class="btn btn-negative btn-gray">
+                                    <fa-icon [icon]="faBook"></fa-icon>
+                                    <span
+                                        jhiTranslate="eventPlannerApp.project.home.screenplayLabel">
                                     Screenplay
                                 </span>
-                            </button>
-                            <button id="jh-settings-{{project.id}}"
-                                    [routerLink]="['project', project.id, 'admin']"
-                                    class="btn btn-negative btn-gray">
-                                <fa-icon [icon]="faCog"></fa-icon>
-                                <span jhiTranslate="eventPlannerApp.project.home.settingsLabel">
+                                </button>
+
+                                <button id="jh-settings-{{project.id}}"
+                                        [routerLink]="['project', project.id, 'admin']"
+                                        class="btn btn-negative btn-gray">
+                                    <fa-icon [icon]="faCog"></fa-icon>
+                                    <span jhiTranslate="eventPlannerApp.project.home.settingsLabel">
                                     Settings
                                 </span>
-                            </button>
+                                </button>
+                            </div>
                         </div>
                     </div>
 
