@@ -4,7 +4,6 @@
     "form": {
       "password": "Passwort",
       "password.placeholder": "Ihr Passwort",
-      "rememberme": "Automatische Anmeldung",
       "button": "Anmelden"
     },
     "messages": {

@@ -81,7 +81,6 @@ jhipster:
         base64-secret: Njk4YTYxNjNlNTZmNmY0OTNjOGU1ZWI3NWY1MjI3OGFiODNkYTQyMzJhZmQ1YjJiMDUxNmE2OTcxMmRjZTBjMjY3ZjkyZWUwMjhjMThmMTdjMDU2MjBiYTljMDZkM2NiMjE3ODhlMmMyNTlhZTBlNjEyZDdlMmUyNDhmZTJkMDQ=
         # Token is valid 24 hours
         token-validity-in-seconds: 86400
-        token-validity-in-seconds-for-remember-me: 2592000
   mail: # specific JHipster mail property, for standard properties see MailProperties
     base-url: http://127.0.0.1:8080
   metrics:

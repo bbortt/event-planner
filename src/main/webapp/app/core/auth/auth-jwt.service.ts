@@ -16,13 +16,13 @@ export class AuthServerProvider {
   constructor(private http: HttpClient, private $localStorage: LocalStorageService, private $sessionStorage: SessionStorageService) {}
 
   getToken(): string {
-    return this.$localStorage.retrieve('authenticationToken') || this.$sessionStorage.retrieve('authenticationToken') || '';
+    return this.$localStorage.retrieve('authenticationToken') || '';
   }
 
   login(credentials: Login): Observable<void> {
     return this.http
       .post<JwtToken>(SERVER_API_URL + 'api/authenticate', credentials)
-      .pipe(map(response => this.authenticateSuccess(response, credentials.rememberMe)));
+      .pipe(map(response => this.authenticateSuccess(response)));
   }
 
   logout(): Observable<void> {
@@ -33,12 +33,7 @@ export class AuthServerProvider {
     });
   }
 
-  private authenticateSuccess(response: JwtToken, rememberMe: boolean): void {
-    const jwt = response.id_token;
-    if (rememberMe) {
-      this.$localStorage.store('authenticationToken', jwt);
-    } else {
-      this.$sessionStorage.store('authenticationToken', jwt);
-    }
+  private authenticateSuccess(response: JwtToken): void {
+    this.$localStorage.store('authenticationToken', response.id_token);
   }
 }
