@@ -1,0 +1,12 @@
+ngb-accordion {
+  ::ng-deep {
+    .card-header {
+      padding: 0;
+
+      button {
+        width: 100%;
+        padding: 1vh 1vw;
+      }
+    }
+  }
+}

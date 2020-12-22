@@ -1,0 +1,43 @@
+<div>
+    <h2 id="page-heading">
+        <span>{{project?.name}}</span>
+        <small jhiTranslate="eventPlannerApp.project.home.screenplayLabel">Screenplay</small>
+
+        <button id="jh-settings-{{project?.id}}"
+                [routerLink]="['/project', project?.id, 'admin']"
+                class="btn btn-negative float-right">
+            <fa-icon [icon]="faCog"></fa-icon>
+            <span jhiTranslate="eventPlannerApp.project.home.settingsLabel">
+                Settings
+            </span>
+        </button>
+    </h2>
+
+    <br />
+
+    <app-project-screenplay-filter></app-project-screenplay-filter>
+
+    <br />
+
+    <jhi-alert-error></jhi-alert-error>
+
+    <jhi-alert></jhi-alert>
+
+    <div class="alert alert-warning" id="no-result" *ngIf="locations?.length === 0">
+        <span jhiTranslate="eventPlannerApp.event.home.notFound">No Locations found</span>
+    </div>
+
+    <ngb-accordion [activeIds]="activeLocations" (panelChange)="onPanelChange($event)">
+        <ngb-panel *ngFor="let location of locations" id="location-{{location.id}}">
+            <ng-template ngbPanelTitle>
+                <div class="d-flex align-items-left">
+                    <strong>{{location.name}}</strong>
+                </div>
+            </ng-template>
+            <ng-template ngbPanelContent>
+                <app-project-screenplay-location [location]="location"
+                                                 *ngIf="isActiveId('location-' + location.id)"></app-project-screenplay-location>
+            </ng-template>
+        </ngb-panel>
+    </ngb-accordion>
+</div>
