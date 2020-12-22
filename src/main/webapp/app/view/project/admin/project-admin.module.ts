@@ -7,6 +7,7 @@ import { EventPlannerSharedModule } from 'app/shared/shared.module';
 import { ProjectAdminComponent } from 'app/view/project/admin/project-admin.component';
 import { ProjectAdminUpdateComponent } from 'app/view/project/admin/project-admin-update.component';
 import { ProjectAdminUpdateModalComponent } from 'app/view/project/admin/project-admin-update-modal.component';
+
 import { ProjectAdminNavbarComponent } from 'app/view/project/admin/navbar/project-admin-navbar.component';
 
 import { ProjectLocationsComponent } from 'app/view/project/admin/locations/project-locations.component';
@@ -14,8 +15,8 @@ import { ProjectLocationUpdateComponent } from 'app/view/project/admin/locations
 import { ProjectLocationModalComponent } from 'app/view/project/admin/locations/project-location-modal.component';
 import { ProjectLocationDeleteDialogComponent } from 'app/view/project/admin/locations/project-location-delete-dialog.component';
 import { ProjectSectionUpdateComponent } from 'app/view/project/admin/locations/sections/project-section-update.component';
-import { ProjectSectionDeleteDialogComponent } from 'app/view/project/admin/locations/sections/project-section-delete-dialog.component';
 import { ProjectSectionModalComponent } from 'app/view/project/admin/locations/sections/project-section-modal.component';
+import { ProjectSectionDeleteDialogComponent } from 'app/view/project/admin/locations/sections/project-section-delete-dialog.component';
 
 import { ProjectUsersComponent } from 'app/view/project/admin/users/project-users.component';
 import { ProjectUserInviteComponent } from 'app/view/project/admin/users/project-user-invite.component';
@@ -30,8 +31,8 @@ import { PROJECT_ADMIN_ROUTES } from './project-admin.routes';
   imports: [EventPlannerSharedModule, NgxAutocompleteModule, RouterModule.forChild(PROJECT_ADMIN_ROUTES)],
   declarations: [
     ProjectAdminComponent,
-    ProjectAdminUpdateComponent,
     ProjectAdminUpdateModalComponent,
+    ProjectAdminUpdateComponent,
     ProjectAdminNavbarComponent,
     ProjectLocationsComponent,
     ProjectLocationUpdateComponent,

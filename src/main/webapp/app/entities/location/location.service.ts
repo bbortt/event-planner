@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { EMPTY, Observable } from 'rxjs';
 
 import { SERVER_API_URL } from 'app/app.constants';
 import { createRequestOption } from 'app/shared/util/request-util';
 import { Location } from 'app/shared/model/location.model';
 import { Project } from 'app/shared/model/project.model';
+import { Section } from 'app/shared/model/section.model';
 
 type EntityResponseType = HttpResponse<Location>;
 type EntityArrayResponseType = HttpResponse<Location[]>;
@@ -43,5 +44,10 @@ export class LocationService {
 
   delete(id: number): Observable<HttpResponse<{}>> {
     return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
+  }
+
+  findAllSections(location: Location): Observable<HttpResponse<Section[]>> {
+    // TODO
+    return EMPTY;
   }
 }

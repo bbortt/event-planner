@@ -8,6 +8,7 @@ import { ProjectAdminComponent } from 'app/view/project/admin/project-admin.comp
 import { ProjectLocationsComponent } from 'app/view/project/admin/locations/project-locations.component';
 import { ProjectResponsibilitiesComponent } from 'app/view/project/admin/responsibilities/project-responsibilities.component';
 import { ProjectUsersComponent } from 'app/view/project/admin/users/project-users.component';
+
 import { ADMIN, SECRETARY } from 'app/shared/constants/role.constants';
 
 export const PROJECT_ADMIN_ROUTES: Routes = [

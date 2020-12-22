@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { FormBuilder, Validators } from '@angular/forms';
+
 import { Observable } from 'rxjs';
+
+import { JhiEventManager } from 'ng-jhipster';
 
 import { SectionService } from 'app/entities/section/section.service';
 
@@ -23,7 +26,7 @@ export class ProjectSectionUpdateComponent implements OnInit {
     location: [],
   });
 
-  constructor(protected sectionService: SectionService, private fb: FormBuilder) {}
+  constructor(protected sectionService: SectionService, private eventManager: JhiEventManager, private fb: FormBuilder) {}
 
   ngOnInit(): void {}
 
@@ -68,6 +71,7 @@ export class ProjectSectionUpdateComponent implements OnInit {
 
   protected onSaveSuccess(): void {
     this.isSaving = false;
+    this.eventManager.broadcast('sectionListModification');
     this.previousState();
   }
 

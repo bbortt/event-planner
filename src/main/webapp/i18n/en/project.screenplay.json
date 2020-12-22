@@ -2,7 +2,10 @@
   "eventPlannerApp": {
     "project": {
       "screenplay": {
-        "tabTitle": "Event Planner | Screenplay"
+        "tabTitle": "Event Planner | Screenplay",
+        "sections": {
+          "notFound": "No Sections found for this Location"
+        }
       }
     }
   }
