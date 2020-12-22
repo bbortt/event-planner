@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { FormBuilder, Validators } from '@angular/forms';
+
 import { Observable } from 'rxjs';
+
+import { JhiEventManager } from 'ng-jhipster';
 
 import { Project } from 'app/shared/model/project.model';
 import { Location } from 'app/shared/model/location.model';
@@ -15,12 +18,15 @@ import { ResponsibilityService } from 'app/entities/responsibility/responsibilit
   templateUrl: './project-location-update.component.html',
   styleUrls: ['./project-location-update.component.scss'],
 })
-export class ProjectLocationUpdateComponent implements OnInit {
-  isSaving = false;
+export class ProjectLocationUpdateComponent {
   isNew = false;
+  isSaving = false;
+
   project?: Project;
+
   responsibilities: Responsibility[] = [];
   filteredResponsibilities: Responsibility[] = [];
+
   editForm = this.fb.group({
     id: [],
     name: [null, [Validators.required, Validators.maxLength(50)]],
@@ -28,35 +34,18 @@ export class ProjectLocationUpdateComponent implements OnInit {
     project: [],
   });
 
-  constructor(protected locationService: LocationService, private fb: FormBuilder, private responsibilityService: ResponsibilityService) {}
-
-  ngOnInit(): void {}
-
-  filter(name: string): void {
-    if (!name) {
-      this.initialLoad();
-      return;
-    }
-
-    const filterValue = name.toLowerCase();
-
-    if (!this.responsibilities) {
-      this.filteredResponsibilities = [] as Responsibility[];
-    }
-
-    this.filteredResponsibilities = this.responsibilities.filter(responsibility =>
-      responsibility.name!.toLowerCase().includes(filterValue)
-    );
-  }
-
-  private initialLoad(): void {
-    this.filteredResponsibilities = this.responsibilities;
-  }
+  constructor(
+    protected locationService: LocationService,
+    private eventManager: JhiEventManager,
+    private fb: FormBuilder,
+    private responsibilityService: ResponsibilityService
+  ) {}
 
   public updateForm(project: Project, location: Location): void {
     this.isNew = !location.id;
     this.responsibilityService.findAllByProject(project).subscribe(responsibilities => {
       this.responsibilities = responsibilities.body || [];
+      this.filteredResponsibilities = this.responsibilities;
     });
 
     this.editForm.patchValue({
@@ -67,6 +56,16 @@ export class ProjectLocationUpdateComponent implements OnInit {
     });
   }
 
+  public filter(searchString: string): void {
+    this.filteredResponsibilities = this.responsibilities.filter(responsibility =>
+      responsibility.name!.toLowerCase().includes(searchString.toLowerCase())
+    );
+  }
+
+  private initialLoad(): void {
+    this.filteredResponsibilities = this.responsibilities;
+  }
+
   previousState(): void {
     window.history.back();
   }
@@ -74,6 +73,7 @@ export class ProjectLocationUpdateComponent implements OnInit {
   save(): void {
     this.isSaving = true;
     const location = this.createFromForm();
+
     if (location.id !== undefined) {
       this.subscribeToSaveResponse(this.locationService.update(location));
     } else {
@@ -99,14 +99,11 @@ export class ProjectLocationUpdateComponent implements OnInit {
 
   protected onSaveSuccess(): void {
     this.isSaving = false;
+    this.eventManager.broadcast('locationListModification');
     this.previousState();
   }
 
   protected onSaveError(): void {
     this.isSaving = false;
-  }
-
-  trackById(index: number, item: Project): any {
-    return item.id;
   }
 }
