@@ -79,8 +79,6 @@ export class ProjectLocationUpdateComponent {
     } else {
       this.subscribeToSaveResponse(this.locationService.create(location));
     }
-
-    this.eventManager.broadcast('locationListModification');
   }
 
   private createFromForm(): Location {
@@ -101,6 +99,7 @@ export class ProjectLocationUpdateComponent {
 
   protected onSaveSuccess(): void {
     this.isSaving = false;
+    this.eventManager.broadcast('locationListModification');
     this.previousState();
   }
 
