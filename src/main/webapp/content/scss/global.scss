@@ -220,8 +220,24 @@ custom button style
   padding: 0.5rem 1rem;
 }
 
-.btn.btn-negative:hover {
-  background-color: #c9c9c9;
+.btn.btn-red:hover {
+  color: #fff;
+  background-color: $danger;
+}
+
+.btn.btn-blue:hover {
+  color: #fff;
+  background-color: $primary;
+}
+
+.btn.btn-green:hover {
+  color: #fff;
+  background-color: $success;
+}
+
+.btn.btn-gray:hover {
+  color: #fff;
+  background-color: #6c757d;
 }
 
 /* ==========================================================================
