@@ -11,14 +11,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import io.github.bbortt.event.planner.AbstractApplicationContextAwareIT;
+import io.github.bbortt.event.planner.domain.Invitation;
 import io.github.bbortt.event.planner.domain.Project;
-import io.github.bbortt.event.planner.domain.Responsibility;
 import io.github.bbortt.event.planner.domain.User;
+import io.github.bbortt.event.planner.repository.AuthorityRepository;
 import io.github.bbortt.event.planner.repository.InvitationRepository;
 import io.github.bbortt.event.planner.repository.ProjectRepository;
-import io.github.bbortt.event.planner.repository.ResponsibilityRepository;
 import io.github.bbortt.event.planner.repository.RoleRepository;
 import io.github.bbortt.event.planner.repository.UserRepository;
+import io.github.bbortt.event.planner.security.AuthoritiesConstants;
+import io.github.bbortt.event.planner.security.RolesConstants;
 import io.github.bbortt.event.planner.service.ProjectService;
 import io.github.bbortt.event.planner.service.dto.CreateProjectDTO;
 import io.github.bbortt.event.planner.service.dto.UserDTO;
@@ -26,7 +28,7 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
-import java.time.ZonedDateTime;
+import java.util.Collections;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,6 +45,9 @@ import org.springframework.transaction.annotation.Transactional;
 @WithMockUser
 public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
 
+    private static final String TEST_USER_LOGIN = "responsibilityresourceit-login";
+    private static final String TEST_ADMIN_LOGIN = "responsibilityresourceit-admin";
+
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
 
@@ -57,6 +62,9 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private AuthorityRepository authorityRepository;
 
     @Autowired
     private RoleRepository roleRepository;
@@ -76,6 +84,7 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
     @Autowired
     private MockMvc restProjectMockMvc;
 
+    private User user;
     private Project project;
 
     /**
@@ -109,11 +118,18 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
     @BeforeEach
     public void initTest() {
         project = createEntity(em);
+
+        user = UserResourceIT.createEntity(em);
+        user.setLogin(TEST_USER_LOGIN);
+        user.setAuthorities(Collections.singleton(authorityRepository.findById(AuthoritiesConstants.USER).get()));
+        em.persist(user);
+
+        em.flush();
     }
 
     @Test
     @Transactional
-    @WithMockUser("TestUser")
+    @WithMockUser(TEST_USER_LOGIN)
     public void createProject() throws Exception {
         projectRepository.deleteAll();
 
@@ -154,6 +170,7 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     public void checkNameIsRequired() throws Exception {
         int databaseSizeBeforeTest = projectRepository.findAll().size();
         // set the field null
@@ -171,6 +188,7 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     public void checkStartTimeIsRequired() throws Exception {
         int databaseSizeBeforeTest = projectRepository.findAll().size();
         // set the field null
@@ -188,6 +206,7 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     public void checkEndTimeIsRequired() throws Exception {
         int databaseSizeBeforeTest = projectRepository.findAll().size();
         // set the field null
@@ -205,9 +224,17 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     public void getProject() throws Exception {
         // Initialize the database
         projectRepository.saveAndFlush(project);
+        Invitation invitation = InvitationResourceIT
+            .createEntity(em)
+            .accepted(Boolean.TRUE)
+            .project(project)
+            .user(user)
+            .role(roleRepository.roleAdmin());
+        em.persist(invitation);
 
         // Get the project
         restProjectMockMvc
@@ -223,6 +250,7 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     public void getNonExistingProject() throws Exception {
         // Get the project
         restProjectMockMvc.perform(get("/api/projects/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
@@ -230,9 +258,17 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     public void updateProject() throws Exception {
         // Initialize the database
         projectService.save(project);
+        Invitation invitation = InvitationResourceIT
+            .createEntity(em)
+            .accepted(Boolean.TRUE)
+            .project(project)
+            .user(user)
+            .role(roleRepository.roleAdmin());
+        em.persist(invitation);
 
         int databaseSizeBeforeUpdate = projectRepository.findAll().size();
 
@@ -264,6 +300,7 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     public void updateNonExistingProject() throws Exception {
         int databaseSizeBeforeUpdate = projectRepository.findAll().size();
 
@@ -279,6 +316,7 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
+    @WithMockUser(username = TEST_ADMIN_LOGIN, roles = { RolesConstants.ADMIN })
     public void deleteProject() throws Exception {
         // Initialize the database
         projectService.save(project);

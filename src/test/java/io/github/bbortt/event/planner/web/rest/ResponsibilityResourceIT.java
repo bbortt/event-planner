@@ -123,11 +123,6 @@ public class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT 
         user.setAuthorities(Collections.singleton(authorityRepository.findById(AuthoritiesConstants.USER).get()));
         em.persist(user);
 
-        User admin = UserResourceIT.createEntity(em);
-        admin.setLogin(TEST_ADMIN_LOGIN);
-        admin.setAuthorities(Collections.singleton(authorityRepository.findById(AuthoritiesConstants.ADMIN).get()));
-        em.persist(admin);
-
         Invitation invitation = InvitationResourceIT
             .createEntity(em)
             .accepted(Boolean.TRUE)

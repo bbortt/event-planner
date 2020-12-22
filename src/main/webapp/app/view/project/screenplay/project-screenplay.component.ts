@@ -4,12 +4,12 @@ import { HttpResponse } from '@angular/common/http';
 
 import { NgbPanelChangeEvent } from '@ng-bootstrap/ng-bootstrap';
 
-import { faCog } from '@fortawesome/free-solid-svg-icons';
-
 import { Location } from 'app/shared/model/location.model';
 import { Project } from 'app/shared/model/project.model';
 
 import { LocationService } from 'app/entities/location/location.service';
+
+import { faCog } from '@fortawesome/free-solid-svg-icons';
 
 import { ADMIN, SECRETARY } from 'app/shared/constants/role.constants';
 

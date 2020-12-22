@@ -11,10 +11,11 @@ import io.github.bbortt.event.planner.security.AuthoritiesConstants;
 import io.github.bbortt.event.planner.security.SecurityUtils;
 import io.github.bbortt.event.planner.service.dto.CreateProjectDTO;
 import io.github.bbortt.event.planner.service.dto.UserDTO;
+import io.github.bbortt.event.planner.service.exception.ProjectDoesNotExistException;
+import io.github.bbortt.event.planner.service.exception.ProjectIdMustBePresentException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Optional;
-import javax.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -149,15 +150,23 @@ public class ProjectService {
 
     @Transactional(readOnly = true)
     @PreAuthorize("isAuthenticated()")
+    public boolean hasAccessToProject(Project project, String... roles) {
+        return hasAccessToProject(project.getId(), roles);
+    }
+
+    @Transactional(readOnly = true)
+    @PreAuthorize("isAuthenticated()")
     public boolean hasAccessToProject(Long projectId, String... roles) {
         if (SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.ADMIN)) {
             return true;
         }
 
+        if (projectId == null) {
+            throw new ProjectIdMustBePresentException();
+        }
+
         return roleRepository.hasAnyRoleInProject(
-            projectRepository
-                .findById(projectId)
-                .orElseThrow(() -> new EntityNotFoundException("Project with id " + projectId + " not found")),
+            projectRepository.findById(projectId).orElseThrow(ProjectDoesNotExistException::new),
             SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new IllegalArgumentException("No user Login found!")),
             Arrays.asList(roles)
         );
