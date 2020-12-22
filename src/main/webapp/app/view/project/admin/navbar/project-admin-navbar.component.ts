@@ -11,11 +11,11 @@ interface ILink {
 }
 
 @Component({
-  selector: 'app-project-navbar',
-  templateUrl: './project-navbar.component.html',
-  styleUrls: ['project-navbar.component.scss'],
+  selector: 'app-project-admin-navbar',
+  templateUrl: './project-admin-navbar.component.html',
+  styleUrls: ['project-admin-navbar.component.scss'],
 })
-export class ProjectNavbarComponent {
+export class ProjectAdminNavbarComponent {
   public navLinks: ILink[] = [
     {
       label: 'Locations',
