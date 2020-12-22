@@ -26,12 +26,14 @@ import org.springframework.util.StringUtils;
 
 @Component
 public class TokenProvider {
+
+    private static final Logger log = LoggerFactory.getLogger(TokenProvider.class);
     private static final String AUTHORITIES_KEY = "auth";
-    private final Logger log = LoggerFactory.getLogger(TokenProvider.class);
+
     private final JHipsterProperties jHipsterProperties;
+
     private Key key;
     private long tokenValidityInMilliseconds;
-    private long tokenValidityInMillisecondsForRememberMe;
 
     public TokenProvider(JHipsterProperties jHipsterProperties) {
         this.jHipsterProperties = jHipsterProperties;
@@ -53,20 +55,13 @@ public class TokenProvider {
         }
         this.key = Keys.hmacShaKeyFor(keyBytes);
         this.tokenValidityInMilliseconds = 1000 * jHipsterProperties.getSecurity().getAuthentication().getJwt().getTokenValidityInSeconds();
-        this.tokenValidityInMillisecondsForRememberMe =
-            1000 * jHipsterProperties.getSecurity().getAuthentication().getJwt().getTokenValidityInSecondsForRememberMe();
     }
 
-    public String createToken(Authentication authentication, boolean rememberMe) {
+    public String createToken(Authentication authentication) {
         String authorities = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(","));
 
         long now = (new Date()).getTime();
-        Date validity;
-        if (rememberMe) {
-            validity = new Date(now + this.tokenValidityInMillisecondsForRememberMe);
-        } else {
-            validity = new Date(now + this.tokenValidityInMilliseconds);
-        }
+        Date validity = new Date(now + this.tokenValidityInMilliseconds);
 
         return Jwts
             .builder()
