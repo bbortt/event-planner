@@ -21,6 +21,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.util.ReflectionTestUtils;
 
 public class TokenProviderTest {
+
     private static final long ONE_MINUTE = 60000;
 
     private Key key;
@@ -48,7 +49,7 @@ public class TokenProviderTest {
     @Test
     public void testReturnFalseWhenJWTisMalformed() {
         Authentication authentication = createAuthentication();
-        String token = tokenProvider.createToken(authentication, false);
+        String token = tokenProvider.createToken(authentication);
         String invalidToken = token.substring(1);
         boolean isTokenValid = tokenProvider.validateToken(invalidToken);
 
@@ -60,7 +61,7 @@ public class TokenProviderTest {
         ReflectionTestUtils.setField(tokenProvider, "tokenValidityInMilliseconds", -ONE_MINUTE);
 
         Authentication authentication = createAuthentication();
-        String token = tokenProvider.createToken(authentication, false);
+        String token = tokenProvider.createToken(authentication);
 
         boolean isTokenValid = tokenProvider.validateToken(token);
 
