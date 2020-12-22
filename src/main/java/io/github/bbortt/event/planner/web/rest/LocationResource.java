@@ -126,7 +126,17 @@ public class LocationResource {
     }
 
     @GetMapping("/locations/project/{projectId}")
-    @PreAuthorize("@projectService.hasAccessToProject(#projectId, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")")
+    @PreAuthorize(
+        "@projectService.hasAccessToProject(#projectId, \"" +
+        RolesConstants.ADMIN +
+        "\", \"" +
+        RolesConstants.SECRETARY +
+        "\", \"" +
+        RolesConstants.CONTRIBUTOR +
+        "\", \"" +
+        RolesConstants.VIEWER +
+        "\")"
+    )
     public ResponseEntity<List<Location>> getLocationsByProjectId(@PathVariable Long projectId) {
         log.debug("Rest Request to get Locations by projectId {}", projectId);
         List<Location> locations = locationService.findAllByProjectId(projectId);
