@@ -2,7 +2,6 @@ import { AfterViewInit, Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { JhiEventManager } from 'ng-jhipster';
 
 import { ProjectAdminUpdateComponent } from 'app/view/project/admin/project-admin-update.component';
 
@@ -13,7 +12,7 @@ import { ProjectAdminUpdateComponent } from 'app/view/project/admin/project-admi
 export class ProjectAdminUpdateModalComponent implements AfterViewInit, OnDestroy {
   private modalRef?: NgbModalRef;
 
-  constructor(private modalService: NgbModal, private eventManager: JhiEventManager, private activatedRoute: ActivatedRoute) {}
+  constructor(private modalService: NgbModal, private activatedRoute: ActivatedRoute) {}
 
   ngAfterViewInit(): void {
     this.activatedRoute.data.subscribe(({ project }) => {
@@ -31,7 +30,5 @@ export class ProjectAdminUpdateModalComponent implements AfterViewInit, OnDestro
     if (this.modalRef) {
       this.modalRef.close();
     }
-
-    this.eventManager.broadcast('projectDataModification');
   }
 }

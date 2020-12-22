@@ -1,10 +1,14 @@
 import { Component } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { FormBuilder, Validators } from '@angular/forms';
+
 import { Observable } from 'rxjs';
 
-import { Project } from 'app/shared/model/project.model';
+import { JhiEventManager } from 'ng-jhipster';
+
 import { ProjectService } from 'app/entities/project/project.service';
+
+import { Project } from 'app/shared/model/project.model';
 
 @Component({
   selector: 'app-project-update',
@@ -22,7 +26,7 @@ export class ProjectAdminUpdateComponent {
     endTime: [],
   });
 
-  constructor(protected projectService: ProjectService, private fb: FormBuilder) {}
+  constructor(protected projectService: ProjectService, private eventManager: JhiEventManager, private fb: FormBuilder) {}
 
   public updateForm(project: Project): void {
     this.editForm.patchValue({
@@ -63,6 +67,7 @@ export class ProjectAdminUpdateComponent {
 
   protected onSaveSuccess(): void {
     this.isSaving = false;
+    this.eventManager.broadcast('projectDataModification');
     this.previousState();
   }
 
