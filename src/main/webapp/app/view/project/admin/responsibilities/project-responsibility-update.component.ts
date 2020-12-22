@@ -1,12 +1,15 @@
 import { Component } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { FormBuilder, Validators } from '@angular/forms';
+
 import { Observable } from 'rxjs';
+
+import { JhiEventManager } from 'ng-jhipster';
+
+import { ResponsibilityService } from 'app/entities/responsibility/responsibility.service';
 
 import { Project } from 'app/shared/model/project.model';
 import { Responsibility } from 'app/shared/model/responsibility.model';
-
-import { ResponsibilityService } from 'app/entities/responsibility/responsibility.service';
 
 @Component({
   selector: 'app-responsibility-update',
@@ -23,7 +26,7 @@ export class ProjectResponsibilityUpdateComponent {
     project: [],
   });
 
-  constructor(protected responsibilityService: ResponsibilityService, private fb: FormBuilder) {}
+  constructor(protected responsibilityService: ResponsibilityService, private eventManager: JhiEventManager, private fb: FormBuilder) {}
 
   public updateForm(project: Project, responsibility: Responsibility): void {
     this.isNew = !responsibility.id;
@@ -65,6 +68,7 @@ export class ProjectResponsibilityUpdateComponent {
 
   protected onSaveSuccess(): void {
     this.isSaving = false;
+    this.eventManager.broadcast('responsibilityListModification');
     this.previousState();
   }
 

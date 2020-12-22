@@ -3,8 +3,6 @@ import { ActivatedRoute } from '@angular/router';
 
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 
-import { JhiEventManager } from 'ng-jhipster';
-
 import { ProjectSectionUpdateComponent } from 'app/view/project/admin/locations/sections/project-section-update.component';
 
 @Component({
@@ -13,7 +11,7 @@ import { ProjectSectionUpdateComponent } from 'app/view/project/admin/locations/
 export class ProjectSectionModalComponent implements AfterViewInit, OnDestroy {
   private modalRef?: NgbModalRef;
 
-  constructor(private modalService: NgbModal, private eventManager: JhiEventManager, private activatedRoute: ActivatedRoute) {}
+  constructor(private modalService: NgbModal, private activatedRoute: ActivatedRoute) {}
 
   ngAfterViewInit(): void {
     this.activatedRoute.data.subscribe(({ location, section }) => {
@@ -31,7 +29,5 @@ export class ProjectSectionModalComponent implements AfterViewInit, OnDestroy {
     if (this.modalRef) {
       this.modalRef.close();
     }
-
-    this.eventManager.broadcast('sectionListModification');
   }
 }
