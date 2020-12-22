@@ -2,10 +2,10 @@
     <h2 id="page-heading">
         <span jhiTranslate="eventPlannerApp.project.mine.title">My Projects</span>
 
-        <div class="float-right">
+        <div class="btn-group float-right clearfix">
             <button *jhiHasAnyAuthority="'ROLE_ADMIN'" [ngSwitch]="showAllProjects"
                     id="btn-show-all-projects"
-                    class="btn btn-info" (click)="switchShowAllProjects()">
+                    class="btn btn-negative btn-gray" (click)="switchShowAllProjects()">
                 <fa-icon icon="eye"></fa-icon>
                 <span *ngSwitchCase="false"
                       jhiTranslate="eventPlannerApp.project.mine.enableAllLabel">
@@ -18,7 +18,7 @@
             </button>
 
             <button id="jh-create-entity" [routerLink]="[{outlets: {modal: ['projects', 'new']}}]"
-                    class="btn btn-primary jh-create-entity create-project">
+                    class="btn btn-negative btn-green jh-create-entity create-project">
                 <fa-icon icon="plus"></fa-icon>
                 <span jhiTranslate="eventPlannerApp.project.home.createLabel">
                     Create a new Project
@@ -31,7 +31,7 @@
 
     <jhi-alert></jhi-alert>
 
-    <br/>
+    <br />
 
     <div class="alert alert-warning" id="no-result" *ngIf="projects?.length === 0">
         <span jhiTranslate="eventPlannerApp.project.home.notFound">No projects found</span>
@@ -50,27 +50,31 @@
                         <div class="project-card-description mb-auto">
                             <i>
                                 {{project.description ? project.description
-                                    : 'eventPlannerApp.project.mine.noDescription' | translate}}
+                                : 'eventPlannerApp.project.mine.noDescription' | translate}}
                             </i>
                         </div>
 
                         <div class="project-card-navigation">
-                            <button id="jh-screenplay-{{project.id}}"
-                                    [routerLink]="['project', project.id, 'screenplay']"
-                                    class="btn btn-negative">
-                                <fa-icon [icon]="faBook"></fa-icon>
-                                <span jhiTranslate="eventPlannerApp.project.home.screenplayLabel">
+                            <div class="btn-group">
+                                <button id="jh-screenplay-{{project.id}}"
+                                        [routerLink]="['project', project.id, 'screenplay']"
+                                        class="btn btn-negative btn-gray">
+                                    <fa-icon [icon]="faBook"></fa-icon>
+                                    <span
+                                        jhiTranslate="eventPlannerApp.project.home.screenplayLabel">
                                     Screenplay
                                 </span>
-                            </button>
-                            <button id="jh-settings-{{project.id}}"
-                                    [routerLink]="['project', project.id, 'admin']"
-                                    class="btn btn-negative">
-                                <fa-icon [icon]="faCog"></fa-icon>
-                                <span jhiTranslate="eventPlannerApp.project.home.settingsLabel">
+                                </button>
+
+                                <button id="jh-settings-{{project.id}}"
+                                        [routerLink]="['project', project.id, 'admin']"
+                                        class="btn btn-negative btn-gray">
+                                    <fa-icon [icon]="faCog"></fa-icon>
+                                    <span jhiTranslate="eventPlannerApp.project.home.settingsLabel">
                                     Settings
                                 </span>
-                            </button>
+                                </button>
+                            </div>
                         </div>
                     </div>
 
@@ -91,7 +95,7 @@
     </div>
 
     <div class="row justify-content-center">
-        <button class="btn btn-primary" (click)="loadPage(page + 1)"
+        <button class="btn btn-negative btn-blue" (click)="loadPage(page + 1)"
                 [disabled]="!loadMoreButtonEnabled">
             <fa-icon [icon]="faArrowDown"></fa-icon>&nbsp;
             <span jhiTranslate="eventPlannerApp.project.mine.loadMore">
