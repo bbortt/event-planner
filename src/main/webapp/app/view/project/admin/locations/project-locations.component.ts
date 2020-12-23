@@ -14,8 +14,6 @@ import { Section } from 'app/shared/model/section.model';
 import { ProjectLocationDeleteDialogComponent } from 'app/view/project/admin/locations/project-location-delete-dialog.component';
 import { ProjectSectionDeleteDialogComponent } from 'app/view/project/admin/locations/sections/project-section-delete-dialog.component';
 
-import { ITEMS_PER_PAGE } from 'app/shared/constants/pagination.constants';
-
 @Component({
   selector: 'app-project-locations',
   templateUrl: './project-locations.component.html',
@@ -26,8 +24,6 @@ export class ProjectLocationsComponent implements OnInit, OnDestroy {
   locations?: Location[];
 
   eventSubscriber?: Subscription;
-
-  itemsPerPage = ITEMS_PER_PAGE;
 
   constructor(
     protected locationService: LocationService,
