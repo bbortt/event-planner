@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { HttpResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 
 import { JhiEventManager } from 'ng-jhipster';
@@ -9,15 +10,14 @@ import { switchMap, takeUntil } from 'rxjs/operators';
 
 import { ProjectService } from 'app/entities/project/project.service';
 import { AccountService } from 'app/core/auth/account.service';
+import { UserService } from 'app/core/user/user.service';
+import { User } from 'app/core/user/user.model';
 import { ICreateProject } from 'app/shared/model/dto/create-project.model';
 
+import { DEFAULT_DEBOUNCE } from 'app/app.constants';
 import { AUTHORITY_ADMIN } from 'app/shared/constants/authority.constants';
 
 import * as moment from 'moment';
-import { DEFAULT_DEBOUNCE } from 'app/app.constants';
-import { UserService } from 'app/core/user/user.service';
-import { User } from 'app/core/user/user.model';
-import { HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-project-create',
@@ -42,6 +42,8 @@ export class ProjectCreateComponent implements OnInit, OnDestroy {
 
   filteredUsers: User[] = [];
   defaultDebounce = DEFAULT_DEBOUNCE;
+
+  authorityAdmin = AUTHORITY_ADMIN;
 
   private destroy$ = new Subject();
 
