@@ -60,7 +60,7 @@ export class ProjectLocationsComponent implements OnInit, OnDestroy {
   }
 
   private loadLocations(): void {
-    this.locationService.findAllByProject(this.project!).subscribe((res: HttpResponse<Location[]>) => this.onSuccess(res.body));
+    this.locationService.findAllByProjectOrderByName(this.project!).subscribe((res: HttpResponse<Location[]>) => this.onSuccess(res.body));
   }
 
   deleteLocation(location: Location): void {

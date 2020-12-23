@@ -133,6 +133,14 @@ public class LocationResource {
         return ResponseEntity.ok(locations);
     }
 
+    @GetMapping("/locations/project/{projectId}/order")
+    @PreAuthorize("@projectService.hasAccessToProject(#projectId, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")")
+    public ResponseEntity<List<Location>> getLocationsByProjectIdOrderByName(@PathVariable Long projectId) {
+        log.debug("Rest Request to get Locations by projectId {}", projectId);
+        List<Location> locations = locationService.findAllByProjectIdOrderByName(projectId);
+        return ResponseEntity.ok(locations);
+    }
+
     /**
      * {@code DELETE  /locations/:id} : delete the "id" location.
      *
