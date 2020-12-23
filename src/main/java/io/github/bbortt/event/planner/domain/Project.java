@@ -39,7 +39,7 @@ public class Project implements Serializable {
     @Column(name = "name", length = 50, nullable = false)
     private String name;
 
-    @Size(min = 1, max = 300)
+    @Size(max = 300)
     @Column(name = "description", length = 300)
     private String description;
 
