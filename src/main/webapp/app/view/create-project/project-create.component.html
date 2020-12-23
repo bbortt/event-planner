@@ -114,8 +114,8 @@
 
                 <div class="form-group" *jhiHasAnyAuthority="authorityAdmin">
                     <label class="form-control-label"
-                           jhiTranslate="eventPlannerApp.project.emailOrLogin"
-                           for="field_selectedUser">Email or login</label>
+                           jhiTranslate="eventPlannerApp.project.owner"
+                           for="field_selectedUser">Owner</label>
                     <ngx-autocomplete inputName="field_selectedUser" inputId="field_selectedUser"
                                       formControlName="selectedUser" [options]="filteredUsers"
                                       propertyAccessor="email"
