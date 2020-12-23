@@ -42,14 +42,7 @@
                     <textarea type="text" class="form-control" name="description"
                               id="field_description" formControlName="description" autocomplete="off">
                     </textarea>
-                    <div
-                        *ngIf="editForm.get('description')!.invalid && (editForm.get('description')!.dirty || editForm.get('description')!.touched)">
-                        <small class="form-text text-danger"
-                               *ngIf="editForm.get('description')?.errors?.minlength"
-                               jhiTranslate="entity.validation.minlength"
-                               [translateValues]="{ min: 1 }">
-                            This field is required to be at least 1 characters.
-                        </small>
+                    <div *ngIf="editForm.get('description')!.invalid && (editForm.get('description')!.dirty || editForm.get('description')!.touched)">
                         <small class="form-text text-danger"
                                *ngIf="editForm.get('description')?.errors?.maxlength"
                                jhiTranslate="entity.validation.maxlength"
