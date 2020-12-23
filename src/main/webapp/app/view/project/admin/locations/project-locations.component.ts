@@ -14,6 +14,8 @@ import { Section } from 'app/shared/model/section.model';
 import { ProjectLocationDeleteDialogComponent } from 'app/view/project/admin/locations/project-location-delete-dialog.component';
 import { ProjectSectionDeleteDialogComponent } from 'app/view/project/admin/locations/sections/project-section-delete-dialog.component';
 
+import { ITEMS_PER_PAGE } from 'app/shared/constants/pagination.constants';
+
 @Component({
   selector: 'app-project-locations',
   templateUrl: './project-locations.component.html',
@@ -25,8 +27,7 @@ export class ProjectLocationsComponent implements OnInit, OnDestroy {
 
   eventSubscriber?: Subscription;
 
-  sortBy = 'name';
-  ascending = true;
+  itemsPerPage = ITEMS_PER_PAGE;
 
   constructor(
     protected locationService: LocationService,
@@ -60,7 +61,9 @@ export class ProjectLocationsComponent implements OnInit, OnDestroy {
   }
 
   private loadLocations(): void {
-    this.locationService.findAllByProjectOrderByName(this.project!).subscribe((res: HttpResponse<Location[]>) => this.onSuccess(res.body));
+    this.locationService
+      .findAllByProject(this.project!, { sort: ['name,asc'] })
+      .subscribe((res: HttpResponse<Location[]>) => this.onSuccess(res.body));
   }
 
   deleteLocation(location: Location): void {
