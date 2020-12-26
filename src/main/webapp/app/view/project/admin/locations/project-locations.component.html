@@ -2,14 +2,19 @@
     <h3 id="page-heading">
         <span jhiTranslate="eventPlannerApp.location.home.title">Location</span>
 
-        <button id="jh-create-entity"
-                class="btn btn-green btn-negative float-right clearfix jh-create-entity create-location"
-                [routerLink]="['', {outlets: {modal: ['projects', project!.id, 'locations', 'new']}}]">
-            <fa-icon icon="plus"></fa-icon>
-            <span jhiTranslate="eventPlannerApp.location.home.createLabel">
+        <div class="float-right clearfix">
+            <app-clientside-filter id="locations-clientside-filter" class="float-left"
+                                   (valueChange)="this.filterData($event)"></app-clientside-filter>
+
+            <button id="jh-create-entity"
+                    class="btn btn-green btn-negative jh-create-entity create-location"
+                    [routerLink]="['', {outlets: {modal: ['projects', project!.id, 'locations', 'new']}}]">
+                <fa-icon icon="plus"></fa-icon>
+                <span jhiTranslate="eventPlannerApp.location.home.createLabel">
             Create a new Location
             </span>
-        </button>
+            </button>
+        </div>
     </h3>
 
     <br/>
