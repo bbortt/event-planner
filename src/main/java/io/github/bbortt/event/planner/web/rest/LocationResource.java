@@ -126,8 +126,25 @@ public class LocationResource {
         return ResponseUtil.wrapOrNotFound(location);
     }
 
+    /**
+     * {@code GET /locations/project/:projectId} : get all Locations by project id.
+     *
+     * @param projectId the id of the project.
+     * @param sort optional sort of locations
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the location, or with status {@code 404 (Not Found)}.
+     */
     @GetMapping("/locations/project/{projectId}")
-    @PreAuthorize("@projectService.hasAccessToProject(#projectId, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")")
+    @PreAuthorize(
+        "@projectService.hasAccessToProject(#projectId, \"" +
+        RolesConstants.ADMIN +
+        "\", \"" +
+        RolesConstants.SECRETARY +
+        "\", \"" +
+        RolesConstants.CONTRIBUTOR +
+        "\", \"" +
+        RolesConstants.VIEWER +
+        "\")"
+    )
     public ResponseEntity<List<Location>> getLocationsByProjectId(@PathVariable Long projectId, Sort sort) {
         log.debug("Rest Request to get Locations by projectId {}", projectId);
         List<Location> locations = locationService.findAllByProjectId(projectId, sort);
