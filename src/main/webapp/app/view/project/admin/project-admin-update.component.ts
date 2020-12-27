@@ -21,7 +21,7 @@ export class ProjectAdminUpdateComponent {
   editForm = this.fb.group({
     id: [],
     name: [null, [Validators.required, Validators.maxLength(50)]],
-    description: [null, [Validators.maxLength(300)]],
+    description: [null, [Validators.minLength(1), Validators.maxLength(300)]],
     startTime: [],
     endTime: [],
   });
@@ -52,7 +52,7 @@ export class ProjectAdminUpdateComponent {
     return {
       id: this.editForm.get(['id'])!.value,
       name: this.editForm.get(['name'])!.value,
-      description: this.editForm.get(['description'])!.value,
+      description: this.editForm.get(['description'])!.value || null,
       startTime: this.editForm.get(['startTime'])!.value,
       endTime: this.editForm.get(['endTime'])!.value,
     };
