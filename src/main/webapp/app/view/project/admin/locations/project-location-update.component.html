@@ -52,16 +52,6 @@
                         (autocompleteChanges)="filter($event)"
                         autocomplete="off"
                     ></ngx-autocomplete>
-
-                    <div *ngIf="editForm.get('responsibility')!.invalid &&
-                        (editForm.get('responsibility')!.dirty
-                                || editForm.get('responsibility')!.touched)">
-                        <small class="form-text text-danger"
-                               *ngIf="editForm.get('responsibility')?.errors?.required"
-                               jhiTranslate="entity.validation.required">
-                            This field is required.
-                        </small>
-                    </div>
                 </div>
 
                 <div>

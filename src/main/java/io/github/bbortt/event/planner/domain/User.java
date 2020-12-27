@@ -47,13 +47,13 @@ public class User extends AbstractAuditingEntity implements Serializable {
     private Long id;
 
     @NotNull
-    @Pattern(regexp = Constants.LOGIN_REGEX)
     @Size(min = 1, max = 50)
+    @Pattern(regexp = Constants.LOGIN_REGEX)
     @Column(length = 50, unique = true, nullable = false)
     private String login;
 
-    @JsonIgnore
     @NotNull
+    @JsonIgnore
     @Size(min = 60, max = 60)
     @Column(name = "password_hash", length = 60, nullable = false)
     private String password;
@@ -76,6 +76,7 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @Column(nullable = false)
     private boolean activated = false;
 
+    @NotNull
     @Size(min = 2, max = 10)
     @Column(name = "lang_key", length = 10)
     private String langKey;
@@ -84,14 +85,14 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @Column(name = "image_url", length = 256)
     private String imageUrl;
 
+    @JsonIgnore
     @Size(max = 20)
     @Column(name = "activation_key", length = 20)
-    @JsonIgnore
     private String activationKey;
 
+    @JsonIgnore
     @Size(max = 20)
     @Column(name = "reset_key", length = 20)
-    @JsonIgnore
     private String resetKey;
 
     @Column(name = "reset_date")

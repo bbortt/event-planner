@@ -46,8 +46,8 @@ public class Responsibility implements Serializable {
     @Column(name = "name", length = 50, nullable = false)
     private String name;
 
-    @ManyToOne(optional = false)
     @NotNull
+    @ManyToOne(optional = false)
     @JsonIgnoreProperties(value = "responsibilities", allowSetters = true)
     private Project project;
 
