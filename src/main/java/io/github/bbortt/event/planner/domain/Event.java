@@ -40,11 +40,11 @@ public class Event implements Serializable {
     private Long id;
 
     @NotNull
-    @Size(min = 0, max = 50)
+    @Size(min = 1, max = 50)
     @Column(name = "name", length = 50, nullable = false)
     private String name;
 
-    @Size(min = 0, max = 300)
+    @Size(max = 300)
     @Column(name = "description", length = 300)
     private String description;
 
