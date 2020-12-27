@@ -30,7 +30,7 @@ export class ProjectLocationUpdateComponent {
   editForm = this.fb.group({
     id: [],
     name: [null, [Validators.required, Validators.maxLength(50)]],
-    responsibility: [null, [Validators.required]],
+    responsibility: [],
     project: [],
   });
 

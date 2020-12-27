@@ -8,10 +8,13 @@ import io.github.bbortt.event.planner.security.SecurityUtils;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -86,16 +89,16 @@ public class LocationService {
      * @return the list of entities.
      */
     @Transactional(readOnly = true)
-    public List<Location> findAllByProjectId(Long projectId) {
+    public List<Location> findAllByProjectId(Long projectId, Sort sort) {
         log.debug("Request to get all Locations for Project {}", projectId);
-        return locationRepository.findAllByProjectId(projectId);
+        return locationRepository.findAllByProjectId(projectId, Sort.by(sort.stream().map(Order::ignoreCase).collect(Collectors.toList())));
     }
 
     /**
      * Checks if the current user has access to the `Project` linked to the given `Location`, identified by id. The project access must be given by any of the `roles`. Example usage: `@PreAuthorize("@locationService.hasAccessToLocation(#location, 'ADMIN', 'SECRETARY')")`
      *
      * @param locationId the id of the location with a linked project to check.
-     * @param roles to look out for.
+     * @param roles      to look out for.
      * @return true if the project access has any of the roles.
      */
     @Transactional(readOnly = true)
@@ -109,7 +112,7 @@ public class LocationService {
      * Checks if the current user has access to the `Project` linked to the given `Location`. The project access must be given by any of the `roles`. Example usage: `@PreAuthorize("@locationService.hasAccessToLocation(#location, 'ADMIN', 'SECRETARY')")`
      *
      * @param location the entity with a linked project to check.
-     * @param roles to look out for.
+     * @param roles    to look out for.
      * @return true if the project access has any of the roles.
      */
     @Transactional(readOnly = true)

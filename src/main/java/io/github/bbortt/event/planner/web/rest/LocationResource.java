@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -127,9 +128,9 @@ public class LocationResource {
 
     @GetMapping("/locations/project/{projectId}")
     @PreAuthorize("@projectService.hasAccessToProject(#projectId, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")")
-    public ResponseEntity<List<Location>> getLocationsByProjectId(@PathVariable Long projectId) {
+    public ResponseEntity<List<Location>> getLocationsByProjectId(@PathVariable Long projectId, Sort sort) {
         log.debug("Rest Request to get Locations by projectId {}", projectId);
-        List<Location> locations = locationService.findAllByProjectId(projectId);
+        List<Location> locations = locationService.findAllByProjectId(projectId, sort);
         return ResponseEntity.ok(locations);
     }
 
