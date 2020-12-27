@@ -45,8 +45,8 @@ public class Location implements Serializable {
     @Column(name = "name", length = 50, nullable = false)
     private String name;
 
-    @ManyToOne(optional = false)
     @NotNull
+    @ManyToOne(optional = false)
     @JsonIgnoreProperties(value = "locations", allowSetters = true)
     private Project project;
 

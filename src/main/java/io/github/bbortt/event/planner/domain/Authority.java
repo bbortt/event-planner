@@ -20,7 +20,7 @@ public class Authority implements Serializable {
 
     @Id
     @NotNull
-    @Size(max = 50)
+    @Size(min = 1, max = 50)
     @Column(length = 50)
     private String name;
 

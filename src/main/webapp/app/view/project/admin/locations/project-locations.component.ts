@@ -21,12 +21,10 @@ import { ProjectSectionDeleteDialogComponent } from 'app/view/project/admin/loca
 })
 export class ProjectLocationsComponent implements OnInit, OnDestroy {
   project?: Project;
+  loadedLocations?: Location[];
   locations?: Location[];
 
   eventSubscriber?: Subscription;
-
-  sortBy = 'name';
-  ascending = true;
 
   constructor(
     protected locationService: LocationService,
@@ -60,7 +58,10 @@ export class ProjectLocationsComponent implements OnInit, OnDestroy {
   }
 
   private loadLocations(): void {
-    this.locationService.findAllByProject(this.project!).subscribe((res: HttpResponse<Location[]>) => this.onSuccess(res.body));
+    this.locationService.findAllByProject(this.project!, { sort: ['name,asc'] }).subscribe((response: HttpResponse<Location[]>) => {
+      this.loadedLocations = response.body || [];
+      this.locations = this.loadedLocations;
+    });
   }
 
   deleteLocation(location: Location): void {
@@ -71,6 +72,12 @@ export class ProjectLocationsComponent implements OnInit, OnDestroy {
   deleteSection(section: Section): void {
     const modalRef = this.modalService.open(ProjectSectionDeleteDialogComponent, { backdrop: 'static' });
     modalRef.componentInstance.section = section;
+  }
+
+  filterData(searchString: string): void {
+    this.locations = this.loadedLocations!.filter((location: Location) =>
+      location.name?.toLowerCase().includes(searchString.toLowerCase())
+    );
   }
 
   protected onSuccess(data: Location[] | null): void {
