@@ -2,7 +2,7 @@
     <h2>
         <span id="user-management-page-heading" jhiTranslate="userManagement.home.title">Users</span>
 
-        <button class="btn btn-primary float-right clearfix jh-create-entity" [routerLink]="['./new']">
+        <button class="btn btn-negative btn-green btn-md float-right clearfix jh-create-entity" [routerLink]="['./new']">
             <fa-icon icon="plus"></fa-icon> <span jhiTranslate="userManagement.home.createLabel">Create a new User</span>
         </button>
     </h2>
@@ -33,9 +33,9 @@
                     <td>{{ user.login }}</td>
                     <td>{{ user.email }}</td>
                     <td>
-                        <button class="btn btn-danger btn-sm" (click)="setActive(user, true)" *ngIf="!user.activated"
+                        <button class="btn btn-outline-danger btn-sm" (click)="setActive(user, true)" *ngIf="!user.activated"
                                 jhiTranslate="userManagement.deactivated">Deactivated</button>
-                        <button class="btn btn-success btn-sm" (click)="setActive(user, false)" *ngIf="user.activated"
+                        <button class="btn btn-outline-success btn-sm" (click)="setActive(user, false)" *ngIf="user.activated"
                                 [disabled]="!currentAccount || currentAccount.login === user.login" jhiTranslate="userManagement.activated">Activated</button>
                     </td>
                     <td>{{ user.langKey }}</td>
@@ -51,7 +51,7 @@
                         <div class="btn-group">
                             <button type="submit"
                                     [routerLink]="['./', user.login, 'view']"
-                                    class="btn btn-info btn-sm">
+                                    class="btn btn-negative btn-gray btn-sm">
                                 <fa-icon icon="eye"></fa-icon>
                                 <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
                             </button>
@@ -59,13 +59,13 @@
                             <button type="submit"
                                     [routerLink]="['./', user.login, 'edit']"
                                     queryParamsHandling="merge"
-                                    class="btn btn-primary btn-sm">
+                                    class="btn btn-negative btn-blue btn-sm">
                                 <fa-icon icon="pencil-alt"></fa-icon>
                                 <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
                             </button>
 
                             <button type="button" (click)="deleteUser(user)"
-                                    class="btn btn-danger btn-sm" [disabled]="!currentAccount || currentAccount.login === user.login">
+                                    class="btn btn-negative btn-red btn-sm" [disabled]="!currentAccount || currentAccount.login === user.login">
                                 <fa-icon icon="times"></fa-icon>
                                 <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
                             </button>

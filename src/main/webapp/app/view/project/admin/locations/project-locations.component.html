@@ -48,13 +48,17 @@
                             </button>
                         </h4>
 
-                        <div class="location-card-responsibility mb-auto" *ngIf="location.responsibility">
+                        <div class="location-card-responsibility" *ngIf="location.responsibility; else responsibilitySpace">
                             <i>
                                 <span jhiTranslate="eventPlannerApp.location.responsibility">Responsibility</span>: {{location.responsibility!.name}}
                             </i>
                         </div>
 
-                        <div class="location-card-section">
+                        <ng-template #responsibilitySpace>
+                            <i><span>&nbsp;</span></i>
+                        </ng-template>
+
+                        <div class="location-card-section mb-auto">
                             <table class="table table-striped">
                                 <tbody>
                                 <tr *ngFor="let section of location.sections">

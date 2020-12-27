@@ -26,9 +26,6 @@ export class ProjectLocationsComponent implements OnInit, OnDestroy {
 
   eventSubscriber?: Subscription;
 
-  sortBy = 'name';
-  ascending = true;
-
   constructor(
     protected locationService: LocationService,
     protected activatedRoute: ActivatedRoute,
@@ -61,7 +58,7 @@ export class ProjectLocationsComponent implements OnInit, OnDestroy {
   }
 
   private loadLocations(): void {
-    this.locationService.findAllByProject(this.project!).subscribe((response: HttpResponse<Location[]>) => {
+    this.locationService.findAllByProject(this.project!, { sort: ['name,asc'] }).subscribe((response: HttpResponse<Location[]>) => {
       this.loadedLocations = response.body || [];
       this.locations = this.loadedLocations;
     });
