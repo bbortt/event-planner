@@ -1,6 +1,7 @@
 package io.github.bbortt.event.planner.web.rest;
 
 import io.github.bbortt.event.planner.domain.Section;
+import io.github.bbortt.event.planner.security.AuthoritiesConstants;
 import io.github.bbortt.event.planner.security.RolesConstants;
 import io.github.bbortt.event.planner.service.SectionService;
 import io.github.bbortt.event.planner.web.rest.errors.BadRequestAlertException;
@@ -58,6 +59,7 @@ public class SectionResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/sections")
+    @PreAuthorize("@sectionService.hasAccessToSection(#section, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")")
     public ResponseEntity<Section> createSection(@Valid @RequestBody Section section) throws URISyntaxException {
         log.debug("REST request to save Section : {}", section);
         if (section.getId() != null) {
@@ -78,6 +80,7 @@ public class SectionResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/sections")
+    @PreAuthorize("@sectionService.hasAccessToSection(#section, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")")
     public ResponseEntity<Section> updateSection(@Valid @RequestBody Section section) throws URISyntaxException {
         log.debug("REST request to update Section : {}", section);
         if (section.getId() == null) {
@@ -97,6 +100,7 @@ public class SectionResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of sections in body.
      */
     @GetMapping("/sections")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<List<Section>> getAllSections(Pageable pageable) {
         log.debug("REST request to get a page of Sections");
         Page<Section> page = sectionService.findAll(pageable);
@@ -111,6 +115,7 @@ public class SectionResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the section, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/sections/{id}")
+    @PreAuthorize("@sectionService.hasAccessToSection(#id, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")")
     public ResponseEntity<Section> getSection(@PathVariable Long id) {
         log.debug("REST request to get Section : {}", id);
         Optional<Section> section = sectionService.findOne(id);

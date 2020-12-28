@@ -1,6 +1,7 @@
 package io.github.bbortt.event.planner.web.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -18,6 +19,7 @@ import io.github.bbortt.event.planner.repository.AuthorityRepository;
 import io.github.bbortt.event.planner.repository.LocationRepository;
 import io.github.bbortt.event.planner.repository.RoleRepository;
 import io.github.bbortt.event.planner.security.AuthoritiesConstants;
+import io.github.bbortt.event.planner.security.RolesConstants;
 import io.github.bbortt.event.planner.service.LocationService;
 import java.util.Collections;
 import java.util.List;
@@ -37,7 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class LocationResourceIT extends AbstractApplicationContextAwareIT {
 
     private static final String TEST_USER_LOGIN = "locationresourceit-login";
-    private static final String TEST_ADMIN_LOGIN = "locationresourceit-admin";
+    private static final String TEST_ADMIN_LOGIN = "responsibilityresourceit-admin";
 
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
@@ -175,6 +177,22 @@ public class LocationResourceIT extends AbstractApplicationContextAwareIT {
 
         List<Location> locationList = locationRepository.findAll();
         assertThat(locationList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    @WithMockUser(value = TEST_ADMIN_LOGIN, roles = { RolesConstants.ADMIN })
+    public void getAllLocations() throws Exception {
+        // Initialize the database
+        locationRepository.saveAndFlush(location);
+
+        // Get all the sectionList
+        restLocationMockMvc
+            .perform(get("/api/locations?sort=id,desc"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(location.getId().intValue())))
+            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)));
     }
 
     @Test

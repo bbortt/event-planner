@@ -2,12 +2,9 @@ package io.github.bbortt.event.planner.service;
 
 import io.github.bbortt.event.planner.domain.Location;
 import io.github.bbortt.event.planner.repository.LocationRepository;
-import io.github.bbortt.event.planner.repository.RoleRepository;
 import io.github.bbortt.event.planner.repository.SectionRepository;
-import io.github.bbortt.event.planner.security.AuthoritiesConstants;
-import io.github.bbortt.event.planner.security.SecurityUtils;
 import io.github.bbortt.event.planner.service.exception.EntityNotFoundException;
-import java.util.Arrays;
+import io.github.bbortt.event.planner.service.exception.IdMustBePresentException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,14 +26,15 @@ public class LocationService {
 
     private final Logger log = LoggerFactory.getLogger(LocationService.class);
 
+    private final ProjectService projectService;
+
     private final LocationRepository locationRepository;
     private final SectionRepository sectionRepository;
-    private final RoleRepository roleRepository;
 
-    public LocationService(LocationRepository locationRepository, SectionRepository sectionRepository, RoleRepository roleRepository) {
+    public LocationService(ProjectService projectService, LocationRepository locationRepository, SectionRepository sectionRepository) {
+        this.projectService = projectService;
         this.locationRepository = locationRepository;
         this.sectionRepository = sectionRepository;
-        this.roleRepository = roleRepository;
     }
 
     /**
@@ -109,8 +107,12 @@ public class LocationService {
     @Transactional(readOnly = true)
     @PreAuthorize("isAuthenticated()")
     public boolean hasAccessToLocation(Long locationId, String... roles) {
-        Optional<Location> location = findOne(locationId);
-        return location.map(value -> hasAccessToLocation(value, roles)).orElseThrow(EntityNotFoundException::new);
+        if (locationId == null) {
+            throw new IdMustBePresentException();
+        }
+
+        Location location = findOne(locationId).orElseThrow(EntityNotFoundException::new);
+        return hasAccessToLocation(location, roles);
     }
 
     /**
@@ -120,16 +122,8 @@ public class LocationService {
      * @param roles to look out for.
      * @return true if the project access has any of the roles.
      */
-    @Transactional(readOnly = true)
     @PreAuthorize("isAuthenticated()")
     public boolean hasAccessToLocation(Location location, String... roles) {
-        return (
-            SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.ADMIN) ||
-            roleRepository.hasAnyRoleInProject(
-                location.getProject(),
-                SecurityUtils.getCurrentUserLogin().orElseThrow(IllegalArgumentException::new),
-                Arrays.asList(roles)
-            )
-        );
+        return projectService.hasAccessToProject(location.getProject(), roles);
     }
 }

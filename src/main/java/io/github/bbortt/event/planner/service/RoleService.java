@@ -1,7 +1,11 @@
 package io.github.bbortt.event.planner.service;
 
+import io.github.bbortt.event.planner.domain.Project;
 import io.github.bbortt.event.planner.domain.Role;
 import io.github.bbortt.event.planner.repository.RoleRepository;
+import io.github.bbortt.event.planner.security.AuthoritiesConstants;
+import io.github.bbortt.event.planner.security.SecurityUtils;
+import java.util.Arrays;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,5 +73,17 @@ public class RoleService {
     public void delete(String name) {
         log.debug("Request to delete Role : {}", name);
         roleRepository.deleteById(name);
+    }
+
+    @Transactional(readOnly = true)
+    public boolean hasAnyRoleInProject(Project project, String... roles) {
+        return (
+            SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.ADMIN) ||
+            roleRepository.hasAnyRoleInProject(
+                project,
+                SecurityUtils.getCurrentUserLogin().orElseThrow(IllegalArgumentException::new),
+                Arrays.asList(roles)
+            )
+        );
     }
 }

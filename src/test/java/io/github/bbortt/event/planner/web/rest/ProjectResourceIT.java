@@ -332,4 +332,15 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
         List<Project> projectList = projectRepository.findAll();
         assertThat(projectList).hasSize(databaseSizeBeforeDelete - 1);
     }
+
+    @Test
+    @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
+    public void deleteProjectDeniedForUsers() throws Exception {
+        // Initialize the database
+        projectService.save(project);
+
+        // Delete the project
+        restProjectMockMvc.perform(delete("/api/projects/{id}", project.getId())).andExpect(status().isForbidden());
+    }
 }

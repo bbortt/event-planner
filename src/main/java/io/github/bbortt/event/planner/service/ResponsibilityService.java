@@ -1,11 +1,13 @@
 package io.github.bbortt.event.planner.service;
 
 import io.github.bbortt.event.planner.domain.Responsibility;
+import io.github.bbortt.event.planner.repository.ProjectRepository;
 import io.github.bbortt.event.planner.repository.ResponsibilityRepository;
 import io.github.bbortt.event.planner.repository.RoleRepository;
 import io.github.bbortt.event.planner.security.AuthoritiesConstants;
 import io.github.bbortt.event.planner.security.SecurityUtils;
 import io.github.bbortt.event.planner.service.exception.EntityNotFoundException;
+import io.github.bbortt.event.planner.service.exception.IdMustBePresentException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -25,12 +27,13 @@ public class ResponsibilityService {
 
     private final Logger log = LoggerFactory.getLogger(ResponsibilityService.class);
 
-    private final ResponsibilityRepository responsibilityRepository;
-    private final RoleRepository roleRepository;
+    private final ProjectService projectService;
 
-    public ResponsibilityService(ResponsibilityRepository responsibilityRepository, RoleRepository roleRepository) {
+    private final ResponsibilityRepository responsibilityRepository;
+
+    public ResponsibilityService(ProjectService projectService, ResponsibilityRepository responsibilityRepository) {
+        this.projectService = projectService;
         this.responsibilityRepository = responsibilityRepository;
-        this.roleRepository = roleRepository;
     }
 
     /**
@@ -102,8 +105,12 @@ public class ResponsibilityService {
     @Transactional(readOnly = true)
     @PreAuthorize("isAuthenticated()")
     public boolean hasAccessToResponsibility(Long responsibilityId, String... roles) {
-        Optional<Responsibility> responsibility = findOne(responsibilityId);
-        return responsibility.map(value -> hasAccessToResponsibility(value, roles)).orElseThrow(EntityNotFoundException::new);
+        if (responsibilityId == null) {
+            throw new IdMustBePresentException();
+        }
+
+        Responsibility responsibility = findOne(responsibilityId).orElseThrow(EntityNotFoundException::new);
+        return hasAccessToResponsibility(responsibility, roles);
     }
 
     /**
@@ -113,16 +120,8 @@ public class ResponsibilityService {
      * @param roles to look out for.
      * @return true if the project access has any of the roles.
      */
-    @Transactional(readOnly = true)
     @PreAuthorize("isAuthenticated()")
     public boolean hasAccessToResponsibility(Responsibility responsibility, String... roles) {
-        return (
-            SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.ADMIN) ||
-            roleRepository.hasAnyRoleInProject(
-                responsibility.getProject(),
-                SecurityUtils.getCurrentUserLogin().orElseThrow(IllegalArgumentException::new),
-                Arrays.asList(roles)
-            )
-        );
+        return projectService.hasAccessToProject(responsibility.getProject(), roles);
     }
 }

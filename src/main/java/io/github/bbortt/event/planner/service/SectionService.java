@@ -6,6 +6,7 @@ import io.github.bbortt.event.planner.repository.SectionRepository;
 import io.github.bbortt.event.planner.security.AuthoritiesConstants;
 import io.github.bbortt.event.planner.security.SecurityUtils;
 import io.github.bbortt.event.planner.service.exception.EntityNotFoundException;
+import io.github.bbortt.event.planner.service.exception.IdMustBePresentException;
 import java.util.Arrays;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -24,12 +25,13 @@ public class SectionService {
 
     private final Logger log = LoggerFactory.getLogger(SectionService.class);
 
-    private final SectionRepository sectionRepository;
-    private final RoleRepository roleRepository;
+    private final ProjectService projectService;
 
-    public SectionService(SectionRepository sectionRepository, RoleRepository roleRepository) {
+    private final SectionRepository sectionRepository;
+
+    public SectionService(ProjectService projectService, SectionRepository sectionRepository) {
+        this.projectService = projectService;
         this.sectionRepository = sectionRepository;
-        this.roleRepository = roleRepository;
     }
 
     /**
@@ -89,8 +91,12 @@ public class SectionService {
     @Transactional(readOnly = true)
     @PreAuthorize("isAuthenticated()")
     public boolean hasAccessToSection(Long sectionId, String... roles) {
-        Optional<Section> section = findOne(sectionId);
-        return section.map(value -> hasAccessToSection(value, roles)).orElseThrow(EntityNotFoundException::new);
+        if (sectionId == null) {
+            throw new IdMustBePresentException();
+        }
+
+        Section section = findOne(sectionId).orElseThrow(EntityNotFoundException::new);
+        return hasAccessToSection(section, roles);
     }
 
     /**
@@ -100,16 +106,8 @@ public class SectionService {
      * @param roles to look out for.
      * @return true if the project access has any of the roles.
      */
-    @Transactional(readOnly = true)
     @PreAuthorize("isAuthenticated()")
     public boolean hasAccessToSection(Section section, String... roles) {
-        return (
-            SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.ADMIN) ||
-            roleRepository.hasAnyRoleInProject(
-                section.getLocation().getProject(),
-                SecurityUtils.getCurrentUserLogin().orElseThrow(IllegalArgumentException::new),
-                Arrays.asList(roles)
-            )
-        );
+        return projectService.hasAccessToProject(section.getLocation().getProject(), roles);
     }
 }
