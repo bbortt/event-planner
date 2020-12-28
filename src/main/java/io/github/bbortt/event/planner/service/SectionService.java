@@ -2,11 +2,13 @@ package io.github.bbortt.event.planner.service;
 
 import io.github.bbortt.event.planner.domain.Section;
 import io.github.bbortt.event.planner.repository.SectionRepository;
+import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -69,5 +71,11 @@ public class SectionService {
     public void delete(Long id) {
         log.debug("Request to delete Section : {}", id);
         sectionRepository.deleteById(id);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Section> findAllByLocationId(Long locationId, Sort sort) {
+        log.debug("Request to get Sections by Location : {}", locationId);
+        return sectionRepository.findAllByLocationId(locationId, sort);
     }
 }
