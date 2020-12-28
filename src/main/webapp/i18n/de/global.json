@@ -34,7 +34,8 @@
       "email.label": "E-Mail-Adresse",
       "email.placeholder": "Ihre Email Adresse",
       "search": "Suchen",
-      "role.label": "Rolle"
+      "role.label": "Rolle",
+      "action": "Aktion"
     },
     "messages": {
       "info": {

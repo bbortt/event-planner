@@ -139,7 +139,6 @@ public class UserService {
         return newUser;
     }
 
-    @Transactional
     private boolean removeNonActivatedUser(User existingUser) {
         if (existingUser.getActivated()) {
             return false;

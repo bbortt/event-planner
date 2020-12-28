@@ -178,7 +178,6 @@ public class ProjectService {
      * @param userDTO the {@code UserDTO}.
      * @return the creator of the project.
      */
-    @Transactional(readOnly = true)
     private User userFromDto(UserDTO userDTO) {
         OptionalUserHolder optionalUserHolder = new OptionalUserHolder();
 
