@@ -3,6 +3,7 @@ package io.github.bbortt.event.planner.web.rest;
 import io.github.bbortt.event.planner.domain.Section;
 import io.github.bbortt.event.planner.security.AuthoritiesConstants;
 import io.github.bbortt.event.planner.security.RolesConstants;
+import io.github.bbortt.event.planner.service.ProjectService;
 import io.github.bbortt.event.planner.service.SectionService;
 import io.github.bbortt.event.planner.web.rest.errors.BadRequestAlertException;
 import io.github.jhipster.web.util.HeaderUtil;
@@ -18,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -46,9 +48,11 @@ public class SectionResource {
     private String applicationName;
 
     private final SectionService sectionService;
+    private final ProjectService projectService;
 
-    public SectionResource(SectionService sectionService) {
+    public SectionResource(SectionService sectionService, ProjectService projectService) {
         this.sectionService = sectionService;
+        this.projectService = projectService;
     }
 
     /**
@@ -120,6 +124,24 @@ public class SectionResource {
         log.debug("REST request to get Section : {}", id);
         Optional<Section> section = sectionService.findOne(id);
         return ResponseUtil.wrapOrNotFound(section);
+    }
+
+    @GetMapping("/sections/project/{projectId}/location/{locationId}")
+    @PreAuthorize(
+        "@projectService.hasAccessToProject(#projectId, \"" +
+        RolesConstants.ADMIN +
+        "\", \"" +
+        RolesConstants.SECRETARY +
+        "\", \"" +
+        RolesConstants.CONTRIBUTOR +
+        "\", \"" +
+        RolesConstants.VIEWER +
+        "\")"
+    )
+    public ResponseEntity<List<Section>> getSectionsByLocationId(@PathVariable Long projectId, @PathVariable Long locationId, Sort sort) {
+        log.debug("REST Request to get Sections by locationId {}", locationId);
+        List<Section> sections = sectionService.findAllByLocationId(locationId, sort);
+        return ResponseEntity.ok(sections);
     }
 
     /**

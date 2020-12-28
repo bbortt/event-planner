@@ -146,7 +146,7 @@ public class LocationResource {
         "\")"
     )
     public ResponseEntity<List<Location>> getLocationsByProjectId(@PathVariable Long projectId, Sort sort) {
-        log.debug("Rest Request to get Locations by projectId {}", projectId);
+        log.debug("REST Request to get Locations by projectId {}", projectId);
         List<Location> locations = locationService.findAllByProjectId(projectId, sort);
         return ResponseEntity.ok(locations);
     }

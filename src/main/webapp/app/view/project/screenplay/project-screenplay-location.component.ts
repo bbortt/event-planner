@@ -1,10 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { HttpResponse } from '@angular/common/http';
+
+import { SectionService } from 'app/entities/section/section.service';
 
 import { Location } from 'app/shared/model/location.model';
 import { Section } from 'app/shared/model/section.model';
-
-import { LocationService } from 'app/entities/location/location.service';
-import { HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-project-screenplay-location',
@@ -16,10 +16,10 @@ export class ProjectScreenplayLocationComponent implements OnInit {
 
   sections: Section[] = [];
 
-  constructor(private locationService: LocationService) {}
+  constructor(private sectionService: SectionService) {}
 
   ngOnInit(): void {
-    this.locationService.findAllSections(this.location!).subscribe((response: HttpResponse<Section[]>) => {
+    this.sectionService.findAllByLocation(this.location!, { sort: ['name,asc'] }).subscribe((response: HttpResponse<Section[]>) => {
       this.sections = response.body || [];
     });
   }

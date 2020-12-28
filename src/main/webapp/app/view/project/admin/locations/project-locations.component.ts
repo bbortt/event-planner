@@ -13,6 +13,7 @@ import { Section } from 'app/shared/model/section.model';
 
 import { ProjectLocationDeleteDialogComponent } from 'app/view/project/admin/locations/project-location-delete-dialog.component';
 import { ProjectSectionDeleteDialogComponent } from 'app/view/project/admin/locations/sections/project-section-delete-dialog.component';
+import { SectionService } from 'app/entities/section/section.service';
 
 import { ADMIN } from 'app/shared/constants/role.constants';
 
@@ -32,6 +33,7 @@ export class ProjectLocationsComponent implements OnInit, OnDestroy {
 
   constructor(
     protected locationService: LocationService,
+    protected sectionService: SectionService,
     protected activatedRoute: ActivatedRoute,
     protected router: Router,
     protected eventManager: JhiEventManager,
@@ -62,8 +64,15 @@ export class ProjectLocationsComponent implements OnInit, OnDestroy {
   }
 
   private loadLocations(): void {
-    this.locationService.findAllByProject(this.project!, { sort: ['name,asc'] }).subscribe((response: HttpResponse<Location[]>) => {
-      this.loadedLocations = response.body || [];
+    this.locationService.findAllByProject(this.project!, { sort: ['name,asc'] }).subscribe((locations: HttpResponse<Location[]>) => {
+      this.loadedLocations = locations.body || [];
+
+      this.loadedLocations.forEach(location =>
+        this.sectionService
+          .findAllByLocation(location, { sort: ['name,asc'] })
+          .subscribe((sections: HttpResponse<Section[]>) => (location.sections = sections.body || []))
+      );
+
       this.locations = this.loadedLocations;
     });
   }

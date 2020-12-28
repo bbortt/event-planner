@@ -32,7 +32,8 @@
       "responsibility": "Responsibility",
       "invitation": "Invitation",
       "location": "Location",
-      "emailOrLogin": "Email or login"
+      "emailOrLogin": "Email or login",
+      "owner": "Owner"
     }
   }
 }

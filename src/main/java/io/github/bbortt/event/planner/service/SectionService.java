@@ -1,18 +1,16 @@
 package io.github.bbortt.event.planner.service;
 
 import io.github.bbortt.event.planner.domain.Section;
-import io.github.bbortt.event.planner.repository.RoleRepository;
 import io.github.bbortt.event.planner.repository.SectionRepository;
-import io.github.bbortt.event.planner.security.AuthoritiesConstants;
-import io.github.bbortt.event.planner.security.SecurityUtils;
 import io.github.bbortt.event.planner.service.exception.EntityNotFoundException;
 import io.github.bbortt.event.planner.service.exception.IdMustBePresentException;
-import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,6 +54,19 @@ public class SectionService {
     public Page<Section> findAll(Pageable pageable) {
         log.debug("Request to get all Sections");
         return sectionRepository.findAll(pageable);
+    }
+
+    /**
+     * Get all sections for the given location.
+     *
+     * @param locationId the location to retrieve locations for.
+     * @param sort the sorting.
+     * @return the list of entities.
+     */
+    @Transactional(readOnly = true)
+    public List<Section> findAllByLocationId(Long locationId, Sort sort) {
+        log.debug("Request to get Sections by Location : {}", locationId);
+        return sectionRepository.findAllByLocationId(locationId, sort);
     }
 
     /**

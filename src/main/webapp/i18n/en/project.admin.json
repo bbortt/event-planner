@@ -7,6 +7,11 @@
           "locations": "Locations",
           "users": "Users",
           "responsibilities": "Responsibilities"
+        },
+        "locations": {
+          "sections": {
+            "addLabel": "Add Section"
+          }
         }
       }
     }
