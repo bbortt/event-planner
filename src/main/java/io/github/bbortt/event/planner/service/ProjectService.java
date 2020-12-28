@@ -11,8 +11,8 @@ import io.github.bbortt.event.planner.security.AuthoritiesConstants;
 import io.github.bbortt.event.planner.security.SecurityUtils;
 import io.github.bbortt.event.planner.service.dto.CreateProjectDTO;
 import io.github.bbortt.event.planner.service.dto.UserDTO;
-import io.github.bbortt.event.planner.service.exception.ProjectDoesNotExistException;
-import io.github.bbortt.event.planner.service.exception.ProjectIdMustBePresentException;
+import io.github.bbortt.event.planner.service.exception.EntityNotFoundException;
+import io.github.bbortt.event.planner.service.exception.IdMustBePresentException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Optional;
@@ -35,17 +35,21 @@ public class ProjectService {
 
     private final Logger log = LoggerFactory.getLogger(ProjectService.class);
 
+    private final RoleService roleService;
+
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final ProjectRepository projectRepository;
     private final InvitationRepository invitationRepository;
 
     public ProjectService(
+        RoleService roleService,
         UserRepository userRepository,
         RoleRepository roleRepository,
         ProjectRepository projectRepository,
         InvitationRepository invitationRepository
     ) {
+        this.roleService = roleService;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.projectRepository = projectRepository;
@@ -148,7 +152,6 @@ public class ProjectService {
             .orElseThrow(() -> new IllegalArgumentException("Error while persisting project!"));
     }
 
-    @Transactional(readOnly = true)
     @PreAuthorize("isAuthenticated()")
     public boolean hasAccessToProject(Project project, String... roles) {
         return hasAccessToProject(project.getId(), roles);
@@ -157,19 +160,11 @@ public class ProjectService {
     @Transactional(readOnly = true)
     @PreAuthorize("isAuthenticated()")
     public boolean hasAccessToProject(Long projectId, String... roles) {
-        if (SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.ADMIN)) {
-            return true;
-        }
-
         if (projectId == null) {
-            throw new ProjectIdMustBePresentException();
+            throw new IdMustBePresentException();
         }
 
-        return roleRepository.hasAnyRoleInProject(
-            projectRepository.findById(projectId).orElseThrow(ProjectDoesNotExistException::new),
-            SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new IllegalArgumentException("No user Login found!")),
-            Arrays.asList(roles)
-        );
+        return roleService.hasAnyRoleInProject(projectRepository.findById(projectId).orElseThrow(EntityNotFoundException::new), roles);
     }
 
     /**

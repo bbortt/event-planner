@@ -12,7 +12,8 @@
       "updated": "A Section is updated with identifier {{ param }}",
       "deleted": "A Section is deleted with identifier {{ param }}",
       "delete": {
-        "question": "Are you sure you want to delete Section {{ name }}?"
+        "question": "Are you sure you want to delete Section {{ name }}?",
+        "warning": "This will delete all Events contained!"
       },
       "detail": {
         "title": "Section"

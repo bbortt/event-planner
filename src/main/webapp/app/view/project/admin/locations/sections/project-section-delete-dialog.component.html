@@ -9,6 +9,10 @@
                 <jhi-alert-error></jhi-alert-error>
 
                 <p id="jhi-delete-section-heading" jhiTranslate="eventPlannerApp.section.delete.question" [translateValues]="{ name: section.name }">Are you sure you want to delete this Section?</p>
+
+                <div class="alert alert-warning">
+                    <span jhiTranslate="eventPlannerApp.section.delete.warning">This will delete all Events contained!</span>
+                </div>
             </div>
 
             <div class="modal-footer">

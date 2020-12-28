@@ -158,7 +158,7 @@ public class LocationResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/locations/{id}")
-    @PreAuthorize("@locationService.hasAccessToLocation(#id, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")")
+    @PreAuthorize("@locationService.hasAccessToLocation(#id, \"" + RolesConstants.ADMIN + "\")")
     public ResponseEntity<Void> deleteLocation(@PathVariable Long id) {
         log.debug("REST request to delete Location : {}", id);
         locationService.delete(id);

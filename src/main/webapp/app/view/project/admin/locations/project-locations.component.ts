@@ -15,6 +15,8 @@ import { ProjectLocationDeleteDialogComponent } from 'app/view/project/admin/loc
 import { ProjectSectionDeleteDialogComponent } from 'app/view/project/admin/locations/sections/project-section-delete-dialog.component';
 import { SectionService } from 'app/entities/section/section.service';
 
+import { ADMIN } from 'app/shared/constants/role.constants';
+
 @Component({
   selector: 'app-project-locations',
   templateUrl: './project-locations.component.html',
@@ -26,6 +28,8 @@ export class ProjectLocationsComponent implements OnInit, OnDestroy {
   locations?: Location[];
 
   eventSubscriber?: Subscription;
+
+  roleAdmin = ADMIN.name;
 
   constructor(
     protected locationService: LocationService,

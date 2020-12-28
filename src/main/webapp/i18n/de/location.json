@@ -12,7 +12,8 @@
       "updated": "Lokalität mit ID {{ param }} aktualisiert",
       "deleted": "Lokalität mit ID {{ param }} gelöscht",
       "delete": {
-        "question": "Soll Lokalität {{ name }} wirklich dauerhaft gelöscht werden?"
+        "question": "Soll Lokalität {{ name }} wirklich dauerhaft gelöscht werden?",
+        "warning": "Dies wird alle untergeordneten Abschnitte und Ereignise löschen!"
       },
       "detail": {
         "title": "Lokalität"

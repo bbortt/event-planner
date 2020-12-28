@@ -22,6 +22,7 @@ import io.github.bbortt.event.planner.repository.ResponsibilityRepository;
 import io.github.bbortt.event.planner.repository.RoleRepository;
 import io.github.bbortt.event.planner.repository.UserRepository;
 import io.github.bbortt.event.planner.security.AuthoritiesConstants;
+import io.github.bbortt.event.planner.security.RolesConstants;
 import io.github.bbortt.event.planner.service.ResponsibilityService;
 import java.util.Collections;
 import java.util.List;
@@ -202,7 +203,7 @@ public class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT 
 
     @Test
     @Transactional
-    @WithMockUser(value = TEST_ADMIN_LOGIN, roles = { "ADMIN" })
+    @WithMockUser(value = TEST_ADMIN_LOGIN, roles = { RolesConstants.ADMIN })
     public void getAllResponsibilitiesIsForAdminsOnly() throws Exception {
         // Initialize the database
         responsibilityRepository.saveAndFlush(responsibility);

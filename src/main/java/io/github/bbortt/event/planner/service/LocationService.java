@@ -2,10 +2,9 @@ package io.github.bbortt.event.planner.service;
 
 import io.github.bbortt.event.planner.domain.Location;
 import io.github.bbortt.event.planner.repository.LocationRepository;
-import io.github.bbortt.event.planner.repository.RoleRepository;
-import io.github.bbortt.event.planner.security.AuthoritiesConstants;
-import io.github.bbortt.event.planner.security.SecurityUtils;
-import java.util.Arrays;
+import io.github.bbortt.event.planner.repository.SectionRepository;
+import io.github.bbortt.event.planner.service.exception.EntityNotFoundException;
+import io.github.bbortt.event.planner.service.exception.IdMustBePresentException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -27,12 +26,15 @@ public class LocationService {
 
     private final Logger log = LoggerFactory.getLogger(LocationService.class);
 
-    private final LocationRepository locationRepository;
-    private final RoleRepository roleRepository;
+    private final ProjectService projectService;
 
-    public LocationService(LocationRepository locationRepository, RoleRepository roleRepository) {
+    private final LocationRepository locationRepository;
+    private final SectionRepository sectionRepository;
+
+    public LocationService(ProjectService projectService, LocationRepository locationRepository, SectionRepository sectionRepository) {
+        this.projectService = projectService;
         this.locationRepository = locationRepository;
-        this.roleRepository = roleRepository;
+        this.sectionRepository = sectionRepository;
     }
 
     /**
@@ -79,6 +81,7 @@ public class LocationService {
     @Transactional
     public void delete(Long id) {
         log.debug("Request to delete Location : {}", id);
+        sectionRepository.deleteAllByLocationId(id);
         locationRepository.deleteById(id);
     }
 
@@ -98,33 +101,29 @@ public class LocationService {
      * Checks if the current user has access to the `Project` linked to the given `Location`, identified by id. The project access must be given by any of the `roles`. Example usage: `@PreAuthorize("@locationService.hasAccessToLocation(#location, 'ADMIN', 'SECRETARY')")`
      *
      * @param locationId the id of the location with a linked project to check.
-     * @param roles      to look out for.
+     * @param roles to look out for.
      * @return true if the project access has any of the roles.
      */
     @Transactional(readOnly = true)
     @PreAuthorize("isAuthenticated()")
     public boolean hasAccessToLocation(Long locationId, String... roles) {
-        Optional<Location> location = findOne(locationId);
-        return location.map(value -> hasAccessToLocation(value, roles)).orElse(true);
+        if (locationId == null) {
+            throw new IdMustBePresentException();
+        }
+
+        Location location = findOne(locationId).orElseThrow(EntityNotFoundException::new);
+        return hasAccessToLocation(location, roles);
     }
 
     /**
      * Checks if the current user has access to the `Project` linked to the given `Location`. The project access must be given by any of the `roles`. Example usage: `@PreAuthorize("@locationService.hasAccessToLocation(#location, 'ADMIN', 'SECRETARY')")`
      *
      * @param location the entity with a linked project to check.
-     * @param roles    to look out for.
+     * @param roles to look out for.
      * @return true if the project access has any of the roles.
      */
-    @Transactional(readOnly = true)
     @PreAuthorize("isAuthenticated()")
     public boolean hasAccessToLocation(Location location, String... roles) {
-        return (
-            SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.ADMIN) ||
-            roleRepository.hasAnyRoleInProject(
-                location.getProject(),
-                SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new IllegalArgumentException("No user Login found!")),
-                Arrays.asList(roles)
-            )
-        );
+        return projectService.hasAccessToProject(location.getProject(), roles);
     }
 }

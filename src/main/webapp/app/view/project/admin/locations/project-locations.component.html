@@ -17,7 +17,7 @@
         </div>
     </h3>
 
-    <br/>
+    <br />
 
     <jhi-alert-error></jhi-alert-error>
 
@@ -45,7 +45,9 @@
                                     <fa-icon icon="pencil-alt"></fa-icon>
                                 </button>
 
-                                <button type="submit" (click)="deleteLocation(location)"
+                                <button *appHasAnyRole="{projectId:project.id!,roles:roleAdmin}"
+                                        type="submit"
+                                        (click)="deleteLocation(location)"
                                         class="btn btn-red btn-sm">
                                     <fa-icon icon="times"></fa-icon>
                                 </button>
@@ -86,7 +88,9 @@
                                                 <fa-icon icon="pencil-alt"></fa-icon>
                                             </button>
 
-                                            <button type="submit" (click)="deleteSection(section)"
+                                            <button *appHasAnyRole="{projectId:project.id!,roles:roleAdmin}"
+                                                    type="submit"
+                                                    (click)="deleteSection(section)"
                                                     class="btn btn-red btn-sm"
                                                     data-toggle="tooltip"
                                                     data-placement="bottom"
@@ -102,7 +106,7 @@
 
                         <div class="location-card-navigation">
                             <div class="btn-group">
-                                <button
+                                                    <button
                                     [routerLink]="['', {outlets: {modal: ['projects', project.id, 'locations', location.id, 'sections', 'new']}}]"
                                     class="btn btn-green btn-negative btn-sm jh-create-entity create-section"
                                     data-toggle="tooltip"
