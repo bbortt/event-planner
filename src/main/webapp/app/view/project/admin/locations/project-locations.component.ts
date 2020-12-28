@@ -30,9 +30,6 @@ export class ProjectLocationsComponent implements OnInit, OnDestroy {
 
   roleAdmin = ADMIN.name;
 
-  sortBy = 'name';
-  ascending = true;
-
   constructor(
     protected locationService: LocationService,
     protected activatedRoute: ActivatedRoute,
