@@ -2,9 +2,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { SERVER_API_URL } from 'app/app.constants';
 import { createRequestOption } from 'app/shared/util/request-util';
+
+import { Location } from 'app/shared/model/location.model';
 import { Section } from 'app/shared/model/section.model';
+
+import { SERVER_API_URL } from 'app/app.constants';
 
 type EntityResponseType = HttpResponse<Section>;
 type EntityArrayResponseType = HttpResponse<Section[]>;
@@ -34,5 +37,13 @@ export class SectionService {
 
   delete(id: number): Observable<HttpResponse<{}>> {
     return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
+  }
+
+  findAllByLocation(location: Location, req?: any): Observable<HttpResponse<Section[]>> {
+    const options = createRequestOption(req);
+    return this.http.get<Location[]>(`${this.resourceUrl}/project/${location.project.id!}/location/${location.id!}`, {
+      params: options,
+      observe: 'response',
+    });
   }
 }

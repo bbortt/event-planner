@@ -1,6 +1,8 @@
 package io.github.bbortt.event.planner.web.rest;
 
 import io.github.bbortt.event.planner.domain.Section;
+import io.github.bbortt.event.planner.security.RolesConstants;
+import io.github.bbortt.event.planner.service.ProjectService;
 import io.github.bbortt.event.planner.service.SectionService;
 import io.github.bbortt.event.planner.web.rest.errors.BadRequestAlertException;
 import io.github.jhipster.web.util.HeaderUtil;
@@ -16,8 +18,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,16 +47,19 @@ public class SectionResource {
     private String applicationName;
 
     private final SectionService sectionService;
+    private final ProjectService projectService;
 
-    public SectionResource(SectionService sectionService) {
+    public SectionResource(SectionService sectionService, ProjectService projectService) {
         this.sectionService = sectionService;
+        this.projectService = projectService;
     }
 
     /**
      * {@code POST  /sections} : Create a new section.
      *
      * @param section the section to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new section, or with status {@code 400 (Bad Request)} if the section has already an ID.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new
+     * section, or with status {@code 400 (Bad Request)} if the section has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/sections")
@@ -72,7 +79,9 @@ public class SectionResource {
      * {@code PUT  /sections} : Updates an existing section.
      *
      * @param section the section to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated section, or with status {@code 400 (Bad Request)} if the section is not valid, or with status {@code 500 (Internal Server Error)} if the section couldn't be updated.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated
+     * section, or with status {@code 400 (Bad Request)} if the section is not valid, or with status
+     * {@code 500 (Internal Server Error)} if the section couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/sections")
@@ -92,7 +101,8 @@ public class SectionResource {
      * {@code GET  /sections} : get all the sections.
      *
      * @param pageable the pagination information.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of sections in body.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of sections in
+     * body.
      */
     @GetMapping("/sections")
     public ResponseEntity<List<Section>> getAllSections(Pageable pageable) {
@@ -106,13 +116,32 @@ public class SectionResource {
      * {@code GET  /sections/:id} : get the "id" section.
      *
      * @param id the id of the section to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the section, or with status {@code 404 (Not Found)}.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the section, or
+     * with status {@code 404 (Not Found)}.
      */
     @GetMapping("/sections/{id}")
     public ResponseEntity<Section> getSection(@PathVariable Long id) {
         log.debug("REST request to get Section : {}", id);
         Optional<Section> section = sectionService.findOne(id);
         return ResponseUtil.wrapOrNotFound(section);
+    }
+
+    @GetMapping("/sections/project/{projectId}/location/{locationId}")
+    @PreAuthorize(
+        "@projectService.hasAccessToProject(#projectId, \"" +
+        RolesConstants.ADMIN +
+        "\", \"" +
+        RolesConstants.SECRETARY +
+        "\", \"" +
+        RolesConstants.CONTRIBUTOR +
+        "\", \"" +
+        RolesConstants.VIEWER +
+        "\")"
+    )
+    public ResponseEntity<List<Section>> getSectionsByLocationId(@PathVariable Long projectId, @PathVariable Long locationId, Sort sort) {
+        log.debug("REST Request to get Sections by locationId {}", locationId);
+        List<Section> sections = sectionService.findAllByLocationId(locationId, sort);
+        return ResponseEntity.ok(sections);
     }
 
     /**
