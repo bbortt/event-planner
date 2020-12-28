@@ -3,7 +3,10 @@
         <span jhiTranslate="eventPlannerApp.project.mine.title">My Projects</span>
 
         <div class="btn-group float-right clearfix">
-            <button *jhiHasAnyAuthority="'ROLE_ADMIN'" [ngSwitch]="showAllProjects"
+            <app-clientside-filter *jhiHasAnyAuthority="authorityAdmin" id="projects-clientside-filter"
+                                   (valueChange)="filterData($event)"></app-clientside-filter>
+
+            <button *jhiHasAnyAuthority="authorityAdmin" [ngSwitch]="showAllProjects"
                     id="btn-show-all-projects"
                     class="btn btn-negative btn-gray" (click)="switchShowAllProjects()">
                 <fa-icon icon="eye"></fa-icon>
@@ -39,7 +42,7 @@
 
     <div id="entities" infinite-scroll (scrolled)="loadPage(page + 1)"
          [infiniteScrollDisabled]="page >= links['last']" [infiniteScrollDistance]="0">
-        <div *ngFor="let projectRow of projects" class="row justify-content-center">
+        <div *ngFor="let projectRow of filteredProjects" class="row justify-content-center">
             <div *ngFor="let project of projectRow;trackBy: trackId"
                  class="project-card col-xs-12 col-sm-4">
                 <div *ngIf="project.id">

@@ -32,7 +32,8 @@
       "responsibility": "Verantwortlichkeit",
       "invitation": "Einladung",
       "location": "Lokalität",
-      "emailOrLogin": "E-Mail oder Login"
+      "emailOrLogin": "E-Mail oder Login",
+      "owner": "Besitzer"
     }
   }
 }

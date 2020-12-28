@@ -22,7 +22,7 @@
                 </a>
             </li>
             <!-- jhipster-needle-add-element-to-menu - JHipster will add new menu items here -->
-            <li *jhiHasAnyAuthority="'ROLE_ADMIN'" ngbDropdown class="nav-item dropdown pointer"
+            <li *jhiHasAnyAuthority="authorityAdmin" ngbDropdown class="nav-item dropdown pointer"
                 display="dynamic" routerLinkActive="active"
                 [routerLinkActiveOptions]="{ exact: true }">
                 <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);"
