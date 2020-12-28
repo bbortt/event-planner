@@ -5,6 +5,7 @@ import io.github.bbortt.event.planner.repository.ResponsibilityRepository;
 import io.github.bbortt.event.planner.repository.RoleRepository;
 import io.github.bbortt.event.planner.security.AuthoritiesConstants;
 import io.github.bbortt.event.planner.security.SecurityUtils;
+import io.github.bbortt.event.planner.service.exception.EntityNotFoundException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -92,30 +93,24 @@ public class ResponsibilityService {
     }
 
     /**
-     * Checks if the current user has access to the `Project` linked to the given `Responsibility`,
-     * identified by id. The project access must be given by any of the `roles`. Example usage:
-     * `@PreAuthorize("@responsibilityService.hasAccessToResponsibility(#responsibility, 'ADMIN',
-     * 'SECRETARY')")`
+     * Checks if the current user has access to the `Project` linked to the given `Responsibility`, identified by id. The project access must be given by any of the `roles`. Example usage: `@PreAuthorize("@responsibilityService.hasAccessToResponsibility(#responsibility, 'ADMIN', 'SECRETARY')")`
      *
      * @param responsibilityId the id of the responsibility with a linked project to check.
-     * @param roles            to look out for.
+     * @param roles to look out for.
      * @return true if the project access has any of the roles.
      */
     @Transactional(readOnly = true)
     @PreAuthorize("isAuthenticated()")
     public boolean hasAccessToResponsibility(Long responsibilityId, String... roles) {
         Optional<Responsibility> responsibility = findOne(responsibilityId);
-        return responsibility.map(value -> hasAccessToResponsibility(value, roles)).orElse(true);
+        return responsibility.map(value -> hasAccessToResponsibility(value, roles)).orElseThrow(EntityNotFoundException::new);
     }
 
     /**
-     * Checks if the current user has access to the `Project` linked to the given `Responsibility`.
-     * The project access must be given by any of the `roles`. Example usage:
-     * `@PreAuthorize("@responsibilityService.hasAccessToResponsibility(#responsibility, 'ADMIN',
-     * 'SECRETARY')")`
+     * Checks if the current user has access to the `Project` linked to the given `Responsibility`. The project access must be given by any of the `roles`. Example usage: `@PreAuthorize("@responsibilityService.hasAccessToResponsibility(#responsibility, 'ADMIN', 'SECRETARY')")`
      *
      * @param responsibility the entity with a linked project to check.
-     * @param roles          to look out for.
+     * @param roles to look out for.
      * @return true if the project access has any of the roles.
      */
     @Transactional(readOnly = true)
@@ -125,7 +120,7 @@ public class ResponsibilityService {
             SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.ADMIN) ||
             roleRepository.hasAnyRoleInProject(
                 responsibility.getProject(),
-                SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new IllegalArgumentException("No user Login found!")),
+                SecurityUtils.getCurrentUserLogin().orElseThrow(IllegalArgumentException::new),
                 Arrays.asList(roles)
             )
         );

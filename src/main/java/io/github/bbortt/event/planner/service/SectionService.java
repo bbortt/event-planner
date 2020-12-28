@@ -5,6 +5,7 @@ import io.github.bbortt.event.planner.repository.RoleRepository;
 import io.github.bbortt.event.planner.repository.SectionRepository;
 import io.github.bbortt.event.planner.security.AuthoritiesConstants;
 import io.github.bbortt.event.planner.security.SecurityUtils;
+import io.github.bbortt.event.planner.service.exception.EntityNotFoundException;
 import java.util.Arrays;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -82,21 +83,21 @@ public class SectionService {
      * Checks if the current user has access to the `Project` linked to the given `Section`, identified by id. The project access must be given by any of the `roles`. Example usage: `@PreAuthorize("@sectionService.hasAccessToSection(#location, 'ADMIN', 'SECRETARY')")`
      *
      * @param sectionId the id of the location with a linked project to check.
-     * @param roles     to look out for.
+     * @param roles to look out for.
      * @return true if the project access has any of the roles.
      */
     @Transactional(readOnly = true)
     @PreAuthorize("isAuthenticated()")
     public boolean hasAccessToSection(Long sectionId, String... roles) {
         Optional<Section> section = findOne(sectionId);
-        return section.map(value -> hasAccessToSection(value, roles)).orElse(true);
+        return section.map(value -> hasAccessToSection(value, roles)).orElseThrow(EntityNotFoundException::new);
     }
 
     /**
      * Checks if the current user has access to the `Project` linked to the given `Section`. The project access must be given by any of the `roles`. Example usage: `@PreAuthorize("@sectionService.hasAccessToSection(#location, 'ADMIN', 'SECRETARY')")`
      *
      * @param section the entity with a linked project to check.
-     * @param roles   to look out for.
+     * @param roles to look out for.
      * @return true if the project access has any of the roles.
      */
     @Transactional(readOnly = true)
@@ -106,7 +107,7 @@ public class SectionService {
             SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.ADMIN) ||
             roleRepository.hasAnyRoleInProject(
                 section.getLocation().getProject(),
-                SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new IllegalArgumentException("No user Login found!")),
+                SecurityUtils.getCurrentUserLogin().orElseThrow(IllegalArgumentException::new),
                 Arrays.asList(roles)
             )
         );

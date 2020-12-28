@@ -17,7 +17,7 @@
         </div>
     </h3>
 
-    <br/>
+    <br />
 
     <jhi-alert-error></jhi-alert-error>
 
@@ -81,7 +81,9 @@
                                                     title="{{ 'entity.action.edit' | translate }}">
                                                 <fa-icon icon="pencil-alt"></fa-icon>
                                             </button>
-                                            <button *appHasAnyRole="roleAdmin" type="submit" (click)="deleteSection(section)"
+                                            <button *appHasAnyRole="roleAdmin"
+                                                    type="submit"
+                                                    (click)="deleteSection(section)"
                                                     class="btn btn-red btn-sm"
                                                     data-toggle="tooltip"
                                                     data-placement="bottom"
@@ -105,7 +107,9 @@
                                           jhiTranslate="entity.action.edit">Edit</span>
                                 </button>
 
-                                <button *appHasAnyRole="roleAdmin" type="submit" (click)="deleteLocation(location)"
+                                <button *appHasAnyRole="roleAdmin"
+                                        type="submit"
+                                        (click)="deleteLocation(location)"
                                         class="btn btn-negative btn-red btn-sm">
                                     <fa-icon icon="times"></fa-icon>
                                     <span class="d-none d-md-inline"

@@ -11,7 +11,7 @@ import io.github.bbortt.event.planner.security.AuthoritiesConstants;
 import io.github.bbortt.event.planner.security.SecurityUtils;
 import io.github.bbortt.event.planner.service.dto.CreateProjectDTO;
 import io.github.bbortt.event.planner.service.dto.UserDTO;
-import io.github.bbortt.event.planner.service.exception.ProjectDoesNotExistException;
+import io.github.bbortt.event.planner.service.exception.EntityNotFoundException;
 import io.github.bbortt.event.planner.service.exception.ProjectIdMustBePresentException;
 import java.util.Arrays;
 import java.util.Collections;
@@ -166,7 +166,7 @@ public class ProjectService {
         }
 
         return roleRepository.hasAnyRoleInProject(
-            projectRepository.findById(projectId).orElseThrow(ProjectDoesNotExistException::new),
+            projectRepository.findById(projectId).orElseThrow(EntityNotFoundException::new),
             SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new IllegalArgumentException("No user Login found!")),
             Arrays.asList(roles)
         );
