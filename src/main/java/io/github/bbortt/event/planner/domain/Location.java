@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -54,7 +53,7 @@ public class Location implements Serializable {
     @JsonIgnoreProperties(value = "locations", allowSetters = true)
     private Responsibility responsibility;
 
-    @OneToMany(mappedBy = "location", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "location")
     private Set<Section> sections = new HashSet<>();
 
     @OneToMany(mappedBy = "location")

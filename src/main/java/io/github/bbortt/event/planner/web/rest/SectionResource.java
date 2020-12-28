@@ -1,6 +1,7 @@
 package io.github.bbortt.event.planner.web.rest;
 
 import io.github.bbortt.event.planner.domain.Section;
+import io.github.bbortt.event.planner.security.RolesConstants;
 import io.github.bbortt.event.planner.service.SectionService;
 import io.github.bbortt.event.planner.web.rest.errors.BadRequestAlertException;
 import io.github.jhipster.web.util.HeaderUtil;
@@ -18,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -122,6 +124,7 @@ public class SectionResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/sections/{id}")
+    @PreAuthorize("@sectionService.hasAccessToSection(#id, \"" + RolesConstants.ADMIN + "\")")
     public ResponseEntity<Void> deleteSection(@PathVariable Long id) {
         log.debug("REST request to delete Section : {}", id);
         sectionService.delete(id);
