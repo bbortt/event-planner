@@ -9,10 +9,13 @@ import io.github.bbortt.event.planner.security.SecurityUtils;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -90,9 +93,9 @@ public class LocationService {
      * @return the list of entities.
      */
     @Transactional(readOnly = true)
-    public List<Location> findAllByProjectId(Long projectId) {
+    public List<Location> findAllByProjectId(Long projectId, Sort sort) {
         log.debug("Request to get all Locations for Project {}", projectId);
-        return locationRepository.findAllByProjectId(projectId);
+        return locationRepository.findAllByProjectId(projectId, Sort.by(sort.stream().map(Order::ignoreCase).collect(Collectors.toList())));
     }
 
     /**

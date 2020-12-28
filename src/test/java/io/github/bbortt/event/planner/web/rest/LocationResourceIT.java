@@ -1,7 +1,6 @@
 package io.github.bbortt.event.planner.web.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -17,7 +16,6 @@ import io.github.bbortt.event.planner.domain.Project;
 import io.github.bbortt.event.planner.domain.User;
 import io.github.bbortt.event.planner.repository.AuthorityRepository;
 import io.github.bbortt.event.planner.repository.LocationRepository;
-import io.github.bbortt.event.planner.repository.ProjectRepository;
 import io.github.bbortt.event.planner.repository.RoleRepository;
 import io.github.bbortt.event.planner.security.AuthoritiesConstants;
 import io.github.bbortt.event.planner.service.LocationService;
@@ -62,6 +60,7 @@ public class LocationResourceIT extends AbstractApplicationContextAwareIT {
     @Autowired
     private MockMvc restLocationMockMvc;
 
+    private User user;
     private Location location;
 
     /**
@@ -108,15 +107,10 @@ public class LocationResourceIT extends AbstractApplicationContextAwareIT {
     public void initTest() {
         location = createEntity(em);
 
-        User user = UserResourceIT.createEntity(em);
+        user = UserResourceIT.createEntity(em);
         user.setLogin(TEST_USER_LOGIN);
         user.setAuthorities(Collections.singleton(authorityRepository.findById(AuthoritiesConstants.USER).get()));
         em.persist(user);
-
-        User admin = UserResourceIT.createEntity(em);
-        admin.setLogin(TEST_ADMIN_LOGIN);
-        admin.setAuthorities(Collections.singleton(authorityRepository.findById(AuthoritiesConstants.ADMIN).get()));
-        em.persist(admin);
 
         Invitation invitation = InvitationResourceIT
             .createEntity(em)
@@ -208,6 +202,41 @@ public class LocationResourceIT extends AbstractApplicationContextAwareIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(location.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME));
+    }
+
+    @Test
+    @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
+    public void getLocationsByProjectIdDoesSortIgnoreCase() throws Exception {
+        // Initialize the database
+        locationRepository.saveAndFlush(location);
+
+        Project project = ProjectResourceIT.createEntity(em);
+        em.persist(project);
+
+        Invitation invitation = InvitationResourceIT
+            .createEntity(em)
+            .accepted(Boolean.TRUE)
+            .project(project)
+            .user(user)
+            .role(roleRepository.roleAdmin());
+        em.persist(invitation);
+
+        Location projectLocation1 = new Location().name("A").project(project);
+        locationRepository.saveAndFlush(projectLocation1);
+        Location projectLocation2 = new Location().name("b").project(project);
+        locationRepository.saveAndFlush(projectLocation2);
+        Location projectLocation3 = new Location().name("C").project(project);
+        locationRepository.saveAndFlush(projectLocation3);
+
+        // Get the locations by project ID
+        restLocationMockMvc
+            .perform(get("/api/locations/project/{projectId}?sort=name,asc", project.getId()))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$[0].name").value(projectLocation1.getName()))
+            .andExpect(jsonPath("$[1].name").value(projectLocation2.getName()))
+            .andExpect(jsonPath("$[2].name").value(projectLocation3.getName()));
     }
 
     @Test

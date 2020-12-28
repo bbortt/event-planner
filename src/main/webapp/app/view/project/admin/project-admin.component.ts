@@ -10,6 +10,8 @@ import { ProjectService } from 'app/entities/project/project.service';
 
 import { faBook } from '@fortawesome/free-solid-svg-icons';
 
+import { ADMIN } from 'app/shared/constants/role.constants';
+
 @Component({
   selector: 'app-project-admin',
   templateUrl: './project-admin.component.html',
@@ -17,6 +19,8 @@ import { faBook } from '@fortawesome/free-solid-svg-icons';
 })
 export class ProjectAdminComponent implements OnInit, OnDestroy {
   faBook = faBook;
+
+  roleAdmin = ADMIN.name;
 
   project?: Project;
   eventSubscriber?: Subscription;
