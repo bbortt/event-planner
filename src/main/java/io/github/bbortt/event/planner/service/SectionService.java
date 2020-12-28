@@ -2,6 +2,7 @@ package io.github.bbortt.event.planner.service;
 
 import io.github.bbortt.event.planner.domain.Section;
 import io.github.bbortt.event.planner.repository.SectionRepository;
+import io.github.bbortt.event.planner.service.exception.BadRequestException;
 import io.github.bbortt.event.planner.service.exception.EntityNotFoundException;
 import io.github.bbortt.event.planner.service.exception.IdMustBePresentException;
 import java.util.List;
@@ -41,6 +42,12 @@ public class SectionService {
     @Transactional
     public Section save(Section section) {
         log.debug("Request to save Section : {}", section);
+
+        if (section.getResponsibility() != null && section.getUser() != null) {
+            log.error("Section does contain responsibility AND user!");
+            throw new BadRequestException();
+        }
+
         return sectionRepository.save(section);
     }
 
