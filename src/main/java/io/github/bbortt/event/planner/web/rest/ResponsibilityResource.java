@@ -3,7 +3,6 @@ package io.github.bbortt.event.planner.web.rest;
 import io.github.bbortt.event.planner.domain.Responsibility;
 import io.github.bbortt.event.planner.security.AuthoritiesConstants;
 import io.github.bbortt.event.planner.security.RolesConstants;
-import io.github.bbortt.event.planner.service.ProjectService;
 import io.github.bbortt.event.planner.service.ResponsibilityService;
 import io.github.bbortt.event.planner.web.rest.errors.BadRequestAlertException;
 import io.github.jhipster.web.util.HeaderUtil;
@@ -19,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -141,8 +141,8 @@ public class ResponsibilityResource {
 
     @GetMapping("/responsibilities/project/{projectId}")
     @PreAuthorize("@projectService.hasAccessToProject(#projectId, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")")
-    public ResponseEntity<List<Responsibility>> getResponsibilitiesByProjectId(@PathVariable Long projectId) {
-        List<Responsibility> responsibilities = responsibilityService.findAllByProjectId(projectId);
+    public ResponseEntity<List<Responsibility>> getResponsibilitiesByProjectId(@PathVariable Long projectId, Sort sort) {
+        List<Responsibility> responsibilities = responsibilityService.findAllByProjectId(projectId, sort);
         return ResponseEntity.ok(responsibilities);
     }
 

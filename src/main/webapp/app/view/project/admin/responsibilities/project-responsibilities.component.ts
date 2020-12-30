@@ -47,10 +47,12 @@ export class ProjectResponsibilitiesComponent implements OnInit, OnDestroy {
   }
 
   loadResponsibilities(): void {
-    this.responsibilityService.findAllByProject(this.project!).subscribe((response: HttpResponse<Responsibility[]>) => {
-      this.loadedResponsibilities = response.body || [];
-      this.responsibilities = this.loadedResponsibilities;
-    });
+    this.responsibilityService
+      .findAllByProject(this.project!, { sort: ['name,asc'] })
+      .subscribe((response: HttpResponse<Responsibility[]>) => {
+        this.loadedResponsibilities = response.body || [];
+        this.responsibilities = this.loadedResponsibilities;
+      });
   }
 
   trackId(index: number, item: Responsibility): number {
