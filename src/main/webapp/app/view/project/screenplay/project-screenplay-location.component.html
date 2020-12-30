@@ -1,3 +1,20 @@
-<div class="alert alert-warning" id="no-result" *ngIf="sections?.length === 0">
+<div class="alert alert-warning" id="no-result" *ngIf="sections?.length === 0; else scheduler">
     <span jhiTranslate="eventPlannerApp.project.screenplay.sections.notFound">Location does not contain any sections</span>
 </div>
+
+<ng-template #scheduler>
+    <dx-scheduler
+        [dataSource]="events"
+        [currentDate]="currentDate"
+        [cellDuration]="60"
+        [firstDayOfWeek]="1"
+        [views]='["timelineDay"]'
+        currentView="timelineDay"
+        [groups]="['sectionId']"
+        height="10vh">
+        <dxi-resource
+            fieldExpr="sectionId"
+            [dataSource]="sections"
+        ></dxi-resource>
+    </dx-scheduler>
+</ng-template>
