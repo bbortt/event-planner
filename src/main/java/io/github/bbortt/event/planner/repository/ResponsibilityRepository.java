@@ -2,6 +2,7 @@ package io.github.bbortt.event.planner.repository;
 
 import io.github.bbortt.event.planner.domain.Responsibility;
 import java.util.List;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -10,5 +11,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface ResponsibilityRepository extends JpaRepository<Responsibility, Long> {
-    List<Responsibility> findAllByProjectId(Long projectId);
+    List<Responsibility> findAllByProjectId(Long projectId, Sort sort);
 }
