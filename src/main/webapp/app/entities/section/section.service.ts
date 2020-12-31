@@ -60,13 +60,6 @@ export class SectionService {
       .pipe(map((response: EntityArrayResponseType) => this.convertDateArrayFromServer(response)));
   }
 
-  protected convertDateFromServer(res: EntityResponseType): EntityResponseType {
-    if (res.body) {
-      this.convertDateInSectionEvents(res.body);
-    }
-    return res;
-  }
-
   protected convertDateArrayFromServer(res: EntityArrayResponseType): EntityArrayResponseType {
     if (res.body) {
       res.body.forEach(this.convertDateInSectionEvents);

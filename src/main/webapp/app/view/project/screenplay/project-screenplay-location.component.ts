@@ -38,10 +38,6 @@ export class ProjectScreenplayLocationComponent implements OnInit {
             this.events.push(...section.events.map((event: Event) => this.toEvents(section, event)));
           }
         });
-        // eslint-disable-next-line no-console
-        console.log('data - sections: ', this.sections);
-        // eslint-disable-next-line no-console
-        console.log('data - events  : ', this.events);
       });
   }
 

@@ -5,16 +5,26 @@
 <ng-template #scheduler>
     <dx-scheduler
         [dataSource]="events"
+        appointmentTemplate="eventTemplate"
+        appointmentTooltipTemplate="tooltipTemplate"
         [currentDate]="currentDate"
         [cellDuration]="60"
         [firstDayOfWeek]="1"
         [views]='["timelineDay"]'
         currentView="timelineDay"
         [groups]="['sectionId']"
-        height="10vh">
+        height="33vh">
         <dxi-resource
             fieldExpr="sectionId"
             [dataSource]="sections"
         ></dxi-resource>
+        <div *dxTemplate="let model of 'eventTemplate'">
+            <app-scheduler-appointment
+                [appointment]="model.appointmentData"></app-scheduler-appointment>
+        </div>
+        <div *dxTemplate="let model of 'tooltipTemplate'">
+            <app-scheduler-appointment-details
+                [appointment]="model.appointmentData"></app-scheduler-appointment-details>
+        </div>
     </dx-scheduler>
 </ng-template>
