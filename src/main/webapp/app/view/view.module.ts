@@ -2,9 +2,8 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { EventPlannerSharedModule } from '../shared/shared.module';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { DatetimeAdapter, MatDatetimepickerModule } from '@mat-datetimepicker/core';
-import { MatMomentDatetimeModule, MomentDatetimeAdapter } from '@mat-datetimepicker/moment';
+
+import { DxDateBoxModule } from 'devextreme-angular';
 
 import { NgxAutocompleteModule } from '@bbortt/ngx-autocomplete';
 
@@ -19,20 +18,7 @@ import { ProjectUserModalComponent } from 'app/view/project/admin/users/project-
 import { VIEW_ROUTES } from './view.routes';
 
 @NgModule({
-  imports: [
-    EventPlannerSharedModule,
-    MatDatepickerModule,
-    MatDatetimepickerModule,
-    MatMomentDatetimeModule,
-    NgxAutocompleteModule,
-    RouterModule.forChild(VIEW_ROUTES),
-  ],
-  providers: [
-    {
-      provide: DatetimeAdapter,
-      useClass: MomentDatetimeAdapter,
-    },
-  ],
+  imports: [EventPlannerSharedModule, DxDateBoxModule, NgxAutocompleteModule, RouterModule.forChild(VIEW_ROUTES)],
   declarations: [
     HomeComponent,
     MyProjectsComponent,

@@ -17,7 +17,7 @@ public interface SectionRepository extends JpaRepository<Section, Long> {
     List<Section> findAllByLocationId(Long locationId, Sort sort);
 
     @Query(value = "SELECT s FROM Section s" + "  LEFT JOIN FETCH s.events" + "  WHERE s.location.id = :locationId" + "    ORDER BY s.name")
-    List<Section> findAllByLocationIdInclusiveEvents(@Param("locationId") Long locationId);
+    List<Section> findAllByLocationIdJoinEventsOrderByNameAsc(@Param("locationId") Long locationId);
 
     @Modifying
     long deleteAllByLocationId(Long locationId);
