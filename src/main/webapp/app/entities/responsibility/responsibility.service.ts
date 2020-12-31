@@ -33,8 +33,10 @@ export class ResponsibilityService {
     return this.http.get<Responsibility[]>(this.resourceUrl, { params: options, observe: 'response' });
   }
 
-  findAllByProject(project: Project): Observable<EntityArrayResponseType> {
+  findAllByProject(project: Project, req?: any): Observable<EntityArrayResponseType> {
+    const options = createRequestOption(req);
     return this.http.get<Responsibility[]>(`${this.resourceUrl}/project/${project.id!}`, {
+      params: options,
       observe: 'response',
     });
   }

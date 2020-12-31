@@ -43,7 +43,7 @@ export class ProjectLocationUpdateComponent {
 
   public updateForm(project: Project, location: Location): void {
     this.isNew = !location.id;
-    this.responsibilityService.findAllByProject(project).subscribe(responsibilities => {
+    this.responsibilityService.findAllByProject(project, { sort: ['name,asc'] }).subscribe(responsibilities => {
       this.responsibilities = responsibilities.body || [];
       this.filteredResponsibilities = this.responsibilities;
     });
