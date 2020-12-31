@@ -50,11 +50,9 @@ export class SectionService {
     });
   }
 
-  findAllByLocationInclusiveEvents(location: Location, req?: any): Observable<EntityArrayResponseType> {
-    const options = createRequestOption(req);
+  findAllByLocationInclusiveEvents(location: Location): Observable<EntityArrayResponseType> {
     return this.http
       .get<Location[]>(`${this.resourceUrl}/project/${location.project.id!}/location/${location.id!}/events`, {
-        params: options,
         observe: 'response',
       })
       .pipe(map((response: EntityArrayResponseType) => this.convertDateArrayFromServer(response)));

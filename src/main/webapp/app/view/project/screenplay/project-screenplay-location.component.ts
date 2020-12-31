@@ -28,17 +28,15 @@ export class ProjectScreenplayLocationComponent implements OnInit {
 
   ngOnInit(): void {
     this.project = this.location?.project;
-    this.sectionService
-      .findAllByLocationInclusiveEvents(this.location!, { sort: ['name,asc'] })
-      .subscribe((response: HttpResponse<Section[]>) => {
-        const data = response.body || [];
-        this.sections = data.map(this.toSections);
-        data.forEach((section: Section) => {
-          if (section.events) {
-            this.events.push(...section.events.map((event: Event) => this.toEvents(section, event)));
-          }
-        });
+    this.sectionService.findAllByLocationInclusiveEvents(this.location!).subscribe((response: HttpResponse<Section[]>) => {
+      const data = response.body || [];
+      this.sections = data.map(this.toSections);
+      data.forEach((section: Section) => {
+        if (section.events) {
+          this.events.push(...section.events.map((event: Event) => this.toEvents(section, event)));
+        }
       });
+    });
   }
 
   private toSections(section: Section): ISchedulerSection {

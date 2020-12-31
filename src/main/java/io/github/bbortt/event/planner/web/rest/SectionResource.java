@@ -130,9 +130,9 @@ public class SectionResource {
 
     @GetMapping("/sections/project/{projectId}/location/{locationId}")
     @PreAuthorize("@projectService.hasAccessToProject(#projectId, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")")
-    public ResponseEntity<List<Section>> getSectionsByLocationId(@PathVariable Long projectId, @PathVariable Long locationId, String sort) {
+    public ResponseEntity<List<Section>> getSectionsByLocationId(@PathVariable Long projectId, @PathVariable Long locationId, Sort sort) {
         log.debug("REST Request to get Sections by locationId {}", locationId);
-        List<Section> sections = sectionService.findAllByLocationId(locationId, Sort.by(sort), false);
+        List<Section> sections = sectionService.findAllByLocationId(locationId, sort);
         return ResponseEntity.ok(sections);
     }
 
@@ -150,11 +150,10 @@ public class SectionResource {
     )
     public ResponseEntity<List<Section>> getSectionsByLocationIdInclusiveEvents(
         @PathVariable Long projectId,
-        @PathVariable Long locationId,
-        String sort
+        @PathVariable Long locationId
     ) {
         log.debug("REST Request to get Sections inclusive Events by locationId {}", locationId);
-        List<Section> sections = sectionService.findAllByLocationId(locationId, Sort.by(sort), true);
+        List<Section> sections = sectionService.findAllByLocationIdInclusiveEvents(locationId);
         return ResponseEntity.ok(sections);
     }
 
