@@ -6,8 +6,6 @@ import io.github.bbortt.event.planner.service.exception.EntityNotFoundException;
 import io.github.bbortt.event.planner.service.exception.IdMustBePresentException;
 import java.util.List;
 import java.util.Optional;
-import javax.persistence.EntityGraph;
-import javax.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -78,9 +76,9 @@ public class SectionService {
      * @return the list of entities.
      */
     @Transactional(readOnly = true)
-    public List<Section> findAllByLocationIdInclusiveEvents(Long locationId) {
+    public List<Section> findAllByLocationIdJoinEvents(Long locationId) {
         log.debug("Request to get Sections and Events by Location : {}", locationId);
-        return sectionRepository.findAllByLocationIdInclusiveEvents(locationId);
+        return sectionRepository.findAllByLocationIdJoinEventsOrderByNameAsc(locationId);
     }
 
     /**

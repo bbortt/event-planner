@@ -16,6 +16,7 @@ import { ICreateProject } from 'app/shared/model/dto/create-project.model';
 
 import { DEFAULT_DEBOUNCE } from 'app/app.constants';
 import { AUTHORITY_ADMIN } from 'app/shared/constants/authority.constants';
+import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 
 import * as moment from 'moment';
 
@@ -39,6 +40,7 @@ export class ProjectCreateComponent implements OnInit, OnDestroy {
 
   startMoment = moment();
   endMoment = moment();
+  dateTimeFormat = DATE_TIME_FORMAT;
 
   filteredUsers: User[] = [];
   defaultDebounce = DEFAULT_DEBOUNCE;
@@ -63,8 +65,8 @@ export class ProjectCreateComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.editForm.get('startTime')!.valueChanges.subscribe((startTime: moment.Moment) => {
-      this.endMoment = startTime;
+    this.editForm.get('startTime')!.valueChanges.subscribe((startTime: Date) => {
+      this.endMoment = moment(startTime);
       this.editForm.get('endTime')!.setValue(startTime);
     });
   }
@@ -115,8 +117,8 @@ export class ProjectCreateComponent implements OnInit, OnDestroy {
   private createFromForm(): ICreateProject {
     const newProject: ICreateProject = {
       name: this.editForm.get(['name'])!.value,
-      startTime: this.editForm.get(['startTime'])!.value,
-      endTime: this.editForm.get(['endTime'])!.value,
+      startTime: moment(this.editForm.get(['startTime'])!.value),
+      endTime: moment(this.editForm.get(['endTime'])!.value),
       description: this.editForm.get(['description'])!.value,
     };
 
@@ -125,5 +127,12 @@ export class ProjectCreateComponent implements OnInit, OnDestroy {
     }
 
     return newProject;
+  }
+
+  isValidInput(formControlName: string): boolean {
+    return !(
+      this.editForm.get(formControlName)!.invalid &&
+      (this.editForm.get(formControlName)!.dirty || this.editForm.get(formControlName)!.touched)
+    );
   }
 }
