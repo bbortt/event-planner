@@ -14,6 +14,7 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 import javax.validation.Valid;
+import javax.websocket.server.PathParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,6 +31,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -127,6 +129,14 @@ public class SectionResource {
     }
 
     @GetMapping("/sections/project/{projectId}/location/{locationId}")
+    @PreAuthorize("@projectService.hasAccessToProject(#projectId, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")")
+    public ResponseEntity<List<Section>> getSectionsByLocationId(@PathVariable Long projectId, @PathVariable Long locationId, Sort sort) {
+        log.debug("REST Request to get Sections by locationId {}", locationId);
+        List<Section> sections = sectionService.findAllByLocationId(locationId, sort);
+        return ResponseEntity.ok(sections);
+    }
+
+    @GetMapping("/sections/project/{projectId}/location/{locationId}/events")
     @PreAuthorize(
         "@projectService.hasAccessToProject(#projectId, \"" +
         RolesConstants.ADMIN +
@@ -138,9 +148,12 @@ public class SectionResource {
         RolesConstants.VIEWER +
         "\")"
     )
-    public ResponseEntity<List<Section>> getSectionsByLocationId(@PathVariable Long projectId, @PathVariable Long locationId, Sort sort) {
-        log.debug("REST Request to get Sections by locationId {}", locationId);
-        List<Section> sections = sectionService.findAllByLocationId(locationId, sort);
+    public ResponseEntity<List<Section>> getSectionsByLocationIdInclusiveEvents(
+        @PathVariable Long projectId,
+        @PathVariable Long locationId
+    ) {
+        log.debug("REST Request to get Sections inclusive Events by locationId {}", locationId);
+        List<Section> sections = sectionService.findAllByLocationIdInclusiveEvents(locationId);
         return ResponseEntity.ok(sections);
     }
 

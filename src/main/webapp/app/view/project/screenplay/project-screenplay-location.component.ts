@@ -5,6 +5,10 @@ import { SectionService } from 'app/entities/section/section.service';
 
 import { Location } from 'app/shared/model/location.model';
 import { Section } from 'app/shared/model/section.model';
+import { Event } from 'app/shared/model/event.model';
+import { ISchedulerEvent, SchedulerEvent } from 'app/shared/model/scheduler/event.scheduler';
+import { Project } from 'app/shared/model/project.model';
+import { ISchedulerSection, SchedulerSection } from 'app/shared/model/scheduler/section.scheduler';
 
 @Component({
   selector: 'app-project-screenplay-location',
@@ -14,13 +18,32 @@ export class ProjectScreenplayLocationComponent implements OnInit {
   @Input()
   location?: Location;
 
-  sections: Section[] = [];
+  project?: Project;
+
+  public currentDate = new Date();
+  public events: ISchedulerEvent[] = [];
+  public sections: ISchedulerSection[] = [];
 
   constructor(private sectionService: SectionService) {}
 
   ngOnInit(): void {
-    this.sectionService.findAllByLocation(this.location!, { sort: ['name,asc'] }).subscribe((response: HttpResponse<Section[]>) => {
-      this.sections = response.body || [];
+    this.project = this.location?.project;
+    this.sectionService.findAllByLocationInclusiveEvents(this.location!).subscribe((response: HttpResponse<Section[]>) => {
+      const data = response.body || [];
+      this.sections = data.map(this.toSections);
+      data.forEach((section: Section) => {
+        if (section.events) {
+          this.events.push(...section.events.map((event: Event) => this.toEvents(section, event)));
+        }
+      });
     });
+  }
+
+  private toSections(section: Section): ISchedulerSection {
+    return new SchedulerSection(section);
+  }
+
+  private toEvents(section: Section, event: Event): ISchedulerEvent {
+    return new SchedulerEvent(section, event);
   }
 }
