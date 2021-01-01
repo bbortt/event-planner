@@ -62,7 +62,15 @@ public class Section implements Serializable {
     @JsonIgnoreProperties(value = "sections", allowSetters = true)
     private Set<Event> events = new HashSet<>();
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here
+    @ManyToOne(optional = false)
+    @JsonIgnoreProperties(value = "sections", allowSetters = true)
+    private Responsibility responsibility;
+
+    @ManyToOne
+    @JoinColumn(name = "jhi_user_id")
+    @JsonIgnoreProperties(value = "sections", allowSetters = true)
+    private User user;
+
     public Long getId() {
         return id;
     }
@@ -122,7 +130,31 @@ public class Section implements Serializable {
         return this;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+    public Responsibility getResponsibility() {
+        return responsibility;
+    }
+
+    public void setResponsibility(Responsibility responsibility) {
+        this.responsibility = responsibility;
+    }
+
+    public Section responsibility(Responsibility responsibility) {
+        this.responsibility = responsibility;
+        return this;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Section user(User user) {
+        this.user = user;
+        return this;
+    }
 
     @Override
     public boolean equals(Object o) {

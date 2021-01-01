@@ -2,6 +2,7 @@ package io.github.bbortt.event.planner.service;
 
 import io.github.bbortt.event.planner.domain.Event;
 import io.github.bbortt.event.planner.repository.EventRepository;
+import io.github.bbortt.event.planner.service.exception.BadRequestException;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +34,12 @@ public class EventService {
     @Transactional
     public Event save(Event event) {
         log.debug("Request to save Event : {}", event);
+
+        if (event.getResponsibility() != null && event.getUser() != null) {
+            log.error("Event does contain responsibility AND user!");
+            throw new BadRequestException();
+        }
+
         return eventRepository.save(event);
     }
 

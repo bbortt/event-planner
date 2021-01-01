@@ -110,6 +110,15 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @OneToMany(mappedBy = "user")
     private Set<Invitation> invitations = new HashSet<>();
 
+    @OneToMany(mappedBy = "user")
+    private Set<Location> locations = new HashSet<>();
+
+    @OneToMany(mappedBy = "user")
+    private Set<Section> sections = new HashSet<>();
+
+    @OneToMany(mappedBy = "user")
+    private Set<Event> events = new HashSet<>();
+
     public Long getId() {
         return id;
     }
@@ -221,6 +230,81 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
     public void setInvitations(Set<Invitation> invitations) {
         this.invitations = invitations;
+    }
+
+    public Set<Location> getLocations() {
+        return locations;
+    }
+
+    public void setLocations(Set<Location> locations) {
+        this.locations = locations;
+    }
+
+    public User locations(Set<Location> locations) {
+        this.locations = locations;
+        return this;
+    }
+
+    public User addLocation(Location location) {
+        this.locations.add(location);
+        location.setUser(this);
+        return this;
+    }
+
+    public User removeLocation(Location location) {
+        this.locations.remove(location);
+        location.setUser(null);
+        return this;
+    }
+
+    public Set<Section> getSections() {
+        return sections;
+    }
+
+    public void setSections(Set<Section> events) {
+        this.sections = sections;
+    }
+
+    public User sections(Set<Section> events) {
+        this.sections = sections;
+        return this;
+    }
+
+    public User addSection(Section section) {
+        this.sections.add(section);
+        section.setUser(this);
+        return this;
+    }
+
+    public User removeSection(Section section) {
+        this.sections.remove(section);
+        section.setUser(null);
+        return this;
+    }
+
+    public Set<Event> getEvents() {
+        return events;
+    }
+
+    public void setEvents(Set<Event> events) {
+        this.events = events;
+    }
+
+    public User events(Set<Event> events) {
+        this.events = events;
+        return this;
+    }
+
+    public User addEvent(Event event) {
+        this.events.add(event);
+        event.setUser(this);
+        return this;
+    }
+
+    public User removeEvent(Event event) {
+        this.events.remove(event);
+        event.setUser(null);
+        return this;
     }
 
     @Override

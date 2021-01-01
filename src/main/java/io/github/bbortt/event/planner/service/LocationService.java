@@ -3,6 +3,7 @@ package io.github.bbortt.event.planner.service;
 import io.github.bbortt.event.planner.domain.Location;
 import io.github.bbortt.event.planner.repository.LocationRepository;
 import io.github.bbortt.event.planner.repository.SectionRepository;
+import io.github.bbortt.event.planner.service.exception.BadRequestException;
 import io.github.bbortt.event.planner.service.exception.EntityNotFoundException;
 import io.github.bbortt.event.planner.service.exception.IdMustBePresentException;
 import java.util.List;
@@ -46,6 +47,12 @@ public class LocationService {
     @Transactional
     public Location save(Location location) {
         log.debug("Request to save Location : {}", location);
+
+        if (location.getResponsibility() != null && location.getUser() != null) {
+            log.error("Location does contain responsibility AND user!");
+            throw new BadRequestException();
+        }
+
         return locationRepository.save(location);
     }
 
