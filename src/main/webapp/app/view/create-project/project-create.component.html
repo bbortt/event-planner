@@ -128,13 +128,17 @@
                     <label class="form-control-label"
                            jhiTranslate="eventPlannerApp.project.owner"
                            for="field_selectedUser">Owner</label>
-                    <ngx-autocomplete inputName="field_selectedUser" inputId="field_selectedUser"
-                                      formControlName="selectedUser" [options]="filteredUsers"
-                                      propertyAccessor="email"
-                                      [placeholder]="'global.form.search' | translate"
-                                      [debounceTime]="defaultDebounce"
-                                      (autocompleteChanges)="filterUsersByLoginOrEmail($event)"
-                                      autocomplete="off"></ngx-autocomplete>
+                    <dx-autocomplete
+                        class="form-control"
+                        name="selectedUser"
+                        id="field_selectedUser"
+                        formControlName="selectedUserAutocomplete"
+                        [placeholder]="'global.form.search' | translate"
+                        [dataSource]="dataSource"
+                        valueExpr="email"
+                        (onSelectionChanged)="userSelected($event)"
+                        [isValid]="isValidInput('selectedUser')">
+                    </dx-autocomplete>
                     <div
                         *ngIf="editForm.get('selectedUser')!.invalid && (editForm.get('selectedUser')!.dirty || editForm.get('selectedUser')!.touched)">
                         <small class="form-text text-danger"
@@ -144,9 +148,7 @@
                         </small>
                     </div>
                 </div>
-            </div>
 
-            <div>
                 <button *ngIf="cancelEnabled" type="button" id="cancel-save"
                         class="btn btn-negative btn-gray"
                         (click)="previousState()">
@@ -158,6 +160,7 @@
                     <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
                 </button>
             </div>
+
         </form>
     </div>
 </div>

@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { HttpResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 
 import { JhiEventManager } from 'ng-jhipster';
@@ -8,13 +7,17 @@ import { JhiEventManager } from 'ng-jhipster';
 import { Subject } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
 
-import { ProjectService } from 'app/entities/project/project.service';
+import DataSource from 'devextreme/data/data_source';
+import { LoadOptions } from 'devextreme/data/load_options';
+
 import { AccountService } from 'app/core/auth/account.service';
+import { ProjectService } from 'app/entities/project/project.service';
 import { UserService } from 'app/core/user/user.service';
+
 import { User } from 'app/core/user/user.model';
+
 import { ICreateProject } from 'app/shared/model/dto/create-project.model';
 
-import { DEFAULT_DEBOUNCE } from 'app/app.constants';
 import { AUTHORITY_ADMIN } from 'app/shared/constants/authority.constants';
 import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 
@@ -36,14 +39,14 @@ export class ProjectCreateComponent implements OnInit, OnDestroy {
     startTime: [null, [Validators.required]],
     endTime: [null, [Validators.required]],
     selectedUser: [null, []],
+    selectedUserAutocomplete: [null, []],
   });
+
+  dataSource: DataSource;
 
   startMoment = moment();
   endMoment = moment();
   dateTimeFormat = DATE_TIME_FORMAT;
-
-  filteredUsers: User[] = [];
-  defaultDebounce = DEFAULT_DEBOUNCE;
 
   authorityAdmin = AUTHORITY_ADMIN;
 
@@ -57,41 +60,36 @@ export class ProjectCreateComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private eventManager: JhiEventManager
   ) {
-    this.accountService.identity().subscribe(() => {
-      if (this.accountService.hasAnyAuthority(AUTHORITY_ADMIN)) {
+    accountService.identity().subscribe(() => {
+      if (accountService.hasAnyAuthority(AUTHORITY_ADMIN)) {
         this.editForm.get(['selectedUser'])!.setValidators(Validators.required);
       }
+    });
+
+    this.dataSource = new DataSource({
+      load(loadOptions: LoadOptions): Promise<User[]> {
+        return userService.findByEmailOrLogin(loadOptions.searchValue).toPromise();
+      },
     });
   }
 
   ngOnInit(): void {
-    this.editForm.get('startTime')!.valueChanges.subscribe((startTime: Date) => {
-      this.endMoment = moment(startTime);
-      this.editForm.get('endTime')!.setValue(startTime);
-    });
+    this.editForm
+      .get('startTime')!
+      .valueChanges.pipe(takeUntil(this.destroy$))
+      .subscribe((startTime: Date) => {
+        this.endMoment = moment(startTime);
+        this.editForm.get('endTime')!.setValue(startTime);
+      });
   }
 
   public ngOnDestroy(): void {
     this.destroy$.next();
+    this.destroy$.complete();
   }
 
-  filterUsersByLoginOrEmail(value: string): void {
-    if (!value) {
-      this.initalLoad();
-      return;
-    }
-
-    this.userService.findByEmailOrLogin(value).subscribe((users: User[]) => (this.filteredUsers = users));
-  }
-
-  private initalLoad(): void {
-    this.userService
-      .query({
-        page: 0,
-        size: 5,
-        sort: ['login,asc', 'email,asc'],
-      })
-      .subscribe((res: HttpResponse<User[]>) => (this.filteredUsers = res.body || []));
+  userSelected($event: any): void {
+    this.editForm.get('selectedUser')!.setValue($event.selectedItem);
   }
 
   previousState(): void {
