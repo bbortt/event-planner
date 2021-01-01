@@ -8,6 +8,9 @@ import { Location } from 'app/shared/model/location.model';
 import { Project } from 'app/shared/model/project.model';
 
 import { SERVER_API_URL } from 'app/app.constants';
+import { Section } from 'app/shared/model/section.model';
+import * as moment from 'moment';
+import { map } from 'rxjs/operators';
 
 type EntityResponseType = HttpResponse<Location>;
 type EntityArrayResponseType = HttpResponse<Location[]>;
@@ -37,13 +40,28 @@ export class LocationService {
 
   findAllByProject(project: Project, req?: any): Observable<EntityArrayResponseType> {
     const options = createRequestOption(req);
-    return this.http.get<Location[]>(`${this.resourceUrl}/project/${project.id!}`, {
-      params: options,
-      observe: 'response',
-    });
+    return this.http
+      .get<Location[]>(`${this.resourceUrl}/project/${project.id!}`, {
+        params: options,
+        observe: 'response',
+      })
+      .pipe(map((response: EntityArrayResponseType) => this.convertDateArrayFromServer(response)));
   }
 
   delete(id: number): Observable<HttpResponse<{}>> {
     return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
+  }
+
+  protected convertDateArrayFromServer(res: EntityArrayResponseType): EntityArrayResponseType {
+    if (res.body) {
+      res.body.forEach(this.convertDateInLocationProject);
+    }
+    return res;
+  }
+
+  private convertDateInLocationProject(location: Location): Section {
+    location.project.startTime = moment(location.project.startTime);
+    location.project.endTime = moment(location.project.endTime);
+    return location;
   }
 }
