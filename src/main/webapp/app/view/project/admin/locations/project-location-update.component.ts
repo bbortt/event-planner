@@ -6,13 +6,14 @@ import { Observable } from 'rxjs';
 
 import { JhiEventManager } from 'ng-jhipster';
 
+import { DxAutocompleteComponent } from 'devextreme-angular';
+
 import { LocationService } from 'app/entities/location/location.service';
 import { ResponsibilityService } from 'app/entities/responsibility/responsibility.service';
 
 import { Location } from 'app/shared/model/location.model';
 import { Project } from 'app/shared/model/project.model';
 import { Responsibility } from 'app/shared/model/responsibility.model';
-import { DxAutocompleteComponent } from 'devextreme-angular';
 
 @Component({
   selector: 'app-location-update',
@@ -20,6 +21,9 @@ import { DxAutocompleteComponent } from 'devextreme-angular';
   styleUrls: ['./project-location-update.component.scss'],
 })
 export class ProjectLocationUpdateComponent {
+  @ViewChild(DxAutocompleteComponent, { static: true })
+  autocomplete?: DxAutocompleteComponent;
+
   isNew = false;
   isSaving = false;
 
@@ -34,9 +38,6 @@ export class ProjectLocationUpdateComponent {
     responsibilityAutocomplete: [],
     project: [],
   });
-
-  @ViewChild(DxAutocompleteComponent, { static: true })
-  autocomplete?: DxAutocompleteComponent;
 
   constructor(
     protected locationService: LocationService,
