@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { NgxAutocompleteModule } from '@bbortt/ngx-autocomplete';
 
 import { EventPlannerSharedModule } from 'app/shared/shared.module';
+import { DxAutocompleteModule } from 'devextreme-angular';
 
 import { ProjectAdminComponent } from 'app/view/project/admin/project-admin.component';
 import { ProjectAdminUpdateComponent } from 'app/view/project/admin/project-admin-update.component';
@@ -28,7 +28,7 @@ import { ProjectResponsibilityDeleteDialogComponent } from 'app/view/project/adm
 import { PROJECT_ADMIN_ROUTES } from './project-admin.routes';
 
 @NgModule({
-  imports: [EventPlannerSharedModule, NgxAutocompleteModule, RouterModule.forChild(PROJECT_ADMIN_ROUTES)],
+  imports: [EventPlannerSharedModule, DxAutocompleteModule, RouterModule.forChild(PROJECT_ADMIN_ROUTES)],
   declarations: [
     ProjectAdminComponent,
     ProjectAdminUpdateModalComponent,
