@@ -130,7 +130,7 @@ export class MyProjectsComponent implements OnInit, OnDestroy {
       this.filteredProjects[this.filteredProjects.length - 1] &&
       this.filteredProjects[this.filteredProjects.length - 1].length % 3 !== 0
     ) {
-      this.filteredProjects[this.filteredProjects.length - 1].push({});
+      this.filteredProjects[this.filteredProjects.length - 1].push({} as Project);
       this.loadMoreButtonEnabled = false;
     }
   }

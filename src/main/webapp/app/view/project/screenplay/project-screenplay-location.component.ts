@@ -1,18 +1,21 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 
 import { SectionService } from 'app/entities/section/section.service';
 
 import { Location } from 'app/shared/model/location.model';
-import { Section } from 'app/shared/model/section.model';
 import { Event } from 'app/shared/model/event.model';
-import { ISchedulerEvent, SchedulerEvent } from 'app/shared/model/scheduler/event.scheduler';
 import { Project } from 'app/shared/model/project.model';
+import { Section } from 'app/shared/model/section.model';
+
+import { ISchedulerEvent, SchedulerEvent } from 'app/shared/model/scheduler/event.scheduler';
 import { ISchedulerSection, SchedulerSection } from 'app/shared/model/scheduler/section.scheduler';
 
 @Component({
   selector: 'app-project-screenplay-location',
   templateUrl: './project-screenplay-location.component.html',
+  styleUrls: ['./project-screenplay-location.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class ProjectScreenplayLocationComponent implements OnInit {
   @Input()
@@ -45,5 +48,10 @@ export class ProjectScreenplayLocationComponent implements OnInit {
 
   private toEvents(section: Section, event: Event): ISchedulerEvent {
     return new SchedulerEvent(section, event);
+  }
+
+  // TODO: This will be in global filter
+  calculateInterval(): number {
+    return this.project!.endTime.diff(this.project!.startTime, 'days') + 1;
   }
 }
