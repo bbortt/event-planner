@@ -59,8 +59,8 @@ export class ProjectService {
 
   protected convertDateFromServer(res: EntityResponseType): EntityResponseType {
     if (res.body) {
-      res.body.startTime = res.body.startTime ? moment(res.body.startTime) : undefined;
-      res.body.endTime = res.body.endTime ? moment(res.body.endTime) : undefined;
+      res.body.startTime = moment(res.body.startTime);
+      res.body.endTime = moment(res.body.endTime);
     }
     return res;
   }
@@ -68,8 +68,8 @@ export class ProjectService {
   protected convertDateArrayFromServer(res: EntityArrayResponseType): EntityArrayResponseType {
     if (res.body) {
       res.body.forEach((project: Project) => {
-        project.startTime = project.startTime ? moment(project.startTime) : undefined;
-        project.endTime = project.endTime ? moment(project.endTime) : undefined;
+        project.startTime = moment(project.startTime);
+        project.endTime = moment(project.endTime);
       });
     }
     return res;
