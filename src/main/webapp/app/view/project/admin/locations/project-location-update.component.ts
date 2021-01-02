@@ -56,7 +56,7 @@ export class ProjectLocationUpdateComponent {
       id: location.id,
       name: location.name,
       responsibility: location.responsibility,
-      responsibilityAutocomplete: location.responsibility!.name,
+      responsibilityAutocomplete: location.responsibility?.name,
       project,
     });
   }
