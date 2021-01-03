@@ -22,13 +22,16 @@ public class EventServiceUnitTest {
     public ExpectedException expectedException = ExpectedException.none();
 
     @Mock
+    ProjectService projectServiceMock;
+
+    @Mock
     EventRepository eventRepositoryMock;
 
     EventService fixture;
 
     @Before
     public void beforeTestSetup() {
-        fixture = new EventService(eventRepositoryMock);
+        fixture = new EventService(projectServiceMock, eventRepositoryMock);
     }
 
     @Test
