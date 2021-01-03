@@ -1,10 +1,9 @@
 @import '../../../content/scss/global.scss';
 
-.dx-texteditor-input,
-.dx-placeholder::before {
-  padding: 0;
-  min-height: 0;
-  text-align: center;
+.dx-timeview-field {
+  .dx-texteditor-input {
+    text-align: center;
+  }
 }
 
 .dx-button-today {

@@ -56,6 +56,7 @@ export class HasAnyRoleDirective implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.destroy$.next();
+    this.destroy$.complete();
   }
 
   private updateView(): void {

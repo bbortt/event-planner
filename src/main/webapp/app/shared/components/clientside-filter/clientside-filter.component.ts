@@ -3,6 +3,7 @@ import { FormControl } from '@angular/forms';
 
 import { Subject } from 'rxjs';
 import { debounceTime, takeUntil } from 'rxjs/operators';
+
 import { DEFAULT_DEBOUNCE } from 'app/app.constants';
 
 @Component({
@@ -27,5 +28,6 @@ export class ClientsideFilterComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.destroy$.next();
+    this.destroy$.complete();
   }
 }
