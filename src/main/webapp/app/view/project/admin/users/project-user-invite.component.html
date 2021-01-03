@@ -1,6 +1,6 @@
 <div class="row justify-content-center">
   <div class="col-8">
-    <form name="inviteForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="inviteform">
+    <form name="inviteForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="inviteForm">
       <h2 id="jhi-project-heading" jhiTranslate="userManagement.invite"></h2>
 
       <div>
@@ -16,11 +16,11 @@
           />
           <div *ngIf="isDisplayingError('email')">
             <small class="form-text text-danger"
-                   *ngIf="inviteform.get('email')?.errors?.email"
+                   *ngIf="inviteForm.get('email')?.errors?.email"
                    jhiTranslate="entity.validation.email">
             </small>
             <small class="form-text text-danger"
-                   *ngIf="inviteform.get('email')?.errors?.required"
+                   *ngIf="inviteForm.get('email')?.errors?.required"
                    jhiTranslate="entity.validation.required">
             </small>
           </div>
@@ -36,8 +36,31 @@
           </select>
           <div *ngIf="isDisplayingError('role')">
             <small class="form-text text-danger"
-                   *ngIf="inviteform.get('role')?.errors?.required"
+                   *ngIf="inviteForm.get('role')?.errors?.required"
                    jhiTranslate="entity.validation.required">
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label"
+                 jhiTranslate="eventPlannerApp.location.responsibility"
+                 for="field-responsibility"> Responsibility </label>
+          <ngx-autocomplete
+              name="responsibility"
+              id="field-responsibility"
+              formControlName="responsibility"
+              [options]="filteredResponsibilities"
+              propertyAccessor="name"
+              [placeholder]="'global.form.search' | translate"
+              (autocompleteChanges)="filter($event)"
+          ></ngx-autocomplete>
+
+          <div *ngIf="isDisplayingError('responsibility')">
+            <small class="form-text text-danger"
+                   *ngIf="inviteForm.get('responsibility')?.errors?.required"
+                   jhiTranslate="entity.validation.required">
+              This field is required.
             </small>
           </div>
         </div>
@@ -51,7 +74,7 @@
           <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
         </button>
 
-        <button type="submit" id="save-entity" [disabled]="inviteform.pristine || inviteform.invalid || isSaving"
+        <button type="submit" id="save-entity" [disabled]="inviteForm.pristine || inviteForm.invalid || isSaving"
                 class="btn btn-primary">
           <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.inviteuser"></span>
         </button>

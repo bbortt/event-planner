@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { LoginService } from 'app/core/login/login.service';
-import { LoginModalComponent } from 'app/shared/login/login.component';
+import { LoginComponent } from 'app/shared/login/login.component';
 import { EventPlannerTestModule } from '../../../test.module';
 import { MockLoginService } from '../../../helpers/mock-login.service';
 import { MockRouter } from '../../../helpers/mock-route.service';
@@ -12,8 +12,8 @@ import { MockActiveModal } from '../../../helpers/mock-active-modal.service';
 
 describe('Component Tests', () => {
   describe('LoginComponent', () => {
-    let comp: LoginModalComponent;
-    let fixture: ComponentFixture<LoginModalComponent>;
+    let comp: LoginComponent;
+    let fixture: ComponentFixture<LoginComponent>;
     let mockLoginService: MockLoginService;
     let mockRouter: MockRouter;
     let mockActiveModal: MockActiveModal;
@@ -21,7 +21,7 @@ describe('Component Tests', () => {
     beforeEach(async(() => {
       TestBed.configureTestingModule({
         imports: [EventPlannerTestModule],
-        declarations: [LoginModalComponent],
+        declarations: [LoginComponent],
         providers: [
           FormBuilder,
           {
@@ -30,12 +30,12 @@ describe('Component Tests', () => {
           },
         ],
       })
-        .overrideTemplate(LoginModalComponent, '')
+        .overrideTemplate(LoginComponent, '')
         .compileComponents();
     }));
 
     beforeEach(() => {
-      fixture = TestBed.createComponent(LoginModalComponent);
+      fixture = TestBed.createComponent(LoginComponent);
       comp = fixture.componentInstance;
       mockLoginService = TestBed.get(LoginService);
       mockRouter = TestBed.get(Router);

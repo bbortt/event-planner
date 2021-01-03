@@ -21,6 +21,15 @@ export const errorRoute: Routes = [
     },
   },
   {
+    path: 'invalid-token',
+    component: ErrorComponent,
+    data: {
+      authorities: [],
+      pageTitle: 'error.title',
+      errorMessage: 'error.invalidInvitationToken',
+    },
+  },
+  {
     path: '404',
     component: ErrorComponent,
     data: {

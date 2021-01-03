@@ -17,6 +17,8 @@ import { ProjectResponsibilityModalComponent } from 'app/view/project/admin/resp
 
 import { ProjectUserModalComponent } from 'app/view/project/admin/users/project-user-modal.component';
 import { VIEW_ROUTES } from './view.routes';
+import { InvitationViaLoginComponent } from 'app/view/invitation/invitation-via-login.component';
+import { InvitationViaRegisterComponent } from 'app/view/invitation/invitation-via-register.component';
 
 @NgModule({
   imports: [
@@ -40,6 +42,8 @@ import { VIEW_ROUTES } from './view.routes';
     CreateProjectModalComponent,
     ProjectResponsibilityModalComponent,
     ProjectUserModalComponent,
+    InvitationViaLoginComponent,
+    InvitationViaRegisterComponent,
   ],
   entryComponents: [HomeComponent],
 })

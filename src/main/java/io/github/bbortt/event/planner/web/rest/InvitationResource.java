@@ -10,6 +10,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,6 +61,7 @@ public class InvitationResource {
         if (invitation.getId() != null) {
             throw new BadRequestAlertException("A new invitation cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        invitation.setToken(UUID.randomUUID().toString());
         Invitation result = invitationService.save(invitation);
         return ResponseEntity
             .created(new URI("/api/invitations/" + result.getId()))
@@ -135,5 +137,20 @@ public class InvitationResource {
             .noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
+    }
+
+    @PostMapping("/invitations/user")
+    public void assignCurrentUserToInvitation(@Valid @RequestBody String token) {
+        invitationService.assignCurrentUserToInvitation(token);
+    }
+
+    @PostMapping("/invitations/user/{login}")
+    public void assignUserByLoginToInvitation(@Valid @RequestBody String token, @PathVariable String login) {
+        invitationService.assignUserByLoginToInvitation(login, token);
+    }
+
+    @PostMapping("/invitations/token-validity")
+    public boolean checkTokenValidity(@Valid @RequestBody String token) {
+        return invitationService.isTokenValid(token);
     }
 }
