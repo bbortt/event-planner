@@ -22,7 +22,6 @@ export class ProjectUserInviteComponent {
   });
   ROLES = ROLES;
   responsibilities: Responsibility[] = [];
-  filteredResponsibilities: Responsibility[] = [];
 
   private project?: Project;
 
@@ -54,18 +53,15 @@ export class ProjectUserInviteComponent {
     this.project = project;
     this.responsibilityService.findAllByProject(project).subscribe(responsibilities => {
       this.responsibilities = responsibilities.body || [];
-      this.filteredResponsibilities = this.responsibilities;
     });
+  }
+
+  responsibilitySelected($event: any): void {
+    this.inviteForm.get('responsibility')!.setValue($event.selectedItem);
   }
 
   public previousState(): void {
     window.history.back();
-  }
-
-  public filter(searchString: string): void {
-    this.filteredResponsibilities = this.responsibilities.filter(responsibility =>
-      responsibility.name!.toLowerCase().includes(searchString.toLowerCase())
-    );
   }
 
   public isDisplayingError(path: string): boolean {
