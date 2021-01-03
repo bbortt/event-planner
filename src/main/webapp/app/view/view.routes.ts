@@ -3,8 +3,7 @@ import { Routes } from '@angular/router';
 import { HomeComponent } from './home.component';
 
 import { MODAL_OUTLET_ROUTES } from 'app/view/modal-outlet.routes';
-import { InvitationViaLoginComponent } from 'app/view/invitation/invitation-via-login.component';
-import { InvitationViaRegisterComponent } from 'app/view/invitation/invitation-via-register.component';
+import { AcceptInvitationComponent } from 'app/view/invitation/accept-invitation.component';
 
 export const VIEW_ROUTES: Routes = [
   {
@@ -16,16 +15,16 @@ export const VIEW_ROUTES: Routes = [
   },
   {
     path: 'invitation/login/:token',
-    component: InvitationViaLoginComponent,
+    component: AcceptInvitationComponent,
     data: {
-      authorities: [],
+      variant: 'login',
     },
   },
   {
     path: 'invitation/register/:token',
-    component: InvitationViaRegisterComponent,
+    component: AcceptInvitationComponent,
     data: {
-      authorities: [],
+      variant: 'register',
     },
   },
   {

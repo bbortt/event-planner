@@ -18,7 +18,7 @@ export class ProjectUserInviteComponent {
   inviteForm = this.fb.group({
     email: [null, [Validators.required, Validators.email]],
     role: [CONTRIBUTOR, [Validators.required]],
-    responsibility: [null, [Validators.required]],
+    responsibility: [null],
   });
   ROLES = ROLES;
   responsibilities: Responsibility[] = [];
@@ -62,9 +62,5 @@ export class ProjectUserInviteComponent {
 
   public previousState(): void {
     window.history.back();
-  }
-
-  public isDisplayingError(path: string): boolean {
-    return (this.inviteForm.get(path)!.invalid && this.inviteForm.get(path)!.dirty) || this.inviteForm.get(path)!.touched;
   }
 }

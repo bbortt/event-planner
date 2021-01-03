@@ -2,6 +2,7 @@ package io.github.bbortt.event.planner.web.rest;
 
 import io.github.bbortt.event.planner.domain.Invitation;
 import io.github.bbortt.event.planner.service.InvitationService;
+import io.github.bbortt.event.planner.service.MailService;
 import io.github.bbortt.event.planner.web.rest.errors.BadRequestAlertException;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
@@ -40,12 +41,14 @@ public class InvitationResource {
     private static final String ENTITY_NAME = "invitation";
     private final Logger log = LoggerFactory.getLogger(InvitationResource.class);
     private final InvitationService invitationService;
+    private final MailService mailService;
 
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
-    public InvitationResource(InvitationService invitationService) {
+    public InvitationResource(InvitationService invitationService, MailService mailService) {
         this.invitationService = invitationService;
+        this.mailService = mailService;
     }
 
     /**
@@ -63,6 +66,7 @@ public class InvitationResource {
         }
         invitation.setToken(UUID.randomUUID().toString());
         Invitation result = invitationService.save(invitation);
+        mailService.sendInvitationMail(invitation);
         return ResponseEntity
             .created(new URI("/api/invitations/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))

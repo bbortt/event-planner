@@ -24,12 +24,10 @@ public class InvitationService {
 
     private final InvitationRepository invitationRepository;
     private final UserRepository userRepository;
-    private final MailService mailService;
 
-    public InvitationService(InvitationRepository invitationRepository, UserRepository userRepository, MailService mailService) {
+    public InvitationService(InvitationRepository invitationRepository, UserRepository userRepository) {
         this.invitationRepository = invitationRepository;
         this.userRepository = userRepository;
-        this.mailService = mailService;
     }
 
     /**
@@ -104,7 +102,6 @@ public class InvitationService {
             .findOneByLogin(login)
             .orElseThrow(() -> new EntityNotFoundException("User with login " + login + " not found"));
         invitationRepository.assignUserToInvitation(user.getId(), token);
-        mailService.sendInvitationMail(user, token);
     }
 
     public boolean isTokenValid(String token) {

@@ -14,7 +14,7 @@
                  formControlName="email"
                  autocomplete="off"
           />
-          <div *ngIf="isDisplayingError('email')">
+          <div *ngIf="inviteForm.get('email')!.invalid && inviteForm.get('email')!.dirty || inviteForm.get('email')!.touched">
             <small class="form-text text-danger"
                    *ngIf="inviteForm.get('email')?.errors?.email"
                    jhiTranslate="entity.validation.email">
@@ -34,7 +34,7 @@
                   id="field_role">
             <option *ngFor="let role of ROLES" [jhiTranslate]="role.i18nKey" [ngValue]="role"></option>
           </select>
-          <div *ngIf="isDisplayingError('role')">
+          <div *ngIf="inviteForm.get('role')!.invalid && inviteForm.get('role')!.dirty || inviteForm.get('role')!.touched">
             <small class="form-text text-danger"
                    *ngIf="inviteForm.get('role')?.errors?.required"
                    jhiTranslate="entity.validation.required">
@@ -56,17 +56,9 @@
               valueExpr="name"
               (onSelectionChanged)="responsibilitySelected($event)"
               [showClearButton]="true"
-              [isValid]="isDisplayingError('responsibility')">
+              [isValid]="!(inviteForm.get('responsibility')!.invalid && inviteForm.get('responsibility')!.dirty || inviteForm.get('responsibility')!.touched)">
           </dx-autocomplete>
-          <div *ngIf="isDisplayingError('responsibility')">
-            <small class="form-text text-danger"
-                   *ngIf="inviteForm.get('responsibility')?.errors?.required"
-                   jhiTranslate="entity.validation.required">
-              This field is required.
-            </small>
-          </div>
         </div>
-
       </div>
 
       <div>

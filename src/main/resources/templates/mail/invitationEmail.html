@@ -13,15 +13,15 @@
 </head>
 <body>
     <div class="container-md">
-        <p th:text="#{email.activation.greeting(${user.login})}">
+        <p th:text="#{email.activation.greeting(${invitation.email})}">
             Dear
         </p>
-        <p th:text="#{email.invitation.text1}">
+        <p th:text="#{email.invitation.text1(${project_name})}">
             You have been invited to join project x.
         </p>
         <p>
             <button type="button" class="btn btn-outline-dark">
-                <a th:with="url=(@{|${baseUrl}/invitation/login/${token}|})"
+                <a th:with="url=(@{|${baseUrl}/invitation/login/${invitation.token}|})"
                    th:href="${url}"
                    th:text="#{email.invitation.accept}">Accept Invitation</a>
             </button>
@@ -33,8 +33,8 @@
         </p>
         <p>
             <small>
-                <span th:text="#{email.invitation.link.alternative}">In case the above link does not work:</span>
-                <a th:with="url=(@{|${baseUrl}/invitation/login/${token}|})"
+                <span th:text="#{email.activation.link.alternative}">In case the above link does not work:</span>
+                <a th:with="url=(@{|${baseUrl}/invitation/login/${invitation.token}|})"
                    th:href="${url}"
                    th:text="${url}">Invitation link</a>.
             </small>
