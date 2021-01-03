@@ -5,6 +5,10 @@
         "tabTitle": "Event Planner | Screenplay",
         "sections": {
           "notFound": "No Sections found for this Location"
+        },
+        "filter": {
+          "collapseAll": "Collapse All",
+          "expandAll": "Expand All"
         }
       }
     }

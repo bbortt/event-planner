@@ -1,16 +1,18 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
+
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { createRequestOption } from 'app/shared/util/request-util';
 
 import { Location } from 'app/shared/model/location.model';
 import { Project } from 'app/shared/model/project.model';
+import { Section } from 'app/shared/model/section.model';
 
 import { SERVER_API_URL } from 'app/app.constants';
-import { Section } from 'app/shared/model/section.model';
+
 import * as moment from 'moment';
-import { map } from 'rxjs/operators';
 
 type EntityResponseType = HttpResponse<Location>;
 type EntityArrayResponseType = HttpResponse<Location[]>;
