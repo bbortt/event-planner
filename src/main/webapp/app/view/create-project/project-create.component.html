@@ -11,7 +11,7 @@
                     <label class="form-control-label" jhiTranslate="eventPlannerApp.project.name"
                            for="field_name">Name</label>
                     <input type="text" class="form-control" name="name" id="field_name"
-                           formControlName="name" autocomplete="off"/>
+                           formControlName="name" autocomplete="off" />
                     <div
                         *ngIf="editForm.get('name')!.invalid && (editForm.get('name')!.dirty || editForm.get('name')!.touched)">
                         <small class="form-text text-danger"
@@ -39,7 +39,8 @@
                            jhiTranslate="eventPlannerApp.project.description"
                            for="field_description">Description</label>
                     <textarea type="text" class="form-control" name="description"
-                              id="field_description" formControlName="description" autocomplete="off">
+                              id="field_description" formControlName="description"
+                              autocomplete="off">
                     </textarea>
                     <div
                         *ngIf="editForm.get('description')!.invalid && (editForm.get('description')!.dirty || editForm.get('description')!.touched)">
@@ -63,13 +64,18 @@
                            jhiTranslate="eventPlannerApp.project.startTime" for="field_startTime">Start
                         Time</label>
                     <div class="d-flex">
-                        <input type="text" class="form-control" name="startTime"
-                               id="field_startTime" formControlName="startTime"
-                               placeholder="dd.MM.yyyy HH:mm" [matDatetimepicker]="startTimePicker"
-                               [min]="startMoment"
-                               required autocomplete="false">
-                        <mat-datetimepicker #startTimePicker type="datetime" [timeInterval]="5"
-                                            [openOnFocus]="true"></mat-datetimepicker>
+                        <dx-date-box
+                            class="form-control"
+                            name="startTime"
+                            id="field_startTime"
+                            type="datetime"
+                            [openOnFieldClick]="true"
+                            [displayFormat]="dateTimeFormat"
+                            formControlName="startTime"
+                            [min]="startMoment.toDate()"
+                            placeholder="dd.MM.yyyy HH:mm"
+                            [isValid]="isValidInput('startTime')">
+                        </dx-date-box>
                     </div>
                     <div
                         *ngIf="editForm.get('startTime')!.invalid && (editForm.get('startTime')!.dirty || editForm.get('startTime')!.touched)">
@@ -90,12 +96,18 @@
                     <label class="form-control-label" jhiTranslate="eventPlannerApp.project.endTime"
                            for="field_endTime">End Time</label>
                     <div class="d-flex">
-                        <input type="text" class="form-control" name="endTime"
-                               id="field_endTime" formControlName="endTime"
-                               placeholder="dd.MM.yyyy HH:mm" [matDatetimepicker]="endTimePicker"
-                               [min]="endMoment" required autocomplete="false">
-                        <mat-datetimepicker #endTimePicker type="datetime" [timeInterval]="5"
-                                            [openOnFocus]="true"></mat-datetimepicker>
+                        <dx-date-box
+                            class="form-control"
+                            name="endTime"
+                            id="field_endTime"
+                            type="datetime"
+                            [openOnFieldClick]="true"
+                            [displayFormat]="dateTimeFormat"
+                            formControlName="endTime"
+                            [min]="endMoment.toDate()"
+                            placeholder="dd.MM.yyyy HH:mm"
+                            [isValid]="isValidInput('endTime')">
+                        </dx-date-box>
                     </div>
                     <div
                         *ngIf="editForm.get('endTime')!.invalid && (editForm.get('endTime')!.dirty || editForm.get('endTime')!.touched)">
@@ -112,17 +124,21 @@
                     </div>
                 </div>
 
-                <div class="form-group" *jhiHasAnyAuthority="'ROLE_ADMIN'">
+                <div class="form-group" *jhiHasAnyAuthority="authorityAdmin">
                     <label class="form-control-label"
-                           jhiTranslate="eventPlannerApp.project.emailOrLogin"
-                           for="field_selectedUser">Email or login</label>
-                    <ngx-autocomplete inputName="field_selectedUser" inputId="field_selectedUser"
-                                      formControlName="selectedUser" [options]="filteredUsers"
-                                      propertyAccessor="email"
-                                      [placeholder]="'global.form.search' | translate"
-                                      [debounceTime]="defaultDebounce"
-                                      (autocompleteChanges)="filterUsersByLoginOrEmail($event)"
-                                      autocomplete="off"></ngx-autocomplete>
+                           jhiTranslate="eventPlannerApp.project.owner"
+                           for="field_selectedUser">Owner</label>
+                    <dx-autocomplete
+                        class="form-control"
+                        name="selectedUser"
+                        id="field_selectedUser"
+                        formControlName="selectedUserAutocomplete"
+                        [placeholder]="'global.form.search' | translate"
+                        [dataSource]="dataSource"
+                        valueExpr="email"
+                        (onSelectionChanged)="userSelected($event)"
+                        [isValid]="isValidInput('selectedUser')">
+                    </dx-autocomplete>
                     <div
                         *ngIf="editForm.get('selectedUser')!.invalid && (editForm.get('selectedUser')!.dirty || editForm.get('selectedUser')!.touched)">
                         <small class="form-text text-danger"
@@ -132,9 +148,7 @@
                         </small>
                     </div>
                 </div>
-            </div>
 
-            <div>
                 <button *ngIf="cancelEnabled" type="button" id="cancel-save"
                         class="btn btn-negative btn-gray"
                         (click)="previousState()">

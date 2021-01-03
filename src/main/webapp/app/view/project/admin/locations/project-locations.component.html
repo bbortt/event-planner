@@ -2,17 +2,22 @@
     <h3 id="page-heading">
         <span jhiTranslate="eventPlannerApp.location.home.title">Location</span>
 
-        <button id="jh-create-entity"
-                class="btn btn-green btn-negative float-right clearfix jh-create-entity create-location"
-                [routerLink]="['', {outlets: {modal: ['projects', project!.id, 'locations', 'new']}}]">
-            <fa-icon icon="plus"></fa-icon>
-            <span jhiTranslate="eventPlannerApp.location.home.createLabel">
+        <div class="float-right clearfix">
+            <app-clientside-filter id="locations-clientside-filter" class="float-left"
+                                   (valueChange)="this.filterData($event)"></app-clientside-filter>
+
+            <button id="jh-create-entity"
+                    class="btn btn-green btn-negative jh-create-entity create-location"
+                    [routerLink]="['', {outlets: {modal: ['projects', project!.id, 'locations', 'new']}}]">
+                <fa-icon icon="plus"></fa-icon>
+                <span jhiTranslate="eventPlannerApp.location.home.createLabel">
             Create a new Location
             </span>
-        </button>
+            </button>
+        </div>
     </h3>
 
-    <br/>
+    <br />
 
     <jhi-alert-error></jhi-alert-error>
 
@@ -33,24 +38,41 @@
                                 {{location.name}}
                             </span>
 
-                            <button
-                                [routerLink]="['', {outlets: {modal: ['projects', project.id, 'locations', location.id, 'sections', 'new']}}]"
-                                class="btn btn-green btn-sm float-right clearfix jh-create-entity create-section"
-                                data-toggle="tooltip"
-                                data-placement="bottom"
-                                title="{{ 'eventPlannerApp.section.home.createLabel' | translate }}">
-                                <fa-icon icon="plus"></fa-icon>
-                            </button>
+                            <div class="btn-group float-right clearfix">
+                                <button type="submit"
+                                        [routerLink]="['', {outlets: {modal: ['projects', project.id, 'locations', location.id, 'edit']}}]"
+                                        class="btn btn-blue btn-sm">
+                                    <fa-icon icon="pencil-alt"></fa-icon>
+                                </button>
+
+                                <button *appHasAnyRole="{projectId:project.id!,roles:roleAdmin}"
+                                        type="submit"
+                                        (click)="deleteLocation(location)"
+                                        class="btn btn-red btn-sm">
+                                    <fa-icon icon="times"></fa-icon>
+                                </button>
+                            </div>
                         </h4>
 
-                        <div class="location-card-responsibility mb-auto" *ngIf="location.responsibility">
+                        <div class="location-card-responsibility"
+                             *ngIf="location.responsibility; else responsibilitySpace">
                             <i>
                                 <span jhiTranslate="eventPlannerApp.location.responsibility">Responsibility</span>: {{location.responsibility!.name}}
                             </i>
                         </div>
 
-                        <div class="location-card-section">
+                        <ng-template #responsibilitySpace>
+                            <i><span>&nbsp;</span></i>
+                        </ng-template>
+
+                        <div class="location-card-section mb-auto">
                             <table class="table table-striped">
+                                <thead class="d-none">
+                                <tr>
+                                    <th>{{ 'eventPlannerApp.location.section' | translate }}</th>
+                                    <th>{{ 'global.form.action' | translate }}</th>
+                                </tr>
+                                </thead>
                                 <tbody>
                                 <tr *ngFor="let section of location.sections">
                                     <td>{{section.name}}</td>
@@ -66,7 +88,9 @@
                                                 <fa-icon icon="pencil-alt"></fa-icon>
                                             </button>
 
-                                            <button type="submit" (click)="deleteSection(section)"
+                                            <button *appHasAnyRole="{projectId:project.id!,roles:roleAdmin}"
+                                                    type="submit"
+                                                    (click)="deleteSection(section)"
                                                     class="btn btn-red btn-sm"
                                                     data-toggle="tooltip"
                                                     data-placement="bottom"
@@ -82,19 +106,15 @@
 
                         <div class="location-card-navigation">
                             <div class="btn-group">
-                                <button type="submit"
-                                        [routerLink]="['', {outlets: {modal: ['projects', project.id, 'locations', location.id, 'edit']}}]"
-                                        class="btn btn-negative btn-blue btn-sm">
-                                    <fa-icon icon="pencil-alt"></fa-icon>
+                                                    <button
+                                    [routerLink]="['', {outlets: {modal: ['projects', project.id, 'locations', location.id, 'sections', 'new']}}]"
+                                    class="btn btn-green btn-negative btn-sm jh-create-entity create-section"
+                                    data-toggle="tooltip"
+                                    data-placement="bottom"
+                                    title="{{ 'eventPlannerApp.project.admin.locations.sections.addLabel' | translate }}">
+                                    <fa-icon icon="plus"></fa-icon>
                                     <span class="d-none d-md-inline"
-                                          jhiTranslate="entity.action.edit">Edit</span>
-                                </button>
-
-                                <button type="submit" (click)="deleteLocation(location)"
-                                        class="btn btn-negative btn-red btn-sm">
-                                    <fa-icon icon="times"></fa-icon>
-                                    <span class="d-none d-md-inline"
-                                          jhiTranslate="entity.action.delete">Delete</span>
+                                          jhiTranslate="eventPlannerApp.project.admin.locations.sections.addLabel">Add Section</span>
                                 </button>
                             </div>
                         </div>

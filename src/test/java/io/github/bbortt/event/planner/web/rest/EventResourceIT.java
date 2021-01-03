@@ -86,32 +86,7 @@ public class EventResourceIT extends AbstractApplicationContextAwareIT {
      * This is a static method, as tests for other entities might also need it, if they test an entity which requires the current entity.
      */
     public static Event createEntity(EntityManager em) {
-        Event event = new Event()
-            .name(DEFAULT_NAME)
-            .description(DEFAULT_DESCRIPTION)
-            .startTime(DEFAULT_START_TIME)
-            .endTime(DEFAULT_END_TIME);
-        // Add required entity
-        Section section;
-        if (TestUtil.findAll(em, Section.class).isEmpty()) {
-            section = SectionResourceIT.createEntity(em);
-            em.persist(section);
-            em.flush();
-        } else {
-            section = TestUtil.findAll(em, Section.class).get(0);
-        }
-        event.getSections().add(section);
-        // Add required entity
-        Responsibility responsibility;
-        if (TestUtil.findAll(em, Responsibility.class).isEmpty()) {
-            responsibility = ResponsibilityResourceIT.createEntity(em);
-            em.persist(responsibility);
-            em.flush();
-        } else {
-            responsibility = TestUtil.findAll(em, Responsibility.class).get(0);
-        }
-        event.setResponsibility(responsibility);
-        return event;
+        return new Event().name(DEFAULT_NAME).description(DEFAULT_DESCRIPTION).startTime(DEFAULT_START_TIME).endTime(DEFAULT_END_TIME);
     }
 
     /**
@@ -120,32 +95,7 @@ public class EventResourceIT extends AbstractApplicationContextAwareIT {
      * This is a static method, as tests for other entities might also need it, if they test an entity which requires the current entity.
      */
     public static Event createUpdatedEntity(EntityManager em) {
-        Event event = new Event()
-            .name(UPDATED_NAME)
-            .description(UPDATED_DESCRIPTION)
-            .startTime(UPDATED_START_TIME)
-            .endTime(UPDATED_END_TIME);
-        // Add required entity
-        Section section;
-        if (TestUtil.findAll(em, Section.class).isEmpty()) {
-            section = SectionResourceIT.createUpdatedEntity(em);
-            em.persist(section);
-            em.flush();
-        } else {
-            section = TestUtil.findAll(em, Section.class).get(0);
-        }
-        event.getSections().add(section);
-        // Add required entity
-        Responsibility responsibility;
-        if (TestUtil.findAll(em, Responsibility.class).isEmpty()) {
-            responsibility = ResponsibilityResourceIT.createUpdatedEntity(em);
-            em.persist(responsibility);
-            em.flush();
-        } else {
-            responsibility = TestUtil.findAll(em, Responsibility.class).get(0);
-        }
-        event.setResponsibility(responsibility);
-        return event;
+        return new Event().name(UPDATED_NAME).description(UPDATED_DESCRIPTION).startTime(UPDATED_START_TIME).endTime(UPDATED_END_TIME);
     }
 
     @BeforeEach

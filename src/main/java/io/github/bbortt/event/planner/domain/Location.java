@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -44,8 +45,8 @@ public class Location implements Serializable {
     @Column(name = "name", length = 50, nullable = false)
     private String name;
 
-    @ManyToOne(optional = false)
     @NotNull
+    @ManyToOne(optional = false)
     @JsonIgnoreProperties(value = "locations", allowSetters = true)
     private Project project;
 
@@ -59,7 +60,11 @@ public class Location implements Serializable {
     @OneToMany(mappedBy = "location")
     private Set<LocationTimeSlot> locationTimeSlots = new HashSet<>();
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here
+    @ManyToOne
+    @JoinColumn(name = "jhi_user_id")
+    @JsonIgnoreProperties(value = "location", allowSetters = true)
+    private User user;
+
     public Long getId() {
         return id;
     }
@@ -152,7 +157,18 @@ public class Location implements Serializable {
         return this;
     }
 
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Location user(User user) {
+        this.user = user;
+        return this;
+    }
 
     @Override
     public boolean equals(Object o) {

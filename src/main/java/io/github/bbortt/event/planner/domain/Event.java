@@ -40,11 +40,11 @@ public class Event implements Serializable {
     private Long id;
 
     @NotNull
-    @Size(min = 0, max = 50)
+    @Size(min = 1, max = 50)
     @Column(name = "name", length = 50, nullable = false)
     private String name;
 
-    @Size(min = 0, max = 300)
+    @Size(max = 300)
     @Column(name = "description", length = 300)
     private String description;
 
@@ -67,7 +67,6 @@ public class Event implements Serializable {
     private Set<Section> sections = new HashSet<>();
 
     @ManyToOne(optional = false)
-    @NotNull
     @JsonIgnoreProperties(value = "events", allowSetters = true)
     private Responsibility responsibility;
 
@@ -76,7 +75,6 @@ public class Event implements Serializable {
     @JsonIgnoreProperties(value = "events", allowSetters = true)
     private User user;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
     }
@@ -187,8 +185,6 @@ public class Event implements Serializable {
         this.user = user;
         return this;
     }
-
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
     public boolean equals(Object o) {

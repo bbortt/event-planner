@@ -1,3 +1,41 @@
-<div class="alert alert-warning" id="no-result" *ngIf="sections?.length === 0">
+<div class="alert alert-warning" id="no-result" *ngIf="sections?.length === 0; else scheduler">
     <span jhiTranslate="eventPlannerApp.project.screenplay.sections.notFound">Location does not contain any sections</span>
 </div>
+
+<ng-template #scheduler>
+    <div class="app-project-screenplay-location">
+        <dx-scheduler
+            [dataSource]="events"
+            appointmentTemplate="eventTemplate"
+            appointmentTooltipTemplate="tooltipTemplate"
+            [currentDate]="project!.startTime.toDate()"
+            [min]="project!.startTime.toDate()"
+            [max]="project!.endTime.toDate()"
+            [groups]="['sectionId']"
+            currentView="custom-project-view"
+            [showCurrentTimeIndicator]="false"
+            [showAllDayPanel]="false"
+            [crossScrollingEnabled]="true">
+            <dxi-view
+                type="timelineDay"
+                name="custom-project-view"
+                [cellDuration]="30"
+                [intervalCount]="calculateInterval()">
+            </dxi-view>
+
+            <dxi-resource
+                fieldExpr="sectionId"
+                [dataSource]="sections"
+            ></dxi-resource>
+
+            <div *dxTemplate="let model of 'eventTemplate'">
+                <app-scheduler-appointment
+                    [appointment]="model.appointmentData"></app-scheduler-appointment>
+            </div>
+            <div *dxTemplate="let model of 'tooltipTemplate'">
+                <app-scheduler-appointment-details
+                    [appointment]="model.appointmentData"></app-scheduler-appointment-details>
+            </div>
+        </dx-scheduler>
+    </div>
+</ng-template>

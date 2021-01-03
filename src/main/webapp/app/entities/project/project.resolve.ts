@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { ActivatedRouteSnapshot, Resolve, Router } from '@angular/router';
+
 import { EMPTY, Observable, of } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
-import { Project } from 'app/shared/model/project.model';
+
 import { ProjectService } from './project.service';
+
+import { Project } from 'app/shared/model/project.model';
 
 @Injectable({ providedIn: 'root' })
 export class ProjectResolve implements Resolve<Project> {
@@ -33,6 +36,6 @@ export class ProjectResolve implements Resolve<Project> {
       );
     }
 
-    return of({});
+    return EMPTY;
   }
 }

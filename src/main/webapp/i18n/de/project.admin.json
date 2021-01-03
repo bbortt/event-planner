@@ -7,6 +7,11 @@
           "locations": "Lokalitäten",
           "users": "Benutzer",
           "responsibilities": "Verantwortlichkeiten"
+        },
+        "locations": {
+          "sections": {
+            "addLabel": "Abschnitt hinzufügen"
+          }
         }
       }
     }

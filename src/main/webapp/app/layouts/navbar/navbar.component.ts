@@ -1,16 +1,22 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+
+import { Subscription } from 'rxjs';
+
 import { JhiLanguageService } from 'ng-jhipster';
+
 import { SessionStorageService } from 'ngx-webstorage';
 
-import { VERSION } from 'app/app.constants';
-import { LANGUAGES } from 'app/core/language/language.constants';
 import { AccountService } from 'app/core/auth/account.service';
 import { LoginModalService } from 'app/core/login/login-modal.service';
 import { LoginService } from 'app/core/login/login.service';
 import { ProfileService } from 'app/layouts/profiles/profile.service';
+
 import { Account } from 'app/core/user/account.model';
-import { Subscription } from 'rxjs';
+
+import { VERSION } from 'app/app.constants';
+import { LANGUAGES } from 'app/core/language/language.constants';
+import { AUTHORITY_ADMIN } from 'app/shared/constants/authority.constants';
 
 @Component({
   selector: 'jhi-navbar',
@@ -26,6 +32,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   account: Account | null = null;
   authSubscription?: Subscription;
+
+  authorityAdmin = AUTHORITY_ADMIN;
 
   constructor(
     private loginService: LoginService,

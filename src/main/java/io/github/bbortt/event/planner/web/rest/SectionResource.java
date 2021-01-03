@@ -1,6 +1,9 @@
 package io.github.bbortt.event.planner.web.rest;
 
 import io.github.bbortt.event.planner.domain.Section;
+import io.github.bbortt.event.planner.security.AuthoritiesConstants;
+import io.github.bbortt.event.planner.security.RolesConstants;
+import io.github.bbortt.event.planner.service.ProjectService;
 import io.github.bbortt.event.planner.service.SectionService;
 import io.github.bbortt.event.planner.web.rest.errors.BadRequestAlertException;
 import io.github.jhipster.web.util.HeaderUtil;
@@ -16,8 +19,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,9 +48,11 @@ public class SectionResource {
     private String applicationName;
 
     private final SectionService sectionService;
+    private final ProjectService projectService;
 
-    public SectionResource(SectionService sectionService) {
+    public SectionResource(SectionService sectionService, ProjectService projectService) {
         this.sectionService = sectionService;
+        this.projectService = projectService;
     }
 
     /**
@@ -56,6 +63,7 @@ public class SectionResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/sections")
+    @PreAuthorize("@sectionService.hasAccessToSection(#section, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")")
     public ResponseEntity<Section> createSection(@Valid @RequestBody Section section) throws URISyntaxException {
         log.debug("REST request to save Section : {}", section);
         if (section.getId() != null) {
@@ -76,6 +84,7 @@ public class SectionResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/sections")
+    @PreAuthorize("@sectionService.hasAccessToSection(#section, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")")
     public ResponseEntity<Section> updateSection(@Valid @RequestBody Section section) throws URISyntaxException {
         log.debug("REST request to update Section : {}", section);
         if (section.getId() == null) {
@@ -95,6 +104,7 @@ public class SectionResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of sections in body.
      */
     @GetMapping("/sections")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<List<Section>> getAllSections(Pageable pageable) {
         log.debug("REST request to get a page of Sections");
         Page<Section> page = sectionService.findAll(pageable);
@@ -109,10 +119,37 @@ public class SectionResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the section, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/sections/{id}")
+    @PreAuthorize("@sectionService.hasAccessToSection(#id, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")")
     public ResponseEntity<Section> getSection(@PathVariable Long id) {
         log.debug("REST request to get Section : {}", id);
         Optional<Section> section = sectionService.findOne(id);
         return ResponseUtil.wrapOrNotFound(section);
+    }
+
+    @GetMapping("/sections/project/{projectId}/location/{locationId}")
+    @PreAuthorize("@projectService.hasAccessToProject(#projectId, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")")
+    public ResponseEntity<List<Section>> getSectionsByLocationId(@PathVariable Long projectId, @PathVariable Long locationId, Sort sort) {
+        log.debug("REST Request to get Sections by locationId {}", locationId);
+        List<Section> sections = sectionService.findAllByLocationId(locationId, sort);
+        return ResponseEntity.ok(sections);
+    }
+
+    @GetMapping("/sections/project/{projectId}/location/{locationId}/events")
+    @PreAuthorize(
+        "@projectService.hasAccessToProject(#projectId, \"" +
+        RolesConstants.ADMIN +
+        "\", \"" +
+        RolesConstants.SECRETARY +
+        "\", \"" +
+        RolesConstants.CONTRIBUTOR +
+        "\", \"" +
+        RolesConstants.VIEWER +
+        "\")"
+    )
+    public ResponseEntity<List<Section>> getSectionsByLocationIdJoinEvents(@PathVariable Long projectId, @PathVariable Long locationId) {
+        log.debug("REST Request to get Sections inclusive Events by locationId {}", locationId);
+        List<Section> sections = sectionService.findAllByLocationIdJoinEvents(locationId);
+        return ResponseEntity.ok(sections);
     }
 
     /**
@@ -122,6 +159,7 @@ public class SectionResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/sections/{id}")
+    @PreAuthorize("@sectionService.hasAccessToSection(#id, \"" + RolesConstants.ADMIN + "\")")
     public ResponseEntity<Void> deleteSection(@PathVariable Long id) {
         log.debug("REST request to delete Section : {}", id);
         sectionService.delete(id);

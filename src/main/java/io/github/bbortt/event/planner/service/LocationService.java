@@ -2,16 +2,19 @@ package io.github.bbortt.event.planner.service;
 
 import io.github.bbortt.event.planner.domain.Location;
 import io.github.bbortt.event.planner.repository.LocationRepository;
-import io.github.bbortt.event.planner.repository.RoleRepository;
-import io.github.bbortt.event.planner.security.AuthoritiesConstants;
-import io.github.bbortt.event.planner.security.SecurityUtils;
-import java.util.Arrays;
+import io.github.bbortt.event.planner.repository.SectionRepository;
+import io.github.bbortt.event.planner.service.exception.BadRequestException;
+import io.github.bbortt.event.planner.service.exception.EntityNotFoundException;
+import io.github.bbortt.event.planner.service.exception.IdMustBePresentException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,12 +27,15 @@ public class LocationService {
 
     private final Logger log = LoggerFactory.getLogger(LocationService.class);
 
-    private final LocationRepository locationRepository;
-    private final RoleRepository roleRepository;
+    private final ProjectService projectService;
 
-    public LocationService(LocationRepository locationRepository, RoleRepository roleRepository) {
+    private final LocationRepository locationRepository;
+    private final SectionRepository sectionRepository;
+
+    public LocationService(ProjectService projectService, LocationRepository locationRepository, SectionRepository sectionRepository) {
+        this.projectService = projectService;
         this.locationRepository = locationRepository;
-        this.roleRepository = roleRepository;
+        this.sectionRepository = sectionRepository;
     }
 
     /**
@@ -41,6 +47,12 @@ public class LocationService {
     @Transactional
     public Location save(Location location) {
         log.debug("Request to save Location : {}", location);
+
+        if (location.getResponsibility() != null && location.getUser() != null) {
+            log.error("Location does contain responsibility AND user!");
+            throw new BadRequestException();
+        }
+
         return locationRepository.save(location);
     }
 
@@ -76,6 +88,7 @@ public class LocationService {
     @Transactional
     public void delete(Long id) {
         log.debug("Request to delete Location : {}", id);
+        sectionRepository.deleteAllByLocationId(id);
         locationRepository.deleteById(id);
     }
 
@@ -86,9 +99,9 @@ public class LocationService {
      * @return the list of entities.
      */
     @Transactional(readOnly = true)
-    public List<Location> findAllByProjectId(Long projectId) {
+    public List<Location> findAllByProjectId(Long projectId, Sort sort) {
         log.debug("Request to get all Locations for Project {}", projectId);
-        return locationRepository.findAllByProjectId(projectId);
+        return locationRepository.findAllByProjectId(projectId, Sort.by(sort.stream().map(Order::ignoreCase).collect(Collectors.toList())));
     }
 
     /**
@@ -101,8 +114,12 @@ public class LocationService {
     @Transactional(readOnly = true)
     @PreAuthorize("isAuthenticated()")
     public boolean hasAccessToLocation(Long locationId, String... roles) {
-        Optional<Location> location = findOne(locationId);
-        return location.map(value -> hasAccessToLocation(value, roles)).orElse(true);
+        if (locationId == null) {
+            throw new IdMustBePresentException();
+        }
+
+        Location location = findOne(locationId).orElseThrow(EntityNotFoundException::new);
+        return hasAccessToLocation(location, roles);
     }
 
     /**
@@ -112,16 +129,8 @@ public class LocationService {
      * @param roles to look out for.
      * @return true if the project access has any of the roles.
      */
-    @Transactional(readOnly = true)
     @PreAuthorize("isAuthenticated()")
     public boolean hasAccessToLocation(Location location, String... roles) {
-        return (
-            SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.ADMIN) ||
-            roleRepository.hasAnyRoleInProject(
-                location.getProject(),
-                SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new IllegalArgumentException("No user Login found!")),
-                Arrays.asList(roles)
-            )
-        );
+        return projectService.hasAccessToProject(location.getProject(), roles);
     }
 }

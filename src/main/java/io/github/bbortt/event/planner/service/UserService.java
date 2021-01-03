@@ -8,6 +8,7 @@ import io.github.bbortt.event.planner.repository.UserRepository;
 import io.github.bbortt.event.planner.security.AuthoritiesConstants;
 import io.github.bbortt.event.planner.security.SecurityUtils;
 import io.github.bbortt.event.planner.service.dto.UserDTO;
+import io.github.bbortt.event.planner.service.exception.UsernameAlreadyUsedException;
 import io.github.jhipster.security.RandomUtil;
 import java.time.Instant;
 import java.time.ZonedDateTime;
@@ -138,7 +139,6 @@ public class UserService {
         return newUser;
     }
 
-    @Transactional
     private boolean removeNonActivatedUser(User existingUser) {
         if (existingUser.getActivated()) {
             return false;

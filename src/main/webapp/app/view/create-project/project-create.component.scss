@@ -1,0 +1,27 @@
+@import '../../../content/scss/global.scss';
+
+.dx-timeview-field {
+  .dx-texteditor-input {
+    text-align: center;
+  }
+}
+
+.dx-button-today {
+  display: none;
+}
+
+.dx-toolbar {
+  .dx-popup-done {
+    @extend .btn;
+    @extend .btn-negative;
+    @extend .btn-green;
+    padding: 0.25rem 0.5rem;
+  }
+
+  .dx-popup-cancel {
+    @extend .btn;
+    @extend .btn-negative;
+    @extend .btn-gray;
+    padding: 0.25rem 0.5rem;
+  }
+}

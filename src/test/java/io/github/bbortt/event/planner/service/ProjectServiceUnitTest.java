@@ -48,6 +48,9 @@ public class ProjectServiceUnitTest {
     Authentication authenticationMock;
 
     @Mock
+    RoleService roleServiceMock;
+
+    @Mock
     UserRepository userRepositoryMock;
 
     @Mock
@@ -67,7 +70,8 @@ public class ProjectServiceUnitTest {
 
         TestSecurityContextHolder.setAuthentication(authenticationMock);
 
-        fixture = new ProjectService(userRepositoryMock, roleRepositoryMock, projectRepositoryMock, invitationRepositoryMock);
+        fixture =
+            new ProjectService(roleServiceMock, userRepositoryMock, roleRepositoryMock, projectRepositoryMock, invitationRepositoryMock);
     }
 
     @Test

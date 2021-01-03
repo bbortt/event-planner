@@ -1,10 +1,18 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
+
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+import { createRequestOption } from 'app/shared/util/request-util';
+
+import { Event } from 'app/shared/model/event.model';
+import { Location } from 'app/shared/model/location.model';
+import { Section } from 'app/shared/model/section.model';
 
 import { SERVER_API_URL } from 'app/app.constants';
-import { createRequestOption } from 'app/shared/util/request-util';
-import { Section } from 'app/shared/model/section.model';
+
+import * as moment from 'moment';
 
 type EntityResponseType = HttpResponse<Section>;
 type EntityArrayResponseType = HttpResponse<Section[]>;
@@ -34,5 +42,36 @@ export class SectionService {
 
   delete(id: number): Observable<HttpResponse<{}>> {
     return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
+  }
+
+  findAllByLocation(location: Location, req?: any): Observable<EntityArrayResponseType> {
+    const options = createRequestOption(req);
+    return this.http.get<Location[]>(`${this.resourceUrl}/project/${location.project.id!}/location/${location.id!}`, {
+      params: options,
+      observe: 'response',
+    });
+  }
+
+  findAllByLocationInclusiveEvents(location: Location): Observable<EntityArrayResponseType> {
+    return this.http
+      .get<Location[]>(`${this.resourceUrl}/project/${location.project.id!}/location/${location.id!}/events`, {
+        observe: 'response',
+      })
+      .pipe(map((response: EntityArrayResponseType) => this.convertDateArrayFromServer(response)));
+  }
+
+  protected convertDateArrayFromServer(res: EntityArrayResponseType): EntityArrayResponseType {
+    if (res.body) {
+      res.body.forEach(this.convertDateInSectionEvents);
+    }
+    return res;
+  }
+
+  private convertDateInSectionEvents(section: Section): Section {
+    section.events?.forEach((event: Event) => {
+      event.startTime = event.startTime ? moment(event.startTime) : undefined;
+      event.endTime = event.endTime ? moment(event.endTime) : undefined;
+    });
+    return section;
   }
 }

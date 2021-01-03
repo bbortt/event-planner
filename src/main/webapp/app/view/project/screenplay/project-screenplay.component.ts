@@ -2,13 +2,16 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { HttpResponse } from '@angular/common/http';
 
-import { faCog } from '@fortawesome/free-solid-svg-icons';
+import { NgbPanelChangeEvent } from '@ng-bootstrap/ng-bootstrap';
 
 import { Location } from 'app/shared/model/location.model';
 import { Project } from 'app/shared/model/project.model';
 
 import { LocationService } from 'app/entities/location/location.service';
-import { NgbPanelChangeEvent } from '@ng-bootstrap/ng-bootstrap';
+
+import { faCog } from '@fortawesome/free-solid-svg-icons';
+
+import { ADMIN, SECRETARY } from 'app/shared/constants/role.constants';
 
 const ROUTE_PARAM_NAME = 'activeLocations';
 
@@ -19,6 +22,8 @@ const ROUTE_PARAM_NAME = 'activeLocations';
 })
 export class ProjectScreenplayComponent implements OnInit {
   faCog = faCog;
+
+  adminRoles = [ADMIN.name, SECRETARY.name];
 
   project?: Project;
   locations?: Location[];
@@ -31,9 +36,9 @@ export class ProjectScreenplayComponent implements OnInit {
     this.activatedRoute.data.subscribe(({ project }) => {
       this.project = project;
 
-      this.locationService.findAllByProject(this.project!).subscribe((response: HttpResponse<Location[]>) => {
-        this.locations = response.body || [];
-      });
+      this.locationService
+        .findAllByProject(this.project!, { sort: ['name,asc'] })
+        .subscribe((response: HttpResponse<Location[]>) => (this.locations = response.body || []));
     });
 
     this.activatedRoute.queryParams.subscribe((params: Params) => {

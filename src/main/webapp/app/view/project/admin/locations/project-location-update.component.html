@@ -41,27 +41,19 @@
                 <div class="form-group">
                     <label class="form-control-label"
                            jhiTranslate="eventPlannerApp.location.responsibility"
-                           for="field-responsibility"> Responsibility </label>
-                    <ngx-autocomplete
+                           for="field_responsibility"> Responsibility </label>
+                    <dx-autocomplete
+                        class="form-control"
                         name="responsibility"
-                        id="field-responsibility"
-                        formControlName="responsibility"
-                        [options]="filteredResponsibilities"
-                        propertyAccessor="name"
+                        id="field_responsibility"
+                        formControlName="responsibilityAutocomplete"
                         [placeholder]="'global.form.search' | translate"
-                        (autocompleteChanges)="filter($event)"
-                        autocomplete="off"
-                    ></ngx-autocomplete>
-
-                    <div *ngIf="editForm.get('responsibility')!.invalid &&
-                        (editForm.get('responsibility')!.dirty
-                                || editForm.get('responsibility')!.touched)">
-                        <small class="form-text text-danger"
-                               *ngIf="editForm.get('responsibility')?.errors?.required"
-                               jhiTranslate="entity.validation.required">
-                            This field is required.
-                        </small>
-                    </div>
+                        [dataSource]="responsibilities"
+                        valueExpr="name"
+                        (onSelectionChanged)="responsibilitySelected($event)"
+                        [showClearButton]="true"
+                        [isValid]="!(editForm.get('responsibility')!.invalid && (editForm.get('responsibility')!.dirty || editForm.get('responsibility')!.touched))">
+                    </dx-autocomplete>
                 </div>
 
                 <div>

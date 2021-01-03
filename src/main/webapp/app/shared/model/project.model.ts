@@ -5,10 +5,10 @@ import { Location } from 'app/shared/model/location.model';
 
 export interface Project {
   id?: number;
-  name?: string;
+  name: string;
   description?: string;
-  startTime?: Moment;
-  endTime?: Moment;
+  startTime: Moment;
+  endTime: Moment;
   responsibilities?: Responsibility[];
   invitations?: Invitation[];
   locations?: Location[];

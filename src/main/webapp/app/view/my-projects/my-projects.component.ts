@@ -22,18 +22,24 @@ import { ADMIN, SECRETARY } from 'app/shared/constants/role.constants';
   styleUrls: ['./my-projects.component.scss'],
 })
 export class MyProjectsComponent implements OnInit, OnDestroy {
-  projects: Project[][];
+  projects: Project[] = [];
+  filteredProjects: Project[][] = [];
+
   eventSubscriber?: Subscription;
-  itemsPerPage: number;
-  links: any;
-  page: number;
-  predicate: string;
-  ascending: boolean;
+
+  itemsPerPage = ITEMS_PER_PAGE;
+  links = {
+    last: 0,
+  };
+  page = 0;
+  predicate = 'startTime';
+  ascending = true;
 
   faArrowDown = faArrowDown;
   faBook = faBook;
   faCog = faCog;
 
+  authorityAdmin = AUTHORITY_ADMIN;
   adminRoles = [ADMIN.name, SECRETARY.name];
 
   showAllProjects = false;
@@ -47,16 +53,7 @@ export class MyProjectsComponent implements OnInit, OnDestroy {
     private projectService: ProjectService,
     private accountService: AccountService,
     private parseLinks: JhiParseLinks
-  ) {
-    this.projects = [];
-    this.itemsPerPage = ITEMS_PER_PAGE;
-    this.page = 0;
-    this.links = {
-      last: 0,
-    };
-    this.predicate = 'startTime';
-    this.ascending = true;
-  }
+  ) {}
 
   ngOnInit(): void {
     this.loadPage(this.page);
@@ -83,6 +80,7 @@ export class MyProjectsComponent implements OnInit, OnDestroy {
 
   reset(): void {
     this.projects = [];
+    this.filteredProjects = [];
     const lastPage = this.page;
 
     for (let i = 0; i <= lastPage; i++) {
@@ -107,16 +105,44 @@ export class MyProjectsComponent implements OnInit, OnDestroy {
     return result;
   }
 
+  filterData(searchString: string): void {
+    if (!searchString) {
+      this.reset();
+    }
+
+    const matchingProjects = this.projects.filter((project: Project) => project.name?.toLowerCase().includes(searchString.toLowerCase()));
+
+    this.filteredProjects = [];
+
+    for (let i = 0; i < matchingProjects.length; i++) {
+      if (i % 3 === 0) {
+        this.filteredProjects.push([]);
+      }
+
+      this.filteredProjects[this.filteredProjects.length - 1].push(matchingProjects[i]);
+    }
+
+    this.fillRow();
+  }
+
+  private fillRow(): void {
+    while (
+      this.filteredProjects[this.filteredProjects.length - 1] &&
+      this.filteredProjects[this.filteredProjects.length - 1].length % 3 !== 0
+    ) {
+      this.filteredProjects[this.filteredProjects.length - 1].push({} as Project);
+      this.loadMoreButtonEnabled = false;
+    }
+  }
+
   private paginateSomeEntities(newProjects: Project[] | null, headers: HttpHeaders): void {
     const headersLink = headers.get('link');
     this.links = this.parseLinks.parse(headersLink ? headersLink : '');
     if (newProjects && newProjects.length > 0) {
-      this.projects.push(newProjects);
+      this.projects.push(...newProjects);
+      this.filteredProjects.push(newProjects);
 
-      while (this.projects[this.projects.length - 1].length % 3 !== 0) {
-        this.projects[this.projects.length - 1].push({});
-        this.loadMoreButtonEnabled = false;
-      }
+      this.fillRow();
     } else {
       this.loadMoreButtonEnabled = false;
     }

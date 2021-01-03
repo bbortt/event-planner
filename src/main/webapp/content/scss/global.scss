@@ -204,7 +204,7 @@ ui bootstrap tweaks
 custom button style
 ========================================================================== */
 .btn.btn-negative {
-  border: 2px solid #000;
+  border: 2px solid #000 !important;
   padding: 0.5rem 1rem;
 }
 
@@ -253,35 +253,12 @@ custom modal styling
 }
 
 /* ==========================================================================
-@bbortt/ngx-autocomplete styles
+devextreme inputs in combination with scss class `form-control` styling
 ========================================================================== */
-@import '~bootstrap/scss/bootstrap';
-
-ngx-autocomplete.ng-invalid {
-  // Do not show the red line, because it is in the wrong place due to the bug
-  border-left: unset;
-}
-
-ngx-autocomplete {
-  .ngx-autocomplete-input {
-    @extend .form-control;
-  }
-
-  .ngx-autocomplete-container {
-    border-radius: $border-radius;
-    background-color: $body-bg;
-
-    .ngx-autocomplete-option {
-      border-radius: 0;
-
-      @extend .form-control;
-
-      &-active {
-        color: $dropdown-link-hover-color;
-        background-color: $dropdown-link-hover-bg;
-      }
-    }
-  }
+.dx-texteditor-input,
+.dx-placeholder::before {
+  padding: 0;
+  min-height: 0;
 }
 
 /* jhipster-needle-scss-add-main JHipster will add new css style */

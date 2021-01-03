@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { FormBuilder, Validators } from '@angular/forms';
 
@@ -6,12 +6,14 @@ import { Observable } from 'rxjs';
 
 import { JhiEventManager } from 'ng-jhipster';
 
-import { Project } from 'app/shared/model/project.model';
-import { Location } from 'app/shared/model/location.model';
+import { DxAutocompleteComponent } from 'devextreme-angular';
 
 import { LocationService } from 'app/entities/location/location.service';
-import { Responsibility } from 'app/shared/model/responsibility.model';
 import { ResponsibilityService } from 'app/entities/responsibility/responsibility.service';
+
+import { Location } from 'app/shared/model/location.model';
+import { Project } from 'app/shared/model/project.model';
+import { Responsibility } from 'app/shared/model/responsibility.model';
 
 @Component({
   selector: 'app-location-update',
@@ -19,18 +21,21 @@ import { ResponsibilityService } from 'app/entities/responsibility/responsibilit
   styleUrls: ['./project-location-update.component.scss'],
 })
 export class ProjectLocationUpdateComponent {
+  @ViewChild(DxAutocompleteComponent, { static: true })
+  autocomplete?: DxAutocompleteComponent;
+
   isNew = false;
   isSaving = false;
 
   project?: Project;
 
   responsibilities: Responsibility[] = [];
-  filteredResponsibilities: Responsibility[] = [];
 
   editForm = this.fb.group({
     id: [],
     name: [null, [Validators.required, Validators.maxLength(50)]],
-    responsibility: [null, [Validators.required]],
+    responsibility: [],
+    responsibilityAutocomplete: [],
     project: [],
   });
 
@@ -43,27 +48,21 @@ export class ProjectLocationUpdateComponent {
 
   public updateForm(project: Project, location: Location): void {
     this.isNew = !location.id;
-    this.responsibilityService.findAllByProject(project).subscribe(responsibilities => {
+    this.responsibilityService.findAllByProject(project, { sort: ['name,asc'] }).subscribe(responsibilities => {
       this.responsibilities = responsibilities.body || [];
-      this.filteredResponsibilities = this.responsibilities;
     });
 
     this.editForm.patchValue({
       id: location.id,
       name: location.name,
       responsibility: location.responsibility,
+      responsibilityAutocomplete: location.responsibility?.name,
       project,
     });
   }
 
-  public filter(searchString: string): void {
-    this.filteredResponsibilities = this.responsibilities.filter(responsibility =>
-      responsibility.name!.toLowerCase().includes(searchString.toLowerCase())
-    );
-  }
-
-  private initialLoad(): void {
-    this.filteredResponsibilities = this.responsibilities;
+  responsibilitySelected($event: any): void {
+    this.editForm.get('responsibility')!.setValue($event.selectedItem);
   }
 
   previousState(): void {

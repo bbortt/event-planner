@@ -12,7 +12,8 @@
       "updated": "Abschnitt mit ID {{ param }} aktualisiert",
       "deleted": "Abschnitt mit ID {{ param }} gelöscht",
       "delete": {
-        "question": "Soll Abschnitt {{ name }} wirklich dauerhaft gelöscht werden?"
+        "question": "Soll Abschnitt {{ name }} wirklich dauerhaft gelöscht werden?",
+        "warning": "Dies wird alle untergeordneten Ereignise löschen!"
       },
       "detail": {
         "title": "Abschnitt"

@@ -11,10 +11,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import io.github.bbortt.event.planner.AbstractApplicationContextAwareIT;
+import io.github.bbortt.event.planner.domain.Invitation;
 import io.github.bbortt.event.planner.domain.Location;
 import io.github.bbortt.event.planner.domain.Section;
+import io.github.bbortt.event.planner.domain.User;
+import io.github.bbortt.event.planner.repository.AuthorityRepository;
+import io.github.bbortt.event.planner.repository.RoleRepository;
 import io.github.bbortt.event.planner.repository.SectionRepository;
+import io.github.bbortt.event.planner.security.AuthoritiesConstants;
+import io.github.bbortt.event.planner.security.RolesConstants;
 import io.github.bbortt.event.planner.service.SectionService;
+import java.util.Collections;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,6 +37,10 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @WithMockUser
 public class SectionResourceIT extends AbstractApplicationContextAwareIT {
+
+    private static final String TEST_USER_LOGIN = "locationresourceit-login";
+    private static final String TEST_ADMIN_LOGIN = "responsibilityresourceit-admin";
+
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
 
@@ -38,6 +49,12 @@ public class SectionResourceIT extends AbstractApplicationContextAwareIT {
 
     @Autowired
     private SectionService sectionService;
+
+    @Autowired
+    private AuthorityRepository authorityRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     @Autowired
     private EntityManager em;
@@ -90,10 +107,26 @@ public class SectionResourceIT extends AbstractApplicationContextAwareIT {
     @BeforeEach
     public void initTest() {
         section = createEntity(em);
+
+        User user = UserResourceIT.createEntity(em);
+        user.setLogin(TEST_USER_LOGIN);
+        user.setAuthorities(Collections.singleton(authorityRepository.findById(AuthoritiesConstants.USER).get()));
+        em.persist(user);
+
+        Invitation invitation = InvitationResourceIT
+            .createEntity(em)
+            .accepted(Boolean.TRUE)
+            .project(section.getLocation().getProject())
+            .user(user)
+            .role(roleRepository.roleAdmin());
+        em.persist(invitation);
+
+        em.flush();
     }
 
     @Test
     @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     public void createSection() throws Exception {
         sectionRepository.deleteAll();
 
@@ -111,6 +144,7 @@ public class SectionResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     public void createSectionWithExistingId() throws Exception {
         int databaseSizeBeforeCreate = sectionRepository.findAll().size();
 
@@ -129,6 +163,7 @@ public class SectionResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     public void checkNameIsRequired() throws Exception {
         int databaseSizeBeforeTest = sectionRepository.findAll().size();
         // set the field null
@@ -146,6 +181,7 @@ public class SectionResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
+    @WithMockUser(value = TEST_ADMIN_LOGIN, roles = { RolesConstants.ADMIN })
     public void getAllSections() throws Exception {
         // Initialize the database
         sectionRepository.saveAndFlush(section);
@@ -161,6 +197,18 @@ public class SectionResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
+    public void getAllSectionsDeniedForUsers() throws Exception {
+        // Initialize the database
+        sectionRepository.saveAndFlush(section);
+
+        // Get all the sectionList
+        restSectionMockMvc.perform(get("/api/sections?sort=id,desc")).andExpect(status().isForbidden());
+    }
+
+    @Test
+    @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     public void getSection() throws Exception {
         // Initialize the database
         sectionRepository.saveAndFlush(section);
@@ -176,6 +224,7 @@ public class SectionResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     public void getNonExistingSection() throws Exception {
         // Get the section
         restSectionMockMvc.perform(get("/api/sections/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
@@ -183,6 +232,7 @@ public class SectionResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     public void updateSection() throws Exception {
         // Initialize the database
         sectionService.save(section);
@@ -214,6 +264,7 @@ public class SectionResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     public void updateNonExistingSection() throws Exception {
         int databaseSizeBeforeUpdate = sectionRepository.findAll().size();
 
@@ -229,6 +280,7 @@ public class SectionResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     public void deleteSection() throws Exception {
         // Initialize the database
         sectionService.save(section);

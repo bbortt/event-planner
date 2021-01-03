@@ -26,7 +26,7 @@ export const MODAL_OUTLET_ROUTES: Routes = [
     path: 'projects/:projectId/edit',
     component: ProjectAdminUpdateModalComponent,
     data: {
-      roles: [ADMIN.name, SECRETARY.name],
+      roles: [ADMIN.name],
     },
     canActivate: [UserRouteRoleAccessService],
     resolve: {
