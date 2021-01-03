@@ -66,7 +66,7 @@ public class Event implements Serializable {
     @JsonIgnoreProperties(value = "events", allowSetters = true)
     private Set<Section> sections = new HashSet<>();
 
-    @ManyToOne(optional = false)
+    @ManyToOne
     @JsonIgnoreProperties(value = "events", allowSetters = true)
     private Responsibility responsibility;
 
