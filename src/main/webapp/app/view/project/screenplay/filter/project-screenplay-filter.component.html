@@ -3,11 +3,11 @@
         <ul class="navbar-nav w-100 flex-row align-items-left">
             <li class="nav-item w-100">
                 <button type="button" class="btn btn-negative btn-grey" (click)="expandLocations()">
-                    <div *ngIf="locationsExpanded; else expanded">
+                    <div *ngIf="locationsExpanded; else expandAll">
                         <fa-icon [icon]="chevronUp"></fa-icon>
                         <span jhiTranslate="eventPlannerApp.project.screenplay.filter.collapseAll">Collapse All</span>
                     </div>
-                    <ng-template #expanded>
+                    <ng-template #expandAll>
                         <fa-icon [icon]="chevronDown"></fa-icon>
                         <span jhiTranslate="eventPlannerApp.project.screenplay.filter.expandAll">Expand All</span>
                     </ng-template>
