@@ -1,0 +1,2 @@
+ALTER TABLE invitation
+  ADD COLUMN token CHARACTER VARYING(36);
