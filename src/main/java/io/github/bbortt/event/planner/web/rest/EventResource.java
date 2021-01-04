@@ -2,6 +2,7 @@ package io.github.bbortt.event.planner.web.rest;
 
 import io.github.bbortt.event.planner.domain.Event;
 import io.github.bbortt.event.planner.service.EventService;
+import io.github.bbortt.event.planner.service.exception.EntityNotFoundException;
 import io.github.bbortt.event.planner.web.rest.errors.BadRequestAlertException;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
@@ -17,9 +18,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 /**
@@ -28,6 +36,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RestController
 @RequestMapping("/api")
 public class EventResource {
+
     private final Logger log = LoggerFactory.getLogger(EventResource.class);
 
     private static final String ENTITY_NAME = "event";
@@ -57,7 +66,7 @@ public class EventResource {
         Event result = eventService.save(event);
         return ResponseEntity
             .created(new URI("/api/events/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getName()))
             .body(result);
     }
 
@@ -65,9 +74,7 @@ public class EventResource {
      * {@code PUT  /events} : Updates an existing event.
      *
      * @param event the event to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated event,
-     * or with status {@code 400 (Bad Request)} if the event is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the event couldn't be updated.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated event, or with status {@code 400 (Bad Request)} if the event is not valid, or with status {@code 500 (Internal Server Error)} if the event couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/events")
@@ -79,14 +86,14 @@ public class EventResource {
         Event result = eventService.save(event);
         return ResponseEntity
             .ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, event.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, event.getName()))
             .body(result);
     }
 
     /**
      * {@code GET  /events} : get all the events.
      *
-     * @param pageable the pagination information.
+     * @param pageable  the pagination information.
      * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of events in body.
      */
@@ -128,10 +135,11 @@ public class EventResource {
     @DeleteMapping("/events/{id}")
     public ResponseEntity<Void> deleteEvent(@PathVariable Long id) {
         log.debug("REST request to delete Event : {}", id);
+        Event event = eventService.findOne(id).orElseThrow(EntityNotFoundException::new);
         eventService.delete(id);
         return ResponseEntity
             .noContent()
-            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, event.getName()))
             .build();
     }
 }

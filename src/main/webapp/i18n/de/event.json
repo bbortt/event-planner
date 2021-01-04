@@ -7,11 +7,11 @@
         "createOrEditLabel": "Ereignis erstellen oder bearbeiten",
         "notFound": "Keine Ereignise gefunden"
       },
-      "created": "Ereignis mit ID {{ param }} erstellt",
-      "updated": "Ereignis mit ID {{ param }} aktualisiert",
-      "deleted": "Ereignis mit ID {{ param }} gelöscht",
+      "created": "Ereignis {{ param }} erstellt",
+      "updated": "Ereignis {{ param }} aktualisiert",
+      "deleted": "Ereignis {{ param }} gelöscht",
       "delete": {
-        "question": "Soll Ereignis {{ id }} wirklich dauerhaft gelöscht werden?"
+        "question": "Soll Ereignis {{ name }} wirklich dauerhaft gelöscht werden?"
       },
       "detail": {
         "title": "Ereignis"

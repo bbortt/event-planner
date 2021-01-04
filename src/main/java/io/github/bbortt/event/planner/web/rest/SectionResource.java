@@ -5,6 +5,7 @@ import io.github.bbortt.event.planner.security.AuthoritiesConstants;
 import io.github.bbortt.event.planner.security.RolesConstants;
 import io.github.bbortt.event.planner.service.ProjectService;
 import io.github.bbortt.event.planner.service.SectionService;
+import io.github.bbortt.event.planner.service.exception.EntityNotFoundException;
 import io.github.bbortt.event.planner.web.rest.errors.BadRequestAlertException;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
@@ -72,7 +73,7 @@ public class SectionResource {
         Section result = sectionService.save(section);
         return ResponseEntity
             .created(new URI("/api/sections/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getName()))
             .body(result);
     }
 
@@ -93,7 +94,7 @@ public class SectionResource {
         Section result = sectionService.save(section);
         return ResponseEntity
             .ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, section.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, section.getName()))
             .body(result);
     }
 
@@ -162,10 +163,11 @@ public class SectionResource {
     @PreAuthorize("@sectionService.hasAccessToSection(#id, \"" + RolesConstants.ADMIN + "\")")
     public ResponseEntity<Void> deleteSection(@PathVariable Long id) {
         log.debug("REST request to delete Section : {}", id);
+        Section section = sectionService.findOne(id).orElseThrow(EntityNotFoundException::new);
         sectionService.delete(id);
         return ResponseEntity
             .noContent()
-            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, section.getName()))
             .build();
     }
 }

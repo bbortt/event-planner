@@ -5,6 +5,7 @@ import io.github.bbortt.event.planner.security.AuthoritiesConstants;
 import io.github.bbortt.event.planner.security.RolesConstants;
 import io.github.bbortt.event.planner.service.LocationService;
 import io.github.bbortt.event.planner.service.ProjectService;
+import io.github.bbortt.event.planner.service.exception.EntityNotFoundException;
 import io.github.bbortt.event.planner.web.rest.errors.BadRequestAlertException;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
@@ -72,7 +73,7 @@ public class LocationResource {
         Location result = locationService.save(location);
         return ResponseEntity
             .created(new URI("/api/locations/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getName()))
             .body(result);
     }
 
@@ -93,7 +94,7 @@ public class LocationResource {
         Location result = locationService.save(location);
         return ResponseEntity
             .ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, location.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, location.getName()))
             .body(result);
     }
 
@@ -130,7 +131,7 @@ public class LocationResource {
      * {@code GET /locations/project/:projectId} : get all Locations by project id.
      *
      * @param projectId the id of the project.
-     * @param sort optional sort of locations
+     * @param sort      optional sort of locations
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the location, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/locations/project/{projectId}")
@@ -161,10 +162,11 @@ public class LocationResource {
     @PreAuthorize("@locationService.hasAccessToLocation(#id, \"" + RolesConstants.ADMIN + "\")")
     public ResponseEntity<Void> deleteLocation(@PathVariable Long id) {
         log.debug("REST request to delete Location : {}", id);
+        Location location = locationService.findOne(id).orElseThrow(EntityNotFoundException::new);
         locationService.delete(id);
         return ResponseEntity
             .noContent()
-            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, location.getName()))
             .build();
     }
 }

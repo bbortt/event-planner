@@ -4,6 +4,7 @@ import io.github.bbortt.event.planner.domain.Responsibility;
 import io.github.bbortt.event.planner.security.AuthoritiesConstants;
 import io.github.bbortt.event.planner.security.RolesConstants;
 import io.github.bbortt.event.planner.service.ResponsibilityService;
+import io.github.bbortt.event.planner.service.exception.EntityNotFoundException;
 import io.github.bbortt.event.planner.web.rest.errors.BadRequestAlertException;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
@@ -76,7 +77,7 @@ public class ResponsibilityResource {
         Responsibility result = responsibilityService.save(responsibility);
         return ResponseEntity
             .created(new URI("/api/responsibilities/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getName()))
             .body(result);
     }
 
@@ -104,7 +105,7 @@ public class ResponsibilityResource {
         Responsibility result = responsibilityService.save(responsibility);
         return ResponseEntity
             .ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, responsibility.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, responsibility.getName()))
             .body(result);
     }
 
@@ -158,10 +159,11 @@ public class ResponsibilityResource {
     )
     public ResponseEntity<Void> deleteResponsibility(@PathVariable Long id) {
         log.debug("REST request to delete Responsibility : {}", id);
+        Responsibility responsibility = responsibilityService.findOne(id).orElseThrow(EntityNotFoundException::new);
         responsibilityService.delete(id);
         return ResponseEntity
             .noContent()
-            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, responsibility.getName()))
             .build();
     }
 }
