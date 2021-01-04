@@ -16,7 +16,10 @@
 
     <br />
 
-    <app-project-screenplay-filter></app-project-screenplay-filter>
+    <app-project-screenplay-filter
+        [allExpanded]="allExpanded"
+        (onExpandAll)="onExpandAll($event)">
+    </app-project-screenplay-filter>
 
     <br />
 
@@ -28,7 +31,10 @@
         <span jhiTranslate="eventPlannerApp.event.home.notFound">No Locations found</span>
     </div>
 
-    <ngb-accordion id="locations-accordion" [activeIds]="activeLocations" (panelChange)="onPanelChange($event)">
+    <ngb-accordion
+        id="locations-accordion"
+        [activeIds]="activeLocations"
+        (panelChange)="onPanelChange($event)">
         <ngb-panel *ngFor="let location of locations" id="location-{{location.id}}">
             <ng-template ngbPanelTitle>
                 <div class="d-flex align-items-left">
@@ -36,8 +42,9 @@
                 </div>
             </ng-template>
             <ng-template ngbPanelContent>
-                <app-project-screenplay-location [location]="location"
-                                                 *ngIf="isActiveId('location-' + location.id)"></app-project-screenplay-location>
+                <app-project-screenplay-location
+                    *ngIf="isActiveId('location-' + location.id)"
+                    [location]="location"></app-project-screenplay-location>
             </ng-template>
         </ngb-panel>
     </ngb-accordion>
