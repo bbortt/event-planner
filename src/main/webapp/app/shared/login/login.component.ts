@@ -1,13 +1,14 @@
 import { AfterViewInit, Component, ElementRef, Input, Optional, ViewChild } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { LoginService } from 'app/core/login/login.service';
-import { InvitationService } from 'app/entities/invitation/invitation.service';
-import { switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+
 import { AccountService } from 'app/core/auth/account.service';
+import { InvitationService } from 'app/entities/invitation/invitation.service';
+import { LoginService } from 'app/core/login/login.service';
 
 @Component({
   selector: 'jhi-login',
@@ -29,13 +30,13 @@ export class LoginComponent implements AfterViewInit {
   invitationToken?: string;
 
   constructor(
-    private loginService: LoginService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    @Optional() public activeModal: NgbActiveModal,
-    private fb: FormBuilder,
+    private accountService: AccountService,
     private invitationService: InvitationService,
-    private accountService: AccountService
+    private loginService: LoginService,
+    @Optional() public activeModal: NgbActiveModal,
+    private fb: FormBuilder
   ) {}
 
   ngAfterViewInit(): void {

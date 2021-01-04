@@ -1,9 +1,11 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { InvitationService } from 'app/entities/invitation/invitation.service';
-import { filter, switchMap, takeUntil, tap } from 'rxjs/operators';
-import { AccountService } from 'app/core/auth/account.service';
+
 import { Subject } from 'rxjs';
+import { filter, switchMap, takeUntil, tap } from 'rxjs/operators';
+
+import { AccountService } from 'app/core/auth/account.service';
+import { InvitationService } from 'app/entities/invitation/invitation.service';
 
 @Component({
   selector: 'app-accept-invitation',

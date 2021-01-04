@@ -66,7 +66,9 @@ public class InvitationResource {
         }
         invitation.setToken(UUID.randomUUID().toString());
         Invitation result = invitationService.save(invitation);
+
         mailService.sendInvitationMail(invitation);
+
         return ResponseEntity
             .created(new URI("/api/invitations/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))

@@ -1,9 +1,9 @@
 import { Routes } from '@angular/router';
 
 import { HomeComponent } from './home.component';
+import { AcceptInvitationComponent } from 'app/view/invitation/accept-invitation.component';
 
 import { MODAL_OUTLET_ROUTES } from 'app/view/modal-outlet.routes';
-import { AcceptInvitationComponent } from 'app/view/invitation/accept-invitation.component';
 
 export const VIEW_ROUTES: Routes = [
   {

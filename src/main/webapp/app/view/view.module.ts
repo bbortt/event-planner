@@ -13,8 +13,9 @@ import { CreateProjectModalComponent } from 'app/view/create-project/create-proj
 import { ProjectResponsibilityModalComponent } from 'app/view/project/admin/responsibilities/project-responsibility-modal.component';
 import { ProjectUserModalComponent } from 'app/view/project/admin/users/project-user-modal.component';
 
-import { VIEW_ROUTES } from './view.routes';
 import { AcceptInvitationComponent } from 'app/view/invitation/accept-invitation.component';
+
+import { VIEW_ROUTES } from './view.routes';
 
 @NgModule({
   imports: [EventPlannerSharedModule, DxAutocompleteModule, DxDateBoxModule, RouterModule.forChild(VIEW_ROUTES)],

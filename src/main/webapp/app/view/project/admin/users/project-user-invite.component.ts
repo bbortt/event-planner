@@ -1,12 +1,16 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+
+import { JhiEventManager } from 'ng-jhipster';
+
 import { InvitationService } from 'app/entities/invitation/invitation.service';
+import { ResponsibilityService } from 'app/entities/responsibility/responsibility.service';
+
 import { Invitation } from 'app/shared/model/invitation.model';
 import { Project } from 'app/shared/model/project.model';
-import { JhiEventManager } from 'ng-jhipster';
-import { CONTRIBUTOR, InternalRole, ROLES } from 'app/shared/constants/role.constants';
 import { Responsibility } from 'app/shared/model/responsibility.model';
-import { ResponsibilityService } from 'app/entities/responsibility/responsibility.service';
+
+import { CONTRIBUTOR, InternalRole, ROLES } from 'app/shared/constants/role.constants';
 
 @Component({
   selector: 'app-project-user-invite',
@@ -20,10 +24,11 @@ export class ProjectUserInviteComponent {
     role: [CONTRIBUTOR, [Validators.required]],
     responsibility: [null],
   });
+
   ROLES = ROLES;
-  responsibilities: Responsibility[] = [];
 
   private project?: Project;
+  responsibilities: Responsibility[] = [];
 
   constructor(
     private invitationService: InvitationService,

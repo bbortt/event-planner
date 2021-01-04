@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
+
 import { Observable } from 'rxjs';
+import { mapTo } from 'rxjs/operators';
+
+import { Invitation } from 'app/shared/model/invitation.model';
+
+import { createRequestOption } from 'app/shared/util/request-util';
 
 import { SERVER_API_URL } from 'app/app.constants';
-import { createRequestOption } from 'app/shared/util/request-util';
-import { Invitation } from 'app/shared/model/invitation.model';
-import { mapTo } from 'rxjs/operators';
 
 type EntityResponseType = HttpResponse<Invitation>;
 type EntityArrayResponseType = HttpResponse<Invitation[]>;
@@ -43,11 +46,11 @@ export class InvitationService {
   }
 
   assignUserByLoginToInvitation(login: string, token: string): Observable<void> {
-    return this.http.post(`${this.resourceUrl}/user/${login}`, token).pipe(mapTo(undefined));
+    return this.http.post<void>(`${this.resourceUrl}/user/${login}`, token);
   }
 
   assignCurrentUserToInvitation(token: string): Observable<void> {
-    return this.http.post(`${this.resourceUrl}/user`, token).pipe(mapTo(undefined));
+    return this.http.post<void>(`${this.resourceUrl}/user`, token);
   }
 
   checkTokenValidity(token: string): Observable<boolean> {

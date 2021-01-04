@@ -1,14 +1,17 @@
 import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, Validators } from '@angular/forms';
+
+import { of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+
 import { JhiLanguageService } from 'ng-jhipster';
 
-import { EMAIL_ALREADY_USED_TYPE, LOGIN_ALREADY_USED_TYPE } from 'app/shared/constants/error.constants';
+import { InvitationService } from 'app/entities/invitation/invitation.service';
 import { LoginModalService } from 'app/core/login/login-modal.service';
 import { RegisterService } from './register.service';
-import { switchMap } from 'rxjs/operators';
-import { of } from 'rxjs';
-import { InvitationService } from 'app/entities/invitation/invitation.service';
+
+import { EMAIL_ALREADY_USED_TYPE, LOGIN_ALREADY_USED_TYPE } from 'app/shared/constants/error.constants';
 
 @Component({
   selector: 'jhi-register',
