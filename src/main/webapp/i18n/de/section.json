@@ -20,6 +20,7 @@
       },
       "name": "Name",
       "location": "Lokalität",
+      "responsibility": "Verantwortlichkeit",
       "event": "Ereignis"
     }
   }

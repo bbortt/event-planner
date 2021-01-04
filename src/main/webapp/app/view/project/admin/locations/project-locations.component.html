@@ -17,7 +17,7 @@
         </div>
     </h3>
 
-    <br />
+    <br/>
 
     <jhi-alert-error></jhi-alert-error>
 
@@ -54,16 +54,26 @@
                             </div>
                         </h4>
 
-                        <div class="location-card-responsibility"
-                             *ngIf="location.responsibility; else responsibilitySpace">
-                            <i>
-                                <span jhiTranslate="eventPlannerApp.location.responsibility">Responsibility</span>: {{location.responsibility!.name}}
-                            </i>
-                        </div>
+                        <div class="location-card-responsibility">
+                            <div *ngIf="location.responsibility; else locationUser">
+                                <i>
+                                    <span jhiTranslate="eventPlannerApp.location.responsibility">Responsibility</span>: {{location.responsibility!.name}}
+                                </i>
 
-                        <ng-template #responsibilitySpace>
-                            <i><span>&nbsp;</span></i>
-                        </ng-template>
+                            </div>
+
+                            <ng-template #locationUser>
+                                <div *ngIf="location.user; else locationResponsibilitySpace">
+                                    <i>
+                                        <span jhiTranslate="eventPlannerApp.location.responsibility">Responsibility</span>: {{location.user!.firstName}} {{location.user!.lastName}}
+                                    </i>
+                                </div>
+                            </ng-template>
+
+                            <ng-template #locationResponsibilitySpace>
+                                <i><span>&nbsp;</span></i>
+                            </ng-template>
+                        </div>
 
                         <div class="location-card-section mb-auto">
                             <table class="table table-striped">
@@ -76,6 +86,20 @@
                                 <tbody>
                                 <tr *ngFor="let section of location.sections">
                                     <td>{{section.name}}</td>
+
+                                    <td>
+                                        <div *ngIf="section.responsibility">
+                                            <i>
+                                                <span jhiTranslate="eventPlannerApp.section.responsibility">Responsibility</span>: {{section.responsibility!.name}}
+                                            </i>
+                                        </div>
+
+                                        <div *ngIf="section.user">
+                                            <i>
+                                                <span jhiTranslate="eventPlannerApp.section.responsibility">Responsibility</span>: {{section.user!.firstName}} {{section.user!.lastName}}
+                                            </i>
+                                        </div>
+                                    </td>
 
                                     <td>
                                         <div class="btn-group float-right clearfix">
@@ -106,7 +130,7 @@
 
                         <div class="location-card-navigation">
                             <div class="btn-group">
-                                                    <button
+                                <button
                                     [routerLink]="['', {outlets: {modal: ['projects', project.id, 'locations', location.id, 'sections', 'new']}}]"
                                     class="btn btn-green btn-negative btn-sm jh-create-entity create-section"
                                     data-toggle="tooltip"
