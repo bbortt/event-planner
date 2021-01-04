@@ -8,9 +8,9 @@
         "createOrEditLabel": "Create or edit a Location",
         "notFound": "No Locations found"
       },
-      "created": "A new Location is created with identifier {{ param }}",
-      "updated": "A Location is updated with identifier {{ param }}",
-      "deleted": "A Location is deleted with identifier {{ param }}",
+      "created": "New Location {{ param }} is created",
+      "updated": "Location {{ param }} is updated",
+      "deleted": "Location {{ param }} is deleted",
       "delete": {
         "question": "Are you sure you want to delete Location {{ name }}?",
         "warning": "This will delete all Sections and Events contained!"
