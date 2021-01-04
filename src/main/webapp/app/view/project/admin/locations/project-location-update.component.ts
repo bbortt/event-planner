@@ -10,10 +10,12 @@ import { DxAutocompleteComponent } from 'devextreme-angular';
 
 import { LocationService } from 'app/entities/location/location.service';
 import { ResponsibilityService } from 'app/entities/responsibility/responsibility.service';
+import { UserService } from 'app/core/user/user.service';
 
 import { Location } from 'app/shared/model/location.model';
 import { Project } from 'app/shared/model/project.model';
 import { Responsibility } from 'app/shared/model/responsibility.model';
+import { User } from 'app/core/user/user.model';
 
 @Component({
   selector: 'app-location-update',
@@ -30,6 +32,7 @@ export class ProjectLocationUpdateComponent {
   project?: Project;
 
   responsibilities: Responsibility[] = [];
+  users: User[] = [];
 
   editForm = this.fb.group({
     id: [],
@@ -43,13 +46,17 @@ export class ProjectLocationUpdateComponent {
     protected locationService: LocationService,
     private eventManager: JhiEventManager,
     private fb: FormBuilder,
-    private responsibilityService: ResponsibilityService
+    private responsibilityService: ResponsibilityService,
+    private userService: UserService
   ) {}
 
   public updateForm(project: Project, location: Location): void {
     this.isNew = !location.id;
     this.responsibilityService.findAllByProject(project, { sort: ['name,asc'] }).subscribe(responsibilities => {
       this.responsibilities = responsibilities.body || [];
+    });
+    this.userService.findAllByProject(project, { sort: ['name,asc'] }).subscribe(users => {
+      this.users = users.body || [];
     });
 
     this.editForm.patchValue({

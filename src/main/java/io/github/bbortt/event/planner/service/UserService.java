@@ -22,6 +22,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -238,10 +240,10 @@ public class UserService {
      * Update basic information (first name, last name, email, language) for the current user.
      *
      * @param firstName first name of user.
-     * @param lastName last name of user.
-     * @param email email id of user.
-     * @param langKey language key.
-     * @param imageUrl image URL of user.
+     * @param lastName  last name of user.
+     * @param email     email id of user.
+     * @param langKey   language key.
+     * @param imageUrl  image URL of user.
      */
     @Transactional
     public void updateUser(String firstName, String lastName, String email, String langKey, String imageUrl) {
@@ -336,5 +338,17 @@ public class UserService {
             .stream()
             .map(UserDTO::new)
             .collect(Collectors.toList());
+    }
+
+    /**
+     * Find all User for the given Project.
+     *
+     * @param projectId the id of the project to retrieve users for.
+     * @return the list of entities.
+     */
+    @Transactional(readOnly = true)
+    public List<User> findAllByProjectId(Long projectId, Sort sort) {
+        log.debug("Request to get all User for Project {}", projectId);
+        return userRepository.findAllByProjectId(projectId, Sort.by(sort.stream().map(Order::ignoreCase).collect(Collectors.toList())));
     }
 }
