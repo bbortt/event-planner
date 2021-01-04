@@ -5,6 +5,10 @@
         "tabTitle": "Event Planner | Drehbuch",
         "sections": {
           "notFound": "Für diese Location wurden keine Sektionen gefunden"
+        },
+        "filter": {
+          "collapseAll": "Alle schliessen",
+          "expandAll": "Alle öffnen"
         }
       }
     }
