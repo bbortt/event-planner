@@ -4,7 +4,6 @@ import io.github.bbortt.event.planner.config.Constants;
 import io.github.bbortt.event.planner.domain.User;
 import io.github.bbortt.event.planner.repository.UserRepository;
 import io.github.bbortt.event.planner.security.AuthoritiesConstants;
-import io.github.bbortt.event.planner.security.RolesConstants;
 import io.github.bbortt.event.planner.service.MailService;
 import io.github.bbortt.event.planner.service.UserService;
 import io.github.bbortt.event.planner.service.dto.UserDTO;
@@ -26,7 +25,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -216,12 +214,5 @@ public class UserResource {
         public void setEmailOrLogin(String emailOrLogin) {
             this.emailOrLogin = emailOrLogin;
         }
-    }
-
-    @GetMapping("/users/project/{projectId}")
-    @PreAuthorize("@projectService.hasAccessToProject(#projectId, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")")
-    public ResponseEntity<List<User>> getUsersByProjectId(@PathVariable Long projectId, Sort sort) {
-        List<User> users = userService.findAllByProjectId(projectId, sort);
-        return ResponseEntity.ok(users);
     }
 }

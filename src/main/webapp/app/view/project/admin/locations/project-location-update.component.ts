@@ -10,12 +10,13 @@ import { DxAutocompleteComponent } from 'devextreme-angular';
 
 import { LocationService } from 'app/entities/location/location.service';
 import { ResponsibilityService } from 'app/entities/responsibility/responsibility.service';
-import { UserService } from 'app/core/user/user.service';
+import { InvitationService } from 'app/entities/invitation/invitation.service';
 
 import { Location } from 'app/shared/model/location.model';
 import { Project } from 'app/shared/model/project.model';
 import { Responsibility } from 'app/shared/model/responsibility.model';
 import { User } from 'app/core/user/user.model';
+import { Invitation } from 'app/shared/model/invitation.model';
 
 @Component({
   selector: 'app-location-update',
@@ -33,6 +34,7 @@ export class ProjectLocationUpdateComponent {
 
   responsibilities: Responsibility[] = [];
   users: User[] = [];
+  inviations: Invitation[] = [];
 
   editForm = this.fb.group({
     id: [],
@@ -47,7 +49,7 @@ export class ProjectLocationUpdateComponent {
     private eventManager: JhiEventManager,
     private fb: FormBuilder,
     private responsibilityService: ResponsibilityService,
-    private userService: UserService
+    private invitationService: InvitationService
   ) {}
 
   public updateForm(project: Project, location: Location): void {
@@ -55,8 +57,10 @@ export class ProjectLocationUpdateComponent {
     this.responsibilityService.findAllByProject(project, { sort: ['name,asc'] }).subscribe(responsibilities => {
       this.responsibilities = responsibilities.body || [];
     });
-    this.userService.findAllByProject(project, { sort: ['name,asc'] }).subscribe(users => {
-      this.users = users.body || [];
+
+    this.invitationService.findAllByProjectId(project.id!).subscribe(inviations => {
+      this.inviations = inviations.body || [];
+      this.inviations.forEach(invitation => this.users.push(invitation.user!));
     });
 
     this.editForm.patchValue({
