@@ -1,3 +1,5 @@
+@import '../../../../content/scss/global';
+
 .app-project-screenplay-location {
   .dx-scheduler-header {
     display: none;
@@ -8,4 +10,25 @@
     margin-top: 0;
     margin-bottom: 2vh;
   }
+}
+
+.dx-dropdowneditor-input-wrapper,
+:not(.dx-dropdowneditor-input-wrapper) > .dx-texteditor-container {
+  @extend .dx-form-control;
+}
+
+.dx-toolbar-before {
+  display: none;
+}
+
+.dx-toolbar-after {
+  float: right;
+  position: relative;
+}
+
+.dx-button {
+  @extend .btn;
+  @extend .btn-negative;
+
+  height: 100%;
 }

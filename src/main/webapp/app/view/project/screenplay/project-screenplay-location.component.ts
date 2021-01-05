@@ -15,6 +15,8 @@ import { ISchedulerEvent, SchedulerEvent } from 'app/shared/model/scheduler/even
 import { ISchedulerSection, SchedulerSection } from 'app/shared/model/scheduler/section.scheduler';
 import { AppointmentEvent } from 'app/shared/model/scheduler/appointment-event';
 
+import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
+
 import * as moment from 'moment';
 
 @Component({
@@ -79,6 +81,10 @@ export class ProjectScreenplayLocationComponent implements OnInit {
           (e.form.itemOption('mainGroup').items.find((item: any) => item.dataField === 'text').label.text = translation)
       );
     e.form.itemOption('mainGroup.text', 'isRequired', true);
+
+    // Date-Time picker formatting
+    e.form.itemOption('mainGroup').items[1].items[0].editorOptions.displayFormat = DATE_TIME_FORMAT;
+    e.form.itemOption('mainGroup').items[1].items[2].editorOptions.displayFormat = DATE_TIME_FORMAT;
 
     // Adapt form to our needs
     e.form.option('showRequiredMark', false);
