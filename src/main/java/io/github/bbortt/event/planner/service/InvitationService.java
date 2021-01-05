@@ -92,7 +92,9 @@ public class InvitationService {
 
     @Transactional
     public void assignCurrentUserToInvitation(String token) {
-        String login = SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new IllegalArgumentException("No user Login found!"));
+        String login = SecurityUtils
+            .getCurrentUserLogin()
+            .orElseThrow(() -> new IllegalArgumentException("Cannot assign user! No login available!"));
         assignUserByLoginToInvitation(login, token);
     }
 
