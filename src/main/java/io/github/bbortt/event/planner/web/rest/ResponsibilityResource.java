@@ -159,11 +159,8 @@ public class ResponsibilityResource {
     )
     public ResponseEntity<Void> deleteResponsibility(@PathVariable Long id) {
         log.debug("REST request to delete Responsibility : {}", id);
-        Responsibility responsibility = responsibilityService.findOne(id).orElseThrow(EntityNotFoundException::new);
+        String name = responsibilityService.findNameByResponsibilityId(id).orElseThrow(EntityNotFoundException::new);
         responsibilityService.delete(id);
-        return ResponseEntity
-            .noContent()
-            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, responsibility.getName()))
-            .build();
+        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, name)).build();
     }
 }

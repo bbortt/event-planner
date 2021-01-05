@@ -147,11 +147,8 @@ public class ProjectResource {
     @PreAuthorize("hasAnyRole(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<Void> deleteProject(@PathVariable Long id) {
         log.debug("REST request to delete Project : {}", id);
-        Project project = projectService.findOne(id).orElseThrow(EntityNotFoundException::new);
+        String name = projectService.findNameByProjectId(id).orElseThrow(EntityNotFoundException::new);
         projectService.delete(id);
-        return ResponseEntity
-            .noContent()
-            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, project.getName()))
-            .build();
+        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, name)).build();
     }
 }

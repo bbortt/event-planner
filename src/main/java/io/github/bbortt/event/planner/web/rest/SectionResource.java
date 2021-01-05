@@ -163,11 +163,8 @@ public class SectionResource {
     @PreAuthorize("@sectionService.hasAccessToSection(#id, \"" + RolesConstants.ADMIN + "\")")
     public ResponseEntity<Void> deleteSection(@PathVariable Long id) {
         log.debug("REST request to delete Section : {}", id);
-        Section section = sectionService.findOne(id).orElseThrow(EntityNotFoundException::new);
+        String name = sectionService.findNamebySectionId(id).orElseThrow(EntityNotFoundException::new);
         sectionService.delete(id);
-        return ResponseEntity
-            .noContent()
-            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, section.getName()))
-            .build();
+        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, name)).build();
     }
 }

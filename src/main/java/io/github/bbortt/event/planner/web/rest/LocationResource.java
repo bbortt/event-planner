@@ -162,11 +162,8 @@ public class LocationResource {
     @PreAuthorize("@locationService.hasAccessToLocation(#id, \"" + RolesConstants.ADMIN + "\")")
     public ResponseEntity<Void> deleteLocation(@PathVariable Long id) {
         log.debug("REST request to delete Location : {}", id);
-        Location location = locationService.findOne(id).orElseThrow(EntityNotFoundException::new);
+        String name = locationService.findNameByLocationId(id).orElseThrow(EntityNotFoundException::new);
         locationService.delete(id);
-        return ResponseEntity
-            .noContent()
-            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, location.getName()))
-            .build();
+        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, name)).build();
     }
 }
