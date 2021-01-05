@@ -16,9 +16,9 @@
         "noDescription": "Project does not have a description.",
         "loadMore": "Load more projects"
       },
-      "created": "New Project {{ param }} is created",
-      "updated": "Project {{ param }} is updated",
-      "deleted": "Project {{ param }} is deleted",
+      "created": "New Project {{ param }} was created",
+      "updated": "Project {{ param }} was updated",
+      "deleted": "Project {{ param }} was deleted",
       "delete": {
         "question": "Are you sure you want to delete Project {{ name }}?"
       },
