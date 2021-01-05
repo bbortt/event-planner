@@ -23,11 +23,13 @@ public class EventService {
     private final Logger log = LoggerFactory.getLogger(EventService.class);
 
     private final ProjectService projectService;
+    private final SectionService sectionService;
 
     private final EventRepository eventRepository;
 
-    public EventService(ProjectService projectService, EventRepository eventRepository) {
+    public EventService(ProjectService projectService, SectionService sectionService, EventRepository eventRepository) {
         this.projectService = projectService;
+        this.sectionService = sectionService;
         this.eventRepository = eventRepository;
     }
 
@@ -123,6 +125,8 @@ public class EventService {
         return event
             .getSections()
             .stream()
+            .map(section -> sectionService.findOne(section.getId()))
+            .flatMap(Optional::stream)
             .anyMatch(section -> projectService.hasAccessToProject(section.getLocation().getProject(), roles));
     }
 }
