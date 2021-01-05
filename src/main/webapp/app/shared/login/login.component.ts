@@ -50,9 +50,7 @@ export class LoginComponent implements AfterViewInit {
       username: '',
       password: '',
     });
-    if (this.activeModal) {
-      this.activeModal.dismiss('cancel');
-    }
+    this.activeModal?.dismiss('cancel');
   }
 
   login(): void {
@@ -68,9 +66,7 @@ export class LoginComponent implements AfterViewInit {
       .subscribe(
         () => {
           this.authenticationError = false;
-          if (this.activeModal) {
-            this.activeModal.close();
-          }
+          this.activeModal?.close();
           if (
             this.router.url === '/account/register' ||
             this.router.url.startsWith('/account/activate') ||
@@ -85,9 +81,7 @@ export class LoginComponent implements AfterViewInit {
   }
 
   register(): void {
-    if (this.activeModal) {
-      this.activeModal.dismiss('to state register');
-    }
+    this.activeModal?.dismiss('to state register');
     if (this.invitationToken) {
       this.router.navigate([`/invitation/register/${this.invitationToken}`]);
     } else {
@@ -96,9 +90,7 @@ export class LoginComponent implements AfterViewInit {
   }
 
   requestResetPassword(): void {
-    if (this.activeModal) {
-      this.activeModal.dismiss('to state requestReset');
-    }
+    this.activeModal?.dismiss('to state requestReset');
     this.router.navigate(['/account/reset', 'request']);
   }
 }

@@ -23,7 +23,7 @@ public interface InvitationRepository extends JpaRepository<Invitation, Long> {
 
     @Modifying
     @Query("update Invitation set user.id = :userId, token = null, accepted = true where token = :token")
-    void assignUserToInvitation(@Param("userId") Long userId, String token);
+    void assignUserToInvitation(@Param("userId") Long userId, @Param("token") String token);
 
     Optional<Invitation> findByToken(String token);
 }

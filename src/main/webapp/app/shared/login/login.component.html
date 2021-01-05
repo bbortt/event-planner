@@ -2,7 +2,7 @@
     <div class="col-md-8">
         <h4 class="modal-title float-left" jhiTranslate="login.title">Sign in</h4>
 
-        <button *ngIf="!invitationToken" aria-label="Close" data-dismiss="modal" class="close float-right clearfix"
+        <button *ngIf="activeModal" aria-label="Close" data-dismiss="modal" class="close float-right clearfix"
                 type="button"
                 (click)="activeModal.dismiss('closed')">
             <span aria-hidden="true">x</span>

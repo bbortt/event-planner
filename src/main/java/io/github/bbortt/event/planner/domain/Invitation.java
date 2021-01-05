@@ -49,7 +49,7 @@ public class Invitation implements Serializable {
     private Boolean accepted;
 
     @Size(min = 36, max = 36)
-    @Column(name = "token", nullable = true)
+    @Column(name = "token")
     private String token;
 
     @ManyToOne(optional = false)
@@ -112,6 +112,11 @@ public class Invitation implements Serializable {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public Invitation token(String token) {
+        this.token = token;
+        return this;
     }
 
     public Project getProject() {

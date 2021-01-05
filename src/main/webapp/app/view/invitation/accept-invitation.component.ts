@@ -29,9 +29,7 @@ export class AcceptInvitationComponent implements OnDestroy {
         tap(isTokenValid => {
           if (!isTokenValid) {
             this.router.navigate(['/invalid-token']);
-            return false;
           }
-          return true;
         }),
         // if the token is valid and the user is already assigned in, automatically accept the invitation
         filter(Boolean),
@@ -47,5 +45,6 @@ export class AcceptInvitationComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this.destroy$.next();
+    this.destroy$.complete();
   }
 }

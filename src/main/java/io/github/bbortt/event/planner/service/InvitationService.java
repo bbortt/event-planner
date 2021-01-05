@@ -104,6 +104,7 @@ public class InvitationService {
         invitationRepository.assignUserToInvitation(user.getId(), token);
     }
 
+    @Transactional(readOnly = true)
     public boolean isTokenValid(String token) {
         return invitationRepository.findByToken(token).isPresent();
     }
