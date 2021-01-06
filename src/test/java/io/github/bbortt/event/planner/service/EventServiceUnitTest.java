@@ -13,13 +13,13 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
-public class EventServiceUnitTest {
+class EventServiceUnitTest {
 
     @Rule
-    public MockitoRule mockitoRule = MockitoJUnit.rule();
+    MockitoRule mockitoRule = MockitoJUnit.rule();
 
     @Rule
-    public ExpectedException expectedException = ExpectedException.none();
+    ExpectedException expectedException = ExpectedException.none();
 
     @Mock
     ProjectService projectServiceMock;
@@ -33,12 +33,12 @@ public class EventServiceUnitTest {
     EventService fixture;
 
     @Before
-    public void beforeTestSetup() {
+    void beforeTestSetup() {
         fixture = new EventService(projectServiceMock, sectionServiceMock, eventRepositoryMock);
     }
 
     @Test
-    public void saveDoesAcceptEitherResponsibilityOrUser() {
+    void saveDoesAcceptEitherResponsibilityOrUser() {
         Event eventWithUser = new Event().user(new User());
         fixture.save(eventWithUser);
 

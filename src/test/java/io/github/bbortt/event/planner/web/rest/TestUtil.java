@@ -24,7 +24,7 @@ import org.springframework.format.support.FormattingConversionService;
 /**
  * Utility class for testing REST controllers.
  */
-public final class TestUtil {
+final class TestUtil {
 
     private static final ObjectMapper mapper = createObjectMapper();
 
@@ -44,7 +44,7 @@ public final class TestUtil {
      * @param object the object to convert.
      * @return the JSON byte array.
      */
-    public static byte[] convertObjectToJsonBytes(Object object) throws IOException {
+    static byte[] convertObjectToJsonBytes(Object object) throws IOException {
         return mapper.writeValueAsBytes(object);
     }
 
@@ -55,7 +55,7 @@ public final class TestUtil {
      * @param data the data to put in the byte array.
      * @return the JSON byte array.
      */
-    public static byte[] createByteArray(int size, String data) {
+    static byte[] createByteArray(int size, String data) {
         byte[] byteArray = new byte[size];
         for (int i = 0; i < size; i++) {
             byteArray[i] = Byte.parseByte(data, 2);
@@ -68,14 +68,14 @@ public final class TestUtil {
      *
      * @param date the reference datetime against which the examined string is checked.
      */
-    public static ZonedDateTimeMatcher sameInstant(ZonedDateTime date) {
+    static ZonedDateTimeMatcher sameInstant(ZonedDateTime date) {
         return new ZonedDateTimeMatcher(date);
     }
 
     /**
      * Verifies the equals/hashcode contract on the domain object.
      */
-    public static <T> void equalsVerifier(Class<T> clazz) throws Exception {
+    static <T> void equalsVerifier(Class<T> clazz) throws Exception {
         T domainObject1 = clazz.getConstructor().newInstance();
         assertThat(domainObject1.toString()).isNotNull();
         assertThat(domainObject1).isEqualTo(domainObject1);
@@ -96,7 +96,7 @@ public final class TestUtil {
      *
      * @return the {@link FormattingConversionService}.
      */
-    public static FormattingConversionService createFormattingConversionService() {
+    static FormattingConversionService createFormattingConversionService() {
         DefaultFormattingConversionService dfcs = new DefaultFormattingConversionService();
         DateTimeFormatterRegistrar registrar = new DateTimeFormatterRegistrar();
         registrar.setUseIsoFormat(true);
@@ -112,7 +112,7 @@ public final class TestUtil {
      * @param clss The class type to be searched
      * @return A list of all found objects
      */
-    public static <T> List<T> findAll(EntityManager em, Class<T> clss) {
+    static <T> List<T> findAll(EntityManager em, Class<T> clss) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<T> cq = cb.createQuery(clss);
         Root<T> rootEntry = cq.from(clss);
@@ -124,11 +124,11 @@ public final class TestUtil {
     /**
      * A matcher that tests that the examined string represents the same instant as the reference datetime.
      */
-    public static class ZonedDateTimeMatcher extends TypeSafeDiagnosingMatcher<String> {
+    static class ZonedDateTimeMatcher extends TypeSafeDiagnosingMatcher<String> {
 
         private final ZonedDateTime date;
 
-        public ZonedDateTimeMatcher(ZonedDateTime date) {
+        ZonedDateTimeMatcher(ZonedDateTime date) {
             this.date = date;
         }
 
@@ -147,7 +147,7 @@ public final class TestUtil {
         }
 
         @Override
-        public void describeTo(Description description) {
+        void describeTo(Description description) {
             description.appendText("a String representing the same ZonedDateTime as ").appendValue(date);
         }
     }

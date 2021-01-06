@@ -16,9 +16,9 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 
-public class StaticResourcesWebConfigurerTest {
+class StaticResourcesWebConfigurerTest {
 
-    public StaticResourcesWebConfiguration staticResourcesWebConfiguration;
+    StaticResourcesWebConfiguration staticResourcesWebConfiguration;
     private ResourceHandlerRegistry resourceHandlerRegistry;
     private MockServletContext servletContext;
     private WebApplicationContext applicationContext;
@@ -32,7 +32,7 @@ public class StaticResourcesWebConfigurerTest {
     }
 
     @Test
-    public void shouldAppendResourceHandlerAndInitiliazeIt() {
+    void shouldAppendResourceHandlerAndInitializeIt() {
         staticResourcesWebConfiguration.addResourceHandlers(resourceHandlerRegistry);
 
         verify(resourceHandlerRegistry, times(1)).addResourceHandler(RESOURCE_PATHS);
@@ -43,7 +43,7 @@ public class StaticResourcesWebConfigurerTest {
     }
 
     @Test
-    public void shouldInitializeResourceHandlerWithLocations() {
+    void shouldInitializeResourceHandlerWithLocations() {
         ResourceHandlerRegistration resourceHandlerRegistration = spy(new ResourceHandlerRegistration(RESOURCE_PATHS));
 
         staticResourcesWebConfiguration.initializeResourceHandler(resourceHandlerRegistration);

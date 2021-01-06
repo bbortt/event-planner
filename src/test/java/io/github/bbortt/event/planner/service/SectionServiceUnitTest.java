@@ -15,13 +15,13 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
-public class SectionServiceUnitTest {
+class SectionServiceUnitTest {
 
     @Rule
-    public MockitoRule mockitoRule = MockitoJUnit.rule();
+    MockitoRule mockitoRule = MockitoJUnit.rule();
 
     @Rule
-    public ExpectedException expectedException = ExpectedException.none();
+    ExpectedException expectedException = ExpectedException.none();
 
     @Mock
     ProjectService projectServiceMock;
@@ -32,12 +32,12 @@ public class SectionServiceUnitTest {
     SectionService fixture;
 
     @Before
-    public void beforeTestSetup() {
+    void beforeTestSetup() {
         fixture = new SectionService(projectServiceMock, sectionRepositoryMock);
     }
 
     @Test
-    public void saveDoesAcceptEitherResponsibilityOrUser() {
+    void saveDoesAcceptEitherResponsibilityOrUser() {
         Section sectionWithUser = new Section().user(new User());
         fixture.save(sectionWithUser);
 

@@ -30,7 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
  * Integration tests for {@link UserService}.
  */
 @Transactional
-public class UserServiceIT extends AbstractApplicationContextAwareIT {
+class UserServiceIT extends AbstractApplicationContextAwareIT {
 
     private static final String DEFAULT_LOGIN = "johndoe";
     private static final String DEFAULT_EMAIL = "johndoe@localhost";
@@ -54,7 +54,7 @@ public class UserServiceIT extends AbstractApplicationContextAwareIT {
     private User user;
 
     @BeforeEach
-    public void init() {
+    void init() {
         user = new User();
         user.setLogin(DEFAULT_LOGIN);
         user.setPassword(RandomStringUtils.random(60));
@@ -71,7 +71,7 @@ public class UserServiceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    public void assertThatUserMustExistToResetPassword() {
+    void assertThatUserMustExistToResetPassword() {
         userRepository.saveAndFlush(user);
         Optional<User> maybeUser = userService.requestPasswordReset("invalid.login@localhost");
         assertThat(maybeUser).isNotPresent();
@@ -85,7 +85,7 @@ public class UserServiceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    public void assertThatOnlyActivatedUserCanRequestPasswordReset() {
+    void assertThatOnlyActivatedUserCanRequestPasswordReset() {
         user.setActivated(false);
         userRepository.saveAndFlush(user);
 
@@ -96,7 +96,7 @@ public class UserServiceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    public void assertThatResetKeyMustNotBeOlderThan24Hours() {
+    void assertThatResetKeyMustNotBeOlderThan24Hours() {
         ZonedDateTime daysAgo = ZonedDateTime.now().minus(25, ChronoUnit.HOURS);
         String resetKey = RandomUtil.generateResetKey();
         user.setActivated(true);
@@ -111,7 +111,7 @@ public class UserServiceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    public void assertThatResetKeyMustBeValid() {
+    void assertThatResetKeyMustBeValid() {
         ZonedDateTime daysAgo = ZonedDateTime.now().minus(25, ChronoUnit.HOURS);
         user.setActivated(true);
         user.setResetDate(daysAgo);
@@ -125,7 +125,7 @@ public class UserServiceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    public void assertThatUserCanResetPassword() {
+    void assertThatUserCanResetPassword() {
         String oldPassword = user.getPassword();
         ZonedDateTime daysAgo = ZonedDateTime.now().minus(2, ChronoUnit.HOURS);
         String resetKey = RandomUtil.generateResetKey();
@@ -145,7 +145,7 @@ public class UserServiceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    public void assertThatNotActivatedUsersWithNotNullActivationKeyCreatedBefore3DaysAreDeleted() {
+    void assertThatNotActivatedUsersWithNotNullActivationKeyCreatedBefore3DaysAreDeleted() {
         Instant now = Instant.now();
         when(dateTimeProvider.getNow()).thenReturn(Optional.of(now.minus(4, ChronoUnit.DAYS)));
         user.setActivated(false);
@@ -163,7 +163,7 @@ public class UserServiceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    public void assertThatNotActivatedUsersWithNullActivationKeyCreatedBefore3DaysAreNotDeleted() {
+    void assertThatNotActivatedUsersWithNullActivationKeyCreatedBefore3DaysAreNotDeleted() {
         Instant now = Instant.now();
         when(dateTimeProvider.getNow()).thenReturn(Optional.of(now.minus(4, ChronoUnit.DAYS)));
         user.setActivated(false);
@@ -180,7 +180,7 @@ public class UserServiceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    public void assertThatAnonymousUserIsNotGet() {
+    void assertThatAnonymousUserIsNotGet() {
         user.setLogin(Constants.ANONYMOUS_USER);
         if (!userRepository.findOneByLogin(Constants.ANONYMOUS_USER).isPresent()) {
             userRepository.saveAndFlush(user);
@@ -192,7 +192,7 @@ public class UserServiceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    public void assertThatFindUsersByEmailOrLoginContaining() {
+    void assertThatFindUsersByEmailOrLoginContaining() {
         User user1 = new User();
         user1.setLogin("EinLogin");
         user1.setEmail("email@ein-login.ch");

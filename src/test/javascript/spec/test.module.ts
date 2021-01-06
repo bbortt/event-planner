@@ -3,8 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { SessionStorageService, LocalStorageService } from 'ngx-webstorage';
-import { JhiLanguageService, JhiDataUtils, JhiDateUtils, JhiEventManager, JhiAlertService, JhiParseLinks } from 'ng-jhipster';
+import { LocalStorageService, SessionStorageService } from 'ngx-webstorage';
+import { JhiAlertService, JhiDataUtils, JhiDateUtils, JhiEventManager, JhiLanguageService, JhiParseLinks } from 'ng-jhipster';
 
 import { MockLanguageService } from './helpers/mock-language.service';
 import { AccountService } from 'app/core/auth/account.service';

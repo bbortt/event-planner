@@ -18,14 +18,14 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.util.ReflectionTestUtils;
 
-public class JWTFilterTest {
+class JWTFilterTest {
 
     private TokenProvider tokenProvider;
 
     private JWTFilter jwtFilter;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         JHipsterProperties jHipsterProperties = new JHipsterProperties();
         tokenProvider = new TokenProvider(jHipsterProperties);
         ReflectionTestUtils.setField(
@@ -42,7 +42,7 @@ public class JWTFilterTest {
     }
 
     @Test
-    public void testJWTFilter() throws Exception {
+    void testJWTFilter() throws Exception {
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
             "test-user",
             "test-password",
@@ -61,7 +61,7 @@ public class JWTFilterTest {
     }
 
     @Test
-    public void testJWTFilterInvalidToken() throws Exception {
+    void testJWTFilterInvalidToken() throws Exception {
         String jwt = "wrong_jwt";
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.addHeader(JWTFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
@@ -74,7 +74,7 @@ public class JWTFilterTest {
     }
 
     @Test
-    public void testJWTFilterMissingAuthorization() throws Exception {
+    void testJWTFilterMissingAuthorization() throws Exception {
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.setRequestURI("/api/test");
         MockHttpServletResponse response = new MockHttpServletResponse();
@@ -85,7 +85,7 @@ public class JWTFilterTest {
     }
 
     @Test
-    public void testJWTFilterMissingToken() throws Exception {
+    void testJWTFilterMissingToken() throws Exception {
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.addHeader(JWTFilter.AUTHORIZATION_HEADER, "Bearer ");
         request.setRequestURI("/api/test");
@@ -97,7 +97,7 @@ public class JWTFilterTest {
     }
 
     @Test
-    public void testJWTFilterWrongScheme() throws Exception {
+    void testJWTFilterWrongScheme() throws Exception {
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
             "test-user",
             "test-password",

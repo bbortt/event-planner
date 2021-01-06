@@ -23,7 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
  * Integration tests for the {@link RoleResource} REST controller.
  */
 @WithMockUser
-public class RoleResourceIT extends AbstractApplicationContextAwareIT {
+class RoleResourceIT extends AbstractApplicationContextAwareIT {
+
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
 
@@ -62,13 +63,13 @@ public class RoleResourceIT extends AbstractApplicationContextAwareIT {
     }
 
     @BeforeEach
-    public void initTest() {
+    void initTest() {
         role = createEntity(em);
     }
 
     @Test
     @Transactional
-    public void getAllRoles() throws Exception {
+    void getAllRoles() throws Exception {
         // Initialize the database
         roleRepository.saveAndFlush(role);
 
@@ -82,7 +83,7 @@ public class RoleResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    public void getRole() throws Exception {
+    void getRole() throws Exception {
         // Initialize the database
         roleRepository.saveAndFlush(role);
 
@@ -96,7 +97,7 @@ public class RoleResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    public void getNonExistingRole() throws Exception {
+    void getNonExistingRole() throws Exception {
         // Get the role
         restRoleMockMvc.perform(get("/api/roles/{name}", "CCCCCCCCCC")).andExpect(status().isNotFound());
     }

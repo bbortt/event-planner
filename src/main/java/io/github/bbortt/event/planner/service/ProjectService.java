@@ -74,7 +74,7 @@ public class ProjectService {
      * @return the list of entities.
      */
     @Transactional(readOnly = true)
-    public Page<Project> findMineOrAll(Boolean loadAll, Pageable pageable) {
+    public Page<Project> findMineOrAll(boolean loadAll, Pageable pageable) {
         if (loadAll) {
             if (!SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.ADMIN)) {
                 throw new IllegalArgumentException("You're not allowed to see all projects!");
@@ -163,6 +163,7 @@ public class ProjectService {
             .orElseThrow(() -> new IllegalArgumentException("Error while persisting project!"));
     }
 
+    @Transactional(readOnly = true)
     @PreAuthorize("isAuthenticated()")
     public boolean hasAccessToProject(Project project, String... roles) {
         return hasAccessToProject(project.getId(), roles);
