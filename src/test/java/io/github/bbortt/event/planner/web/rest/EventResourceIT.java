@@ -17,9 +17,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import io.github.bbortt.event.planner.AbstractApplicationContextAwareIT;
 import io.github.bbortt.event.planner.domain.Event;
+import io.github.bbortt.event.planner.domain.Invitation;
+import io.github.bbortt.event.planner.domain.Location;
+import io.github.bbortt.event.planner.domain.Project;
 import io.github.bbortt.event.planner.domain.Responsibility;
 import io.github.bbortt.event.planner.domain.Section;
+import io.github.bbortt.event.planner.domain.User;
+import io.github.bbortt.event.planner.repository.AuthorityRepository;
 import io.github.bbortt.event.planner.repository.EventRepository;
+import io.github.bbortt.event.planner.repository.RoleRepository;
+import io.github.bbortt.event.planner.security.AuthoritiesConstants;
+import io.github.bbortt.event.planner.security.RolesConstants;
 import io.github.bbortt.event.planner.service.EventService;
 import java.time.Instant;
 import java.time.ZoneId;
@@ -27,7 +35,9 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,6 +58,9 @@ import org.springframework.transaction.annotation.Transactional;
 @ExtendWith(MockitoExtension.class)
 public class EventResourceIT extends AbstractApplicationContextAwareIT {
 
+    private static final String TEST_USER_LOGIN = "locationresourceit-login";
+    private static final String TEST_ADMIN_LOGIN = "responsibilityresourceit-admin";
+
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
 
@@ -64,13 +77,16 @@ public class EventResourceIT extends AbstractApplicationContextAwareIT {
     private EventRepository eventRepository;
 
     @Mock
-    private EventRepository eventRepositoryMock;
-
-    @Mock
     private EventService eventServiceMock;
 
     @Autowired
     private EventService eventService;
+
+    @Autowired
+    private AuthorityRepository authorityRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     @Autowired
     private EntityManager em;
@@ -86,7 +102,23 @@ public class EventResourceIT extends AbstractApplicationContextAwareIT {
      * This is a static method, as tests for other entities might also need it, if they test an entity which requires the current entity.
      */
     public static Event createEntity(EntityManager em) {
-        return new Event().name(DEFAULT_NAME).description(DEFAULT_DESCRIPTION).startTime(DEFAULT_START_TIME).endTime(DEFAULT_END_TIME);
+        Event event = new Event()
+            .name(DEFAULT_NAME)
+            .description(DEFAULT_DESCRIPTION)
+            .startTime(DEFAULT_START_TIME)
+            .endTime(DEFAULT_END_TIME);
+
+        Section section;
+        if (TestUtil.findAll(em, Section.class).isEmpty()) {
+            section = SectionResourceIT.createEntity(em);
+            em.persist(section);
+            em.flush();
+        } else {
+            section = TestUtil.findAll(em, Section.class).get(0);
+        }
+        event.setSections(Set.of(section));
+
+        return event;
     }
 
     /**
@@ -95,16 +127,48 @@ public class EventResourceIT extends AbstractApplicationContextAwareIT {
      * This is a static method, as tests for other entities might also need it, if they test an entity which requires the current entity.
      */
     public static Event createUpdatedEntity(EntityManager em) {
-        return new Event().name(UPDATED_NAME).description(UPDATED_DESCRIPTION).startTime(UPDATED_START_TIME).endTime(UPDATED_END_TIME);
+        Event event = new Event()
+            .name(UPDATED_NAME)
+            .description(UPDATED_DESCRIPTION)
+            .startTime(UPDATED_START_TIME)
+            .endTime(UPDATED_END_TIME);
+
+        Section section;
+        if (TestUtil.findAll(em, Section.class).isEmpty()) {
+            section = SectionResourceIT.createEntity(em);
+            em.persist(section);
+            em.flush();
+        } else {
+            section = TestUtil.findAll(em, Section.class).get(0);
+        }
+        event.setSections(Set.of(section));
+
+        return event;
     }
 
     @BeforeEach
     public void initTest() {
         event = createEntity(em);
+
+        User user = UserResourceIT.createEntity(em);
+        user.setLogin(TEST_USER_LOGIN);
+        user.setAuthorities(Collections.singleton(authorityRepository.findById(AuthoritiesConstants.USER).get()));
+        em.persist(user);
+
+        Invitation invitation = InvitationResourceIT
+            .createEntity(em)
+            .accepted(Boolean.TRUE)
+            .project(event.getSections().toArray(new Section[1])[0].getLocation().getProject())
+            .user(user)
+            .role(roleRepository.roleAdmin());
+        em.persist(invitation);
+
+        em.flush();
     }
 
     @Test
     @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     public void createEvent() throws Exception {
         eventRepository.deleteAll();
 
@@ -125,6 +189,7 @@ public class EventResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     public void createEventWithExistingId() throws Exception {
         int databaseSizeBeforeCreate = eventRepository.findAll().size();
 
@@ -143,6 +208,7 @@ public class EventResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     public void checkNameIsRequired() throws Exception {
         int databaseSizeBeforeTest = eventRepository.findAll().size();
         // set the field null
@@ -160,6 +226,7 @@ public class EventResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     public void checkStartTimeIsRequired() throws Exception {
         int databaseSizeBeforeTest = eventRepository.findAll().size();
         // set the field null
@@ -177,6 +244,7 @@ public class EventResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     public void checkEndTimeIsRequired() throws Exception {
         int databaseSizeBeforeTest = eventRepository.findAll().size();
         // set the field null
@@ -194,6 +262,7 @@ public class EventResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
+    @WithMockUser(value = TEST_ADMIN_LOGIN, roles = { RolesConstants.ADMIN })
     public void getAllEvents() throws Exception {
         // Initialize the database
         eventRepository.saveAndFlush(event);
@@ -210,26 +279,20 @@ public class EventResourceIT extends AbstractApplicationContextAwareIT {
             .andExpect(jsonPath("$.[*].endTime").value(hasItem(sameInstant(DEFAULT_END_TIME))));
     }
 
-    @SuppressWarnings({ "unchecked" })
-    public void getAllEventsWithEagerRelationshipsIsEnabled() throws Exception {
-        when(eventServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+    @Test
+    @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
+    public void getAllEventsDeniedForUsers() throws Exception {
+        // Initialize the database
+        eventRepository.saveAndFlush(event);
 
-        restEventMockMvc.perform(get("/api/events?eagerload=true")).andExpect(status().isOk());
-
-        verify(eventServiceMock, times(1)).findAllWithEagerRelationships(any());
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    public void getAllEventsWithEagerRelationshipsIsNotEnabled() throws Exception {
-        when(eventServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restEventMockMvc.perform(get("/api/events?eagerload=true")).andExpect(status().isOk());
-
-        verify(eventServiceMock, times(1)).findAllWithEagerRelationships(any());
+        // Get all the sectionList
+        restEventMockMvc.perform(get("/api/events?sort=id,desc")).andExpect(status().isForbidden());
     }
 
     @Test
     @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     public void getEvent() throws Exception {
         // Initialize the database
         eventRepository.saveAndFlush(event);
@@ -248,6 +311,7 @@ public class EventResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     public void getNonExistingEvent() throws Exception {
         // Get the event
         restEventMockMvc.perform(get("/api/events/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
@@ -255,6 +319,7 @@ public class EventResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     public void updateEvent() throws Exception {
         // Initialize the database
         eventService.save(event);
@@ -287,6 +352,7 @@ public class EventResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     public void updateNonExistingEvent() throws Exception {
         int databaseSizeBeforeUpdate = eventRepository.findAll().size();
 
@@ -302,6 +368,7 @@ public class EventResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     public void deleteEvent() throws Exception {
         // Initialize the database
         eventService.save(event);

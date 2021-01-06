@@ -255,8 +255,11 @@ custom modal styling
 /* ==========================================================================
 devextreme inputs in combination with scss class `form-control` styling
 ========================================================================== */
-.dx-texteditor-input,
-.dx-placeholder::before {
+@import '~bootstrap/scss/bootstrap';
+
+.dx-form-control {
+  @extend .form-control;
+
   padding: 0;
   min-height: 0;
 }

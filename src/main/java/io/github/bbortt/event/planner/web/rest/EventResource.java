@@ -1,7 +1,10 @@
 package io.github.bbortt.event.planner.web.rest;
 
 import io.github.bbortt.event.planner.domain.Event;
+import io.github.bbortt.event.planner.security.AuthoritiesConstants;
+import io.github.bbortt.event.planner.security.RolesConstants;
 import io.github.bbortt.event.planner.service.EventService;
+import io.github.bbortt.event.planner.service.ProjectService;
 import io.github.bbortt.event.planner.service.exception.EntityNotFoundException;
 import io.github.bbortt.event.planner.web.rest.errors.BadRequestAlertException;
 import io.github.jhipster.web.util.HeaderUtil;
@@ -19,6 +22,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,9 +49,11 @@ public class EventResource {
     private String applicationName;
 
     private final EventService eventService;
+    private final ProjectService projectService;
 
-    public EventResource(EventService eventService) {
+    public EventResource(EventService eventService, ProjectService projectService) {
         this.eventService = eventService;
+        this.projectService = projectService;
     }
 
     /**
@@ -58,6 +64,17 @@ public class EventResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/events")
+    @PreAuthorize(
+        "@eventService.hasAccessToEvent(#event, \"" +
+        RolesConstants.ADMIN +
+        "\", \"" +
+        RolesConstants.SECRETARY +
+        "\", \"" +
+        RolesConstants.CONTRIBUTOR +
+        "\", \"" +
+        RolesConstants.VIEWER +
+        "\")"
+    )
     public ResponseEntity<Event> createEvent(@Valid @RequestBody Event event) throws URISyntaxException {
         log.debug("REST request to save Event : {}", event);
         if (event.getId() != null) {
@@ -78,6 +95,17 @@ public class EventResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/events")
+    @PreAuthorize(
+        "@eventService.hasAccessToEvent(#event, \"" +
+        RolesConstants.ADMIN +
+        "\", \"" +
+        RolesConstants.SECRETARY +
+        "\", \"" +
+        RolesConstants.CONTRIBUTOR +
+        "\", \"" +
+        RolesConstants.VIEWER +
+        "\")"
+    )
     public ResponseEntity<Event> updateEvent(@Valid @RequestBody Event event) throws URISyntaxException {
         log.debug("REST request to update Event : {}", event);
         if (event.getId() == null) {
@@ -98,6 +126,7 @@ public class EventResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of events in body.
      */
     @GetMapping("/events")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<List<Event>> getAllEvents(
         Pageable pageable,
         @RequestParam(required = false, defaultValue = "false") boolean eagerload
@@ -120,6 +149,17 @@ public class EventResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the event, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/events/{id}")
+    @PreAuthorize(
+        "@eventService.hasAccessToEvent(#id, \"" +
+        RolesConstants.ADMIN +
+        "\", \"" +
+        RolesConstants.SECRETARY +
+        "\", \"" +
+        RolesConstants.CONTRIBUTOR +
+        "\", \"" +
+        RolesConstants.VIEWER +
+        "\")"
+    )
     public ResponseEntity<Event> getEvent(@PathVariable Long id) {
         log.debug("REST request to get Event : {}", id);
         Optional<Event> event = eventService.findOne(id);
@@ -133,6 +173,17 @@ public class EventResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/events/{id}")
+    @PreAuthorize(
+        "@eventService.hasAccessToEvent(#id, \"" +
+        RolesConstants.ADMIN +
+        "\", \"" +
+        RolesConstants.SECRETARY +
+        "\", \"" +
+        RolesConstants.CONTRIBUTOR +
+        "\", \"" +
+        RolesConstants.VIEWER +
+        "\")"
+    )
     public ResponseEntity<Void> deleteEvent(@PathVariable Long id) {
         log.debug("REST request to delete Event : {}", id);
         String name = eventService.findNameByEventId(id).orElseThrow(EntityNotFoundException::new);
