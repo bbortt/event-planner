@@ -8,9 +8,9 @@
         "createOrEditLabel": "Create or edit a Section",
         "notFound": "No Sections found"
       },
-      "created": "A new Section is created with identifier {{ param }}",
-      "updated": "A Section is updated with identifier {{ param }}",
-      "deleted": "A Section is deleted with identifier {{ param }}",
+      "created": "New Section {{ param }} was created",
+      "updated": "Section {{ param }} was updated",
+      "deleted": "Section {{ param }} was deleted",
       "delete": {
         "question": "Are you sure you want to delete Section {{ name }}?",
         "warning": "This will delete all Events contained!"

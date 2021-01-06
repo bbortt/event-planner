@@ -81,6 +81,18 @@ public class LocationService {
     }
 
     /**
+     * Get location name by id.
+     *
+     * @param id the id of the entity.
+     * @return name of the entity.
+     */
+    @Transactional(readOnly = true)
+    public Optional<String> findNameByLocationId(Long id) {
+        log.debug("Request to get name of Location : {}", id);
+        return locationRepository.findNameByLocationId(id);
+    }
+
+    /**
      * Delete the location by id.
      *
      * @param id the id of the entity.
@@ -108,7 +120,7 @@ public class LocationService {
      * Checks if the current user has access to the `Project` linked to the given `Location`, identified by id. The project access must be given by any of the `roles`. Example usage: `@PreAuthorize("@locationService.hasAccessToLocation(#location, 'ADMIN', 'SECRETARY')")`
      *
      * @param locationId the id of the location with a linked project to check.
-     * @param roles to look out for.
+     * @param roles      to look out for.
      * @return true if the project access has any of the roles.
      */
     @Transactional(readOnly = true)
@@ -126,7 +138,7 @@ public class LocationService {
      * Checks if the current user has access to the `Project` linked to the given `Location`. The project access must be given by any of the `roles`. Example usage: `@PreAuthorize("@locationService.hasAccessToLocation(#location, 'ADMIN', 'SECRETARY')")`
      *
      * @param location the entity with a linked project to check.
-     * @param roles to look out for.
+     * @param roles    to look out for.
      * @return true if the project access has any of the roles.
      */
     @PreAuthorize("isAuthenticated()")

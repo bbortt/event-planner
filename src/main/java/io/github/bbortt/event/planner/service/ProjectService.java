@@ -13,7 +13,6 @@ import io.github.bbortt.event.planner.service.dto.CreateProjectDTO;
 import io.github.bbortt.event.planner.service.dto.UserDTO;
 import io.github.bbortt.event.planner.service.exception.EntityNotFoundException;
 import io.github.bbortt.event.planner.service.exception.IdMustBePresentException;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -102,6 +101,18 @@ public class ProjectService {
     public Optional<Project> findOne(Long id) {
         log.debug("Request to get Project : {}", id);
         return projectRepository.findById(id);
+    }
+
+    /**
+     * Get project name by id.
+     *
+     * @param id the id of the entity.
+     * @return name of the entity.
+     */
+    @Transactional(readOnly = true)
+    public Optional<String> findNameByProjectId(Long id) {
+        log.debug("Request to get name of Project : {}", id);
+        return projectRepository.findNameByProjectId(id);
     }
 
     /**

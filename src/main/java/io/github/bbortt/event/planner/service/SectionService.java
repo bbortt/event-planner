@@ -67,7 +67,7 @@ public class SectionService {
      * Get all sections for the given location.
      *
      * @param locationId the location to retrieve sections for.
-     * @param sort the sorting.
+     * @param sort       the sorting.
      * @return the list of entities.
      */
     @Transactional(readOnly = true)
@@ -101,6 +101,18 @@ public class SectionService {
     }
 
     /**
+     * Get section name by id.
+     *
+     * @param id the id of the entity.
+     * @return name of the entity.
+     */
+    @Transactional(readOnly = true)
+    public Optional<String> findNamebySectionId(Long id) {
+        log.debug("Request to get name of Section : {}", id);
+        return sectionRepository.findNameBySectionId(id);
+    }
+
+    /**
      * Delete the section by id.
      *
      * @param id the id of the entity.
@@ -115,7 +127,7 @@ public class SectionService {
      * Checks if the current user has access to the `Project` linked to the given `Section`, identified by id. The project access must be given by any of the `roles`. Example usage: `@PreAuthorize("@sectionService.hasAccessToSection(#section, 'ADMIN', 'SECRETARY')")`
      *
      * @param sectionId the id of the location with a linked project to check.
-     * @param roles to look out for.
+     * @param roles     to look out for.
      * @return true if the project access has any of the roles.
      */
     @Transactional(readOnly = true)
@@ -133,7 +145,7 @@ public class SectionService {
      * Checks if the current user has access to the `Project` linked to the given `Section`. The project access must be given by any of the `roles`. Example usage: `@PreAuthorize("@sectionService.hasAccessToSection(#section, 'ADMIN', 'SECRETARY')")`
      *
      * @param section the entity with a linked project to check.
-     * @param roles to look out for.
+     * @param roles   to look out for.
      * @return true if the project access has any of the roles.
      */
     @PreAuthorize("isAuthenticated()")

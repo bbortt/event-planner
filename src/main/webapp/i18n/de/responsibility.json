@@ -8,9 +8,9 @@
         "createOrEditLabel": "Verantwortlichkeit erstellen oder bearbeiten",
         "notFound": "Keine Verantwortlichkeiten gefunden"
       },
-      "created": "Verantwortlichkeit mit ID {{ param }} erstellt",
-      "updated": "Verantwortlichkeit mit ID {{ param }} aktualisiert",
-      "deleted": "Verantwortlichkeit mit ID {{ param }} gelöscht",
+      "created": "Verantwortlichkeit {{ param }} erstellt",
+      "updated": "Verantwortlichkeit {{ param }} aktualisiert",
+      "deleted": "Verantwortlichkeit {{ param }} gelöscht",
       "delete": {
         "question": "Soll Verantwortlichkeit {{ name }} wirklich dauerhaft gelöscht werden?"
       },

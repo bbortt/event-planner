@@ -85,6 +85,18 @@ public class EventService {
     }
 
     /**
+     * Get event name by id.
+     *
+     * @param id the id of the entity.
+     * @return name of the entity.
+     */
+    @Transactional(readOnly = true)
+    public Optional<String> findNameByEventId(Long id) {
+        log.debug("Request to get name of Event : {}", id);
+        return eventRepository.findNameByEventId(id);
+    }
+
+    /**
      * Delete the event by id.
      *
      * @param id the id of the entity.

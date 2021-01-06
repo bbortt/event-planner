@@ -1,7 +1,10 @@
 package io.github.bbortt.event.planner.service;
 
 import io.github.bbortt.event.planner.domain.Invitation;
+import io.github.bbortt.event.planner.domain.User;
 import io.github.bbortt.event.planner.repository.InvitationRepository;
+import io.github.bbortt.event.planner.repository.UserRepository;
+import io.github.bbortt.event.planner.security.SecurityUtils;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,9 +22,11 @@ public class InvitationService {
     private final Logger log = LoggerFactory.getLogger(InvitationService.class);
 
     private final InvitationRepository invitationRepository;
+    private final UserRepository userRepository;
 
-    public InvitationService(InvitationRepository invitationRepository) {
+    public InvitationService(InvitationRepository invitationRepository, UserRepository userRepository) {
         this.invitationRepository = invitationRepository;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -75,12 +80,29 @@ public class InvitationService {
      * Find all Invitations for the given project.
      *
      * @param projectId the id of the project to retrieve invitations for.
-     * @param pageable  the pagination information.
+     * @param pageable the pagination information.
      * @return the list of entities.
      */
     @Transactional(readOnly = true)
     public Page<Invitation> findAllByProjectId(Long projectId, Pageable pageable) {
         log.debug("Request to get all Invitations for Project {}", projectId);
         return invitationRepository.findAllByProjectId(projectId, pageable);
+    }
+
+    @Transactional
+    public void assignCurrentUserToInvitation(String token) {
+        String login = SecurityUtils.getCurrentUserLogin().orElseThrow(IllegalArgumentException::new);
+        assignUserByLoginToInvitation(login, token);
+    }
+
+    @Transactional
+    public void assignUserByLoginToInvitation(String login, String token) {
+        User user = userRepository.findOneByLogin(login).orElseThrow(IllegalArgumentException::new);
+        invitationRepository.assignUserToInvitation(user.getId(), token);
+    }
+
+    @Transactional(readOnly = true)
+    public boolean isTokenValid(String token) {
+        return invitationRepository.findByToken(token).isPresent();
     }
 }
