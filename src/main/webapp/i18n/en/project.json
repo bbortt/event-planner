@@ -16,11 +16,11 @@
         "noDescription": "Project does not have a description.",
         "loadMore": "Load more projects"
       },
-      "created": "A new Project is created with identifier {{ param }}",
-      "updated": "A Project is updated with identifier {{ param }}",
-      "deleted": "A Project is deleted with identifier {{ param }}",
+      "created": "New Project {{ param }} was created",
+      "updated": "Project {{ param }} was updated",
+      "deleted": "Project {{ param }} was deleted",
       "delete": {
-        "question": "Are you sure you want to delete Project {{ id }}?"
+        "question": "Are you sure you want to delete Project {{ name }}?"
       },
       "detail": {
         "title": "Project"

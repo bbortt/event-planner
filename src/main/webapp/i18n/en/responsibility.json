@@ -8,9 +8,9 @@
         "createOrEditLabel": "Create or edit a Responsibility",
         "notFound": "No Responsibilities found"
       },
-      "created": "A new Responsibility is created with identifier {{ param }}",
-      "updated": "A Responsibility is updated with identifier {{ param }}",
-      "deleted": "A Responsibility is deleted with identifier {{ param }}",
+      "created": "New Responsibility {{ param }} was created",
+      "updated": "Responsibility {{ param }} was updated",
+      "deleted": "Responsibility {{ param }} was deleted",
       "delete": {
         "question": "Are you sure you want to delete Responsibility {{ name }}?"
       },
