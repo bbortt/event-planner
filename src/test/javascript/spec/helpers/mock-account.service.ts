@@ -1,5 +1,5 @@
 import Spy = jasmine.Spy;
-import { of } from 'rxjs';
+import { EMPTY, of } from 'rxjs';
 
 import { SpyObject } from './spyobject';
 import { AccountService } from 'app/core/auth/account.service';
@@ -19,8 +19,8 @@ export class MockAccountService extends SpyObject {
     this.getSpy = this.spy('get').andReturn(this);
     this.saveSpy = this.spy('save').andReturn(this);
     this.authenticateSpy = this.spy('authenticate').andReturn(this);
-    this.identitySpy = this.spy('identity').andReturn(of(null));
-    this.getAuthenticationStateSpy = this.spy('getAuthenticationState').andReturn(of(null));
+    this.identitySpy = this.spy('identity').andReturn(EMPTY);
+    this.getAuthenticationStateSpy = this.spy('getAuthenticationState').andReturn(EMPTY);
     this.isAuthenticated = this.spy('isAuthenticated').andReturn(true);
   }
 

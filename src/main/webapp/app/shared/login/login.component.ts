@@ -3,7 +3,7 @@ import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { of } from 'rxjs';
+import { EMPTY } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
 import { AccountService } from 'app/core/auth/account.service';
@@ -60,8 +60,8 @@ export class LoginComponent implements AfterViewInit {
         password: this.loginForm.get('password')!.value,
       })
       .pipe(
-        switchMap(() => (this.invitationToken ? this.invitationService.assignCurrentUserToInvitation(this.invitationToken) : of(null))),
-        switchMap(() => (this.invitationToken ? this.accountService.identity(true) : of(null)))
+        switchMap(() => (this.invitationToken ? this.invitationService.assignCurrentUserToInvitation(this.invitationToken) : EMPTY)),
+        switchMap(() => (this.invitationToken ? this.accountService.identity(true) : EMPTY))
       )
       .subscribe(
         () => {
