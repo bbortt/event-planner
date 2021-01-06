@@ -2,6 +2,8 @@ package io.github.bbortt.event.planner.web.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -14,6 +16,7 @@ import io.github.bbortt.event.planner.AbstractApplicationContextAwareIT;
 import io.github.bbortt.event.planner.domain.Invitation;
 import io.github.bbortt.event.planner.domain.Project;
 import io.github.bbortt.event.planner.domain.Role;
+import io.github.bbortt.event.planner.domain.User;
 import io.github.bbortt.event.planner.repository.InvitationRepository;
 import io.github.bbortt.event.planner.service.InvitationService;
 import java.util.List;
@@ -29,8 +32,11 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * Integration tests for the {@link InvitationResource} REST controller.
  */
-@WithMockUser
 public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
+
+    private static final String TEST_USER_LOGIN = "responsibilityresourceit-login";
+    private static final String TEST_ADMIN_LOGIN = "responsibilityresourceit-admin";
+
     private static final String DEFAULT_EMAIL = "default@event.planner";
     private static final String UPDATED_EMAIL = "update@event.planner";
 
@@ -49,12 +55,15 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
     @Autowired
     private MockMvc restInvitationMockMvc;
 
+    private User testUser;
+
     private Invitation invitation;
 
     /**
      * Create an entity for this test.
      * <p>
-     * This is a static method, as tests for other entities might also need it, if they test an entity which requires the current entity.
+     * This is a static method, as tests for other entities might also need it, if they test an
+     * entity which requires the current entity.
      */
     public static Invitation createEntity(EntityManager em) {
         Invitation invitation = new Invitation().email(DEFAULT_EMAIL).accepted(DEFAULT_ACCEPTED);
@@ -84,7 +93,8 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
     /**
      * Create an updated entity for this test.
      * <p>
-     * This is a static method, as tests for other entities might also need it, if they test an entity which requires the current entity.
+     * This is a static method, as tests for other entities might also need it, if they test an
+     * entity which requires the current entity.
      */
     public static Invitation createUpdatedEntity(EntityManager em) {
         Invitation invitation = new Invitation().email(UPDATED_EMAIL).accepted(UPDATED_ACCEPTED);
@@ -114,10 +124,16 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
     @BeforeEach
     public void initTest() {
         invitation = createEntity(em);
+
+        testUser = UserResourceIT.createEntity(em);
+        testUser.setLogin(TEST_USER_LOGIN);
+        em.persist(testUser);
+        em.flush();
     }
 
     @Test
     @Transactional
+    @WithMockUser
     public void createInvitation() throws Exception {
         invitationRepository.deleteAll();
 
@@ -137,6 +153,7 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
     }
 
     @Test
+    @WithMockUser
     @Transactional
     public void createInvitationWithExistingId() throws Exception {
         int databaseSizeBeforeCreate = invitationRepository.findAll().size();
@@ -157,6 +174,7 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
     }
 
     @Test
+    @WithMockUser
     @Transactional
     public void checkEmailIsRequired() throws Exception {
         int databaseSizeBeforeTest = invitationRepository.findAll().size();
@@ -176,6 +194,7 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
     }
 
     @Test
+    @WithMockUser
     @Transactional
     public void checkAcceptedIsRequired() throws Exception {
         int databaseSizeBeforeTest = invitationRepository.findAll().size();
@@ -195,6 +214,7 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
     }
 
     @Test
+    @WithMockUser
     @Transactional
     public void getAllInvitations() throws Exception {
         // Initialize the database
@@ -211,6 +231,7 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
     }
 
     @Test
+    @WithMockUser
     @Transactional
     public void getInvitation() throws Exception {
         // Initialize the database
@@ -227,6 +248,7 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
     }
 
     @Test
+    @WithMockUser
     @Transactional
     public void getNonExistingInvitation() throws Exception {
         // Get the invitation
@@ -234,6 +256,7 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
     }
 
     @Test
+    @WithMockUser
     @Transactional
     public void updateInvitation() throws Exception {
         // Initialize the database
@@ -268,6 +291,7 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
     }
 
     @Test
+    @WithMockUser
     @Transactional
     public void updateNonExistingInvitation() throws Exception {
         int databaseSizeBeforeUpdate = invitationRepository.findAll().size();
@@ -283,6 +307,7 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
     }
 
     @Test
+    @WithMockUser
     @Transactional
     public void deleteInvitation() throws Exception {
         // Initialize the database
@@ -298,5 +323,59 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
         // Validate the database contains one less item
         List<Invitation> invitationList = invitationRepository.findAll();
         assertThat(invitationList).hasSize(databaseSizeBeforeDelete - 1);
+    }
+
+    @Test
+    @Transactional
+    public void acceptInvitationWithoutCurrentUser() throws Exception {
+        restInvitationMockMvc
+            .perform(post("/api/invitations/accept").content("a0d5206e-4a3f-49f9-b92d-8bf7bcd5a9ab"))
+            .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
+    public void acceptInvitationForCurrentUser() throws Exception {
+        final String token = "810b88eb-4d1b-430b-905c-ad5a387bca3b";
+        final Invitation invitation = createEntity(em).user(testUser).token(token);
+
+        em.persist(invitation);
+
+        restInvitationMockMvc.perform(post("/api/invitations/accept").content(token)).andExpect(status().isOk());
+
+        em.refresh(invitation);
+
+        assertThat(invitation).hasFieldOrPropertyWithValue("token", null);
+        assertThat(invitation).hasFieldOrPropertyWithValue("accepted", Boolean.TRUE);
+    }
+
+    @Test
+    @Transactional
+    public void acceptInvitationRightAfterRegistration() throws Exception {
+        final String token = "78024294-baf7-414f-9b12-d86c9983a71d";
+        final Invitation invitation = createEntity(em).user(testUser).token(token);
+
+        em.persist(invitation);
+
+        restInvitationMockMvc.perform(post("/api/invitations/accept/" + testUser.getLogin()).content(token)).andExpect(status().isOk());
+
+        em.refresh(invitation);
+
+        assertThat(invitation).hasFieldOrPropertyWithValue("token", null);
+        assertThat(invitation).hasFieldOrPropertyWithValue("accepted", Boolean.TRUE);
+    }
+
+    @Test
+    @Transactional
+    public void acceptInvitationRightAfterRegistrationWithInvalidUsername() throws Exception {
+        final String token = "78024294-baf7-414f-9b12-d86c9983a71d";
+        final Invitation invitation = createEntity(em).user(testUser).token(token);
+
+        em.persist(invitation);
+
+        restInvitationMockMvc
+            .perform(post("/api/invitations/accept/InvalidLoginName").content(token))
+            .andExpect(status().isInternalServerError());
     }
 }

@@ -40,7 +40,6 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * Integration tests for the {@link ResponsibilityResource} REST controller.
  */
-@WithMockUser
 public class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT {
 
     private static final String TEST_USER_LOGIN = "responsibilityresourceit-login";
@@ -182,6 +181,7 @@ public class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT 
 
     @Test
     @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     public void checkNameIsRequired() throws Exception {
         int databaseSizeBeforeTest = responsibilityRepository.findAll().size();
         // set the field null

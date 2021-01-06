@@ -35,7 +35,6 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * Integration tests for the {@link LocationResource} REST controller.
  */
-@WithMockUser
 public class LocationResourceIT extends AbstractApplicationContextAwareIT {
 
     private static final String TEST_USER_LOGIN = "locationresourceit-login";
@@ -164,6 +163,7 @@ public class LocationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     public void checkNameIsRequired() throws Exception {
         int databaseSizeBeforeTest = locationRepository.findAll().size();
         // set the field null
