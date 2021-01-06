@@ -14,7 +14,7 @@
 
 ## Documentation
 
-To answer the most frequently asked questions, we have created the [Wiki] (https://github.com/bbortt/event-planner/wiki).
+To answer the most frequently asked questions, we have created the [Wiki](https://github.com/bbortt/event-planner/wiki).
 
 ## Development
 
