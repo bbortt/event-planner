@@ -8,9 +8,9 @@
         "createOrEditLabel": "Abschnitt erstellen oder bearbeiten",
         "notFound": "Keine Abschnitte gefunden"
       },
-      "created": "Abschnitt mit ID {{ param }} erstellt",
-      "updated": "Abschnitt mit ID {{ param }} aktualisiert",
-      "deleted": "Abschnitt mit ID {{ param }} gelöscht",
+      "created": "Abschnitt {{ param }} erstellt",
+      "updated": "Abschnitt {{ param }} aktualisiert",
+      "deleted": "Abschnitt {{ param }} gelöscht",
       "delete": {
         "question": "Soll Abschnitt {{ name }} wirklich dauerhaft gelöscht werden?",
         "warning": "Dies wird alle untergeordneten Ereignise löschen!"
