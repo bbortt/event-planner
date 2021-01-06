@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, Validators } from '@angular/forms';
 
-import { EMPTY } from 'rxjs';
+import { of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
 import { JhiLanguageService } from 'ng-jhipster';
@@ -75,7 +75,7 @@ export class RegisterComponent implements AfterViewInit {
         .save({ login, email, password, langKey: this.languageService.getCurrentLanguage() })
         .pipe(
           switchMap(() =>
-            this.invitationToken ? this.invitationService.assignUserByLoginToInvitation(login, this.invitationToken) : EMPTY
+            this.invitationToken ? this.invitationService.assignUserByLoginToInvitation(login, this.invitationToken) : of(null)
           )
         )
         .subscribe(
