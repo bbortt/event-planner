@@ -21,6 +21,7 @@ export class ProjectUserModalComponent implements AfterViewInit, OnDestroy {
           return true;
         },
       });
+
       (this.modalRef.componentInstance as ProjectUserInviteComponent).setProject(project);
     });
   }

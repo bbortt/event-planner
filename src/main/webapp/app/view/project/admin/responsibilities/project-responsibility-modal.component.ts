@@ -21,6 +21,7 @@ export class ProjectResponsibilityModalComponent implements AfterViewInit, OnDes
           return true;
         },
       });
+
       (this.modalRef.componentInstance as ProjectResponsibilityUpdateComponent).updateForm(project, responsibility ? responsibility : {});
     });
   }

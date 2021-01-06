@@ -22,6 +22,7 @@ export class ProjectAdminUpdateModalComponent implements AfterViewInit, OnDestro
           return true;
         },
       });
+
       (this.modalRef.componentInstance as ProjectAdminUpdateComponent).updateForm(project);
     });
   }
