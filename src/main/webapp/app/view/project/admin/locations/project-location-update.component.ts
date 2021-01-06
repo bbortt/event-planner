@@ -17,6 +17,7 @@ import { Project } from 'app/shared/model/project.model';
 import { Responsibility } from 'app/shared/model/responsibility.model';
 import { User } from 'app/core/user/user.model';
 import { Invitation } from 'app/shared/model/invitation.model';
+import { UserService } from 'app/core/user/user.service';
 
 @Component({
   selector: 'app-location-update',
@@ -29,6 +30,8 @@ export class ProjectLocationUpdateComponent {
 
   isNew = false;
   isSaving = false;
+  isResponsibility = false;
+  isUser = false;
 
   project?: Project;
 
@@ -49,6 +52,7 @@ export class ProjectLocationUpdateComponent {
     private eventManager: JhiEventManager,
     private fb: FormBuilder,
     private responsibilityService: ResponsibilityService,
+    private userService: UserService,
     private invitationService: InvitationService
   ) {}
 
@@ -58,10 +62,14 @@ export class ProjectLocationUpdateComponent {
       this.responsibilities = responsibilities.body || [];
     });
 
-    this.invitationService.findAllByProjectId(project.id!).subscribe(inviations => {
-      this.inviations = inviations.body || [];
-      this.inviations.forEach(invitation => this.users.push(invitation.user!));
+    this.userService.findAllByProject(project).subscribe(users => {
+      this.users = users.body || [];
     });
+
+    // this.invitationService.findAllByProjectId(project.id!).subscribe(inviations => {
+    //   this.inviations = inviations.body || [];
+    //   this.inviations.forEach(invitation => this.users.push(invitation.user!));
+    // });
 
     this.editForm.patchValue({
       id: location.id,
@@ -115,5 +123,15 @@ export class ProjectLocationUpdateComponent {
 
   protected onSaveError(): void {
     this.isSaving = false;
+  }
+
+  protected onRadioChange(value: String): void {
+    if (value === 'responsibility') {
+      this.isResponsibility = true;
+      this.isUser = false;
+    } else {
+      this.isResponsibility = false;
+      this.isUser = true;
+    }
   }
 }

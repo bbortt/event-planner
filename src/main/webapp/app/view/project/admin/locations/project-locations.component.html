@@ -65,7 +65,7 @@
                             <ng-template #locationUser>
                                 <div *ngIf="location.user; else locationResponsibilitySpace">
                                     <i>
-                                        <span jhiTranslate="eventPlannerApp.location.responsibility">Responsibility</span>: {{location.user!.firstName}} {{location.user!.lastName}}
+                                        <span jhiTranslate="eventPlannerApp.location.responsibility">Responsibility</span>: {{location.user!.login}}
                                     </i>
                                 </div>
                             </ng-template>
@@ -96,7 +96,7 @@
 
                                         <div *ngIf="section.user">
                                             <i>
-                                                <span jhiTranslate="eventPlannerApp.section.responsibility">Responsibility</span>: {{section.user!.firstName}} {{section.user!.lastName}}
+                                                <span jhiTranslate="eventPlannerApp.section.responsibility">Responsibility</span>: {{section.user!.login}}
                                             </i>
                                         </div>
                                     </td>

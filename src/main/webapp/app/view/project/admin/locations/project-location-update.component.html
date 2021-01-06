@@ -41,6 +41,18 @@
                 <div class="form-group">
                     <label class="form-control-label"
                            jhiTranslate="eventPlannerApp.location.responsibility"
+                           for="field_responsibilityUser"> Responsibility </label>
+                    <input type="radio" value="responsibility" name="responsibilityUser"
+                           [checked]="true"
+                           (change)="onRadioChange($event.target.value)"> Responsibility
+                    <input type="radio" value="user" name="responsibilityUser"
+                           [(ngModel)]="responsibility.value" name="" value="i" [checked]="true"
+                           (change)="onRadioChange($event.target.value)"> User
+                </div>
+
+                <div *ngIf="isResponsibility" class="form-group">
+                    <label class="form-control-label"
+                           jhiTranslate="eventPlannerApp.location.responsibility"
                            for="field_responsibility"> Responsibility </label>
                     <dx-autocomplete
                         class="form-control"
