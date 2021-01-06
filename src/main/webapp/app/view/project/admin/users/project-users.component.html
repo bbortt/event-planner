@@ -32,6 +32,9 @@
                     <span jhiTranslate="eventPlannerApp.invitation.role"></span>
                 </th>
                 <th scope="col">
+                  <span jhiTranslate="eventPlannerApp.responsibility.detail.title"></span>
+                </th>
+                <th scope="col">
                     <span jhiTranslate="eventPlannerApp.invitation.accepted"></span>
                 </th>
             </tr>
@@ -40,6 +43,7 @@
             <tr *ngFor="let invitation of invitations ;trackBy: trackByFn">
                 <td>{{ invitation.email }}</td>
                 <td>{{ invitation.role.name | i18nRole | translate }}</td>
+                <td>{{ invitation.responsibility?.name }}</td>
                 <td [jhiTranslate]="invitation.accepted ? 'eventPlannerApp.invitation.accepted.yes' : 'eventPlannerApp.invitation.accepted.no'"></td>
             </tr>
             </tbody>

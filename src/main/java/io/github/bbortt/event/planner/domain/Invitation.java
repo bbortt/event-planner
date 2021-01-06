@@ -48,6 +48,10 @@ public class Invitation implements Serializable {
     @Column(name = "accepted", nullable = false)
     private Boolean accepted;
 
+    @Size(min = 36, max = 36)
+    @Column(name = "token", columnDefinition = "bpchar(36)")
+    private String token;
+
     @ManyToOne(optional = false)
     @NotNull
     @JsonIgnoreProperties(value = "invitations", allowSetters = true)
@@ -100,6 +104,19 @@ public class Invitation implements Serializable {
 
     public void setAccepted(Boolean accepted) {
         this.accepted = accepted;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public Invitation token(String token) {
+        this.token = token;
+        return this;
     }
 
     public Project getProject() {

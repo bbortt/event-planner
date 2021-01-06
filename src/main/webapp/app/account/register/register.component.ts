@@ -1,11 +1,17 @@
-import { Component, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, Validators } from '@angular/forms';
+
+import { of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+
 import { JhiLanguageService } from 'ng-jhipster';
 
-import { EMAIL_ALREADY_USED_TYPE, LOGIN_ALREADY_USED_TYPE } from 'app/shared/constants/error.constants';
+import { InvitationService } from 'app/entities/invitation/invitation.service';
 import { LoginModalService } from 'app/core/login/login-modal.service';
 import { RegisterService } from './register.service';
+
+import { EMAIL_ALREADY_USED_TYPE, LOGIN_ALREADY_USED_TYPE } from 'app/shared/constants/error.constants';
 
 @Component({
   selector: 'jhi-register',
@@ -14,6 +20,9 @@ import { RegisterService } from './register.service';
 export class RegisterComponent implements AfterViewInit {
   @ViewChild('login', { static: false })
   login?: ElementRef;
+
+  @Input()
+  invitationToken?: string;
 
   doNotMatch = false;
   error = false;
@@ -40,7 +49,8 @@ export class RegisterComponent implements AfterViewInit {
     private languageService: JhiLanguageService,
     private loginModalService: LoginModalService,
     private registerService: RegisterService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private invitationService: InvitationService
   ) {}
 
   ngAfterViewInit(): void {
@@ -61,10 +71,17 @@ export class RegisterComponent implements AfterViewInit {
     } else {
       const login = this.registerForm.get(['login'])!.value;
       const email = this.registerForm.get(['email'])!.value;
-      this.registerService.save({ login, email, password, langKey: this.languageService.getCurrentLanguage() }).subscribe(
-        () => (this.success = true),
-        response => this.processError(response)
-      );
+      this.registerService
+        .save({ login, email, password, langKey: this.languageService.getCurrentLanguage() })
+        .pipe(
+          switchMap(() =>
+            this.invitationToken ? this.invitationService.assignUserByLoginToInvitation(login, this.invitationToken) : of(null)
+          )
+        )
+        .subscribe(
+          () => (this.success = true),
+          response => this.processError(response)
+        );
     }
   }
 

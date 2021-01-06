@@ -7,6 +7,7 @@ export interface Invitation {
   id?: number;
   email: string;
   accepted: boolean;
+  token?: string;
   project: Project;
   user?: User;
   role: Role;
