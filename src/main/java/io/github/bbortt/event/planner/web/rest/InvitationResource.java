@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,8 +39,10 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RequestMapping("/api")
 public class InvitationResource {
 
-    private static final String ENTITY_NAME = "invitation";
     private final Logger log = LoggerFactory.getLogger(InvitationResource.class);
+
+    private static final String ENTITY_NAME = "invitation";
+
     private final InvitationService invitationService;
     private final MailService mailService;
 
@@ -55,7 +58,8 @@ public class InvitationResource {
      * {@code POST  /invitations} : Create a new invitation.
      *
      * @param invitation the invitation to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new invitation, or with status {@code 400 (Bad Request)} if the invitation has already an ID.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new
+     * invitation, or with status {@code 400 (Bad Request)} if the invitation has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/invitations")
@@ -79,7 +83,9 @@ public class InvitationResource {
      * {@code PUT  /invitations} : Updates an existing invitation.
      *
      * @param invitation the invitation to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated invitation, or with status {@code 400 (Bad Request)} if the invitation is not valid, or with status {@code 500 (Internal Server Error)} if the invitation couldn't be updated.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated
+     * invitation, or with status {@code 400 (Bad Request)} if the invitation is not valid, or with
+     * status {@code 500 (Internal Server Error)} if the invitation couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/invitations")
@@ -99,7 +105,8 @@ public class InvitationResource {
      * {@code GET  /invitations} : get all the invitations.
      *
      * @param pageable the pagination information.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of invitations in body.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of invitations
+     * in body.
      */
     @GetMapping("/invitations")
     public ResponseEntity<List<Invitation>> getAllInvitations(Pageable pageable) {
@@ -113,7 +120,8 @@ public class InvitationResource {
      * {@code GET  /invitations/:id} : get the "id" invitation.
      *
      * @param id the id of the invitation to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the invitation, or with status {@code 404 (Not Found)}.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the invitation,
+     * or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/invitations/{id}")
     public ResponseEntity<Invitation> getInvitation(@PathVariable Long id) {
@@ -145,18 +153,18 @@ public class InvitationResource {
             .build();
     }
 
-    @PostMapping("/invitations/user")
-    public void assignCurrentUserToInvitation(@Valid @RequestBody String token) {
+    @PostMapping("/invitations/accept")
+    public void assignCurrentUserToInvitation(@NotEmpty @RequestBody String token) {
         invitationService.assignCurrentUserToInvitation(token);
     }
 
-    @PostMapping("/invitations/user/{login}")
-    public void assignUserByLoginToInvitation(@Valid @RequestBody String token, @PathVariable String login) {
+    @PostMapping("/invitations/accept/{login}")
+    public void assignUserByLoginToInvitation(@NotEmpty @RequestBody String token, @NotEmpty @PathVariable String login) {
         invitationService.assignUserByLoginToInvitation(login, token);
     }
 
     @PostMapping("/invitations/token-validity")
-    public boolean checkTokenValidity(@Valid @RequestBody String token) {
+    public boolean checkTokenValidity(@NotEmpty @RequestBody String token) {
         return invitationService.isTokenValid(token);
     }
 }

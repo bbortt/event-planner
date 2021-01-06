@@ -46,11 +46,11 @@ export class InvitationService {
   }
 
   assignUserByLoginToInvitation(login: string, token: string): Observable<void> {
-    return this.http.post<void>(`${this.resourceUrl}/user/${login}`, token);
+    return this.http.post<void>(`${this.resourceUrl}/accept/${login}`, token);
   }
 
   assignCurrentUserToInvitation(token: string): Observable<void> {
-    return this.http.post<void>(`${this.resourceUrl}/user`, token);
+    return this.http.post<void>(`${this.resourceUrl}/accept`, token);
   }
 
   checkTokenValidity(token: string): Observable<boolean> {

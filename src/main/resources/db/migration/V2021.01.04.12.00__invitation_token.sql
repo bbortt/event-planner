@@ -1,2 +1,2 @@
 ALTER TABLE invitation
-  ADD COLUMN token VARCHAR (36);
+  ADD COLUMN token CHAR (36);

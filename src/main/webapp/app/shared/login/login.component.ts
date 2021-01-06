@@ -23,7 +23,6 @@ export class LoginComponent implements AfterViewInit {
   loginForm = this.fb.group({
     username: [''],
     password: [''],
-    rememberMe: [false],
   });
 
   @Input()

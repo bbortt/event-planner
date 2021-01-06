@@ -49,7 +49,7 @@ public class Invitation implements Serializable {
     private Boolean accepted;
 
     @Size(min = 36, max = 36)
-    @Column(name = "token")
+    @Column(name = "token", columnDefinition = "bpchar(36)")
     private String token;
 
     @ManyToOne(optional = false)

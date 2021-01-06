@@ -6,7 +6,6 @@ import io.github.bbortt.event.planner.repository.InvitationRepository;
 import io.github.bbortt.event.planner.repository.UserRepository;
 import io.github.bbortt.event.planner.security.SecurityUtils;
 import java.util.Optional;
-import javax.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -92,17 +91,13 @@ public class InvitationService {
 
     @Transactional
     public void assignCurrentUserToInvitation(String token) {
-        String login = SecurityUtils
-            .getCurrentUserLogin()
-            .orElseThrow(() -> new IllegalArgumentException("Cannot assign user! No login available!"));
+        String login = SecurityUtils.getCurrentUserLogin().orElseThrow(IllegalArgumentException::new);
         assignUserByLoginToInvitation(login, token);
     }
 
     @Transactional
     public void assignUserByLoginToInvitation(String login, String token) {
-        User user = userRepository
-            .findOneByLogin(login)
-            .orElseThrow(() -> new EntityNotFoundException("User with login " + login + " not found"));
+        User user = userRepository.findOneByLogin(login).orElseThrow(IllegalArgumentException::new);
         invitationRepository.assignUserToInvitation(user.getId(), token);
     }
 
