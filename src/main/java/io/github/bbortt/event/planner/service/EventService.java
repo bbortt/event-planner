@@ -3,11 +3,14 @@ package io.github.bbortt.event.planner.service;
 import io.github.bbortt.event.planner.domain.Event;
 import io.github.bbortt.event.planner.repository.EventRepository;
 import io.github.bbortt.event.planner.service.exception.BadRequestException;
+import io.github.bbortt.event.planner.service.exception.EntityNotFoundException;
+import io.github.bbortt.event.planner.service.exception.IdMustBePresentException;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,9 +22,14 @@ public class EventService {
 
     private final Logger log = LoggerFactory.getLogger(EventService.class);
 
+    private final ProjectService projectService;
+    private final SectionService sectionService;
+
     private final EventRepository eventRepository;
 
-    public EventService(EventRepository eventRepository) {
+    public EventService(ProjectService projectService, SectionService sectionService, EventRepository eventRepository) {
+        this.projectService = projectService;
+        this.sectionService = sectionService;
         this.eventRepository = eventRepository;
     }
 
@@ -97,5 +105,40 @@ public class EventService {
     public void delete(Long id) {
         log.debug("Request to delete Event : {}", id);
         eventRepository.deleteById(id);
+    }
+
+    /**
+     * Checks if the current user has access to the `Project` linked to the given `Event`, identified by id. The project access must be given by any of the `roles`. Example usage: `@PreAuthorize("@eventService.hasAccessToEvent(#event, 'ADMIN', 'SECRETARY')")`
+     *
+     * @param eventId the id of the location with a linked project to check.
+     * @param roles to look out for.
+     * @return true if the project access has any of the roles.
+     */
+    @Transactional(readOnly = true)
+    @PreAuthorize("isAuthenticated()")
+    public boolean hasAccessToEvent(Long eventId, String... roles) {
+        if (eventId == null) {
+            throw new IdMustBePresentException();
+        }
+
+        Event event = findOne(eventId).orElseThrow(EntityNotFoundException::new);
+        return hasAccessToEvent(event, roles);
+    }
+
+    /**
+     * Checks if the current user has access to the `Project` linked to the given `Event`. The project access must be given by any of the `roles`. Example usage: `@PreAuthorize("@eventService.hasAccessToSection(#event, 'ADMIN', 'SECRETARY')")`
+     *
+     * @param event the entity with a linked project to check.
+     * @param roles to look out for.
+     * @return true if the project access has any of the roles.
+     */
+    @PreAuthorize("isAuthenticated()")
+    public boolean hasAccessToEvent(Event event, String... roles) {
+        return event
+            .getSections()
+            .stream()
+            .map(section -> sectionService.findOne(section.getId()))
+            .flatMap(Optional::stream)
+            .anyMatch(section -> projectService.hasAccessToProject(section.getLocation().getProject(), roles));
     }
 }

@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Sql({ "classpath:db/scripts/RoleRepositoryIT_before.sql" })
 @Sql(value = { "classpath:db/scripts/RoleRepositoryIT_after.sql" }, executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
-public class RoleRepositoryIT extends AbstractApplicationContextAwareIT {
+class RoleRepositoryIT extends AbstractApplicationContextAwareIT {
 
     @Autowired
     private ProjectRepository projectRepository;
@@ -25,7 +25,7 @@ public class RoleRepositoryIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    public void hasAnyRoleInProjectReturnsTrueOnMatch() {
+    void hasAnyRoleInProjectReturnsTrueOnMatch() {
         Project project = projectByName("RoleRepositoryIT-project-1");
         List<String> roles = Collections.singletonList(RolesConstants.ADMIN);
 
@@ -34,7 +34,7 @@ public class RoleRepositoryIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    public void hasAnyRoleInProjectReturnsFalseOnAnyMismatch() {
+    void hasAnyRoleInProjectReturnsFalseOnAnyMismatch() {
         // wrong user
         Project project = projectByName("RoleRepositoryIT-project-1");
         List<String> roles = Collections.singletonList(RolesConstants.ADMIN);

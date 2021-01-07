@@ -35,7 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * Integration tests for the {@link LocationResource} REST controller.
  */
-public class LocationResourceIT extends AbstractApplicationContextAwareIT {
+class LocationResourceIT extends AbstractApplicationContextAwareIT {
 
     private static final String TEST_USER_LOGIN = "locationresourceit-login";
     private static final String TEST_ADMIN_LOGIN = "responsibilityresourceit-admin";
@@ -105,7 +105,7 @@ public class LocationResourceIT extends AbstractApplicationContextAwareIT {
     }
 
     @BeforeEach
-    public void initTest() {
+    void initTest() {
         location = createEntity(em);
 
         user = UserResourceIT.createEntity(em);
@@ -127,7 +127,7 @@ public class LocationResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
-    public void createLocation() throws Exception {
+    void createLocation() throws Exception {
         locationRepository.deleteAll();
 
         // Create the Location
@@ -145,7 +145,7 @@ public class LocationResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
-    public void createLocationWithExistingId() throws Exception {
+    void createLocationWithExistingId() throws Exception {
         int databaseSizeBeforeCreate = locationRepository.findAll().size();
 
         // Create the Location with an existing ID
@@ -164,7 +164,7 @@ public class LocationResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
-    public void checkNameIsRequired() throws Exception {
+    void checkNameIsRequired() throws Exception {
         int databaseSizeBeforeTest = locationRepository.findAll().size();
         // set the field null
         location.setName(null);
@@ -182,7 +182,7 @@ public class LocationResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(value = TEST_ADMIN_LOGIN, roles = { RolesConstants.ADMIN })
-    public void getAllLocations() throws Exception {
+    void getAllLocations() throws Exception {
         // Initialize the database
         locationRepository.saveAndFlush(location);
 
@@ -198,7 +198,7 @@ public class LocationResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
-    public void getAllLocationsDeniedForUsers() throws Exception {
+    void getAllLocationsDeniedForUsers() throws Exception {
         // Initialize the database
         locationRepository.saveAndFlush(location);
 
@@ -209,7 +209,7 @@ public class LocationResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
-    public void getLocation() throws Exception {
+    void getLocation() throws Exception {
         // Initialize the database
         locationRepository.saveAndFlush(location);
 
@@ -225,7 +225,7 @@ public class LocationResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
-    public void getLocationsByProjectIdDoesSortIgnoreCase() throws Exception {
+    void getLocationsByProjectIdDoesSortIgnoreCase() throws Exception {
         // Initialize the database
         locationRepository.saveAndFlush(location);
 
@@ -260,7 +260,7 @@ public class LocationResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
-    public void getNonExistingLocation() throws Exception {
+    void getNonExistingLocation() throws Exception {
         // Get the location
         restLocationMockMvc.perform(get("/api/locations/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
@@ -268,7 +268,7 @@ public class LocationResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
-    public void updateLocation() throws Exception {
+    void updateLocation() throws Exception {
         // Initialize the database
         locationService.save(location);
 
@@ -300,7 +300,7 @@ public class LocationResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
-    public void updateNonExistingLocation() throws Exception {
+    void updateNonExistingLocation() throws Exception {
         int databaseSizeBeforeUpdate = locationRepository.findAll().size();
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
@@ -316,7 +316,7 @@ public class LocationResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
-    public void deleteLocation() throws Exception {
+    void deleteLocation() throws Exception {
         // Initialize the database
         locationService.save(location);
 

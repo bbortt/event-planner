@@ -62,7 +62,7 @@ public class Section implements Serializable {
     @JsonIgnoreProperties(value = "sections", allowSetters = true)
     private Set<Event> events = new HashSet<>();
 
-    @ManyToOne(optional = false)
+    @ManyToOne
     @JsonIgnoreProperties(value = "sections", allowSetters = true)
     private Responsibility responsibility;
 

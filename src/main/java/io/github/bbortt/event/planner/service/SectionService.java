@@ -124,7 +124,7 @@ public class SectionService {
     }
 
     /**
-     * Checks if the current user has access to the `Project` linked to the given `Section`, identified by id. The project access must be given by any of the `roles`. Example usage: `@PreAuthorize("@sectionService.hasAccessToSection(#location, 'ADMIN', 'SECRETARY')")`
+     * Checks if the current user has access to the `Project` linked to the given `Section`, identified by id. The project access must be given by any of the `roles`. Example usage: `@PreAuthorize("@sectionService.hasAccessToSection(#section, 'ADMIN', 'SECRETARY')")`
      *
      * @param sectionId the id of the location with a linked project to check.
      * @param roles     to look out for.
@@ -142,7 +142,7 @@ public class SectionService {
     }
 
     /**
-     * Checks if the current user has access to the `Project` linked to the given `Section`. The project access must be given by any of the `roles`. Example usage: `@PreAuthorize("@sectionService.hasAccessToSection(#location, 'ADMIN', 'SECRETARY')")`
+     * Checks if the current user has access to the `Project` linked to the given `Section`. The project access must be given by any of the `roles`. Example usage: `@PreAuthorize("@sectionService.hasAccessToSection(#section, 'ADMIN', 'SECRETARY')")`
      *
      * @param section the entity with a linked project to check.
      * @param roles   to look out for.

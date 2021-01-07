@@ -32,10 +32,9 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * Integration tests for the {@link InvitationResource} REST controller.
  */
-public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
+class InvitationResourceIT extends AbstractApplicationContextAwareIT {
 
     private static final String TEST_USER_LOGIN = "responsibilityresourceit-login";
-    private static final String TEST_ADMIN_LOGIN = "responsibilityresourceit-admin";
 
     private static final String DEFAULT_EMAIL = "default@event.planner";
     private static final String UPDATED_EMAIL = "update@event.planner";
@@ -122,7 +121,7 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
     }
 
     @BeforeEach
-    public void initTest() {
+    void initTest() {
         invitation = createEntity(em);
 
         testUser = UserResourceIT.createEntity(em);
@@ -132,9 +131,9 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
     }
 
     @Test
-    @Transactional
     @WithMockUser
-    public void createInvitation() throws Exception {
+    @Transactional
+    void createInvitation() throws Exception {
         invitationRepository.deleteAll();
 
         // Create the Invitation
@@ -155,7 +154,7 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @WithMockUser
     @Transactional
-    public void createInvitationWithExistingId() throws Exception {
+    void createInvitationWithExistingId() throws Exception {
         int databaseSizeBeforeCreate = invitationRepository.findAll().size();
 
         // Create the Invitation with an existing ID
@@ -176,7 +175,7 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @WithMockUser
     @Transactional
-    public void checkEmailIsRequired() throws Exception {
+    void checkEmailIsRequired() throws Exception {
         int databaseSizeBeforeTest = invitationRepository.findAll().size();
         // set the field null
         invitation.setEmail(null);
@@ -196,7 +195,7 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @WithMockUser
     @Transactional
-    public void checkAcceptedIsRequired() throws Exception {
+    void checkAcceptedIsRequired() throws Exception {
         int databaseSizeBeforeTest = invitationRepository.findAll().size();
         // set the field null
         invitation.setAccepted(null);
@@ -216,7 +215,7 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @WithMockUser
     @Transactional
-    public void getAllInvitations() throws Exception {
+    void getAllInvitations() throws Exception {
         // Initialize the database
         invitationRepository.saveAndFlush(invitation);
 
@@ -233,7 +232,7 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @WithMockUser
     @Transactional
-    public void getInvitation() throws Exception {
+    void getInvitation() throws Exception {
         // Initialize the database
         invitationRepository.saveAndFlush(invitation);
 
@@ -250,7 +249,7 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @WithMockUser
     @Transactional
-    public void getNonExistingInvitation() throws Exception {
+    void getNonExistingInvitation() throws Exception {
         // Get the invitation
         restInvitationMockMvc.perform(get("/api/invitations/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
@@ -258,7 +257,7 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @WithMockUser
     @Transactional
-    public void updateInvitation() throws Exception {
+    void updateInvitation() throws Exception {
         // Initialize the database
         invitationService.save(invitation);
 
@@ -293,7 +292,7 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @WithMockUser
     @Transactional
-    public void updateNonExistingInvitation() throws Exception {
+    void updateNonExistingInvitation() throws Exception {
         int databaseSizeBeforeUpdate = invitationRepository.findAll().size();
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
@@ -309,7 +308,7 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @WithMockUser
     @Transactional
-    public void deleteInvitation() throws Exception {
+    void deleteInvitation() throws Exception {
         // Initialize the database
         invitationService.save(invitation);
 
@@ -327,7 +326,7 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    public void acceptInvitationWithoutCurrentUser() throws Exception {
+    void acceptInvitationWithoutCurrentUser() throws Exception {
         restInvitationMockMvc
             .perform(post("/api/invitations/accept").content("a0d5206e-4a3f-49f9-b92d-8bf7bcd5a9ab"))
             .andExpect(status().isUnauthorized());
@@ -336,7 +335,7 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
-    public void acceptInvitationForCurrentUser() throws Exception {
+    void acceptInvitationForCurrentUser() throws Exception {
         final String token = "810b88eb-4d1b-430b-905c-ad5a387bca3b";
         final Invitation invitation = createEntity(em).user(testUser).token(token);
 
@@ -352,7 +351,7 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    public void acceptInvitationRightAfterRegistration() throws Exception {
+    void acceptInvitationRightAfterRegistration() throws Exception {
         final String token = "78024294-baf7-414f-9b12-d86c9983a71d";
         final Invitation invitation = createEntity(em).user(testUser).token(token);
 
@@ -368,7 +367,7 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    public void acceptInvitationRightAfterRegistrationWithInvalidUsername() throws Exception {
+    void acceptInvitationRightAfterRegistrationWithInvalidUsername() throws Exception {
         final String token = "78024294-baf7-414f-9b12-d86c9983a71d";
         final Invitation invitation = createEntity(em).user(testUser).token(token);
 

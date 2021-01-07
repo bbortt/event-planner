@@ -7,6 +7,7 @@ export interface ISchedulerEvent {
   startDate: Date;
   endDate: Date;
   sectionId: number;
+  originalEvent?: Event;
 }
 
 export class SchedulerEvent implements ISchedulerEvent {
@@ -15,6 +16,7 @@ export class SchedulerEvent implements ISchedulerEvent {
   startDate: Date;
   endDate: Date;
   sectionId: number;
+  originalEvent?: Event;
 
   constructor(section: Section, event: Event) {
     this.text = event.name!;
@@ -22,5 +24,6 @@ export class SchedulerEvent implements ISchedulerEvent {
     this.startDate = event.startTime!.toDate();
     this.endDate = event.endTime!.toDate();
     this.sectionId = section.id!;
+    this.originalEvent = event;
   }
 }

@@ -5,10 +5,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import io.github.bbortt.event.planner.web.rest.TestUtil;
 import org.junit.jupiter.api.Test;
 
-public class SectionTest {
+class SectionTest {
 
     @Test
-    public void equalsVerifier() throws Exception {
+    void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(Section.class);
         Section section1 = new Section();
         section1.setId(1L);
