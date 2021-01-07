@@ -16,7 +16,6 @@ import io.github.bbortt.event.planner.domain.Project;
 import io.github.bbortt.event.planner.domain.Responsibility;
 import io.github.bbortt.event.planner.domain.User;
 import io.github.bbortt.event.planner.repository.AuthorityRepository;
-import io.github.bbortt.event.planner.repository.InvitationRepository;
 import io.github.bbortt.event.planner.repository.ProjectRepository;
 import io.github.bbortt.event.planner.repository.ResponsibilityRepository;
 import io.github.bbortt.event.planner.repository.RoleRepository;
@@ -28,7 +27,6 @@ import java.util.Collections;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
  * Integration tests for the {@link ResponsibilityResource} REST controller.
  */
 @WithMockUser
-public class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT {
+class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT {
 
     private static final String TEST_USER_LOGIN = "responsibilityresourceit-login";
     private static final String TEST_ADMIN_LOGIN = "responsibilityresourceit-admin";
@@ -116,7 +114,7 @@ public class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT 
     }
 
     @BeforeEach
-    public void initTest() {
+    void initTest() {
         responsibility = createEntity(em);
 
         User user = UserResourceIT.createEntity(em);
@@ -138,7 +136,7 @@ public class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT 
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
-    public void createResponsibility() throws Exception {
+    void createResponsibility() throws Exception {
         responsibilityRepository.deleteAll();
 
         // Create the Responsibility
@@ -160,7 +158,7 @@ public class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT 
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
-    public void createResponsibilityWithExistingId() throws Exception {
+    void createResponsibilityWithExistingId() throws Exception {
         int databaseSizeBeforeCreate = responsibilityRepository.findAll().size();
 
         // Create the Responsibility with an existing ID
@@ -182,7 +180,7 @@ public class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT 
 
     @Test
     @Transactional
-    public void checkNameIsRequired() throws Exception {
+    void checkNameIsRequired() throws Exception {
         int databaseSizeBeforeTest = responsibilityRepository.findAll().size();
         // set the field null
         responsibility.setName(null);
@@ -204,7 +202,7 @@ public class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT 
     @Test
     @Transactional
     @WithMockUser(value = TEST_ADMIN_LOGIN, roles = { RolesConstants.ADMIN })
-    public void getAllResponsibilitiesIsForAdminsOnly() throws Exception {
+    void getAllResponsibilitiesIsForAdminsOnly() throws Exception {
         // Initialize the database
         responsibilityRepository.saveAndFlush(responsibility);
 
@@ -220,7 +218,7 @@ public class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT 
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
-    public void getAllResponsibilitiesDeniedForUsers() throws Exception {
+    void getAllResponsibilitiesDeniedForUsers() throws Exception {
         // Initialize the database
         responsibilityRepository.saveAndFlush(responsibility);
 
@@ -231,7 +229,7 @@ public class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT 
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
-    public void getResponsibility() throws Exception {
+    void getResponsibility() throws Exception {
         // Initialize the database
         responsibilityRepository.saveAndFlush(responsibility);
 
@@ -247,7 +245,7 @@ public class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT 
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
-    public void getNonExistingResponsibility() throws Exception {
+    void getNonExistingResponsibility() throws Exception {
         // Get the responsibility
         restResponsibilityMockMvc.perform(get("/api/responsibilities/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
@@ -255,7 +253,7 @@ public class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT 
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
-    public void updateResponsibility() throws Exception {
+    void updateResponsibility() throws Exception {
         // Initialize the database
         responsibilityService.save(responsibility);
 
@@ -289,7 +287,7 @@ public class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT 
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
-    public void updateNonExistingResponsibility() throws Exception {
+    void updateNonExistingResponsibility() throws Exception {
         int databaseSizeBeforeUpdate = responsibilityRepository.findAll().size();
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
@@ -309,7 +307,7 @@ public class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT 
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
-    public void deleteResponsibility() throws Exception {
+    void deleteResponsibility() throws Exception {
         // Initialize the database
         responsibilityService.save(responsibility);
 
@@ -328,7 +326,7 @@ public class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT 
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
-    public void getResponsibilitiesPerProject() throws Exception {
+    void getResponsibilitiesPerProject() throws Exception {
         // Test data
         final String responsibility2Name = "Responsibility1";
         final String responsibility3Name = "Responsibility2";

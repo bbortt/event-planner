@@ -20,7 +20,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.util.ReflectionTestUtils;
 
-public class TokenProviderTest {
+class TokenProviderTest {
 
     private static final long ONE_MINUTE = 60000;
 
@@ -28,7 +28,7 @@ public class TokenProviderTest {
     private TokenProvider tokenProvider;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         tokenProvider = new TokenProvider(new JHipsterProperties());
         key =
             Keys.hmacShaKeyFor(
@@ -40,14 +40,14 @@ public class TokenProviderTest {
     }
 
     @Test
-    public void testReturnFalseWhenJWThasInvalidSignature() {
+    void testReturnFalseWhenJWThasInvalidSignature() {
         boolean isTokenValid = tokenProvider.validateToken(createTokenWithDifferentSignature());
 
         assertThat(isTokenValid).isEqualTo(false);
     }
 
     @Test
-    public void testReturnFalseWhenJWTisMalformed() {
+    void testReturnFalseWhenJWTisMalformed() {
         Authentication authentication = createAuthentication();
         String token = tokenProvider.createToken(authentication);
         String invalidToken = token.substring(1);
@@ -57,7 +57,7 @@ public class TokenProviderTest {
     }
 
     @Test
-    public void testReturnFalseWhenJWTisExpired() {
+    void testReturnFalseWhenJWTisExpired() {
         ReflectionTestUtils.setField(tokenProvider, "tokenValidityInMilliseconds", -ONE_MINUTE);
 
         Authentication authentication = createAuthentication();
@@ -69,7 +69,7 @@ public class TokenProviderTest {
     }
 
     @Test
-    public void testReturnFalseWhenJWTisUnsupported() {
+    void testReturnFalseWhenJWTisUnsupported() {
         String unsupportedToken = createUnsupportedToken();
 
         boolean isTokenValid = tokenProvider.validateToken(unsupportedToken);
@@ -78,7 +78,7 @@ public class TokenProviderTest {
     }
 
     @Test
-    public void testReturnFalseWhenJWTisInvalid() {
+    void testReturnFalseWhenJWTisInvalid() {
         boolean isTokenValid = tokenProvider.validateToken("");
 
         assertThat(isTokenValid).isEqualTo(false);

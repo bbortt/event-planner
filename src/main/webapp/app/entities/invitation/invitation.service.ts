@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
-import { mapTo } from 'rxjs/operators';
 
 import { Invitation } from 'app/shared/model/invitation.model';
 

@@ -5,10 +5,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import io.github.bbortt.event.planner.web.rest.TestUtil;
 import org.junit.jupiter.api.Test;
 
-public class ProjectTest {
+class ProjectTest {
 
     @Test
-    public void equalsVerifier() throws Exception {
+    void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(Project.class);
         Project project1 = new Project();
         project1.setId(1L);

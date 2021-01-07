@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
  * Integration tests for {@link AuditEventService}.
  */
 @Transactional
-public class AuditEventServiceIT extends AbstractApplicationContextAwareIT {
+class AuditEventServiceIT extends AbstractApplicationContextAwareIT {
 
     @Autowired
     private AuditEventService auditEventService;
@@ -35,7 +35,7 @@ public class AuditEventServiceIT extends AbstractApplicationContextAwareIT {
     private PersistentAuditEvent auditEventNew;
 
     @BeforeEach
-    public void init() {
+    void init() {
         auditEventOld = new PersistentAuditEvent();
         auditEventOld.setAuditEventDate(
             ZonedDateTime.now().minus(jHipsterProperties.getAuditEvents().getRetentionPeriod() + 1, ChronoUnit.DAYS)
@@ -58,7 +58,7 @@ public class AuditEventServiceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    public void verifyOldAuditEventsAreDeleted() {
+    void verifyOldAuditEventsAreDeleted() {
         persistenceAuditEventRepository.deleteAll();
         persistenceAuditEventRepository.save(auditEventOld);
         persistenceAuditEventRepository.save(auditEventWithinRetention);

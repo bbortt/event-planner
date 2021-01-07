@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed, async } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpHeaders, HttpResponse } from '@angular/common/http';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { of } from 'rxjs';
 import { advanceTo } from 'jest-date-mock';
 
@@ -9,7 +9,7 @@ import { AuditsComponent } from 'app/admin/audits/audits.component';
 import { AuditsService } from 'app/admin/audits/audits.service';
 import { Audit } from 'app/admin/audits/audit.model';
 import { ITEMS_PER_PAGE } from 'app/shared/constants/pagination.constants';
-import { MockRouter, MockActivatedRoute } from '../../../helpers/mock-route.service';
+import { MockActivatedRoute, MockRouter } from '../../../helpers/mock-route.service';
 
 function build2DigitsDatePart(datePart: number): string {
   return `0${datePart}`.slice(-2);

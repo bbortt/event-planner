@@ -36,7 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
  * Integration tests for the {@link SectionResource} REST controller.
  */
 @WithMockUser
-public class SectionResourceIT extends AbstractApplicationContextAwareIT {
+class SectionResourceIT extends AbstractApplicationContextAwareIT {
 
     private static final String TEST_USER_LOGIN = "locationresourceit-login";
     private static final String TEST_ADMIN_LOGIN = "responsibilityresourceit-admin";
@@ -105,7 +105,7 @@ public class SectionResourceIT extends AbstractApplicationContextAwareIT {
     }
 
     @BeforeEach
-    public void initTest() {
+    void initTest() {
         section = createEntity(em);
 
         User user = UserResourceIT.createEntity(em);
@@ -127,7 +127,7 @@ public class SectionResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
-    public void createSection() throws Exception {
+    void createSection() throws Exception {
         sectionRepository.deleteAll();
 
         // Create the Section
@@ -145,7 +145,7 @@ public class SectionResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
-    public void createSectionWithExistingId() throws Exception {
+    void createSectionWithExistingId() throws Exception {
         int databaseSizeBeforeCreate = sectionRepository.findAll().size();
 
         // Create the Section with an existing ID
@@ -164,7 +164,7 @@ public class SectionResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
-    public void checkNameIsRequired() throws Exception {
+    void checkNameIsRequired() throws Exception {
         int databaseSizeBeforeTest = sectionRepository.findAll().size();
         // set the field null
         section.setName(null);
@@ -182,7 +182,7 @@ public class SectionResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(value = TEST_ADMIN_LOGIN, roles = { RolesConstants.ADMIN })
-    public void getAllSections() throws Exception {
+    void getAllSections() throws Exception {
         // Initialize the database
         sectionRepository.saveAndFlush(section);
 
@@ -198,7 +198,7 @@ public class SectionResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
-    public void getAllSectionsDeniedForUsers() throws Exception {
+    void getAllSectionsDeniedForUsers() throws Exception {
         // Initialize the database
         sectionRepository.saveAndFlush(section);
 
@@ -209,7 +209,7 @@ public class SectionResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
-    public void getSection() throws Exception {
+    void getSection() throws Exception {
         // Initialize the database
         sectionRepository.saveAndFlush(section);
 
@@ -225,7 +225,7 @@ public class SectionResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
-    public void getNonExistingSection() throws Exception {
+    void getNonExistingSection() throws Exception {
         // Get the section
         restSectionMockMvc.perform(get("/api/sections/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
@@ -233,7 +233,7 @@ public class SectionResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
-    public void updateSection() throws Exception {
+    void updateSection() throws Exception {
         // Initialize the database
         sectionService.save(section);
 
@@ -265,7 +265,7 @@ public class SectionResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
-    public void updateNonExistingSection() throws Exception {
+    void updateNonExistingSection() throws Exception {
         int databaseSizeBeforeUpdate = sectionRepository.findAll().size();
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
@@ -281,7 +281,7 @@ public class SectionResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
-    public void deleteSection() throws Exception {
+    void deleteSection() throws Exception {
         // Initialize the database
         sectionService.save(section);
 

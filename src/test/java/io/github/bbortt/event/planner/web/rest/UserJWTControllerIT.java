@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * Integration tests for the {@link UserJWTController} REST controller.
  */
-public class UserJWTControllerIT extends AbstractApplicationContextAwareIT {
+class UserJWTControllerIT extends AbstractApplicationContextAwareIT {
 
     @Autowired
     private UserRepository userRepository;
@@ -36,7 +36,7 @@ public class UserJWTControllerIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    public void testAuthorize() throws Exception {
+    void testAuthorize() throws Exception {
         User user = new User();
         user.setLogin("user-jwt-controller");
         user.setEmail("user-jwt-controller@example.com");
@@ -58,7 +58,7 @@ public class UserJWTControllerIT extends AbstractApplicationContextAwareIT {
     }
 
     @Test
-    public void testAuthorizeFails() throws Exception {
+    void testAuthorizeFails() throws Exception {
         LoginVM login = new LoginVM();
         login.setUsername("wrong-user");
         login.setPassword("wrong password");

@@ -30,7 +30,8 @@ import org.springframework.transaction.annotation.Transactional;
  * Integration tests for the {@link InvitationResource} REST controller.
  */
 @WithMockUser
-public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
+class InvitationResourceIT extends AbstractApplicationContextAwareIT {
+
     private static final String DEFAULT_EMAIL = "default@event.planner";
     private static final String UPDATED_EMAIL = "update@event.planner";
 
@@ -112,13 +113,13 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
     }
 
     @BeforeEach
-    public void initTest() {
+    void initTest() {
         invitation = createEntity(em);
     }
 
     @Test
     @Transactional
-    public void createInvitation() throws Exception {
+    void createInvitation() throws Exception {
         invitationRepository.deleteAll();
 
         // Create the Invitation
@@ -138,7 +139,7 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    public void createInvitationWithExistingId() throws Exception {
+    void createInvitationWithExistingId() throws Exception {
         int databaseSizeBeforeCreate = invitationRepository.findAll().size();
 
         // Create the Invitation with an existing ID
@@ -158,7 +159,7 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    public void checkEmailIsRequired() throws Exception {
+    void checkEmailIsRequired() throws Exception {
         int databaseSizeBeforeTest = invitationRepository.findAll().size();
         // set the field null
         invitation.setEmail(null);
@@ -177,7 +178,7 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    public void checkAcceptedIsRequired() throws Exception {
+    void checkAcceptedIsRequired() throws Exception {
         int databaseSizeBeforeTest = invitationRepository.findAll().size();
         // set the field null
         invitation.setAccepted(null);
@@ -196,7 +197,7 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    public void getAllInvitations() throws Exception {
+    void getAllInvitations() throws Exception {
         // Initialize the database
         invitationRepository.saveAndFlush(invitation);
 
@@ -212,7 +213,7 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    public void getInvitation() throws Exception {
+    void getInvitation() throws Exception {
         // Initialize the database
         invitationRepository.saveAndFlush(invitation);
 
@@ -228,14 +229,14 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    public void getNonExistingInvitation() throws Exception {
+    void getNonExistingInvitation() throws Exception {
         // Get the invitation
         restInvitationMockMvc.perform(get("/api/invitations/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
-    public void updateInvitation() throws Exception {
+    void updateInvitation() throws Exception {
         // Initialize the database
         invitationService.save(invitation);
 
@@ -269,7 +270,7 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    public void updateNonExistingInvitation() throws Exception {
+    void updateNonExistingInvitation() throws Exception {
         int databaseSizeBeforeUpdate = invitationRepository.findAll().size();
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
@@ -284,7 +285,7 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    public void deleteInvitation() throws Exception {
+    void deleteInvitation() throws Exception {
         // Initialize the database
         invitationService.save(invitation);
 

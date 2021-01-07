@@ -5,10 +5,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import io.github.bbortt.event.planner.web.rest.TestUtil;
 import org.junit.jupiter.api.Test;
 
-public class InvitationTest {
+class InvitationTest {
 
     @Test
-    public void equalsVerifier() throws Exception {
+    void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(Invitation.class);
         Invitation invitation1 = new Invitation();
         invitation1.setId(1L);

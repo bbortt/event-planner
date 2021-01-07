@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Sql({ "classpath:db/scripts/ProjectRepositoryIT_before.sql" })
 @Sql(value = { "classpath:db/scripts/ProjectRepositoryIT_after.sql" }, executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
-public class ProjectRepositoryIT extends AbstractApplicationContextAwareIT {
+class ProjectRepositoryIT extends AbstractApplicationContextAwareIT {
 
     private static final String TEST_USER_1 = "ProjectRepositoryIT-user-1";
 
@@ -28,14 +28,14 @@ public class ProjectRepositoryIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    public void findMineDoesReturnMyProjectsOnly() {
+    void findMineDoesReturnMyProjectsOnly() {
         Page<Project> projects = projectRepository.findMine(TEST_USER_1, Pageable.unpaged());
         Assertions.assertThat(projects).hasSize(2);
     }
 
     @Test
     @Transactional
-    public void findMineQueryRespectsPageable() {
+    void findMineQueryRespectsPageable() {
         PageRequest pageRequest = PageRequest.of(0, 1, Sort.by(Direction.ASC, "name"));
 
         Page<Project> projects = projectRepository.findMine(TEST_USER_1, pageRequest);

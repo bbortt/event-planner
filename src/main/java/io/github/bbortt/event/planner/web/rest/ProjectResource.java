@@ -108,7 +108,7 @@ public class ProjectResource {
     ) {
         log.debug("REST request to get a page of Projects");
 
-        Page<Project> page = projectService.findMineOrAll(loadAll.orElse(Boolean.FALSE), pageable);
+        Page<Project> page = projectService.findMineOrAll(loadAll.orElse(false), pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }

@@ -5,10 +5,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import io.github.bbortt.event.planner.web.rest.TestUtil;
 import org.junit.jupiter.api.Test;
 
-public class RoleTest {
+class RoleTest {
 
     @Test
-    public void equalsVerifier() throws Exception {
+    void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(Role.class);
         Role role1 = new Role();
         role1.setName("A");
