@@ -84,8 +84,6 @@ export class ProjectLocationUpdateComponent {
   }
 
   onRadioChange($event: any): void {
-    // eslint-disable-next-line no-console
-    console.log($event.target.defaultValue);
     if ($event.target.defaultValue === 'responsibility') {
       this.isResponsibility = true;
       this.isUser = false;
@@ -111,11 +109,21 @@ export class ProjectLocationUpdateComponent {
   }
 
   private createFromForm(): Location {
+    let responsibility;
+    let user;
+    if (this.isResponsibility) {
+      responsibility = this.editForm.get(['responsibility'])!.value;
+      user = null;
+    } else {
+      responsibility = null;
+      user = this.editForm.get(['user'])!.value;
+    }
+
     return {
       id: this.editForm.get(['id'])!.value,
       name: this.editForm.get(['name'])!.value,
-      responsibility: this.editForm.get(['responsibility'])!.value,
-      user: this.editForm.get(['user'])!.value,
+      responsibility,
+      user,
       project: this.editForm.get(['project'])!.value,
     };
   }

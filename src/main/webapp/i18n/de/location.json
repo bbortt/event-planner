@@ -21,6 +21,7 @@
       "name": "Name",
       "project": "Project",
       "responsibility": "Verantwortlichkeit",
+      "user": "Benutzer",
       "section": "Abschnitt"
     }
   }
