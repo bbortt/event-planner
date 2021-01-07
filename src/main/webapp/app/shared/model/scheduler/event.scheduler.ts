@@ -7,6 +7,7 @@ export interface ISchedulerEvent {
   startDate: Date;
   endDate: Date;
   sectionId: number;
+  responsibility?: string;
   originalEvent?: Event;
 }
 

@@ -36,8 +36,6 @@ a:not([href]):not([tabindex]):hover.dropdown-item {
   }
 
   .active {
-    //    background-color: $dropdown-link-active-bg;
-
     :hover {
       background-color: mix($dropdown-link-hover-bg, $dropdown-link-active-bg, 50%);
     }

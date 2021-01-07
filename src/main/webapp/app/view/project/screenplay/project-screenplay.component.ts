@@ -12,7 +12,7 @@ import { Project } from 'app/shared/model/project.model';
 
 import { LocationService } from 'app/entities/location/location.service';
 
-import { faCog } from '@fortawesome/free-solid-svg-icons';
+import { faChevronDown, faChevronUp, faCog } from '@fortawesome/free-solid-svg-icons';
 
 import { ADMIN, SECRETARY } from 'app/shared/constants/role.constants';
 
@@ -25,6 +25,8 @@ const ROUTE_PARAM_NAME = 'activeLocations';
 })
 export class ProjectScreenplayComponent implements OnInit, OnDestroy {
   faCog = faCog;
+  chevronDown = faChevronDown;
+  chevronUp = faChevronUp;
 
   adminRoles = [ADMIN.name, SECRETARY.name];
 
