@@ -1,14 +1,19 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { JhiLanguageService } from 'ng-jhipster';
-import { SessionStorageService } from 'ngx-webstorage';
-import { Observable, of, ReplaySubject } from 'rxjs';
+
+import { of, Observable, ReplaySubject } from 'rxjs';
 import { catchError, shareReplay, tap } from 'rxjs/operators';
+
+import { SessionStorageService } from 'ngx-webstorage';
+
+import { JhiLanguageService } from 'ng-jhipster';
+
 import { StateStorageService } from 'app/core/auth/state-storage.service';
 
-import { SERVER_API_URL } from 'app/app.constants';
 import { Account } from 'app/core/user/account.model';
+
+import { SERVER_API_URL } from 'app/app.constants';
 import { AUTHORITY_ADMIN } from 'app/shared/constants/authority.constants';
 
 @Injectable({ providedIn: 'root' })

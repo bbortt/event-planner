@@ -117,6 +117,18 @@ public class LocationService {
     }
 
     /**
+     * Find all Locations for the given project.
+     *
+     * @param projectId the project to retrieve locations for.
+     * @return the list of entities.
+     */
+    @Transactional(readOnly = true)
+    public List<Location> findAllByProjectIdJoinSections(Long projectId) {
+        log.debug("Request to get all Locations inclusive Sections for Project {}", projectId);
+        return locationRepository.findAllByProjectIdJoinSectionsOrderByNameAsc(projectId);
+    }
+
+    /**
      * Checks if the current user has access to the `Project` linked to the given `Location`, identified by id. The project access must be given by any of the `roles`. Example usage: `@PreAuthorize("@locationService.hasAccessToLocation(#location, 'ADMIN', 'SECRETARY')")`
      *
      * @param locationId the id of the location with a linked project to check.

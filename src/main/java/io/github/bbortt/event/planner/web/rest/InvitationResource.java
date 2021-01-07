@@ -22,6 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -153,18 +154,22 @@ public class InvitationResource {
             .build();
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/invitations/accept")
     public void assignCurrentUserToInvitation(@NotEmpty @RequestBody String token) {
+        log.debug("REST request to accept invitation for current user by token : {}", token);
         invitationService.assignCurrentUserToInvitation(token);
     }
 
     @PostMapping("/invitations/accept/{login}")
     public void assignUserByLoginToInvitation(@NotEmpty @RequestBody String token, @NotEmpty @PathVariable String login) {
+        log.debug("REST request to accept invitation for user '{}' by token : {}", login, token);
         invitationService.assignUserByLoginToInvitation(login, token);
     }
 
     @PostMapping("/invitations/token-validity")
     public boolean checkTokenValidity(@NotEmpty @RequestBody String token) {
+        log.debug("REST request to check token validity : {}", token);
         return invitationService.isTokenValid(token);
     }
 }

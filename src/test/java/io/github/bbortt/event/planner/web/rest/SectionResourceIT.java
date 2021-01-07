@@ -35,7 +35,6 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * Integration tests for the {@link SectionResource} REST controller.
  */
-@WithMockUser
 class SectionResourceIT extends AbstractApplicationContextAwareIT {
 
     private static final String TEST_USER_LOGIN = "locationresourceit-login";

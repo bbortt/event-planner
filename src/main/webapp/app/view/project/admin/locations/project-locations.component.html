@@ -23,7 +23,7 @@
 
     <jhi-alert></jhi-alert>
 
-    <div class="alert alert-warning" id="no-result" *ngIf="locations?.length === 0">
+    <div class="alert alert-warning" id="no-result" *ngIf="loadedLocations?.length === 0">
         <span
             jhiTranslate="eventPlannerApp.location.home.notFound">No locations found</span>
     </div>
@@ -40,7 +40,7 @@
 
                             <div class="btn-group float-right clearfix">
                                 <button type="submit"
-                                        [routerLink]="['', {outlets: {modal: ['projects', project.id, 'locations', location.id, 'edit']}}]"
+                                        [routerLink]="['', {outlets: {modal: ['projects', project!.id, 'locations', location.id, 'edit']}}]"
                                         class="btn btn-blue btn-sm">
                                     <fa-icon icon="pencil-alt"></fa-icon>
                                 </button>
