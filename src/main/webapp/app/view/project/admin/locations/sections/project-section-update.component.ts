@@ -50,7 +50,7 @@ export class ProjectSectionUpdateComponent implements OnInit {
 
   public updateForm(location: Location, section: Section): void {
     this.isNew = !section.id;
-    this.isResponsibility = !location.user;
+    this.isResponsibility = !section.user;
 
     this.responsibilityService.findAllByProject(location.project, { sort: ['name,asc'] }).subscribe(responsibilities => {
       this.responsibilities = responsibilities.body || [];
@@ -63,10 +63,10 @@ export class ProjectSectionUpdateComponent implements OnInit {
     this.editForm.patchValue({
       id: section.id,
       name: section.name,
-      responsibility: location.responsibility,
-      responsibilityAutocomplete: location.responsibility?.name,
-      user: location.user,
-      userAutocomplete: location.user?.login,
+      responsibility: section.responsibility,
+      responsibilityAutocomplete: section.responsibility?.name,
+      user: section.user,
+      userAutocomplete: section.user?.login,
       location,
     });
   }
