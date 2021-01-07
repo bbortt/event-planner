@@ -38,6 +38,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     List<User> findTop5ByEmailContainingIgnoreCaseOrLoginContainingIgnoreCase(String email, String login);
 
-    @Query("SELECT u FROM User u LEFT JOIN u.invitations i WHERE i.project.id =: projectId")
+    @Query("SELECT u FROM User u LEFT JOIN u.invitations i WHERE i.project.id =:projectId")
     List<User> findAllByProjectId(@Param("projectId") long projectId, Sort sort);
 }

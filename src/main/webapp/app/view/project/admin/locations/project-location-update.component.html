@@ -42,12 +42,10 @@
                     <label class="form-control-label"
                            jhiTranslate="eventPlannerApp.location.responsibility"
                            for="field_responsibilityUser"> Responsibility </label>
-                    <input type="radio" value="responsibility" name="responsibilityUser"
-                           [checked]="true"
-                           (change)="onRadioChange($event.target.value)"> Responsibility
+                    <input type="radio" value="responsibility" name="responsibilityUser" [checked]="true"
+                           (change)="onRadioChange($event)"> Responsibility
                     <input type="radio" value="user" name="responsibilityUser"
-                           [(ngModel)]="responsibility.value" name="" value="i" [checked]="true"
-                           (change)="onRadioChange($event.target.value)"> User
+                           (change)="onRadioChange($event)"> User
                 </div>
 
                 <div *ngIf="isResponsibility" class="form-group">
@@ -65,6 +63,24 @@
                         (onSelectionChanged)="responsibilitySelected($event)"
                         [showClearButton]="true"
                         [isValid]="!(editForm.get('responsibility')!.invalid && (editForm.get('responsibility')!.dirty || editForm.get('responsibility')!.touched))">
+                    </dx-autocomplete>
+                </div>
+
+                <div *ngIf="isUser" class="form-group">
+                    <label class="form-control-label"
+
+                           for="field_user"> User </label>
+                    <dx-autocomplete
+                        class="form-control"
+                        name="user"
+                        id="field_user"
+                        formControlName="userAutocomplete"
+                        [placeholder]="'global.form.search' | translate"
+                        [dataSource]="users"
+                        valueExpr="login"
+                        (onSelectionChanged)="userSelected($event)"
+                        [showClearButton]="true"
+                        [isValid]="!(editForm.get('user')!.invalid && (editForm.get('user')!.dirty || editForm.get('user')!.touched))">
                     </dx-autocomplete>
                 </div>
 
