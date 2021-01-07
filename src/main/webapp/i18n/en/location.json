@@ -21,6 +21,7 @@
       "name": "Name",
       "project": "Project",
       "responsibility": "Responsibility",
+      "user": "User",
       "section": "Section"
     }
   }

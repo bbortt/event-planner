@@ -38,6 +38,56 @@
                     </div>
                 </div>
 
+                <div class="form-group">
+                    <input type="radio" value="responsibility" name="responsibilityUser"
+                           [checked]="isResponsibility"
+                           (change)="onRadioChange($event)"> <span
+                    jhiTranslate="eventPlannerApp.section.responsibility">Responsibility</span>
+
+                    <input type="radio" value="user" name="responsibilityUser"
+                           [checked]="!isResponsibility"
+                           (change)="onRadioChange($event)"> <span
+                    jhiTranslate="eventPlannerApp.section.user">User</span>
+                </div>
+
+                <div *ngIf="isResponsibility; else userAutocomplete" class="form-group">
+                    <label class="form-control-label"
+                           jhiTranslate="eventPlannerApp.section.responsibility"
+                           for="field_responsibility">Responsibility</label>
+                    <dx-autocomplete
+                        class="dx-form-control"
+                        name="responsibility"
+                        id="field_responsibility"
+                        formControlName="responsibilityAutocomplete"
+                        [placeholder]="'global.form.search' | translate"
+                        [dataSource]="responsibilities"
+                        valueExpr="name"
+                        (onSelectionChanged)="responsibilitySelected($event)"
+                        [showClearButton]="true"
+                        [isValid]="!(editForm.get('responsibility')!.invalid && (editForm.get('responsibility')!.dirty || editForm.get('responsibility')!.touched))">
+                    </dx-autocomplete>
+                </div>
+
+                <ng-template #userAutocomplete>
+                    <div class="form-group">
+                        <label class="form-control-label"
+                               jhiTranslate="eventPlannerApp.section.user"
+                               for="field_user">User</label>
+                        <dx-autocomplete
+                            class="dx-form-control"
+                            name="user"
+                            id="field_user"
+                            formControlName="userAutocomplete"
+                            [placeholder]="'global.form.search' | translate"
+                            [dataSource]="users"
+                            valueExpr="login"
+                            (onSelectionChanged)="userSelected($event)"
+                            [showClearButton]="true"
+                            [isValid]="!(editForm.get('user')!.invalid && (editForm.get('user')!.dirty || editForm.get('user')!.touched))">
+                        </dx-autocomplete>
+                    </div>
+                </ng-template>
+
                 <div>
                     <button type="button" id="cancel-save" class="btn btn-negative btn-gray"
                             (click)="previousState()">

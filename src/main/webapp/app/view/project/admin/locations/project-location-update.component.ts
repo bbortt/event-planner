@@ -10,10 +10,12 @@ import { DxAutocompleteComponent } from 'devextreme-angular';
 
 import { LocationService } from 'app/entities/location/location.service';
 import { ResponsibilityService } from 'app/entities/responsibility/responsibility.service';
+import { UserService } from 'app/core/user/user.service';
 
 import { Location } from 'app/shared/model/location.model';
 import { Project } from 'app/shared/model/project.model';
 import { Responsibility } from 'app/shared/model/responsibility.model';
+import { User } from 'app/core/user/user.model';
 
 @Component({
   selector: 'app-location-update',
@@ -26,16 +28,20 @@ export class ProjectLocationUpdateComponent {
 
   isNew = false;
   isSaving = false;
+  isResponsibility = false;
 
   project?: Project;
 
   responsibilities: Responsibility[] = [];
+  users: User[] = [];
 
   editForm = this.fb.group({
     id: [],
     name: [null, [Validators.required, Validators.maxLength(50)]],
     responsibility: [],
     responsibilityAutocomplete: [],
+    user: [],
+    userAutocomplete: [],
     project: [],
   });
 
@@ -43,13 +49,20 @@ export class ProjectLocationUpdateComponent {
     protected locationService: LocationService,
     private eventManager: JhiEventManager,
     private fb: FormBuilder,
-    private responsibilityService: ResponsibilityService
+    private responsibilityService: ResponsibilityService,
+    private userService: UserService
   ) {}
 
   public updateForm(project: Project, location: Location): void {
     this.isNew = !location.id;
+    this.isResponsibility = !location.user;
+
     this.responsibilityService.findAllByProject(project, { sort: ['name,asc'] }).subscribe(responsibilities => {
       this.responsibilities = responsibilities.body || [];
+    });
+
+    this.userService.findAllByProject(project, { sort: ['login,asc'] }).subscribe(users => {
+      this.users = users.body || [];
     });
 
     this.editForm.patchValue({
@@ -57,12 +70,22 @@ export class ProjectLocationUpdateComponent {
       name: location.name,
       responsibility: location.responsibility,
       responsibilityAutocomplete: location.responsibility?.name,
+      user: location.user,
+      userAutocomplete: location.user?.login,
       project,
     });
   }
 
   responsibilitySelected($event: any): void {
     this.editForm.get('responsibility')!.setValue($event.selectedItem);
+  }
+
+  userSelected($event: any): void {
+    this.editForm.get('user')!.setValue($event.selectedItem);
+  }
+
+  onRadioChange($event: any): void {
+    this.isResponsibility = $event.target.defaultValue === 'responsibility';
   }
 
   previousState(): void {
@@ -81,10 +104,21 @@ export class ProjectLocationUpdateComponent {
   }
 
   private createFromForm(): Location {
+    let responsibility;
+    let user;
+    if (this.isResponsibility) {
+      responsibility = this.editForm.get(['responsibility'])!.value;
+      user = null;
+    } else {
+      responsibility = null;
+      user = this.editForm.get(['user'])!.value;
+    }
+
     return {
       id: this.editForm.get(['id'])!.value,
       name: this.editForm.get(['name'])!.value,
-      responsibility: this.editForm.get(['responsibility'])!.value,
+      responsibility,
+      user,
       project: this.editForm.get(['project'])!.value,
     };
   }
