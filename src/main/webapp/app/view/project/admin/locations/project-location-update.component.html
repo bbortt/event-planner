@@ -43,9 +43,10 @@
                            jhiTranslate="eventPlannerApp.location.responsibility"
                            for="field_responsibilityUser"> Responsibility </label>
                     <br>
-                    <input jhiTranslate="eventPlannerApp.location.responsibility" type="radio" value="responsibility" name="responsibilityUser" [checked]="true"
+                    <input type="radio" value="responsibility" name="responsibilityUser" [checked]="isResponsibility"
                            (change)="onRadioChange($event)"> <span jhiTranslate="eventPlannerApp.location.responsibility">Responsibility</span>
-                    <input type="radio" value="user" name="responsibilityUser"
+
+                    <input type="radio" value="user" name="responsibilityUser" [checked]="!isResponsibility"
                            (change)="onRadioChange($event)"> <span jhiTranslate="eventPlannerApp.location.user">User</span>
                 </div>
 
@@ -67,7 +68,7 @@
                     </dx-autocomplete>
                 </div>
 
-                <div *ngIf="isUser" class="form-group">
+                <div *ngIf="!isResponsibility" class="form-group">
                     <label class="form-control-label"
                            jhiTranslate="eventPlannerApp.location.user"
                            for="field_user"> User </label>

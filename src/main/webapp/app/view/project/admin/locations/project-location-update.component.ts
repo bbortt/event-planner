@@ -28,8 +28,7 @@ export class ProjectLocationUpdateComponent {
 
   isNew = false;
   isSaving = false;
-  isResponsibility = true;
-  isUser = false;
+  isResponsibility = false;
 
   project?: Project;
 
@@ -56,6 +55,8 @@ export class ProjectLocationUpdateComponent {
 
   public updateForm(project: Project, location: Location): void {
     this.isNew = !location.id;
+    this.isResponsibility = !location.user;
+
     this.responsibilityService.findAllByProject(project, { sort: ['name,asc'] }).subscribe(responsibilities => {
       this.responsibilities = responsibilities.body || [];
     });
@@ -84,13 +85,7 @@ export class ProjectLocationUpdateComponent {
   }
 
   onRadioChange($event: any): void {
-    if ($event.target.defaultValue === 'responsibility') {
-      this.isResponsibility = true;
-      this.isUser = false;
-    } else {
-      this.isResponsibility = false;
-      this.isUser = true;
-    }
+    this.isResponsibility = $event.target.defaultValue === 'responsibility';
   }
 
   previousState(): void {
