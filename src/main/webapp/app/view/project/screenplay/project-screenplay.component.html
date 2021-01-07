@@ -38,7 +38,7 @@
         <ngb-panel *ngFor="let location of locations" id="location-{{location.id}}">
             <ng-template ngbPanelTitle>
                 <div class="d-flex align-items-left">
-                    <strong>{{location.name}}</strong>
+                    <h3 class="location-header">{{location.name}}</h3>
                 </div>
             </ng-template>
             <ng-template ngbPanelContent>
