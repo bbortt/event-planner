@@ -280,4 +280,19 @@ devextreme inputs in combination with scss class `form-control` styling
   }
 }
 
+.dx-toolbar {
+  .dx-popup-done {
+    @extend .btn;
+    @extend .btn-negative;
+    @extend .btn-green;
+    padding: 0.25rem 0.5rem;
+  }
+
+  .dx-popup-cancel {
+    @extend .btn;
+    @extend .btn-negative;
+    @extend .btn-gray;
+    padding: 0.25rem 0.5rem;
+  }
+}
 /* jhipster-needle-scss-add-main JHipster will add new css style */
