@@ -200,7 +200,16 @@ public class UserResource {
     @PostMapping("/users/findByEmailOrLogin")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<List<UserDTO>> findByEmailOrLogin(@Valid @RequestBody FindByEmailOrLogin findByEmailOrLogin) {
+        log.debug("REST request to search User by login or email: {}", findByEmailOrLogin);
         return ResponseEntity.ok(userService.findByEmailOrLoginContaining(findByEmailOrLogin.getEmailOrLogin()));
+    }
+
+    @GetMapping("/users/project/{projectId}")
+    @PreAuthorize("@projectService.hasAccessToProject(#projectId, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")")
+    public ResponseEntity<List<User>> getUsersByProjectId(@PathVariable Long projectId, Sort sort) {
+        log.debug("REST request to get Users by projectId: {}", projectId);
+        List<User> users = userService.findAllByProjectId(projectId, sort);
+        return ResponseEntity.ok(users);
     }
 
     private static class FindByEmailOrLogin {
@@ -216,12 +225,5 @@ public class UserResource {
         public void setEmailOrLogin(String emailOrLogin) {
             this.emailOrLogin = emailOrLogin;
         }
-    }
-
-    @GetMapping("/users/project/{projectId}")
-    @PreAuthorize("@projectService.hasAccessToProject(#projectId, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")")
-    public ResponseEntity<List<User>> getUsersByProjectId(@PathVariable Long projectId, Sort sort) {
-        List<User> users = userService.findAllByProjectId(projectId, sort);
-        return ResponseEntity.ok(users);
     }
 }

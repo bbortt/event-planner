@@ -333,6 +333,7 @@ public class UserService {
      */
     @Transactional(readOnly = true)
     public List<UserDTO> findByEmailOrLoginContaining(String emailOrLogin) {
+        log.debug("Request to get all Users by login or email: {}", emailOrLogin);
         return userRepository
             .findTop5ByEmailContainingIgnoreCaseOrLoginContainingIgnoreCase(emailOrLogin, emailOrLogin)
             .stream()

@@ -6,14 +6,14 @@ import { Observable } from 'rxjs';
 
 import { JhiEventManager } from 'ng-jhipster';
 
+import { ResponsibilityService } from 'app/entities/responsibility/responsibility.service';
 import { SectionService } from 'app/entities/section/section.service';
+import { UserService } from 'app/core/user/user.service';
 
 import { Location } from 'app/shared/model/location.model';
-import { Section } from 'app/shared/model/section.model';
 import { Responsibility } from 'app/shared/model/responsibility.model';
+import { Section } from 'app/shared/model/section.model';
 import { User } from 'app/core/user/user.model';
-import { ResponsibilityService } from 'app/entities/responsibility/responsibility.service';
-import { UserService } from 'app/core/user/user.service';
 
 @Component({
   selector: 'app-section-update',
