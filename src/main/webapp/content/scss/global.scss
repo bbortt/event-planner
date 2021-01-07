@@ -30,17 +30,23 @@ a:not([href]):not([tabindex]):hover.dropdown-item {
 }
 
 /* override .dropdown-item.active background-color on hover */
-.dropdown-item.active:hover {
-  background-color: mix($dropdown-link-hover-bg, $dropdown-link-active-bg, 50%);
+.dropdown-item {
+  :hover {
+    color: $dropdown-link-hover-color;
+  }
+
+  .active {
+    //    background-color: $dropdown-link-active-bg;
+
+    :hover {
+      background-color: mix($dropdown-link-hover-bg, $dropdown-link-active-bg, 50%);
+    }
+  }
 }
 
 a:hover {
   /* make sure browsers use the pointer cursor for anchors, even with no href */
   cursor: pointer;
-}
-
-.dropdown-item:hover {
-  color: $dropdown-link-hover-color;
 }
 
 /* ==========================================================================
@@ -264,4 +270,29 @@ devextreme inputs in combination with scss class `form-control` styling
   min-height: 0;
 }
 
+.dx-calendar-navigator {
+  .dx-calendar-caption-button {
+    left: 0;
+  }
+
+  .dx-button {
+    position: relative;
+  }
+}
+
+.dx-toolbar {
+  .dx-popup-done {
+    @extend .btn;
+    @extend .btn-negative;
+    @extend .btn-green;
+    padding: 0.25rem 0.5rem;
+  }
+
+  .dx-popup-cancel {
+    @extend .btn;
+    @extend .btn-negative;
+    @extend .btn-gray;
+    padding: 0.25rem 0.5rem;
+  }
+}
 /* jhipster-needle-scss-add-main JHipster will add new css style */

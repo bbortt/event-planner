@@ -3,7 +3,7 @@ import { Section } from 'app/shared/model/section.model';
 export interface ISchedulerSection {
   id: number;
   text: string;
-  color: string;
+  color?: string;
 }
 
 export class SchedulerSection implements ISchedulerSection {
@@ -14,6 +14,6 @@ export class SchedulerSection implements ISchedulerSection {
   constructor(section: Section) {
     this.id = section.id!;
     this.text = section.name!;
-    this.color = '#FFCC00';
+    this.color = '#17a2b8';
   }
 }
