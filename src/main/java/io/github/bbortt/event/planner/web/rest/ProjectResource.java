@@ -5,6 +5,7 @@ import io.github.bbortt.event.planner.security.AuthoritiesConstants;
 import io.github.bbortt.event.planner.security.RolesConstants;
 import io.github.bbortt.event.planner.service.ProjectService;
 import io.github.bbortt.event.planner.service.dto.CreateProjectDTO;
+import io.github.bbortt.event.planner.service.exception.EntityNotFoundException;
 import io.github.bbortt.event.planner.web.rest.errors.BadRequestAlertException;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
@@ -67,7 +68,7 @@ public class ProjectResource {
         Project result = projectService.create(createProjectDTO);
         return ResponseEntity
             .created(new URI("/api/projects/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getName()))
             .body(result);
     }
 
@@ -88,14 +89,14 @@ public class ProjectResource {
         Project result = projectService.save(project);
         return ResponseEntity
             .ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, project.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, project.getName()))
             .body(result);
     }
 
     /**
      * {@code GET  /projects} : get all the projects.
      *
-     * @param loadAll loads projects for current user by default.
+     * @param loadAll  loads projects for current user by default.
      * @param pageable the pagination information.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of projects in body.
      */
@@ -107,7 +108,7 @@ public class ProjectResource {
     ) {
         log.debug("REST request to get a page of Projects");
 
-        Page<Project> page = projectService.findMineOrAll(loadAll.orElse(Boolean.FALSE), pageable);
+        Page<Project> page = projectService.findMineOrAll(loadAll.orElse(false), pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -146,10 +147,8 @@ public class ProjectResource {
     @PreAuthorize("hasAnyRole(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<Void> deleteProject(@PathVariable Long id) {
         log.debug("REST request to delete Project : {}", id);
+        String name = projectService.findNameByProjectId(id).orElseThrow(EntityNotFoundException::new);
         projectService.delete(id);
-        return ResponseEntity
-            .noContent()
-            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
-            .build();
+        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, name)).build();
     }
 }

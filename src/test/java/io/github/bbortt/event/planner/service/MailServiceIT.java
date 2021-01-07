@@ -41,7 +41,8 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 /**
  * Integration tests for {@link MailService}.
  */
-public class MailServiceIT extends AbstractApplicationContextAwareIT {
+class MailServiceIT extends AbstractApplicationContextAwareIT {
+
     private static final String[] languages = {
         "de",
         "en",
@@ -68,14 +69,14 @@ public class MailServiceIT extends AbstractApplicationContextAwareIT {
     private MailService mailService;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         MockitoAnnotations.initMocks(this);
         doNothing().when(javaMailSender).send(any(MimeMessage.class));
         mailService = new MailService(jHipsterProperties, javaMailSender, messageSource, templateEngine);
     }
 
     @Test
-    public void testSendEmail() throws Exception {
+    void testSendEmail() throws Exception {
         mailService.sendEmail("john.doe@example.com", "testSubject", "testContent", false, false);
         verify(javaMailSender).send(messageCaptor.capture());
         MimeMessage message = messageCaptor.getValue();
@@ -88,7 +89,7 @@ public class MailServiceIT extends AbstractApplicationContextAwareIT {
     }
 
     @Test
-    public void testSendHtmlEmail() throws Exception {
+    void testSendHtmlEmail() throws Exception {
         mailService.sendEmail("john.doe@example.com", "testSubject", "testContent", false, true);
         verify(javaMailSender).send(messageCaptor.capture());
         MimeMessage message = messageCaptor.getValue();
@@ -101,7 +102,7 @@ public class MailServiceIT extends AbstractApplicationContextAwareIT {
     }
 
     @Test
-    public void testSendMultipartEmail() throws Exception {
+    void testSendMultipartEmail() throws Exception {
         mailService.sendEmail("john.doe@example.com", "testSubject", "testContent", true, false);
         verify(javaMailSender).send(messageCaptor.capture());
         MimeMessage message = messageCaptor.getValue();
@@ -118,7 +119,7 @@ public class MailServiceIT extends AbstractApplicationContextAwareIT {
     }
 
     @Test
-    public void testSendMultipartHtmlEmail() throws Exception {
+    void testSendMultipartHtmlEmail() throws Exception {
         mailService.sendEmail("john.doe@example.com", "testSubject", "testContent", true, true);
         verify(javaMailSender).send(messageCaptor.capture());
         MimeMessage message = messageCaptor.getValue();
@@ -135,7 +136,7 @@ public class MailServiceIT extends AbstractApplicationContextAwareIT {
     }
 
     @Test
-    public void testSendEmailFromTemplate() throws Exception {
+    void testSendEmailFromTemplate() throws Exception {
         User user = new User();
         user.setLogin("john");
         user.setEmail("john.doe@example.com");
@@ -151,7 +152,7 @@ public class MailServiceIT extends AbstractApplicationContextAwareIT {
     }
 
     @Test
-    public void testSendActivationEmail() throws Exception {
+    void testSendActivationEmail() throws Exception {
         User user = new User();
         user.setLangKey(Constants.DEFAULT_LANGUAGE);
         user.setLogin("john");
@@ -166,7 +167,7 @@ public class MailServiceIT extends AbstractApplicationContextAwareIT {
     }
 
     @Test
-    public void testCreationEmail() throws Exception {
+    void testCreationEmail() throws Exception {
         User user = new User();
         user.setLangKey(Constants.DEFAULT_LANGUAGE);
         user.setLogin("john");
@@ -181,7 +182,7 @@ public class MailServiceIT extends AbstractApplicationContextAwareIT {
     }
 
     @Test
-    public void testSendPasswordResetMail() throws Exception {
+    void testSendPasswordResetMail() throws Exception {
         User user = new User();
         user.setLangKey(Constants.DEFAULT_LANGUAGE);
         user.setLogin("john");
@@ -196,7 +197,7 @@ public class MailServiceIT extends AbstractApplicationContextAwareIT {
     }
 
     @Test
-    public void testSendEmailWithException() {
+    void testSendEmailWithException() {
         doThrow(MailSendException.class).when(javaMailSender).send(any(MimeMessage.class));
         try {
             mailService.sendEmail("john.doe@example.com", "testSubject", "testContent", false, false);
@@ -206,7 +207,7 @@ public class MailServiceIT extends AbstractApplicationContextAwareIT {
     }
 
     @Test
-    public void testSendLocalizedEmailForAllSupportedLanguages() throws Exception {
+    void testSendLocalizedEmailForAllSupportedLanguages() throws Exception {
         User user = new User();
         user.setLogin("john");
         user.setEmail("john.doe@example.com");

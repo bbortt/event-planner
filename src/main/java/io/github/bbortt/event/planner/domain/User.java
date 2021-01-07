@@ -3,7 +3,6 @@ package io.github.bbortt.event.planner.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.github.bbortt.event.planner.config.Constants;
-import io.swagger.models.auth.In;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
@@ -55,7 +54,7 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @NotNull
     @JsonIgnore
     @Size(min = 60, max = 60)
-    @Column(name = "password_hash", length = 60, nullable = false)
+    @Column(name = "password_hash", length = 60, nullable = false, columnDefinition = "bpchar(60)")
     private String password;
 
     @Size(max = 50)
@@ -261,11 +260,11 @@ public class User extends AbstractAuditingEntity implements Serializable {
         return sections;
     }
 
-    public void setSections(Set<Section> events) {
+    public void setSections(Set<Section> sections) {
         this.sections = sections;
     }
 
-    public User sections(Set<Section> events) {
+    public User sections(Set<Section> sections) {
         this.sections = sections;
         return this;
     }

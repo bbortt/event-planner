@@ -23,7 +23,9 @@
       "project": "Project",
       "user": "Benutzer",
       "role": "Rolle",
-      "responsibility": "Verantwortung"
+      "responsibility": "Verantwortung",
+      "acceptViaLoginMessage": "Melden Sie sich an, um die Einladung zu akzeptieren.",
+      "acceptViaRegisterMessage": "Registrieren Sie sich, um die Einladung zu akzeptieren."
     }
   }
 }

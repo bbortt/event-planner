@@ -12,6 +12,10 @@
 [![codecov](https://codecov.io/gh/bbortt/event-planner/branch/canary/graph/badge.svg?token=NF44ZR04HH)](https://codecov.io/gh/bbortt/event-planner)
 [![License: Apache 2](https://img.shields.io/badge/License-Apache2-blue.svg?label=license)](https://github.com/bbortt/event-planner/blob/master/LICENSE)
 
+## Documentation
+
+To answer the most frequently asked questions, we have created the [Wiki](https://github.com/bbortt/event-planner/wiki).
+
 ## Development
 
 For any questions regarding the local development consider reading the [`DEVELOPMENT.md`](https://github.com/bbortt/event-planner/blob/canary/DEVELOPMENT.md)

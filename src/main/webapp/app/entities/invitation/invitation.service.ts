@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
+
 import { Observable } from 'rxjs';
 
-import { SERVER_API_URL } from 'app/app.constants';
-import { createRequestOption } from 'app/shared/util/request-util';
 import { Invitation } from 'app/shared/model/invitation.model';
+
+import { createRequestOption } from 'app/shared/util/request-util';
+
+import { SERVER_API_URL } from 'app/app.constants';
 
 type EntityResponseType = HttpResponse<Invitation>;
 type EntityArrayResponseType = HttpResponse<Invitation[]>;
@@ -39,5 +42,17 @@ export class InvitationService {
   findAllByProjectId(projectId: number, req?: any): Observable<HttpResponse<Invitation[]>> {
     const options = createRequestOption(req);
     return this.http.get<Invitation[]>(`${this.resourceUrl}/project/${projectId}`, { params: options, observe: 'response' });
+  }
+
+  assignUserByLoginToInvitation(login: string, token: string): Observable<void> {
+    return this.http.post<void>(`${this.resourceUrl}/accept/${login}`, token);
+  }
+
+  assignCurrentUserToInvitation(token: string): Observable<void> {
+    return this.http.post<void>(`${this.resourceUrl}/accept`, token);
+  }
+
+  checkTokenValidity(token: string): Observable<boolean> {
+    return this.http.post<boolean>(`${this.resourceUrl}/token-validity`, token);
   }
 }
