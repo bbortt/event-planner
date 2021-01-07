@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -80,7 +81,7 @@ public class InvitationService {
      * Find all Invitations for the given project.
      *
      * @param projectId the id of the project to retrieve invitations for.
-     * @param pageable the pagination information.
+     * @param pageable  the pagination information.
      * @return the list of entities.
      */
     @Transactional(readOnly = true)
@@ -89,20 +90,41 @@ public class InvitationService {
         return invitationRepository.findAllByProjectId(projectId, pageable);
     }
 
+    /**
+     * Accept the invitation identified by the given token, assign the current user.
+     *
+     * @param token the invitation token.
+     */
     @Transactional
+    @PreAuthorize("isAuthenticated()")
     public void assignCurrentUserToInvitation(String token) {
+        log.debug("Request to accept invitation for current user by token : {}", token);
         String login = SecurityUtils.getCurrentUserLogin().orElseThrow(IllegalArgumentException::new);
         assignUserByLoginToInvitation(login, token);
     }
 
+    /**
+     * Accept the invitation identified by the given token, assign the user identified by `login`.
+     *
+     * @param login the user login.
+     * @param token the invitation token.
+     */
     @Transactional
     public void assignUserByLoginToInvitation(String login, String token) {
+        log.debug("Request to accept invitation for user '{}' by token : {}", login, token);
         User user = userRepository.findOneByLogin(login).orElseThrow(IllegalArgumentException::new);
         invitationRepository.assignUserToInvitation(user.getId(), token);
     }
 
+    /**
+     * Check whether the `token` exists.
+     *
+     * @param token the invitation token to check.
+     * @return true if the token is valid.
+     */
     @Transactional(readOnly = true)
     public boolean isTokenValid(String token) {
+        log.debug("Request to check token validity : {}", token);
         return invitationRepository.findByToken(token).isPresent();
     }
 }

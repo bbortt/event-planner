@@ -1,10 +1,17 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
+
 import { Observable } from 'rxjs';
 
-import { SERVER_API_URL } from 'app/app.constants';
-import { createRequestOption, Pagination } from 'app/shared/util/request-util';
 import { User } from './user.model';
+import { Project } from 'app/shared/model/project.model';
+import { Responsibility } from 'app/shared/model/responsibility.model';
+
+import { createRequestOption, Pagination } from 'app/shared/util/request-util';
+
+import { SERVER_API_URL } from 'app/app.constants';
+
+type EntityArrayResponseType = HttpResponse<User[]>;
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -39,5 +46,13 @@ export class UserService {
 
   findByEmailOrLogin(emailOrLogin: string): Observable<User[]> {
     return this.http.post<User[]>(`${this.resourceUrl}/findByEmailOrLogin`, { emailOrLogin });
+  }
+
+  findAllByProject(project: Project, req?: any): Observable<EntityArrayResponseType> {
+    const options = createRequestOption(req);
+    return this.http.get<Responsibility[]>(`${this.resourceUrl}/project/${project.id!}`, {
+      params: options,
+      observe: 'response',
+    });
   }
 }

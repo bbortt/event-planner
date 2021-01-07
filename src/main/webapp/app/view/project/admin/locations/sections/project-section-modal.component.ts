@@ -21,6 +21,7 @@ export class ProjectSectionModalComponent implements AfterViewInit, OnDestroy {
           return true;
         },
       });
+
       (this.modalRef.componentInstance as ProjectSectionUpdateComponent).updateForm(location ? location : {}, section ? section : {});
     });
   }

@@ -20,6 +20,7 @@ export class CreateProjectModalComponent implements AfterViewInit, OnDestroy {
         return true;
       },
     });
+
     (this.modalRef.componentInstance as ProjectCreateComponent).cancelEnabled = false;
   }
 

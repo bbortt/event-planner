@@ -1,11 +1,16 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Data, Router } from '@angular/router';
+
 import { Subscription } from 'rxjs';
+import { tap } from 'rxjs/operators';
+
 import { JhiEventManager } from 'ng-jhipster';
+
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { LocationService } from 'app/entities/location/location.service';
+import { SectionService } from 'app/entities/section/section.service';
 
 import { Location } from 'app/shared/model/location.model';
 import { Project } from 'app/shared/model/project.model';
@@ -13,7 +18,6 @@ import { Section } from 'app/shared/model/section.model';
 
 import { ProjectLocationDeleteDialogComponent } from 'app/view/project/admin/locations/project-location-delete-dialog.component';
 import { ProjectSectionDeleteDialogComponent } from 'app/view/project/admin/locations/sections/project-section-delete-dialog.component';
-import { SectionService } from 'app/entities/section/section.service';
 
 import { ADMIN } from 'app/shared/constants/role.constants';
 
@@ -41,12 +45,15 @@ export class ProjectLocationsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.activatedRoute.data.subscribe(({ project }) => {
-      this.project = project;
-      this.loadLocations();
-      this.registerChangeInLocations();
-      this.registerChangeInSections();
-    });
+    this.activatedRoute.data
+      .pipe(
+        tap((data: Data) => (this.project = data.project)),
+        tap(() => this.loadLocations())
+      )
+      .subscribe(() => {
+        this.registerChangeInLocations();
+        this.registerChangeInSections();
+      });
   }
 
   ngOnDestroy(): void {
@@ -64,15 +71,8 @@ export class ProjectLocationsComponent implements OnInit, OnDestroy {
   }
 
   private loadLocations(): void {
-    this.locationService.findAllByProject(this.project!, { sort: ['name,asc'] }).subscribe((locations: HttpResponse<Location[]>) => {
-      this.loadedLocations = locations.body || [];
-
-      this.loadedLocations.forEach(location =>
-        this.sectionService
-          .findAllByLocation(location, { sort: ['name,asc'] })
-          .subscribe((sections: HttpResponse<Section[]>) => (location.sections = sections.body || []))
-      );
-
+    this.locationService.findAllByProjectInclusiveSections(this.project!).subscribe((response: HttpResponse<Location[]>) => {
+      this.loadedLocations = response.body || [];
       this.locations = this.loadedLocations;
     });
   }

@@ -15,8 +15,11 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface LocationRepository extends JpaRepository<Location, Long> {
-    @EntityGraph(attributePaths = { "project", "responsibility" })
+    @EntityGraph(attributePaths = { "project", "responsibility", "user" })
     List<Location> findAllByProjectId(Long projectId, Sort sort);
+
+    @Query("SELECT DISTINCT l FROM Location l LEFT JOIN FETCH l.sections WHERE l.project.id = :projectId ORDER BY l.name")
+    List<Location> findAllByProjectIdJoinSectionsOrderByNameAsc(@Param("projectId") Long projectId);
 
     @Query("SELECT l.name FROM Location l WHERE l.id = :locationId")
     Optional<String> findNameByLocationId(@Param("locationId") Long locationId);

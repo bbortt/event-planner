@@ -4,6 +4,7 @@ import io.github.bbortt.event.planner.config.Constants;
 import io.github.bbortt.event.planner.domain.User;
 import io.github.bbortt.event.planner.repository.UserRepository;
 import io.github.bbortt.event.planner.security.AuthoritiesConstants;
+import io.github.bbortt.event.planner.security.RolesConstants;
 import io.github.bbortt.event.planner.service.MailService;
 import io.github.bbortt.event.planner.service.UserService;
 import io.github.bbortt.event.planner.service.dto.UserDTO;
@@ -25,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -86,7 +88,7 @@ public class UserResource {
      *
      * @param userDTO the user to create.
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new user, or with status {@code 400 (Bad Request)} if the login or email is already in use.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     * @throws URISyntaxException       if the Location URI syntax is incorrect.
      * @throws BadRequestAlertException {@code 400 (Bad Request)} if the login or email is already in use.
      */
     @PostMapping("/users")
@@ -198,7 +200,16 @@ public class UserResource {
     @PostMapping("/users/findByEmailOrLogin")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<List<UserDTO>> findByEmailOrLogin(@Valid @RequestBody FindByEmailOrLogin findByEmailOrLogin) {
+        log.debug("REST request to search User by login or email: {}", findByEmailOrLogin);
         return ResponseEntity.ok(userService.findByEmailOrLoginContaining(findByEmailOrLogin.getEmailOrLogin()));
+    }
+
+    @GetMapping("/users/project/{projectId}")
+    @PreAuthorize("@projectService.hasAccessToProject(#projectId, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")")
+    public ResponseEntity<List<User>> getUsersByProjectId(@PathVariable Long projectId, Sort sort) {
+        log.debug("REST request to get Users by projectId: {}", projectId);
+        List<User> users = userService.findAllByProjectId(projectId, sort);
+        return ResponseEntity.ok(users);
     }
 
     private static class FindByEmailOrLogin {

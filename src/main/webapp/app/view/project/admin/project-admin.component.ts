@@ -39,6 +39,7 @@ export class ProjectAdminComponent implements OnInit, OnDestroy {
         this.router.navigate(['locations'], { relativeTo: this.activatedRoute.parent });
       }
     });
+
     this.eventSubscriber = this.eventManager.subscribe('projectDataModification', () => this.loadProject());
   }
 

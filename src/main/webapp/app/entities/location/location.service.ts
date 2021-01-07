@@ -50,6 +50,14 @@ export class LocationService {
       .pipe(map((response: EntityArrayResponseType) => this.convertDateArrayFromServer(response)));
   }
 
+  findAllByProjectInclusiveSections(project: Project): Observable<EntityArrayResponseType> {
+    return this.http
+      .get<Location[]>(`${this.resourceUrl}/project/${project.id!}/sections`, {
+        observe: 'response',
+      })
+      .pipe(map((response: EntityArrayResponseType) => this.convertDateArrayFromServer(response)));
+  }
+
   delete(id: number): Observable<HttpResponse<{}>> {
     return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
   }

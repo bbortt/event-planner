@@ -15,19 +15,10 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface EventRepository extends JpaRepository<Event, Long> {
-    @Query("select event from Event event where event.user.login = ?#{principal.username}")
-    List<Event> findByUserIsCurrentUser();
-
-    @Query(
-        value = "select distinct event from Event event left join fetch event.sections",
-        countQuery = "select count(distinct event) from Event event"
-    )
+    @Query(value = "SELECT DISTINCT e FROM Event e LEFT JOIN FETCH e.sections", countQuery = "SELECT COUNT(DISTINCT e) FROM Event e")
     Page<Event> findAllWithEagerRelationships(Pageable pageable);
 
-    @Query("select distinct event from Event event left join fetch event.sections")
-    List<Event> findAllWithEagerRelationships();
-
-    @Query("select event from Event event left join fetch event.sections where event.id =:id")
+    @Query("SELECT e FROM Event e LEFT JOIN FETCH e.sections WHERE e.id =:id")
     Optional<Event> findOneWithEagerRelationships(@Param("id") Long id);
 
     @Query("SELECT e.name FROM Event e WHERE e.id = :eventId")

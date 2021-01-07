@@ -16,13 +16,10 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface InvitationRepository extends JpaRepository<Invitation, Long> {
-    @Query("select invitation from Invitation invitation where invitation.user.login = ?#{principal.username}")
-    List<Invitation> findByUserIsCurrentUser();
-
     Page<Invitation> findAllByProjectId(Long projectId, Pageable pageable);
 
     @Modifying
-    @Query("update Invitation set user.id = :userId, token = null, accepted = true where token = :token")
+    @Query("UPDATE Invitation SET user.id = :userId, token = null, accepted = true WHERE token = :token")
     void assignUserToInvitation(@Param("userId") Long userId, @Param("token") String token);
 
     Optional<Invitation> findByToken(String token);

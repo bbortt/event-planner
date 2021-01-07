@@ -180,6 +180,7 @@ class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     void checkNameIsRequired() throws Exception {
         int databaseSizeBeforeTest = responsibilityRepository.findAll().size();
         // set the field null

@@ -21,6 +21,7 @@ export class ProjectLocationModalComponent implements AfterViewInit, OnDestroy {
           return true;
         },
       });
+
       (this.modalRef.componentInstance as ProjectLocationUpdateComponent).updateForm(project, location ? location : {});
     });
   }
