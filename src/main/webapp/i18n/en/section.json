@@ -21,6 +21,7 @@
       "name": "Name",
       "location": "Location",
       "responsibility": "Responsibility",
+      "user": "User",
       "event": "Event"
     }
   }

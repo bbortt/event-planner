@@ -21,6 +21,7 @@
       "name": "Name",
       "location": "Lokalität",
       "responsibility": "Verantwortlichkeit",
+      "user": "Benutzer",
       "event": "Ereignis"
     }
   }

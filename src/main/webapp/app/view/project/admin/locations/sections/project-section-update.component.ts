@@ -10,6 +10,10 @@ import { SectionService } from 'app/entities/section/section.service';
 
 import { Location } from 'app/shared/model/location.model';
 import { Section } from 'app/shared/model/section.model';
+import { Responsibility } from 'app/shared/model/responsibility.model';
+import { User } from 'app/core/user/user.model';
+import { ResponsibilityService } from 'app/entities/responsibility/responsibility.service';
+import { UserService } from 'app/core/user/user.service';
 
 @Component({
   selector: 'app-section-update',
@@ -19,25 +23,64 @@ import { Section } from 'app/shared/model/section.model';
 export class ProjectSectionUpdateComponent implements OnInit {
   isSaving = false;
   isNew = false;
+  isResponsibility = false;
+
+  responsibilities: Responsibility[] = [];
+  users: User[] = [];
 
   editForm = this.fb.group({
     id: [],
     name: [null, [Validators.required, Validators.maxLength(50)]],
+    responsibility: [],
+    responsibilityAutocomplete: [],
+    user: [],
+    userAutocomplete: [],
     location: [],
   });
 
-  constructor(protected sectionService: SectionService, private eventManager: JhiEventManager, private fb: FormBuilder) {}
+  constructor(
+    protected sectionService: SectionService,
+    private eventManager: JhiEventManager,
+    private fb: FormBuilder,
+    private responsibilityService: ResponsibilityService,
+    private userService: UserService
+  ) {}
 
   ngOnInit(): void {}
 
   public updateForm(location: Location, section: Section): void {
     this.isNew = !section.id;
+    this.isResponsibility = !location.user;
+
+    this.responsibilityService.findAllByProject(location.project, { sort: ['name,asc'] }).subscribe(responsibilities => {
+      this.responsibilities = responsibilities.body || [];
+    });
+
+    this.userService.findAllByProject(location.project, { sort: ['login,asc'] }).subscribe(users => {
+      this.users = users.body || [];
+    });
 
     this.editForm.patchValue({
       id: section.id,
       name: section.name,
+      responsibility: location.responsibility,
+      responsibilityAutocomplete: location.responsibility?.name,
+      user: location.user,
+      userAutocomplete: location.user?.login,
       location,
     });
+  }
+
+  responsibilitySelected($event: any): void {
+    this.editForm.get('responsibility')!.setValue($event.selectedItem);
+  }
+
+  userSelected($event: any): void {
+    this.editForm.get('user')!.setValue($event.selectedItem);
+  }
+
+  onRadioChange($event: any): void {
+    this.isResponsibility = $event.target.defaultValue === 'responsibility';
   }
 
   previousState(): void {
@@ -55,9 +98,21 @@ export class ProjectSectionUpdateComponent implements OnInit {
   }
 
   private createFromForm(): Section {
+    let responsibility;
+    let user;
+    if (this.isResponsibility) {
+      responsibility = this.editForm.get(['responsibility'])!.value;
+      user = null;
+    } else {
+      responsibility = null;
+      user = this.editForm.get(['user'])!.value;
+    }
+
     return {
       id: this.editForm.get(['id'])!.value,
       name: this.editForm.get(['name'])!.value,
+      responsibility,
+      user,
       location: this.editForm.get(['location'])!.value,
     };
   }
