@@ -26,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
  * Integration tests for {@link CustomAuditEventRepository}.
  */
 @Transactional
-public class CustomAuditEventRepositoryIT extends AbstractApplicationContextAwareIT {
+class CustomAuditEventRepositoryIT extends AbstractApplicationContextAwareIT {
 
     @Autowired
     private PersistenceAuditEventRepository persistenceAuditEventRepository;
@@ -37,7 +37,7 @@ public class CustomAuditEventRepositoryIT extends AbstractApplicationContextAwar
     private CustomAuditEventRepository customAuditEventRepository;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         customAuditEventRepository = new CustomAuditEventRepository(persistenceAuditEventRepository, auditEventConverter);
         persistenceAuditEventRepository.deleteAll();
         ZonedDateTime oneHourAgo = ZonedDateTime.now().minusSeconds(3600);
@@ -62,7 +62,7 @@ public class CustomAuditEventRepositoryIT extends AbstractApplicationContextAwar
     }
 
     @Test
-    public void addAuditEvent() {
+    void addAuditEvent() {
         Map<String, Object> data = new HashMap<>();
         data.put("test-key", "test-value");
         AuditEvent event = new AuditEvent("test-user", "test-type", data);
@@ -79,7 +79,7 @@ public class CustomAuditEventRepositoryIT extends AbstractApplicationContextAwar
     }
 
     @Test
-    public void addAuditEventTruncateLargeData() {
+    void addAuditEventTruncateLargeData() {
         Map<String, Object> data = new HashMap<>();
         StringBuilder largeData = new StringBuilder();
         for (int i = 0; i < EVENT_DATA_COLUMN_MAX_LENGTH + 10; i++) {
@@ -102,7 +102,7 @@ public class CustomAuditEventRepositoryIT extends AbstractApplicationContextAwar
     }
 
     @Test
-    public void testAddEventWithWebAuthenticationDetails() {
+    void testAddEventWithWebAuthenticationDetails() {
         HttpSession session = new MockHttpSession(null, "test-session-id");
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.setSession(session);
@@ -120,7 +120,7 @@ public class CustomAuditEventRepositoryIT extends AbstractApplicationContextAwar
     }
 
     @Test
-    public void testAddEventWithNullData() {
+    void testAddEventWithNullData() {
         Map<String, Object> data = new HashMap<>();
         data.put("test-key", null);
         AuditEvent event = new AuditEvent("test-user", "test-type", data);
@@ -132,7 +132,7 @@ public class CustomAuditEventRepositoryIT extends AbstractApplicationContextAwar
     }
 
     @Test
-    public void addAuditEventWithAnonymousUser() {
+    void addAuditEventWithAnonymousUser() {
         Map<String, Object> data = new HashMap<>();
         data.put("test-key", "test-value");
         AuditEvent event = new AuditEvent(Constants.ANONYMOUS_USER, "test-type", data);
@@ -142,7 +142,7 @@ public class CustomAuditEventRepositoryIT extends AbstractApplicationContextAwar
     }
 
     @Test
-    public void addAuditEventWithAuthorizationFailureType() {
+    void addAuditEventWithAuthorizationFailureType() {
         Map<String, Object> data = new HashMap<>();
         data.put("test-key", "test-value");
         AuditEvent event = new AuditEvent("test-user", "AUTHORIZATION_FAILURE", data);

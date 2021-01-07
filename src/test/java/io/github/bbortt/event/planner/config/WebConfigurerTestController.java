@@ -4,11 +4,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class WebConfigurerTestController {
+class WebConfigurerTestController {
 
     @GetMapping("/api/test-cors")
-    public void testCorsOnApiPath() {}
+    void testCorsOnApiPath() {}
 
     @GetMapping("/test/test-cors")
-    public void testCorsOnOtherPath() {}
+    void testCorsOnOtherPath() {}
 }

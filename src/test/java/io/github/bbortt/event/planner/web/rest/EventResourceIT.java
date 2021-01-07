@@ -3,10 +3,6 @@ package io.github.bbortt.event.planner.web.rest;
 import static io.github.bbortt.event.planner.web.rest.TestUtil.sameInstant;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -18,9 +14,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import io.github.bbortt.event.planner.AbstractApplicationContextAwareIT;
 import io.github.bbortt.event.planner.domain.Event;
 import io.github.bbortt.event.planner.domain.Invitation;
-import io.github.bbortt.event.planner.domain.Location;
-import io.github.bbortt.event.planner.domain.Project;
-import io.github.bbortt.event.planner.domain.Responsibility;
 import io.github.bbortt.event.planner.domain.Section;
 import io.github.bbortt.event.planner.domain.User;
 import io.github.bbortt.event.planner.repository.AuthorityRepository;
@@ -33,8 +26,6 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -45,7 +36,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -56,7 +46,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @WithMockUser
 @ExtendWith(MockitoExtension.class)
-public class EventResourceIT extends AbstractApplicationContextAwareIT {
+class EventResourceIT extends AbstractApplicationContextAwareIT {
 
     private static final String TEST_USER_LOGIN = "locationresourceit-login";
     private static final String TEST_ADMIN_LOGIN = "responsibilityresourceit-admin";
@@ -147,7 +137,7 @@ public class EventResourceIT extends AbstractApplicationContextAwareIT {
     }
 
     @BeforeEach
-    public void initTest() {
+    void initTest() {
         event = createEntity(em);
 
         User user = UserResourceIT.createEntity(em);
@@ -169,7 +159,7 @@ public class EventResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
-    public void createEvent() throws Exception {
+    void createEvent() throws Exception {
         eventRepository.deleteAll();
 
         // Create the Event
@@ -190,7 +180,7 @@ public class EventResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
-    public void createEventWithExistingId() throws Exception {
+    void createEventWithExistingId() throws Exception {
         int databaseSizeBeforeCreate = eventRepository.findAll().size();
 
         // Create the Event with an existing ID
@@ -209,7 +199,7 @@ public class EventResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
-    public void checkNameIsRequired() throws Exception {
+    void checkNameIsRequired() throws Exception {
         int databaseSizeBeforeTest = eventRepository.findAll().size();
         // set the field null
         event.setName(null);
@@ -227,7 +217,7 @@ public class EventResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
-    public void checkStartTimeIsRequired() throws Exception {
+    void checkStartTimeIsRequired() throws Exception {
         int databaseSizeBeforeTest = eventRepository.findAll().size();
         // set the field null
         event.setStartTime(null);
@@ -245,7 +235,7 @@ public class EventResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
-    public void checkEndTimeIsRequired() throws Exception {
+    void checkEndTimeIsRequired() throws Exception {
         int databaseSizeBeforeTest = eventRepository.findAll().size();
         // set the field null
         event.setEndTime(null);
@@ -263,7 +253,7 @@ public class EventResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(value = TEST_ADMIN_LOGIN, roles = { RolesConstants.ADMIN })
-    public void getAllEvents() throws Exception {
+    void getAllEvents() throws Exception {
         // Initialize the database
         eventRepository.saveAndFlush(event);
 
@@ -282,7 +272,7 @@ public class EventResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
-    public void getAllEventsDeniedForUsers() throws Exception {
+    void getAllEventsDeniedForUsers() throws Exception {
         // Initialize the database
         eventRepository.saveAndFlush(event);
 
@@ -293,7 +283,7 @@ public class EventResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
-    public void getEvent() throws Exception {
+    void getEvent() throws Exception {
         // Initialize the database
         eventRepository.saveAndFlush(event);
 
@@ -312,7 +302,7 @@ public class EventResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
-    public void getNonExistingEvent() throws Exception {
+    void getNonExistingEvent() throws Exception {
         // Get the event
         restEventMockMvc.perform(get("/api/events/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
@@ -320,7 +310,7 @@ public class EventResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
-    public void updateEvent() throws Exception {
+    void updateEvent() throws Exception {
         // Initialize the database
         eventService.save(event);
 
@@ -353,7 +343,7 @@ public class EventResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
-    public void updateNonExistingEvent() throws Exception {
+    void updateNonExistingEvent() throws Exception {
         int databaseSizeBeforeUpdate = eventRepository.findAll().size();
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
@@ -369,7 +359,7 @@ public class EventResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
-    public void deleteEvent() throws Exception {
+    void deleteEvent() throws Exception {
         // Initialize the database
         eventService.save(event);
 

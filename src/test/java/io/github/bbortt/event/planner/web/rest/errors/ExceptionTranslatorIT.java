@@ -17,12 +17,13 @@ import org.springframework.test.web.servlet.MockMvc;
  * Integration tests {@link ExceptionTranslator} controller advice.
  */
 @WithMockUser
-public class ExceptionTranslatorIT extends AbstractApplicationContextAwareIT {
+class ExceptionTranslatorIT extends AbstractApplicationContextAwareIT {
+
     @Autowired
     private MockMvc mockMvc;
 
     @Test
-    public void testConcurrencyFailure() throws Exception {
+    void testConcurrencyFailure() throws Exception {
         mockMvc
             .perform(get("/api/exception-translator-test/concurrency-failure"))
             .andExpect(status().isConflict())
@@ -31,7 +32,7 @@ public class ExceptionTranslatorIT extends AbstractApplicationContextAwareIT {
     }
 
     @Test
-    public void testMethodArgumentNotValid() throws Exception {
+    void testMethodArgumentNotValid() throws Exception {
         mockMvc
             .perform(post("/api/exception-translator-test/method-argument").content("{}").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isBadRequest())
@@ -43,7 +44,7 @@ public class ExceptionTranslatorIT extends AbstractApplicationContextAwareIT {
     }
 
     @Test
-    public void testMissingServletRequestPartException() throws Exception {
+    void testMissingServletRequestPartException() throws Exception {
         mockMvc
             .perform(get("/api/exception-translator-test/missing-servlet-request-part"))
             .andExpect(status().isBadRequest())
@@ -52,7 +53,7 @@ public class ExceptionTranslatorIT extends AbstractApplicationContextAwareIT {
     }
 
     @Test
-    public void testMissingServletRequestParameterException() throws Exception {
+    void testMissingServletRequestParameterException() throws Exception {
         mockMvc
             .perform(get("/api/exception-translator-test/missing-servlet-request-parameter"))
             .andExpect(status().isBadRequest())
@@ -61,7 +62,7 @@ public class ExceptionTranslatorIT extends AbstractApplicationContextAwareIT {
     }
 
     @Test
-    public void testAccessDenied() throws Exception {
+    void testAccessDenied() throws Exception {
         mockMvc
             .perform(get("/api/exception-translator-test/access-denied"))
             .andExpect(status().isForbidden())
@@ -71,7 +72,7 @@ public class ExceptionTranslatorIT extends AbstractApplicationContextAwareIT {
     }
 
     @Test
-    public void testUnauthorized() throws Exception {
+    void testUnauthorized() throws Exception {
         mockMvc
             .perform(get("/api/exception-translator-test/unauthorized"))
             .andExpect(status().isUnauthorized())
@@ -82,7 +83,7 @@ public class ExceptionTranslatorIT extends AbstractApplicationContextAwareIT {
     }
 
     @Test
-    public void testMethodNotSupported() throws Exception {
+    void testMethodNotSupported() throws Exception {
         mockMvc
             .perform(post("/api/exception-translator-test/access-denied"))
             .andExpect(status().isMethodNotAllowed())
@@ -92,7 +93,7 @@ public class ExceptionTranslatorIT extends AbstractApplicationContextAwareIT {
     }
 
     @Test
-    public void testExceptionWithResponseStatus() throws Exception {
+    void testExceptionWithResponseStatus() throws Exception {
         mockMvc
             .perform(get("/api/exception-translator-test/response-status"))
             .andExpect(status().isBadRequest())
@@ -102,7 +103,7 @@ public class ExceptionTranslatorIT extends AbstractApplicationContextAwareIT {
     }
 
     @Test
-    public void testInternalServerError() throws Exception {
+    void testInternalServerError() throws Exception {
         mockMvc
             .perform(get("/api/exception-translator-test/internal-server-error"))
             .andExpect(status().isInternalServerError())

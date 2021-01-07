@@ -16,13 +16,13 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
-public class LocationServiceUnitTest {
+class LocationServiceUnitTest {
 
     @Rule
-    public MockitoRule mockitoRule = MockitoJUnit.rule();
+    MockitoRule mockitoRule = MockitoJUnit.rule();
 
     @Rule
-    public ExpectedException expectedException = ExpectedException.none();
+    ExpectedException expectedException = ExpectedException.none();
 
     @Mock
     ProjectService projectServiceMock;
@@ -36,12 +36,12 @@ public class LocationServiceUnitTest {
     LocationService fixture;
 
     @Before
-    public void beforeTestSetup() {
+    void beforeTestSetup() {
         fixture = new LocationService(projectServiceMock, locationRepositoryMock, sectionRepositoryMock);
     }
 
     @Test
-    public void saveDoesAcceptEitherResponsibilityOrUser() {
+    void saveDoesAcceptEitherResponsibilityOrUser() {
         Location locationWithUser = new Location().user(new User());
         fixture.save(locationWithUser);
 

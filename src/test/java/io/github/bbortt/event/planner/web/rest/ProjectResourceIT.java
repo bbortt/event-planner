@@ -43,7 +43,7 @@ import org.springframework.transaction.annotation.Transactional;
  * Integration tests for the {@link ProjectResource} REST controller.
  */
 @WithMockUser
-public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
+class ProjectResourceIT extends AbstractApplicationContextAwareIT {
 
     private static final String TEST_USER_LOGIN = "responsibilityresourceit-login";
     private static final String TEST_ADMIN_LOGIN = "responsibilityresourceit-admin";
@@ -116,7 +116,7 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
     }
 
     @BeforeEach
-    public void initTest() {
+    void initTest() {
         project = createEntity(em);
 
         user = UserResourceIT.createEntity(em);
@@ -130,7 +130,7 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
-    public void createProject() throws Exception {
+    void createProject() throws Exception {
         projectRepository.deleteAll();
 
         User user = userRepository.save(UserResourceIT.createEntity(em));
@@ -171,7 +171,7 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
-    public void checkNameIsRequired() throws Exception {
+    void checkNameIsRequired() throws Exception {
         int databaseSizeBeforeTest = projectRepository.findAll().size();
         // set the field null
         project.setName(null);
@@ -189,7 +189,7 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
-    public void checkStartTimeIsRequired() throws Exception {
+    void checkStartTimeIsRequired() throws Exception {
         int databaseSizeBeforeTest = projectRepository.findAll().size();
         // set the field null
         project.setStartTime(null);
@@ -207,7 +207,7 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
-    public void checkEndTimeIsRequired() throws Exception {
+    void checkEndTimeIsRequired() throws Exception {
         int databaseSizeBeforeTest = projectRepository.findAll().size();
         // set the field null
         project.setEndTime(null);
@@ -225,7 +225,7 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
-    public void getProject() throws Exception {
+    void getProject() throws Exception {
         // Initialize the database
         projectRepository.saveAndFlush(project);
         Invitation invitation = InvitationResourceIT
@@ -251,7 +251,7 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
-    public void getNonExistingProject() throws Exception {
+    void getNonExistingProject() throws Exception {
         // Get the project
         restProjectMockMvc.perform(get("/api/projects/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
@@ -259,7 +259,7 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
-    public void updateProject() throws Exception {
+    void updateProject() throws Exception {
         // Initialize the database
         projectService.save(project);
         Invitation invitation = InvitationResourceIT
@@ -301,7 +301,7 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
-    public void updateNonExistingProject() throws Exception {
+    void updateNonExistingProject() throws Exception {
         int databaseSizeBeforeUpdate = projectRepository.findAll().size();
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
@@ -317,7 +317,7 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(username = TEST_ADMIN_LOGIN, roles = { RolesConstants.ADMIN })
-    public void deleteProject() throws Exception {
+    void deleteProject() throws Exception {
         // Initialize the database
         projectService.save(project);
 
@@ -336,7 +336,7 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
-    public void deleteProjectDeniedForUsers() throws Exception {
+    void deleteProjectDeniedForUsers() throws Exception {
         // Initialize the database
         projectService.save(project);
 

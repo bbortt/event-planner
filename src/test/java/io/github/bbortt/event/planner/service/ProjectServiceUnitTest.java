@@ -34,15 +34,15 @@ import org.zalando.problem.Status;
 import org.zalando.problem.violations.ConstraintViolationProblem;
 
 @TestExecutionListeners({ WithSecurityContextTestExecutionListener.class })
-public class ProjectServiceUnitTest {
+class ProjectServiceUnitTest {
 
     static final String MOCK_USER_LOGIN = "mock-user-login";
 
     @Rule
-    public MockitoRule mockitoRule = MockitoJUnit.rule();
+    MockitoRule mockitoRule = MockitoJUnit.rule();
 
     @Rule
-    public ExpectedException expectedException = ExpectedException.none();
+    ExpectedException expectedException = ExpectedException.none();
 
     @Mock
     Authentication authenticationMock;
@@ -65,7 +65,7 @@ public class ProjectServiceUnitTest {
     ProjectService fixture;
 
     @Before
-    public void beforeTestSetup() {
+    void beforeTestSetup() {
         doReturn(MOCK_USER_LOGIN).when(authenticationMock).getPrincipal();
 
         TestSecurityContextHolder.setAuthentication(authenticationMock);
@@ -75,7 +75,7 @@ public class ProjectServiceUnitTest {
     }
 
     @Test
-    public void findMineOrAllDoesLoadMine() {
+    void findMineOrAllDoesLoadMine() {
         Pageable pageable = Pageable.unpaged();
 
         fixture.findMineOrAll(Boolean.FALSE, pageable);
@@ -84,14 +84,14 @@ public class ProjectServiceUnitTest {
     }
 
     @Test
-    public void findMineOrAllThrowsExceptionIfAuthorityAdminMissing() {
+    void findMineOrAllThrowsExceptionIfAuthorityAdminMissing() {
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("You're not allowed to see all projects!");
         fixture.findMineOrAll(Boolean.TRUE, Pageable.unpaged());
     }
 
     @Test
-    public void findMineOrAllLoadsAllWhenAdminAuthorityAssigned() {
+    void findMineOrAllLoadsAllWhenAdminAuthorityAssigned() {
         Pageable pageable = Pageable.unpaged();
 
         doReturn(Collections.singletonList(new SimpleGrantedAuthority(AuthoritiesConstants.ADMIN)))
@@ -104,7 +104,7 @@ public class ProjectServiceUnitTest {
     }
 
     @Test
-    public void createThrowsErrorOnInvalidStartEndTimeCombination() {
+    void createThrowsErrorOnInvalidStartEndTimeCombination() {
         ZonedDateTime startTime = ZonedDateTime.now();
         ZonedDateTime endTime = startTime.minus(1, ChronoUnit.MINUTES);
 
