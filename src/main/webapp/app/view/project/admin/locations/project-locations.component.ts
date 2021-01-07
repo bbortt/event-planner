@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Data, Router } from '@angular/router';
 
-import { forkJoin, of, Subscription } from 'rxjs';
-import { concatAll, map, mergeMap } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 import { JhiEventManager } from 'ng-jhipster';
 
@@ -28,7 +28,7 @@ import { ADMIN } from 'app/shared/constants/role.constants';
 })
 export class ProjectLocationsComponent implements OnInit, OnDestroy {
   project?: Project;
-  loadedLocations: Location[] = [];
+  loadedLocations?: Location[];
   locations?: Location[];
 
   eventSubscriber?: Subscription;
@@ -45,12 +45,15 @@ export class ProjectLocationsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.activatedRoute.data.subscribe(({ project }) => {
-      this.project = project;
-      this.loadLocations();
-      this.registerChangeInLocations();
-      this.registerChangeInSections();
-    });
+    this.activatedRoute.data
+      .pipe(
+        tap((data: Data) => (this.project = data.project)),
+        tap(() => this.loadLocations())
+      )
+      .subscribe(() => {
+        this.registerChangeInLocations();
+        this.registerChangeInSections();
+      });
   }
 
   ngOnDestroy(): void {
@@ -68,29 +71,10 @@ export class ProjectLocationsComponent implements OnInit, OnDestroy {
   }
 
   private loadLocations(): void {
-    this.locationService
-      .findAllByProject(this.project!, { sort: ['name,asc'] })
-      .pipe(
-        map((response: HttpResponse<Location[]>) => response.body || []),
-        mergeMap(x => x),
-        map((location: Location) =>
-          forkJoin({
-            location: of(location),
-            sectionsResponse: this.sectionService.findAllByLocation(location, { sort: ['name,asc'] }),
-          })
-        ),
-        concatAll(),
-        map((value: { location: Location; sectionsResponse: HttpResponse<Section[]> }) => {
-          const location = value.location;
-          location.sections = value.sectionsResponse.body || [];
-          return location;
-        })
-      )
-      .subscribe(
-        (location: Location) => this.loadedLocations.push(location),
-        () => {},
-        () => (this.locations = this.loadedLocations)
-      );
+    this.locationService.findAllByProjectInclusiveSections(this.project!).subscribe((response: HttpResponse<Location[]>) => {
+      this.loadedLocations = response.body || [];
+      this.locations = this.loadedLocations;
+    });
   }
 
   deleteLocation(location: Location): void {
@@ -104,7 +88,9 @@ export class ProjectLocationsComponent implements OnInit, OnDestroy {
   }
 
   filterData(searchString: string): void {
-    this.locations = this.loadedLocations.filter((location: Location) => location.name?.toLowerCase().includes(searchString.toLowerCase()));
+    this.locations = this.loadedLocations!.filter((location: Location) =>
+      location.name?.toLowerCase().includes(searchString.toLowerCase())
+    );
   }
 
   protected onSuccess(data: Location[] | null): void {
