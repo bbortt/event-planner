@@ -1,12 +1,10 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { FormBuilder, Validators } from '@angular/forms';
 
 import { Observable } from 'rxjs';
 
 import { JhiEventManager } from 'ng-jhipster';
-
-import { DxAutocompleteComponent } from 'devextreme-angular';
 
 import { LocationService } from 'app/entities/location/location.service';
 import { ResponsibilityService } from 'app/entities/responsibility/responsibility.service';
@@ -23,9 +21,6 @@ import { User } from 'app/core/user/user.model';
   styleUrls: ['./project-location-update.component.scss'],
 })
 export class ProjectLocationUpdateComponent {
-  @ViewChild(DxAutocompleteComponent, { static: true })
-  autocomplete?: DxAutocompleteComponent;
-
   isNew = false;
   isSaving = false;
   isResponsibility = false;
@@ -47,23 +42,23 @@ export class ProjectLocationUpdateComponent {
 
   constructor(
     protected locationService: LocationService,
-    private eventManager: JhiEventManager,
-    private fb: FormBuilder,
     private responsibilityService: ResponsibilityService,
-    private userService: UserService
+    private userService: UserService,
+    private eventManager: JhiEventManager,
+    private fb: FormBuilder
   ) {}
 
   public updateForm(project: Project, location: Location): void {
     this.isNew = !location.id;
     this.isResponsibility = !location.user;
 
-    this.responsibilityService.findAllByProject(project, { sort: ['name,asc'] }).subscribe(responsibilities => {
-      this.responsibilities = responsibilities.body || [];
-    });
+    this.responsibilityService
+      .findAllByProject(project, { sort: ['name,asc'] })
+      .subscribe((response: HttpResponse<Responsibility[]>) => (this.responsibilities = response.body || []));
 
-    this.userService.findAllByProject(project, { sort: ['login,asc'] }).subscribe(users => {
-      this.users = users.body || [];
-    });
+    this.userService
+      .findAllByProject(project, { sort: ['email,asc'] })
+      .subscribe((response: HttpResponse<User[]>) => (this.users = response.body || []));
 
     this.editForm.patchValue({
       id: location.id,

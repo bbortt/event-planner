@@ -52,13 +52,13 @@ export class ProjectSectionUpdateComponent implements OnInit {
     this.isNew = !section.id;
     this.isResponsibility = !section.user;
 
-    this.responsibilityService.findAllByProject(location.project, { sort: ['name,asc'] }).subscribe(responsibilities => {
-      this.responsibilities = responsibilities.body || [];
-    });
+    this.responsibilityService
+      .findAllByProject(location.project, { sort: ['name,asc'] })
+      .subscribe((response: HttpResponse<Responsibility[]>) => (this.responsibilities = response.body || []));
 
-    this.userService.findAllByProject(location.project, { sort: ['login,asc'] }).subscribe(users => {
-      this.users = users.body || [];
-    });
+    this.userService
+      .findAllByProject(location.project, { sort: ['email,asc'] })
+      .subscribe((response: HttpResponse<User[]>) => (this.users = response.body || []));
 
     this.editForm.patchValue({
       id: section.id,

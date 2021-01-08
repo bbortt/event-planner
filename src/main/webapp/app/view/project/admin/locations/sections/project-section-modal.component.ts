@@ -22,7 +22,7 @@ export class ProjectSectionModalComponent implements AfterViewInit, OnDestroy {
         },
       });
 
-      (this.modalRef.componentInstance as ProjectSectionUpdateComponent).updateForm(location ? location : {}, section ? section : {});
+      (this.modalRef.componentInstance as ProjectSectionUpdateComponent).updateForm(location, section || {});
     });
   }
 

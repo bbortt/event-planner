@@ -80,7 +80,7 @@
                             formControlName="userAutocomplete"
                             [placeholder]="'global.form.search' | translate"
                             [dataSource]="users"
-                            valueExpr="login"
+                            valueExpr="email"
                             (onSelectionChanged)="userSelected($event)"
                             [showClearButton]="true"
                             [isValid]="!(editForm.get('user')!.invalid && (editForm.get('user')!.dirty || editForm.get('user')!.touched))">
