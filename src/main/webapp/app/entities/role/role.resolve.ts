@@ -33,6 +33,6 @@ export class RoleResolve implements Resolve<Role> {
       );
     }
 
-    return of({});
+    return of({} as Role);
   }
 }

@@ -33,6 +33,6 @@ export class ResponsibilityResolve implements Resolve<Responsibility> {
       );
     }
 
-    return of({});
+    return of({} as Responsibility);
   }
 }

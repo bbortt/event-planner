@@ -2,9 +2,13 @@ import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 
+import { TranslateService } from '@ngx-translate/core';
+
 import { JhiEventManager } from 'ng-jhipster';
 
-import { TranslateService } from '@ngx-translate/core';
+import { AppointmentEvent } from 'app/shared/model/scheduler/appointment-event';
+
+import { EventService } from 'app/entities/event/event.service';
 import { SectionService } from 'app/entities/section/section.service';
 
 import { Event } from 'app/shared/model/event.model';
@@ -35,6 +39,7 @@ export class ProjectScreenplayLocationComponent implements OnInit {
   constructor(
     private translateService: TranslateService,
     private sectionService: SectionService,
+    private eventService: EventService,
     private eventManager: JhiEventManager,
     private router: Router
   ) {}
@@ -96,6 +101,22 @@ export class ProjectScreenplayLocationComponent implements OnInit {
     e.cancel = true;
   }
 
+  /*
+   * This is for the "drag & drop" update (times only). Any click on an item results in `this.configureAppointmentForm` beeing called.
+   */
+  onAppointmentUpdated(e: AppointmentEvent): void {
+    const appointment = e.appointmentData;
+
+    this.eventService.update(this.fromEvent(appointment)).subscribe(
+      (response: HttpResponse<Event>) => {
+        if (response.status !== 200) {
+          this.reset();
+        }
+      },
+      () => this.reset()
+    );
+  }
+
   private fromEvent(event: ISchedulerEvent): Event {
     const updatedEvent = {
       name: event.text,
@@ -104,6 +125,14 @@ export class ProjectScreenplayLocationComponent implements OnInit {
       endTime: moment(event.endDate),
       sections: [this.sectionById(event.sectionId)],
     };
+
+    if (event.responsibility) {
+      if (event.responsibility.isResponsibility) {
+        updatedEvent['responsibility'] = event.responsibility.originalValue;
+      } else {
+        updatedEvent['user'] = event.responsibility.originalValue;
+      }
+    }
 
     return { ...event.originalEvent, ...updatedEvent };
   }

@@ -33,6 +33,6 @@ export class InvitationResolve implements Resolve<Invitation> {
       );
     }
 
-    return of({});
+    return of({} as Invitation);
   }
 }
