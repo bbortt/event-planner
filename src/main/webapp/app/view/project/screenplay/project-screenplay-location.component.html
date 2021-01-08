@@ -16,10 +16,7 @@
             [showCurrentTimeIndicator]="false"
             [showAllDayPanel]="false"
             [crossScrollingEnabled]="true"
-            (onAppointmentFormOpening)="configureAppointmentForm($event)"
-            (onAppointmentAdded)="onAppointmentAdded($event)"
-            (onAppointmentUpdated)="onAppointmentUpdated($event)"
-            (onAppointmentDeleted)="onAppointmentDeleted($event)">
+            (onAppointmentFormOpening)="configureAppointmentForm($event)">
             <dxi-view
                 type="timelineDay"
                 name="custom-project-view"

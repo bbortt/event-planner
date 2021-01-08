@@ -77,10 +77,7 @@ export class ProjectCreateComponent implements OnInit, OnDestroy {
     this.editForm
       .get('startTime')!
       .valueChanges.pipe(takeUntil(this.destroy$))
-      .subscribe((startTime: Date) => {
-        this.endMoment = moment(startTime);
-        this.editForm.get('endTime')!.setValue(startTime);
-      });
+      .subscribe((startTime: Date) => (this.endMoment = moment(startTime)));
   }
 
   public ngOnDestroy(): void {

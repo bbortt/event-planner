@@ -4,7 +4,7 @@
       "home": {
         "title": "Ereignise",
         "createLabel": "Ereignis erstellen",
-        "createOrEditLabel": "Ereignis erstellen oder bearbeiten",
+        "editLabel": "Ereignis bearbeiten",
         "notFound": "Keine Ereignise gefunden"
       },
       "created": "Ereignis {{ param }} erstellt",
