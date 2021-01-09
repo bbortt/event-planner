@@ -25,9 +25,6 @@ export class EventUpdateModalComponent implements AfterViewInit, OnDestroy {
         },
       });
 
-      // eslint-disable-next-line no-console
-      console.log('section: ', section);
-
       (this.modalRef.componentInstance as EventUpdateComponent).updateForm(
         event || { sections: [section] },
         startTime || new Date(),
