@@ -17,7 +17,7 @@ import { ProjectSectionModalComponent } from 'app/view/project/admin/locations/s
 
 import { EventUpdateModalComponent } from 'app/view/project/screenplay/event/event-update-modal.component';
 
-import { ADMIN, SECRETARY, CONTRIBUTOR, VIEWER } from 'app/shared/constants/role.constants';
+import { ADMIN, CONTRIBUTOR, SECRETARY } from 'app/shared/constants/role.constants';
 
 export const MODAL_OUTLET_ROUTES: Routes = [
   {
@@ -128,7 +128,7 @@ export const MODAL_OUTLET_ROUTES: Routes = [
     path: 'projects/:projectId/locations/:locationId/sections/:sectionId/events/new',
     component: EventUpdateModalComponent,
     data: {
-      roles: [ADMIN.name, SECRETARY.name, CONTRIBUTOR.name, VIEWER.name],
+      roles: [ADMIN.name, SECRETARY.name, CONTRIBUTOR.name],
     },
     canActivate: [UserRouteRoleAccessService],
     resolve: {
@@ -142,7 +142,7 @@ export const MODAL_OUTLET_ROUTES: Routes = [
     path: 'projects/:projectId/locations/:locationId/sections/:sectionId/events/:eventId/edit',
     component: EventUpdateModalComponent,
     data: {
-      roles: [ADMIN.name, SECRETARY.name, CONTRIBUTOR.name, VIEWER.name],
+      roles: [ADMIN.name, SECRETARY.name, CONTRIBUTOR.name],
     },
     canActivate: [UserRouteRoleAccessService],
     resolve: {

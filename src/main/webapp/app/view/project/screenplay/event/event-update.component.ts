@@ -32,10 +32,9 @@ export class EventUpdateComponent implements OnInit, OnDestroy {
   responsibilities: Responsibility[] = [];
   users: User[] = [];
 
-  private location?: Location;
+  location?: Location;
 
-  startMoment = moment();
-  endMoment = moment();
+  minEndDate = new Date();
   dateTimeFormat = DATE_TIME_FORMAT;
 
   editForm = this.fb.group({
@@ -65,7 +64,7 @@ export class EventUpdateComponent implements OnInit, OnDestroy {
     this.editForm
       .get('startTime')!
       .valueChanges.pipe(takeUntil(this.destroy$))
-      .subscribe((startTime: Date) => (this.endMoment = moment(startTime)));
+      .subscribe((startTime: Date) => (this.minEndDate = startTime));
   }
 
   public ngOnDestroy(): void {
@@ -77,10 +76,10 @@ export class EventUpdateComponent implements OnInit, OnDestroy {
     this.isNew = !event.id;
     this.isResponsibility = !event.user;
 
-    this.startMoment = moment(newStartTime);
-    this.endMoment = moment(newEndTime);
+    this.location = event.sections![0].location;
+    this.minEndDate = newStartTime;
 
-    const project = event.sections![0].location!.project;
+    const project = this.location!.project;
 
     this.responsibilityService
       .findAllByProject(project, { sort: ['name,asc'] })

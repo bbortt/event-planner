@@ -78,7 +78,8 @@
                             [openOnFieldClick]="true"
                             [displayFormat]="dateTimeFormat"
                             formControlName="startTime"
-                            [min]="startMoment.toDate()"
+                            [min]="location!.project!.startTime.toDate()"
+                            [max]="location!.project!.endTime.toDate()"
                             placeholder="dd.MM.yyyy HH:mm"
                             [isValid]="isValidInput('startTime')">
                         </dx-date-box>
@@ -110,7 +111,8 @@
                             [openOnFieldClick]="true"
                             [displayFormat]="dateTimeFormat"
                             formControlName="endTime"
-                            [min]="endMoment.toDate()"
+                            [min]="minEndDate"
+                            [max]="location!.project!.endTime.toDate()"
                             placeholder="dd.MM.yyyy HH:mm"
                             [isValid]="isValidInput('endTime')">
                         </dx-date-box>
