@@ -3,6 +3,7 @@ import { HttpResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 
 import { TranslateService } from '@ngx-translate/core';
+import { AccountService } from 'app/core/auth/account.service';
 
 import { JhiEventManager } from 'ng-jhipster';
 
@@ -19,7 +20,10 @@ import { Section } from 'app/shared/model/section.model';
 import { ISchedulerEvent, SchedulerEvent } from 'app/shared/model/scheduler/event.scheduler';
 import { ISchedulerSection, SchedulerSection } from 'app/shared/model/scheduler/section.scheduler';
 
+import { VIEWER } from 'app/shared/constants/role.constants';
+
 import * as moment from 'moment';
+import { AUTHORITY_ADMIN } from 'app/shared/constants/authority.constants';
 
 @Component({
   selector: 'app-project-screenplay-location',
@@ -38,6 +42,7 @@ export class ProjectScreenplayLocationComponent implements OnInit {
 
   constructor(
     private translateService: TranslateService,
+    private accountService: AccountService,
     private sectionService: SectionService,
     private eventService: EventService,
     private eventManager: JhiEventManager,
@@ -114,6 +119,13 @@ export class ProjectScreenplayLocationComponent implements OnInit {
         }
       },
       () => this.reset()
+    );
+  }
+
+  isViewer(): boolean {
+    return (
+      !this.accountService.hasAnyAuthority(AUTHORITY_ADMIN) &&
+      (!this.project || this.accountService.hasAnyRole(this.project.id!, VIEWER.name))
     );
   }
 

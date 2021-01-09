@@ -10,7 +10,7 @@ export interface ISchedulerResponsibility {
 
 export class SchedulerResponsibility implements ISchedulerResponsibility {
   id: number;
-  text: string = '';
+  text = '';
   isResponsibility: boolean;
   originalValue: Responsibility | User;
 
