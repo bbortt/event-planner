@@ -28,14 +28,21 @@ public class LocationService {
     private final Logger log = LoggerFactory.getLogger(LocationService.class);
 
     private final ProjectService projectService;
+    private final SectionService sectionService;
+    private final EventService eventService;
 
     private final LocationRepository locationRepository;
-    private final SectionRepository sectionRepository;
 
-    public LocationService(ProjectService projectService, LocationRepository locationRepository, SectionRepository sectionRepository) {
+    public LocationService(
+        ProjectService projectService,
+        SectionService sectionService,
+        EventService eventService,
+        LocationRepository locationRepository
+    ) {
         this.projectService = projectService;
+        this.sectionService = sectionService;
+        this.eventService = eventService;
         this.locationRepository = locationRepository;
-        this.sectionRepository = sectionRepository;
     }
 
     /**
@@ -100,7 +107,8 @@ public class LocationService {
     @Transactional
     public void delete(Long id) {
         log.debug("Request to delete Location : {}", id);
-        sectionRepository.deleteAllByLocationId(id);
+        eventService.deleteAllByLocationId(id);
+        sectionService.deleteAllByLocationId(id);
         locationRepository.deleteById(id);
     }
 

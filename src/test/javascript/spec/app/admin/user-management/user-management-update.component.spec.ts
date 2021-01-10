@@ -75,7 +75,7 @@ describe('Component Tests', () => {
         [],
         fakeAsync(() => {
           // GIVEN
-          const entity: User = { id: 123 };
+          const entity: User = { id: 123 } as User;
           spyOn(service, 'update').and.returnValue(
             of(
               new HttpResponse({
@@ -99,7 +99,7 @@ describe('Component Tests', () => {
         [],
         fakeAsync(() => {
           // GIVEN
-          const entity: User = {};
+          const entity: User = {} as User;
           spyOn(service, 'create').and.returnValue(of(new HttpResponse({ body: entity })));
           comp.user = entity;
           // WHEN

@@ -28,7 +28,7 @@
             jhiTranslate="eventPlannerApp.responsibility.home.notFound">No responsibilities found</span>
     </div>
 
-    <div class="table-responsive" id="entities" *ngIf="project && responsibilities">
+    <div class="table-responsive" id="entities" *ngIf="project && loadedResponsibilities?.length != 0">
         <table class="table table-striped" aria-describedby="page-heading">
             <thead>
             <tr>

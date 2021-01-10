@@ -4,6 +4,7 @@ import io.github.bbortt.event.planner.domain.Event;
 import io.github.bbortt.event.planner.domain.Responsibility;
 import io.github.bbortt.event.planner.domain.User;
 import io.github.bbortt.event.planner.repository.EventRepository;
+import io.github.bbortt.event.planner.repository.SectionRepository;
 import io.github.bbortt.event.planner.service.exception.BadRequestException;
 import org.junit.Before;
 import org.junit.Rule;
@@ -25,7 +26,7 @@ class EventServiceUnitTest {
     ProjectService projectServiceMock;
 
     @Mock
-    SectionService sectionServiceMock;
+    SectionRepository sectionRepositoryMock;
 
     @Mock
     EventRepository eventRepositoryMock;
@@ -34,7 +35,7 @@ class EventServiceUnitTest {
 
     @Before
     void beforeTestSetup() {
-        fixture = new EventService(projectServiceMock, sectionServiceMock, eventRepositoryMock);
+        fixture = new EventService(projectServiceMock, sectionRepositoryMock, eventRepositoryMock);
     }
 
     @Test

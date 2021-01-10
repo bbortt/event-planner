@@ -20,7 +20,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -155,7 +154,7 @@ public class SectionResource {
     @PreAuthorize("@sectionService.hasAccessToSection(#id, \"" + RolesConstants.ADMIN + "\")")
     public ResponseEntity<Void> deleteSection(@PathVariable Long id) {
         log.debug("REST request to delete Section : {}", id);
-        String name = sectionService.findNamebySectionId(id).orElseThrow(EntityNotFoundException::new);
+        String name = sectionService.findNameBySectionId(id).orElseThrow(EntityNotFoundException::new);
         sectionService.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, name)).build();
     }

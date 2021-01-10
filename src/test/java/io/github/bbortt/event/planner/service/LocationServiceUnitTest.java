@@ -5,14 +5,17 @@ import io.github.bbortt.event.planner.domain.Responsibility;
 import io.github.bbortt.event.planner.domain.User;
 import io.github.bbortt.event.planner.repository.LocationRepository;
 import io.github.bbortt.event.planner.repository.SectionRepository;
+import io.github.bbortt.event.planner.service.EventService;
 import io.github.bbortt.event.planner.service.LocationService;
 import io.github.bbortt.event.planner.service.ProjectService;
+import io.github.bbortt.event.planner.service.SectionService;
 import io.github.bbortt.event.planner.service.exception.BadRequestException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
@@ -28,16 +31,19 @@ class LocationServiceUnitTest {
     ProjectService projectServiceMock;
 
     @Mock
-    LocationRepository locationRepositoryMock;
+    SectionService sectionServiceMock;
 
     @Mock
-    SectionRepository sectionRepositoryMock;
+    EventService eventServiceMock;
+
+    @Mock
+    LocationRepository locationRepositoryMock;
 
     LocationService fixture;
 
     @Before
     void beforeTestSetup() {
-        fixture = new LocationService(projectServiceMock, locationRepositoryMock, sectionRepositoryMock);
+        fixture = new LocationService(projectServiceMock, sectionServiceMock, eventServiceMock, locationRepositoryMock);
     }
 
     @Test
@@ -52,5 +58,16 @@ class LocationServiceUnitTest {
 
         expectedException.expect(BadRequestException.class);
         fixture.save(invalidLocation);
+    }
+
+    @Test
+    void deleteDoesTriggerEventsAndSectionDelete() {
+        Long locationId = 1234L;
+
+        fixture.delete(locationId);
+
+        Mockito.verify(eventServiceMock).deleteAllByLocationId(locationId);
+        Mockito.verify(sectionServiceMock).deleteAllByLocationId(locationId);
+        Mockito.verify(locationRepositoryMock).deleteById(locationId);
     }
 }

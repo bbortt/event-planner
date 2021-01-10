@@ -2,6 +2,7 @@ package io.github.bbortt.event.planner.service;
 
 import io.github.bbortt.event.planner.domain.Event;
 import io.github.bbortt.event.planner.repository.EventRepository;
+import io.github.bbortt.event.planner.repository.SectionRepository;
 import io.github.bbortt.event.planner.service.exception.BadRequestException;
 import io.github.bbortt.event.planner.service.exception.EntityNotFoundException;
 import io.github.bbortt.event.planner.service.exception.IdMustBePresentException;
@@ -23,13 +24,13 @@ public class EventService {
     private final Logger log = LoggerFactory.getLogger(EventService.class);
 
     private final ProjectService projectService;
-    private final SectionService sectionService;
 
+    private final SectionRepository sectionRepository;
     private final EventRepository eventRepository;
 
-    public EventService(ProjectService projectService, SectionService sectionService, EventRepository eventRepository) {
+    public EventService(ProjectService projectService, SectionRepository sectionRepository, EventRepository eventRepository) {
         this.projectService = projectService;
-        this.sectionService = sectionService;
+        this.sectionRepository = sectionRepository;
         this.eventRepository = eventRepository;
     }
 
@@ -108,6 +109,28 @@ public class EventService {
     }
 
     /**
+     * Delete all Events corresponding to a Section.
+     *
+     * @param sectionId the Section identifier.
+     */
+    @Transactional
+    public void deleteAllBySectionId(Long sectionId) {
+        log.debug("Request to delete all Event by Section : {}", sectionId);
+        eventRepository.deleteAllBySectionId(sectionId);
+    }
+
+    /**
+     * Delete all Events corresponding to a Location.
+     *
+     * @param locationId the Location identifier.
+     */
+    @Transactional
+    public void deleteAllByLocationId(Long locationId) {
+        log.debug("Request to delete all Event by Location : {}", locationId);
+        eventRepository.deleteAllByLocationId(locationId);
+    }
+
+    /**
      * Checks if the current user has access to the `Project` linked to the given `Event`, identified by id. The project access must be given by any of the `roles`. Example usage: `@PreAuthorize("@eventService.hasAccessToEvent(#event, 'ADMIN', 'SECRETARY')")`
      *
      * @param eventId the id of the location with a linked project to check.
@@ -137,7 +160,7 @@ public class EventService {
         return event
             .getSections()
             .stream()
-            .map(section -> sectionService.findOne(section.getId()))
+            .map(section -> sectionRepository.findById(section.getId()))
             .flatMap(Optional::stream)
             .anyMatch(section -> projectService.hasAccessToProject(section.getLocation().getProject(), roles));
     }

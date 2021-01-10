@@ -1,11 +1,11 @@
 package io.github.bbortt.event.planner.repository;
 
 import io.github.bbortt.event.planner.domain.Event;
-import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -23,4 +23,18 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     @Query("SELECT e.name FROM Event e WHERE e.id = :eventId")
     Optional<String> findNameByEventId(@Param("eventId") Long eventId);
+
+    @Modifying
+    @Query(
+        nativeQuery = true,
+        value = "DELETE FROM event WHERE id IN (SELECT e.id FROM event e LEFT JOIN section_has_events se ON e.id = se.event_id WHERE se.section_id = :sectionId)"
+    )
+    void deleteAllBySectionId(@Param("sectionId") Long sectionId);
+
+    @Modifying
+    @Query(
+        nativeQuery = true,
+        value = "DELETE FROM event WHERE id IN (SELECT e.id FROM event e LEFT JOIN section_has_events se ON e.id = se.event_id LEFT JOIN section s ON se.section_id = s.id WHERE s.location_id = :locationId)"
+    )
+    void deleteAllByLocationId(@Param("locationId") Long locationId);
 }
