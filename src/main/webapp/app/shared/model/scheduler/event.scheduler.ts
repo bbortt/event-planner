@@ -23,10 +23,10 @@ export class SchedulerEvent implements ISchedulerEvent {
   originalEvent?: Event;
 
   constructor(section: Section, event: Event) {
-    this.text = event.name!;
+    this.text = event.name;
     this.description = event.description;
-    this.startDate = event.startTime!.toDate();
-    this.endDate = event.endTime!.toDate();
+    this.startDate = event.startTime.toDate();
+    this.endDate = event.endTime.toDate();
     this.sectionId = section.id!;
 
     if (section.responsibility) {

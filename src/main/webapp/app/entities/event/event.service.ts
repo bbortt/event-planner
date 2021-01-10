@@ -58,8 +58,8 @@ export class EventService {
 
   protected convertDateFromServer(res: EntityResponseType): EntityResponseType {
     if (res.body) {
-      res.body.startTime = res.body.startTime ? moment(res.body.startTime) : undefined;
-      res.body.endTime = res.body.endTime ? moment(res.body.endTime) : undefined;
+      res.body.startTime = moment(res.body.startTime);
+      res.body.endTime = moment(res.body.endTime);
     }
     return res;
   }
@@ -67,8 +67,8 @@ export class EventService {
   protected convertDateArrayFromServer(res: EntityArrayResponseType): EntityArrayResponseType {
     if (res.body) {
       res.body.forEach((event: Event) => {
-        event.startTime = event.startTime ? moment(event.startTime) : undefined;
-        event.endTime = event.endTime ? moment(event.endTime) : undefined;
+        event.startTime = moment(event.startTime);
+        event.endTime = moment(event.endTime);
       });
     }
     return res;

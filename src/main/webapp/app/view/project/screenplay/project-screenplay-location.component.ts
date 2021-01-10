@@ -97,7 +97,9 @@ export class ProjectScreenplayLocationComponent implements OnInit {
       route.push('new');
     }
 
-    const { startTime, endTime } = event;
+    const startTime = event.startTime.toJSON();
+    const endTime = event.endTime.toJSON();
+
     this.router.navigate([{ outlets: { modal: route } }], {
       queryParams: { startTime, endTime },
     });

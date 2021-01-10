@@ -70,8 +70,8 @@ export class SectionService {
 
   private convertDateInSectionEvents(section: Section): Section {
     section.events?.forEach((event: Event) => {
-      event.startTime = event.startTime ? moment(event.startTime) : undefined;
-      event.endTime = event.endTime ? moment(event.endTime) : undefined;
+      event.startTime = moment(event.startTime);
+      event.endTime = moment(event.endTime);
     });
 
     const project = section.location?.project;
