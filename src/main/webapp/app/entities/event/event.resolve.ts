@@ -33,6 +33,6 @@ export class EventResolve implements Resolve<Event> {
       );
     }
 
-    return of({});
+    return of({} as Event);
   }
 }

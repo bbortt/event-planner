@@ -24,20 +24,28 @@ export class LocationService {
   constructor(protected http: HttpClient) {}
 
   create(location: Location): Observable<EntityResponseType> {
-    return this.http.post<Location>(this.resourceUrl, location, { observe: 'response' });
+    return this.http
+      .post<Location>(this.resourceUrl, location, { observe: 'response' })
+      .pipe(map((response: EntityResponseType) => this.convertDateFromServer(response)));
   }
 
   update(location: Location): Observable<EntityResponseType> {
-    return this.http.put<Location>(this.resourceUrl, location, { observe: 'response' });
+    return this.http
+      .put<Location>(this.resourceUrl, location, { observe: 'response' })
+      .pipe(map((response: EntityResponseType) => this.convertDateFromServer(response)));
   }
 
   find(id: number): Observable<EntityResponseType> {
-    return this.http.get<Location>(`${this.resourceUrl}/${id}`, { observe: 'response' });
+    return this.http
+      .get<Location>(`${this.resourceUrl}/${id}`, { observe: 'response' })
+      .pipe(map((response: EntityResponseType) => this.convertDateFromServer(response)));
   }
 
   query(req?: any): Observable<EntityArrayResponseType> {
     const options = createRequestOption(req);
-    return this.http.get<Location[]>(this.resourceUrl, { params: options, observe: 'response' });
+    return this.http
+      .get<Location[]>(this.resourceUrl, { params: options, observe: 'response' })
+      .pipe(map((response: EntityArrayResponseType) => this.convertDateArrayFromServer(response)));
   }
 
   findAllByProject(project: Project, req?: any): Observable<EntityArrayResponseType> {
@@ -62,14 +70,21 @@ export class LocationService {
     return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
   }
 
-  protected convertDateArrayFromServer(res: EntityArrayResponseType): EntityArrayResponseType {
+  protected convertDateFromServer(res: EntityResponseType): EntityResponseType {
     if (res.body) {
-      res.body.forEach(this.convertDateInLocationProject);
+      this.convertDates(res.body);
     }
     return res;
   }
 
-  private convertDateInLocationProject(location: Location): Section {
+  protected convertDateArrayFromServer(res: EntityArrayResponseType): EntityArrayResponseType {
+    if (res.body) {
+      res.body.forEach(this.convertDates);
+    }
+    return res;
+  }
+
+  private convertDates(location: Location): Section {
     location.project.startTime = moment(location.project.startTime);
     location.project.endTime = moment(location.project.endTime);
     return location;

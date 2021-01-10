@@ -56,29 +56,28 @@ export class SectionService {
 
   private convertDateFromServer(res: EntityResponseType): EntityResponseType {
     if (res.body) {
-      this.convertDateInSectionEvents(res.body);
+      this.convertDates(res.body);
     }
     return res;
   }
 
   protected convertDateArrayFromServer(res: EntityArrayResponseType): EntityArrayResponseType {
     if (res.body) {
-      res.body.forEach(this.convertDateInSectionEvents);
+      res.body.forEach(this.convertDates);
     }
     return res;
   }
 
-  private convertDateInSectionEvents(section: Section): Section {
-    section.events?.forEach((event: Event) => {
-      event.startTime = event.startTime ? moment(event.startTime) : undefined;
-      event.endTime = event.endTime ? moment(event.endTime) : undefined;
-    });
-
-    const project = section.location?.project;
-    if (project) {
-      project.startTime = moment(project.startTime);
-      project.endTime = moment(project.endTime);
+  private convertDates(section: Section): Section {
+    if (section.location?.project) {
+      section.location.project.startTime = moment(section.location.project.startTime);
+      section.location.project.endTime = moment(section.location.project.endTime);
     }
+
+    section.events?.forEach((event: Event) => {
+      event.startTime = moment(event.startTime);
+      event.endTime = moment(event.endTime);
+    });
 
     return section;
   }
