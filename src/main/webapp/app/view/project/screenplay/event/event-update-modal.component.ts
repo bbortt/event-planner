@@ -13,7 +13,6 @@ import * as moment from 'moment';
   template: '',
 })
 export class EventUpdateModalComponent implements AfterViewInit, OnDestroy {
-  private isReadonly = true;
   private modalRef?: NgbModalRef;
 
   constructor(private modalService: NgbModal, private activatedRoute: ActivatedRoute) {}
@@ -32,7 +31,7 @@ export class EventUpdateModalComponent implements AfterViewInit, OnDestroy {
 
       const url = routeParams[2];
       const lastSegment = url[url.length - 1].path;
-      this.isReadonly = lastSegment !== 'new' && lastSegment !== 'edit';
+      const isReadonly = lastSegment !== 'new' && lastSegment !== 'edit';
 
       this.modalRef = this.modalService.open(EventUpdateComponent, {
         beforeDismiss(): boolean {
@@ -45,7 +44,7 @@ export class EventUpdateModalComponent implements AfterViewInit, OnDestroy {
         event || { sections: [section] },
         startTime || new Date(),
         endTime || new Date(),
-        this.isReadonly
+        isReadonly
       );
     });
   }
