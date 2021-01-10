@@ -36,7 +36,7 @@ export class ProjectAdminComponent implements OnInit, OnDestroy {
     this.activatedRoute.data.subscribe(({ project }) => {
       this.project = project;
       if (this.router.isActive(`/project/${(project as Project).id!}/admin`, true)) {
-        this.router.navigate(['locations'], { relativeTo: this.activatedRoute.parent });
+        this.router.navigate(['locations'], { replaceUrl: true, relativeTo: this.activatedRoute.parent });
       }
     });
 

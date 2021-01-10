@@ -23,7 +23,7 @@
                     <label class="form-control-label" jhiTranslate="eventPlannerApp.event.name"
                            for="field_name">Name</label>
                     <input type="text" class="form-control" name="name" id="field_name"
-                           formControlName="name" autocomplete="off"  />
+                           formControlName="name" autocomplete="off" />
                     <div
                         *ngIf="editForm.get('name')!.invalid && (editForm.get('name')!.dirty || editForm.get('name')!.touched)">
                         <small class="form-text text-danger"
@@ -151,7 +151,7 @@
                            [checked]="isResponsibility"
                            (change)="onRadioChange($event)"
                            [readOnly]="isReadonly">
-                    <span                    jhiTranslate="eventPlannerApp.event.responsibility">Responsibility</span>
+                    <span jhiTranslate="eventPlannerApp.event.responsibility">Responsibility</span>
 
                     <input type="radio"
                            value="user"
@@ -159,7 +159,7 @@
                            [checked]="!isResponsibility"
                            (change)="onRadioChange($event)"
                            [readOnly]="isReadonly">
-                    <span                    jhiTranslate="eventPlannerApp.event.user">User</span>
+                    <span jhiTranslate="eventPlannerApp.event.user">User</span>
                 </div>
 
                 <div *ngIf="isResponsibility; else userAutocomplete" class="form-group">
@@ -202,24 +202,38 @@
                     </div>
                 </ng-template>
 
-                <div *ngIf="isReadonly && !isViewer ; else editButtons">
+                <div
+                    *ngIf="isReadonly && !isViewer ; else editButtons"
+                    class="btn-group">
                     <button
                         type="button"
                         id="edit-event"
                         class="btn btn-negative btn-gray"
-                            (click)="edit()">
+                        (click)="edit()">
                         <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span
                         jhiTranslate="entity.action.edit">Edit</span>
+                    </button>
+
+                    <button
+                        type="button"
+                        id="delete-event"
+                        [disabled]=" isSaving"
+                        class="btn btn-negative btn-gray"
+                        (click)="delete()">
+                        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span
+                        jhiTranslate="entity.action.delete">Delete</span>
                     </button>
                 </div>
 
                 <ng-template #editButtons>
-                    <div *ngIf="!isViewer">
+                    <div
+                        *ngIf="!isViewer"
+                        class="btn-group">
                         <button
                             type="button"
                             id="cancel-save"
                             class="btn btn-negative btn-gray"
-                                (click)="previousState()">
+                            (click)="previousState()">
                             <fa-icon icon="ban"></fa-icon>&nbsp;<span
                             jhiTranslate="entity.action.cancel">Cancel</span>
                         </button>
@@ -228,7 +242,7 @@
                             type="submit"
                             id="save-entity"
                             [disabled]="editForm.invalid || isSaving"
-                                class="btn btn-negative btn-green">
+                            class="btn btn-negative btn-green">
                             <fa-icon icon="save"></fa-icon>&nbsp;<span
                             jhiTranslate="entity.action.save">Save</span>
                         </button>

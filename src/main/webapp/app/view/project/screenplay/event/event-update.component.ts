@@ -156,6 +156,11 @@ export class EventUpdateComponent implements OnInit, OnDestroy {
     this.router.navigate([{ outlets: { modal: route } }], { replaceUrl: true });
   }
 
+  delete(): void {
+    this.isSaving = true;
+    this.eventService.delete(this.event!.id!).subscribe(() => this.onSaveSuccess());
+  }
+
   save(): void {
     this.isSaving = true;
     const event = this.createFromForm();
