@@ -31,7 +31,8 @@ export class EventUpdateModalComponent implements AfterViewInit, OnDestroy {
       }
 
       const url = routeParams[2];
-      this.isReadonly = url[url.length - 1].path !== 'edit';
+      const lastSegment = url[url.length - 1].path;
+      this.isReadonly = lastSegment !== 'new' && lastSegment !== 'edit';
 
       this.modalRef = this.modalService.open(EventUpdateComponent, {
         beforeDismiss(): boolean {
