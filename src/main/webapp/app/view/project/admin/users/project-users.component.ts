@@ -7,6 +7,8 @@ import { Project } from 'app/shared/model/project.model';
 import { InvitationService } from 'app/entities/invitation/invitation.service';
 import { Invitation } from 'app/shared/model/invitation.model';
 import { JhiEventManager } from 'ng-jhipster';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ProjectUserInviteDeleteDialogComponent } from 'app/view/project/admin/users/project-user-invite-delete-dialog.component';
 
 @Component({
   selector: 'app-project-users',
@@ -29,7 +31,8 @@ export class ProjectUsersComponent implements OnDestroy {
     private invitationService: InvitationService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private eventManager: JhiEventManager
+    private eventManager: JhiEventManager,
+    private modalService: NgbModal
   ) {
     combineLatest([this.activatedRoute.data, this.activatedRoute.queryParamMap]).subscribe(([data, params]) => {
       this.projectId = (data.project as Project).id;
@@ -96,5 +99,10 @@ export class ProjectUsersComponent implements OnDestroy {
 
   trackByFn(index: number, item: Invitation): number {
     return item.id!;
+  }
+
+  delete(invitation: Invitation): void {
+    const modalRef = this.modalService.open(ProjectUserInviteDeleteDialogComponent, { backdrop: 'static' });
+    modalRef.componentInstance.invitation = invitation;
   }
 }

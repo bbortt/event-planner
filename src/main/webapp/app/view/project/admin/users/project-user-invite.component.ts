@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 
 import { JhiEventManager } from 'ng-jhipster';
@@ -11,6 +11,7 @@ import { Project } from 'app/shared/model/project.model';
 import { Responsibility } from 'app/shared/model/responsibility.model';
 
 import { CONTRIBUTOR, InternalRole, ROLES } from 'app/shared/constants/role.constants';
+import { ChangeDetection } from '@angular/cli/lib/config/schema';
 
 @Component({
   selector: 'app-project-user-invite',
@@ -19,10 +20,13 @@ import { CONTRIBUTOR, InternalRole, ROLES } from 'app/shared/constants/role.cons
 })
 export class ProjectUserInviteComponent {
   isSaving = false;
+  isNew = false;
   inviteForm = this.fb.group({
+    id: [],
     email: [null, [Validators.required, Validators.email]],
     role: [CONTRIBUTOR, [Validators.required]],
     responsibility: [null],
+    responsibilityAutocomplete: [],
   });
 
   ROLES = ROLES;
@@ -40,6 +44,7 @@ export class ProjectUserInviteComponent {
   public save(): void {
     this.isSaving = false;
     const invitation: Invitation = {
+      id: this.inviteForm.get('id')!.value,
       email: this.inviteForm.get('email')!.value,
       accepted: false,
       project: this.project!,
@@ -48,14 +53,29 @@ export class ProjectUserInviteComponent {
         name: (this.inviteForm.get('role')!.value as InternalRole).name,
       },
     };
-    this.invitationService.create(invitation).subscribe(() => {
-      this.eventManager.broadcast('invitationListModification');
-      this.previousState();
-    });
+    if (invitation.id !== undefined) {
+      this.invitationService.update(invitation).subscribe(() => {
+        this.eventManager.broadcast('invitationListModification');
+        this.previousState();
+      });
+    } else {
+      this.invitationService.create(invitation).subscribe(() => {
+        this.eventManager.broadcast('invitationListModification');
+        this.previousState();
+      });
+    }
   }
 
-  public setProject(project: Project): void {
+  public updateForm(project: Project, invitation: Invitation): void {
+    this.isNew = !invitation.id;
     this.project = project;
+    this.inviteForm.patchValue({
+      id: invitation.id,
+      email: invitation.email,
+      role: ROLES.find(role => role.name === invitation?.role?.name) || null,
+      responsibility: invitation.responsibility,
+      responsibilityAutocomplete: invitation.responsibility?.name,
+    });
     this.responsibilityService.findAllByProject(project).subscribe(responsibilities => {
       this.responsibilities = responsibilities.body || [];
     });

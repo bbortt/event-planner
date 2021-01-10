@@ -11,13 +11,14 @@ import { UserRouteRoleAccessService } from 'app/core/auth/user-route-role-access
 import { CreateProjectModalComponent } from 'app/view/create-project/create-project-modal.component';
 import { ProjectAdminUpdateModalComponent } from 'app/view/project/admin/project-admin-update-modal.component';
 import { ProjectResponsibilityModalComponent } from 'app/view/project/admin/responsibilities/project-responsibility-modal.component';
-import { ProjectUserModalComponent } from 'app/view/project/admin/users/project-user-modal.component';
+import { ProjectUserInviteModalComponent } from 'app/view/project/admin/users/project-user-invite-modal.component';
 import { ProjectLocationModalComponent } from 'app/view/project/admin/locations/project-location-modal.component';
 import { ProjectSectionModalComponent } from 'app/view/project/admin/locations/sections/project-section-modal.component';
 
 import { EventUpdateModalComponent } from 'app/view/project/screenplay/event/event-update-modal.component';
 
 import { ADMIN, CONTRIBUTOR, SECRETARY } from 'app/shared/constants/role.constants';
+import { InvitationResolve } from 'app/entities/invitation/invitation.resolve';
 
 export const MODAL_OUTLET_ROUTES: Routes = [
   {
@@ -63,14 +64,27 @@ export const MODAL_OUTLET_ROUTES: Routes = [
     outlet: 'modal',
   },
   {
-    path: 'projects/:projectId/users/invite',
-    component: ProjectUserModalComponent,
+    path: 'projects/:projectId/users/invite/new',
+    component: ProjectUserInviteModalComponent,
     data: {
       roles: [ADMIN.name, SECRETARY.name],
     },
     canActivate: [UserRouteRoleAccessService],
     resolve: {
       project: ProjectResolve,
+    },
+    outlet: 'modal',
+  },
+  {
+    path: 'projects/:projectId/users/invite/:invitationId/edit',
+    component: ProjectUserInviteModalComponent,
+    data: {
+      roles: [ADMIN.name, SECRETARY.name],
+    },
+    canActivate: [UserRouteRoleAccessService],
+    resolve: {
+      project: ProjectResolve,
+      invitation: InvitationResolve,
     },
     outlet: 'modal',
   },

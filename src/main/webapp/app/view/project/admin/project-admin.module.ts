@@ -26,6 +26,7 @@ import { ProjectResponsibilityUpdateComponent } from 'app/view/project/admin/res
 import { ProjectResponsibilityDeleteDialogComponent } from 'app/view/project/admin/responsibilities/project-responsibility-delete-dialog.component';
 
 import { PROJECT_ADMIN_ROUTES } from './project-admin.routes';
+import { ProjectUserInviteDeleteDialogComponent } from 'app/view/project/admin/users/project-user-invite-delete-dialog.component';
 
 @NgModule({
   imports: [EventPlannerSharedModule, DxAutocompleteModule, RouterModule.forChild(PROJECT_ADMIN_ROUTES)],
@@ -43,6 +44,7 @@ import { PROJECT_ADMIN_ROUTES } from './project-admin.routes';
     ProjectSectionDeleteDialogComponent,
     ProjectUsersComponent,
     ProjectUserInviteComponent,
+    ProjectUserInviteDeleteDialogComponent,
     ProjectResponsibilitiesComponent,
     ProjectResponsibilityUpdateComponent,
     ProjectResponsibilityDeleteDialogComponent,

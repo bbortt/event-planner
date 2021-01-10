@@ -8,13 +8,13 @@ import { ProjectUserInviteComponent } from 'app/view/project/admin/users/project
 @Component({
   template: '',
 })
-export class ProjectUserModalComponent implements AfterViewInit, OnDestroy {
+export class ProjectUserInviteModalComponent implements AfterViewInit, OnDestroy {
   private modalRef?: NgbModalRef;
 
   constructor(private modalService: NgbModal, private eventManager: JhiEventManager, private activatedRoute: ActivatedRoute) {}
 
   ngAfterViewInit(): void {
-    this.activatedRoute.data.subscribe(({ project }) => {
+    this.activatedRoute.data.subscribe(({ project, invitation }) => {
       this.modalRef = this.modalService.open(ProjectUserInviteComponent, {
         beforeDismiss(): boolean {
           window.history.back();
@@ -22,7 +22,7 @@ export class ProjectUserModalComponent implements AfterViewInit, OnDestroy {
         },
       });
 
-      (this.modalRef.componentInstance as ProjectUserInviteComponent).setProject(project);
+      (this.modalRef.componentInstance as ProjectUserInviteComponent).updateForm(project, invitation || {});
     });
   }
 
