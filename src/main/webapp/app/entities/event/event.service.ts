@@ -1,12 +1,17 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
+
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+
+import { Event } from 'app/shared/model/event.model';
+import { Section } from 'app/shared/model/section.model';
+
+import { createRequestOption } from 'app/shared/util/request-util';
+
 import * as moment from 'moment';
 
 import { SERVER_API_URL } from 'app/app.constants';
-import { createRequestOption } from 'app/shared/util/request-util';
-import { Event } from 'app/shared/model/event.model';
 
 type EntityResponseType = HttpResponse<Event>;
 type EntityArrayResponseType = HttpResponse<Event[]>;
@@ -58,19 +63,29 @@ export class EventService {
 
   protected convertDateFromServer(res: EntityResponseType): EntityResponseType {
     if (res.body) {
-      res.body.startTime = moment(res.body.startTime);
-      res.body.endTime = moment(res.body.endTime);
+      this.convertDates(res.body);
     }
     return res;
   }
 
   protected convertDateArrayFromServer(res: EntityArrayResponseType): EntityArrayResponseType {
     if (res.body) {
-      res.body.forEach((event: Event) => {
-        event.startTime = moment(event.startTime);
-        event.endTime = moment(event.endTime);
-      });
+      res.body.forEach(this.convertDates);
     }
     return res;
+  }
+
+  convertDates(event: Event): Event {
+    event.startTime = moment(event.startTime);
+    event.endTime = moment(event.endTime);
+
+    event.sections?.forEach((section: Section) => {
+      if (section.location?.project) {
+        section.location.project.startTime = moment(section.location.project.startTime);
+        section.location.project.endTime = moment(section.location.project.endTime);
+      }
+    });
+
+    return event;
   }
 }
