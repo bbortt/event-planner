@@ -71,8 +71,6 @@ public class EventResource {
         RolesConstants.SECRETARY +
         "\", \"" +
         RolesConstants.CONTRIBUTOR +
-        "\", \"" +
-        RolesConstants.VIEWER +
         "\")"
     )
     public ResponseEntity<Event> createEvent(@Valid @RequestBody Event event) throws URISyntaxException {
@@ -102,8 +100,6 @@ public class EventResource {
         RolesConstants.SECRETARY +
         "\", \"" +
         RolesConstants.CONTRIBUTOR +
-        "\", \"" +
-        RolesConstants.VIEWER +
         "\")"
     )
     public ResponseEntity<Event> updateEvent(@Valid @RequestBody Event event) throws URISyntaxException {
@@ -180,8 +176,6 @@ public class EventResource {
         RolesConstants.SECRETARY +
         "\", \"" +
         RolesConstants.CONTRIBUTOR +
-        "\", \"" +
-        RolesConstants.VIEWER +
         "\")"
     )
     public ResponseEntity<Void> deleteEvent(@PathVariable Long id) {

@@ -1,7 +1,13 @@
 import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 import { TranslateService } from '@ngx-translate/core';
+import { AccountService } from 'app/core/auth/account.service';
+
+import { JhiEventManager } from 'ng-jhipster';
+
+import { AppointmentEvent } from 'app/shared/model/scheduler/appointment-event';
 
 import { EventService } from 'app/entities/event/event.service';
 import { SectionService } from 'app/entities/section/section.service';
@@ -13,11 +19,11 @@ import { Section } from 'app/shared/model/section.model';
 
 import { ISchedulerEvent, SchedulerEvent } from 'app/shared/model/scheduler/event.scheduler';
 import { ISchedulerSection, SchedulerSection } from 'app/shared/model/scheduler/section.scheduler';
-import { AppointmentEvent } from 'app/shared/model/scheduler/appointment-event';
 
-import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
+import { VIEWER } from 'app/shared/constants/role.constants';
 
 import * as moment from 'moment';
+import { AUTHORITY_ADMIN } from 'app/shared/constants/authority.constants';
 
 @Component({
   selector: 'app-project-screenplay-location',
@@ -34,11 +40,20 @@ export class ProjectScreenplayLocationComponent implements OnInit {
   public events: ISchedulerEvent[] = [];
   public sections: ISchedulerSection[] = [];
 
-  constructor(private translateService: TranslateService, private sectionService: SectionService, private eventService: EventService) {}
+  constructor(
+    private translateService: TranslateService,
+    private accountService: AccountService,
+    private sectionService: SectionService,
+    private eventService: EventService,
+    private eventManager: JhiEventManager,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
-    this.project = this.location?.project;
+    this.project = this.location!.project;
     this.reset();
+
+    this.eventManager.subscribe(`eventListModificationInLocation${this.location!.id!}`, () => this.reset());
   }
 
   private reset(): void {
@@ -73,42 +88,27 @@ export class ProjectScreenplayLocationComponent implements OnInit {
   }
 
   configureAppointmentForm(e: any): void {
-    // Make 'text' mandatory field and set name according to `Event`
-    this.translateService
-      .get('eventPlannerApp.event.name')
-      .subscribe(
-        (translation: string) =>
-          (e.form.itemOption('mainGroup').items.find((item: any) => item.dataField === 'text').label.text = translation)
-      );
-    e.form.itemOption('mainGroup.text', 'isRequired', true);
+    const event = this.fromEvent(e.appointmentData);
 
-    // Date-Time picker formatting
-    e.form.itemOption('mainGroup').items[1].items[0].editorOptions.displayFormat = DATE_TIME_FORMAT;
-    e.form.itemOption('mainGroup').items[1].items[2].editorOptions.displayFormat = DATE_TIME_FORMAT;
+    const route = ['projects', this.project!.id!, 'locations', this.location!.id!, 'sections', event.sections![0].id, 'events'];
+    if (event.id) {
+      route.push(event.id, 'edit');
+    } else {
+      route.push('new');
+    }
 
-    // Adapt form to our needs
-    e.form.option('showRequiredMark', false);
-    e.form.option('items', [...e.form.option('items') /* TODO: Append `Responsibility` / `User` */]);
+    const { startTime, endTime } = event;
+    this.router.navigate([{ outlets: { modal: route } }], {
+      queryParams: { startTime, endTime },
+    });
+
+    // Cancel devextreme form
+    e.cancel = true;
   }
 
-  onAppointmentAdded(e: AppointmentEvent): void {
-    const appointment = e.appointmentData;
-    const eventIndex = this.events.findIndex((event: ISchedulerEvent) => !(event instanceof SchedulerEvent));
-
-    this.eventService.create(this.fromEvent(appointment)).subscribe(
-      (response: HttpResponse<Event>) => {
-        const event = response.body;
-
-        if (response.status !== 201) {
-          this.events.splice(eventIndex, 1);
-        } else if (event) {
-          this.events[eventIndex] = this.toEvent(event.sections![0], event);
-        }
-      },
-      () => this.events.splice(eventIndex, 1)
-    );
-  }
-
+  /*
+   * This is for the "drag & drop" update (times only). Any click on an item results in `this.configureAppointmentForm` beeing called.
+   */
   onAppointmentUpdated(e: AppointmentEvent): void {
     const appointment = e.appointmentData;
 
@@ -122,16 +122,10 @@ export class ProjectScreenplayLocationComponent implements OnInit {
     );
   }
 
-  onAppointmentDeleted(e: AppointmentEvent): void {
-    const appointment = e.appointmentData;
-
-    this.eventService.delete(this.fromEvent(e.appointmentData).id!).subscribe(
-      (response: HttpResponse<{}>) => {
-        if (response.status !== 204) {
-          this.events.push(appointment);
-        }
-      },
-      () => this.events.push(appointment)
+  isViewer(): boolean {
+    return (
+      !this.accountService.hasAnyAuthority(AUTHORITY_ADMIN) &&
+      (!this.project || this.accountService.hasAnyRole(this.project.id!, VIEWER.name))
     );
   }
 
@@ -143,6 +137,14 @@ export class ProjectScreenplayLocationComponent implements OnInit {
       endTime: moment(event.endDate),
       sections: [this.sectionById(event.sectionId)],
     };
+
+    if (event.responsibility) {
+      if (event.responsibility.isResponsibility) {
+        updatedEvent['responsibility'] = event.responsibility.originalValue;
+      } else {
+        updatedEvent['user'] = event.responsibility.originalValue;
+      }
+    }
 
     return { ...event.originalEvent, ...updatedEvent };
   }

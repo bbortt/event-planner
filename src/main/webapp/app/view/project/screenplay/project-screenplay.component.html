@@ -37,8 +37,15 @@
         (panelChange)="onPanelChange($event)">
         <ngb-panel *ngFor="let location of locations" id="location-{{location.id}}">
             <ng-template ngbPanelTitle>
-                <div class="d-flex align-items-left">
-                    <h3 class="location-header">{{location.name}}</h3>
+                <div class="d-flex align-items-left location-header">
+                    <h6>{{location.name}}</h6>
+                    &nbsp;
+                    <div *ngIf="isActiveId('location-' + location.id); else collapsed">
+                        <small><fa-icon [icon]="chevronUp"></fa-icon></small>
+                    </div>
+                    <ng-template #collapsed>
+                        <small><fa-icon [icon]="chevronDown"></fa-icon></small>
+                    </ng-template>
                 </div>
             </ng-template>
             <ng-template ngbPanelContent>

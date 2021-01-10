@@ -5,7 +5,6 @@ import { Observable } from 'rxjs';
 
 import { User } from './user.model';
 import { Project } from 'app/shared/model/project.model';
-import { Responsibility } from 'app/shared/model/responsibility.model';
 
 import { createRequestOption, Pagination } from 'app/shared/util/request-util';
 
@@ -50,7 +49,7 @@ export class UserService {
 
   findAllByProject(project: Project, req?: any): Observable<EntityArrayResponseType> {
     const options = createRequestOption(req);
-    return this.http.get<Responsibility[]>(`${this.resourceUrl}/project/${project.id!}`, {
+    return this.http.get<User[]>(`${this.resourceUrl}/project/${project.id!}`, {
       params: options,
       observe: 'response',
     });

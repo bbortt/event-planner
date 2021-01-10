@@ -3,7 +3,7 @@
 </div>
 
 <ng-template #scheduler>
-    <div class="app-project-screenplay-location">
+    <div class="app-project-screenplay-location" [ngClass]="{ 'screenplay-readonly': isViewer() }">
         <dx-scheduler
             [dataSource]="events"
             appointmentTemplate="eventTemplate"
@@ -13,13 +13,11 @@
             [max]="project!.endTime.toDate()"
             [groups]="['sectionId']"
             currentView="custom-project-view"
-            [showCurrentTimeIndicator]="false"
             [showAllDayPanel]="false"
             [crossScrollingEnabled]="true"
+            [showCurrentTimeIndicator]="false"
             (onAppointmentFormOpening)="configureAppointmentForm($event)"
-            (onAppointmentAdded)="onAppointmentAdded($event)"
-            (onAppointmentUpdated)="onAppointmentUpdated($event)"
-            (onAppointmentDeleted)="onAppointmentDeleted($event)">
+            (onAppointmentUpdated)="onAppointmentUpdated($event)">
             <dxi-view
                 type="timelineDay"
                 name="custom-project-view"

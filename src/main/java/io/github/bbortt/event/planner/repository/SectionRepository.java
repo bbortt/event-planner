@@ -15,8 +15,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface SectionRepository extends JpaRepository<Section, Long> {
-    List<Section> findAllByLocationId(Long locationId, Sort sort);
-
     @Query("SELECT DISTINCT s FROM Section s LEFT JOIN FETCH s.events WHERE s.location.id = :locationId ORDER BY s.name")
     List<Section> findAllByLocationIdJoinEventsOrderByNameAsc(@Param("locationId") Long locationId);
 
