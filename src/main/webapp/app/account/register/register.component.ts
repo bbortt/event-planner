@@ -72,7 +72,7 @@ export class RegisterComponent implements AfterViewInit {
       const login = this.registerForm.get(['login'])!.value;
       const email = this.registerForm.get(['email'])!.value;
       this.registerService
-        .save({ login, email, password, langKey: this.languageService.getCurrentLanguage() })
+        .save({ login, email, password, activated: false, langKey: this.languageService.getCurrentLanguage(), createdBy: 'anonymousUser' })
         .pipe(
           switchMap(() =>
             this.invitationToken ? this.invitationService.assignUserByLoginToInvitation(login, this.invitationToken) : of(null)

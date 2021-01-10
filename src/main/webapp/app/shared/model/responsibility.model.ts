@@ -5,8 +5,8 @@ import { Event } from 'app/shared/model/event.model';
 
 export interface Responsibility {
   id?: number;
-  name?: string;
-  project?: Project;
+  name: string;
+  project: Project;
   invitations?: Invitation[];
   locations?: Location[];
   events?: Event[];

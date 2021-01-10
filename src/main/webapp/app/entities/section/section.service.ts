@@ -32,7 +32,9 @@ export class SectionService {
   }
 
   find(id: number): Observable<EntityResponseType> {
-    return this.http.get<Section>(`${this.resourceUrl}/${id}`, { observe: 'response' });
+    return this.http
+      .get<Section>(`${this.resourceUrl}/${id}`, { observe: 'response' })
+      .pipe(map((response: EntityResponseType) => this.convertDateFromServer(response)));
   }
 
   query(req?: any): Observable<EntityArrayResponseType> {
@@ -44,20 +46,19 @@ export class SectionService {
     return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
   }
 
-  findAllByLocation(location: Location, req?: any): Observable<EntityArrayResponseType> {
-    const options = createRequestOption(req);
-    return this.http.get<Location[]>(`${this.resourceUrl}/project/${location.project.id!}/location/${location.id!}`, {
-      params: options,
-      observe: 'response',
-    });
-  }
-
   findAllByLocationInclusiveEvents(location: Location): Observable<EntityArrayResponseType> {
     return this.http
       .get<Location[]>(`${this.resourceUrl}/project/${location.project.id!}/location/${location.id!}/events`, {
         observe: 'response',
       })
       .pipe(map((response: EntityArrayResponseType) => this.convertDateArrayFromServer(response)));
+  }
+
+  private convertDateFromServer(res: EntityResponseType): EntityResponseType {
+    if (res.body) {
+      this.convertDateInSectionEvents(res.body);
+    }
+    return res;
   }
 
   protected convertDateArrayFromServer(res: EntityArrayResponseType): EntityArrayResponseType {
@@ -72,6 +73,13 @@ export class SectionService {
       event.startTime = event.startTime ? moment(event.startTime) : undefined;
       event.endTime = event.endTime ? moment(event.endTime) : undefined;
     });
+
+    const project = section.location?.project;
+    if (project) {
+      project.startTime = moment(project.startTime);
+      project.endTime = moment(project.endTime);
+    }
+
     return section;
   }
 }

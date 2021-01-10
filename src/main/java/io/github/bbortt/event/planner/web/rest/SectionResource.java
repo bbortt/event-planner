@@ -127,14 +127,6 @@ public class SectionResource {
         return ResponseUtil.wrapOrNotFound(section);
     }
 
-    @GetMapping("/sections/project/{projectId}/location/{locationId}")
-    @PreAuthorize("@projectService.hasAccessToProject(#projectId, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")")
-    public ResponseEntity<List<Section>> getSectionsByLocationId(@PathVariable Long projectId, @PathVariable Long locationId, Sort sort) {
-        log.debug("REST Request to get Sections by locationId {}", locationId);
-        List<Section> sections = sectionService.findAllByLocationId(locationId, sort);
-        return ResponseEntity.ok(sections);
-    }
-
     @GetMapping("/sections/project/{projectId}/location/{locationId}/events")
     @PreAuthorize(
         "@projectService.hasAccessToProject(#projectId, \"" +

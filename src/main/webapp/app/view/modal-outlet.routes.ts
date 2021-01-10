@@ -1,8 +1,9 @@
 import { Routes } from '@angular/router';
 
+import { EventResolve } from 'app/entities/event/event.resolve';
+import { LocationResolve } from 'app/entities/location/location.resolve';
 import { ProjectResolve } from 'app/entities/project/project.resolve';
 import { ResponsibilityResolve } from 'app/entities/responsibility/responsibility.resolve';
-import { LocationResolve } from 'app/entities/location/location.resolve';
 import { SectionResolve } from 'app/entities/section/section.resolve';
 
 import { UserRouteRoleAccessService } from 'app/core/auth/user-route-role-access-service';
@@ -14,7 +15,9 @@ import { ProjectUserModalComponent } from 'app/view/project/admin/users/project-
 import { ProjectLocationModalComponent } from 'app/view/project/admin/locations/project-location-modal.component';
 import { ProjectSectionModalComponent } from 'app/view/project/admin/locations/sections/project-section-modal.component';
 
-import { ADMIN, SECRETARY } from 'app/shared/constants/role.constants';
+import { EventUpdateModalComponent } from 'app/view/project/screenplay/event/event-update-modal.component';
+
+import { ADMIN, CONTRIBUTOR, SECRETARY } from 'app/shared/constants/role.constants';
 
 export const MODAL_OUTLET_ROUTES: Routes = [
   {
@@ -118,6 +121,35 @@ export const MODAL_OUTLET_ROUTES: Routes = [
     resolve: {
       location: LocationResolve,
       section: SectionResolve,
+    },
+    outlet: 'modal',
+  },
+  {
+    path: 'projects/:projectId/locations/:locationId/sections/:sectionId/events/new',
+    component: EventUpdateModalComponent,
+    data: {
+      roles: [ADMIN.name, SECRETARY.name, CONTRIBUTOR.name],
+    },
+    canActivate: [UserRouteRoleAccessService],
+    resolve: {
+      project: ProjectResolve,
+      location: LocationResolve,
+      section: SectionResolve,
+    },
+    outlet: 'modal',
+  },
+  {
+    path: 'projects/:projectId/locations/:locationId/sections/:sectionId/events/:eventId/edit',
+    component: EventUpdateModalComponent,
+    data: {
+      roles: [ADMIN.name, SECRETARY.name, CONTRIBUTOR.name],
+    },
+    canActivate: [UserRouteRoleAccessService],
+    resolve: {
+      project: ProjectResolve,
+      location: LocationResolve,
+      section: SectionResolve,
+      event: EventResolve,
     },
     outlet: 'modal',
   },

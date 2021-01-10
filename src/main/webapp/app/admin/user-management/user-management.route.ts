@@ -17,7 +17,7 @@ export class UserManagementResolve implements Resolve<User> {
     if (id) {
       return this.service.find(id);
     }
-    return of({});
+    return of({} as User);
   }
 }
 

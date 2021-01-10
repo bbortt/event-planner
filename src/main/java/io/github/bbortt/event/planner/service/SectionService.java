@@ -64,19 +64,6 @@ public class SectionService {
     }
 
     /**
-     * Get all sections for the given location.
-     *
-     * @param locationId the location to retrieve sections for.
-     * @param sort       the sorting.
-     * @return the list of entities.
-     */
-    @Transactional(readOnly = true)
-    public List<Section> findAllByLocationId(Long locationId, Sort sort) {
-        log.debug("Request to get Sections by Location : {}", locationId);
-        return sectionRepository.findAllByLocationId(locationId, sort);
-    }
-
-    /**
      * Get all sections and their corresponding events for the given location.
      *
      * @param locationId the location to retrieve sections and events for.
