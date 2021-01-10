@@ -29,12 +29,10 @@ export class SchedulerEvent implements ISchedulerEvent {
     this.endDate = event.endTime.toDate();
     this.sectionId = section.id!;
 
-    if (section.responsibility) {
-      const { responsibility } = section;
-      this.responsibility = new SchedulerResponsibility(responsibility, true);
-    } else if (section.user) {
-      const { user } = section;
-      this.responsibility = new SchedulerResponsibility(user, false);
+    if (event.responsibility) {
+      this.responsibility = new SchedulerResponsibility(event.responsibility, true);
+    } else if (event.user) {
+      this.responsibility = new SchedulerResponsibility(event.user, false);
     }
 
     this.originalEvent = event;

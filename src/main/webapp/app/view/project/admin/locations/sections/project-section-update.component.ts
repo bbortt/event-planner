@@ -66,7 +66,7 @@ export class ProjectSectionUpdateComponent implements OnInit {
       responsibility: section.responsibility,
       responsibilityAutocomplete: section.responsibility?.name,
       user: section.user,
-      userAutocomplete: section.user?.login,
+      userAutocomplete: section.user?.email,
       location,
     });
   }

@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+
 import { ISchedulerEvent } from 'app/shared/model/scheduler/event.scheduler';
 
 @Component({

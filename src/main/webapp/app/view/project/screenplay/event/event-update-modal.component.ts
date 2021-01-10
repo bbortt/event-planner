@@ -13,12 +13,13 @@ import * as moment from 'moment';
   template: '',
 })
 export class EventUpdateModalComponent implements AfterViewInit, OnDestroy {
+  private isReadonly = true;
   private modalRef?: NgbModalRef;
 
   constructor(private modalService: NgbModal, private activatedRoute: ActivatedRoute) {}
 
   ngAfterViewInit(): void {
-    combineLatest([this.activatedRoute.queryParams, this.activatedRoute.data]).subscribe((routeParams: any[]) => {
+    combineLatest([this.activatedRoute.queryParams, this.activatedRoute.data, this.activatedRoute.url]).subscribe((routeParams: any[]) => {
       let { startTime, endTime } = routeParams[0];
       const { section, event } = routeParams[1];
 
@@ -28,6 +29,9 @@ export class EventUpdateModalComponent implements AfterViewInit, OnDestroy {
       if (endTime) {
         endTime = moment(endTime).toDate();
       }
+
+      const url = routeParams[2];
+      this.isReadonly = url[url.length - 1].path !== 'edit';
 
       this.modalRef = this.modalService.open(EventUpdateComponent, {
         beforeDismiss(): boolean {
@@ -39,7 +43,8 @@ export class EventUpdateModalComponent implements AfterViewInit, OnDestroy {
       (this.modalRef.componentInstance as EventUpdateComponent).updateForm(
         event || { sections: [section] },
         startTime || new Date(),
-        endTime || new Date()
+        endTime || new Date(),
+        this.isReadonly
       );
     });
   }

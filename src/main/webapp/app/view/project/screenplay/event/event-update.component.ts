@@ -1,11 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { JhiEventManager } from 'ng-jhipster';
+
+import { AccountService } from 'app/core/auth/account.service';
 
 import { EventService } from 'app/entities/event/event.service';
 import { ResponsibilityService } from 'app/entities/responsibility/responsibility.service';
@@ -13,10 +16,14 @@ import { UserService } from 'app/core/user/user.service';
 
 import { Event } from 'app/shared/model/event.model';
 import { Location } from 'app/shared/model/location.model';
+import { Project } from 'app/shared/model/project.model';
 import { Responsibility } from 'app/shared/model/responsibility.model';
+import { Section } from 'app/shared/model/section.model';
 import { User } from 'app/core/user/user.model';
 
 import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
+import { AUTHORITY_ADMIN } from 'app/shared/constants/authority.constants';
+import { VIEWER } from 'app/shared/constants/role.constants';
 
 import * as moment from 'moment';
 
@@ -27,16 +34,22 @@ import * as moment from 'moment';
 export class EventUpdateComponent implements OnInit, OnDestroy {
   isNew = false;
   isSaving = false;
-  isResponsibility = false;
+
+  isViewer = true;
+  isReadonly = true;
 
   responsibilities: Responsibility[] = [];
   users: User[] = [];
 
-  location?: Location;
+  project?: Project;
+  private location?: Location;
+  private section?: Section;
+  private event?: Event;
 
   minEndDate = new Date();
   dateTimeFormat = DATE_TIME_FORMAT;
 
+  isResponsibility = false;
   editForm = this.fb.group({
     id: [],
     name: [null, [Validators.required, Validators.maxLength(50)]],
@@ -53,6 +66,8 @@ export class EventUpdateComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject();
 
   constructor(
+    private router: Router,
+    private accountService: AccountService,
     private eventService: EventService,
     private responsibilityService: ResponsibilityService,
     private userService: UserService,
@@ -61,6 +76,10 @@ export class EventUpdateComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.isViewer =
+      !this.accountService.hasAnyAuthority(AUTHORITY_ADMIN) &&
+      (!this.project || this.accountService.hasAnyRole(this.project.id!, VIEWER.name));
+
     this.editForm
       .get('startTime')!
       .valueChanges.pipe(takeUntil(this.destroy$))
@@ -72,23 +91,26 @@ export class EventUpdateComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  public updateForm(event: Event, newStartTime: Date, newEndTime: Date): void {
+  public updateForm(event: Event, newStartTime: Date, newEndTime: Date, isReadonly = true): void {
     this.isNew = !event.id;
-    this.isResponsibility = !event.user;
+    this.isReadonly = isReadonly;
 
-    this.location = event.sections![0].location;
+    this.event = event;
+    this.section = this.event.sections![0];
+    this.location = this.section.location;
+    this.project = this.location!.project;
+
     this.minEndDate = newStartTime;
 
-    const project = this.location!.project;
-
     this.responsibilityService
-      .findAllByProject(project, { sort: ['name,asc'] })
+      .findAllByProject(this.project, { sort: ['name,asc'] })
       .subscribe((response: HttpResponse<Responsibility[]>) => (this.responsibilities = response.body || []));
 
     this.userService
-      .findAllByProject(project, { sort: ['login,asc'] })
+      .findAllByProject(this.project, { sort: ['email,asc'] })
       .subscribe((response: HttpResponse<User[]>) => (this.users = response.body || []));
 
+    this.isResponsibility = !event.user;
     this.editForm.patchValue({
       id: event.id,
       name: event.name,
@@ -99,7 +121,7 @@ export class EventUpdateComponent implements OnInit, OnDestroy {
       responsibility: event.responsibility,
       responsibilityAutocomplete: event.responsibility?.name,
       user: event.user,
-      userAutocomplete: event.user?.login,
+      userAutocomplete: event.user?.email,
     });
   }
 
@@ -119,11 +141,24 @@ export class EventUpdateComponent implements OnInit, OnDestroy {
     window.history.back();
   }
 
+  edit(): void {
+    const route = [
+      'projects',
+      this.project!.id!,
+      'locations',
+      this.location!.id!,
+      'sections',
+      this.section!.id,
+      'events',
+      this.event!.id!,
+      'edit',
+    ];
+    this.router.navigate([{ outlets: { modal: route } }], { replaceUrl: true });
+  }
+
   save(): void {
     this.isSaving = true;
     const event = this.createFromForm();
-
-    this.location = event.sections![0].location;
 
     if (event.id !== undefined) {
       this.subscribeToSaveResponse(this.eventService.update(event));
