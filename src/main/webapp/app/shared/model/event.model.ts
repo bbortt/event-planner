@@ -5,10 +5,10 @@ import { User } from 'app/core/user/user.model';
 
 export interface Event {
   id?: number;
-  name?: string;
+  name: string;
   description?: string;
-  startTime?: Moment;
-  endTime?: Moment;
+  startTime: Moment;
+  endTime: Moment;
   sections?: Section[];
   responsibility?: Responsibility;
   user?: User;

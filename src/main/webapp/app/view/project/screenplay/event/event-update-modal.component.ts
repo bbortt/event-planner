@@ -1,9 +1,13 @@
 import { AfterViewInit, Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { EventUpdateComponent } from 'app/view/project/screenplay/event/event-update.component';
 import { combineLatest } from 'rxjs';
+
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+
+import { EventUpdateComponent } from 'app/view/project/screenplay/event/event-update.component';
+
+import * as moment from 'moment';
 
 @Component({
   template: '',
@@ -15,8 +19,15 @@ export class EventUpdateModalComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     combineLatest([this.activatedRoute.queryParams, this.activatedRoute.data]).subscribe((routeParams: any[]) => {
-      const { startTime, endTime } = routeParams[0];
+      let { startTime, endTime } = routeParams[0];
       const { section, event } = routeParams[1];
+
+      if (startTime) {
+        startTime = moment(startTime).toDate();
+      }
+      if (endTime) {
+        endTime = moment(endTime).toDate();
+      }
 
       this.modalRef = this.modalService.open(EventUpdateComponent, {
         beforeDismiss(): boolean {
