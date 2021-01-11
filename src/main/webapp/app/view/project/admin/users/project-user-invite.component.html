@@ -1,81 +1,87 @@
 <div class="row justify-content-center">
-  <div class="col-8">
-    <form name="inviteForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="inviteForm">
-      <h2 id="jhi-project-heading" jhiTranslate="userManagement.invite"></h2>
+    <div class="col-8">
+        <form name="inviteForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="inviteForm">
+            <h2 id="jhi-project-heading" jhiTranslate="userManagement.invite"></h2>
 
-      <div>
-        <jhi-alert-error></jhi-alert-error>
-        <div class="form-group">
-          <label class="form-control-label" jhiTranslate="global.form.email.label" for="field_email"></label>
-          <input type="email"
-                 class="form-control"
-                 name="email"
-                 id="field_email"
-                 formControlName="email"
-                 autocomplete="off"
-                 [readOnly]="!isNew"
-          />
-          <div *ngIf="inviteForm.get('email')!.invalid && inviteForm.get('email')!.dirty || inviteForm.get('email')!.touched">
-            <small class="form-text text-danger"
-                   *ngIf="inviteForm.get('email')?.errors?.email"
-                   jhiTranslate="entity.validation.email">
-            </small>
-            <small class="form-text text-danger"
-                   *ngIf="inviteForm.get('email')?.errors?.required"
-                   jhiTranslate="entity.validation.required">
-            </small>
-          </div>
-        </div>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="global.form.email.label"
+                           for="field_email"></label>
+                    <input type="email"
+                           class="form-control"
+                           name="email"
+                           id="field_email"
+                           formControlName="email"
+                           autocomplete="off"
+                           [readOnly]="!isNew"
+                    />
+                    <div
+                        *ngIf="inviteForm.get('email')!.invalid && inviteForm.get('email')!.dirty || inviteForm.get('email')!.touched">
+                        <small class="form-text text-danger"
+                               *ngIf="inviteForm.get('email')?.errors?.email"
+                               jhiTranslate="entity.validation.email">
+                        </small>
+                        <small class="form-text text-danger"
+                               *ngIf="inviteForm.get('email')?.errors?.required"
+                               jhiTranslate="entity.validation.required">
+                        </small>
+                    </div>
+                </div>
 
-        <div class="form-group">
-          <label class="form-control-label" jhiTranslate="global.form.role.label" for="field_role"></label>
-          <select formControlName="role"
-                  class="form-control"
-                  name="role"
-                  id="field_role">
-            <option *ngFor="let role of ROLES" [jhiTranslate]="role.i18nKey" [ngValue]="role"></option>
-          </select>
-          <div *ngIf="inviteForm.get('role')!.invalid && inviteForm.get('role')!.dirty || inviteForm.get('role')!.touched">
-            <small class="form-text text-danger"
-                   *ngIf="inviteForm.get('role')?.errors?.required"
-                   jhiTranslate="entity.validation.required">
-            </small>
-          </div>
-        </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="global.form.role.label"
+                           for="field_role"></label>
+                    <select formControlName="role"
+                            class="form-control"
+                            name="role"
+                            id="field_role">
+                        <option *ngFor="let role of invitationRoles" [jhiTranslate]="role.i18nKey"
+                                [ngValue]="role"></option>
+                    </select>
+                    <div
+                        *ngIf="inviteForm.get('role')!.invalid && inviteForm.get('role')!.dirty || inviteForm.get('role')!.touched">
+                        <small class="form-text text-danger"
+                               *ngIf="inviteForm.get('role')?.errors?.required"
+                               jhiTranslate="entity.validation.required">
+                        </small>
+                    </div>
+                </div>
 
-        <div class="form-group">
-          <label class="form-control-label"
-                 jhiTranslate="eventPlannerApp.location.responsibility"
-                 for="field_responsibility"> Responsibility </label>
-          <dx-autocomplete
-              class="form-control"
-              name="responsibility"
-              id="field_responsibility"
-              formControlName="responsibilityAutocomplete"
-              [placeholder]="'global.form.search' | translate"
-              [dataSource]="responsibilities"
-              valueExpr="name"
-              (onSelectionChanged)="responsibilitySelected($event)"
-              [showClearButton]="true"
-              [isValid]="!(inviteForm.get('responsibility')!.invalid && inviteForm.get('responsibility')!.dirty || inviteForm.get('responsibility')!.touched)">
-          </dx-autocomplete>
-        </div>
-      </div>
+                <div class="form-group">
+                    <label class="form-control-label"
+                           jhiTranslate="eventPlannerApp.location.responsibility"
+                           for="field_responsibility"> Responsibility </label>
+                    <dx-autocomplete
+                        class="dx-form-control"
+                        name="responsibility"
+                        id="field_responsibility"
+                        formControlName="responsibilityAutocomplete"
+                        [placeholder]="'global.form.search' | translate"
+                        [dataSource]="responsibilities"
+                        valueExpr="name"
+                        (onSelectionChanged)="responsibilitySelected($event)"
+                        [showClearButton]="true"
+                        [isValid]="!(inviteForm.get('responsibility')!.invalid && inviteForm.get('responsibility')!.dirty || inviteForm.get('responsibility')!.touched)">
+                    </dx-autocomplete>
+                </div>
+            </div>
 
-      <div>
-        <button type="button"
-                class="btn btn-secondary"
-                (click)="previousState()">
-          <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
-        </button>
+            <div>
+                <button type="button"
+                        class="btn btn-secondary"
+                        (click)="previousState()">
+                    <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                </button>
 
-        <button type="submit" id="save-entity" [disabled]="inviteForm.pristine || inviteForm.invalid || isSaving"
-                class="btn btn-primary">
-          <fa-icon icon="save"></fa-icon>&nbsp;
-          <span *ngIf="isNew" jhiTranslate="entity.action.inviteuser"></span>
-          <span *ngIf="!isNew" jhiTranslate="entity.action.save"></span>
-        </button>
-      </div>
-    </form>
-  </div>
+                <button type="submit" id="save-entity"
+                        [disabled]="inviteForm.pristine || inviteForm.invalid || isSaving"
+                        class="btn btn-primary">
+                    <fa-icon icon="save"></fa-icon>&nbsp;
+                    <span *ngIf="isNew" jhiTranslate="entity.action.inviteuser"></span>
+                    <span *ngIf="!isNew" jhiTranslate="entity.action.save"></span>
+                </button>
+            </div>
+        </form>
+    </div>
 </div>
