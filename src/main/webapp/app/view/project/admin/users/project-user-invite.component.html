@@ -13,7 +13,7 @@
                  id="field_email"
                  formControlName="email"
                  autocomplete="off"
-                 [attr.disabled]="!isNew ? 'disabled' : null"
+                 [readOnly]="!isNew"
           />
           <div *ngIf="inviteForm.get('email')!.invalid && inviteForm.get('email')!.dirty || inviteForm.get('email')!.touched">
             <small class="form-text text-danger"

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 
 import { JhiEventManager } from 'ng-jhipster';
@@ -11,7 +11,6 @@ import { Project } from 'app/shared/model/project.model';
 import { Responsibility } from 'app/shared/model/responsibility.model';
 
 import { CONTRIBUTOR, InternalRole, ROLES } from 'app/shared/constants/role.constants';
-import { ChangeDetection } from '@angular/cli/lib/config/schema';
 
 @Component({
   selector: 'app-project-user-invite',
@@ -53,7 +52,7 @@ export class ProjectUserInviteComponent {
         name: (this.inviteForm.get('role')!.value as InternalRole).name,
       },
     };
-    if (invitation.id !== undefined) {
+    if (invitation.id) {
       this.invitationService.update(invitation).subscribe(() => {
         this.eventManager.broadcast('invitationListModification');
         this.previousState();

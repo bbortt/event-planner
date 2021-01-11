@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 
 import { EventResolve } from 'app/entities/event/event.resolve';
+import { InvitationResolve } from 'app/entities/invitation/invitation.resolve';
 import { LocationResolve } from 'app/entities/location/location.resolve';
 import { ProjectResolve } from 'app/entities/project/project.resolve';
 import { ResponsibilityResolve } from 'app/entities/responsibility/responsibility.resolve';
@@ -18,7 +19,6 @@ import { ProjectSectionModalComponent } from 'app/view/project/admin/locations/s
 import { EventUpdateModalComponent } from 'app/view/project/screenplay/event/event-update-modal.component';
 
 import { ADMIN, CONTRIBUTOR, SECRETARY } from 'app/shared/constants/role.constants';
-import { InvitationResolve } from 'app/entities/invitation/invitation.resolve';
 
 export const MODAL_OUTLET_ROUTES: Routes = [
   {
