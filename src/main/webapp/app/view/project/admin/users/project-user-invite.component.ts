@@ -10,7 +10,7 @@ import { Invitation } from 'app/shared/model/invitation.model';
 import { Project } from 'app/shared/model/project.model';
 import { Responsibility } from 'app/shared/model/responsibility.model';
 
-import { CONTRIBUTOR, InternalRole, ROLES } from 'app/shared/constants/role.constants';
+import { CONTRIBUTOR, InternalRole, ROLES, SECRETARY, VIEWER } from 'app/shared/constants/role.constants';
 
 @Component({
   selector: 'app-project-user-invite',
@@ -28,7 +28,7 @@ export class ProjectUserInviteComponent {
     responsibilityAutocomplete: [],
   });
 
-  ROLES = ROLES;
+  invitationRoles = [SECRETARY, CONTRIBUTOR, VIEWER];
 
   private project?: Project;
   responsibilities: Responsibility[] = [];
