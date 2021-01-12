@@ -57,7 +57,9 @@ public class ResponsibilityResource {
      * {@code POST  /responsibilities} : Create a new responsibility.
      *
      * @param responsibility the responsibility to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new responsibility, or with status {@code 400 (Bad Request)} if the responsibility has already an ID.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new
+     * responsibility, or with status {@code 400 (Bad Request)} if the responsibility has already an
+     * ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/responsibilities")
@@ -85,7 +87,10 @@ public class ResponsibilityResource {
      * {@code PUT  /responsibilities} : Updates an existing responsibility.
      *
      * @param responsibility the responsibility to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated responsibility, or with status {@code 400 (Bad Request)} if the responsibility is not valid, or with status {@code 500 (Internal Server Error)} if the responsibility couldn't be updated.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated
+     * responsibility, or with status {@code 400 (Bad Request)} if the responsibility is not valid,
+     * or with status {@code 500 (Internal Server Error)} if the responsibility couldn't be
+     * updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/responsibilities")
@@ -113,7 +118,8 @@ public class ResponsibilityResource {
      * {@code GET  /responsibilities} : get all the responsibilities.
      *
      * @param pageable the pagination information.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of responsibilities in body.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of
+     * responsibilities in body.
      */
     @GetMapping("/responsibilities")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
@@ -128,7 +134,8 @@ public class ResponsibilityResource {
      * {@code GET  /responsibilities/:id} : get the "id" responsibility.
      *
      * @param id the id of the responsibility to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the responsibility, or with status {@code 404 (Not Found)}.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the
+     * responsibility, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/responsibilities/{id}")
     @PreAuthorize(
@@ -140,11 +147,34 @@ public class ResponsibilityResource {
         return ResponseUtil.wrapOrNotFound(responsibility);
     }
 
+    /**
+     * {@code GET /responsibilities/project/:projectId} : get Responsibilities for Project.
+     *
+     * @param projectId the id of the project to retrieve responsibilities for.
+     * @return the list of entities.
+     */
     @GetMapping("/responsibilities/project/{projectId}")
     @PreAuthorize("@projectService.hasAccessToProject(#projectId, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")")
     public ResponseEntity<List<Responsibility>> getResponsibilitiesByProjectId(@PathVariable Long projectId, Sort sort) {
+        log.debug("REST request to get Responsibilities by projectId : {}", projectId);
         List<Responsibility> responsibilities = responsibilityService.findAllByProjectId(projectId, sort);
         return ResponseEntity.ok(responsibilities);
+    }
+
+    /**
+     * {@code POST /responsibilities/project/:projectId/name-exists} : Whether the given name is
+     * still unique in this Project.
+     *
+     * @param projectId the Project identifier.
+     * @param name      the value to check.
+     * @return true if the value exists.
+     */
+    @PostMapping("/responsibilities/project/{projectId}/name-exists")
+    @PreAuthorize("@projectService.hasAccessToProject(#projectId, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")")
+    public ResponseEntity<Boolean> isNameExistingInProject(@PathVariable Long projectId, @RequestBody String name) {
+        log.debug("REST request to check uniqueness of name '{}' by projectId : {}", name, projectId);
+        Boolean isUnique = responsibilityService.isNameExistingInProject(projectId, name);
+        return ResponseEntity.ok(isUnique);
     }
 
     /**

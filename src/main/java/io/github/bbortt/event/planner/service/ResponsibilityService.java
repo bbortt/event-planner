@@ -109,7 +109,23 @@ public class ResponsibilityService {
     }
 
     /**
-     * Checks if the current user has access to the `Project` linked to the given `Responsibility`, identified by id. The project access must be given by any of the `roles`. Example usage: `@PreAuthorize("@responsibilityService.hasAccessToResponsibility(#responsibility, 'ADMIN', 'SECRETARY')")`
+     * Checks whether the given name is still unique in this Project.
+     *
+     * @param projectId the Project identifier.
+     * @param name      the value to check.
+     * @return true if the value exists.
+     */
+    @Transactional(readOnly = true)
+    public Boolean isNameExistingInProject(Long projectId, String name) {
+        log.debug("Request to check uniqueness of name '{}' by projectId : {}", name, projectId);
+        return responsibilityRepository.findOneByNameAndProjectId(name, projectId).isPresent();
+    }
+
+    /**
+     * Checks if the current user has access to the `Project` linked to the given `Responsibility`,
+     * identified by id. The project access must be given by any of the `roles`. Example usage:
+     * `@PreAuthorize("@responsibilityService.hasAccessToResponsibility(#responsibility, 'ADMIN',
+     * 'SECRETARY')")`
      *
      * @param responsibilityId the id of the responsibility with a linked project to check.
      * @param roles            to look out for.
@@ -127,7 +143,10 @@ public class ResponsibilityService {
     }
 
     /**
-     * Checks if the current user has access to the `Project` linked to the given `Responsibility`. The project access must be given by any of the `roles`. Example usage: `@PreAuthorize("@responsibilityService.hasAccessToResponsibility(#responsibility, 'ADMIN', 'SECRETARY')")`
+     * Checks if the current user has access to the `Project` linked to the given `Responsibility`.
+     * The project access must be given by any of the `roles`. Example usage:
+     * `@PreAuthorize("@responsibilityService.hasAccessToResponsibility(#responsibility, 'ADMIN',
+     * 'SECRETARY')")`
      *
      * @param responsibility the entity with a linked project to check.
      * @param roles          to look out for.
