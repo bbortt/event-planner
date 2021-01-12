@@ -2,8 +2,14 @@
     <div class="col-8">
         <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
             <h2 id="jhi-event-heading">
-                <span *ngIf="isNew; else updateTitle"
-                      jhiTranslate="eventPlannerApp.event.home.createLabel">Create a new Event</span>
+                <div *ngIf="isReadonly; else createTitle">
+                    <small jhiTranslate="eventPlannerApp.event.detail.title">Event</small>
+                    {{ editForm.get('name')!.value }}
+                </div>
+                <ng-template #createTitle>
+                    <span *ngIf="isNew; else updateTitle"
+                          jhiTranslate="eventPlannerApp.event.home.createLabel">Create a new Event</span>
+                </ng-template>
                 <ng-template #updateTitle>
                     <span
                         jhiTranslate="eventPlannerApp.event.home.editLabel">Edit Event</span>
@@ -13,11 +19,11 @@
             <div>
                 <jhi-alert-error></jhi-alert-error>
 
-                <div class="form-group">
+                <div class="form-group" *ngIf="!isReadonly">
                     <label class="form-control-label" jhiTranslate="eventPlannerApp.event.name"
                            for="field_name">Name</label>
                     <input type="text" class="form-control" name="name" id="field_name"
-                           formControlName="name" autocomplete="off"/>
+                           formControlName="name" autocomplete="off" />
                     <div
                         *ngIf="editForm.get('name')!.invalid && (editForm.get('name')!.dirty || editForm.get('name')!.touched)">
                         <small class="form-text text-danger"
@@ -44,9 +50,13 @@
                     <label class="form-control-label"
                            jhiTranslate="eventPlannerApp.event.description"
                            for="field_description">Description</label>
-                    <textarea type="text" class="form-control" name="description"
-                              id="field_description" formControlName="description"
-                              autocomplete="off">
+                    <textarea type="text"
+                              class="form-control"
+                              name="description"
+                              id="field_description"
+                              formControlName="description"
+                              autocomplete="off"
+                              [readOnly]="isReadonly">
                     </textarea>
                     <div
                         *ngIf="editForm.get('description')!.invalid && (editForm.get('description')!.dirty || editForm.get('description')!.touched)">
@@ -78,10 +88,11 @@
                             [openOnFieldClick]="true"
                             [displayFormat]="dateTimeFormat"
                             formControlName="startTime"
-                            [min]="location!.project!.startTime.toDate()"
-                            [max]="location!.project!.endTime.toDate()"
+                            [min]="project!.startTime.toDate()"
+                            [max]="project!.endTime.toDate()"
                             placeholder="dd.MM.yyyy HH:mm"
-                            [isValid]="isValidInput('startTime')">
+                            [isValid]="isValidInput('startTime')"
+                            [readOnly]="isReadonly">
                         </dx-date-box>
                     </div>
                     <div
@@ -112,9 +123,10 @@
                             [displayFormat]="dateTimeFormat"
                             formControlName="endTime"
                             [min]="minEndDate"
-                            [max]="location!.project!.endTime.toDate()"
+                            [max]="project!.endTime.toDate()"
                             placeholder="dd.MM.yyyy HH:mm"
-                            [isValid]="isValidInput('endTime')">
+                            [isValid]="isValidInput('endTime')"
+                            [readOnly]="isReadonly">
                         </dx-date-box>
                     </div>
                     <div
@@ -133,15 +145,21 @@
                 </div>
 
                 <div class="form-group">
-                    <input type="radio" value="responsibility" name="responsibilityUser"
+                    <input type="radio"
+                           value="responsibility"
+                           name="responsibilityUser"
                            [checked]="isResponsibility"
-                           (change)="onRadioChange($event)"> <span
-                    jhiTranslate="eventPlannerApp.event.responsibility">Responsibility</span>
+                           (change)="onRadioChange($event)"
+                           [readOnly]="isReadonly">
+                    <span jhiTranslate="eventPlannerApp.event.responsibility">Responsibility</span>
 
-                    <input type="radio" value="user" name="responsibilityUser"
+                    <input type="radio"
+                           value="user"
+                           name="responsibilityUser"
                            [checked]="!isResponsibility"
-                           (change)="onRadioChange($event)"> <span
-                    jhiTranslate="eventPlannerApp.event.user">User</span>
+                           (change)="onRadioChange($event)"
+                           [readOnly]="isReadonly">
+                    <span jhiTranslate="eventPlannerApp.event.user">User</span>
                 </div>
 
                 <div *ngIf="isResponsibility; else userAutocomplete" class="form-group">
@@ -158,7 +176,8 @@
                         valueExpr="name"
                         (onSelectionChanged)="responsibilitySelected($event)"
                         [showClearButton]="true"
-                        [isValid]="isValidInput('responsibility')">
+                        [isValid]="isValidInput('responsibility')"
+                        [readOnly]="isReadonly">
                     </dx-autocomplete>
                 </div>
 
@@ -174,27 +193,61 @@
                             formControlName="userAutocomplete"
                             [placeholder]="'global.form.search' | translate"
                             [dataSource]="users"
-                            valueExpr="login"
+                            valueExpr="email"
                             (onSelectionChanged)="userSelected($event)"
                             [showClearButton]="true"
-                            [isValid]="isValidInput('user')">
+                            [isValid]="isValidInput('user')"
+                            [readOnly]="isReadonly">
                         </dx-autocomplete>
                     </div>
                 </ng-template>
 
-                <div>
-                    <button type="button" id="cancel-save" class="btn btn-negative btn-gray"
-                            (click)="previousState()">
-                        <fa-icon icon="ban"></fa-icon>&nbsp;<span
-                        jhiTranslate="entity.action.cancel">Cancel</span>
+                <div
+                    *ngIf="isReadonly && !isViewer ; else editButtons"
+                    class="btn-group">
+                    <button
+                        type="button"
+                        id="edit-event"
+                        class="btn btn-negative btn-gray"
+                        (click)="edit()">
+                        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span
+                        jhiTranslate="entity.action.edit">Edit</span>
                     </button>
 
-                    <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving"
-                            class="btn btn-negative btn-green">
-                        <fa-icon icon="save"></fa-icon>&nbsp;<span
-                        jhiTranslate="entity.action.save">Save</span>
+                    <button
+                        type="button"
+                        id="delete-event"
+                        [disabled]=" isSaving"
+                        class="btn btn-negative btn-gray"
+                        (click)="delete()">
+                        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span
+                        jhiTranslate="entity.action.delete">Delete</span>
                     </button>
                 </div>
+
+                <ng-template #editButtons>
+                    <div
+                        *ngIf="!isViewer"
+                        class="btn-group">
+                        <button
+                            type="button"
+                            id="cancel-save"
+                            class="btn btn-negative btn-gray"
+                            (click)="previousState()">
+                            <fa-icon icon="ban"></fa-icon>&nbsp;<span
+                            jhiTranslate="entity.action.cancel">Cancel</span>
+                        </button>
+
+                        <button
+                            type="submit"
+                            id="save-entity"
+                            [disabled]="editForm.invalid || isSaving"
+                            class="btn btn-negative btn-green">
+                            <fa-icon icon="save"></fa-icon>&nbsp;<span
+                            jhiTranslate="entity.action.save">Save</span>
+                        </button>
+                    </div>
+                </ng-template>
             </div>
         </form>
     </div>

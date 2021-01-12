@@ -66,7 +66,7 @@ export class ProjectLocationUpdateComponent {
       responsibility: location.responsibility,
       responsibilityAutocomplete: location.responsibility?.name,
       user: location.user,
-      userAutocomplete: location.user?.login,
+      userAutocomplete: location.user?.email,
       project,
     });
   }
