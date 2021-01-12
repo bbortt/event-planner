@@ -38,7 +38,7 @@
                             This field cannot be longer than 50 characters.
                         </small>
                         <small class="form-text text-danger"
-                               *ngIf="editForm.get('name')?.errors?.uniqueness"
+                               *ngIf="editForm.get('name')?.errors?.exists"
                                jhiTranslate="entity.validation.uniqueness"
                                [translateValues]="{ max: 50 }">
                             This value has already been taken.

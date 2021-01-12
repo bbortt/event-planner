@@ -48,7 +48,7 @@ export class ResponsibilityService {
     return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
   }
 
-  nameUniquePerProject(project: Project, name: string): Observable<boolean> {
-    return this.http.post<boolean>(`${this.resourceUrl}/project/${project.id!}/unique-name`, name);
+  nameExistsInProject(project: Project, name: string): Observable<boolean> {
+    return this.http.post<boolean>(`${this.resourceUrl}/project/${project.id!}/name-exists`, name);
   }
 }
