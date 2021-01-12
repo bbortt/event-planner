@@ -8,14 +8,14 @@
 
             <button id="jh-create-entity"
                     class="btn btn-negative btn-green jh-create-entity invite-user"
-                    [routerLink]="['', {outlets: {modal: ['projects', projectId, 'users', 'invite']}}]">
+                    [routerLink]="['', {outlets: {modal: ['projects', projectId, 'users', 'invite', 'new']}}]">
                 <fa-icon icon="plus"></fa-icon>
                 <span jhiTranslate="userManagement.invite"></span>
             </button>
         </div>
     </h3>
 
-    <br/>
+    <br />
 
     <jhi-alert-error></jhi-alert-error>
 
@@ -32,11 +32,12 @@
                     <span jhiTranslate="eventPlannerApp.invitation.role"></span>
                 </th>
                 <th scope="col">
-                  <span jhiTranslate="eventPlannerApp.responsibility.detail.title"></span>
+                    <span jhiTranslate="eventPlannerApp.responsibility.detail.title"></span>
                 </th>
                 <th scope="col">
                     <span jhiTranslate="eventPlannerApp.invitation.accepted"></span>
                 </th>
+                <th scope="col"></th>
             </tr>
             </thead>
             <tbody>
@@ -45,6 +46,26 @@
                 <td>{{ invitation.role.name | i18nRole | translate }}</td>
                 <td>{{ invitation.responsibility?.name }}</td>
                 <td [jhiTranslate]="invitation.accepted ? 'eventPlannerApp.invitation.accepted.yes' : 'eventPlannerApp.invitation.accepted.no'"></td>
+                <td class="text-right">
+                    <div *ngIf="invitation.role.name !== roleProjectAdmin.name" class="btn-group">
+                        <button type="submit"
+                                [routerLink]="['', {outlets: {modal: ['projects', projectId, 'users', 'invite', invitation.id, 'edit']}}]"
+                                class="btn btn-blue btn-sm"
+                                data-toggle="tooltip"
+                                data-placement="bottom"
+                                title="{{ 'entity.action.edit' | translate }}">
+                            <fa-icon icon="pencil-alt"></fa-icon>
+                        </button>
+
+                        <button type="submit" (click)="delete(invitation)"
+                                class="btn btn-red btn-sm"
+                                data-toggle="tooltip"
+                                data-placement="bottom"
+                                title="{{ 'entity.action.delete' | translate }}">
+                            <fa-icon icon="times"></fa-icon>
+                        </button>
+                    </div>
+                </td>
             </tr>
             </tbody>
         </table>

@@ -20,6 +20,7 @@ import { ProjectSectionDeleteDialogComponent } from 'app/view/project/admin/loca
 
 import { ProjectUsersComponent } from 'app/view/project/admin/users/project-users.component';
 import { ProjectUserInviteComponent } from 'app/view/project/admin/users/project-user-invite.component';
+import { ProjectUserInviteDeleteDialogComponent } from 'app/view/project/admin/users/project-user-invite-delete-dialog.component';
 
 import { ProjectResponsibilitiesComponent } from 'app/view/project/admin/responsibilities/project-responsibilities.component';
 import { ProjectResponsibilityUpdateComponent } from 'app/view/project/admin/responsibilities/project-responsibility-update.component';
@@ -41,6 +42,7 @@ import { PROJECT_ADMIN_ROUTES } from './project-admin.routes';
     ProjectSectionUpdateComponent,
     ProjectSectionModalComponent,
     ProjectSectionDeleteDialogComponent,
+    ProjectUserInviteDeleteDialogComponent,
     ProjectUsersComponent,
     ProjectUserInviteComponent,
     ProjectResponsibilitiesComponent,

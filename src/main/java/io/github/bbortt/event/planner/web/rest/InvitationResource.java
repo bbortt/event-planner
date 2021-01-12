@@ -1,6 +1,7 @@
 package io.github.bbortt.event.planner.web.rest;
 
 import io.github.bbortt.event.planner.domain.Invitation;
+import io.github.bbortt.event.planner.repository.RoleRepository;
 import io.github.bbortt.event.planner.service.InvitationService;
 import io.github.bbortt.event.planner.service.MailService;
 import io.github.bbortt.event.planner.web.rest.errors.BadRequestAlertException;
@@ -47,20 +48,22 @@ public class InvitationResource {
     private final InvitationService invitationService;
     private final MailService mailService;
 
+    private final RoleRepository roleRepository;
+
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
-    public InvitationResource(InvitationService invitationService, MailService mailService) {
+    public InvitationResource(InvitationService invitationService, MailService mailService, RoleRepository roleRepository) {
         this.invitationService = invitationService;
         this.mailService = mailService;
+        this.roleRepository = roleRepository;
     }
 
     /**
      * {@code POST  /invitations} : Create a new invitation.
      *
      * @param invitation the invitation to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new
-     * invitation, or with status {@code 400 (Bad Request)} if the invitation has already an ID.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new invitation, or with status {@code 400 (Bad Request)} if the invitation has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/invitations")
@@ -68,6 +71,9 @@ public class InvitationResource {
         log.debug("REST request to save Invitation : {}", invitation);
         if (invitation.getId() != null) {
             throw new BadRequestAlertException("A new invitation cannot already have an ID", ENTITY_NAME, "idexists");
+        }
+        if (invitation.getRole().equals(roleRepository.roleAdmin())) {
+            throw new BadRequestAlertException("Cannot invite a second project administrator", ENTITY_NAME, "badRequest");
         }
         invitation.setToken(UUID.randomUUID().toString());
         Invitation result = invitationService.save(invitation);
@@ -84,9 +90,7 @@ public class InvitationResource {
      * {@code PUT  /invitations} : Updates an existing invitation.
      *
      * @param invitation the invitation to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated
-     * invitation, or with status {@code 400 (Bad Request)} if the invitation is not valid, or with
-     * status {@code 500 (Internal Server Error)} if the invitation couldn't be updated.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated invitation, or with status {@code 400 (Bad Request)} if the invitation is not valid, or with status {@code 500 (Internal Server Error)} if the invitation couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/invitations")
@@ -106,8 +110,7 @@ public class InvitationResource {
      * {@code GET  /invitations} : get all the invitations.
      *
      * @param pageable the pagination information.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of invitations
-     * in body.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of invitations in body.
      */
     @GetMapping("/invitations")
     public ResponseEntity<List<Invitation>> getAllInvitations(Pageable pageable) {
@@ -121,8 +124,7 @@ public class InvitationResource {
      * {@code GET  /invitations/:id} : get the "id" invitation.
      *
      * @param id the id of the invitation to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the invitation,
-     * or with status {@code 404 (Not Found)}.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the invitation, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/invitations/{id}")
     public ResponseEntity<Invitation> getInvitation(@PathVariable Long id) {
