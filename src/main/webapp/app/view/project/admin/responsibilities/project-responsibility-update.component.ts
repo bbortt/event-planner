@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 
 import { Observable } from 'rxjs';
 
@@ -11,15 +11,17 @@ import { ResponsibilityService } from 'app/entities/responsibility/responsibilit
 import { Project } from 'app/shared/model/project.model';
 import { Responsibility } from 'app/shared/model/responsibility.model';
 
+import { uniquePropertyValueInProjectValidator } from 'app/entities/validator/unique-property-value-in-project.validator';
+
 @Component({
   selector: 'app-responsibility-update',
   templateUrl: './project-responsibility-update.component.html',
   styleUrls: ['./project-responsibility-update.component.scss'],
 })
 export class ProjectResponsibilityUpdateComponent {
+  isNew = false;
   isSaving = false;
 
-  isNew = false;
   editForm = this.fb.group({
     id: [],
     name: [null, [Validators.required, Validators.minLength(1), Validators.maxLength(50)]],
@@ -30,11 +32,21 @@ export class ProjectResponsibilityUpdateComponent {
 
   public updateForm(project: Project, responsibility: Responsibility): void {
     this.isNew = !responsibility.id;
+
     this.editForm.patchValue({
       id: responsibility.id,
       name: responsibility.name,
       project,
     });
+
+    this.editForm.setControl(
+      'name',
+      new FormControl(
+        responsibility.name,
+        [Validators.required, Validators.minLength(1), Validators.maxLength(50)],
+        [uniquePropertyValueInProjectValidator(project, (p: Project, v: string) => this.responsibilityService.nameExistsInProject(p, v))]
+      )
+    );
   }
 
   previousState(): void {
