@@ -11,7 +11,7 @@
       "updated": "Einladung mit ID {{ param }} aktualisiert",
       "deleted": "Einladung mit ID {{ param }} gelöscht",
       "delete": {
-        "question": "Soll Einladung {{ id }} wirklich dauerhaft gelöscht werden?"
+        "question": "Soll Einladung {{ name }} wirklich dauerhaft gelöscht werden?"
       },
       "detail": {
         "title": "Einladung"

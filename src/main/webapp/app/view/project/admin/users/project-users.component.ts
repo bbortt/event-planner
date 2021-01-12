@@ -1,12 +1,22 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ITEMS_PER_PAGE } from 'app/shared/constants/pagination.constants';
-import { combineLatest, Subscription } from 'rxjs';
 import { HttpHeaders, HttpResponse } from '@angular/common/http';
-import { Project } from 'app/shared/model/project.model';
-import { InvitationService } from 'app/entities/invitation/invitation.service';
-import { Invitation } from 'app/shared/model/invitation.model';
+
+import { combineLatest, Subscription } from 'rxjs';
+
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+
 import { JhiEventManager } from 'ng-jhipster';
+
+import { InvitationService } from 'app/entities/invitation/invitation.service';
+
+import { Invitation } from 'app/shared/model/invitation.model';
+import { Project } from 'app/shared/model/project.model';
+
+import { ProjectUserInviteDeleteDialogComponent } from 'app/view/project/admin/users/project-user-invite-delete-dialog.component';
+
+import { ITEMS_PER_PAGE } from 'app/shared/constants/pagination.constants';
+import { ADMIN } from 'app/shared/constants/role.constants';
 
 @Component({
   selector: 'app-project-users',
@@ -23,13 +33,17 @@ export class ProjectUsersComponent implements OnDestroy {
   private loadedInvitations?: Invitation[];
   private sortOrder: 'asc' | 'desc' = 'asc';
   private sortBy = 'id';
+
   private eventSubscriber?: Subscription;
+
+  roleProjectAdmin = ADMIN;
 
   constructor(
     private invitationService: InvitationService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private eventManager: JhiEventManager
+    private eventManager: JhiEventManager,
+    private modalService: NgbModal
   ) {
     combineLatest([this.activatedRoute.data, this.activatedRoute.queryParamMap]).subscribe(([data, params]) => {
       this.projectId = (data.project as Project).id;
@@ -96,5 +110,10 @@ export class ProjectUsersComponent implements OnDestroy {
 
   trackByFn(index: number, item: Invitation): number {
     return item.id!;
+  }
+
+  delete(invitation: Invitation): void {
+    const modalRef = this.modalService.open(ProjectUserInviteDeleteDialogComponent, { backdrop: 'static' });
+    modalRef.componentInstance.invitation = invitation;
   }
 }

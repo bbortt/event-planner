@@ -18,6 +18,7 @@ import io.github.bbortt.event.planner.domain.Project;
 import io.github.bbortt.event.planner.domain.Role;
 import io.github.bbortt.event.planner.domain.User;
 import io.github.bbortt.event.planner.repository.InvitationRepository;
+import io.github.bbortt.event.planner.repository.RoleRepository;
 import io.github.bbortt.event.planner.service.InvitationService;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -44,6 +45,9 @@ class InvitationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Autowired
     private InvitationRepository invitationRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     @Autowired
     private InvitationService invitationService;
@@ -83,7 +87,8 @@ class InvitationResourceIT extends AbstractApplicationContextAwareIT {
             em.persist(role);
             em.flush();
         } else {
-            role = TestUtil.findAll(em, Role.class).get(0);
+            // Role "ADMIN" @ index 0
+            role = TestUtil.findAll(em, Role.class).get(1);
         }
         invitation.setRole(role);
         return invitation;
@@ -149,6 +154,22 @@ class InvitationResourceIT extends AbstractApplicationContextAwareIT {
         Invitation testInvitation = invitationList.get(0);
         assertThat(testInvitation.getEmail()).isEqualTo(DEFAULT_EMAIL);
         assertThat(testInvitation.isAccepted()).isEqualTo(DEFAULT_ACCEPTED);
+    }
+
+    @Test
+    @WithMockUser
+    @Transactional
+    void cannotCreateADMINInvitation() throws Exception {
+        invitationRepository.deleteAll();
+
+        invitation.setRole(roleRepository.roleAdmin());
+
+        // Create the Invitation
+        restInvitationMockMvc
+            .perform(
+                post("/api/invitations").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(invitation))
+            )
+            .andExpect(status().isBadRequest());
     }
 
     @Test
