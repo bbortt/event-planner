@@ -1,14 +1,9 @@
-package io.github.bbortt.location.planner.service;
+package io.github.bbortt.event.planner.service;
 
 import io.github.bbortt.event.planner.domain.Location;
 import io.github.bbortt.event.planner.domain.Responsibility;
 import io.github.bbortt.event.planner.domain.User;
 import io.github.bbortt.event.planner.repository.LocationRepository;
-import io.github.bbortt.event.planner.repository.SectionRepository;
-import io.github.bbortt.event.planner.service.EventService;
-import io.github.bbortt.event.planner.service.LocationService;
-import io.github.bbortt.event.planner.service.ProjectService;
-import io.github.bbortt.event.planner.service.SectionService;
 import io.github.bbortt.event.planner.service.exception.BadRequestException;
 import org.junit.Before;
 import org.junit.Rule;

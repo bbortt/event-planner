@@ -14,8 +14,8 @@ import { DEFAULT_DEBOUNCE } from 'app/app.constants';
 export class ResponsibilityUniqueNameValidator {
   constructor(private responsibilityService: ResponsibilityService) {}
 
-  public validate(aproject: Project): AsyncValidatorFn {
-    const validator = new Validator(aproject, this.responsibilityService);
+  public validate(project: Project): AsyncValidatorFn {
+    const validator = new Validator(project, this.responsibilityService);
     return (control: AbstractControl) => timer(DEFAULT_DEBOUNCE).pipe(switchMap(() => validator.validate(control)));
   }
 }
