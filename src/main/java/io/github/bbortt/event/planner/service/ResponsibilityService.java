@@ -112,7 +112,7 @@ public class ResponsibilityService {
      * Checks whether the given name is still unique in this Project.
      *
      * @param projectId the Project identifier.
-     * @param name      the value to check.
+     * @param name the value to check.
      * @return true if the value exists.
      */
     @Transactional(readOnly = true)
@@ -122,13 +122,10 @@ public class ResponsibilityService {
     }
 
     /**
-     * Checks if the current user has access to the `Project` linked to the given `Responsibility`,
-     * identified by id. The project access must be given by any of the `roles`. Example usage:
-     * `@PreAuthorize("@responsibilityService.hasAccessToResponsibility(#responsibility, 'ADMIN',
-     * 'SECRETARY')")`
+     * Checks if the current user has access to the `Project` linked to the given `Responsibility`, identified by id. The project access must be given by any of the `roles`. Example usage: `@PreAuthorize("@responsibilityService.hasAccessToResponsibility(#responsibility, 'ADMIN', 'SECRETARY')")`
      *
      * @param responsibilityId the id of the responsibility with a linked project to check.
-     * @param roles            to look out for.
+     * @param roles to look out for.
      * @return true if the project access has any of the roles.
      */
     @Transactional(readOnly = true)
@@ -143,13 +140,10 @@ public class ResponsibilityService {
     }
 
     /**
-     * Checks if the current user has access to the `Project` linked to the given `Responsibility`.
-     * The project access must be given by any of the `roles`. Example usage:
-     * `@PreAuthorize("@responsibilityService.hasAccessToResponsibility(#responsibility, 'ADMIN',
-     * 'SECRETARY')")`
+     * Checks if the current user has access to the `Project` linked to the given `Responsibility`. The project access must be given by any of the `roles`. Example usage: `@PreAuthorize("@responsibilityService.hasAccessToResponsibility(#responsibility, 'ADMIN', 'SECRETARY')")`
      *
      * @param responsibility the entity with a linked project to check.
-     * @param roles          to look out for.
+     * @param roles to look out for.
      * @return true if the project access has any of the roles.
      */
     @PreAuthorize("isAuthenticated()")
