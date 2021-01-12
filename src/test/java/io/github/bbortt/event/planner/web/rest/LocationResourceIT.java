@@ -331,4 +331,30 @@ class LocationResourceIT extends AbstractApplicationContextAwareIT {
         List<Location> locationList = locationRepository.findAll();
         assertThat(locationList).hasSize(databaseSizeBeforeDelete - 1);
     }
+
+    @Test
+    @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
+    void isNameExistingInProject() throws Exception {
+        restLocationMockMvc
+            .perform(
+                post("/api/locations/project/{projectId}/name-exists", location.getProject().getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(location.getName())
+            )
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$").value(Boolean.FALSE));
+
+        // Initialize the database
+        locationService.save(location);
+
+        restLocationMockMvc
+            .perform(
+                post("/api/locations/project/{projectId}/name-exists", location.getProject().getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(location.getName())
+            )
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$").value(Boolean.TRUE));
+    }
 }

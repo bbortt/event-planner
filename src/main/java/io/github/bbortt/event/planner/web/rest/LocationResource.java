@@ -131,7 +131,7 @@ public class LocationResource {
      * {@code GET /locations/project/:projectId} : get all Locations by project id.
      *
      * @param projectId the id of the project.
-     * @param sort      optional sort of locations
+     * @param sort optional sort of locations
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the location, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/locations/project/{projectId}")
@@ -164,6 +164,21 @@ public class LocationResource {
         log.debug("REST Request to get Locations inclusive Sections by projectId {}", projectId);
         List<Location> locations = locationService.findAllByProjectIdJoinSections(projectId);
         return ResponseEntity.ok(locations);
+    }
+
+    /**
+     * {@code POST /locations/project/:projectId/name-exists} : Whether the given name is still unique in this Project.
+     *
+     * @param projectId the Project identifier.
+     * @param name the value to check.
+     * @return true if the value exists.
+     */
+    @PostMapping("/locations/project/{projectId}/name-exists")
+    @PreAuthorize("@projectService.hasAccessToProject(#projectId, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")")
+    public ResponseEntity<Boolean> isNameExistingInProject(@PathVariable Long projectId, @RequestBody String name) {
+        log.debug("REST request to check uniqueness of name '{}' by projectId : {}", name, projectId);
+        Boolean isUnique = locationService.isNameExistingInProject(projectId, name);
+        return ResponseEntity.ok(isUnique);
     }
 
     /**
