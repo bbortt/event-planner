@@ -366,4 +366,30 @@ class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT {
             .andExpect(jsonPath("$[1].id").value(responsibility3.getId()))
             .andExpect(jsonPath("$[1].name").value(responsibility3.getName()));
     }
+
+    @Test
+    @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
+    void isNameExistingInProject() throws Exception {
+        restResponsibilityMockMvc
+            .perform(
+                post("/api/responsibilities/project/{projectId}/name-exists", responsibility.getProject().getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(responsibility.getName())
+            )
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$").value(Boolean.FALSE));
+
+        // Initialize the database
+        responsibilityService.save(responsibility);
+
+        restResponsibilityMockMvc
+            .perform(
+                post("/api/responsibilities/project/{projectId}/name-exists", responsibility.getProject().getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(responsibility.getName())
+            )
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$").value(Boolean.TRUE));
+    }
 }

@@ -140,11 +140,33 @@ public class ResponsibilityResource {
         return ResponseUtil.wrapOrNotFound(responsibility);
     }
 
+    /**
+     * {@code GET /responsibilities/project/:projectId} : get Responsibilities for Project.
+     *
+     * @param projectId the id of the project to retrieve responsibilities for.
+     * @return the list of entities.
+     */
     @GetMapping("/responsibilities/project/{projectId}")
     @PreAuthorize("@projectService.hasAccessToProject(#projectId, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")")
     public ResponseEntity<List<Responsibility>> getResponsibilitiesByProjectId(@PathVariable Long projectId, Sort sort) {
+        log.debug("REST request to get Responsibilities by projectId : {}", projectId);
         List<Responsibility> responsibilities = responsibilityService.findAllByProjectId(projectId, sort);
         return ResponseEntity.ok(responsibilities);
+    }
+
+    /**
+     * {@code POST /responsibilities/project/:projectId/name-exists} : Whether the given name is still unique in this Project.
+     *
+     * @param projectId the Project identifier.
+     * @param name the value to check.
+     * @return true if the value exists.
+     */
+    @PostMapping("/responsibilities/project/{projectId}/name-exists")
+    @PreAuthorize("@projectService.hasAccessToProject(#projectId, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")")
+    public ResponseEntity<Boolean> isNameExistingInProject(@PathVariable Long projectId, @RequestBody String name) {
+        log.debug("REST request to check uniqueness of name '{}' by projectId : {}", name, projectId);
+        Boolean isUnique = responsibilityService.isNameExistingInProject(projectId, name);
+        return ResponseEntity.ok(isUnique);
     }
 
     /**

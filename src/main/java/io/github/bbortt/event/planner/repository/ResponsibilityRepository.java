@@ -18,4 +18,6 @@ public interface ResponsibilityRepository extends JpaRepository<Responsibility, 
 
     @Query("SELECT r.name FROM Responsibility r WHERE r.id = :responsibilityId")
     Optional<String> findNameByResponsibilityId(@Param("responsibilityId") Long responsibilityId);
+
+    Optional<Responsibility> findOneByNameAndProjectId(String name, Long projectId);
 }

@@ -30,7 +30,10 @@ export class ResponsibilityService {
 
   query(req?: any): Observable<EntityArrayResponseType> {
     const options = createRequestOption(req);
-    return this.http.get<Responsibility[]>(this.resourceUrl, { params: options, observe: 'response' });
+    return this.http.get<Responsibility[]>(this.resourceUrl, {
+      params: options,
+      observe: 'response',
+    });
   }
 
   findAllByProject(project: Project, req?: any): Observable<EntityArrayResponseType> {
@@ -43,5 +46,9 @@ export class ResponsibilityService {
 
   delete(id: number): Observable<HttpResponse<{}>> {
     return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
+  }
+
+  nameExistsInProject(project: Project, name: string): Observable<boolean> {
+    return this.http.post<boolean>(`${this.resourceUrl}/project/${project.id!}/name-exists`, name);
   }
 }
