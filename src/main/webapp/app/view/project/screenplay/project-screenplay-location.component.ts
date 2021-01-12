@@ -21,9 +21,9 @@ import { ISchedulerEvent, SchedulerEvent } from 'app/shared/model/scheduler/even
 import { ISchedulerSection, SchedulerSection } from 'app/shared/model/scheduler/section.scheduler';
 
 import { VIEWER } from 'app/shared/constants/role.constants';
+import { AUTHORITY_ADMIN } from 'app/shared/constants/authority.constants';
 
 import * as moment from 'moment';
-import { AUTHORITY_ADMIN } from 'app/shared/constants/authority.constants';
 
 @Component({
   selector: 'app-project-screenplay-location',
@@ -37,21 +37,30 @@ export class ProjectScreenplayLocationComponent implements OnInit {
 
   project?: Project;
 
+  public isViewer = true;
+
+  private originalSections: Section[] = [];
+
   public events: ISchedulerEvent[] = [];
   public sections: ISchedulerSection[] = [];
 
   constructor(
+    private router: Router,
     private translateService: TranslateService,
     private accountService: AccountService,
     private sectionService: SectionService,
     private eventService: EventService,
-    private eventManager: JhiEventManager,
-    private router: Router
+    private eventManager: JhiEventManager
   ) {}
 
   ngOnInit(): void {
     this.project = this.location!.project;
+
     this.reset();
+
+    this.isViewer =
+      !this.accountService.hasAnyAuthority(AUTHORITY_ADMIN) &&
+      (!this.project || this.accountService.hasAnyRole(this.project.id!, VIEWER.name));
 
     this.eventManager.subscribe(`eventListModificationInLocation${this.location!.id!}`, () => this.reset());
   }
@@ -69,6 +78,8 @@ export class ProjectScreenplayLocationComponent implements OnInit {
         }
       });
 
+      this.originalSections = data;
+
       this.sections = sections;
       this.events = events;
     });
@@ -82,12 +93,15 @@ export class ProjectScreenplayLocationComponent implements OnInit {
     return new SchedulerEvent(section, event);
   }
 
-  // TODO: This will be done in the screenplay-filter
+  // TODO: This will be done in the screenplay-filter, move to `@Input()` attribute then
   calculateInterval(): number {
     return this.project!.endTime.diff(this.project!.startTime, 'days') + 1;
   }
 
-  configureAppointmentForm(e: any): void {
+  configureAppointmentForm(e: AppointmentEvent): void {
+    // Cancel devextreme form
+    e.cancel = true;
+
     const event = this.fromEvent(e.appointmentData);
 
     const route = ['projects', this.project!.id!, 'locations', this.location!.id!, 'sections', event.sections![0].id, 'events'];
@@ -103,15 +117,12 @@ export class ProjectScreenplayLocationComponent implements OnInit {
     this.router.navigate([{ outlets: { modal: route } }], {
       queryParams: { startTime, endTime },
     });
-
-    // Cancel devextreme form
-    e.cancel = true;
   }
 
   /*
-   * This is for the "drag & drop" update (times only). Any click on an item results in `this.configureAppointmentForm` beeing called.
+   * This is for the 'drag & drop' update (times only). Any click on an item results in `this.configureAppointmentForm` beeing called.
    */
-  onAppointmentUpdated(e: AppointmentEvent): void {
+  onAppointmentDragged(e: AppointmentEvent): void {
     const appointment = e.appointmentData;
 
     this.eventService.update(this.fromEvent(appointment)).subscribe(
@@ -124,14 +135,27 @@ export class ProjectScreenplayLocationComponent implements OnInit {
     );
   }
 
-  isViewer(): boolean {
-    return (
-      !this.accountService.hasAnyAuthority(AUTHORITY_ADMIN) &&
-      (!this.project || this.accountService.hasAnyRole(this.project.id!, VIEWER.name))
-    );
+  /*
+   * Appointment deletion for example through 'delete' key.
+   */
+  cancelAppointmentDeleting(e: AppointmentEvent): void {
+    // Cancel devextreme form
+    e.cancel = true;
   }
 
-  private fromEvent(event: ISchedulerEvent): Event {
+  /*
+   * Open `Event` details instead of the devextreme tooltip.
+   */
+  openEventDetails(e: AppointmentEvent): void {
+    // Cancel devextreme tooltip
+    e.cancel = true;
+
+    const event = this.fromEvent(e.appointmentData);
+    const route = ['projects', this.project!.id!, 'locations', this.location!.id!, 'sections', event.sections![0].id, 'events', event.id!];
+    this.router.navigate([{ outlets: { modal: route } }]);
+  }
+
+  fromEvent(event: ISchedulerEvent): Event {
     const updatedEvent = {
       name: event.text,
       description: event.description,
@@ -152,6 +176,6 @@ export class ProjectScreenplayLocationComponent implements OnInit {
   }
 
   private sectionById(sectionId: number): Section {
-    return this.sections.find((section: Section) => section.id === sectionId)!;
+    return this.originalSections.find((section: Section) => section.id === sectionId)!;
   }
 }

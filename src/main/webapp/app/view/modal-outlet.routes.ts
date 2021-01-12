@@ -15,10 +15,9 @@ import { ProjectResponsibilityModalComponent } from 'app/view/project/admin/resp
 import { ProjectUserInviteModalComponent } from 'app/view/project/admin/users/project-user-invite-modal.component';
 import { ProjectLocationModalComponent } from 'app/view/project/admin/locations/project-location-modal.component';
 import { ProjectSectionModalComponent } from 'app/view/project/admin/locations/sections/project-section-modal.component';
-
 import { EventUpdateModalComponent } from 'app/view/project/screenplay/event/event-update-modal.component';
 
-import { ADMIN, CONTRIBUTOR, SECRETARY } from 'app/shared/constants/role.constants';
+import { ADMIN, CONTRIBUTOR, SECRETARY, VIEWER } from 'app/shared/constants/role.constants';
 
 export const MODAL_OUTLET_ROUTES: Routes = [
   {
@@ -149,6 +148,21 @@ export const MODAL_OUTLET_ROUTES: Routes = [
       project: ProjectResolve,
       location: LocationResolve,
       section: SectionResolve,
+    },
+    outlet: 'modal',
+  },
+  {
+    path: 'projects/:projectId/locations/:locationId/sections/:sectionId/events/:eventId',
+    component: EventUpdateModalComponent,
+    data: {
+      roles: [ADMIN.name, SECRETARY.name, CONTRIBUTOR.name, VIEWER.name],
+    },
+    canActivate: [UserRouteRoleAccessService],
+    resolve: {
+      project: ProjectResolve,
+      location: LocationResolve,
+      section: SectionResolve,
+      event: EventResolve,
     },
     outlet: 'modal',
   },
