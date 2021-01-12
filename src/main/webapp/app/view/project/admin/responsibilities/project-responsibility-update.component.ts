@@ -11,7 +11,7 @@ import { ResponsibilityService } from 'app/entities/responsibility/responsibilit
 import { Project } from 'app/shared/model/project.model';
 import { Responsibility } from 'app/shared/model/responsibility.model';
 
-import { ResponsibilityUniqueNameValidator } from 'app/entities/responsibility/responsibility-unique-name.validator';
+import { uniquePropertyValueInProjectValidator } from 'app/entities/validator/unique-property-value-in-project.validator';
 
 @Component({
   selector: 'app-responsibility-update',
@@ -28,12 +28,7 @@ export class ProjectResponsibilityUpdateComponent {
     project: [],
   });
 
-  constructor(
-    protected responsibilityService: ResponsibilityService,
-    private uniqueValidator: ResponsibilityUniqueNameValidator,
-    private eventManager: JhiEventManager,
-    private fb: FormBuilder
-  ) {}
+  constructor(protected responsibilityService: ResponsibilityService, private eventManager: JhiEventManager, private fb: FormBuilder) {}
 
   public updateForm(project: Project, responsibility: Responsibility): void {
     this.isNew = !responsibility.id;
@@ -49,7 +44,7 @@ export class ProjectResponsibilityUpdateComponent {
       new FormControl(
         responsibility.name,
         [Validators.required, Validators.minLength(1), Validators.maxLength(50)],
-        [this.uniqueValidator.validate(project)]
+        [uniquePropertyValueInProjectValidator(project, (p: Project, v: string) => this.responsibilityService.nameExistsInProject(p, v))]
       )
     );
   }
