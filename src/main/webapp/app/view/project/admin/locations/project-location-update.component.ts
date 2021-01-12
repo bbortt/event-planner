@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 
 import { Observable } from 'rxjs';
 
@@ -14,6 +14,8 @@ import { Location } from 'app/shared/model/location.model';
 import { Project } from 'app/shared/model/project.model';
 import { Responsibility } from 'app/shared/model/responsibility.model';
 import { User } from 'app/core/user/user.model';
+
+import { uniquePropertyValueInProjectValidator } from 'app/entities/validator/unique-property-value-in-project.validator';
 
 @Component({
   selector: 'app-location-update',
@@ -69,6 +71,15 @@ export class ProjectLocationUpdateComponent {
       userAutocomplete: location.user?.email,
       project,
     });
+
+    this.editForm.setControl(
+      'name',
+      new FormControl(
+        location.name,
+        [Validators.required, Validators.maxLength(50)],
+        [uniquePropertyValueInProjectValidator(project, (p: Project, v: string) => this.locationService.nameExistsInProject(p, v))]
+      )
+    );
   }
 
   responsibilitySelected($event: any): void {
