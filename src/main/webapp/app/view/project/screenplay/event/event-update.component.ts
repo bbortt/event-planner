@@ -153,11 +153,8 @@ export class EventUpdateComponent implements OnInit, OnDestroy {
       this.event!.id!,
       'edit',
     ];
-    const startTime = this.event!.startTime.toJSON();
-    const endTime = this.event!.endTime.toJSON();
     this.router.navigate([{ outlets: { modal: route } }], {
       replaceUrl: true,
-      queryParams: { startTime, endTime },
     });
   }
 
