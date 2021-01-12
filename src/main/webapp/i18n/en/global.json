@@ -107,7 +107,8 @@
       "number": "This field should be a number.",
       "datetimelocal": "This field should be a date and time.",
       "patternLogin": "This field can only contain letters, digits and e-mail addresses.",
-      "email": "Please enter a valid email address."
+      "email": "Please enter a valid email address.",
+      "uniqueness": "This value has already been taken."
     }
   },
   "error": {
