@@ -2,7 +2,6 @@ package io.github.bbortt.event.planner.service;
 
 import io.github.bbortt.event.planner.domain.Location;
 import io.github.bbortt.event.planner.repository.LocationRepository;
-import io.github.bbortt.event.planner.repository.SectionRepository;
 import io.github.bbortt.event.planner.service.exception.BadRequestException;
 import io.github.bbortt.event.planner.service.exception.EntityNotFoundException;
 import io.github.bbortt.event.planner.service.exception.IdMustBePresentException;
@@ -137,10 +136,23 @@ public class LocationService {
     }
 
     /**
+     * Checks whether the given name is still unique in this Project.
+     *
+     * @param projectId the Project identifier.
+     * @param name the value to check.
+     * @return true if the value exists.
+     */
+    @Transactional(readOnly = true)
+    public Boolean isNameExistingInProject(Long projectId, String name) {
+        log.debug("Request to check uniqueness of name '{}' by projectId : {}", name, projectId);
+        return locationRepository.findOneByNameAndProjectId(name, projectId).isPresent();
+    }
+
+    /**
      * Checks if the current user has access to the `Project` linked to the given `Location`, identified by id. The project access must be given by any of the `roles`. Example usage: `@PreAuthorize("@locationService.hasAccessToLocation(#location, 'ADMIN', 'SECRETARY')")`
      *
      * @param locationId the id of the location with a linked project to check.
-     * @param roles      to look out for.
+     * @param roles to look out for.
      * @return true if the project access has any of the roles.
      */
     @Transactional(readOnly = true)
@@ -158,7 +170,7 @@ public class LocationService {
      * Checks if the current user has access to the `Project` linked to the given `Location`. The project access must be given by any of the `roles`. Example usage: `@PreAuthorize("@locationService.hasAccessToLocation(#location, 'ADMIN', 'SECRETARY')")`
      *
      * @param location the entity with a linked project to check.
-     * @param roles    to look out for.
+     * @param roles to look out for.
      * @return true if the project access has any of the roles.
      */
     @PreAuthorize("isAuthenticated()")

@@ -1,10 +1,14 @@
 package io.github.bbortt.event.planner.service;
 
+import static org.mockito.Mockito.doReturn;
+
 import io.github.bbortt.event.planner.domain.Location;
 import io.github.bbortt.event.planner.domain.Responsibility;
 import io.github.bbortt.event.planner.domain.User;
 import io.github.bbortt.event.planner.repository.LocationRepository;
 import io.github.bbortt.event.planner.service.exception.BadRequestException;
+import java.util.Optional;
+import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -64,5 +68,19 @@ class LocationServiceUnitTest {
         Mockito.verify(eventServiceMock).deleteAllByLocationId(locationId);
         Mockito.verify(sectionServiceMock).deleteAllByLocationId(locationId);
         Mockito.verify(locationRepositoryMock).deleteById(locationId);
+    }
+
+    @Test
+    void isNameExistingInProject() {
+        final Long projectId = 1234L;
+        final String name = "text-existing-responsibility-name";
+
+        doReturn(Optional.of(new Responsibility())).when(locationRepositoryMock).findOneByNameAndProjectId(name, projectId);
+
+        Assertions.assertThat(fixture.isNameExistingInProject(projectId, name)).isTrue();
+
+        doReturn(Optional.empty()).when(locationRepositoryMock).findOneByNameAndProjectId(name, projectId);
+
+        Assertions.assertThat(fixture.isNameExistingInProject(projectId, name)).isFalse();
     }
 }
