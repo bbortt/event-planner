@@ -134,7 +134,7 @@ public class SectionService {
     @Transactional(readOnly = true)
     public Boolean isNameExistingInProject(Long projectId, String name) {
         log.debug("Request to check uniqueness of name '{}' by projectId : {}", name, projectId);
-        return sectionRepository.findOneByNameAndProjectId(name, projectId).isPresent();
+        return sectionRepository.findOneByNameAndLocationProjectId(name, projectId).isPresent();
     }
 
     /**

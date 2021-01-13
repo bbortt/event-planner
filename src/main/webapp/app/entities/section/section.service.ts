@@ -8,6 +8,7 @@ import { createRequestOption } from 'app/shared/util/request-util';
 
 import { Event } from 'app/shared/model/event.model';
 import { Location } from 'app/shared/model/location.model';
+import { Project } from 'app/shared/model/project.model';
 import { Section } from 'app/shared/model/section.model';
 
 import { SERVER_API_URL } from 'app/app.constants';
@@ -52,6 +53,10 @@ export class SectionService {
         observe: 'response',
       })
       .pipe(map((response: EntityArrayResponseType) => this.convertDateArrayFromServer(response)));
+  }
+
+  nameExistsInProject(project: Project, name: string): void {
+    return this.http.post<boolean>(`${this.resourceUrl}/project/${project.id!}/name-exists`, name);
   }
 
   private convertDateFromServer(res: EntityResponseType): EntityResponseType {
