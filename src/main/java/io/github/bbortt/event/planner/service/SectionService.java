@@ -125,6 +125,19 @@ public class SectionService {
     }
 
     /**
+     * Checks whether the given name is still unique in this Project.
+     *
+     * @param projectId the Project identifier.
+     * @param name the value to check.
+     * @return true if the value exists.
+     */
+    @Transactional(readOnly = true)
+    public Boolean isNameExistingInProject(Long projectId, String name) {
+        log.debug("Request to check uniqueness of name '{}' by projectId : {}", name, projectId);
+        return sectionRepository.findOneByNameAndProjectId(name, projectId).isPresent();
+    }
+
+    /**
      * Checks if the current user has access to the `Project` linked to the given `Section`, identified by id. The project access must be given by any of the `roles`. Example usage: `@PreAuthorize("@sectionService.hasAccessToSection(#section, 'ADMIN', 'SECRETARY')")`
      *
      * @param sectionId the id of the location with a linked project to check.

@@ -1,5 +1,6 @@
 package io.github.bbortt.event.planner.repository;
 
+import com.fasterxml.jackson.databind.introspect.AnnotationCollector;
 import io.github.bbortt.event.planner.domain.Section;
 import java.util.List;
 import java.util.Optional;
@@ -23,4 +24,6 @@ public interface SectionRepository extends JpaRepository<Section, Long> {
 
     @Modifying
     long deleteAllByLocationId(Long locationId);
+
+    Optional<Section> findOneByNameAndProjectId(String name, Long projectId);
 }

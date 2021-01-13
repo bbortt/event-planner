@@ -126,6 +126,21 @@ public class SectionResource {
         return ResponseUtil.wrapOrNotFound(section);
     }
 
+    /**
+     * {@code POST /sections/project/:projectId/name-exists} : Whether the given name is still unique in this Project.
+     *
+     * @param projectId the Project identifier.
+     * @param name the value to check.
+     * @return true if the value exists.
+     */
+    @PostMapping("/sections/project/{projectId}/name-exists")
+    @PreAuthorize("@projectService.hasAccessToProject(#projectId, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")")
+    public ResponseEntity<Boolean> isNameExistingInProject(@PathVariable Long projectId, @RequestBody String name) {
+        log.debug("REST request to check uniqueness of name '{}' by projectId : {}", name, projectId);
+        Boolean isUnique = sectionService.isNameExistingInProject(projectId, name);
+        return ResponseEntity.ok(isUnique);
+    }
+
     @GetMapping("/sections/project/{projectId}/location/{locationId}/events")
     @PreAuthorize(
         "@projectService.hasAccessToProject(#projectId, \"" +

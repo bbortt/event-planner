@@ -1,5 +1,7 @@
 package io.github.bbortt.section.planner.service;
 
+import static org.mockito.Mockito.doReturn;
+
 import io.github.bbortt.event.planner.domain.Responsibility;
 import io.github.bbortt.event.planner.domain.Section;
 import io.github.bbortt.event.planner.domain.User;
@@ -8,6 +10,8 @@ import io.github.bbortt.event.planner.service.EventService;
 import io.github.bbortt.event.planner.service.ProjectService;
 import io.github.bbortt.event.planner.service.SectionService;
 import io.github.bbortt.event.planner.service.exception.BadRequestException;
+import java.util.Optional;
+import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -63,5 +67,19 @@ class SectionServiceUnitTest {
 
         Mockito.verify(eventServiceMock).deleteAllBySectionId(sectionId);
         Mockito.verify(sectionRepositoryMock).deleteById(sectionId);
+    }
+
+    @Test
+    void isNameExistingInProject() {
+        final Long projectId = 1234L;
+        final String name = "text-existing-responsibility-name";
+
+        doReturn(Optional.of(new Responsibility())).when(sectionRepositoryMock).findOneByNameAndProjectId(name, projectId);
+
+        Assertions.assertThat(fixture.isNameExistingInProject(projectId, name)).isTrue();
+
+        doReturn(Optional.empty()).when(sectionRepositoryMock).findOneByNameAndProjectId(name, projectId);
+
+        Assertions.assertThat(fixture.isNameExistingInProject(projectId, name)).isFalse();
     }
 }

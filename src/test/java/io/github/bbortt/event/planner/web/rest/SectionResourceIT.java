@@ -295,4 +295,30 @@ class SectionResourceIT extends AbstractApplicationContextAwareIT {
         List<Section> sectionList = sectionRepository.findAll();
         assertThat(sectionList).hasSize(databaseSizeBeforeDelete - 1);
     }
+
+    @Test
+    @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
+    void isNameExistingInProject() throws Exception {
+        restSectionMockMvc
+            .perform(
+                post("/api/sections/project/{projectId}/name-exists", section.getLocation().getProject().getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(section.getName())
+            )
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$").value(Boolean.FALSE));
+
+        // Initialize the database
+        sectionService.save(section);
+
+        restSectionMockMvc
+            .perform(
+                post("/api/sections/project/{projectId}/name-exists", section.getLocation().getProject().getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(section.getName())
+            )
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$").value(Boolean.TRUE));
+    }
 }
