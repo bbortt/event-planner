@@ -55,7 +55,7 @@ export class SectionService {
       .pipe(map((response: EntityArrayResponseType) => this.convertDateArrayFromServer(response)));
   }
 
-  nameExistsInProject(project: Project, name: string): void {
+  nameExistsInProject(project: Project, name: string): Observable<boolean> {
     return this.http.post<boolean>(`${this.resourceUrl}/project/${project.id!}/name-exists`, name);
   }
 

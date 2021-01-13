@@ -74,11 +74,11 @@ class SectionServiceUnitTest {
         final Long projectId = 1234L;
         final String name = "text-existing-responsibility-name";
 
-        doReturn(Optional.of(new Responsibility())).when(sectionRepositoryMock).findOneByNameAndProjectId(name, projectId);
+        doReturn(Optional.of(new Responsibility())).when(sectionRepositoryMock).findOneByNameAndLocationProjectId(name, projectId);
 
         Assertions.assertThat(fixture.isNameExistingInProject(projectId, name)).isTrue();
 
-        doReturn(Optional.empty()).when(sectionRepositoryMock).findOneByNameAndProjectId(name, projectId);
+        doReturn(Optional.empty()).when(sectionRepositoryMock).findOneByNameAndLocationProjectId(name, projectId);
 
         Assertions.assertThat(fixture.isNameExistingInProject(projectId, name)).isFalse();
     }
