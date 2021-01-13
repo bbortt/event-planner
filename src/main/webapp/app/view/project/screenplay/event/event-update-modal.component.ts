@@ -19,15 +19,12 @@ export class EventUpdateModalComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     combineLatest([this.activatedRoute.queryParams, this.activatedRoute.data, this.activatedRoute.url]).subscribe((routeParams: any[]) => {
-      let { startTime, endTime } = routeParams[0];
       const { section, event } = routeParams[1];
 
-      if (startTime) {
-        startTime = moment(startTime).toDate();
-      }
-      if (endTime) {
-        endTime = moment(endTime).toDate();
-      }
+      let startTime = routeParams[0].startTime;
+      startTime = startTime ? moment(startTime).toDate() : event.startTime;
+      let endTime = routeParams[0].endTime;
+      endTime = endTime ? moment(endTime).toDate() : event.endTime;
 
       const url = routeParams[2];
       const lastSegment = url[url.length - 1].path;

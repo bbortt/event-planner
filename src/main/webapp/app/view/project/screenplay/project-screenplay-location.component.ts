@@ -103,6 +103,8 @@ export class ProjectScreenplayLocationComponent implements OnInit {
     e.cancel = true;
 
     const event = this.fromEvent(e.appointmentData);
+    const startTime = event.startTime.toJSON();
+    const endTime = event.endTime.toJSON();
 
     const route = ['projects', this.project!.id!, 'locations', this.location!.id!, 'sections', event.sections![0].id, 'events'];
     if (event.id) {
@@ -110,10 +112,6 @@ export class ProjectScreenplayLocationComponent implements OnInit {
     } else {
       route.push('new');
     }
-
-    const startTime = event.startTime.toJSON();
-    const endTime = event.endTime.toJSON();
-
     this.router.navigate([{ outlets: { modal: route } }], {
       queryParams: { startTime, endTime },
     });
@@ -151,6 +149,7 @@ export class ProjectScreenplayLocationComponent implements OnInit {
     e.cancel = true;
 
     const event = this.fromEvent(e.appointmentData);
+
     const route = ['projects', this.project!.id!, 'locations', this.location!.id!, 'sections', event.sections![0].id, 'events', event.id!];
     this.router.navigate([{ outlets: { modal: route } }]);
   }

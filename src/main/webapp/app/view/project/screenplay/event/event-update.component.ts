@@ -153,7 +153,9 @@ export class EventUpdateComponent implements OnInit, OnDestroy {
       this.event!.id!,
       'edit',
     ];
-    this.router.navigate([{ outlets: { modal: route } }], { replaceUrl: true });
+    this.router.navigate([{ outlets: { modal: route } }], {
+      replaceUrl: true,
+    });
   }
 
   delete(): void {
