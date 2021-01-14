@@ -112,7 +112,7 @@ public class InvitationService {
     @Transactional
     public void assignUserByLoginToInvitation(String login, String token) {
         log.debug("Request to accept invitation for user '{}' by token : {}", login, token);
-        User user = userRepository.findOneByLogin(login).orElseThrow(IllegalArgumentException::new);
+        User user = userRepository.findOneByLogin(login.toLowerCase()).orElseThrow(IllegalArgumentException::new);
         invitationRepository.assignUserToInvitation(user.getId(), token);
     }
 

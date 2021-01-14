@@ -23,6 +23,8 @@ export class ProjectUserInviteComponent {
   inviteForm = this.fb.group({
     id: [],
     email: [null, [Validators.required, Validators.email]],
+    token: [null],
+    accepted: [false],
     role: [CONTRIBUTOR, [Validators.required]],
     responsibility: [null],
     responsibilityAutocomplete: [],
@@ -45,7 +47,8 @@ export class ProjectUserInviteComponent {
     const invitation: Invitation = {
       id: this.inviteForm.get('id')!.value,
       email: this.inviteForm.get('email')!.value,
-      accepted: false,
+      token: this.inviteForm.get('token')!.value,
+      accepted: this.inviteForm.get('accepted')!.value || false,
       project: this.project!,
       responsibility: this.inviteForm.get('responsibility')!.value,
       role: {
@@ -71,6 +74,8 @@ export class ProjectUserInviteComponent {
     this.inviteForm.patchValue({
       id: invitation.id,
       email: invitation.email,
+      token: invitation.token,
+      accepted: invitation.accepted,
       role: ROLES.find(role => role.name === invitation?.role?.name) || null,
       responsibility: invitation.responsibility,
       responsibilityAutocomplete: invitation.responsibility?.name,
