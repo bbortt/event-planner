@@ -205,7 +205,15 @@ public class UserResource {
     }
 
     @GetMapping("/users/project/{projectId}")
-    @PreAuthorize("@projectService.hasAccessToProject(#projectId, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")")
+    @PreAuthorize(
+        "@projectService.hasAccessToProject(#projectId, \"" +
+        RolesConstants.ADMIN +
+        "\", \"" +
+        RolesConstants.SECRETARY +
+        "\", \"" +
+        RolesConstants.CONTRIBUTOR +
+        "\")"
+    )
     public ResponseEntity<List<User>> getUsersByProjectId(@PathVariable Long projectId, Sort sort) {
         log.debug("REST request to get Users by projectId: {}", projectId);
         List<User> users = userService.findAllByProjectId(projectId, sort);

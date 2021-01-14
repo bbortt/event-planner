@@ -119,7 +119,17 @@ public class SectionResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the section, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/sections/{id}")
-    @PreAuthorize("@sectionService.hasAccessToSection(#id, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")")
+    @PreAuthorize(
+        "@sectionService.hasAccessToSection(#id, \"" +
+        RolesConstants.ADMIN +
+        "\", \"" +
+        RolesConstants.SECRETARY +
+        "\", \"" +
+        RolesConstants.CONTRIBUTOR +
+        "\", \"" +
+        RolesConstants.VIEWER +
+        "\")"
+    )
     public ResponseEntity<Section> getSection(@PathVariable Long id) {
         log.debug("REST request to get Section : {}", id);
         Optional<Section> section = sectionService.findOne(id);
