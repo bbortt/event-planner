@@ -147,7 +147,15 @@ public class ResponsibilityResource {
      * @return the list of entities.
      */
     @GetMapping("/responsibilities/project/{projectId}")
-    @PreAuthorize("@projectService.hasAccessToProject(#projectId, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")")
+    @PreAuthorize(
+        "@projectService.hasAccessToProject(#projectId, \"" +
+        RolesConstants.ADMIN +
+        "\", \"" +
+        RolesConstants.SECRETARY +
+        "\", \"" +
+        RolesConstants.CONTRIBUTOR +
+        "\")"
+    )
     public ResponseEntity<List<Responsibility>> getResponsibilitiesByProjectId(@PathVariable Long projectId, Sort sort) {
         log.debug("REST request to get Responsibilities by projectId : {}", projectId);
         List<Responsibility> responsibilities = responsibilityService.findAllByProjectId(projectId, sort);

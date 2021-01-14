@@ -12,14 +12,15 @@
   }
 
   &.screenplay-readonly {
-    .dx-draggable {
-      cursor: default;
-    }
-
-    .dx-scheduler-date-table-cell,
-    .dx-scheduler-appointment {
+    .dx-draggable,
+    .dx-scheduler-date-table-cell {
       cursor: default;
       pointer-events: none;
+    }
+
+    .dx-scheduler-appointment {
+      cursor: pointer;
+      pointer-events: all;
     }
   }
 }
