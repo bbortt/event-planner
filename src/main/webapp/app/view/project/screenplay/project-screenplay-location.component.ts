@@ -19,6 +19,7 @@ import { Section } from 'app/shared/model/section.model';
 
 import { ISchedulerEvent, SchedulerEvent } from 'app/shared/model/scheduler/event.scheduler';
 import { ISchedulerSection, SchedulerSection } from 'app/shared/model/scheduler/section.scheduler';
+import SchedulerInformation from 'app/shared/model/scheduler/scheduler-information';
 
 import { VIEWER } from 'app/shared/constants/role.constants';
 import { AUTHORITY_ADMIN } from 'app/shared/constants/authority.constants';
@@ -33,11 +34,12 @@ import * as moment from 'moment';
 })
 export class ProjectScreenplayLocationComponent implements OnInit {
   @Input()
-  location?: Location;
+  public location?: Location;
 
-  project?: Project;
+  public project?: Project;
 
   public isViewer = true;
+  public schedulerInformation: SchedulerInformation = { allowDeleting: false };
 
   private originalSections: Section[] = [];
 
@@ -61,6 +63,12 @@ export class ProjectScreenplayLocationComponent implements OnInit {
     this.isViewer =
       !this.accountService.hasAnyAuthority(AUTHORITY_ADMIN) &&
       (!this.project || this.accountService.hasAnyRole(this.project.id!, VIEWER.name));
+
+    this.schedulerInformation = {
+      ...this.schedulerInformation,
+      allowAdding: !this.isViewer,
+      allowDragging: !this.isViewer,
+    };
 
     this.eventManager.subscribe(`eventListModificationInLocation${this.location!.id!}`, () => this.reset());
   }
@@ -131,14 +139,6 @@ export class ProjectScreenplayLocationComponent implements OnInit {
       },
       () => this.reset()
     );
-  }
-
-  /*
-   * Appointment deletion for example through 'delete' key.
-   */
-  cancelAppointmentDeleting(e: AppointmentEvent): void {
-    // Cancel devextreme form
-    e.cancel = true;
   }
 
   /*

@@ -102,13 +102,15 @@ export class EventUpdateComponent implements OnInit, OnDestroy {
 
     this.minEndDate = newStartTime;
 
-    this.responsibilityService
-      .findAllByProject(this.project, { sort: ['name,asc'] })
-      .subscribe((response: HttpResponse<Responsibility[]>) => (this.responsibilities = response.body || []));
+    if (!isReadonly) {
+      this.responsibilityService
+        .findAllByProject(this.project, { sort: ['name,asc'] })
+        .subscribe((response: HttpResponse<Responsibility[]>) => (this.responsibilities = response.body || []));
 
-    this.userService
-      .findAllByProject(this.project, { sort: ['email,asc'] })
-      .subscribe((response: HttpResponse<User[]>) => (this.users = response.body || []));
+      this.userService
+        .findAllByProject(this.project, { sort: ['email,asc'] })
+        .subscribe((response: HttpResponse<User[]>) => (this.users = response.body || []));
+    }
 
     this.isResponsibility = !event.user;
     this.editForm.patchValue({
