@@ -54,6 +54,10 @@ export class SectionService {
       .pipe(map((response: EntityArrayResponseType) => this.convertDateArrayFromServer(response)));
   }
 
+  nameExistsInLocation(location: Location, name: string): Observable<boolean> {
+    return this.http.post<boolean>(`${this.resourceUrl}/location/${location.id!}/name-exists`, name);
+  }
+
   private convertDateFromServer(res: EntityResponseType): EntityResponseType {
     if (res.body) {
       this.convertDates(res.body);

@@ -136,6 +136,23 @@ public class SectionResource {
         return ResponseUtil.wrapOrNotFound(section);
     }
 
+    /**
+     * {@code POST /sections/location/:locationId/name-exists} : Whether the given name exists in this Location.
+     *
+     * @param locationId the Location identifier.
+     * @param name the value to check.
+     * @return true if the value exists.
+     */
+    @PostMapping("/sections/location/{locationId}/name-exists")
+    @PreAuthorize(
+        "@locationService.hasAccessToLocation(#locationId, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")"
+    )
+    public ResponseEntity<Boolean> isNameExistingInLocation(@PathVariable Long locationId, @RequestBody String name) {
+        log.debug("REST request to check uniqueness of name '{}' by locationId : {}", name, locationId);
+        Boolean isExisting = sectionService.isNameExistingInLocation(locationId, name);
+        return ResponseEntity.ok(isExisting);
+    }
+
     @GetMapping("/sections/project/{projectId}/location/{locationId}/events")
     @PreAuthorize(
         "@projectService.hasAccessToProject(#projectId, \"" +

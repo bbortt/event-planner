@@ -163,7 +163,7 @@ public class ResponsibilityResource {
     }
 
     /**
-     * {@code POST /responsibilities/project/:projectId/name-exists} : Whether the given name is still unique in this Project.
+     * {@code POST /responsibilities/project/:projectId/name-exists} : Whether the given name exists in this Project.
      *
      * @param projectId the Project identifier.
      * @param name the value to check.
@@ -173,8 +173,8 @@ public class ResponsibilityResource {
     @PreAuthorize("@projectService.hasAccessToProject(#projectId, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")")
     public ResponseEntity<Boolean> isNameExistingInProject(@PathVariable Long projectId, @RequestBody String name) {
         log.debug("REST request to check uniqueness of name '{}' by projectId : {}", name, projectId);
-        Boolean isUnique = responsibilityService.isNameExistingInProject(projectId, name);
-        return ResponseEntity.ok(isUnique);
+        Boolean isExisting = responsibilityService.isNameExistingInProject(projectId, name);
+        return ResponseEntity.ok(isExisting);
     }
 
     /**
