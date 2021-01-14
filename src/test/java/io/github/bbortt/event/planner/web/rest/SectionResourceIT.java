@@ -302,7 +302,7 @@ class SectionResourceIT extends AbstractApplicationContextAwareIT {
     void isNameExistingInProject() throws Exception {
         restSectionMockMvc
             .perform(
-                post("/api/sections/project/{projectId}/name-exists", section.getLocation().getProject().getId())
+                post("/api/sections/location/{locationId}/name-exists", section.getLocation().getId())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(section.getName())
             )
@@ -314,7 +314,7 @@ class SectionResourceIT extends AbstractApplicationContextAwareIT {
 
         restSectionMockMvc
             .perform(
-                post("/api/sections/project/{projectId}/name-exists", section.getLocation().getProject().getId())
+                post("/api/sections/location/{locationId}/name-exists", section.getLocation().getId())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(section.getName())
             )

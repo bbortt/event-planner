@@ -14,8 +14,8 @@ import { Location } from 'app/shared/model/location.model';
 import { Responsibility } from 'app/shared/model/responsibility.model';
 import { Section } from 'app/shared/model/section.model';
 import { User } from 'app/core/user/user.model';
-import { uniquePropertyValueInProjectValidator } from 'app/entities/validator/unique-property-value-in-project.validator';
-import { Project } from 'app/shared/model/project.model';
+
+import { uniquePropertyValueInLocationValidator } from 'app/entities/validator/unique-property-value-in-location.validator';
 
 @Component({
   selector: 'app-section-update',
@@ -77,7 +77,7 @@ export class ProjectSectionUpdateComponent implements OnInit {
       new FormControl(
         section.name,
         [Validators.required, Validators.maxLength(50)],
-        [uniquePropertyValueInProjectValidator(location.project, (p: Project, v: string) => this.sectionService.nameExistsInProject(p, v))]
+        [uniquePropertyValueInLocationValidator(location, (l: Location, v: string) => this.sectionService.nameExistsInLocation(l, v))]
       )
     );
   }

@@ -127,18 +127,20 @@ public class SectionResource {
     }
 
     /**
-     * {@code POST /sections/project/:projectId/name-exists} : Whether the given name is still unique in this Project.
+     * {@code POST /sections/location/:locationId/name-exists} : Whether the given name exists in this Location.
      *
-     * @param projectId the Project identifier.
+     * @param locationId the Location identifier.
      * @param name the value to check.
      * @return true if the value exists.
      */
-    @PostMapping("/sections/project/{projectId}/name-exists")
-    @PreAuthorize("@projectService.hasAccessToProject(#projectId, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")")
-    public ResponseEntity<Boolean> isNameExistingInProject(@PathVariable Long projectId, @RequestBody String name) {
-        log.debug("REST request to check uniqueness of name '{}' by projectId : {}", name, projectId);
-        Boolean isUnique = sectionService.isNameExistingInProject(projectId, name);
-        return ResponseEntity.ok(isUnique);
+    @PostMapping("/sections/location/{locationId}/name-exists")
+    @PreAuthorize(
+        "@locationService.hasAccessToLocation(#locationId, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")"
+    )
+    public ResponseEntity<Boolean> isNameExistingInLocation(@PathVariable Long locationId, @RequestBody String name) {
+        log.debug("REST request to check uniqueness of name '{}' by locationId : {}", name, locationId);
+        Boolean isExisting = sectionService.isNameExistingInLocation(locationId, name);
+        return ResponseEntity.ok(isExisting);
     }
 
     @GetMapping("/sections/project/{projectId}/location/{locationId}/events")

@@ -25,5 +25,5 @@ public interface SectionRepository extends JpaRepository<Section, Long> {
     @Modifying
     long deleteAllByLocationId(Long locationId);
 
-    Optional<Section> findOneByNameAndLocationProjectId(String name, Long projectId);
+    Optional<Section> findOneByNameAndLocationId(String name, Long locationId);
 }

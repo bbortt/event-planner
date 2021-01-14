@@ -11,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -125,16 +124,16 @@ public class SectionService {
     }
 
     /**
-     * Checks whether the given name is still unique in this Project.
+     * Checks whether the given name exists in this Location.
      *
-     * @param projectId the Project identifier.
+     * @param locationId the Location identifier.
      * @param name the value to check.
      * @return true if the value exists.
      */
     @Transactional(readOnly = true)
-    public Boolean isNameExistingInProject(Long projectId, String name) {
-        log.debug("Request to check uniqueness of name '{}' by projectId : {}", name, projectId);
-        return sectionRepository.findOneByNameAndLocationProjectId(name, projectId).isPresent();
+    public Boolean isNameExistingInLocation(Long locationId, String name) {
+        log.debug("Request to check uniqueness of name '{}' by locationId : {}", name, locationId);
+        return sectionRepository.findOneByNameAndLocationId(name, locationId).isPresent();
     }
 
     /**

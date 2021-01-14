@@ -71,15 +71,15 @@ class SectionServiceUnitTest {
 
     @Test
     void isNameExistingInProject() {
-        final Long projectId = 1234L;
+        final Long locationId = 1234L;
         final String name = "text-existing-responsibility-name";
 
-        doReturn(Optional.of(new Responsibility())).when(sectionRepositoryMock).findOneByNameAndLocationProjectId(name, projectId);
+        doReturn(Optional.of(new Responsibility())).when(sectionRepositoryMock).findOneByNameAndLocationId(name, locationId);
 
-        Assertions.assertThat(fixture.isNameExistingInProject(projectId, name)).isTrue();
+        Assertions.assertThat(fixture.isNameExistingInLocation(locationId, name)).isTrue();
 
-        doReturn(Optional.empty()).when(sectionRepositoryMock).findOneByNameAndLocationProjectId(name, projectId);
+        doReturn(Optional.empty()).when(sectionRepositoryMock).findOneByNameAndLocationId(name, locationId);
 
-        Assertions.assertThat(fixture.isNameExistingInProject(projectId, name)).isFalse();
+        Assertions.assertThat(fixture.isNameExistingInLocation(locationId, name)).isFalse();
     }
 }
