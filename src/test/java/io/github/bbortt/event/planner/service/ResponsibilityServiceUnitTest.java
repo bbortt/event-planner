@@ -34,7 +34,7 @@ class ResponsibilityServiceUnitTest {
     @Test
     void isNameExistingInProject() {
         final Long projectId = 1234L;
-        final String name = "text-existing-responsibility-name";
+        final String name = "test-existing-responsibility-name";
 
         doReturn(Optional.of(new Responsibility())).when(responsibilityRepositoryMock).findOneByNameAndProjectId(name, projectId);
 
