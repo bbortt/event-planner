@@ -27,7 +27,7 @@
                                jhiTranslate="entity.validation.required">
                         </small>
                         <small class="form-text text-danger"
-                               *ngIf="editForm.get('name')?.errors?.exists"
+                               *ngIf="editForm.get('email')?.errors?.exists"
                                jhiTranslate="entity.validation.uniqueness"
                                [translateValues]="{ max: 50 }">
                             This value has already been taken.

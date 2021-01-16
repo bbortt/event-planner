@@ -2,8 +2,11 @@ package io.github.bbortt.event.planner.web.rest;
 
 import io.github.bbortt.event.planner.domain.Invitation;
 import io.github.bbortt.event.planner.repository.RoleRepository;
+import io.github.bbortt.event.planner.security.AuthoritiesConstants;
+import io.github.bbortt.event.planner.security.RolesConstants;
 import io.github.bbortt.event.planner.service.InvitationService;
 import io.github.bbortt.event.planner.service.MailService;
+import io.github.bbortt.event.planner.service.ProjectService;
 import io.github.bbortt.event.planner.web.rest.errors.BadRequestAlertException;
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
@@ -46,6 +49,7 @@ public class InvitationResource {
     private static final String ENTITY_NAME = "invitation";
 
     private final InvitationService invitationService;
+    private final ProjectService projectService;
     private final MailService mailService;
 
     private final RoleRepository roleRepository;
@@ -53,8 +57,14 @@ public class InvitationResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
-    public InvitationResource(InvitationService invitationService, MailService mailService, RoleRepository roleRepository) {
+    public InvitationResource(
+        InvitationService invitationService,
+        ProjectService projectService,
+        MailService mailService,
+        RoleRepository roleRepository
+    ) {
         this.invitationService = invitationService;
+        this.projectService = projectService;
         this.mailService = mailService;
         this.roleRepository = roleRepository;
     }
@@ -67,6 +77,9 @@ public class InvitationResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/invitations")
+    @PreAuthorize(
+        "@projectService.hasAccessToProject(#invitation.project, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")"
+    )
     public ResponseEntity<Invitation> createInvitation(@Valid @RequestBody Invitation invitation) throws URISyntaxException {
         log.debug("REST request to save Invitation : {}", invitation);
         if (invitation.getId() != null) {
@@ -94,6 +107,9 @@ public class InvitationResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/invitations")
+    @PreAuthorize(
+        "@projectService.hasAccessToProject(#invitation.project, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")"
+    )
     public ResponseEntity<Invitation> updateInvitation(@Valid @RequestBody Invitation invitation) throws URISyntaxException {
         log.debug("REST request to update Invitation : {}", invitation);
         if (invitation.getId() == null) {
@@ -113,6 +129,7 @@ public class InvitationResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of invitations in body.
      */
     @GetMapping("/invitations")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<List<Invitation>> getAllInvitations(Pageable pageable) {
         log.debug("REST request to get a page of Invitations");
         Page<Invitation> page = invitationService.findAll(pageable);
@@ -127,6 +144,7 @@ public class InvitationResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the invitation, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/invitations/{id}")
+    @PreAuthorize("@invitationService.hasAccessToInvitation(#id, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")")
     public ResponseEntity<Invitation> getInvitation(@PathVariable Long id) {
         log.debug("REST request to get Invitation : {}", id);
         Optional<Invitation> invitation = invitationService.findOne(id);
@@ -134,6 +152,7 @@ public class InvitationResource {
     }
 
     @GetMapping("/invitations/project/{projectId}")
+    @PreAuthorize("@projectService.hasAccessToProject(#projectId, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")")
     public ResponseEntity<List<Invitation>> getInvitationsByProjectId(@PathVariable("projectId") Long projectId, Pageable pageable) {
         Page<Invitation> page = invitationService.findAllByProjectId(projectId, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
@@ -147,6 +166,7 @@ public class InvitationResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/invitations/{id}")
+    @PreAuthorize("@invitationService.hasAccessToInvitation(#id, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")")
     public ResponseEntity<Void> deleteInvitation(@PathVariable Long id) {
         log.debug("REST request to delete Invitation : {}", id);
         invitationService.delete(id);
@@ -173,5 +193,20 @@ public class InvitationResource {
     public boolean checkTokenValidity(@NotEmpty @RequestBody String token) {
         log.debug("REST request to check token validity : {}", token);
         return invitationService.isTokenValid(token);
+    }
+
+    /**
+     * {@code POST /invitations/project/:projectId/email-exists} : Whether the given email exists in this Project.
+     *
+     * @param projectId the Project identifier.
+     * @param email the value to check.
+     * @return true if the value exists.
+     */
+    @PostMapping("/invitations/project/{projectId}/email-exists")
+    @PreAuthorize("@projectService.hasAccessToProject(#projectId, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")")
+    public ResponseEntity<Boolean> isEmailExistingInProject(@PathVariable Long projectId, @RequestBody String email) {
+        log.debug("REST request to check uniqueness of email '{}' by projectId : {}", email, projectId);
+        Boolean isExisting = invitationService.isEmailExistingInProject(projectId, email);
+        return ResponseEntity.ok(isExisting);
     }
 }

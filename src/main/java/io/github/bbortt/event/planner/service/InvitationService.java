@@ -5,6 +5,8 @@ import io.github.bbortt.event.planner.domain.User;
 import io.github.bbortt.event.planner.repository.InvitationRepository;
 import io.github.bbortt.event.planner.repository.UserRepository;
 import io.github.bbortt.event.planner.security.SecurityUtils;
+import io.github.bbortt.event.planner.service.exception.EntityNotFoundException;
+import io.github.bbortt.event.planner.service.exception.IdMustBePresentException;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,10 +24,13 @@ public class InvitationService {
 
     private final Logger log = LoggerFactory.getLogger(InvitationService.class);
 
+    private final ProjectService projectService;
+
     private final InvitationRepository invitationRepository;
     private final UserRepository userRepository;
 
-    public InvitationService(InvitationRepository invitationRepository, UserRepository userRepository) {
+    public InvitationService(ProjectService projectService, InvitationRepository invitationRepository, UserRepository userRepository) {
+        this.projectService = projectService;
         this.invitationRepository = invitationRepository;
         this.userRepository = userRepository;
     }
@@ -81,7 +86,7 @@ public class InvitationService {
      * Find all Invitations for the given project.
      *
      * @param projectId the id of the project to retrieve invitations for.
-     * @param pageable  the pagination information.
+     * @param pageable the pagination information.
      * @return the list of entities.
      */
     @Transactional(readOnly = true)
@@ -126,5 +131,48 @@ public class InvitationService {
     public boolean isTokenValid(String token) {
         log.debug("Request to check token validity : {}", token);
         return invitationRepository.findByToken(token).isPresent();
+    }
+
+    /**
+     * Checks whether the given email is still unique in this Project.
+     *
+     * @param projectId the Project identifier.
+     * @param email the value to check.
+     * @return true if the value exists.
+     */
+    @Transactional(readOnly = true)
+    public Boolean isEmailExistingInProject(Long projectId, String email) {
+        log.debug("Request to check uniqueness of email '{}' by projectId : {}", email, projectId);
+        return invitationRepository.findOnyByEmailAndProjectId(email, projectId).isPresent();
+    }
+
+    /**
+     * Checks if the current user has access to the `Project` linked to the given `Invitation`, identified by id. The project access must be given by any of the `roles`. Example usage: `@PreAuthorize("@locationService.hasAccessToLocation(#invitationId, 'ADMIN', 'SECRETARY')")`
+     *
+     * @param invitationId the id of the location with a linked project to check.
+     * @param roles to look out for.
+     * @return true if the project access has any of the roles.
+     */
+    @Transactional(readOnly = true)
+    @PreAuthorize("isAuthenticated()")
+    public boolean hasAccessToInvitation(Long invitationId, String... roles) {
+        if (invitationId == null) {
+            throw new IdMustBePresentException();
+        }
+
+        Invitation invitation = findOne(invitationId).orElseThrow(EntityNotFoundException::new);
+        return hasAccessToInvitation(invitation, roles);
+    }
+
+    /**
+     * Checks if the current user has access to the `Project` linked to the given `Invitation`. The project access must be given by any of the `roles`. Example usage: `@PreAuthorize("@locationService.hasAccessToLocation(#invitation, 'ADMIN', 'SECRETARY')")`
+     *
+     * @param invitation the entity with a linked project to check.
+     * @param roles to look out for.
+     * @return true if the project access has any of the roles.
+     */
+    @PreAuthorize("isAuthenticated()")
+    public boolean hasAccessToInvitation(Invitation invitation, String... roles) {
+        return projectService.hasAccessToProject(invitation.getProject(), roles);
     }
 }
