@@ -33,7 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * Integration tests for the {@link InvitationResource} REST controller.
  */
-class InvitationResourceIT extends AbstractApplicationContextAwareIT {
+public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
 
     private static final String TEST_USER_LOGIN = "invitationresourceit-login";
     private static final String TEST_USER_EMAIL = "invitationresourceit@login";

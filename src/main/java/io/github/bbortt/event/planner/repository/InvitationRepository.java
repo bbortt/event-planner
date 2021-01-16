@@ -1,6 +1,9 @@
 package io.github.bbortt.event.planner.repository;
 
 import io.github.bbortt.event.planner.domain.Invitation;
+import io.github.bbortt.event.planner.domain.User;
+import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,4 +27,6 @@ public interface InvitationRepository extends JpaRepository<Invitation, Long> {
     Optional<Invitation> findByToken(String token);
 
     Optional<Invitation> findOnyByEmailAndProjectId(String email, Long projectId);
+
+    List<Invitation> findAllByAcceptedIsFalseAndAndTokenIsNotNullAndCreatedDateBefore(Instant dateTime);
 }

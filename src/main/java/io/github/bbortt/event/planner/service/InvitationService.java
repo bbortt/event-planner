@@ -7,11 +7,14 @@ import io.github.bbortt.event.planner.repository.UserRepository;
 import io.github.bbortt.event.planner.security.SecurityUtils;
 import io.github.bbortt.event.planner.service.exception.EntityNotFoundException;
 import io.github.bbortt.event.planner.service.exception.IdMustBePresentException;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -144,6 +147,23 @@ public class InvitationService {
     public Boolean isEmailExistingInProject(Long projectId, String email) {
         log.debug("Request to check uniqueness of email '{}' by projectId : {}", email, projectId);
         return invitationRepository.findOnyByEmailAndProjectId(email, projectId).isPresent();
+    }
+
+    /**
+     * Not accepted invitations should be automatically deleted after 14 days.
+     * This is scheduled to get fired everyday, at 01:00 (am).
+     */
+    @Transactional
+    @Scheduled(cron = "0 0 1 * * ?")
+    public void removeNotAcceptedInvitations() {
+        invitationRepository
+            .findAllByAcceptedIsFalseAndAndTokenIsNotNullAndCreatedDateBefore(Instant.now().minus(14, ChronoUnit.DAYS))
+            .forEach(
+                invitation -> {
+                    log.debug("Deleting not accepted invitation {} in project {}", invitation.getEmail(), invitation.getProject().getId());
+                    invitationRepository.delete(invitation);
+                }
+            );
     }
 
     /**
