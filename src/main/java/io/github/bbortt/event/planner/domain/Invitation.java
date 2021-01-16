@@ -23,9 +23,12 @@ import org.hibernate.annotations.Parameter;
 @Entity
 @Table(
     name = "invitation",
-    uniqueConstraints = { @UniqueConstraint(name = "unique_invitation_per_project", columnNames = { "email", "project_id" }) }
+    uniqueConstraints = {
+        @UniqueConstraint(name = "unique_invitation_per_project", columnNames = { "email", "project_id" }),
+        @UniqueConstraint(name = "unique_user_per_project", columnNames = { "jhi_user_id", "project_id" }),
+    }
 )
-public class Invitation implements Serializable {
+public class Invitation extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
