@@ -1,6 +1,6 @@
 <div>
     <nav class="navbar navbar-light bg-light">
-        <ul class="navbar-nav w-100 flex-row align-items-left">
+        <ul class="navbar-nav w-100 flex-row align-items-left align-items-center">
             <li class="nav-item w-100">
                 <button type="button" class="btn btn-negative btn-gray" (click)="expandLocations()">
                     <div *ngIf="locationsExpanded; else expandAll">
@@ -12,6 +12,32 @@
                         <span jhiTranslate="eventPlannerApp.project.screenplay.filter.expandAll">Expand All</span>
                     </ng-template>
                 </button>
+            </li>
+
+            <li class="nav-item w-100">
+                <div class="form-group">
+                    <label class="form-control-label"
+                           jhiTranslate="eventPlannerApp.project.screenplay.filter.interval"
+                           for="field_cellDuration">Interval</label>
+                    <dx-slider
+                        name="cellDuration"
+                        id="field_cellDuration"
+                        [min]="15"
+                        [max]="60"
+                        [step]="15"
+                        [value]="defaultCellDuration"
+                        (onValueChanged)="cellDurationChange($event)">
+                        <dxo-tooltip
+                            [enabled]="true"
+                            [format]="format">
+                        </dxo-tooltip>
+                        <dxo-label
+                            [visible]="true"
+                            [format]="format"
+                            position="top"
+                        ></dxo-label>
+                    </dx-slider>
+                </div>
             </li>
         </ul>
     </nav>

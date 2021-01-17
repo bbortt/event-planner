@@ -15,6 +15,7 @@ import { LocationService } from 'app/entities/location/location.service';
 import { faChevronDown, faChevronUp, faCog } from '@fortawesome/free-solid-svg-icons';
 
 import { ADMIN, SECRETARY } from 'app/shared/constants/role.constants';
+import { DEFAULT_CELL_DURATION } from 'app/app.constants';
 
 const ROUTE_PARAM_NAME = 'activeLocations';
 
@@ -35,6 +36,8 @@ export class ProjectScreenplayComponent implements OnInit, OnDestroy {
 
   activeLocations: string[] = [];
   allExpanded = new EventEmitter<boolean>();
+
+  cellDuration = DEFAULT_CELL_DURATION;
 
   private destroy$ = new Subject();
 
@@ -112,5 +115,9 @@ export class ProjectScreenplayComponent implements OnInit, OnDestroy {
       relativeTo: this.activatedRoute,
       queryParams: { [ROUTE_PARAM_NAME]: JSON.stringify(this.activeLocations) },
     });
+  }
+
+  onCellDurationChange(cellDuration: number): void {
+    this.cellDuration = cellDuration;
   }
 }
