@@ -6,6 +6,9 @@ import { Subject } from 'rxjs';
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 
 import { DEFAULT_CELL_DURATION } from 'app/app.constants';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+
+const ROUTE_INTERVAL_PARAMETER_NAME = 'interval';
 
 @Component({
   selector: 'app-project-screenplay-filter',
@@ -27,12 +30,21 @@ export class ProjectScreenplayFilterComponent implements OnInit, OnDestroy {
 
   locationsExpanded = false;
 
-  defaultCellDuration = DEFAULT_CELL_DURATION;
+  cellDuration = DEFAULT_CELL_DURATION;
 
   private destroy$ = new Subject<void>();
 
+  constructor(private router: Router, private activatedRoute: ActivatedRoute) {}
+
   ngOnInit(): void {
     this.allExpanded!.pipe(takeUntil(this.destroy$)).subscribe((allExpanded: boolean) => (this.locationsExpanded = allExpanded));
+
+    this.activatedRoute.queryParams.pipe(takeUntil(this.destroy$)).subscribe((params: Params) => {
+      const interval = params[ROUTE_INTERVAL_PARAMETER_NAME];
+      if (interval) {
+        this.cellDurationChange({ value: JSON.parse(interval) });
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -46,11 +58,22 @@ export class ProjectScreenplayFilterComponent implements OnInit, OnDestroy {
   }
 
   cellDurationChange(e: { value: number }): void {
-    this.onCellDurationChange.emit(e.value);
+    this.cellDuration = e.value;
+    this.onCellDurationChange.emit(this.cellDuration);
+    this.afterFilterChange();
   }
 
   format(value: any): string {
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     return `${value} min`;
+  }
+
+  private afterFilterChange(): void {
+    // Update route
+    this.router.navigate(['.'], {
+      relativeTo: this.activatedRoute,
+      queryParams: { [ROUTE_INTERVAL_PARAMETER_NAME]: JSON.stringify(this.cellDuration) },
+      queryParamsHandling: 'merge',
+    });
   }
 }
