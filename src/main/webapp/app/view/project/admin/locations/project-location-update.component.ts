@@ -3,6 +3,7 @@ import { HttpResponse } from '@angular/common/http';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 
 import { Observable } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 import { JhiEventManager } from 'ng-jhipster';
 
@@ -72,14 +73,19 @@ export class ProjectLocationUpdateComponent {
       project,
     });
 
-    this.editForm.setControl(
-      'name',
-      new FormControl(
-        location.name,
-        [Validators.required, Validators.maxLength(50)],
-        [uniquePropertyValueInProjectValidator(project, (p: Project, v: string) => this.locationService.nameExistsInProject(p, v))]
-      )
-    );
+    this.editForm
+      .get('name')
+      ?.valueChanges.pipe(take(1))
+      .subscribe((newValue: string) =>
+        this.editForm.setControl(
+          'name',
+          new FormControl(
+            newValue,
+            [Validators.required, Validators.maxLength(50)],
+            [uniquePropertyValueInProjectValidator(project, (p: Project, v: string) => this.locationService.nameExistsInProject(p, v))]
+          )
+        )
+      );
   }
 
   responsibilitySelected($event: any): void {
