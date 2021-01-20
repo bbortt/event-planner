@@ -4,6 +4,7 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { Invitation } from 'app/shared/model/invitation.model';
+import { Project } from 'app/shared/model/project.model';
 
 import { createRequestOption } from 'app/shared/util/request-util';
 
@@ -54,5 +55,9 @@ export class InvitationService {
 
   checkTokenValidity(token: string): Observable<boolean> {
     return this.http.post<boolean>(`${this.resourceUrl}/token-validity`, token);
+  }
+
+  emailExistsInProject(project: Project, email: string): Observable<boolean> {
+    return this.http.post<boolean>(`${this.resourceUrl}/project/${project.id!}/email-exists`, email);
   }
 }

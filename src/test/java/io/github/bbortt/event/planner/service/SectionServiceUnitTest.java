@@ -72,7 +72,7 @@ class SectionServiceUnitTest {
     @Test
     void isNameExistingInProject() {
         final Long locationId = 1234L;
-        final String name = "text-existing-responsibility-name";
+        final String name = "test-existing-responsibility-name";
 
         doReturn(Optional.of(new Responsibility())).when(sectionRepositoryMock).findOneByNameAndLocationId(name, locationId);
 

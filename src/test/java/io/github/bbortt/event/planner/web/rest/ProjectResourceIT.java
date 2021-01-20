@@ -44,8 +44,8 @@ import org.springframework.transaction.annotation.Transactional;
  */
 class ProjectResourceIT extends AbstractApplicationContextAwareIT {
 
-    private static final String TEST_USER_LOGIN = "responsibilityresourceit-login";
-    private static final String TEST_ADMIN_LOGIN = "responsibilityresourceit-admin";
+    private static final String TEST_USER_LOGIN = "projectresourceit-login";
+    private static final String TEST_ADMIN_LOGIN = "projectresourceit-admin";
 
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";

@@ -48,8 +48,8 @@ import org.springframework.transaction.annotation.Transactional;
 @ExtendWith(MockitoExtension.class)
 class EventResourceIT extends AbstractApplicationContextAwareIT {
 
-    private static final String TEST_USER_LOGIN = "locationresourceit-login";
-    private static final String TEST_ADMIN_LOGIN = "responsibilityresourceit-admin";
+    private static final String TEST_USER_LOGIN = "eventresourceit-login";
+    private static final String TEST_ADMIN_LOGIN = "eventresourceit-admin";
 
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
