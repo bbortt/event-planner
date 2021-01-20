@@ -1,6 +1,6 @@
 <div class="row justify-content-center">
     <div class="col-8">
-        <form name="inviteForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="inviteForm">
+        <form name="inviteForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
             <h2 id="jhi-project-heading" jhiTranslate="userManagement.invite"></h2>
 
             <div>
@@ -17,14 +17,20 @@
                            [readOnly]="!isNew"
                     />
                     <div
-                        *ngIf="inviteForm.get('email')!.invalid && inviteForm.get('email')!.dirty || inviteForm.get('email')!.touched">
+                        *ngIf="editForm.get('email')!.invalid && editForm.get('email')!.dirty || editForm.get('email')!.touched">
                         <small class="form-text text-danger"
-                               *ngIf="inviteForm.get('email')?.errors?.email"
+                               *ngIf="editForm.get('email')?.errors?.email"
                                jhiTranslate="entity.validation.email">
                         </small>
                         <small class="form-text text-danger"
-                               *ngIf="inviteForm.get('email')?.errors?.required"
+                               *ngIf="editForm.get('email')?.errors?.required"
                                jhiTranslate="entity.validation.required">
+                        </small>
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('email')?.errors?.exists"
+                               jhiTranslate="entity.validation.uniqueness"
+                               [translateValues]="{ max: 50 }">
+                            This value has already been taken.
                         </small>
                     </div>
                 </div>
@@ -40,9 +46,9 @@
                                 [ngValue]="role"></option>
                     </select>
                     <div
-                        *ngIf="inviteForm.get('role')!.invalid && inviteForm.get('role')!.dirty || inviteForm.get('role')!.touched">
+                        *ngIf="editForm.get('role')!.invalid && editForm.get('role')!.dirty || editForm.get('role')!.touched">
                         <small class="form-text text-danger"
-                               *ngIf="inviteForm.get('role')?.errors?.required"
+                               *ngIf="editForm.get('role')?.errors?.required"
                                jhiTranslate="entity.validation.required">
                         </small>
                     </div>
@@ -62,7 +68,7 @@
                         valueExpr="name"
                         (onSelectionChanged)="responsibilitySelected($event)"
                         [showClearButton]="true"
-                        [isValid]="!(inviteForm.get('responsibility')!.invalid && inviteForm.get('responsibility')!.dirty || inviteForm.get('responsibility')!.touched)">
+                        [isValid]="!(editForm.get('responsibility')!.invalid && editForm.get('responsibility')!.dirty || editForm.get('responsibility')!.touched)">
                     </dx-autocomplete>
                 </div>
             </div>
@@ -75,7 +81,7 @@
                 </button>
 
                 <button type="submit" id="save-entity"
-                        [disabled]="inviteForm.pristine || inviteForm.invalid || isSaving"
+                        [disabled]="editForm.pristine || editForm.invalid || isSaving"
                         class="btn btn-primary">
                     <fa-icon icon="save"></fa-icon>&nbsp;
                     <span *ngIf="isNew" jhiTranslate="entity.action.inviteuser"></span>

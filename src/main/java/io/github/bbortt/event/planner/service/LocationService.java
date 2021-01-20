@@ -149,7 +149,7 @@ public class LocationService {
     }
 
     /**
-     * Checks if the current user has access to the `Project` linked to the given `Location`, identified by id. The project access must be given by any of the `roles`. Example usage: `@PreAuthorize("@locationService.hasAccessToLocation(#location, 'ADMIN', 'SECRETARY')")`
+     * Checks if the current user has access to the `Project` linked to the given `Location`, identified by id. The project access must be given by any of the `roles`. Example usage: `@PreAuthorize("@locationService.hasAccessToLocation(#locationId, 'ADMIN', 'SECRETARY')")`
      *
      * @param locationId the id of the location with a linked project to check.
      * @param roles to look out for.
