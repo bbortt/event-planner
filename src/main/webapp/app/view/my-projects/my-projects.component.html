@@ -3,7 +3,8 @@
         <span jhiTranslate="eventPlannerApp.project.mine.title">My Projects</span>
 
         <div class="btn-group float-right clearfix">
-            <app-clientside-filter *jhiHasAnyAuthority="authorityAdmin" id="projects-clientside-filter"
+            <app-clientside-filter *jhiHasAnyAuthority="authorityAdmin"
+                                   id="projects-clientside-filter"
                                    (valueChange)="filterData($event)"></app-clientside-filter>
 
             <button *jhiHasAnyAuthority="authorityAdmin" [ngSwitch]="showAllProjects"
@@ -63,19 +64,20 @@
                                         [routerLink]="['project', project.id, 'screenplay']"
                                         class="btn btn-negative btn-gray">
                                     <fa-icon [icon]="faBook"></fa-icon>
-                                    <span
-                                        jhiTranslate="eventPlannerApp.project.home.screenplayLabel">
-                                    Screenplay
-                                </span>
+                                    <span class="d-sm-none d-lg-inline"
+                                          jhiTranslate="eventPlannerApp.project.home.screenplayLabel">
+                                        Screenplay
+                                    </span>
                                 </button>
 
                                 <button id="jh-settings-{{project.id}}"
                                         [routerLink]="['project', project.id, 'admin']"
                                         class="btn btn-negative btn-gray">
                                     <fa-icon [icon]="faCog"></fa-icon>
-                                    <span jhiTranslate="eventPlannerApp.project.home.settingsLabel">
-                                    Settings
-                                </span>
+                                    <span class="d-sm-none d-lg-inline"
+                                          jhiTranslate="eventPlannerApp.project.home.settingsLabel">
+                                        Settings
+                                    </span>
                                 </button>
                             </div>
                         </div>
