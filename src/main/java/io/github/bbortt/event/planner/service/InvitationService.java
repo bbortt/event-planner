@@ -157,7 +157,7 @@ public class InvitationService {
     @Scheduled(cron = "0 0 1 * * ?")
     public void removeNotAcceptedInvitations() {
         invitationRepository
-            .findAllByAcceptedIsFalseAndAndTokenIsNotNullAndCreatedDateBefore(Instant.now().minus(14, ChronoUnit.DAYS))
+            .findAllByAcceptedIsFalseAndTokenIsNotNullAndCreatedDateBefore(Instant.now().minus(14, ChronoUnit.DAYS))
             .forEach(
                 invitation -> {
                     log.debug("Deleting not accepted invitation {} in project {}", invitation.getEmail(), invitation.getProject().getId());
