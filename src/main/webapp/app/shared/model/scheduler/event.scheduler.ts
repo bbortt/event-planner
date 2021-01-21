@@ -3,12 +3,15 @@ import { ISchedulerResponsibility, SchedulerResponsibility } from 'app/shared/mo
 import { Event } from 'app/shared/model/event.model';
 import { Section } from 'app/shared/model/section.model';
 
+import { DEFAULT_SCHEDULER_RESPONSIBILITY_ID } from 'app/app.constants';
+
 export interface ISchedulerEvent {
   text: string;
   description?: string;
   startDate: Date;
   endDate: Date;
   sectionId: number;
+  responsibilityId: number;
   responsibility?: ISchedulerResponsibility;
   originalEvent?: Event;
 }
@@ -19,6 +22,7 @@ export class SchedulerEvent implements ISchedulerEvent {
   startDate: Date;
   endDate: Date;
   sectionId: number;
+  responsibilityId: number;
   responsibility?: ISchedulerResponsibility;
   originalEvent?: Event;
 
@@ -28,6 +32,7 @@ export class SchedulerEvent implements ISchedulerEvent {
     this.startDate = event.startTime.toDate();
     this.endDate = event.endTime.toDate();
     this.sectionId = section.id!;
+    this.responsibilityId = event.responsibility?.id || event.user?.id || DEFAULT_SCHEDULER_RESPONSIBILITY_ID;
 
     if (event.responsibility) {
       this.responsibility = new SchedulerResponsibility(event.responsibility, true);

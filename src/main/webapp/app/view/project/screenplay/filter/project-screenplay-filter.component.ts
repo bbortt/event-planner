@@ -5,7 +5,7 @@ import { Subject } from 'rxjs';
 
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 
-import { DEFAULT_CELL_DURATION } from 'app/app.constants';
+import { DEFAULT_SCHEDULER_CELL_DURATION } from 'app/app.constants';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 
 const ROUTE_INTERVAL_PARAMETER_NAME = 'interval';
@@ -30,7 +30,7 @@ export class ProjectScreenplayFilterComponent implements OnInit, OnDestroy {
 
   locationsExpanded = false;
 
-  cellDuration = DEFAULT_CELL_DURATION;
+  cellDuration = DEFAULT_SCHEDULER_CELL_DURATION;
 
   private destroy$ = new Subject<void>();
 
