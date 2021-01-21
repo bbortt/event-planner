@@ -18,8 +18,8 @@ import { PROJECT_SCREENPLAY_ROUTES } from './project-screenplay.routes';
 @NgModule({
   imports: [
     EventPlannerSharedModule,
-    DxSchedulerModule,
     DxSliderModule,
+    DxSchedulerModule,
     DxTemplateModule,
     EventPlannerEventModule,
     RouterModule.forChild(PROJECT_SCREENPLAY_ROUTES),

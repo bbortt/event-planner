@@ -35,12 +35,16 @@
                 <th scope="col">
                     <span jhiTranslate="eventPlannerApp.responsibility.name">Name</span>
                 </th>
+                <th scope="col">
+                    <span jhiTranslate="eventPlannerApp.responsibility.color">Color</span>
+                </th>
                 <th scope="col"></th>
             </tr>
             </thead>
             <tbody>
             <tr *ngFor="let responsibility of responsibilities ;trackBy: trackId">
                 <td>{{ responsibility.name }}</td>
+                <td><div class="btn color-preview" [ngStyle]="{'background-color':responsibility.color? responsibility.color: defaultColor}" ></div></td>
                 <td class="text-right">
                     <div class="btn-group">
                         <button type="submit"

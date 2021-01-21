@@ -18,6 +18,7 @@
         "title": "Responsibility"
       },
       "name": "Name",
+      "color": "Color",
       "project": "Project",
       "invitation": "Invitation",
       "location": "Location",

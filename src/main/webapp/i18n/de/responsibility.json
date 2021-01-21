@@ -18,6 +18,7 @@
         "title": "Verantwortlichkeit"
       },
       "name": "Name",
+      "color": "Farbe",
       "project": "Projekt",
       "invitation": "Einladung",
       "location": "Lokalität",

@@ -12,6 +12,8 @@ import { ResponsibilityService } from 'app/entities/responsibility/responsibilit
 
 import { ProjectResponsibilityDeleteDialogComponent } from 'app/view/project/admin/responsibilities/project-responsibility-delete-dialog.component';
 
+import { DEFAULT_SCHEDULER_COLOR } from 'app/app.constants';
+
 @Component({
   selector: 'app-project-responsibilities',
   templateUrl: './project-responsibilities.component.html',
@@ -21,6 +23,8 @@ export class ProjectResponsibilitiesComponent implements OnInit, OnDestroy {
   project?: Project;
   loadedResponsibilities?: Responsibility[];
   responsibilities?: Responsibility[];
+
+  defaultColor = DEFAULT_SCHEDULER_COLOR;
 
   eventSubscriber?: Subscription;
 

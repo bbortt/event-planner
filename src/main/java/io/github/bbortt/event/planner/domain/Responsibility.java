@@ -86,6 +86,19 @@ public class Responsibility implements Serializable {
         return this;
     }
 
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public Responsibility color(String color) {
+        this.color = color;
+        return this;
+    }
+
     public Project getProject() {
         return project;
     }
@@ -198,6 +211,7 @@ public class Responsibility implements Serializable {
         return "Responsibility{" +
             "id=" + getId() +
             ", name='" + getName() + "'" +
+            ", color='" +getColor() + "'" +
             "}";
     }
 }
