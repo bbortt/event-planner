@@ -46,6 +46,10 @@ public class Responsibility implements Serializable {
     @Column(name = "name", length = 50, nullable = false)
     private String name;
 
+    @Size(min = 4, max = 23)
+    @Column(name = "color", length = 23)
+    private String color;
+
     @NotNull
     @ManyToOne(optional = false)
     @JsonIgnoreProperties(value = "responsibilities", allowSetters = true)
