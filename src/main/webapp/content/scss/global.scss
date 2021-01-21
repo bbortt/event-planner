@@ -266,6 +266,14 @@ devextreme inputs in combination with scss class `form-control` styling
 
   padding: 0;
   min-height: 0;
+
+  &.dx-state-readonly {
+    border-style: none;
+  }
+
+  .dx-texteditor-input[readonly] {
+    @extend .form-control, [readonly];
+  }
 }
 
 .dx-calendar-navigator {
@@ -293,4 +301,5 @@ devextreme inputs in combination with scss class `form-control` styling
     padding: 0.25rem 0.5rem;
   }
 }
+
 /* jhipster-needle-scss-add-main JHipster will add new css style */

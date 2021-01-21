@@ -1,6 +1,8 @@
 import { User } from 'app/core/user/user.model';
 import { Responsibility } from 'app/shared/model/responsibility.model';
 
+import { DEFAULT_SCHEDULER_COLOR } from 'app/app.constants';
+
 export interface ISchedulerResponsibility {
   id: number;
   text: string;
@@ -30,7 +32,7 @@ export class SchedulerResponsibility implements ISchedulerResponsibility {
     if (this.isResponsibility && 'color' in value && value.color) {
       this.color = value.color;
     } else {
-      this.color = '#17a2b8';
+      this.color = DEFAULT_SCHEDULER_COLOR;
     }
 
     this.originalValue = value;

@@ -3,7 +3,7 @@ import { ActivatedRoute, Data, ParamMap, Router } from '@angular/router';
 import { HttpResponse } from '@angular/common/http';
 
 import { combineLatest, of } from 'rxjs';
-import { map, switchMap, take } from 'rxjs/operators';
+import { map, switchMap, take, tap } from 'rxjs/operators';
 
 import { NgbPanelChangeEvent } from '@ng-bootstrap/ng-bootstrap';
 
@@ -19,7 +19,7 @@ import { ISchedulerResponsibility, SchedulerResponsibility } from 'app/shared/mo
 import { faChevronDown, faChevronUp, faCog } from '@fortawesome/free-solid-svg-icons';
 
 import { ADMIN, SECRETARY } from 'app/shared/constants/role.constants';
-import { DEFAULT_SCHEDULER_CELL_DURATION, DEFAULT_SCHEDULER_RESPONSIBILITY_ID } from 'app/app.constants';
+import { DEFAULT_SCHEDULER_CELL_DURATION, DEFAULT_SCHEDULER_COLOR, DEFAULT_SCHEDULER_RESPONSIBILITY_ID } from 'app/app.constants';
 
 const ROUTE_ACTIVE_LOCATIONS_PARAM_NAME = 'activeLocations';
 
@@ -39,7 +39,7 @@ export class ProjectScreenplayComponent implements OnInit {
   locations?: Location[];
 
   responsibilities: ISchedulerResponsibility[] = [
-    { id: DEFAULT_SCHEDULER_RESPONSIBILITY_ID, color: '#17a2b8' } as ISchedulerResponsibility,
+    { id: DEFAULT_SCHEDULER_RESPONSIBILITY_ID, color: DEFAULT_SCHEDULER_COLOR } as ISchedulerResponsibility,
   ];
 
   activeLocations: string[] = [];
@@ -57,6 +57,7 @@ export class ProjectScreenplayComponent implements OnInit {
   ngOnInit(): void {
     combineLatest([this.activatedRoute.data, this.activatedRoute.queryParamMap])
       .pipe(
+        tap((value: [Data, ParamMap]) => (this.project = value[0].project)),
         switchMap((value: [Data, ParamMap]) =>
           combineLatest([
             this.locationService.findAllByProject(value[0].project, { sort: ['name,asc'] }),
