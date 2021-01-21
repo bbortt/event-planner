@@ -23,6 +23,7 @@ import SchedulerInformation from 'app/shared/model/scheduler/scheduler-informati
 
 import { VIEWER } from 'app/shared/constants/role.constants';
 import { AUTHORITY_ADMIN } from 'app/shared/constants/authority.constants';
+import { DEFAULT_CELL_DURATION } from 'app/app.constants';
 
 import * as moment from 'moment';
 
@@ -35,6 +36,9 @@ import * as moment from 'moment';
 export class ProjectScreenplayLocationComponent implements OnInit {
   @Input()
   public location?: Location;
+
+  @Input()
+  public cellDuration = DEFAULT_CELL_DURATION;
 
   public project?: Project;
 
@@ -120,6 +124,7 @@ export class ProjectScreenplayLocationComponent implements OnInit {
     } else {
       route.push('new');
     }
+
     this.router.navigate([{ outlets: { modal: route } }], {
       queryParams: { startTime, endTime },
     });

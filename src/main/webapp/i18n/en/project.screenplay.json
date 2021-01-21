@@ -8,7 +8,8 @@
         },
         "filter": {
           "collapseAll": "Collapse All",
-          "expandAll": "Expand All"
+          "expandAll": "Expand All",
+          "interval": "Interval"
         }
       }
     }

@@ -1,18 +1,42 @@
-<div>
-    <nav class="navbar navbar-light bg-light">
-        <ul class="navbar-nav w-100 flex-row align-items-left">
-            <li class="nav-item w-100">
-                <button type="button" class="btn btn-negative btn-gray" (click)="expandLocations()">
-                    <div *ngIf="locationsExpanded; else expandAll">
-                        <fa-icon [icon]="chevronUp"></fa-icon>
-                        <span jhiTranslate="eventPlannerApp.project.screenplay.filter.collapseAll">Collapse All</span>
-                    </div>
-                    <ng-template #expandAll>
-                        <fa-icon [icon]="chevronDown"></fa-icon>
-                        <span jhiTranslate="eventPlannerApp.project.screenplay.filter.expandAll">Expand All</span>
-                    </ng-template>
-                </button>
-            </li>
-        </ul>
-    </nav>
-</div>
+<nav class="navbar navbar-light bg-light">
+    <ul class="navbar-nav col-12 flex-row align-items-left align-items-center">
+        <li class="nav-item col-lg-2 col-md-4 col-sm-6 col-xs-12">
+            <button type="button" class="btn btn-negative btn-gray" (click)="expandLocations()">
+                <div *ngIf="locationsExpanded; else expandAll">
+                    <fa-icon [icon]="chevronUp"></fa-icon>
+                    <span jhiTranslate="eventPlannerApp.project.screenplay.filter.collapseAll">Collapse All</span>
+                </div>
+                <ng-template #expandAll>
+                    <fa-icon [icon]="chevronDown"></fa-icon>
+                    <span jhiTranslate="eventPlannerApp.project.screenplay.filter.expandAll">Expand All</span>
+                </ng-template>
+            </button>
+        </li>
+
+        <li class="nav-item col-lg-2 col-md-4 col-sm-6 col-xs-12">
+            <div class="form-group">
+                <label class="form-control-label"
+                       jhiTranslate="eventPlannerApp.project.screenplay.filter.interval"
+                       for="field_cellDuration">Interval</label>
+                <dx-slider
+                    name="cellDuration"
+                    id="field_cellDuration"
+                    [min]="15"
+                    [max]="60"
+                    [step]="15"
+                    [value]="cellDuration"
+                    (onValueChanged)="cellDurationChange($event)">
+                    <dxo-tooltip
+                        [enabled]="true"
+                        [format]="format">
+                    </dxo-tooltip>
+                    <dxo-label
+                        [visible]="true"
+                        [format]="format"
+                        position="top"
+                    ></dxo-label>
+                </dx-slider>
+            </div>
+        </li>
+    </ul>
+</nav>

@@ -15,8 +15,9 @@ import { LocationService } from 'app/entities/location/location.service';
 import { faChevronDown, faChevronUp, faCog } from '@fortawesome/free-solid-svg-icons';
 
 import { ADMIN, SECRETARY } from 'app/shared/constants/role.constants';
+import { DEFAULT_CELL_DURATION } from 'app/app.constants';
 
-const ROUTE_PARAM_NAME = 'activeLocations';
+const ROUTE_ACTIVE_LOCATIONS_PARAM_NAME = 'activeLocations';
 
 @Component({
   selector: 'app-screenplay',
@@ -36,6 +37,8 @@ export class ProjectScreenplayComponent implements OnInit, OnDestroy {
   activeLocations: string[] = [];
   allExpanded = new EventEmitter<boolean>();
 
+  cellDuration = DEFAULT_CELL_DURATION;
+
   private destroy$ = new Subject();
 
   constructor(private locationService: LocationService, private router: Router, private activatedRoute: ActivatedRoute) {}
@@ -51,7 +54,7 @@ export class ProjectScreenplayComponent implements OnInit, OnDestroy {
     });
 
     this.activatedRoute.queryParams.pipe(takeUntil(this.destroy$)).subscribe((params: Params) => {
-      let activeIds = params[ROUTE_PARAM_NAME];
+      let activeIds = params[ROUTE_ACTIVE_LOCATIONS_PARAM_NAME];
       if (activeIds) {
         activeIds = JSON.parse(activeIds);
         if (!(activeIds instanceof Array)) {
@@ -110,7 +113,12 @@ export class ProjectScreenplayComponent implements OnInit, OnDestroy {
     // Update route
     this.router.navigate(['.'], {
       relativeTo: this.activatedRoute,
-      queryParams: { [ROUTE_PARAM_NAME]: JSON.stringify(this.activeLocations) },
+      queryParams: { [ROUTE_ACTIVE_LOCATIONS_PARAM_NAME]: JSON.stringify(this.activeLocations) },
+      queryParamsHandling: 'merge',
     });
+  }
+
+  onCellDurationChange(cellDuration: number): void {
+    this.cellDuration = cellDuration;
   }
 }
