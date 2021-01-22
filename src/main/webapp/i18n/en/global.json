@@ -127,5 +127,8 @@
       "not.image": "File was expected to be an image but was found to be \"{{ fileType }}\""
     }
   },
-  "footer": "This is your footer"
+  "footer": {
+    "openSourceNotice": "EventPlanner is Open Source on",
+    "createIssue": "Found an error?"
+  }
 }
