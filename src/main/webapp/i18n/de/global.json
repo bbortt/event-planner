@@ -126,5 +126,8 @@
       "not.image": "Bild-Datei erwartet aber \"{{ fileType }}\" gefunden"
     }
   },
-  "footer": "Dies ist Ihre Fußzeile"
+  "footer": {
+    "openSourceNotice": "EventPlanner ist Open Source auf",
+    "createIssue": "Fehler gefunden?"
+  }
 }
