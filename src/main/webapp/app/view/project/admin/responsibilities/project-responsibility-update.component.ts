@@ -13,6 +13,7 @@ import { Project } from 'app/shared/model/project.model';
 import { Responsibility } from 'app/shared/model/responsibility.model';
 
 import { uniquePropertyValueInProjectValidator } from 'app/entities/validator/unique-property-value-in-project.validator';
+
 import { DEFAULT_SCHEDULER_COLOR } from 'app/app.constants';
 
 @Component({

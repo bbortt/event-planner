@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
@@ -6,7 +7,6 @@ import { Subject } from 'rxjs';
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 
 import { DEFAULT_SCHEDULER_CELL_DURATION } from 'app/app.constants';
-import { ActivatedRoute, Params, Router } from '@angular/router';
 
 const ROUTE_INTERVAL_PARAMETER_NAME = 'interval';
 
