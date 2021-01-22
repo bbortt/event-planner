@@ -14,7 +14,7 @@ import { Responsibility } from 'app/shared/model/responsibility.model';
 
 import { uniquePropertyValueInProjectValidator } from 'app/entities/validator/unique-property-value-in-project.validator';
 
-import { CONTRIBUTOR, InternalRole, ROLES, SECRETARY, VIEWER } from 'app/shared/constants/role.constants';
+import { ADMIN, CONTRIBUTOR, InternalRole, ROLES, SECRETARY, VIEWER } from 'app/shared/constants/role.constants';
 
 @Component({
   selector: 'app-project-user-invite',
@@ -35,6 +35,7 @@ export class ProjectUserInviteComponent {
     responsibilityAutocomplete: [],
   });
 
+  roleProjectAdmin = ADMIN;
   invitationRoles = [SECRETARY, CONTRIBUTOR, VIEWER];
 
   private project?: Project;

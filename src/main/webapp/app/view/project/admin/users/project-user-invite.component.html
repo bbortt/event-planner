@@ -38,13 +38,23 @@
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="global.form.role.label"
                            for="field_role"></label>
-                    <select formControlName="role"
-                            class="form-control"
-                            name="role"
-                            id="field_role">
-                        <option *ngFor="let role of invitationRoles" [jhiTranslate]="role.i18nKey"
-                                [ngValue]="role"></option>
-                    </select>
+                    <input
+                        *ngIf="editForm.get('role')?.value.name === roleProjectAdmin.name; else roleSelect"
+                        class="form-control"
+                        name="role"
+                        id="field_role"
+                        value="{{roleProjectAdmin.name}}"
+                        readOnly="true">
+                    <ng-template #roleSelect>
+                        <select formControlName="role"
+                                class="form-control"
+                                name="role"
+                                id="field_role">
+                            <option *ngFor="let role of invitationRoles"
+                                    [jhiTranslate]="role.i18nKey"
+                                    [ngValue]="role"></option>
+                        </select>
+                    </ng-template>
                     <div
                         *ngIf="editForm.get('role')!.invalid && editForm.get('role')!.dirty || editForm.get('role')!.touched">
                         <small class="form-text text-danger"
