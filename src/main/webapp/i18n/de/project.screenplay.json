@@ -11,7 +11,8 @@
           "expandAll": "Alle öffnen",
           "interval": "Abstand",
           "from": "Von",
-          "to": "Bis"
+          "to": "Bis",
+          "reset": "Zurücksetzen"
         }
       }
     }

@@ -11,7 +11,8 @@
           "expandAll": "Expand All",
           "interval": "Interval",
           "from": "From",
-          "to": "To"
+          "to": "To",
+          "reset": "Reset"
         }
       }
     }

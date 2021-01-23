@@ -2,6 +2,9 @@ import { Component, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular
 import { HttpResponse } from '@angular/common/http';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 
+import { Subject } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
+
 import { TranslateService } from '@ngx-translate/core';
 import { AccountService } from 'app/core/auth/account.service';
 
@@ -22,18 +25,17 @@ import { ISchedulerResponsibility } from 'app/shared/model/scheduler/responsibil
 import { ISchedulerSection, SchedulerSection } from 'app/shared/model/scheduler/section.scheduler';
 import SchedulerInformation from 'app/shared/model/scheduler/scheduler-information';
 
-import { VIEWER } from 'app/shared/constants/role.constants';
-import { AUTHORITY_ADMIN } from 'app/shared/constants/authority.constants';
-import { DEFAULT_SCHEDULER_CELL_DURATION } from 'app/app.constants';
-
-import * as moment from 'moment';
-import { Subject } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
 import {
   ROUTE_CELL_DURATION_PARAMETER_NAME,
   ROUTE_FROM_PARAMETER_NAME,
   ROUTE_INTERVAL_PARAMETER_NAME,
 } from 'app/view/project/screenplay/filter/project-screenplay-filter.component';
+
+import { VIEWER } from 'app/shared/constants/role.constants';
+import { AUTHORITY_ADMIN } from 'app/shared/constants/authority.constants';
+import { DEFAULT_SCHEDULER_CELL_DURATION } from 'app/app.constants';
+
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-project-screenplay-location',

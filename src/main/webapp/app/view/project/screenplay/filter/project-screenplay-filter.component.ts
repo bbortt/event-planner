@@ -91,6 +91,13 @@ export class ProjectScreenplayFilterComponent implements OnInit, OnDestroy {
     this.recalculateInterval();
   }
 
+  resetFilter(): void {
+    this.cellDuration = DEFAULT_SCHEDULER_CELL_DURATION;
+    this.from = this.project!.startTime.toDate();
+    this.to = this.project!.endTime.toDate();
+    this.recalculateInterval();
+  }
+
   private recalculateInterval(): void {
     // TODO: Devextreme timelineDay does not accept comma values
     // this.interval = (moment(this.to).diff(moment(this.from), 'hours') + 1) / 24;
