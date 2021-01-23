@@ -73,7 +73,7 @@
                             [displayFormat]="dateTimeFormat"
                             formControlName="startTime"
                             [min]="startMoment.toDate()"
-                            placeholder="dd.MM.yyyy HH:mm"
+                            placeholder="{{dateTimeFormat}}"
                             [isValid]="isValidInput('startTime')">
                         </dx-date-box>
                     </div>
@@ -105,7 +105,7 @@
                             [displayFormat]="dateTimeFormat"
                             formControlName="endTime"
                             [min]="endMoment.toDate()"
-                            placeholder="dd.MM.yyyy HH:mm"
+                            placeholder="{{dateTimeFormat}}"
                             [isValid]="isValidInput('endTime')">
                         </dx-date-box>
                     </div>

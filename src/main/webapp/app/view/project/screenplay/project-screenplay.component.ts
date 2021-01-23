@@ -19,7 +19,7 @@ import { ISchedulerResponsibility, SchedulerResponsibility } from 'app/shared/mo
 import { faChevronDown, faChevronUp, faCog } from '@fortawesome/free-solid-svg-icons';
 
 import { ADMIN, SECRETARY } from 'app/shared/constants/role.constants';
-import { DEFAULT_SCHEDULER_CELL_DURATION, DEFAULT_SCHEDULER_COLOR, DEFAULT_SCHEDULER_RESPONSIBILITY_ID } from 'app/app.constants';
+import { DEFAULT_SCHEDULER_COLOR, DEFAULT_SCHEDULER_RESPONSIBILITY_ID } from 'app/app.constants';
 
 const ROUTE_ACTIVE_LOCATIONS_PARAM_NAME = 'activeLocations';
 
@@ -44,8 +44,6 @@ export class ProjectScreenplayComponent implements OnInit {
 
   activeLocations: string[] = [];
   allExpanded = new EventEmitter<boolean>();
-
-  cellDuration = DEFAULT_SCHEDULER_CELL_DURATION;
 
   constructor(
     private locationService: LocationService,
@@ -137,9 +135,5 @@ export class ProjectScreenplayComponent implements OnInit {
       queryParams: { [ROUTE_ACTIVE_LOCATIONS_PARAM_NAME]: JSON.stringify(this.activeLocations) },
       queryParamsHandling: 'merge',
     });
-  }
-
-  onCellDurationChange(cellDuration: number): void {
-    this.cellDuration = cellDuration;
   }
 }

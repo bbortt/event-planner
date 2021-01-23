@@ -38,5 +38,47 @@
                 </dx-slider>
             </div>
         </li>
+
+        <li class="nav-item col-lg-2 col-md-4 col-sm-6 col-xs-12">
+            <div class="form-group">
+                <label class="form-control-label"
+                       jhiTranslate="eventPlannerApp.project.screenplay.filter.from"
+                       for="field_from">From</label>
+                <dx-date-box
+                    class="dx-form-control"
+                    name="from"
+                    id="field_from"
+                    type="date"
+                    [value]="from"
+                    (valueChange)="dateValueChanged('from', $event)"
+                    [openOnFieldClick]="true"
+                    [displayFormat]="dateFormat"
+                    [min]="project!.startTime!.toDate()"
+                    [max]="project!.endTime!.toDate()"
+                    placeholder="{{dateFormat}}">
+                </dx-date-box>
+            </div>
+        </li>
+
+        <li class="nav-item col-lg-2 col-md-4 col-sm-6 col-xs-12">
+            <div class="form-group">
+                <label class="form-control-label"
+                       jhiTranslate="eventPlannerApp.project.screenplay.filter.to"
+                       for="field_to">To</label>
+                <dx-date-box
+                    class="dx-form-control"
+                    name="to"
+                    id="field_to"
+                    type="date"
+                    [value]="to"
+                    (valueChange)="dateValueChanged('to', $event)"
+                    [openOnFieldClick]="true"
+                    [displayFormat]="dateFormat"
+                    [min]="minToDate"
+                    [max]="project!.endTime!.toDate()"
+                    placeholder="{{dateFormat}}">
+                </dx-date-box>
+            </div>
+        </li>
     </ul>
 </nav>

@@ -1,14 +1,22 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 
-import { takeUntil } from 'rxjs/operators';
+import { take, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+
+import { Project } from 'app/shared/model/project.model';
 
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 
 import { DEFAULT_SCHEDULER_CELL_DURATION } from 'app/app.constants';
+import { DATE_FORMAT } from 'app/shared/constants/input.constants';
 
-const ROUTE_INTERVAL_PARAMETER_NAME = 'interval';
+import * as moment from 'moment';
+
+export const ROUTE_CELL_DURATION_PARAMETER_NAME = 'duration';
+export const ROUTE_FROM_PARAMETER_NAME = 'showFrom';
+export const ROUTE_TO_PARAMETER_NAME = 'showTo';
+export const ROUTE_INTERVAL_PARAMETER_NAME = 'interval';
 
 @Component({
   selector: 'app-project-screenplay-filter',
@@ -17,13 +25,13 @@ const ROUTE_INTERVAL_PARAMETER_NAME = 'interval';
 })
 export class ProjectScreenplayFilterComponent implements OnInit, OnDestroy {
   @Input()
+  project?: Project;
+
+  @Input()
   allExpanded?: EventEmitter<boolean>;
 
   @Output()
   public onExpandAll = new EventEmitter<boolean>();
-
-  @Output()
-  public onCellDurationChange = new EventEmitter<number>();
 
   chevronDown = faChevronDown;
   chevronUp = faChevronUp;
@@ -31,6 +39,12 @@ export class ProjectScreenplayFilterComponent implements OnInit, OnDestroy {
   locationsExpanded = false;
 
   cellDuration = DEFAULT_SCHEDULER_CELL_DURATION;
+  from = new Date();
+  minToDate = new Date();
+  to = new Date();
+  interval = 1;
+
+  dateFormat = DATE_FORMAT;
 
   private destroy$ = new Subject<void>();
 
@@ -39,11 +53,16 @@ export class ProjectScreenplayFilterComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.allExpanded!.pipe(takeUntil(this.destroy$)).subscribe((allExpanded: boolean) => (this.locationsExpanded = allExpanded));
 
-    this.activatedRoute.queryParams.pipe(takeUntil(this.destroy$)).subscribe((params: Params) => {
-      const interval = params[ROUTE_INTERVAL_PARAMETER_NAME];
-      if (interval) {
-        this.cellDurationChange({ value: JSON.parse(interval) });
-      }
+    this.activatedRoute.queryParams.pipe(take(1)).subscribe((params: Params) => {
+      const cellDuration = params[ROUTE_CELL_DURATION_PARAMETER_NAME];
+      const from = params[ROUTE_FROM_PARAMETER_NAME];
+      const to = params[ROUTE_TO_PARAMETER_NAME];
+
+      this.cellDuration = cellDuration || DEFAULT_SCHEDULER_CELL_DURATION;
+      this.from = (from ? moment(from) : this.project!.startTime).toDate();
+      this.to = (to ? moment(to) : this.project!.endTime).toDate();
+
+      this.recalculateInterval();
     });
   }
 
@@ -59,7 +78,6 @@ export class ProjectScreenplayFilterComponent implements OnInit, OnDestroy {
 
   cellDurationChange(e: { value: number }): void {
     this.cellDuration = e.value;
-    this.onCellDurationChange.emit(this.cellDuration);
     this.afterFilterChange();
   }
 
@@ -68,11 +86,27 @@ export class ProjectScreenplayFilterComponent implements OnInit, OnDestroy {
     return `${value} min`;
   }
 
+  dateValueChanged(fromOrTo: string, newDate: string | number | Date): void {
+    this[fromOrTo] = new Date(newDate);
+    this.recalculateInterval();
+  }
+
+  private recalculateInterval(): void {
+    // TODO: Devextreme timelineDay does not accept comma values
+    // this.interval = (moment(this.to).diff(moment(this.from), 'hours') + 1) / 24;
+    this.interval = moment(this.to).diff(moment(this.from), 'days') + 1;
+    this.afterFilterChange();
+  }
+
   private afterFilterChange(): void {
-    // Update route
     this.router.navigate(['.'], {
       relativeTo: this.activatedRoute,
-      queryParams: { [ROUTE_INTERVAL_PARAMETER_NAME]: JSON.stringify(this.cellDuration) },
+      queryParams: {
+        [ROUTE_CELL_DURATION_PARAMETER_NAME]: this.cellDuration,
+        [ROUTE_FROM_PARAMETER_NAME]: moment(this.from).toJSON(),
+        [ROUTE_TO_PARAMETER_NAME]: moment(this.to).toJSON(),
+        [ROUTE_INTERVAL_PARAMETER_NAME]: this.interval,
+      },
       queryParamsHandling: 'merge',
     });
   }

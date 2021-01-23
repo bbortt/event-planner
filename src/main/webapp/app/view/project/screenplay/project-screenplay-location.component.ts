@@ -1,6 +1,6 @@
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 
 import { TranslateService } from '@ngx-translate/core';
 import { AccountService } from 'app/core/auth/account.service';
@@ -27,6 +27,13 @@ import { AUTHORITY_ADMIN } from 'app/shared/constants/authority.constants';
 import { DEFAULT_SCHEDULER_CELL_DURATION } from 'app/app.constants';
 
 import * as moment from 'moment';
+import { Subject } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
+import {
+  ROUTE_CELL_DURATION_PARAMETER_NAME,
+  ROUTE_FROM_PARAMETER_NAME,
+  ROUTE_INTERVAL_PARAMETER_NAME,
+} from 'app/view/project/screenplay/filter/project-screenplay-filter.component';
 
 @Component({
   selector: 'app-project-screenplay-location',
@@ -34,14 +41,15 @@ import * as moment from 'moment';
   styleUrls: ['./project-screenplay-location.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class ProjectScreenplayLocationComponent implements OnInit {
+export class ProjectScreenplayLocationComponent implements OnInit, OnDestroy {
   @Input()
   public location?: Location;
   @Input()
   public responsibilities?: ISchedulerResponsibility[];
 
-  @Input()
-  public cellDuration = DEFAULT_SCHEDULER_CELL_DURATION;
+  schedulerStartDate?: Date;
+  cellDuration?: number;
+  interval?: number;
 
   public project?: Project;
 
@@ -53,8 +61,11 @@ export class ProjectScreenplayLocationComponent implements OnInit {
   public events: ISchedulerEvent[] = [];
   public sections: ISchedulerSection[] = [];
 
+  private destroy$ = new Subject<void>();
+
   constructor(
     private router: Router,
+    private activatedRoute: ActivatedRoute,
     private translateService: TranslateService,
     private accountService: AccountService,
     private sectionService: SectionService,
@@ -64,6 +75,21 @@ export class ProjectScreenplayLocationComponent implements OnInit {
 
   ngOnInit(): void {
     this.project = this.location!.project;
+
+    this.activatedRoute.queryParams
+      .pipe(
+        map((params: Params) => ({
+          cellDuration: params[ROUTE_CELL_DURATION_PARAMETER_NAME],
+          from: params[ROUTE_FROM_PARAMETER_NAME],
+          interval: params[ROUTE_INTERVAL_PARAMETER_NAME],
+        })),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(({ cellDuration, from, interval }: { cellDuration?: number; from?: Date; interval?: number }) => {
+        this.cellDuration = cellDuration || this.cellDuration || DEFAULT_SCHEDULER_CELL_DURATION;
+        this.schedulerStartDate = from ? moment(from).toDate() : this.schedulerStartDate || this.project!.startTime.toDate();
+        this.interval = interval || this.interval || this.project!.endTime.diff(this.project!.startTime, 'days') + 1;
+      });
 
     this.reset();
 
@@ -78,6 +104,11 @@ export class ProjectScreenplayLocationComponent implements OnInit {
     };
 
     this.eventManager.subscribe(`eventListModificationInLocation${this.location!.id!}`, () => this.reset());
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   private reset(): void {
@@ -106,11 +137,6 @@ export class ProjectScreenplayLocationComponent implements OnInit {
 
   private toEvent(section: Section, event: Event): ISchedulerEvent {
     return new SchedulerEvent(section, event);
-  }
-
-  // TODO: This will be done in the screenplay-filter, move to `@Input()` attribute then
-  calculateInterval(): number {
-    return this.project!.endTime.diff(this.project!.startTime, 'days') + 1;
   }
 
   configureAppointmentForm(e: AppointmentEvent): void {
