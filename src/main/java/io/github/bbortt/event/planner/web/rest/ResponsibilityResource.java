@@ -154,6 +154,8 @@ public class ResponsibilityResource {
         RolesConstants.SECRETARY +
         "\", \"" +
         RolesConstants.CONTRIBUTOR +
+        "\", \"" +
+        RolesConstants.VIEWER +
         "\")"
     )
     public ResponseEntity<List<Responsibility>> getResponsibilitiesByProjectId(@PathVariable Long projectId, Sort sort) {

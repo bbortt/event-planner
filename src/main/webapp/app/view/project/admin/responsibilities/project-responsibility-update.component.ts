@@ -14,6 +14,8 @@ import { Responsibility } from 'app/shared/model/responsibility.model';
 
 import { uniquePropertyValueInProjectValidator } from 'app/entities/validator/unique-property-value-in-project.validator';
 
+import { DEFAULT_SCHEDULER_COLOR } from 'app/app.constants';
+
 @Component({
   selector: 'app-responsibility-update',
   templateUrl: './project-responsibility-update.component.html',
@@ -26,6 +28,7 @@ export class ProjectResponsibilityUpdateComponent {
   editForm = this.fb.group({
     id: [],
     name: [null, [Validators.required, Validators.minLength(1), Validators.maxLength(50)]],
+    color: [DEFAULT_SCHEDULER_COLOR, [Validators.required, Validators.minLength(3), Validators.maxLength(23)]],
     project: [],
   });
 
@@ -77,6 +80,7 @@ export class ProjectResponsibilityUpdateComponent {
     return {
       id: this.editForm.get(['id'])!.value,
       name: this.editForm.get(['name'])!.value,
+      color: this.editForm.get(['color'])!.value,
       project: this.editForm.get(['project'])!.value,
     };
   }

@@ -1,10 +1,13 @@
 import { User } from 'app/core/user/user.model';
 import { Responsibility } from 'app/shared/model/responsibility.model';
 
+import { DEFAULT_SCHEDULER_COLOR } from 'app/app.constants';
+
 export interface ISchedulerResponsibility {
   id: number;
   text: string;
   isResponsibility: boolean;
+  color: string;
   originalValue: Responsibility | User;
 }
 
@@ -12,6 +15,7 @@ export class SchedulerResponsibility implements ISchedulerResponsibility {
   id: number;
   text = '';
   isResponsibility: boolean;
+  color: string;
   originalValue: Responsibility | User;
 
   constructor(value: Responsibility | User, isResponsibility: boolean) {
@@ -24,6 +28,13 @@ export class SchedulerResponsibility implements ISchedulerResponsibility {
     }
 
     this.isResponsibility = isResponsibility;
+
+    if (this.isResponsibility && 'color' in value && value.color) {
+      this.color = value.color;
+    } else {
+      this.color = DEFAULT_SCHEDULER_COLOR;
+    }
+
     this.originalValue = value;
   }
 }

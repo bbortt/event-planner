@@ -1,21 +1,25 @@
-import { Component, EventEmitter, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { Component, EventEmitter, OnInit } from '@angular/core';
+import { ActivatedRoute, Data, ParamMap, Router } from '@angular/router';
 import { HttpResponse } from '@angular/common/http';
 
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { combineLatest, of } from 'rxjs';
+import { map, switchMap, take, tap } from 'rxjs/operators';
 
 import { NgbPanelChangeEvent } from '@ng-bootstrap/ng-bootstrap';
 
+import { LocationService } from 'app/entities/location/location.service';
+import { ResponsibilityService } from 'app/entities/responsibility/responsibility.service';
+
 import { Location } from 'app/shared/model/location.model';
 import { Project } from 'app/shared/model/project.model';
+import { Responsibility } from 'app/shared/model/responsibility.model';
 
-import { LocationService } from 'app/entities/location/location.service';
+import { ISchedulerResponsibility, SchedulerResponsibility } from 'app/shared/model/scheduler/responsibility.scheduler';
 
 import { faChevronDown, faChevronUp, faCog } from '@fortawesome/free-solid-svg-icons';
 
 import { ADMIN, SECRETARY } from 'app/shared/constants/role.constants';
-import { DEFAULT_CELL_DURATION } from 'app/app.constants';
+import { DEFAULT_SCHEDULER_CELL_DURATION, DEFAULT_SCHEDULER_COLOR, DEFAULT_SCHEDULER_RESPONSIBILITY_ID } from 'app/app.constants';
 
 const ROUTE_ACTIVE_LOCATIONS_PARAM_NAME = 'activeLocations';
 
@@ -24,7 +28,7 @@ const ROUTE_ACTIVE_LOCATIONS_PARAM_NAME = 'activeLocations';
   templateUrl: './project-screenplay.component.html',
   styleUrls: ['project-screenplay.component.scss'],
 })
-export class ProjectScreenplayComponent implements OnInit, OnDestroy {
+export class ProjectScreenplayComponent implements OnInit {
   faCog = faCog;
   chevronDown = faChevronDown;
   chevronUp = faChevronUp;
@@ -34,41 +38,58 @@ export class ProjectScreenplayComponent implements OnInit, OnDestroy {
   project?: Project;
   locations?: Location[];
 
+  responsibilities: ISchedulerResponsibility[] = [
+    { id: DEFAULT_SCHEDULER_RESPONSIBILITY_ID, color: DEFAULT_SCHEDULER_COLOR } as ISchedulerResponsibility,
+  ];
+
   activeLocations: string[] = [];
   allExpanded = new EventEmitter<boolean>();
 
-  cellDuration = DEFAULT_CELL_DURATION;
+  cellDuration = DEFAULT_SCHEDULER_CELL_DURATION;
 
-  private destroy$ = new Subject();
-
-  constructor(private locationService: LocationService, private router: Router, private activatedRoute: ActivatedRoute) {}
+  constructor(
+    private locationService: LocationService,
+    private responsibilityService: ResponsibilityService,
+    private router: Router,
+    private activatedRoute: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
-    this.activatedRoute.data.pipe(takeUntil(this.destroy$)).subscribe(({ project }) => {
-      this.project = project;
+    combineLatest([this.activatedRoute.data, this.activatedRoute.queryParamMap])
+      .pipe(
+        tap((value: [Data, ParamMap]) => (this.project = value[0].project)),
+        switchMap((value: [Data, ParamMap]) =>
+          combineLatest([
+            this.locationService.findAllByProject(value[0].project, { sort: ['name,asc'] }),
+            this.responsibilityService.findAllByProject(value[0].project, { sort: ['name,asc'] }),
+            of(value[1].get(ROUTE_ACTIVE_LOCATIONS_PARAM_NAME) as string),
+          ])
+        ),
+        map((value: [HttpResponse<Location[]>, HttpResponse<Responsibility[]>, string]) => ({
+          locations: value[0].body || [],
+          responsibilities: value[1].body || [],
+          activeIds: value[2],
+        })),
+        take(1)
+      )
+      .subscribe(
+        ({ locations, responsibilities, activeIds }: { locations: Location[]; responsibilities: Responsibility[]; activeIds: string }) => {
+          this.locations = locations;
+          this.responsibilities.push(
+            ...responsibilities.map((responsibility: Responsibility) => new SchedulerResponsibility(responsibility, true))
+          );
+          let newActiveIds: any = activeIds;
+          if (newActiveIds) {
+            newActiveIds = JSON.parse(newActiveIds);
+            if (!(newActiveIds instanceof Array)) {
+              newActiveIds = [newActiveIds];
+            }
+            this.activeLocations = newActiveIds;
+          }
 
-      this.locationService.findAllByProject(this.project!, { sort: ['name,asc'] }).subscribe((response: HttpResponse<Location[]>) => {
-        this.locations = response.body || [];
-        this.afterActiveLocationsChange();
-      });
-    });
-
-    this.activatedRoute.queryParams.pipe(takeUntil(this.destroy$)).subscribe((params: Params) => {
-      let activeIds = params[ROUTE_ACTIVE_LOCATIONS_PARAM_NAME];
-      if (activeIds) {
-        activeIds = JSON.parse(activeIds);
-        if (!(activeIds instanceof Array)) {
-          activeIds = [activeIds];
+          this.afterActiveLocationsChange();
         }
-        this.activeLocations = activeIds;
-        this.afterActiveLocationsChange();
-      }
-    });
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+      );
   }
 
   reset(): void {

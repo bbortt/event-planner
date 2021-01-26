@@ -32,6 +32,13 @@
                 [dataSource]="sections"
             ></dxi-resource>
 
+            <dxi-resource
+                *ngIf="responsibilities"
+                fieldExpr="responsibilityId"
+                [dataSource]="responsibilities"
+                [useColorAsDefault]="true"
+            ></dxi-resource>
+
             <div *dxTemplate="let model of 'eventTemplate'">
                 <app-scheduler-appointment
                     [appointment]="model.appointmentData"></app-scheduler-appointment>

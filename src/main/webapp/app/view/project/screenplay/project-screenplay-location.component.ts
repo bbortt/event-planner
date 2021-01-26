@@ -18,12 +18,13 @@ import { Project } from 'app/shared/model/project.model';
 import { Section } from 'app/shared/model/section.model';
 
 import { ISchedulerEvent, SchedulerEvent } from 'app/shared/model/scheduler/event.scheduler';
+import { ISchedulerResponsibility } from 'app/shared/model/scheduler/responsibility.scheduler';
 import { ISchedulerSection, SchedulerSection } from 'app/shared/model/scheduler/section.scheduler';
 import SchedulerInformation from 'app/shared/model/scheduler/scheduler-information';
 
 import { VIEWER } from 'app/shared/constants/role.constants';
 import { AUTHORITY_ADMIN } from 'app/shared/constants/authority.constants';
-import { DEFAULT_CELL_DURATION } from 'app/app.constants';
+import { DEFAULT_SCHEDULER_CELL_DURATION } from 'app/app.constants';
 
 import * as moment from 'moment';
 
@@ -36,9 +37,11 @@ import * as moment from 'moment';
 export class ProjectScreenplayLocationComponent implements OnInit {
   @Input()
   public location?: Location;
+  @Input()
+  public responsibilities?: ISchedulerResponsibility[];
 
   @Input()
-  public cellDuration = DEFAULT_CELL_DURATION;
+  public cellDuration = DEFAULT_SCHEDULER_CELL_DURATION;
 
   public project?: Project;
 

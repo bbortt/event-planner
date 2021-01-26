@@ -46,6 +46,10 @@ public class Responsibility implements Serializable {
     @Column(name = "name", length = 50, nullable = false)
     private String name;
 
+    @Size(min = 4, max = 23)
+    @Column(name = "color", length = 23)
+    private String color;
+
     @NotNull
     @ManyToOne(optional = false)
     @JsonIgnoreProperties(value = "responsibilities", allowSetters = true)
@@ -79,6 +83,19 @@ public class Responsibility implements Serializable {
 
     public Responsibility name(String name) {
         this.name = name;
+        return this;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public Responsibility color(String color) {
+        this.color = color;
         return this;
     }
 
@@ -194,6 +211,7 @@ public class Responsibility implements Serializable {
         return "Responsibility{" +
             "id=" + getId() +
             ", name='" + getName() + "'" +
+            ", color='" +getColor() + "'" +
             "}";
     }
 }
