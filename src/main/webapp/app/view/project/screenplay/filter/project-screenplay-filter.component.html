@@ -1,19 +1,27 @@
 <nav class="navbar navbar-light bg-light">
     <ul class="navbar-nav col-12 d-flex flex-row flex-wrap align-items-center">
-        <li class="nav-item col-lg-3 col-md-4 col-sm-6 col-xs-12">
-            <button type="button" class="btn btn-negative btn-gray" (click)="expandLocations()">
-                <div *ngIf="locationsExpanded; else expandAll">
-                    <fa-icon [icon]="chevronUp"></fa-icon>
-                    <span jhiTranslate="eventPlannerApp.project.screenplay.filter.collapseAll">Collapse All</span>
-                </div>
-                <ng-template #expandAll>
-                    <fa-icon [icon]="chevronDown"></fa-icon>
-                    <span jhiTranslate="eventPlannerApp.project.screenplay.filter.expandAll">Expand All</span>
-                </ng-template>
-            </button>
+        <li class="nav-item col-lg-3 col-md-6 col-sm-12">
+            <div class="btn-group">
+                <button type="button" class="btn btn-negative btn-gray" (click)="expandLocations()">
+                    <div *ngIf="locationsExpanded; else expandAll">
+                        <fa-icon [icon]="chevronUp"></fa-icon>
+                        <span jhiTranslate="eventPlannerApp.project.screenplay.filter.collapseAll">Collapse All</span>
+                    </div>
+                    <ng-template #expandAll>
+                        <fa-icon [icon]="chevronDown"></fa-icon>
+                        <span jhiTranslate="eventPlannerApp.project.screenplay.filter.expandAll">Expand All</span>
+                    </ng-template>
+                </button>
+
+                <button type="button"
+                        class="btn btn-negative btn-gray"
+                        (click)="resetFilter()"
+                        jhiTranslate="eventPlannerApp.project.screenplay.filter.reset">Reset
+                </button>
+            </div>
         </li>
 
-        <li class="nav-item col-lg-3 col-md-4 col-sm-6 col-xs-12">
+        <li class="nav-item col-lg-3 col-md-6 col-xs-12">
             <div class="form-group">
                 <label class="form-control-label"
                        jhiTranslate="eventPlannerApp.project.screenplay.filter.interval"
@@ -49,8 +57,9 @@
                     name="from"
                     id="field_from"
                     type="date"
-                    [value]="from"
-                    (valueChange)="dateValueChanged('from', $event)"
+                    [(value)]="from"
+                    (valueChange)="dateValueChanged()"
+                    [showClearButton]="false"
                     [openOnFieldClick]="true"
                     [displayFormat]="dateFormat"
                     [min]="project!.startTime!.toDate()"
@@ -70,24 +79,15 @@
                     name="to"
                     id="field_to"
                     type="date"
-                    [value]="to"
-                    (valueChange)="dateValueChanged('to', $event)"
+                    [(value)]="to"
+                    (valueChange)="dateValueChanged()"
+                    [showClearButton]="false"
                     [openOnFieldClick]="true"
                     [displayFormat]="dateFormat"
                     [min]="minToDate"
                     [max]="project!.endTime!.toDate()"
                     placeholder="{{dateFormat}}">
                 </dx-date-box>
-            </div>
-        </li>
-
-        <li class="nav-item col-lg-3 col-md-4 col-sm-6 col-xs-12">
-            <div class="btn-group">
-                <button type="button"
-                        class="btn btn-negative btn-gray"
-                        (click)="resetFilter()"
-                        jhiTranslate="eventPlannerApp.project.screenplay.filter.reset">Reset
-                </button>
             </div>
         </li>
     </ul>
