@@ -3,7 +3,7 @@ import { RouterModule } from '@angular/router';
 
 import { EventPlannerSharedModule } from 'app/shared/shared.module';
 
-import { DxSchedulerModule, DxSliderModule, DxTemplateModule } from 'devextreme-angular';
+import { DxDateBoxModule, DxSchedulerModule, DxSliderModule, DxTemplateModule } from 'devextreme-angular';
 
 import { EventPlannerEventModule } from 'app/view/project/screenplay/event/event.module';
 
@@ -19,6 +19,7 @@ import { PROJECT_SCREENPLAY_ROUTES } from './project-screenplay.routes';
   imports: [
     EventPlannerSharedModule,
     DxSliderModule,
+    DxDateBoxModule,
     DxSchedulerModule,
     DxTemplateModule,
     EventPlannerEventModule,

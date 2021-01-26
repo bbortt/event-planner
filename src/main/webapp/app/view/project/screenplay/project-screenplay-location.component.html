@@ -3,12 +3,15 @@
 </div>
 
 <ng-template #scheduler>
-    <div class="app-project-screenplay-location" [ngClass]="{ 'screenplay-readonly': isViewer }">
+    <div
+        *ngIf="cellDuration && schedulerStartDate && interval"
+        class="app-project-screenplay-location"
+        [ngClass]="{ 'screenplay-readonly': isViewer }">
         <dx-scheduler
             [dataSource]="events"
             appointmentTemplate="eventTemplate"
             appointmentTooltipTemplate="tooltipTemplate"
-            [currentDate]="project!.startTime.toDate()"
+            [currentDate]="schedulerStartDate"
             [min]="project!.startTime.toDate()"
             [max]="project!.endTime.toDate()"
             [groups]="['sectionId']"
@@ -24,7 +27,7 @@
                 type="timelineDay"
                 name="custom-project-view"
                 [cellDuration]="cellDuration"
-                [intervalCount]="calculateInterval()">
+                [intervalCount]="interval">
             </dxi-view>
 
             <dxi-resource

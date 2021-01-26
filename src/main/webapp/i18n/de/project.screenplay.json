@@ -9,7 +9,10 @@
         "filter": {
           "collapseAll": "Alle schliessen",
           "expandAll": "Alle öffnen",
-          "interval": "Abstand"
+          "interval": "Abstand",
+          "from": "Von",
+          "to": "Bis",
+          "reset": "Zurücksetzen"
         }
       }
     }

@@ -14,15 +14,15 @@
         </button>
     </h2>
 
-    <br />
+    <br/>
 
     <app-project-screenplay-filter
+        [project]="project"
         [allExpanded]="allExpanded"
-        (onExpandAll)="onExpandAll($event)"
-        (onCellDurationChange)="onCellDurationChange($event)">
+        (onExpandAll)="onExpandAll($event)">
     </app-project-screenplay-filter>
 
-    <br />
+    <br/>
 
     <jhi-alert-error></jhi-alert-error>
 
@@ -57,8 +57,7 @@
                 <app-project-screenplay-location
                     *ngIf="isActiveId('location-' + location.id)"
                     [location]="location"
-                    [responsibilities]="responsibilities"
-                    [cellDuration]="cellDuration"></app-project-screenplay-location>
+                    [responsibilities]="responsibilities"></app-project-screenplay-location>
             </ng-template>
         </ngb-panel>
     </ngb-accordion>

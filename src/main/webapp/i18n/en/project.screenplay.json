@@ -9,7 +9,10 @@
         "filter": {
           "collapseAll": "Collapse All",
           "expandAll": "Expand All",
-          "interval": "Interval"
+          "interval": "Interval",
+          "from": "From",
+          "to": "To",
+          "reset": "Reset"
         }
       }
     }
