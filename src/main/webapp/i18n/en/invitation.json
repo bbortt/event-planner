@@ -24,6 +24,7 @@
       "user": "User",
       "role": "Role",
       "responsibility": "Responsibility",
+      "color": "Color",
       "acceptViaLoginMessage": "Log in to accept the invitation.",
       "acceptViaRegisterMessage": "Register to accept the invitation."
     }

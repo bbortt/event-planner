@@ -26,16 +26,20 @@
             <thead>
             <tr>
                 <th scope="col">
-                    <span jhiTranslate="eventPlannerApp.invitation.email"></span>
+                    <span jhiTranslate="eventPlannerApp.invitation.email">Email</span>
                 </th>
                 <th scope="col">
-                    <span jhiTranslate="eventPlannerApp.invitation.role"></span>
+                    <span jhiTranslate="eventPlannerApp.invitation.role">Role</span>
                 </th>
                 <th scope="col">
-                    <span jhiTranslate="eventPlannerApp.responsibility.detail.title"></span>
+                    <span
+                        jhiTranslate="eventPlannerApp.invitation.responsibility">Responsibility</span>
                 </th>
                 <th scope="col">
-                    <span jhiTranslate="eventPlannerApp.invitation.accepted"></span>
+                    <span jhiTranslate="eventPlannerApp.invitation.color">Color</span>
+                </th>
+                <th scope="col">
+                    <span jhiTranslate="eventPlannerApp.invitation.accepted">Accepted</span>
                 </th>
                 <th scope="col"></th>
             </tr>
@@ -45,6 +49,10 @@
                 <td>{{ invitation.email }}</td>
                 <td>{{ invitation.role.name | i18nRole | translate }}</td>
                 <td>{{ invitation.responsibility?.name }}</td>
+                <td>
+                    <div class="btn color-preview"
+                         [ngStyle]="{'background-color': invitation.color ? invitation.color : defaultColor}"></div>
+                </td>
                 <td [jhiTranslate]="invitation.accepted ? 'eventPlannerApp.invitation.accepted.yes' : 'eventPlannerApp.invitation.accepted.no'"></td>
                 <td class="text-right">
                     <div class="btn-group">

@@ -55,6 +55,10 @@ public class Invitation extends AbstractAuditingEntity implements Serializable {
     @Column(name = "token", columnDefinition = "bpchar(36)")
     private String token;
 
+    @Size(min = 4, max = 23)
+    @Column(name = "color", length = 23)
+    private String color;
+
     @ManyToOne(optional = false)
     @NotNull
     @JsonIgnoreProperties(value = "invitations", allowSetters = true)
@@ -119,6 +123,19 @@ public class Invitation extends AbstractAuditingEntity implements Serializable {
 
     public Invitation token(String token) {
         this.token = token;
+        return this;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public Invitation color(String color) {
+        this.color = color;
         return this;
     }
 
@@ -199,6 +216,7 @@ public class Invitation extends AbstractAuditingEntity implements Serializable {
             "id=" + getId() +
             ", email='" + getEmail() + "'" +
             ", accepted='" + isAccepted() + "'" +
+            ", color='" +getColor() + "'" +
             "}";
     }
 }

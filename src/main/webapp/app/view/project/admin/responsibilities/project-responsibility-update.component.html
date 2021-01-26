@@ -17,7 +17,7 @@
                            jhiTranslate="eventPlannerApp.responsibility.name"
                            for="field_name">Name</label>
                     <input type="text" class="form-control" name="name" id="field_name"
-                           formControlName="name"/>
+                           formControlName="name" />
                     <div
                         *ngIf="editForm.get('name')!.invalid && (editForm.get('name')!.dirty || editForm.get('name')!.touched)">
                         <small class="form-text text-danger"
@@ -49,7 +49,7 @@
                 <div class="form-group">
                     <label class="form-control-label"
                            jhiTranslate="eventPlannerApp.responsibility.color"
-                           for="field_color">Name</label>
+                           for="field_color">Color</label>
                     <dx-color-box class="dx-form-control"
                                   name="color"
                                   id="field_color"

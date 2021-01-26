@@ -1,10 +1,16 @@
 package io.github.bbortt.event.planner.web.rest;
 
+import io.github.bbortt.event.planner.domain.Event;
+import io.github.bbortt.event.planner.domain.Responsibility;
 import io.github.bbortt.event.planner.domain.Section;
+import io.github.bbortt.event.planner.domain.User;
 import io.github.bbortt.event.planner.security.AuthoritiesConstants;
 import io.github.bbortt.event.planner.security.RolesConstants;
+import io.github.bbortt.event.planner.service.InvitationService;
 import io.github.bbortt.event.planner.service.ProjectService;
 import io.github.bbortt.event.planner.service.SectionService;
+import io.github.bbortt.event.planner.service.dto.SchedulerEventDTO;
+import io.github.bbortt.event.planner.service.dto.SchedulerSectionDTO;
 import io.github.bbortt.event.planner.service.exception.EntityNotFoundException;
 import io.github.bbortt.event.planner.web.rest.errors.BadRequestAlertException;
 import io.github.jhipster.web.util.HeaderUtil;
@@ -14,6 +20,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,10 +56,12 @@ public class SectionResource {
 
     private final SectionService sectionService;
     private final ProjectService projectService;
+    private final InvitationService invitationService;
 
-    public SectionResource(SectionService sectionService, ProjectService projectService) {
+    public SectionResource(SectionService sectionService, ProjectService projectService, InvitationService invitationService) {
         this.sectionService = sectionService;
         this.projectService = projectService;
+        this.invitationService = invitationService;
     }
 
     /**
@@ -165,10 +174,49 @@ public class SectionResource {
         RolesConstants.VIEWER +
         "\")"
     )
-    public ResponseEntity<List<Section>> getSectionsByLocationIdJoinEvents(@PathVariable Long projectId, @PathVariable Long locationId) {
+    public ResponseEntity<List<SchedulerSectionDTO>> getSectionsByLocationIdJoinEvents(
+        @PathVariable Long projectId,
+        @PathVariable Long locationId
+    ) {
         log.debug("REST Request to get Sections inclusive Events by locationId {}", locationId);
         List<Section> sections = sectionService.findAllByLocationIdJoinEvents(locationId);
-        return ResponseEntity.ok(sections);
+        return ResponseEntity.ok(sections.stream().map(this::toSchedulerSectionDTO).collect(Collectors.toList()));
+    }
+
+    private SchedulerSectionDTO toSchedulerSectionDTO(Section section) {
+        return new SchedulerSectionDTO(
+            section.getId(),
+            section.getName(),
+            section.getEvents().stream().map(event -> this.toSchedulerEventDTO(event, section)).collect(Collectors.toList()),
+            section
+        );
+    }
+
+    private SchedulerEventDTO toSchedulerEventDTO(Event event, Section section) {
+        String color = null;
+        String colorId = null;
+
+        if (event.getResponsibility() != null) {
+            color = event.getResponsibility().getColor();
+            colorId = Responsibility.class.getSimpleName().toLowerCase() + "-" + event.getResponsibility().getId();
+        } else if (event.getUser() != null) {
+            color =
+                this.invitationService.findOneByEmailAndProjectId(event.getUser().getEmail(), section.getLocation().getProject().getId())
+                    .orElseThrow(IllegalArgumentException::new)
+                    .getColor();
+            colorId = User.class.getSimpleName().toLowerCase() + "-" + event.getUser().getId();
+        }
+
+        return new SchedulerEventDTO(
+            event.getName(),
+            event.getDescription(),
+            event.getStartTime(),
+            event.getEndTime(),
+            colorId,
+            color,
+            section.getId(),
+            event
+        );
     }
 
     /**

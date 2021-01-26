@@ -98,6 +98,12 @@ public class InvitationService {
         return invitationRepository.findAllByProjectId(projectId, pageable);
     }
 
+    @Transactional(readOnly = true)
+    public Optional<Invitation> findOneByEmailAndProjectId(String email, Long projectId) {
+        log.debug("Request to get Invitation for User {} in Project {}", email, projectId);
+        return invitationRepository.findOneByEmailAndProjectId(email, projectId);
+    }
+
     /**
      * Accept the invitation identified by the given token, assign the current user.
      *
@@ -146,7 +152,7 @@ public class InvitationService {
     @Transactional(readOnly = true)
     public Boolean isEmailExistingInProject(Long projectId, String email) {
         log.debug("Request to check uniqueness of email '{}' by projectId : {}", email, projectId);
-        return invitationRepository.findOnyByEmailAndProjectId(email, projectId).isPresent();
+        return invitationRepository.findOneByEmailAndProjectId(email, projectId).isPresent();
     }
 
     /**

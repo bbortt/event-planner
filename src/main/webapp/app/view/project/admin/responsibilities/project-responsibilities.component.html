@@ -17,7 +17,7 @@
         </div>
     </h3>
 
-    <br/>
+    <br />
 
     <jhi-alert-error></jhi-alert-error>
 
@@ -28,7 +28,8 @@
             jhiTranslate="eventPlannerApp.responsibility.home.notFound">No responsibilities found</span>
     </div>
 
-    <div class="table-responsive" id="entities" *ngIf="project && loadedResponsibilities?.length != 0">
+    <div class="table-responsive" id="entities"
+         *ngIf="project && loadedResponsibilities?.length != 0">
         <table class="table table-striped" aria-describedby="page-heading">
             <thead>
             <tr>
@@ -44,7 +45,10 @@
             <tbody>
             <tr *ngFor="let responsibility of responsibilities ;trackBy: trackId">
                 <td>{{ responsibility.name }}</td>
-                <td><div class="btn color-preview" [ngStyle]="{'background-color':responsibility.color? responsibility.color: defaultColor}" ></div></td>
+                <td>
+                    <div class="btn color-preview"
+                         [ngStyle]="{'background-color': responsibility.color ? responsibility.color : defaultColor}"></div>
+                </td>
                 <td class="text-right">
                     <div class="btn-group">
                         <button type="submit"

@@ -5,7 +5,6 @@ import static org.mockito.Mockito.doReturn;
 import io.github.bbortt.event.planner.domain.Responsibility;
 import io.github.bbortt.event.planner.repository.InvitationRepository;
 import io.github.bbortt.event.planner.repository.UserRepository;
-import io.github.bbortt.event.planner.web.rest.InvitationResource;
 import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
@@ -41,11 +40,11 @@ public class InvitationServiceUnitTest {
         final Long locationId = 1234L;
         final String email = "existing@email";
 
-        doReturn(Optional.of(new Responsibility())).when(invitationRepositoryMock).findOnyByEmailAndProjectId(email, locationId);
+        doReturn(Optional.of(new Responsibility())).when(invitationRepositoryMock).findOneByEmailAndProjectId(email, locationId);
 
         Assertions.assertThat(fixture.isEmailExistingInProject(locationId, email)).isTrue();
 
-        doReturn(Optional.empty()).when(invitationRepositoryMock).findOnyByEmailAndProjectId(email, locationId);
+        doReturn(Optional.empty()).when(invitationRepositoryMock).findOneByEmailAndProjectId(email, locationId);
 
         Assertions.assertThat(fixture.isEmailExistingInProject(locationId, email)).isFalse();
     }

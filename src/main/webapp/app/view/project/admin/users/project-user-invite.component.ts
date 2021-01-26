@@ -14,6 +14,7 @@ import { Responsibility } from 'app/shared/model/responsibility.model';
 
 import { uniquePropertyValueInProjectValidator } from 'app/entities/validator/unique-property-value-in-project.validator';
 
+import { DEFAULT_SCHEDULER_COLOR } from 'app/app.constants';
 import { ADMIN, CONTRIBUTOR, InternalRole, ROLES, SECRETARY, VIEWER } from 'app/shared/constants/role.constants';
 
 @Component({
@@ -30,6 +31,7 @@ export class ProjectUserInviteComponent {
     email: [null, [Validators.required, Validators.email]],
     token: [null],
     accepted: [false],
+    color: [DEFAULT_SCHEDULER_COLOR, [Validators.required, Validators.minLength(3), Validators.maxLength(23)]],
     role: [CONTRIBUTOR, [Validators.required]],
     responsibility: [null],
     responsibilityAutocomplete: [],
@@ -59,8 +61,9 @@ export class ProjectUserInviteComponent {
     this.editForm.patchValue({
       id: invitation.id,
       email: invitation.email,
-      token: invitation.token,
       accepted: invitation.accepted,
+      token: invitation.token,
+      color: invitation.color ? invitation.color : DEFAULT_SCHEDULER_COLOR,
       role: ROLES.find(role => role.name === invitation?.role?.name) || null,
       responsibility: invitation.responsibility,
       responsibilityAutocomplete: invitation.responsibility?.name,
@@ -86,8 +89,9 @@ export class ProjectUserInviteComponent {
     const invitation: Invitation = {
       id: this.editForm.get('id')!.value,
       email: this.editForm.get('email')!.value,
-      token: this.editForm.get('token')!.value,
       accepted: this.editForm.get('accepted')!.value || false,
+      token: this.editForm.get('token')!.value,
+      color: this.editForm.get('color')!.value,
       project: this.project!,
       responsibility: this.editForm.get('responsibility')!.value,
       role: {

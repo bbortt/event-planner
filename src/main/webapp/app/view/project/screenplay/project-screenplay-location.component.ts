@@ -18,11 +18,9 @@ import { SectionService } from 'app/entities/section/section.service';
 import { Event } from 'app/shared/model/event.model';
 import { Location } from 'app/shared/model/location.model';
 import { Project } from 'app/shared/model/project.model';
-import { Section } from 'app/shared/model/section.model';
 
-import { ISchedulerEvent, SchedulerEvent } from 'app/shared/model/scheduler/event.scheduler';
-import { ISchedulerResponsibility } from 'app/shared/model/scheduler/responsibility.scheduler';
-import { ISchedulerSection, SchedulerSection } from 'app/shared/model/scheduler/section.scheduler';
+import { ISchedulerEvent } from 'app/shared/model/scheduler/event.scheduler';
+import { ISchedulerSection } from 'app/shared/model/scheduler/section.scheduler';
 import SchedulerInformation from 'app/shared/model/scheduler/scheduler-information';
 
 import {
@@ -36,6 +34,7 @@ import { AUTHORITY_ADMIN } from 'app/shared/constants/authority.constants';
 import { DEFAULT_SCHEDULER_CELL_DURATION } from 'app/app.constants';
 
 import * as moment from 'moment';
+import { ColorGroup } from 'app/shared/model/scheduler/color-group';
 
 @Component({
   selector: 'app-project-screenplay-location',
@@ -46,8 +45,6 @@ import * as moment from 'moment';
 export class ProjectScreenplayLocationComponent implements OnInit, OnDestroy {
   @Input()
   public location?: Location;
-  @Input()
-  public responsibilities?: ISchedulerResponsibility[];
 
   schedulerStartDate?: Date;
   cellDuration?: number;
@@ -58,10 +55,9 @@ export class ProjectScreenplayLocationComponent implements OnInit, OnDestroy {
   public isViewer = true;
   public schedulerInformation: SchedulerInformation = { allowDeleting: false };
 
-  private originalSections: Section[] = [];
-
   public events: ISchedulerEvent[] = [];
   public sections: ISchedulerSection[] = [];
+  public colors: ColorGroup[] = [];
 
   private destroy$ = new Subject<void>();
 
@@ -116,42 +112,44 @@ export class ProjectScreenplayLocationComponent implements OnInit, OnDestroy {
   private reset(): void {
     let sections: ISchedulerSection[] = [];
     const events: ISchedulerEvent[] = [];
+    const colors: ColorGroup[] = [];
 
-    this.sectionService.findAllByLocationInclusiveEvents(this.location!).subscribe((response: HttpResponse<Section[]>) => {
+    this.sectionService.findAllByLocationInclusiveEvents(this.location!).subscribe((response: HttpResponse<ISchedulerSection[]>) => {
       const data = response.body || [];
-      sections = data.map(this.toSection);
-      data.forEach((section: Section) => {
+      sections = data;
+      data.forEach((section: ISchedulerSection) => {
         if (section.events) {
-          events.push(...section.events.map((event: Event) => this.toEvent(section, event)));
+          section.events.forEach((event: ISchedulerEvent) => {
+            if (!colors.find((colorGroup: ColorGroup) => colorGroup.color === event.color)) {
+              colors.push({ id: event.colorId, color: event.color });
+            }
+          });
+          events.push(...section.events);
         }
       });
 
-      this.originalSections = data;
-
       this.sections = sections;
       this.events = events;
+      this.colors = colors;
+
+      // eslint-disable-next-line no-console
+      console.log('sections: ', this.sections);
+      // eslint-disable-next-line no-console
+      console.log('events: ', this.events);
     });
-  }
-
-  private toSection(section: Section): ISchedulerSection {
-    return new SchedulerSection(section);
-  }
-
-  private toEvent(section: Section, event: Event): ISchedulerEvent {
-    return new SchedulerEvent(section, event);
   }
 
   configureAppointmentForm(e: AppointmentEvent): void {
     // Cancel devextreme form
     e.cancel = true;
 
-    const event = this.fromEvent(e.appointmentData);
-    const startTime = event.startTime.toJSON();
-    const endTime = event.endTime.toJSON();
+    const event = e.appointmentData;
+    const startTime = moment(event.startDate).toJSON();
+    const endTime = moment(event.endDate).toJSON();
 
-    const route = ['projects', this.project!.id!, 'locations', this.location!.id!, 'sections', event.sections![0].id, 'events'];
-    if (event.id) {
-      route.push(event.id, 'edit');
+    const route = ['projects', this.project!.id!, 'locations', this.location!.id!, 'sections', event.sectionId, 'events'];
+    if (event.originalEvent) {
+      route.push(event.originalEvent.id!, 'edit');
     } else {
       route.push('new');
     }
@@ -165,9 +163,7 @@ export class ProjectScreenplayLocationComponent implements OnInit, OnDestroy {
    * This is for the 'drag & drop' update (times only). Any click on an item results in `this.configureAppointmentForm` beeing called.
    */
   onAppointmentDragged(e: AppointmentEvent): void {
-    const appointment = e.appointmentData;
-
-    this.eventService.update(this.fromEvent(appointment)).subscribe(
+    this.eventService.update(this.updateDraggedEvent(e.appointmentData)).subscribe(
       (response: HttpResponse<Event>) => {
         if (response.status !== 200) {
           this.reset();
@@ -184,33 +180,26 @@ export class ProjectScreenplayLocationComponent implements OnInit, OnDestroy {
     // Cancel devextreme tooltip
     e.cancel = true;
 
-    const event = this.fromEvent(e.appointmentData);
-
-    const route = ['projects', this.project!.id!, 'locations', this.location!.id!, 'sections', event.sections![0].id, 'events', event.id!];
+    const event = e.appointmentData;
+    const route = [
+      'projects',
+      this.project!.id!,
+      'locations',
+      this.location!.id!,
+      'sections',
+      event.sectionId,
+      'events',
+      event.originalEvent!.id,
+    ];
     this.router.navigate([{ outlets: { modal: route } }]);
   }
 
-  fromEvent(event: ISchedulerEvent): Event {
+  updateDraggedEvent(event: ISchedulerEvent): Event {
     const updatedEvent = {
-      name: event.text,
-      description: event.description,
       startTime: moment(event.startDate),
       endTime: moment(event.endDate),
-      sections: [this.sectionById(event.sectionId)],
     };
 
-    if (event.responsibility) {
-      if (event.responsibility.isResponsibility) {
-        updatedEvent['responsibility'] = event.responsibility.originalValue;
-      } else {
-        updatedEvent['user'] = event.responsibility.originalValue;
-      }
-    }
-
-    return { ...event.originalEvent, ...updatedEvent };
-  }
-
-  private sectionById(sectionId: number): Section {
-    return this.originalSections.find((section: Section) => section.id === sectionId)!;
+    return { ...event.originalEvent!, ...updatedEvent };
   }
 }

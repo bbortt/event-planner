@@ -40,6 +40,7 @@ export class ProjectResponsibilityUpdateComponent {
     this.editForm.patchValue({
       id: responsibility.id,
       name: responsibility.name,
+      color: responsibility.color ? responsibility.color : DEFAULT_SCHEDULER_COLOR,
       project,
     });
 

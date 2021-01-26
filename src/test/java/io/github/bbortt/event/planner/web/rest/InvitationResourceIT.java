@@ -166,7 +166,7 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
 
         // Validate the Invitation in the database
         Invitation testInvitation = invitationRepository
-            .findOnyByEmailAndProjectId(invitation.getEmail(), invitation.getProject().getId())
+            .findOneByEmailAndProjectId(invitation.getEmail(), invitation.getProject().getId())
             .orElseThrow(IllegalArgumentException::new);
         assertThat(testInvitation.getEmail()).isEqualTo(invitation.getEmail());
         assertThat(testInvitation.isAccepted()).isEqualTo(DEFAULT_ACCEPTED);
