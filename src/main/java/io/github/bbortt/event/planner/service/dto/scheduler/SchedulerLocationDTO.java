@@ -4,12 +4,26 @@ import java.util.List;
 
 public class SchedulerLocationDTO {
 
+    private List<SchedulerEventDTO> events;
     private List<SchedulerSectionDTO> sections;
     private List<SchedulerColorGroupDTO> colorGroups;
 
-    public SchedulerLocationDTO(List<SchedulerSectionDTO> sections, List<SchedulerColorGroupDTO> colorGroups) {
+    public SchedulerLocationDTO(
+        List<SchedulerEventDTO> events,
+        List<SchedulerSectionDTO> sections,
+        List<SchedulerColorGroupDTO> colorGroups
+    ) {
+        this.events = events;
         this.sections = sections;
         this.colorGroups = colorGroups;
+    }
+
+    public List<SchedulerEventDTO> getEvents() {
+        return events;
+    }
+
+    public void setEvents(List<SchedulerEventDTO> events) {
+        this.events = events;
     }
 
     public List<SchedulerSectionDTO> getSections() {

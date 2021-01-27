@@ -98,17 +98,25 @@ public class SchedulerResource {
     }
 
     private SchedulerLocationDTO toSchedulerLocationDTO(List<Section> sections) {
-        Set<SchedulerColorGroupDTO> schedulerColorGroups = new HashSet<>();
+        List<SchedulerEventDTO> schedulerEvents = new ArrayList<>();
         List<SchedulerSectionDTO> schedulerSections = new ArrayList<>();
+        Set<SchedulerColorGroupDTO> schedulerColorGroups = new HashSet<>();
 
         sections.forEach(
             section -> {
-                section.getEvents().forEach(event -> schedulerColorGroups.add(toSchedulerColorGroupDTO(section, event)));
                 schedulerSections.add(toSchedulerSectionDTO(section));
+                section
+                    .getEvents()
+                    .forEach(
+                        event -> {
+                            schedulerEvents.add(toSchedulerEventDTO(section, event));
+                            schedulerColorGroups.add(toSchedulerColorGroupDTO(section, event));
+                        }
+                    );
             }
         );
 
-        return new SchedulerLocationDTO(schedulerSections, new ArrayList<>(schedulerColorGroups));
+        return new SchedulerLocationDTO(schedulerEvents, schedulerSections, new ArrayList<>(schedulerColorGroups));
     }
 
     private SchedulerColorGroupDTO toSchedulerColorGroupDTO(Section section, Event event) {
@@ -130,12 +138,7 @@ public class SchedulerResource {
     }
 
     private SchedulerSectionDTO toSchedulerSectionDTO(Section section) {
-        return new SchedulerSectionDTO(
-            section.getId(),
-            section.getName(),
-            section.getEvents().stream().map(event -> this.toSchedulerEventDTO(section, event)).collect(Collectors.toList()),
-            section
-        );
+        return new SchedulerSectionDTO(section.getId(), section.getName(), section);
     }
 
     private SchedulerEventDTO toSchedulerEventDTO(Section section, Event event) {

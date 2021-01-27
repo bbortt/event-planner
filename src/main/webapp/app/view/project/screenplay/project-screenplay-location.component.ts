@@ -13,13 +13,15 @@ import { JhiEventManager } from 'ng-jhipster';
 import { AppointmentEvent } from 'app/shared/model/scheduler/appointment-event';
 
 import { EventService } from 'app/entities/event/event.service';
-import { SectionService } from 'app/entities/section/section.service';
+import { SchedulerService } from 'app/entities/scheduler/scheduler.service';
 
 import { Event } from 'app/shared/model/event.model';
 import { Location } from 'app/shared/model/location.model';
 import { Project } from 'app/shared/model/project.model';
 
+import { SchedulerColorGroup } from 'app/shared/model/dto/scheduler-color-group.model';
 import { SchedulerEvent } from 'app/shared/model/dto/scheduler-event.model';
+import { SchedulerLocation } from 'app/shared/model/dto/scheduler-location.model';
 import { SchedulerSection } from 'app/shared/model/dto/scheduler-section.model';
 import SchedulerInformation from 'app/shared/model/scheduler/scheduler-information';
 
@@ -34,7 +36,6 @@ import { AUTHORITY_ADMIN } from 'app/shared/constants/authority.constants';
 import { DEFAULT_SCHEDULER_CELL_DURATION } from 'app/app.constants';
 
 import * as moment from 'moment';
-import { SchedulerColorGroup } from 'app/shared/model/dto/scheduler-color-group.model';
 
 @Component({
   selector: 'app-project-screenplay-location',
@@ -66,7 +67,7 @@ export class ProjectScreenplayLocationComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private translateService: TranslateService,
     private accountService: AccountService,
-    private sectionService: SectionService,
+    private schedulerService: SchedulerService,
     private eventService: EventService,
     private eventManager: JhiEventManager
   ) {}
@@ -110,33 +111,19 @@ export class ProjectScreenplayLocationComponent implements OnInit, OnDestroy {
   }
 
   private reset(): void {
-    let sections: SchedulerSection[] = [];
     const events: SchedulerEvent[] = [];
+    const sections: SchedulerSection[] = [];
     const colors: SchedulerColorGroup[] = [];
 
-    this.sectionService.findAllByLocationInclusiveEvents(this.location!).subscribe((response: HttpResponse<SchedulerSection[]>) => {
-      const data = response.body || [];
-      sections = data;
-      data.forEach((section: SchedulerSection) => {
-        if (section.events) {
-          section.events.forEach((event: SchedulerEvent) => {
-            if (!colors.find((colorGroup: SchedulerColorGroup) => colorGroup.color === event.color)) {
-              colors.push({ id: event.colorId, color: event.color });
-            }
-          });
-          events.push(...section.events);
-        }
-      });
-
-      this.sections = sections;
-      this.events = events;
-      this.colors = colors;
-
-      // eslint-disable-next-line no-console
-      console.log('sections: ', this.sections);
-      // eslint-disable-next-line no-console
-      console.log('events: ', this.events);
+    this.schedulerService.getSchedulerInformation(this.location!).subscribe((data: SchedulerLocation) => {
+      data.events.forEach((event: SchedulerEvent) => events.push(event));
+      data.sections.forEach((section: SchedulerSection) => sections.push(section));
+      data.colorGroups.forEach((colorGroup: SchedulerColorGroup) => colors.push(colorGroup));
     });
+
+    this.sections = sections;
+    this.events = events;
+    this.colors = colors;
   }
 
   configureAppointmentForm(e: AppointmentEvent): void {

@@ -13,8 +13,6 @@ import { Section } from 'app/shared/model/section.model';
 import { SERVER_API_URL } from 'app/app.constants';
 
 import * as moment from 'moment';
-import { SchedulerSection } from 'app/shared/model/dto/scheduler-section.model';
-import { SchedulerEvent } from 'app/shared/model/dto/scheduler-event.model';
 
 type EntityResponseType = HttpResponse<Section>;
 type EntityArrayResponseType = HttpResponse<Section[]>;
@@ -48,14 +46,6 @@ export class SectionService {
     return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
   }
 
-  findAllByLocationInclusiveEvents(location: Location): Observable<HttpResponse<SchedulerSection[]>> {
-    return this.http
-      .get<SchedulerSection[]>(`${this.resourceUrl}/project/${location.project.id!}/location/${location.id!}/events`, {
-        observe: 'response',
-      })
-      .pipe(map((response: HttpResponse<SchedulerSection[]>) => this.convertDTOsFromServer(response)));
-  }
-
   nameExistsInLocation(location: Location, name: string): Observable<boolean> {
     return this.http.post<boolean>(`${this.resourceUrl}/location/${location.id!}/name-exists`, name);
   }
@@ -63,18 +53,6 @@ export class SectionService {
   private convertDateFromServer(res: EntityResponseType): EntityResponseType {
     if (res.body) {
       this.convertDates(res.body);
-    }
-    return res;
-  }
-
-  protected convertDTOsFromServer(res: HttpResponse<SchedulerSection[]>): HttpResponse<SchedulerSection[]> {
-    if (res.body) {
-      res.body.forEach((schedulerSection: SchedulerSection) =>
-        schedulerSection.events?.forEach((schedulerEvent: SchedulerEvent) => {
-          schedulerEvent.originalEvent!.startTime = moment(schedulerEvent.originalEvent!.startTime);
-          schedulerEvent.originalEvent!.endTime = moment(schedulerEvent.originalEvent!.endTime);
-        })
-      );
     }
     return res;
   }
