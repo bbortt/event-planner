@@ -13,8 +13,8 @@ import { Section } from 'app/shared/model/section.model';
 import { SERVER_API_URL } from 'app/app.constants';
 
 import * as moment from 'moment';
-import { ISchedulerSection } from 'app/shared/model/scheduler/section.scheduler';
-import { ISchedulerEvent } from 'app/shared/model/scheduler/event.scheduler';
+import { SchedulerSection } from 'app/shared/model/dto/scheduler-section.model';
+import { SchedulerEvent } from 'app/shared/model/dto/scheduler-event.model';
 
 type EntityResponseType = HttpResponse<Section>;
 type EntityArrayResponseType = HttpResponse<Section[]>;
@@ -48,12 +48,12 @@ export class SectionService {
     return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
   }
 
-  findAllByLocationInclusiveEvents(location: Location): Observable<HttpResponse<ISchedulerSection[]>> {
+  findAllByLocationInclusiveEvents(location: Location): Observable<HttpResponse<SchedulerSection[]>> {
     return this.http
-      .get<ISchedulerSection[]>(`${this.resourceUrl}/project/${location.project.id!}/location/${location.id!}/events`, {
+      .get<SchedulerSection[]>(`${this.resourceUrl}/project/${location.project.id!}/location/${location.id!}/events`, {
         observe: 'response',
       })
-      .pipe(map((response: HttpResponse<ISchedulerSection[]>) => this.convertDTOsFromServer(response)));
+      .pipe(map((response: HttpResponse<SchedulerSection[]>) => this.convertDTOsFromServer(response)));
   }
 
   nameExistsInLocation(location: Location, name: string): Observable<boolean> {
@@ -67,10 +67,10 @@ export class SectionService {
     return res;
   }
 
-  protected convertDTOsFromServer(res: HttpResponse<ISchedulerSection[]>): HttpResponse<ISchedulerSection[]> {
+  protected convertDTOsFromServer(res: HttpResponse<SchedulerSection[]>): HttpResponse<SchedulerSection[]> {
     if (res.body) {
-      res.body.forEach((schedulerSection: ISchedulerSection) =>
-        schedulerSection.events?.forEach((schedulerEvent: ISchedulerEvent) => {
+      res.body.forEach((schedulerSection: SchedulerSection) =>
+        schedulerSection.events?.forEach((schedulerEvent: SchedulerEvent) => {
           schedulerEvent.originalEvent!.startTime = moment(schedulerEvent.originalEvent!.startTime);
           schedulerEvent.originalEvent!.endTime = moment(schedulerEvent.originalEvent!.endTime);
         })

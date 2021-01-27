@@ -1,4 +1,4 @@
-package io.github.bbortt.event.planner.service.dto;
+package io.github.bbortt.event.planner.service.dto.scheduler;
 
 import io.github.bbortt.event.planner.domain.Event;
 import java.time.ZonedDateTime;
@@ -9,9 +9,8 @@ public class SchedulerEventDTO {
     private String description;
     private ZonedDateTime startDate;
     private ZonedDateTime endDate;
-    private String colorId;
-    private String color;
     private Long sectionId;
+    private String colorGroupId;
     private Event originalEvent;
 
     public SchedulerEventDTO(
@@ -19,18 +18,16 @@ public class SchedulerEventDTO {
         String description,
         ZonedDateTime startDate,
         ZonedDateTime endDate,
-        String colorId,
-        String color,
         Long sectionId,
+        String colorGroupId,
         Event originalEvent
     ) {
         this.text = text;
         this.description = description;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.colorId = colorId;
-        this.color = color;
         this.sectionId = sectionId;
+        this.colorGroupId = colorGroupId;
         this.originalEvent = originalEvent;
     }
 
@@ -66,14 +63,6 @@ public class SchedulerEventDTO {
         this.endDate = endDate;
     }
 
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
-    }
-
     public Long getSectionId() {
         return sectionId;
     }
@@ -82,12 +71,12 @@ public class SchedulerEventDTO {
         this.sectionId = sectionId;
     }
 
-    public String getColorId() {
-        return colorId;
+    public String getColorGroupId() {
+        return colorGroupId;
     }
 
-    public void setColorId(String colorId) {
-        this.colorId = colorId;
+    public void setColorGroupId(String colorGroupId) {
+        this.colorGroupId = colorGroupId;
     }
 
     public Event getOriginalEvent() {

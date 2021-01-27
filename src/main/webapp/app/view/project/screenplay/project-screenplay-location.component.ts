@@ -19,8 +19,8 @@ import { Event } from 'app/shared/model/event.model';
 import { Location } from 'app/shared/model/location.model';
 import { Project } from 'app/shared/model/project.model';
 
-import { ISchedulerEvent } from 'app/shared/model/scheduler/event.scheduler';
-import { ISchedulerSection } from 'app/shared/model/scheduler/section.scheduler';
+import { SchedulerEvent } from 'app/shared/model/dto/scheduler-event.model';
+import { SchedulerSection } from 'app/shared/model/dto/scheduler-section.model';
 import SchedulerInformation from 'app/shared/model/scheduler/scheduler-information';
 
 import {
@@ -34,7 +34,7 @@ import { AUTHORITY_ADMIN } from 'app/shared/constants/authority.constants';
 import { DEFAULT_SCHEDULER_CELL_DURATION } from 'app/app.constants';
 
 import * as moment from 'moment';
-import { ColorGroup } from 'app/shared/model/scheduler/color-group';
+import { SchedulerColorGroup } from 'app/shared/model/dto/scheduler-color-group.model';
 
 @Component({
   selector: 'app-project-screenplay-location',
@@ -55,9 +55,9 @@ export class ProjectScreenplayLocationComponent implements OnInit, OnDestroy {
   public isViewer = true;
   public schedulerInformation: SchedulerInformation = { allowDeleting: false };
 
-  public events: ISchedulerEvent[] = [];
-  public sections: ISchedulerSection[] = [];
-  public colors: ColorGroup[] = [];
+  public events: SchedulerEvent[] = [];
+  public sections: SchedulerSection[] = [];
+  public colors: SchedulerColorGroup[] = [];
 
   private destroy$ = new Subject<void>();
 
@@ -110,17 +110,17 @@ export class ProjectScreenplayLocationComponent implements OnInit, OnDestroy {
   }
 
   private reset(): void {
-    let sections: ISchedulerSection[] = [];
-    const events: ISchedulerEvent[] = [];
-    const colors: ColorGroup[] = [];
+    let sections: SchedulerSection[] = [];
+    const events: SchedulerEvent[] = [];
+    const colors: SchedulerColorGroup[] = [];
 
-    this.sectionService.findAllByLocationInclusiveEvents(this.location!).subscribe((response: HttpResponse<ISchedulerSection[]>) => {
+    this.sectionService.findAllByLocationInclusiveEvents(this.location!).subscribe((response: HttpResponse<SchedulerSection[]>) => {
       const data = response.body || [];
       sections = data;
-      data.forEach((section: ISchedulerSection) => {
+      data.forEach((section: SchedulerSection) => {
         if (section.events) {
-          section.events.forEach((event: ISchedulerEvent) => {
-            if (!colors.find((colorGroup: ColorGroup) => colorGroup.color === event.color)) {
+          section.events.forEach((event: SchedulerEvent) => {
+            if (!colors.find((colorGroup: SchedulerColorGroup) => colorGroup.color === event.color)) {
               colors.push({ id: event.colorId, color: event.color });
             }
           });
@@ -194,7 +194,7 @@ export class ProjectScreenplayLocationComponent implements OnInit, OnDestroy {
     this.router.navigate([{ outlets: { modal: route } }]);
   }
 
-  updateDraggedEvent(event: ISchedulerEvent): Event {
+  updateDraggedEvent(event: SchedulerEvent): Event {
     const updatedEvent = {
       startTime: moment(event.startDate),
       endTime: moment(event.endDate),

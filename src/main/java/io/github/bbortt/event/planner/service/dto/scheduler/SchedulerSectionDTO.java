@@ -1,4 +1,4 @@
-package io.github.bbortt.event.planner.service.dto;
+package io.github.bbortt.event.planner.service.dto.scheduler;
 
 import io.github.bbortt.event.planner.domain.Section;
 import java.util.List;
@@ -8,13 +8,13 @@ public class SchedulerSectionDTO {
     private Long id;
     private String text;
     private List<SchedulerEventDTO> events;
-    private Section originalSecion;
+    private Section originalSection;
 
-    public SchedulerSectionDTO(Long id, String text, List<SchedulerEventDTO> events, Section originalSecion) {
+    public SchedulerSectionDTO(Long id, String text, List<SchedulerEventDTO> events, Section originalSection) {
         this.id = id;
         this.text = text;
         this.events = events;
-        this.originalSecion = originalSecion;
+        this.originalSection = originalSection;
     }
 
     public Long getId() {
@@ -41,11 +41,11 @@ public class SchedulerSectionDTO {
         this.events = events;
     }
 
-    public Section getOriginalSecion() {
-        return originalSecion;
+    public Section getOriginalSection() {
+        return originalSection;
     }
 
-    public void setOriginalSecion(Section originalSecion) {
-        this.originalSecion = originalSecion;
+    public void setOriginalSection(Section originalSection) {
+        this.originalSection = originalSection;
     }
 }

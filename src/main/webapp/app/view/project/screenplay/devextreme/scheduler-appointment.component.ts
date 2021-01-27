@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 
-import { ISchedulerEvent } from 'app/shared/model/scheduler/event.scheduler';
+import { SchedulerEvent } from 'app/shared/model/dto/scheduler-event.model';
 
 @Component({
   selector: 'app-scheduler-appointment',
@@ -8,5 +8,5 @@ import { ISchedulerEvent } from 'app/shared/model/scheduler/event.scheduler';
 })
 export class SchedulerAppointmentComponent {
   @Input()
-  appointment?: ISchedulerEvent;
+  appointment?: SchedulerEvent;
 }
