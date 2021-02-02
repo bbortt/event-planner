@@ -1,10 +1,9 @@
 package io.github.bbortt.event.planner.repository;
 
-import com.fasterxml.jackson.databind.introspect.AnnotationCollector;
+import io.github.bbortt.event.planner.domain.Event;
 import io.github.bbortt.event.planner.domain.Section;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

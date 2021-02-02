@@ -14,7 +14,7 @@
         </button>
     </h2>
 
-    <br/>
+    <br />
 
     <app-project-screenplay-filter
         [project]="project"
@@ -22,7 +22,7 @@
         (onExpandAll)="onExpandAll($event)">
     </app-project-screenplay-filter>
 
-    <br/>
+    <br />
 
     <jhi-alert-error></jhi-alert-error>
 
@@ -56,8 +56,7 @@
             <ng-template ngbPanelContent>
                 <app-project-screenplay-location
                     *ngIf="isActiveId('location-' + location.id)"
-                    [location]="location"
-                    [responsibilities]="responsibilities"></app-project-screenplay-location>
+                    [location]="location"></app-project-screenplay-location>
             </ng-template>
         </ngb-panel>
     </ngb-accordion>

@@ -15,6 +15,7 @@ import { Project } from 'app/shared/model/project.model';
 
 import { ProjectUserInviteDeleteDialogComponent } from 'app/view/project/admin/users/project-user-invite-delete-dialog.component';
 
+import { DEFAULT_SCHEDULER_COLOR } from 'app/app.constants';
 import { ITEMS_PER_PAGE } from 'app/shared/constants/pagination.constants';
 import { ADMIN } from 'app/shared/constants/role.constants';
 
@@ -37,6 +38,7 @@ export class ProjectUsersComponent implements OnDestroy {
   private eventSubscriber?: Subscription;
 
   roleProjectAdmin = ADMIN;
+  defaultColor = DEFAULT_SCHEDULER_COLOR;
 
   constructor(
     private invitationService: InvitationService,

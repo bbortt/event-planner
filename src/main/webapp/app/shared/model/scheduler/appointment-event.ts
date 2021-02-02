@@ -1,6 +1,6 @@
-import { ISchedulerEvent } from 'app/shared/model/scheduler/event.scheduler';
+import { SchedulerEvent } from 'app/shared/model/dto/scheduler-event.model';
 
 export interface AppointmentEvent {
-  appointmentData: ISchedulerEvent;
+  appointmentData: SchedulerEvent;
   cancel: boolean;
 }

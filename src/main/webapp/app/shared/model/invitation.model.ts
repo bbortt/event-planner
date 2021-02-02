@@ -8,6 +8,7 @@ export interface Invitation {
   email: string;
   accepted: boolean;
   token?: string;
+  color?: string;
   project: Project;
   user?: User;
   role: Role;

@@ -46,14 +46,6 @@ export class SectionService {
     return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
   }
 
-  findAllByLocationInclusiveEvents(location: Location): Observable<EntityArrayResponseType> {
-    return this.http
-      .get<Location[]>(`${this.resourceUrl}/project/${location.project.id!}/location/${location.id!}/events`, {
-        observe: 'response',
-      })
-      .pipe(map((response: EntityArrayResponseType) => this.convertDateArrayFromServer(response)));
-  }
-
   nameExistsInLocation(location: Location, name: string): Observable<boolean> {
     return this.http.post<boolean>(`${this.resourceUrl}/location/${location.id!}/name-exists`, name);
   }
@@ -61,13 +53,6 @@ export class SectionService {
   private convertDateFromServer(res: EntityResponseType): EntityResponseType {
     if (res.body) {
       this.convertDates(res.body);
-    }
-    return res;
-  }
-
-  protected convertDateArrayFromServer(res: EntityArrayResponseType): EntityArrayResponseType {
-    if (res.body) {
-      res.body.forEach(this.convertDates);
     }
     return res;
   }

@@ -20,10 +20,11 @@
       "accepted": "Akzeptiert",
       "accepted.yes": "Ja",
       "accepted.no": "Nein",
-      "project": "Project",
+      "project": "Projekt",
       "user": "Benutzer",
       "role": "Rolle",
       "responsibility": "Verantwortung",
+      "color": "Farbe",
       "acceptViaLoginMessage": "Melden Sie sich an, um die Einladung zu akzeptieren.",
       "acceptViaRegisterMessage": "Registrieren Sie sich, um die Einladung zu akzeptieren."
     }

@@ -3,6 +3,7 @@ package io.github.bbortt.event.planner.web.rest;
 import io.github.bbortt.event.planner.domain.Section;
 import io.github.bbortt.event.planner.security.AuthoritiesConstants;
 import io.github.bbortt.event.planner.security.RolesConstants;
+import io.github.bbortt.event.planner.service.InvitationService;
 import io.github.bbortt.event.planner.service.ProjectService;
 import io.github.bbortt.event.planner.service.SectionService;
 import io.github.bbortt.event.planner.service.exception.EntityNotFoundException;
@@ -49,10 +50,12 @@ public class SectionResource {
 
     private final SectionService sectionService;
     private final ProjectService projectService;
+    private final InvitationService invitationService;
 
-    public SectionResource(SectionService sectionService, ProjectService projectService) {
+    public SectionResource(SectionService sectionService, ProjectService projectService, InvitationService invitationService) {
         this.sectionService = sectionService;
         this.projectService = projectService;
+        this.invitationService = invitationService;
     }
 
     /**
@@ -151,24 +154,6 @@ public class SectionResource {
         log.debug("REST request to check uniqueness of name '{}' by locationId : {}", name, locationId);
         Boolean isExisting = sectionService.isNameExistingInLocation(locationId, name);
         return ResponseEntity.ok(isExisting);
-    }
-
-    @GetMapping("/sections/project/{projectId}/location/{locationId}/events")
-    @PreAuthorize(
-        "@projectService.hasAccessToProject(#projectId, \"" +
-        RolesConstants.ADMIN +
-        "\", \"" +
-        RolesConstants.SECRETARY +
-        "\", \"" +
-        RolesConstants.CONTRIBUTOR +
-        "\", \"" +
-        RolesConstants.VIEWER +
-        "\")"
-    )
-    public ResponseEntity<List<Section>> getSectionsByLocationIdJoinEvents(@PathVariable Long projectId, @PathVariable Long locationId) {
-        log.debug("REST Request to get Sections inclusive Events by locationId {}", locationId);
-        List<Section> sections = sectionService.findAllByLocationIdJoinEvents(locationId);
-        return ResponseEntity.ok(sections);
     }
 
     /**

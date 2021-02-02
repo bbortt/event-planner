@@ -13,16 +13,16 @@ import { JhiEventManager } from 'ng-jhipster';
 import { AppointmentEvent } from 'app/shared/model/scheduler/appointment-event';
 
 import { EventService } from 'app/entities/event/event.service';
-import { SectionService } from 'app/entities/section/section.service';
+import { SchedulerService } from 'app/entities/scheduler/scheduler.service';
 
 import { Event } from 'app/shared/model/event.model';
 import { Location } from 'app/shared/model/location.model';
 import { Project } from 'app/shared/model/project.model';
-import { Section } from 'app/shared/model/section.model';
 
-import { ISchedulerEvent, SchedulerEvent } from 'app/shared/model/scheduler/event.scheduler';
-import { ISchedulerResponsibility } from 'app/shared/model/scheduler/responsibility.scheduler';
-import { ISchedulerSection, SchedulerSection } from 'app/shared/model/scheduler/section.scheduler';
+import { SchedulerColorGroup } from 'app/shared/model/dto/scheduler-color-group.model';
+import { SchedulerEvent } from 'app/shared/model/dto/scheduler-event.model';
+import { SchedulerLocation } from 'app/shared/model/dto/scheduler-location.model';
+import { SchedulerSection } from 'app/shared/model/dto/scheduler-section.model';
 import SchedulerInformation from 'app/shared/model/scheduler/scheduler-information';
 
 import {
@@ -46,8 +46,6 @@ import * as moment from 'moment';
 export class ProjectScreenplayLocationComponent implements OnInit, OnDestroy {
   @Input()
   public location?: Location;
-  @Input()
-  public responsibilities?: ISchedulerResponsibility[];
 
   schedulerStartDate?: Date;
   cellDuration?: number;
@@ -58,10 +56,9 @@ export class ProjectScreenplayLocationComponent implements OnInit, OnDestroy {
   public isViewer = true;
   public schedulerInformation: SchedulerInformation = { allowDeleting: false };
 
-  private originalSections: Section[] = [];
-
-  public events: ISchedulerEvent[] = [];
-  public sections: ISchedulerSection[] = [];
+  public events: SchedulerEvent[] = [];
+  public sections: SchedulerSection[] = [];
+  public colors: SchedulerColorGroup[] = [];
 
   private destroy$ = new Subject<void>();
 
@@ -70,7 +67,7 @@ export class ProjectScreenplayLocationComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private translateService: TranslateService,
     private accountService: AccountService,
-    private sectionService: SectionService,
+    private schedulerService: SchedulerService,
     private eventService: EventService,
     private eventManager: JhiEventManager
   ) {}
@@ -114,44 +111,32 @@ export class ProjectScreenplayLocationComponent implements OnInit, OnDestroy {
   }
 
   private reset(): void {
-    let sections: ISchedulerSection[] = [];
-    const events: ISchedulerEvent[] = [];
+    const events: SchedulerEvent[] = [];
+    const sections: SchedulerSection[] = [];
+    const colors: SchedulerColorGroup[] = [];
 
-    this.sectionService.findAllByLocationInclusiveEvents(this.location!).subscribe((response: HttpResponse<Section[]>) => {
-      const data = response.body || [];
-      sections = data.map(this.toSection);
-      data.forEach((section: Section) => {
-        if (section.events) {
-          events.push(...section.events.map((event: Event) => this.toEvent(section, event)));
-        }
-      });
-
-      this.originalSections = data;
-
-      this.sections = sections;
-      this.events = events;
+    this.schedulerService.getSchedulerInformation(this.location!).subscribe((data: SchedulerLocation) => {
+      data.events.forEach((event: SchedulerEvent) => events.push(event));
+      data.sections.forEach((section: SchedulerSection) => sections.push(section));
+      data.colorGroups.forEach((colorGroup: SchedulerColorGroup) => colors.push(colorGroup));
     });
-  }
 
-  private toSection(section: Section): ISchedulerSection {
-    return new SchedulerSection(section);
-  }
-
-  private toEvent(section: Section, event: Event): ISchedulerEvent {
-    return new SchedulerEvent(section, event);
+    this.sections = sections;
+    this.events = events;
+    this.colors = colors;
   }
 
   configureAppointmentForm(e: AppointmentEvent): void {
     // Cancel devextreme form
     e.cancel = true;
 
-    const event = this.fromEvent(e.appointmentData);
-    const startTime = event.startTime.toJSON();
-    const endTime = event.endTime.toJSON();
+    const event = e.appointmentData;
+    const startTime = moment(event.startDate).toJSON();
+    const endTime = moment(event.endDate).toJSON();
 
-    const route = ['projects', this.project!.id!, 'locations', this.location!.id!, 'sections', event.sections![0].id, 'events'];
-    if (event.id) {
-      route.push(event.id, 'edit');
+    const route = ['projects', this.project!.id!, 'locations', this.location!.id!, 'sections', event.sectionId, 'events'];
+    if (event.originalEvent) {
+      route.push(event.originalEvent.id!, 'edit');
     } else {
       route.push('new');
     }
@@ -165,9 +150,7 @@ export class ProjectScreenplayLocationComponent implements OnInit, OnDestroy {
    * This is for the 'drag & drop' update (times only). Any click on an item results in `this.configureAppointmentForm` beeing called.
    */
   onAppointmentDragged(e: AppointmentEvent): void {
-    const appointment = e.appointmentData;
-
-    this.eventService.update(this.fromEvent(appointment)).subscribe(
+    this.eventService.update(this.updateDraggedEvent(e.appointmentData)).subscribe(
       (response: HttpResponse<Event>) => {
         if (response.status !== 200) {
           this.reset();
@@ -184,33 +167,26 @@ export class ProjectScreenplayLocationComponent implements OnInit, OnDestroy {
     // Cancel devextreme tooltip
     e.cancel = true;
 
-    const event = this.fromEvent(e.appointmentData);
-
-    const route = ['projects', this.project!.id!, 'locations', this.location!.id!, 'sections', event.sections![0].id, 'events', event.id!];
+    const event = e.appointmentData;
+    const route = [
+      'projects',
+      this.project!.id!,
+      'locations',
+      this.location!.id!,
+      'sections',
+      event.sectionId,
+      'events',
+      event.originalEvent!.id,
+    ];
     this.router.navigate([{ outlets: { modal: route } }]);
   }
 
-  fromEvent(event: ISchedulerEvent): Event {
+  updateDraggedEvent(event: SchedulerEvent): Event {
     const updatedEvent = {
-      name: event.text,
-      description: event.description,
       startTime: moment(event.startDate),
       endTime: moment(event.endDate),
-      sections: [this.sectionById(event.sectionId)],
     };
 
-    if (event.responsibility) {
-      if (event.responsibility.isResponsibility) {
-        updatedEvent['responsibility'] = event.responsibility.originalValue;
-      } else {
-        updatedEvent['user'] = event.responsibility.originalValue;
-      }
-    }
-
-    return { ...event.originalEvent, ...updatedEvent };
-  }
-
-  private sectionById(sectionId: number): Section {
-    return this.originalSections.find((section: Section) => section.id === sectionId)!;
+    return { ...event.originalEvent!, ...updatedEvent };
   }
 }
