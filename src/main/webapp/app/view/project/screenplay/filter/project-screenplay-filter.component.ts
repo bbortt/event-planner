@@ -39,9 +39,9 @@ export class ProjectScreenplayFilterComponent implements OnInit, OnDestroy {
   locationsExpanded = false;
 
   cellDuration = DEFAULT_SCHEDULER_CELL_DURATION;
-  from = new Date();
-  minToDate = new Date();
-  to = new Date();
+  from: string | number | Date = new Date();
+  minToDate: string | number | Date = new Date();
+  to: string | number | Date = new Date();
   interval = 1;
 
   dateFormat = DATE_FORMAT;
@@ -60,6 +60,7 @@ export class ProjectScreenplayFilterComponent implements OnInit, OnDestroy {
 
       this.cellDuration = cellDuration || DEFAULT_SCHEDULER_CELL_DURATION;
       this.from = (from ? moment(from) : this.project!.startTime).toDate();
+      this.minToDate = this.from;
       this.to = (to ? moment(to) : this.project!.endTime).toDate();
 
       this.recalculateInterval();
@@ -86,14 +87,15 @@ export class ProjectScreenplayFilterComponent implements OnInit, OnDestroy {
     return `${value} min`;
   }
 
-  dateValueChanged(fromOrTo: string, newDate: string | number | Date): void {
-    this[fromOrTo] = new Date(newDate);
+  dateValueChanged(): void {
+    this.minToDate = this.from;
     this.recalculateInterval();
   }
 
   resetFilter(): void {
     this.cellDuration = DEFAULT_SCHEDULER_CELL_DURATION;
     this.from = this.project!.startTime.toDate();
+    this.minToDate = this.from;
     this.to = this.project!.endTime.toDate();
     this.recalculateInterval();
   }
