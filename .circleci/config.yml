@@ -34,7 +34,7 @@ jobs:
           key: nodemodules-{{ checksum "package-lock.json" }}
           paths:
             - node_modules
-  deploy_canary:
+  deploy:
     working_directory: ~/project
     docker:
       - image: cimg/base:stable
@@ -60,15 +60,15 @@ jobs:
           export IMAGE_TAG=${CIRCLE_SHA1:0:7}
           docker build . --build-arg JAR_FILE=event-planner-$PIPELINE_NUMBER.jar --tag gcr.io/$GCP_PROJECT_ID/event-planner:$IMAGE_TAG
           .circleci/docker_push_gcp.sh gcr.io/$GCP_PROJECT_ID/event-planner:$IMAGE_TAG
-          gcloud run deploy event-planner-canary --image gcr.io/$GCP_PROJECT_ID/event-planner:$IMAGE_TAG --platform managed --region $GCP_COMPUTE_REGION
+          gcloud run deploy event-planner --image gcr.io/$GCP_PROJECT_ID/event-planner:$IMAGE_TAG --platform managed --region $GCP_COMPUTE_REGION
           .circleci/git_tag_and_push.sh $PIPELINE_NUMBER
 workflows:
-  release_canary:
+  release:
     jobs:
       - build:
           filters:
             branches:
               only: canary
-      - deploy_canary:
+      - deploy:
           requires:
             - build
