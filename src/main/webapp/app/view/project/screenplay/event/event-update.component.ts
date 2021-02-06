@@ -102,7 +102,18 @@ export class EventUpdateComponent implements OnInit, OnDestroy {
 
     this.minEndDate = newStartTime;
 
+    const { id, name, description, sections } = event;
+    let { responsibility, user } = event;
+
     if (!isReadonly) {
+      if (this.section.responsibility || this.section.user) {
+        responsibility = this.section.responsibility;
+        user = this.section.user;
+      } else if (this.location!.responsibility || this.location!.user) {
+        responsibility = this.location!.responsibility;
+        user = this.location!.user;
+      }
+
       this.responsibilityService
         .findAllByProject(this.project, { sort: ['name,asc'] })
         .subscribe((response: HttpResponse<Responsibility[]>) => (this.responsibilities = response.body || []));
@@ -112,18 +123,18 @@ export class EventUpdateComponent implements OnInit, OnDestroy {
         .subscribe((response: HttpResponse<User[]>) => (this.users = response.body || []));
     }
 
-    this.isResponsibility = !event.user;
+    this.isResponsibility = !user;
     this.editForm.patchValue({
-      id: event.id,
-      name: event.name,
-      description: event.description,
+      id,
+      name,
+      description,
       startTime: newStartTime,
       endTime: newEndTime,
-      sections: event.sections,
-      responsibility: event.responsibility,
-      responsibilityAutocomplete: event.responsibility?.name,
-      user: event.user,
-      userAutocomplete: event.user?.email,
+      sections,
+      responsibility,
+      responsibilityAutocomplete: responsibility?.name,
+      user,
+      userAutocomplete: user?.email,
     });
   }
 
