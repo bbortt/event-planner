@@ -10,7 +10,7 @@
         <dx-scheduler
             [dataSource]="events"
             appointmentTemplate="eventTemplate"
-            appointmentTooltipTemplate="tooltipTemplate"
+            resourceCellTemplate="resourceTemplate"
             [currentDate]="schedulerStartDate"
             [min]="project!.startTime.toDate()"
             [max]="project!.endTime.toDate()"
@@ -44,6 +44,11 @@
             <div *dxTemplate="let model of 'eventTemplate'">
                 <app-scheduler-appointment
                     [appointment]="model.appointmentData"></app-scheduler-appointment>
+            </div>
+
+            <div *dxTemplate="let model of 'resourceTemplate'">
+                <app-scheduler-resource
+                    [resource]="model.data"></app-scheduler-resource>
             </div>
         </dx-scheduler>
     </div>
