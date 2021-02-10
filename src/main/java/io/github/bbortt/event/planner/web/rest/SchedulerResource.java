@@ -128,7 +128,7 @@ public class SchedulerResource {
             colorGroupId = Responsibility.class.getSimpleName().toLowerCase() + "-" + event.getResponsibility().getId();
         } else if (event.getUser() != null) {
             color =
-                this.invitationService.findOneByEmailAndProjectId(event.getUser().getEmail(), section.getLocation().getProject().getId())
+                this.invitationService.findOneByUserIdAndProjectId(event.getUser().getId(), section.getLocation().getProject().getId())
                     .orElseThrow(IllegalArgumentException::new)
                     .getColor();
             colorGroupId = User.class.getSimpleName().toLowerCase() + "-" + event.getUser().getId();

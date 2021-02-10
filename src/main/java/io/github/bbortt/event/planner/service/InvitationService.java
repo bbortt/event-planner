@@ -100,8 +100,14 @@ public class InvitationService {
 
     @Transactional(readOnly = true)
     public Optional<Invitation> findOneByEmailAndProjectId(String email, Long projectId) {
-        log.debug("Request to get Invitation for User {} in Project {}", email, projectId);
+        log.debug("Request to get Invitation by Email {} in Project {}", email, projectId);
         return invitationRepository.findOneByEmailAndProjectId(email, projectId);
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<Invitation> findOneByUserIdAndProjectId(Long userId, Long projectId) {
+        log.debug("Request to get Invitation for User {} in Project {}", userId, projectId);
+        return invitationRepository.findOneByUserIdAndProjectId(userId, projectId);
     }
 
     /**
