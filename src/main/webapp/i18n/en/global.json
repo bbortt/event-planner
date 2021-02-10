@@ -42,6 +42,9 @@
         "register": {
           "noaccount": "You don't have an account yet?",
           "link": "Register a new account"
+        },
+        "authenticated": {
+          "link": "Sign In"
         }
       },
       "error": {

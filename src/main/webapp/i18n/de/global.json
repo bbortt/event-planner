@@ -42,6 +42,9 @@
         "register": {
           "noaccount": "Sie haben noch keinen Zugang?",
           "link": "Registrieren Sie sich"
+        },
+        "authenticated": {
+          "link": "anmelden"
         }
       },
       "error": {
