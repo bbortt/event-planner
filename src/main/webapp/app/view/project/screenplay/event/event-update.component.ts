@@ -25,6 +25,8 @@ import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 import { AUTHORITY_ADMIN } from 'app/shared/constants/authority.constants';
 import { VIEWER } from 'app/shared/constants/role.constants';
 
+import responsibilityOrUserFromForm from 'app/shared/util/responsibility-or-user-from-form';
+
 import * as moment from 'moment';
 
 @Component({
@@ -188,15 +190,7 @@ export class EventUpdateComponent implements OnInit, OnDestroy {
   }
 
   private createFromForm(): Event {
-    let responsibility;
-    let user;
-    if (this.isResponsibility) {
-      responsibility = this.editForm.get(['responsibility'])!.value;
-      user = null;
-    } else {
-      responsibility = null;
-      user = this.editForm.get(['user'])!.value;
-    }
+    const { responsibility, user } = responsibilityOrUserFromForm(this.editForm, this.isResponsibility);
 
     return {
       id: this.editForm.get(['id'])!.value,

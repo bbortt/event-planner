@@ -106,6 +106,7 @@
       "pattern": "Dieses Feld muss das Muster {{pattern}} erfüllen.",
       "number": "Dieses Feld muss eine Zahl sein.",
       "datetimelocal": "Dieses Feld muss eine Datums- und Zeitangabe enthalten.",
+      "patternLogin": "Dieses Feld kann nur Buchstaben, Zahlen und Email Adressen enthalten.",
       "email": "Bitte gib eine gültige Email-Adresse ein.",
       "uniqueness": "Dieser Wert ist bereits vergeben."
     }
