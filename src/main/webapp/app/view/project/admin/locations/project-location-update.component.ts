@@ -18,6 +18,8 @@ import { User } from 'app/core/user/user.model';
 
 import { uniquePropertyValueInProjectValidator } from 'app/entities/validator/unique-property-value-in-project.validator';
 
+import responsibilityOrUserFromForm from 'app/shared/util/responsibility-or-user-from-form';
+
 @Component({
   selector: 'app-location-update',
   templateUrl: './project-location-update.component.html',
@@ -116,15 +118,7 @@ export class ProjectLocationUpdateComponent {
   }
 
   private createFromForm(): Location {
-    let responsibility;
-    let user;
-    if (this.isResponsibility) {
-      responsibility = this.editForm.get(['responsibility'])!.value;
-      user = null;
-    } else {
-      responsibility = null;
-      user = this.editForm.get(['user'])!.value;
-    }
+    const { responsibility, user } = responsibilityOrUserFromForm(this.editForm, this.isResponsibility);
 
     return {
       id: this.editForm.get(['id'])!.value,

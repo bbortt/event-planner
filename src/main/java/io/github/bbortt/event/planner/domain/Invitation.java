@@ -44,7 +44,7 @@ public class Invitation extends AbstractAuditingEntity implements Serializable {
     @Email
     @NotNull
     @Size(min = 5, max = 254)
-    @Column(name = "email", length = 254, nullable = false)
+    @Column(name = "email", length = 254, nullable = false, updatable = false)
     private String email;
 
     @NotNull
@@ -59,13 +59,14 @@ public class Invitation extends AbstractAuditingEntity implements Serializable {
     @Column(name = "color", length = 23)
     private String color;
 
-    @ManyToOne(optional = false)
     @NotNull
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "project_id", updatable = false)
     @JsonIgnoreProperties(value = "invitations", allowSetters = true)
     private Project project;
 
     @ManyToOne
-    @JoinColumn(name = "jhi_user_id")
+    @JoinColumn(name = "jhi_user_id", updatable = false)
     @JsonIgnoreProperties(value = "invitations", allowSetters = true)
     private User user;
 

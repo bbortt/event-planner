@@ -12,6 +12,7 @@ import { ProjectScreenplayFilterComponent } from 'app/view/project/screenplay/fi
 import { ProjectScreenplayLocationComponent } from 'app/view/project/screenplay/project-screenplay-location.component';
 
 import { SchedulerAppointmentComponent } from 'app/view/project/screenplay/devextreme/scheduler-appointment.component';
+import { SchedulerResourceComponent } from 'app/view/project/screenplay/devextreme/scheduler-resource.component';
 
 import { PROJECT_SCREENPLAY_ROUTES } from './project-screenplay.routes';
 
@@ -30,6 +31,7 @@ import { PROJECT_SCREENPLAY_ROUTES } from './project-screenplay.routes';
     ProjectScreenplayFilterComponent,
     ProjectScreenplayLocationComponent,
     SchedulerAppointmentComponent,
+    SchedulerResourceComponent,
   ],
   entryComponents: [ProjectScreenplayComponent],
 })

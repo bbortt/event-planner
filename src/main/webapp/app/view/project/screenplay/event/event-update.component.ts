@@ -25,6 +25,8 @@ import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 import { AUTHORITY_ADMIN } from 'app/shared/constants/authority.constants';
 import { VIEWER } from 'app/shared/constants/role.constants';
 
+import responsibilityOrUserFromForm from 'app/shared/util/responsibility-or-user-from-form';
+
 import * as moment from 'moment';
 
 @Component({
@@ -102,7 +104,18 @@ export class EventUpdateComponent implements OnInit, OnDestroy {
 
     this.minEndDate = newStartTime;
 
+    const { id, name, description, sections } = event;
+    let { responsibility, user } = event;
+
     if (!isReadonly) {
+      if (this.section.responsibility || this.section.user) {
+        responsibility = this.section.responsibility;
+        user = this.section.user;
+      } else if (this.location!.responsibility || this.location!.user) {
+        responsibility = this.location!.responsibility;
+        user = this.location!.user;
+      }
+
       this.responsibilityService
         .findAllByProject(this.project, { sort: ['name,asc'] })
         .subscribe((response: HttpResponse<Responsibility[]>) => (this.responsibilities = response.body || []));
@@ -112,18 +125,18 @@ export class EventUpdateComponent implements OnInit, OnDestroy {
         .subscribe((response: HttpResponse<User[]>) => (this.users = response.body || []));
     }
 
-    this.isResponsibility = !event.user;
+    this.isResponsibility = !user;
     this.editForm.patchValue({
-      id: event.id,
-      name: event.name,
-      description: event.description,
+      id,
+      name,
+      description,
       startTime: newStartTime,
       endTime: newEndTime,
-      sections: event.sections,
-      responsibility: event.responsibility,
-      responsibilityAutocomplete: event.responsibility?.name,
-      user: event.user,
-      userAutocomplete: event.user?.email,
+      sections,
+      responsibility,
+      responsibilityAutocomplete: responsibility?.name,
+      user,
+      userAutocomplete: user?.email,
     });
   }
 
@@ -177,15 +190,7 @@ export class EventUpdateComponent implements OnInit, OnDestroy {
   }
 
   private createFromForm(): Event {
-    let responsibility;
-    let user;
-    if (this.isResponsibility) {
-      responsibility = this.editForm.get(['responsibility'])!.value;
-      user = null;
-    } else {
-      responsibility = null;
-      user = this.editForm.get(['user'])!.value;
-    }
+    const { responsibility, user } = responsibilityOrUserFromForm(this.editForm, this.isResponsibility);
 
     return {
       id: this.editForm.get(['id'])!.value,

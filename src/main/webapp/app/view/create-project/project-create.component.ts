@@ -38,8 +38,8 @@ export class ProjectCreateComponent implements OnInit, OnDestroy {
     description: [null, [Validators.maxLength(300)]],
     startTime: [null, [Validators.required]],
     endTime: [null, [Validators.required]],
-    selectedUser: [null, []],
-    selectedUserAutocomplete: [null, []],
+    selectedUser: [null, [Validators.required]],
+    selectedUserAutocomplete: [null],
   });
 
   dataSource: DataSource;

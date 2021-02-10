@@ -93,7 +93,7 @@ export class ProjectUserInviteComponent {
       token: this.editForm.get('token')!.value,
       color: this.editForm.get('color')!.value,
       project: this.project!,
-      responsibility: this.editForm.get('responsibility')!.value,
+      responsibility: this.editForm.get('responsibilityAutocomplete')!.value ? this.editForm.get('responsibility')!.value : null,
       role: {
         name: (this.editForm.get('role')!.value as InternalRole).name,
       },
