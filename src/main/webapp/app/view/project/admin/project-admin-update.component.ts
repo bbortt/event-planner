@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { JhiEventManager } from 'ng-jhipster';
+import { JhiAlertService, JhiEventManager } from 'ng-jhipster';
 
 import { ProjectService } from 'app/entities/project/project.service';
 
@@ -44,6 +44,7 @@ export class ProjectAdminUpdateComponent {
     private router: Router,
     protected projectService: ProjectService,
     private modalService: NgbModal,
+    private alertService: JhiAlertService,
     private eventManager: JhiEventManager,
     private fb: FormBuilder
   ) {}
@@ -77,7 +78,9 @@ export class ProjectAdminUpdateComponent {
     modalRef.result
       .then((result: boolean) => {
         if (result) {
-          this.router.navigate(['']);
+          this.router
+            .navigate([''])
+            .then(() => this.alertService.success('eventPlannerApp.project.archived', { param: this.project!.name }));
         }
       })
       .catch(() => {});
@@ -90,7 +93,9 @@ export class ProjectAdminUpdateComponent {
     modalRef.result
       .then((result: boolean) => {
         if (result) {
-          this.router.navigate(['']);
+          this.router
+            .navigate([''])
+            .then(() => this.alertService.success('eventPlannerApp.project.deleted', { param: this.project!.name }));
         }
       })
       .catch(() => {});

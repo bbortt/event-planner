@@ -53,7 +53,7 @@ public class Project implements Serializable {
 
     @NotNull
     @Column(name = "archived", nullable = false)
-    private Boolean archived;
+    private Boolean archived = Boolean.FALSE;
 
     @OneToMany(mappedBy = "project")
     private Set<Responsibility> responsibilities = new HashSet<>();

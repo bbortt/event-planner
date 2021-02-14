@@ -316,6 +316,24 @@ class ProjectResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(username = TEST_ADMIN_LOGIN, roles = { RolesConstants.ADMIN })
+    void archiveProject() throws Exception {
+        // Initialize the database
+        projectService.save(project);
+
+        int databaseSizeBeforeDelete = projectRepository.findAll().size();
+
+        // Delete the project
+        restProjectMockMvc
+            .perform(delete("/api/projects/{id}/archive", project.getId()).accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNoContent());
+
+        Project archivedProject = projectRepository.findById(project.getId()).orElseThrow(IllegalArgumentException::new);
+        assertThat(archivedProject).hasFieldOrPropertyWithValue("archived", Boolean.TRUE);
+    }
+
+    @Test
+    @Transactional
+    @WithMockUser(username = TEST_ADMIN_LOGIN, roles = { RolesConstants.ADMIN })
     void deleteProject() throws Exception {
         // Initialize the database
         projectService.save(project);

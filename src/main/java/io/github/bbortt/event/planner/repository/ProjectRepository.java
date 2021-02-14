@@ -22,11 +22,15 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
         "  on p = i.project" +
         " left join User u" +
         "  on i.user = u" +
-        "    where u.login = :currentUserLogin",
-        countQuery = "select count(i.id) from Invitation i" +
+        "    where p.archived = false" +
+        "    and u.login = :currentUserLogin",
+        countQuery = "select count(p.id) from Project p" +
+        " left join Invitation i" +
+        "  on p = i.project" +
         " left join User u" +
         "  on i.user = u" +
-        "    where u.login = :currentUserLogin"
+        "    where p.archived = false" +
+        "    and u.login = :currentUserLogin"
     )
     Page<Project> findMine(@NotNull @Param("currentUserLogin") String currentUserLogin, Pageable pageable);
 

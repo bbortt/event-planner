@@ -10,14 +10,14 @@ public class CreateProjectDTO {
     @Size(min = 1, max = 50)
     private String name;
 
+    @Size(max = 300)
+    private String description;
+
     @NotNull
     private ZonedDateTime startTime;
 
     @NotNull
     private ZonedDateTime endTime;
-
-    @Size(max = 300)
-    private String description;
 
     UserDTO user = new UserDTO();
 
@@ -27,6 +27,14 @@ public class CreateProjectDTO {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public ZonedDateTime getStartTime() {
@@ -43,14 +51,6 @@ public class CreateProjectDTO {
 
     public void setEndTime(ZonedDateTime endTime) {
         this.endTime = endTime;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public UserDTO getUser() {

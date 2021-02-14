@@ -134,7 +134,7 @@ public class EventService {
         }
 
         Event event = findOne(eventId).orElseThrow(EntityNotFoundException::new);
-        return projectService.hasAccessToProject(event.getSection().getLocation().getProject(), roles);
+        return hasAccessToEvent(event, roles);
     }
 
     /**
@@ -146,6 +146,6 @@ public class EventService {
      */
     @PreAuthorize("isAuthenticated()")
     public boolean hasAccessToEvent(Event event, String... roles) {
-        return hasAccessToEvent(event.getId(), roles);
+        return projectService.hasAccessToProject(event.getSection().getLocation().getProject(), roles);
     }
 }

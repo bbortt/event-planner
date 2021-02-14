@@ -29,7 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Sql({ "classpath:db/scripts/SchedulerResourceIT_before.sql" })
 @Sql(value = { "classpath:db/scripts/SchedulerResourceIT_after.sql" }, executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
-class SchedulerResourceIT extends AbstractApplicationContextAwareIT {
+public class SchedulerResourceIT extends AbstractApplicationContextAwareIT {
 
     private static final String TEST_USER_LOGIN = "SchedulerResourceIT-user";
     private static final String PROJECT_NAME = "SchedulerResourceIT-project-1";

@@ -1,7 +1,4 @@
 DELETE
-FROM section_has_events
-WHERE section_id = (SELECT id FROM section WHERE name = 'SchedulerResourceIT-section');
-DELETE
 FROM event
 WHERE name in ('SchedulerResourceIT-event-1', 'SchedulerResourceIT-event-2');
 DELETE
