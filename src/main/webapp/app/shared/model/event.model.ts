@@ -9,7 +9,7 @@ export interface Event {
   description?: string;
   startTime: Moment;
   endTime: Moment;
-  sections?: Section[];
+  section: Section;
   responsibility?: Responsibility;
   user?: User;
 }

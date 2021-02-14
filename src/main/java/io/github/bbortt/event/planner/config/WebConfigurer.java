@@ -29,6 +29,7 @@ import org.springframework.web.filter.CorsFilter;
  */
 @Configuration
 public class WebConfigurer implements ServletContextInitializer, WebServerFactoryCustomizer<WebServerFactory> {
+
     private final Logger log = LoggerFactory.getLogger(WebConfigurer.class);
 
     private final Environment env;

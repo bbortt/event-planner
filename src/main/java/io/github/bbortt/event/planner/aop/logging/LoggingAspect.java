@@ -20,6 +20,7 @@ import org.springframework.core.env.Profiles;
  */
 @Aspect
 public class LoggingAspect {
+
     private final Environment env;
 
     public LoggingAspect(Environment env) {

@@ -5,7 +5,6 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { Event } from 'app/shared/model/event.model';
-import { Section } from 'app/shared/model/section.model';
 
 import { createRequestOption } from 'app/shared/util/request-util';
 
@@ -79,12 +78,11 @@ export class EventService {
     event.startTime = moment(event.startTime);
     event.endTime = moment(event.endTime);
 
-    event.sections?.forEach((section: Section) => {
-      if (section.location?.project) {
-        section.location.project.startTime = moment(section.location.project.startTime);
-        section.location.project.endTime = moment(section.location.project.endTime);
-      }
-    });
+    const section = event.section;
+    if (section.location?.project) {
+      section.location.project.startTime = moment(section.location.project.startTime);
+      section.location.project.endTime = moment(section.location.project.endTime);
+    }
 
     return event;
   }

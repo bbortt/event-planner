@@ -38,7 +38,7 @@ export class EventUpdateModalComponent implements AfterViewInit, OnDestroy {
       });
 
       (this.modalRef.componentInstance as EventUpdateComponent).updateForm(
-        event || { sections: [section] },
+        event || { section },
         startTime || new Date(),
         endTime || new Date(),
         isReadonly

@@ -58,7 +58,7 @@ export class EventUpdateComponent implements OnInit, OnDestroy {
     description: [],
     startTime: [new Date(), [Validators.required]],
     endTime: [new Date(), [Validators.required]],
-    sections: [null, [Validators.required]],
+    section: [null, [Validators.required]],
     responsibility: [],
     responsibilityAutocomplete: [],
     user: [],
@@ -98,13 +98,13 @@ export class EventUpdateComponent implements OnInit, OnDestroy {
     this.isReadonly = isReadonly;
 
     this.event = event;
-    this.section = this.event.sections![0];
+    this.section = this.event.section;
     this.location = this.section.location;
     this.project = this.location!.project;
 
     this.minEndDate = newStartTime;
 
-    const { id, name, description, sections } = event;
+    const { id, name, description, section } = event;
     let { responsibility, user } = event;
 
     if (!isReadonly) {
@@ -132,7 +132,7 @@ export class EventUpdateComponent implements OnInit, OnDestroy {
       description,
       startTime: newStartTime,
       endTime: newEndTime,
-      sections,
+      section,
       responsibility,
       responsibilityAutocomplete: responsibility?.name,
       user,
@@ -198,7 +198,7 @@ export class EventUpdateComponent implements OnInit, OnDestroy {
       description: this.editForm.get(['description'])!.value,
       startTime: moment(this.editForm.get(['startTime'])!.value),
       endTime: moment(this.editForm.get(['endTime'])!.value),
-      sections: this.editForm.get(['sections'])!.value,
+      section: this.editForm.get(['section'])!.value,
       responsibility,
       user,
     };

@@ -24,6 +24,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RestController
 @RequestMapping("/api")
 public class RoleResource {
+
     private final Logger log = LoggerFactory.getLogger(RoleResource.class);
 
     private final RoleService roleService;

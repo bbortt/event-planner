@@ -1,11 +1,9 @@
 package io.github.bbortt.event.planner.repository;
 
-import io.github.bbortt.event.planner.domain.Event;
 import io.github.bbortt.event.planner.domain.Section;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -20,9 +18,6 @@ public interface SectionRepository extends JpaRepository<Section, Long> {
 
     @Query("SELECT s.name FROM Section s WHERE s.id = :sectionId")
     Optional<String> findNameBySectionId(@Param("sectionId") Long sectionId);
-
-    @Modifying
-    long deleteAllByLocationId(Long locationId);
 
     Optional<Section> findOneByNameAndLocationId(String name, Long locationId);
 }

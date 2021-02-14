@@ -56,15 +56,9 @@ public class Event implements Serializable {
     @Column(name = "end_time", nullable = false)
     private ZonedDateTime endTime;
 
-    @ManyToMany
-    @JoinTable(
-        name = "section_has_events",
-        joinColumns = { @JoinColumn(name = "event_id", referencedColumnName = "id") },
-        inverseJoinColumns = { @JoinColumn(name = "section_id", referencedColumnName = "id") }
-    )
-    @BatchSize(size = 20)
+    @ManyToOne
     @JsonIgnoreProperties(value = "events", allowSetters = true)
-    private Set<Section> sections = new HashSet<>();
+    private Section section;
 
     @ManyToOne
     @JsonIgnoreProperties(value = "events", allowSetters = true)
@@ -135,28 +129,16 @@ public class Event implements Serializable {
         return this;
     }
 
-    public Set<Section> getSections() {
-        return sections;
+    public Section getSection() {
+        return section;
     }
 
-    public void setSections(Set<Section> sections) {
-        this.sections = sections;
+    public void setSection(Section section) {
+        this.section = section;
     }
 
-    public Event sections(Set<Section> sections) {
-        this.sections = sections;
-        return this;
-    }
-
-    public Event addSection(Section section) {
-        this.sections.add(section);
-        section.getEvents().add(this);
-        return this;
-    }
-
-    public Event removeSection(Section section) {
-        this.sections.remove(section);
-        section.getEvents().remove(this);
+    public Event section(Section section) {
+        this.section = section;
         return this;
     }
 
