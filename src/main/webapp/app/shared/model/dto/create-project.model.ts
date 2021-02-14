@@ -5,6 +5,7 @@ export interface ICreateProject {
   name: string;
   startTime: Moment;
   endTime: Moment;
+  archived: boolean;
   description?: string;
   user?: User;
 }

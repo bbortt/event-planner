@@ -106,7 +106,7 @@ class EventResourceIT extends AbstractApplicationContextAwareIT {
         } else {
             section = TestUtil.findAll(em, Section.class).get(0);
         }
-        event.setSections(Set.of(section));
+        event.setSection(section);
 
         return event;
     }
@@ -131,7 +131,7 @@ class EventResourceIT extends AbstractApplicationContextAwareIT {
         } else {
             section = TestUtil.findAll(em, Section.class).get(0);
         }
-        event.setSections(Set.of(section));
+        event.setSection(section);
 
         return event;
     }
@@ -148,7 +148,7 @@ class EventResourceIT extends AbstractApplicationContextAwareIT {
         Invitation invitation = InvitationResourceIT
             .createEntity(em)
             .accepted(Boolean.TRUE)
-            .project(event.getSections().toArray(new Section[1])[0].getLocation().getProject())
+            .project(event.getSection().getLocation().getProject())
             .user(user)
             .role(roleRepository.roleAdmin());
         em.persist(invitation);

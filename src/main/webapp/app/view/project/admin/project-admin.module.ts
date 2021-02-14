@@ -26,6 +26,8 @@ import { ProjectResponsibilitiesComponent } from 'app/view/project/admin/respons
 import { ProjectResponsibilityUpdateComponent } from 'app/view/project/admin/responsibilities/project-responsibility-update.component';
 import { ProjectResponsibilityDeleteDialogComponent } from 'app/view/project/admin/responsibilities/project-responsibility-delete-dialog.component';
 
+import { ProjectConfirmationDialogComponent } from 'app/view/project/admin/project-confirmation-dialog.component';
+
 import { PROJECT_ADMIN_ROUTES } from './project-admin.routes';
 
 @NgModule({
@@ -48,6 +50,7 @@ import { PROJECT_ADMIN_ROUTES } from './project-admin.routes';
     ProjectResponsibilitiesComponent,
     ProjectResponsibilityUpdateComponent,
     ProjectResponsibilityDeleteDialogComponent,
+    ProjectConfirmationDialogComponent,
   ],
   entryComponents: [ProjectAdminComponent],
 })

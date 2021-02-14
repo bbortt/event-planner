@@ -1,6 +1,10 @@
 {
   "eventPlannerApp": {
     "project": {
+      "action": {
+        "advanced": "Mehr",
+        "archive": "Archivieren"
+      },
       "home": {
         "title": "Projekte",
         "createLabel": "Projekt erstellen",
@@ -18,7 +22,12 @@
       },
       "created": "Projekt {{ param }} erstellt",
       "updated": "Projekt {{ param }} aktualisiert",
+      "archived": "Projekt {{ param }} archiviert",
       "deleted": "Projekt {{ param }} gelöscht",
+      "archive": {
+        "title": "Archivieren bestätigen",
+        "question": "Soll Projekt {{ name }} wirklich dauerhaft archiviert werden?"
+      },
       "delete": {
         "question": "Soll Projekt {{ name }} wirklich dauerhaft gelöscht werden?"
       },
@@ -29,6 +38,7 @@
       "description": "Beschreibung",
       "startTime": "Start Zeit",
       "endTime": "End Zeit",
+      "archived": "Archiviert",
       "responsibility": "Verantwortlichkeit",
       "invitation": "Einladung",
       "location": "Lokalität",

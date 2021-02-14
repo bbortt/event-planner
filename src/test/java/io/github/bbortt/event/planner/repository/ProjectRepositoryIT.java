@@ -5,6 +5,7 @@ import io.github.bbortt.event.planner.domain.Project;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -45,5 +46,15 @@ class ProjectRepositoryIT extends AbstractApplicationContextAwareIT {
 
         projects = projectRepository.findMine(TEST_USER_1, pageRequest);
         Assertions.assertThat(projects).hasSize(1).first().hasFieldOrPropertyWithValue("name", PROJECT_2_NAME);
+    }
+
+    @Test
+    @Transactional
+    void archiveUpdatesEntity() {
+        Project project = projectRepository
+            .findOne(Example.of(new Project().name(PROJECT_1_NAME)))
+            .orElseThrow(IllegalArgumentException::new);
+        projectRepository.archive(project.getId());
+        Assertions.assertThat(project.isArchived()).isTrue();
     }
 }

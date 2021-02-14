@@ -96,7 +96,7 @@ public class ProjectResource {
     /**
      * {@code GET  /projects} : get all the projects.
      *
-     * @param loadAll  loads projects for current user by default.
+     * @param loadAll loads projects for current user by default.
      * @param pageable the pagination information.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of projects in body.
      */
@@ -150,5 +150,19 @@ public class ProjectResource {
         String name = projectService.findNameByProjectId(id).orElseThrow(EntityNotFoundException::new);
         projectService.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, name)).build();
+    }
+
+    /**
+     * {@code PUT  /projects/:id} : archive the "id" project.
+     *
+     * @param id the id of the project to archive.
+     * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
+     */
+    @PutMapping("/projects/{id}/archive")
+    @PreAuthorize("hasAnyRole(\"" + AuthoritiesConstants.ADMIN + "\")")
+    public ResponseEntity<Void> archiveProject(@PathVariable Long id) {
+        log.debug("REST request to archive Project : {}", id);
+        projectService.archive(id);
+        return ResponseEntity.ok().build();
     }
 }

@@ -49,6 +49,10 @@ export class ProjectService {
     return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
   }
 
+  archive(id: number): Observable<HttpResponse<{}>> {
+    return this.http.put(`${this.resourceUrl}/${id}/archive`, {}, { observe: 'response' });
+  }
+
   protected convertDateFromClient(project: Project): Project {
     const copy: Project = Object.assign({}, project, {
       startTime: project.startTime && project.startTime.isValid() ? project.startTime.toJSON() : undefined,

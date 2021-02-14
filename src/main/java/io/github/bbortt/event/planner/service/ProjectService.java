@@ -56,6 +56,43 @@ public class ProjectService {
     }
 
     /**
+     * Create project with properties from DTO.
+     *
+     * @param createProjectDTO crate project DTO.
+     * @return saved project.
+     */
+    @Transactional
+    public Project create(CreateProjectDTO createProjectDTO) {
+        Project project = new Project()
+            .name(createProjectDTO.getName())
+            .description(createProjectDTO.getDescription())
+            .startTime(createProjectDTO.getStartTime())
+            .endTime(createProjectDTO.getEndTime());
+
+        if (project.getStartTime().isAfter(project.getEndTime())) {
+            throw new ConstraintViolationProblem(
+                Status.BAD_REQUEST,
+                Collections.singletonList(new Violation("endTime", "endTime may not occur before startTime!"))
+            );
+        }
+
+        project = projectRepository.save(project);
+
+        User userFromDto = userFromDto(createProjectDTO.getUser());
+        Invitation invitation = new Invitation()
+            .email(userFromDto.getEmail())
+            .user(userFromDto)
+            .project(project)
+            .role(roleRepository.roleAdmin())
+            .accepted(true);
+        invitationRepository.save(invitation);
+
+        return projectRepository
+            .findById(project.getId())
+            .orElseThrow(() -> new IllegalArgumentException("Error while persisting project!"));
+    }
+
+    /**
      * Save a project.
      *
      * @param project the entity to save.
@@ -127,40 +164,14 @@ public class ProjectService {
     }
 
     /**
-     * Create project with properties from DTO.
+     * Archive the project by id.
      *
-     * @param createProjectDTO crate project DTO.
-     * @return saved project.
+     * @param id the id of the entity.
      */
     @Transactional
-    public Project create(CreateProjectDTO createProjectDTO) {
-        Project project = new Project()
-            .name(createProjectDTO.getName())
-            .description(createProjectDTO.getDescription())
-            .startTime(createProjectDTO.getStartTime())
-            .endTime(createProjectDTO.getEndTime());
-
-        if (project.getStartTime().isAfter(project.getEndTime())) {
-            throw new ConstraintViolationProblem(
-                Status.BAD_REQUEST,
-                Collections.singletonList(new Violation("endTime", "endTime may not occur before startTime!"))
-            );
-        }
-
-        project = projectRepository.save(project);
-
-        User userFromDto = userFromDto(createProjectDTO.getUser());
-        Invitation invitation = new Invitation()
-            .email(userFromDto.getEmail())
-            .user(userFromDto)
-            .project(project)
-            .role(roleRepository.roleAdmin())
-            .accepted(true);
-        invitationRepository.save(invitation);
-
-        return projectRepository
-            .findById(project.getId())
-            .orElseThrow(() -> new IllegalArgumentException("Error while persisting project!"));
+    public void archive(Long id) {
+        log.debug("Request to archive Project : {}", id);
+        projectRepository.archive(id);
     }
 
     @Transactional(readOnly = true)
