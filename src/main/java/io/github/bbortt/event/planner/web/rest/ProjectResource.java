@@ -163,6 +163,6 @@ public class ProjectResource {
     public ResponseEntity<Void> archiveProject(@PathVariable Long id) {
         log.debug("REST request to archive Project : {}", id);
         projectService.archive(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }

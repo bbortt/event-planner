@@ -240,6 +240,7 @@ public class Project implements Serializable {
             ", description='" + getDescription() + "'" +
             ", startTime='" + getStartTime() + "'" +
             ", endTime='" + getEndTime() + "'" +
+            ", archived='" + isArchived() + "'" +
             "}";
     }
 }

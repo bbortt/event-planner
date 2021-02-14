@@ -39,5 +39,5 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 
     @Modifying
     @Query("UPDATE Project p SET p.archived = true WHERE p.id = :projectId")
-    void archive(@Param("projectId") Long projectId);
+    int archive(@Param("projectId") Long projectId);
 }

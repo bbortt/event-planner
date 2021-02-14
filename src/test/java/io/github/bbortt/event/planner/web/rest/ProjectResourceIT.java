@@ -42,7 +42,7 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * Integration tests for the {@link ProjectResource} REST controller.
  */
-class ProjectResourceIT extends AbstractApplicationContextAwareIT {
+public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
 
     private static final String TEST_USER_LOGIN = "projectresourceit-login";
     private static final String TEST_ADMIN_LOGIN = "projectresourceit-admin";
@@ -320,15 +320,25 @@ class ProjectResourceIT extends AbstractApplicationContextAwareIT {
         // Initialize the database
         projectService.save(project);
 
-        int databaseSizeBeforeDelete = projectRepository.findAll().size();
+        int databaseSizeBeforeArchive = projectRepository.findAll().size();
+
+        // Disconnect from session
+        em.detach(project);
 
         // Delete the project
         restProjectMockMvc
-            .perform(delete("/api/projects/{id}/archive", project.getId()).accept(MediaType.APPLICATION_JSON))
+            .perform(put("/api/projects/{id}/archive", project.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
-        Project archivedProject = projectRepository.findById(project.getId()).orElseThrow(IllegalArgumentException::new);
-        assertThat(archivedProject).hasFieldOrPropertyWithValue("archived", Boolean.TRUE);
+        // Validate the Project in the database
+        List<Project> projectList = projectRepository.findAll();
+        assertThat(projectList).hasSize(databaseSizeBeforeArchive);
+        Project archivedProject = projectList
+            .stream()
+            .filter(testProject -> testProject.getId().equals(project.getId()))
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("Cannot find updated project!"));
+        assertThat(archivedProject.isArchived()).isTrue();
     }
 
     @Test

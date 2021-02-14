@@ -171,7 +171,9 @@ public class ProjectService {
     @Transactional
     public void archive(Long id) {
         log.debug("Request to archive Project : {}", id);
-        projectRepository.archive(id);
+        if (projectRepository.archive(id) == 0) {
+            throw new IllegalArgumentException("Unable to archive Project!");
+        }
     }
 
     @Transactional(readOnly = true)
