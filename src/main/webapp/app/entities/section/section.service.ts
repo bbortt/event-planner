@@ -58,10 +58,9 @@ export class SectionService {
   }
 
   private convertDates(section: Section): Section {
-    if (section.location?.project) {
-      section.location.project.startTime = moment(section.location.project.startTime);
-      section.location.project.endTime = moment(section.location.project.endTime);
-    }
+    const project = section.location.project;
+    project.startTime = moment(project.startTime);
+    project.endTime = moment(project.endTime);
 
     section.events?.forEach((event: Event) => {
       event.startTime = moment(event.startTime);

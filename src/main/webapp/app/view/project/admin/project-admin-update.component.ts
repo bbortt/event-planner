@@ -83,7 +83,7 @@ export class ProjectAdminUpdateComponent {
             .then(() => this.alertService.success('eventPlannerApp.project.archived', { param: this.project!.name }));
         }
       })
-      .catch(() => {});
+      .catch(() => this.alertService.warning('global.error.internalServerError', { param: this.project!.name }));
   }
 
   delete(): void {
@@ -98,7 +98,7 @@ export class ProjectAdminUpdateComponent {
             .then(() => this.alertService.success('eventPlannerApp.project.deleted', { param: this.project!.name }));
         }
       })
-      .catch(() => {});
+      .catch(() => this.alertService.warning('global.error.internalServerError', { param: this.project!.name }));
   }
 
   private createFromForm(): Project {

@@ -48,7 +48,7 @@
                  class="project-card col-xs-12 col-sm-4">
                 <div *ngIf="project.id">
                     <div
-                        *appHasAnyRole="{ projectId: project.id, roles: adminRoles}; else readOnlyProjectCard"
+                        *appHasAnyRole="{ projectId: project.id, roles: adminRoles }; else readOnlyProjectCard"
                         class="project-card-content d-flex flex-column">
                         <h2>{{project.name}}</h2>
                         <div class="project-card-description mb-auto">

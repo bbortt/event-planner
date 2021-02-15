@@ -45,7 +45,7 @@
                                     <fa-icon icon="pencil-alt"></fa-icon>
                                 </button>
 
-                                <button *appHasAnyRole="{projectId:project.id!,roles:roleAdmin}"
+                                <button *appHasAnyRole="{ projectId:project.id!, roles:roleAdmin }"
                                         type="submit"
                                         (click)="deleteLocation(location)"
                                         class="btn btn-red btn-sm">
@@ -112,7 +112,7 @@
                                                 <fa-icon icon="pencil-alt"></fa-icon>
                                             </button>
 
-                                            <button *appHasAnyRole="{projectId:project.id!,roles:roleAdmin}"
+                                            <button *appHasAnyRole="{ projectId:project.id!, roles:roleAdmin }"
                                                     type="submit"
                                                     (click)="deleteSection(section)"
                                                     class="btn btn-red btn-sm"

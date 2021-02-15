@@ -42,7 +42,7 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * Integration tests for the {@link ProjectResource} REST controller.
  */
-public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
+class ProjectResourceIT extends AbstractApplicationContextAwareIT {
 
     private static final String TEST_USER_LOGIN = "projectresourceit-login";
     private static final String TEST_ADMIN_LOGIN = "projectresourceit-admin";

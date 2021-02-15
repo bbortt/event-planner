@@ -35,7 +35,7 @@ describe('Component Tests', () => {
     });
 
     describe('confirmDelete', () => {
-      it('Should call delete service on confirm', inject(
+      it('Should call delete service on confirmDelete', inject(
         [],
         fakeAsync(() => {
           // GIVEN

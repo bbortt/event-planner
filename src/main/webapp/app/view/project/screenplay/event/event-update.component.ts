@@ -100,7 +100,7 @@ export class EventUpdateComponent implements OnInit, OnDestroy {
     this.event = event;
     this.section = this.event.section;
     this.location = this.section.location;
-    this.project = this.location!.project;
+    this.project = this.location.project;
 
     this.minEndDate = newStartTime;
 
@@ -111,9 +111,9 @@ export class EventUpdateComponent implements OnInit, OnDestroy {
       if (this.section.responsibility || this.section.user) {
         responsibility = this.section.responsibility;
         user = this.section.user;
-      } else if (this.location!.responsibility || this.location!.user) {
-        responsibility = this.location!.responsibility;
-        user = this.location!.user;
+      } else if (this.location.responsibility || this.location.user) {
+        responsibility = this.location.responsibility;
+        user = this.location.user;
       }
 
       this.responsibilityService

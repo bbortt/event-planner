@@ -105,27 +105,27 @@ public class ProjectService {
     }
 
     /**
-     * Get all the projects.
+     * Get all the projects which are not archived.
      *
      * @param pageable the pagination information.
      * @return the list of entities.
      */
     @Transactional(readOnly = true)
-    public Page<Project> findMineOrAll(boolean loadAll, Pageable pageable) {
+    public Page<Project> findMineOrAllByArchivedIsFalse(boolean loadAll, Pageable pageable) {
         if (loadAll) {
             if (!SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.ADMIN)) {
                 throw new IllegalArgumentException("You're not allowed to see all projects!");
             }
 
             log.debug("Request to get all Projects");
-            return projectRepository.findAll(pageable);
+            return projectRepository.findAllByArchivedIsFalse(pageable);
         }
 
         String login = SecurityUtils
             .getCurrentUserLogin()
             .orElseThrow(() -> new IllegalArgumentException("Cannot find current user login!"));
         log.debug("Request to get Projects for user {}", login);
-        return projectRepository.findMine(login, pageable);
+        return projectRepository.findMineByArchivedIsFalse(login, pageable);
     }
 
     /**

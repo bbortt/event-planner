@@ -3,7 +3,8 @@
     "project": {
       "action": {
         "advanced": "Advanced",
-        "archive": "Archive"
+        "archive": "Archive",
+        "warning": "This action will be permanent!"
       },
       "home": {
         "title": "Projects",

@@ -3,7 +3,8 @@
     "project": {
       "action": {
         "advanced": "Mehr",
-        "archive": "Archivieren"
+        "archive": "Archivieren",
+        "warning": "Diese Aktion ist permanent!"
       },
       "home": {
         "title": "Projekte",

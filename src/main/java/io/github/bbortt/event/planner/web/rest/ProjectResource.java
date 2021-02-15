@@ -108,7 +108,7 @@ public class ProjectResource {
     ) {
         log.debug("REST request to get a page of Projects");
 
-        Page<Project> page = projectService.findMineOrAll(loadAll.orElse(false), pageable);
+        Page<Project> page = projectService.findMineOrAllByArchivedIsFalse(loadAll.orElse(false), pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -153,7 +153,7 @@ public class ProjectResource {
     }
 
     /**
-     * {@code PUT  /projects/:id} : archive the "id" project.
+     * {@code PUT  /projects/:id/archive} : archive the "id" project.
      *
      * @param id the id of the project to archive.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.

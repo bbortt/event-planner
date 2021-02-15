@@ -78,11 +78,9 @@ export class EventService {
     event.startTime = moment(event.startTime);
     event.endTime = moment(event.endTime);
 
-    const section = event.section;
-    if (section.location?.project) {
-      section.location.project.startTime = moment(section.location.project.startTime);
-      section.location.project.endTime = moment(section.location.project.endTime);
-    }
+    const project = event.section.location.project;
+    project.startTime = moment(project.startTime);
+    project.endTime = moment(project.endTime);
 
     return event;
   }
