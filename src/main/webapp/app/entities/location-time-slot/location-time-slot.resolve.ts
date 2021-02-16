@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { ActivatedRouteSnapshot, Resolve, Router } from '@angular/router';
 import { EMPTY, Observable, of } from 'rxjs';
-import { flatMap } from 'rxjs/operators';
+import { mergeMap } from 'rxjs/operators';
 import { LocationTimeSlot } from 'app/shared/model/location-time-slot.model';
 import { LocationTimeSlotService } from './location-time-slot.service';
 
@@ -22,7 +22,7 @@ export class LocationTimeSlotTimeSlotResolve implements Resolve<LocationTimeSlot
 
     if (locationTimeSlotId) {
       return this.service.find(locationTimeSlotId).pipe(
-        flatMap((locationTimeSlot: HttpResponse<LocationTimeSlot>) => {
+        mergeMap((locationTimeSlot: HttpResponse<LocationTimeSlot>) => {
           if (locationTimeSlot.body) {
             return of(locationTimeSlot.body);
           } else {
@@ -33,6 +33,6 @@ export class LocationTimeSlotTimeSlotResolve implements Resolve<LocationTimeSlot
       );
     }
 
-    return of({});
+    return of({} as LocationTimeSlot);
   }
 }

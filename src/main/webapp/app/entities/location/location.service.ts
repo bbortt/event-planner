@@ -8,7 +8,6 @@ import { createRequestOption } from 'app/shared/util/request-util';
 
 import { Location } from 'app/shared/model/location.model';
 import { Project } from 'app/shared/model/project.model';
-import { Section } from 'app/shared/model/section.model';
 
 import { SERVER_API_URL } from 'app/app.constants';
 
@@ -88,9 +87,8 @@ export class LocationService {
     return res;
   }
 
-  private convertDates(location: Location): Section {
+  private convertDates(location: Location): void {
     location.project.startTime = moment(location.project.startTime);
     location.project.endTime = moment(location.project.endTime);
-    return location;
   }
 }

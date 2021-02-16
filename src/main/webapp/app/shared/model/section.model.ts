@@ -5,7 +5,7 @@ import { User } from 'app/core/user/user.model';
 
 export interface Section {
   id?: number;
-  name?: string;
+  name: string;
   location: Location;
   events?: Event[];
   responsibility?: Responsibility;

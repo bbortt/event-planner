@@ -16,8 +16,8 @@
       },
       "mine": {
         "title": "My Projects",
-        "enableAllLabel": "Show all projects",
-        "disableAllLabel": "Show my projects",
+        "showArchived": "Show archived",
+        "adminView": "Administrative view",
         "noDescription": "Project does not have a description.",
         "loadMore": "Load more projects"
       },

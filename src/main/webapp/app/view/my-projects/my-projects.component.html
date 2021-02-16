@@ -7,20 +7,6 @@
                                    id="projects-clientside-filter"
                                    (valueChange)="filterData($event)"></app-clientside-filter>
 
-            <button *jhiHasAnyAuthority="authorityAdmin" [ngSwitch]="showAllProjects"
-                    id="btn-show-all-projects"
-                    class="btn btn-negative btn-gray" (click)="switchShowAllProjects()">
-                <fa-icon icon="eye"></fa-icon>
-                <span *ngSwitchCase="false"
-                      jhiTranslate="eventPlannerApp.project.mine.enableAllLabel">
-                    Show all projects
-                </span>
-                <span *ngSwitchCase="true"
-                      jhiTranslate="eventPlannerApp.project.mine.disableAllLabel">
-                    Show my projects
-                </span>
-            </button>
-
             <button id="jh-create-entity" [routerLink]="[{outlets: {modal: ['projects', 'new']}}]"
                     class="btn btn-negative btn-green jh-create-entity create-project">
                 <fa-icon icon="plus"></fa-icon>
@@ -30,6 +16,27 @@
             </button>
         </div>
     </h2>
+
+    <form name="filterForm" role="form" novalidate
+          class="project-filter d-flex justify-content-end">
+        <div class="form-check col-xl-2 col-md-3 col-sm-4 col-sx-6">
+            <label for="field_archived" class="float-right">
+                <input type="checkbox" name="archived" id="field_archived"
+                       class="form-check-input" [(ngModel)]="showArchivedProjects"
+                       (change)="reset()" />
+                <span jhiTranslate="eventPlannerApp.project.mine.showArchived">Show archived</span>
+            </label>
+        </div>
+
+        <div class="form-check col-xl-2 col-md-3 col-sm-4 col-sx-6">
+            <label for="field_showAll" class="float-right clearfix">
+                <input type="checkbox" name="showAll" id="field_showAll"
+                       class="form-check-input" [(ngModel)]="showAllProjects" (change)="reset()" />
+                <span
+                    jhiTranslate="eventPlannerApp.project.mine.adminView">Administrative View</span>
+            </label>
+        </div>
+    </form>
 
     <jhi-alert-error></jhi-alert-error>
 
@@ -41,7 +48,7 @@
         <span jhiTranslate="eventPlannerApp.project.home.notFound">No projects found</span>
     </div>
 
-    <div id="entities" infinite-scroll (scrolled)="loadPage(page + 1)"
+    <div id="entities" infinite-scroll (scrolled)="loadNextPage()"
          [infiniteScrollDisabled]="page >= links['last']" [infiniteScrollDistance]="0">
         <div *ngFor="let projectRow of filteredProjects" class="row justify-content-center">
             <div *ngFor="let project of projectRow;trackBy: trackId"
@@ -100,7 +107,7 @@
     </div>
 
     <div class="row justify-content-center">
-        <button class="btn btn-negative btn-blue" (click)="loadPage(page + 1)"
+        <button class="btn btn-negative btn-blue" (click)="loadNextPage()"
                 [disabled]="!loadMoreButtonEnabled">
             <fa-icon [icon]="faArrowDown"></fa-icon>&nbsp;
             <span jhiTranslate="eventPlannerApp.project.mine.loadMore">
