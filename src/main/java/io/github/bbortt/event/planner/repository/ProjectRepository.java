@@ -16,7 +16,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, Long> {
-    Page<Project> findAllByArchivedIsFalse(Pageable pageable);
+    Page<Project> findAllByArchived(@Param("archived") boolean archived, Pageable pageable);
 
     @Query(
         value = "select p from Project p" +
@@ -24,17 +24,21 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
         "  on p = i.project" +
         " left join User u" +
         "  on i.user = u" +
-        "    where p.archived = false" +
+        "    where p.archived = :archived" +
         "    and u.login = :currentUserLogin",
         countQuery = "select count(p.id) from Project p" +
         " left join Invitation i" +
         "  on p = i.project" +
         " left join User u" +
         "  on i.user = u" +
-        "    where p.archived = false" +
+        "    where p.archived = :archived" +
         "    and u.login = :currentUserLogin"
     )
-    Page<Project> findMineByArchivedIsFalse(@NotNull @Param("currentUserLogin") String currentUserLogin, Pageable pageable);
+    Page<Project> findMineByArchived(
+        @Param("currentUserLogin") String currentUserLogin,
+        @Param("archived") boolean archived,
+        Pageable pageable
+    );
 
     @Query("SELECT p.name FROM Project p WHERE p.id = :projectId")
     Optional<String> findNameByProjectId(@Param("projectId") Long projectId);

@@ -23,28 +23,36 @@ class ProjectRepositoryIT extends AbstractApplicationContextAwareIT {
 
     private static final String PROJECT_1_NAME = "ProjectRepositoryIT-project-1";
     private static final String PROJECT_2_NAME = "ProjectRepositoryIT-project-2";
+    private static final String PROJECT_3_NAME = "ProjectRepositoryIT-project-3";
 
     @Autowired
     private ProjectRepository projectRepository;
 
     @Test
     @Transactional
-    void findMineDoesReturnMyProjectsOnly() {
-        Page<Project> projects = projectRepository.findMineByArchivedIsFalse(TEST_USER_1, Pageable.unpaged());
+    void findMineByArchivedDoesReturnMyProjectsOnly() {
+        Page<Project> projects = projectRepository.findMineByArchived(TEST_USER_1, false, Pageable.unpaged());
         Assertions.assertThat(projects).hasSize(2);
     }
 
     @Test
     @Transactional
-    void findMineQueryRespectsPageable() {
+    void findMineByArchivedDoesReturnArchived() {
+        Page<Project> projects = projectRepository.findMineByArchived(TEST_USER_1, true, Pageable.unpaged());
+        Assertions.assertThat(projects).hasSize(1).first().hasFieldOrPropertyWithValue("name", PROJECT_3_NAME);
+    }
+
+    @Test
+    @Transactional
+    void findMineByArchivedQueryRespectsPageable() {
         PageRequest pageRequest = PageRequest.of(0, 1, Sort.by(Direction.ASC, "name"));
 
-        Page<Project> projects = projectRepository.findMineByArchivedIsFalse(TEST_USER_1, pageRequest);
+        Page<Project> projects = projectRepository.findMineByArchived(TEST_USER_1, false, pageRequest);
         Assertions.assertThat(projects).hasSize(1).first().hasFieldOrPropertyWithValue("name", PROJECT_1_NAME);
 
         pageRequest = PageRequest.of(0, 1, Sort.by(Direction.DESC, "name"));
 
-        projects = projectRepository.findMineByArchivedIsFalse(TEST_USER_1, pageRequest);
+        projects = projectRepository.findMineByArchived(TEST_USER_1, false, pageRequest);
         Assertions.assertThat(projects).hasSize(1).first().hasFieldOrPropertyWithValue("name", PROJECT_2_NAME);
     }
 

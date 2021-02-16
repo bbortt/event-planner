@@ -28,7 +28,8 @@
             </label>
         </div>
 
-        <div class="form-check col-xl-2 col-md-3 col-sm-4 col-sx-6">
+        <div *jhiHasAnyAuthority="authorityAdmin"
+             class="form-check col-xl-2 col-md-3 col-sm-4 col-sx-6">
             <label for="field_showAll" class="float-right clearfix">
                 <input type="checkbox" name="showAll" id="field_showAll"
                        class="form-check-input" [(ngModel)]="showAllProjects" (change)="reset()" />

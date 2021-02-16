@@ -130,6 +130,7 @@ export class MyProjectsComponent implements OnInit, OnDestroy {
         page,
         size: this.itemsPerPage,
         sort: this.sort(),
+        loadArchived: this.showArchivedProjects,
         loadAll: this.accountService.hasAnyAuthority(AUTHORITY_ADMIN) && this.showAllProjects,
       })
       .pipe(map((res: HttpResponse<Project[]>) => this.paginateSomeEntities(page, res.body, res.headers)));

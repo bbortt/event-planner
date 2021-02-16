@@ -75,30 +75,32 @@ class ProjectServiceUnitTest {
     }
 
     @Test
-    void findMineOrAllDoesLoadMine() {
+    void findMineOrAllByArchivedDoesLoadMine() {
         Pageable pageable = Pageable.unpaged();
 
-        fixture.findMineOrAllByArchivedIsFalse(Boolean.FALSE, pageable);
+        fixture.findMineOrAllByArchived(false, false, pageable);
+        verify(projectRepositoryMock).findMineByArchived(MOCK_USER_LOGIN, false, pageable);
 
-        verify(projectRepositoryMock).findMineByArchivedIsFalse(MOCK_USER_LOGIN, pageable);
+        fixture.findMineOrAllByArchived(false, true, pageable);
+        verify(projectRepositoryMock).findMineByArchived(MOCK_USER_LOGIN, true, pageable);
     }
 
     @Test
-    void findMineOrAllThrowsExceptionIfAuthorityAdminMissing() {
+    void findMineOrAllByArchivedThrowsExceptionIfAuthorityAdminMissing() {
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("You're not allowed to see all projects!");
-        fixture.findMineOrAllByArchivedIsFalse(Boolean.TRUE, Pageable.unpaged());
+        fixture.findMineOrAllByArchived(true, false, Pageable.unpaged());
     }
 
     @Test
-    void findMineOrAllLoadsAllWhenAdminAuthorityAssigned() {
+    void findMineOrAllByArchivedByArchivedLoadsAllWhenAdminAuthorityAssigned() {
         Pageable pageable = Pageable.unpaged();
 
         doReturn(Collections.singletonList(new SimpleGrantedAuthority(AuthoritiesConstants.ADMIN)))
             .when(authenticationMock)
             .getAuthorities();
 
-        fixture.findMineOrAllByArchivedIsFalse(Boolean.TRUE, pageable);
+        fixture.findMineOrAllByArchived(Boolean.TRUE, false, pageable);
 
         verify(projectRepositoryMock).findAll(pageable);
     }

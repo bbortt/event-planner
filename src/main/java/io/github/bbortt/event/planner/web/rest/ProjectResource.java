@@ -103,12 +103,14 @@ public class ProjectResource {
     @GetMapping("/projects")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<Project>> getProjects(
+        @RequestParam(name = "loarArchived", required = false) Optional<Boolean> loadArchived,
         @RequestParam(name = "loadAll", required = false) Optional<Boolean> loadAll,
         Pageable pageable
     ) {
-        log.debug("REST request to get a page of Projects");
+        log.debug("REST request to get a page of Projects: { loadArchived: {}, loadAll: {} }", loadArchived, loadAll);
 
-        Page<Project> page = projectService.findMineOrAllByArchivedIsFalse(loadAll.orElse(false), pageable);
+        Page<Project> page = projectService.findMineOrAllByArchived(loadAll.orElse(false), loadArchived.orElse(false), pageable);
+
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }

@@ -12,6 +12,7 @@ import io.github.bbortt.event.planner.security.SecurityUtils;
 import io.github.bbortt.event.planner.service.dto.CreateProjectDTO;
 import io.github.bbortt.event.planner.service.dto.UserDTO;
 import io.github.bbortt.event.planner.service.exception.EntityNotFoundException;
+import io.github.bbortt.event.planner.service.exception.ForbiddenRequestException;
 import io.github.bbortt.event.planner.service.exception.IdMustBePresentException;
 import java.util.Collections;
 import java.util.Optional;
@@ -111,21 +112,21 @@ public class ProjectService {
      * @return the list of entities.
      */
     @Transactional(readOnly = true)
-    public Page<Project> findMineOrAllByArchivedIsFalse(boolean loadAll, Pageable pageable) {
-        if (loadAll) {
+    public Page<Project> findMineOrAllByArchived(boolean all, boolean archived, Pageable pageable) {
+        if (all) {
             if (!SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.ADMIN)) {
-                throw new IllegalArgumentException("You're not allowed to see all projects!");
+                throw new ForbiddenRequestException("You're not allowed to see all projects!");
             }
 
-            log.debug("Request to get all Projects");
-            return projectRepository.findAllByArchivedIsFalse(pageable);
+            log.debug("Request to get all Projects: { archived: {} }", archived);
+            return projectRepository.findAllByArchived(archived, pageable);
         }
 
         String login = SecurityUtils
             .getCurrentUserLogin()
             .orElseThrow(() -> new IllegalArgumentException("Cannot find current user login!"));
         log.debug("Request to get Projects for user {}", login);
-        return projectRepository.findMineByArchivedIsFalse(login, pageable);
+        return projectRepository.findMineByArchived(login, archived, pageable);
     }
 
     /**
