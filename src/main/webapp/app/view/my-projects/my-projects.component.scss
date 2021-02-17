@@ -8,7 +8,6 @@
 
 .project-filter {
   margin-top: 1em;
-  margin-bottom: 1em;
   padding-top: 1em;
   border-top: 2px solid #000;
   border-bottom: 2px solid #000;
@@ -30,6 +29,12 @@
 
     border: 2px solid black;
     border-radius: 5px;
+
+    &.disabled {
+      // from .btn[disabled]
+      opacity: 0.65;
+      box-shadow: none;
+    }
 
     .project-card-navigation {
       margin-top: 1vh;

@@ -103,7 +103,7 @@ public class ProjectResource {
     @GetMapping("/projects")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<Project>> getProjects(
-        @RequestParam(name = "loarArchived", required = false) Optional<Boolean> loadArchived,
+        @RequestParam(name = "loadArchived", required = false) Optional<Boolean> loadArchived,
         @RequestParam(name = "loadAll", required = false) Optional<Boolean> loadAll,
         Pageable pageable
     ) {

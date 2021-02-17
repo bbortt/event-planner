@@ -250,6 +250,95 @@ class ProjectResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
+    void getMyProject() throws Exception {
+        // Initialize the database
+        projectRepository.saveAndFlush(project);
+        Invitation invitation = InvitationResourceIT
+            .createEntity(em)
+            .accepted(Boolean.TRUE)
+            .project(project)
+            .user(user)
+            .role(roleRepository.roleAdmin());
+        em.persist(invitation);
+
+        // Get the project
+        restProjectMockMvc
+            .perform(get("/api/projects"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.length()").value(1))
+            .andExpect(jsonPath("$[0].id").value(project.getId().intValue()));
+    }
+
+    @Test
+    @Transactional
+    @WithMockUser(value = TEST_ADMIN_LOGIN, roles = { RolesConstants.ADMIN })
+    void getAllProjects() throws Exception {
+        // Initialize the database
+        projectRepository.saveAndFlush(createEntity(em));
+        projectRepository.saveAndFlush(createUpdatedEntity(em));
+
+        // Get the project
+        restProjectMockMvc
+            .perform(get("/api/projects?loadAll=true"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.length()").value(2));
+    }
+
+    @Test
+    @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
+    void getArchievedProjects() throws Exception {
+        // Initialize the database
+        Project archivedProject = createEntity(em).archived(Boolean.TRUE);
+        projectRepository.saveAndFlush(archivedProject);
+        Invitation invitation1 = InvitationResourceIT
+            .createEntity(em)
+            .accepted(Boolean.TRUE)
+            .project(archivedProject)
+            .user(user)
+            .role(roleRepository.roleAdmin());
+        em.persist(invitation1);
+
+        Project activeProject = createUpdatedEntity(em);
+        projectRepository.saveAndFlush(activeProject);
+        Invitation invitation2 = InvitationResourceIT
+            .createEntity(em)
+            .accepted(Boolean.TRUE)
+            .project(activeProject)
+            .user(user)
+            .role(roleRepository.roleAdmin());
+        em.persist(invitation2);
+
+        // Get the project
+        restProjectMockMvc
+            .perform(get("/api/projects?loadArchived=true"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.length()").value(1))
+            .andExpect(jsonPath("$[0].id").value(project.getId().intValue()));
+    }
+
+    @Test
+    @Transactional
+    @WithMockUser(value = TEST_ADMIN_LOGIN, roles = { RolesConstants.ADMIN })
+    void getAllArchievedProjects() throws Exception {
+        // Initialize the database
+        projectRepository.saveAndFlush(createEntity(em).archived(Boolean.TRUE));
+        projectRepository.saveAndFlush(createUpdatedEntity(em).archived(Boolean.TRUE));
+
+        // Get the project
+        restProjectMockMvc
+            .perform(get("/api/projects?loadAll=true&loadArchived=true"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.length()").value(2));
+    }
+
+    @Test
+    @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     void getNonExistingProject() throws Exception {
         // Get the project
         restProjectMockMvc.perform(get("/api/projects/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());

@@ -1,13 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HttpHeaders, HttpResponse } from '@angular/common/http';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 
 import { JhiEventManager, JhiParseLinks } from 'ng-jhipster';
 
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { Observable, range, Subscription } from 'rxjs';
-import { finalize, map, mergeMap } from 'rxjs/operators';
+import { finalize, map, mergeMap, take, tap } from 'rxjs/operators';
 
 import { ProjectService } from 'app/entities/project/project.service';
 import { AccountService } from 'app/core/auth/account.service';
@@ -19,6 +19,9 @@ import { AUTHORITY_ADMIN } from 'app/shared/constants/authority.constants';
 import { ADMIN, SECRETARY } from 'app/shared/constants/role.constants';
 
 type PagedEntity = { page: number; projects: Project[]; links: { next?: number; last: number } };
+
+const ROUTE_PARAM_SHOW_ARCHIVED = 'showArchived';
+const ROUTE_PARAM_SHOW_ALL = 'showAll';
 
 @Component({
   selector: 'app-my-projects',
@@ -62,8 +65,18 @@ export class MyProjectsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.reset();
-    this.registerChangeInSomeEntities();
+    this.activatedRoute.queryParams
+      .pipe(
+        take(1),
+        tap((params: Params) => {
+          this.showArchivedProjects = !!params[ROUTE_PARAM_SHOW_ARCHIVED];
+          this.showAllProjects = !!params[ROUTE_PARAM_SHOW_ALL];
+        })
+      )
+      .subscribe(() => {
+        this.reset();
+        this.registerChangeInSomeEntities();
+      });
   }
 
   ngOnDestroy(): void {
@@ -73,6 +86,14 @@ export class MyProjectsComponent implements OnInit, OnDestroy {
   }
 
   reset(): void {
+    this.router.navigate(['.'], {
+      replaceUrl: false,
+      queryParams: {
+        [ROUTE_PARAM_SHOW_ARCHIVED]: this.showArchivedProjects,
+        [ROUTE_PARAM_SHOW_ALL]: this.showAllProjects,
+      },
+    });
+
     let page = -1;
     const projects: Project[] = [];
     const filteredProjects: Project[][] = [];
