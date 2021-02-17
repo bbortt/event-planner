@@ -114,6 +114,7 @@ export class ProjectCreateComponent implements OnInit, OnDestroy {
       name: this.editForm.get(['name'])!.value,
       startTime: moment(this.editForm.get(['startTime'])!.value),
       endTime: moment(this.editForm.get(['endTime'])!.value),
+      archived: false,
       description: this.editForm.get(['description'])!.value,
     };
 

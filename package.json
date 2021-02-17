@@ -13,6 +13,29 @@
   "cacheDirectories": [
     "node_modules"
   ],
+  "scripts": {
+    "prettier:format": "prettier --write \"{,src/**/}*.{md,json,ts,css,scss,yml,java}\"",
+    "lint": "eslint . --ext .js,.ts",
+    "lint:fix": "npm run lint -- --fix",
+    "postinstall": "ngcc",
+    "cleanup": "rimraf build/resources/main/static/",
+    "clean-www": "rimraf build/resources/main/static/app/{src,build/}",
+    "start": "npm run webpack:dev",
+    "start-tls": "npm run webpack:dev -- --env tls",
+    "serve": "npm run start",
+    "build": "npm run webpack:prod",
+    "test": "npm run lint && jest --coverage --logHeapUsage -w=2 --config src/test/javascript/jest.conf.js",
+    "test:watch": "npm run test -- --watch",
+    "webpack:dev": "npm run webpack serve -- --config webpack/webpack.dev.js --inline --hot --port=9060 --watch-content-base --env stats=minimal",
+    "webpack:dev-verbose": "npm run webpack serve -- --config webpack/webpack.dev.js --inline --hot --port=9060 --watch-content-base --progress --env stats=normal",
+    "webpack:build:main": "npm run webpack -- --config webpack/webpack.dev.js --env stats=minimal",
+    "webpack:build": "npm run cleanup && npm run webpack:build:main",
+    "webpack:prod:main": "npm run webpack -- --config webpack/webpack.prod.js",
+    "webpack:prod": "npm run cleanup && npm run webpack:prod:main && npm run clean-www",
+    "webpack-dev-server": "node --max_old_space_size=4096 node_modules/webpack-dev-server/bin/webpack-dev-server.js",
+    "webpack:test": "npm run test",
+    "webpack": "node --max_old_space_size=4096 node_modules/webpack/bin/webpack.js"
+  },
   "dependencies": {
     "@angular/animations": "^10.2.4",
     "@angular/common": "^10.2.4",
@@ -51,7 +74,7 @@
     "@angular/cli": "^10.2.1",
     "@angular/compiler-cli": "^10.2.4",
     "@ngtools/webpack": "10.1.7",
-    "@openapitools/openapi-generator-cli": "2.0.3",
+    "@openapitools/openapi-generator-cli": "^2.1.23",
     "@types/jest": "26.0.14",
     "@types/jquery": "3.5.3",
     "@types/node": "14.11.8",
@@ -111,29 +134,6 @@
   },
   "engines": {
     "node": ">=12.16.1"
-  },
-  "scripts": {
-    "prettier:format": "prettier --write \"{,src/**/}*.{md,json,ts,css,scss,yml,java}\"",
-    "lint": "eslint . --ext .js,.ts",
-    "lint:fix": "npm run lint -- --fix",
-    "postinstall": "ngcc",
-    "cleanup": "rimraf build/resources/main/static/",
-    "clean-www": "rimraf build/resources/main/static/app/{src,build/}",
-    "start": "npm run webpack:dev",
-    "start-tls": "npm run webpack:dev -- --env tls",
-    "serve": "npm run start",
-    "build": "npm run webpack:prod",
-    "test": "npm run lint && jest --coverage --logHeapUsage -w=2 --config src/test/javascript/jest.conf.js",
-    "test:watch": "npm run test -- --watch",
-    "webpack:dev": "npm run webpack serve -- --config webpack/webpack.dev.js --inline --hot --port=9060 --watch-content-base --env stats=minimal",
-    "webpack:dev-verbose": "npm run webpack serve -- --config webpack/webpack.dev.js --inline --hot --port=9060 --watch-content-base --progress --env stats=normal",
-    "webpack:build:main": "npm run webpack -- --config webpack/webpack.dev.js --env stats=minimal",
-    "webpack:build": "npm run cleanup && npm run webpack:build:main",
-    "webpack:prod:main": "npm run webpack -- --config webpack/webpack.prod.js",
-    "webpack:prod": "npm run cleanup && npm run webpack:prod:main && npm run clean-www",
-    "webpack-dev-server": "node --max_old_space_size=4096 node_modules/webpack-dev-server/bin/webpack-dev-server.js",
-    "webpack:test": "npm run test",
-    "webpack": "node --max_old_space_size=4096 node_modules/webpack/bin/webpack.js"
   },
   "jestSonar": {
     "reportPath": "build/test-results/jest",

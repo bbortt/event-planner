@@ -15,7 +15,13 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface RoleRepository extends JpaRepository<Role, String> {
     @Query("FROM Role r WHERE r.name = io.github.bbortt.event.planner.security.RolesConstants.ADMIN")
-    public Role roleAdmin();
+    Role roleAdmin();
+
+    @Query("FROM Role r WHERE r.name = io.github.bbortt.event.planner.security.RolesConstants.SECRETARY")
+    Role roleSecretary();
+
+    @Query("FROM Role r WHERE r.name = io.github.bbortt.event.planner.security.RolesConstants.CONTRIBUTOR")
+    Role roleContributor();
 
     @Query(
         "SELECT CASE WHEN COUNT(i) > 0 THEN TRUE ELSE FALSE END FROM Invitation i" +
@@ -24,9 +30,9 @@ public interface RoleRepository extends JpaRepository<Role, String> {
         "  AND i.user.login = :currentUserLogin" +
         "  AND i.role.name in :roles"
     )
-    public boolean hasAnyRoleInProject(
-        @NotNull @Param("project") Project project,
-        @NotNull @Param("currentUserLogin") String currentUserLogin,
-        @NotNull @Param("roles") List<String> roles
+    boolean hasAnyRoleInProject(
+        @Param("project") Project project,
+        @Param("currentUserLogin") String currentUserLogin,
+        @Param("roles") List<String> roles
     );
 }

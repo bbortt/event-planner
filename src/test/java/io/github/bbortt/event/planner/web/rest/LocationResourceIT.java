@@ -63,6 +63,7 @@ class LocationResourceIT extends AbstractApplicationContextAwareIT {
 
     private User user;
     private Location location;
+    private Invitation invitation;
 
     /**
      * Create an entity for this test.
@@ -113,13 +114,13 @@ class LocationResourceIT extends AbstractApplicationContextAwareIT {
         user.setAuthorities(Collections.singleton(authorityRepository.findById(AuthoritiesConstants.USER).get()));
         em.persist(user);
 
-        Invitation invitation = InvitationResourceIT
-            .createEntity(em)
-            .accepted(Boolean.TRUE)
-            .project(location.getProject())
-            .user(user)
-            .role(roleRepository.roleAdmin());
-        em.persist(invitation);
+        invitation =
+            InvitationResourceIT
+                .createEntity(em)
+                .accepted(Boolean.TRUE)
+                .project(location.getProject())
+                .user(user)
+                .role(roleRepository.roleContributor());
 
         em.flush();
     }
@@ -128,6 +129,8 @@ class LocationResourceIT extends AbstractApplicationContextAwareIT {
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
     void createLocation() throws Exception {
+        em.persist(invitation.role(roleRepository.roleAdmin()));
+
         locationRepository.deleteAll();
 
         // Create the Location
@@ -146,6 +149,8 @@ class LocationResourceIT extends AbstractApplicationContextAwareIT {
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
     void createLocationWithExistingId() throws Exception {
+        em.persist(invitation.role(roleRepository.roleAdmin()));
+
         int databaseSizeBeforeCreate = locationRepository.findAll().size();
 
         // Create the Location with an existing ID
@@ -159,6 +164,18 @@ class LocationResourceIT extends AbstractApplicationContextAwareIT {
         // Validate the Location in the database
         List<Location> locationList = locationRepository.findAll();
         assertThat(locationList).hasSize(databaseSizeBeforeCreate);
+    }
+
+    @Test
+    @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
+    void createLocationForbiddenForRoleContributor() throws Exception {
+        em.persist(invitation);
+
+        // Create the Location
+        restLocationMockMvc
+            .perform(post("/api/locations").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(location)))
+            .andExpect(status().isForbidden());
     }
 
     @Test
@@ -198,7 +215,7 @@ class LocationResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
-    void getAllLocationsDeniedForUsers() throws Exception {
+    void getAllLocationsForbiddenForUsers() throws Exception {
         // Initialize the database
         locationRepository.saveAndFlush(location);
 
@@ -210,6 +227,8 @@ class LocationResourceIT extends AbstractApplicationContextAwareIT {
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
     void getLocation() throws Exception {
+        em.persist(invitation.role(roleRepository.roleAdmin()));
+
         // Initialize the database
         locationRepository.saveAndFlush(location);
 
@@ -220,6 +239,16 @@ class LocationResourceIT extends AbstractApplicationContextAwareIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(location.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME));
+    }
+
+    @Test
+    @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
+    void getLocationForbiddenForRoleContributor() throws Exception {
+        em.persist(invitation);
+
+        // Get the location
+        restLocationMockMvc.perform(get("/api/locations/{id}", location.getId())).andExpect(status().isForbidden());
     }
 
     @Test
@@ -237,7 +266,7 @@ class LocationResourceIT extends AbstractApplicationContextAwareIT {
             .accepted(Boolean.TRUE)
             .project(project)
             .user(user)
-            .role(roleRepository.roleAdmin());
+            .role(roleRepository.roleContributor());
         em.persist(invitation);
 
         Location projectLocation1 = new Location().name("A").project(project);
@@ -269,6 +298,8 @@ class LocationResourceIT extends AbstractApplicationContextAwareIT {
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
     void updateLocation() throws Exception {
+        em.persist(invitation.role(roleRepository.roleAdmin()));
+
         // Initialize the database
         locationService.save(location);
 
@@ -301,6 +332,8 @@ class LocationResourceIT extends AbstractApplicationContextAwareIT {
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
     void updateNonExistingLocation() throws Exception {
+        em.persist(invitation.role(roleRepository.roleAdmin()));
+
         int databaseSizeBeforeUpdate = locationRepository.findAll().size();
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
@@ -316,7 +349,25 @@ class LocationResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
+    void updateLocationForbiddenForRoleContributor() throws Exception {
+        em.persist(invitation);
+
+        // Update the location
+        Location updatedLocation = createUpdatedEntity(em);
+
+        restLocationMockMvc
+            .perform(
+                put("/api/locations").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(updatedLocation))
+            )
+            .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     void deleteLocation() throws Exception {
+        em.persist(invitation.role(roleRepository.roleAdmin()));
+
         // Initialize the database
         locationService.save(location);
 
@@ -335,7 +386,24 @@ class LocationResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
+    void deleteLocationForbiddenForRoleContributor() throws Exception {
+        em.persist(invitation);
+
+        // Initialize the database
+        locationService.save(location);
+
+        // Delete the location
+        restLocationMockMvc
+            .perform(delete("/api/locations/{id}", location.getId()).accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     void isNameExistingInProject() throws Exception {
+        em.persist(invitation.role(roleRepository.roleAdmin()));
+
         restLocationMockMvc
             .perform(
                 post("/api/locations/project/{projectId}/name-exists", location.getProject().getId())
@@ -356,5 +424,20 @@ class LocationResourceIT extends AbstractApplicationContextAwareIT {
             )
             .andExpect(status().isOk())
             .andExpect(jsonPath("$").value(Boolean.TRUE));
+    }
+
+    @Test
+    @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
+    void isNameExistingInProjectForbiddenForRoleContributor() throws Exception {
+        em.persist(invitation);
+
+        restLocationMockMvc
+            .perform(
+                post("/api/locations/project/{projectId}/name-exists", location.getProject().getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(location.getName())
+            )
+            .andExpect(status().isForbidden());
     }
 }

@@ -1,20 +1,27 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HttpHeaders, HttpResponse } from '@angular/common/http';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+
 import { JhiEventManager, JhiParseLinks } from 'ng-jhipster';
+
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { Project } from 'app/shared/model/project.model';
+import { Observable, range, Subscription } from 'rxjs';
+import { finalize, map, mergeMap, take, tap } from 'rxjs/operators';
 
 import { ProjectService } from 'app/entities/project/project.service';
 import { AccountService } from 'app/core/auth/account.service';
 
-import { faArrowDown, faBook, faCog } from '@fortawesome/free-solid-svg-icons';
+import { Project } from 'app/shared/model/project.model';
 
-import { ITEMS_PER_PAGE } from 'app/shared/constants/pagination.constants';
+import { faArrowDown, faBook, faCog } from '@fortawesome/free-solid-svg-icons';
 import { AUTHORITY_ADMIN } from 'app/shared/constants/authority.constants';
 import { ADMIN, SECRETARY } from 'app/shared/constants/role.constants';
+
+type PagedEntity = { page: number; projects: Project[]; links: { next?: number; last: number } };
+
+const ROUTE_PARAM_SHOW_ARCHIVED = 'showArchived';
+const ROUTE_PARAM_SHOW_ALL = 'showAll';
 
 @Component({
   selector: 'app-my-projects',
@@ -27,7 +34,8 @@ export class MyProjectsComponent implements OnInit, OnDestroy {
 
   eventSubscriber?: Subscription;
 
-  itemsPerPage = ITEMS_PER_PAGE;
+  // itemsPerPage = ITEMS_PER_PAGE;
+  itemsPerPage = 3;
   links = {
     last: 0,
   };
@@ -42,8 +50,9 @@ export class MyProjectsComponent implements OnInit, OnDestroy {
   authorityAdmin = AUTHORITY_ADMIN;
   adminRoles = [ADMIN.name, SECRETARY.name];
 
+  showArchivedProjects = false;
   showAllProjects = false;
-  loadMoreButtonEnabled = true;
+  loadMoreButtonEnabled = false;
 
   constructor(
     private router: Router,
@@ -56,8 +65,18 @@ export class MyProjectsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.loadPage(this.page);
-    this.registerChangeInSomeEntities();
+    this.activatedRoute.queryParams
+      .pipe(
+        take(1),
+        tap((params: Params) => {
+          this.showArchivedProjects = !!params[ROUTE_PARAM_SHOW_ARCHIVED];
+          this.showAllProjects = !!params[ROUTE_PARAM_SHOW_ALL];
+        })
+      )
+      .subscribe(() => {
+        this.reset();
+        this.registerChangeInSomeEntities();
+      });
   }
 
   ngOnDestroy(): void {
@@ -66,26 +85,76 @@ export class MyProjectsComponent implements OnInit, OnDestroy {
     }
   }
 
-  loadPage(page: number): void {
-    this.page = page;
-    this.projectService
+  reset(): void {
+    this.router.navigate(['.'], {
+      replaceUrl: false,
+      queryParams: {
+        [ROUTE_PARAM_SHOW_ARCHIVED]: this.showArchivedProjects,
+        [ROUTE_PARAM_SHOW_ALL]: this.showAllProjects,
+      },
+    });
+
+    let page = -1;
+    const projects: Project[] = [];
+    const filteredProjects: Project[][] = [];
+    let links = { last: 0 };
+    let loadMoreButtonEnabled = false;
+
+    range(0, this.page + 1)
+      .pipe(
+        mergeMap((nextPage: number) => this.loadPage(nextPage)),
+        finalize(() => {
+          this.fillLastRow(filteredProjects);
+
+          this.page = page;
+          this.projects = projects;
+          this.filteredProjects = filteredProjects;
+          this.links = links;
+          this.loadMoreButtonEnabled = loadMoreButtonEnabled;
+        })
+      )
+      .subscribe((pagedEntity: PagedEntity) => {
+        const newProjects = pagedEntity.projects;
+
+        if (newProjects) {
+          page = pagedEntity.page;
+          projects.push(...newProjects);
+          filteredProjects.push(newProjects);
+          links = pagedEntity.links;
+          loadMoreButtonEnabled = 'next' in links;
+        }
+      });
+  }
+
+  loadNextPage(): void {
+    this.page++;
+    this.loadPage(this.page)
+      .pipe(finalize(() => this.fillLastRow(this.filteredProjects)))
+      .subscribe((pagedEntity: PagedEntity) => {
+        const { page, projects, links } = pagedEntity;
+
+        if (!projects) {
+          return;
+        }
+
+        this.page = page;
+        this.projects.push(...projects);
+        this.filteredProjects.push(projects);
+        this.links = links;
+        this.loadMoreButtonEnabled = !!links.next;
+      });
+  }
+
+  private loadPage(page: number): Observable<PagedEntity> {
+    return this.projectService
       .query({
         page,
         size: this.itemsPerPage,
         sort: this.sort(),
+        loadArchived: this.showArchivedProjects,
         loadAll: this.accountService.hasAnyAuthority(AUTHORITY_ADMIN) && this.showAllProjects,
       })
-      .subscribe((res: HttpResponse<Project[]>) => this.paginateSomeEntities(res.body, res.headers));
-  }
-
-  reset(): void {
-    this.projects = [];
-    this.filteredProjects = [];
-    const lastPage = this.page;
-
-    for (let i = 0; i <= lastPage; i++) {
-      this.loadPage(i);
-    }
+      .pipe(map((res: HttpResponse<Project[]>) => this.paginateSomeEntities(page, res.body, res.headers)));
   }
 
   trackId(index: number, item: Project): number {
@@ -122,34 +191,19 @@ export class MyProjectsComponent implements OnInit, OnDestroy {
       this.filteredProjects[this.filteredProjects.length - 1].push(matchingProjects[i]);
     }
 
-    this.fillRow();
+    this.fillLastRow(this.filteredProjects);
   }
 
-  private fillRow(): void {
-    while (
-      this.filteredProjects[this.filteredProjects.length - 1] &&
-      this.filteredProjects[this.filteredProjects.length - 1].length % 3 !== 0
-    ) {
-      this.filteredProjects[this.filteredProjects.length - 1].push({} as Project);
+  private fillLastRow(rows: Project[][]): void {
+    while (rows[rows.length - 1] && rows[rows.length - 1].length % 3 !== 0) {
+      rows[rows.length - 1].push({} as Project);
       this.loadMoreButtonEnabled = false;
     }
   }
 
-  private paginateSomeEntities(newProjects: Project[] | null, headers: HttpHeaders): void {
+  private paginateSomeEntities(page: number, newProjects: Project[] | null, headers: HttpHeaders): PagedEntity {
     const headersLink = headers.get('link');
-    this.links = this.parseLinks.parse(headersLink ? headersLink : '');
-    if (newProjects && newProjects.length > 0) {
-      this.projects.push(...newProjects);
-      this.filteredProjects.push(newProjects);
-
-      this.fillRow();
-    } else {
-      this.loadMoreButtonEnabled = false;
-    }
-  }
-
-  switchShowAllProjects(): void {
-    this.showAllProjects = !this.showAllProjects;
-    this.reset();
+    const links = this.parseLinks.parse(headersLink ? headersLink : '');
+    return { page, projects: newProjects || [], links };
   }
 }

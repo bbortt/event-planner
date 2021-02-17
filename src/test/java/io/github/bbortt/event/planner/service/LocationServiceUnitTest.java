@@ -30,19 +30,13 @@ class LocationServiceUnitTest {
     ProjectService projectServiceMock;
 
     @Mock
-    SectionService sectionServiceMock;
-
-    @Mock
-    EventService eventServiceMock;
-
-    @Mock
     LocationRepository locationRepositoryMock;
 
     LocationService fixture;
 
     @Before
     void beforeTestSetup() {
-        fixture = new LocationService(projectServiceMock, sectionServiceMock, eventServiceMock, locationRepositoryMock);
+        fixture = new LocationService(projectServiceMock, locationRepositoryMock);
     }
 
     @Test
@@ -65,8 +59,6 @@ class LocationServiceUnitTest {
 
         fixture.delete(locationId);
 
-        Mockito.verify(eventServiceMock).deleteAllByLocationId(locationId);
-        Mockito.verify(sectionServiceMock).deleteAllByLocationId(locationId);
         Mockito.verify(locationRepositoryMock).deleteById(locationId);
     }
 

@@ -51,6 +51,10 @@ public class Project implements Serializable {
     @Column(name = "end_time", nullable = false)
     private ZonedDateTime endTime;
 
+    @NotNull
+    @Column(name = "archived", nullable = false)
+    private Boolean archived = Boolean.FALSE;
+
     @OneToMany(mappedBy = "project")
     private Set<Responsibility> responsibilities = new HashSet<>();
 
@@ -118,6 +122,19 @@ public class Project implements Serializable {
 
     public Project endTime(ZonedDateTime endTime) {
         this.endTime = endTime;
+        return this;
+    }
+
+    public Boolean isArchived() {
+        return archived;
+    }
+
+    public void setArchived(Boolean archived) {
+        this.archived = archived;
+    }
+
+    public Project archived(Boolean archived) {
+        this.archived = archived;
         return this;
     }
 
@@ -223,6 +240,7 @@ public class Project implements Serializable {
             ", description='" + getDescription() + "'" +
             ", startTime='" + getStartTime() + "'" +
             ", endTime='" + getEndTime() + "'" +
+            ", archived='" + isArchived() + "'" +
             "}";
     }
 }

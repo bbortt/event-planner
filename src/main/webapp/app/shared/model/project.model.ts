@@ -9,6 +9,7 @@ export interface Project {
   description?: string;
   startTime: Moment;
   endTime: Moment;
+  archived: boolean;
   responsibilities?: Responsibility[];
   invitations?: Invitation[];
   locations?: Location[];

@@ -44,7 +44,6 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * Integration tests for the {@link EventResource} REST controller.
  */
-@WithMockUser
 @ExtendWith(MockitoExtension.class)
 class EventResourceIT extends AbstractApplicationContextAwareIT {
 
@@ -106,7 +105,7 @@ class EventResourceIT extends AbstractApplicationContextAwareIT {
         } else {
             section = TestUtil.findAll(em, Section.class).get(0);
         }
-        event.setSections(Set.of(section));
+        event.setSection(section);
 
         return event;
     }
@@ -131,7 +130,7 @@ class EventResourceIT extends AbstractApplicationContextAwareIT {
         } else {
             section = TestUtil.findAll(em, Section.class).get(0);
         }
-        event.setSections(Set.of(section));
+        event.setSection(section);
 
         return event;
     }
@@ -148,9 +147,9 @@ class EventResourceIT extends AbstractApplicationContextAwareIT {
         Invitation invitation = InvitationResourceIT
             .createEntity(em)
             .accepted(Boolean.TRUE)
-            .project(event.getSections().toArray(new Section[1])[0].getLocation().getProject())
+            .project(event.getSection().getLocation().getProject())
             .user(user)
-            .role(roleRepository.roleAdmin());
+            .role(roleRepository.roleContributor());
         em.persist(invitation);
 
         em.flush();
@@ -272,7 +271,7 @@ class EventResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
-    void getAllEventsDeniedForUsers() throws Exception {
+    void getAllEventsForbiddenForUsers() throws Exception {
         // Initialize the database
         eventRepository.saveAndFlush(event);
 

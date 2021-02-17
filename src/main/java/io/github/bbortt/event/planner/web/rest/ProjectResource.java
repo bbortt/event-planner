@@ -96,19 +96,21 @@ public class ProjectResource {
     /**
      * {@code GET  /projects} : get all the projects.
      *
-     * @param loadAll  loads projects for current user by default.
+     * @param loadAll loads projects for current user by default.
      * @param pageable the pagination information.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of projects in body.
      */
     @GetMapping("/projects")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<Project>> getProjects(
+        @RequestParam(name = "loadArchived", required = false) Optional<Boolean> loadArchived,
         @RequestParam(name = "loadAll", required = false) Optional<Boolean> loadAll,
         Pageable pageable
     ) {
-        log.debug("REST request to get a page of Projects");
+        log.debug("REST request to get a page of Projects: { loadArchived: {}, loadAll: {} }", loadArchived, loadAll);
 
-        Page<Project> page = projectService.findMineOrAll(loadAll.orElse(false), pageable);
+        Page<Project> page = projectService.findMineOrAllByArchived(loadAll.orElse(false), loadArchived.orElse(false), pageable);
+
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -144,11 +146,25 @@ public class ProjectResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/projects/{id}")
-    @PreAuthorize("hasAnyRole(\"" + AuthoritiesConstants.ADMIN + "\")")
+    @PreAuthorize("@projectService.hasAccessToProject(#id, \"" + RolesConstants.ADMIN + "\")")
     public ResponseEntity<Void> deleteProject(@PathVariable Long id) {
         log.debug("REST request to delete Project : {}", id);
         String name = projectService.findNameByProjectId(id).orElseThrow(EntityNotFoundException::new);
         projectService.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, name)).build();
+    }
+
+    /**
+     * {@code PUT  /projects/:id/archive} : archive the "id" project.
+     *
+     * @param id the id of the project to archive.
+     * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
+     */
+    @PutMapping("/projects/{id}/archive")
+    @PreAuthorize("@projectService.hasAccessToProject(#id, \"" + RolesConstants.ADMIN + "\")")
+    public ResponseEntity<Void> archiveProject(@PathVariable Long id) {
+        log.debug("REST request to archive Project : {}", id);
+        projectService.archive(id);
+        return ResponseEntity.noContent().build();
     }
 }

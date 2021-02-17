@@ -4,7 +4,7 @@
         <small jhiTranslate="eventPlannerApp.project.home.screenplayLabel">Screenplay</small>
 
         <button id="jh-settings-{{project?.id}}"
-                *appHasAnyRole="{ projectId: project?.id!, roles: adminRoles}"
+                *appHasAnyRole="{ projectId: project?.id!, roles: adminRoles }"
                 [routerLink]="['/project', project?.id, 'admin']"
                 class="btn btn-negative btn-gray float-right clearfix">
             <fa-icon [icon]="faCog"></fa-icon>

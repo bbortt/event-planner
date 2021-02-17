@@ -7,20 +7,6 @@
                                    id="projects-clientside-filter"
                                    (valueChange)="filterData($event)"></app-clientside-filter>
 
-            <button *jhiHasAnyAuthority="authorityAdmin" [ngSwitch]="showAllProjects"
-                    id="btn-show-all-projects"
-                    class="btn btn-negative btn-gray" (click)="switchShowAllProjects()">
-                <fa-icon icon="eye"></fa-icon>
-                <span *ngSwitchCase="false"
-                      jhiTranslate="eventPlannerApp.project.mine.enableAllLabel">
-                    Show all projects
-                </span>
-                <span *ngSwitchCase="true"
-                      jhiTranslate="eventPlannerApp.project.mine.disableAllLabel">
-                    Show my projects
-                </span>
-            </button>
-
             <button id="jh-create-entity" [routerLink]="[{outlets: {modal: ['projects', 'new']}}]"
                     class="btn btn-negative btn-green jh-create-entity create-project">
                 <fa-icon icon="plus"></fa-icon>
@@ -30,6 +16,30 @@
             </button>
         </div>
     </h2>
+
+    <form name="filterForm" role="form" novalidate
+          class="project-filter d-flex justify-content-end">
+        <div class="form-check col-xl-2 col-md-3 col-sm-4 col-sx-6">
+            <label for="field_archived" class="float-right">
+                <input type="checkbox" name="archived" id="field_archived"
+                       class="form-check-input" [(ngModel)]="showArchivedProjects"
+                       (change)="reset()" />
+                <span jhiTranslate="eventPlannerApp.project.mine.showArchived">Show archived</span>
+            </label>
+        </div>
+
+        <div *jhiHasAnyAuthority="authorityAdmin"
+             class="form-check col-xl-2 col-md-3 col-sm-4 col-sx-6">
+            <label for="field_showAll" class="float-right clearfix">
+                <input type="checkbox" name="showAll" id="field_showAll"
+                       class="form-check-input" [(ngModel)]="showAllProjects" (change)="reset()" />
+                <span
+                    jhiTranslate="eventPlannerApp.project.mine.adminView">Administrative View</span>
+            </label>
+        </div>
+    </form>
+
+    <br />
 
     <jhi-alert-error></jhi-alert-error>
 
@@ -41,58 +51,70 @@
         <span jhiTranslate="eventPlannerApp.project.home.notFound">No projects found</span>
     </div>
 
-    <div id="entities" infinite-scroll (scrolled)="loadPage(page + 1)"
+    <div id="entities" infinite-scroll (scrolled)="loadNextPage()"
          [infiniteScrollDisabled]="page >= links['last']" [infiniteScrollDistance]="0">
         <div *ngFor="let projectRow of filteredProjects" class="row justify-content-center">
             <div *ngFor="let project of projectRow;trackBy: trackId"
                  class="project-card col-xs-12 col-sm-4">
-                <div *ngIf="project.id">
-                    <div
-                        *appHasAnyRole="{ projectId: project.id, roles: adminRoles}; else readOnlyProjectCard"
-                        class="project-card-content d-flex flex-column">
-                        <h2>{{project.name}}</h2>
-                        <div class="project-card-description mb-auto">
-                            <i>
-                                {{project.description ? project.description
-                                : 'eventPlannerApp.project.mine.noDescription' | translate}}
-                            </i>
-                        </div>
-
-                        <div class="project-card-navigation">
-                            <div class="btn-group">
-                                <button id="jh-screenplay-{{project.id}}"
-                                        [routerLink]="['project', project.id, 'screenplay']"
-                                        class="btn btn-negative btn-gray">
-                                    <fa-icon [icon]="faBook"></fa-icon>
-                                    <span class="d-sm-none d-lg-inline"
-                                          jhiTranslate="eventPlannerApp.project.home.screenplayLabel">
-                                        Screenplay
-                                    </span>
-                                </button>
-
-                                <button id="jh-settings-{{project.id}}"
-                                        [routerLink]="['project', project.id, 'admin']"
-                                        class="btn btn-negative btn-gray">
-                                    <fa-icon [icon]="faCog"></fa-icon>
-                                    <span class="d-sm-none d-lg-inline"
-                                          jhiTranslate="eventPlannerApp.project.home.settingsLabel">
-                                        Settings
-                                    </span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <ng-template #readOnlyProjectCard>
-                        <a [routerLink]="['/project', project.id, 'screenplay']">
-                            <div class="project-card-content">
-                                <h2>{{project.name}}</h2>
-                                <div class="project-card-description">
+                <div *ngIf="project.id" class="h-100">
+                    <div *ngIf="!project.archived; else archivedProjectCard" class="h-100">
+                        <div
+                            *appHasAnyRole="{ projectId: project.id, roles: adminRoles }; else readOnlyProjectCard"
+                            class="project-card-content d-flex flex-column">
+                            <h2>{{project.name}}</h2>
+                            <div class="project-card-description mb-auto">
+                                <i>
                                     {{project.description ? project.description
                                     : 'eventPlannerApp.project.mine.noDescription' | translate}}
+                                </i>
+                            </div>
+
+                            <div class="project-card-navigation">
+                                <div class="btn-group">
+                                    <button id="jh-screenplay-{{project.id}}"
+                                            [routerLink]="['project', project.id, 'screenplay']"
+                                            class="btn btn-negative btn-gray">
+                                        <fa-icon [icon]="faBook"></fa-icon>
+                                        <span class="d-sm-none d-lg-inline"
+                                              jhiTranslate="eventPlannerApp.project.home.screenplayLabel">
+                                        Screenplay
+                                    </span>
+                                    </button>
+
+                                    <button id="jh-settings-{{project.id}}"
+                                            [routerLink]="['project', project.id, 'admin']"
+                                            class="btn btn-negative btn-gray">
+                                        <fa-icon [icon]="faCog"></fa-icon>
+                                        <span class="d-sm-none d-lg-inline"
+                                              jhiTranslate="eventPlannerApp.project.home.settingsLabel">
+                                        Settings
+                                    </span>
+                                    </button>
                                 </div>
                             </div>
-                        </a>
+                        </div>
+
+                        <ng-template #readOnlyProjectCard>
+                            <a [routerLink]="['/project', project.id, 'screenplay']">
+                                <div class="project-card-content d-flex flex-column">
+                                    <h2>{{project.name}}</h2>
+                                    <div class="project-card-description">
+                                        {{project.description ? project.description
+                                        : 'eventPlannerApp.project.mine.noDescription' | translate}}
+                                    </div>
+                                </div>
+                            </a>
+                        </ng-template>
+                    </div>
+
+                    <ng-template #archivedProjectCard>
+                        <div class="project-card-content disabled d-flex flex-column" >
+                            <h2>{{project.name}}</h2>
+                            <div class="project-card-description">
+                                {{project.description ? project.description
+                                : 'eventPlannerApp.project.mine.noDescription' | translate}}
+                            </div>
+                        </div>
                     </ng-template>
                 </div>
             </div>
@@ -100,7 +122,7 @@
     </div>
 
     <div class="row justify-content-center">
-        <button class="btn btn-negative btn-blue" (click)="loadPage(page + 1)"
+        <button class="btn btn-negative btn-blue" (click)="loadNextPage()"
                 [disabled]="!loadMoreButtonEnabled">
             <fa-icon [icon]="faArrowDown"></fa-icon>&nbsp;
             <span jhiTranslate="eventPlannerApp.project.mine.loadMore">

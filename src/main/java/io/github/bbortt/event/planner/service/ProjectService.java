@@ -12,6 +12,7 @@ import io.github.bbortt.event.planner.security.SecurityUtils;
 import io.github.bbortt.event.planner.service.dto.CreateProjectDTO;
 import io.github.bbortt.event.planner.service.dto.UserDTO;
 import io.github.bbortt.event.planner.service.exception.EntityNotFoundException;
+import io.github.bbortt.event.planner.service.exception.ForbiddenRequestException;
 import io.github.bbortt.event.planner.service.exception.IdMustBePresentException;
 import java.util.Collections;
 import java.util.Optional;
@@ -56,6 +57,43 @@ public class ProjectService {
     }
 
     /**
+     * Create project with properties from DTO.
+     *
+     * @param createProjectDTO crate project DTO.
+     * @return saved project.
+     */
+    @Transactional
+    public Project create(CreateProjectDTO createProjectDTO) {
+        Project project = new Project()
+            .name(createProjectDTO.getName())
+            .description(createProjectDTO.getDescription())
+            .startTime(createProjectDTO.getStartTime())
+            .endTime(createProjectDTO.getEndTime());
+
+        if (project.getStartTime().isAfter(project.getEndTime())) {
+            throw new ConstraintViolationProblem(
+                Status.BAD_REQUEST,
+                Collections.singletonList(new Violation("endTime", "endTime may not occur before startTime!"))
+            );
+        }
+
+        project = projectRepository.save(project);
+
+        User userFromDto = userFromDto(createProjectDTO.getUser());
+        Invitation invitation = new Invitation()
+            .email(userFromDto.getEmail())
+            .user(userFromDto)
+            .project(project)
+            .role(roleRepository.roleAdmin())
+            .accepted(true);
+        invitationRepository.save(invitation);
+
+        return projectRepository
+            .findById(project.getId())
+            .orElseThrow(() -> new IllegalArgumentException("Error while persisting project!"));
+    }
+
+    /**
      * Save a project.
      *
      * @param project the entity to save.
@@ -68,27 +106,27 @@ public class ProjectService {
     }
 
     /**
-     * Get all the projects.
+     * Get all the projects which are not archived.
      *
      * @param pageable the pagination information.
      * @return the list of entities.
      */
     @Transactional(readOnly = true)
-    public Page<Project> findMineOrAll(boolean loadAll, Pageable pageable) {
-        if (loadAll) {
+    public Page<Project> findMineOrAllByArchived(boolean all, boolean archived, Pageable pageable) {
+        if (all) {
             if (!SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.ADMIN)) {
-                throw new IllegalArgumentException("You're not allowed to see all projects!");
+                throw new ForbiddenRequestException("You're not allowed to see all projects!");
             }
 
-            log.debug("Request to get all Projects");
-            return projectRepository.findAll(pageable);
+            log.debug("Request to get all Projects: { archived: {} }", archived);
+            return projectRepository.findAllByArchived(archived, pageable);
         }
 
         String login = SecurityUtils
             .getCurrentUserLogin()
             .orElseThrow(() -> new IllegalArgumentException("Cannot find current user login!"));
         log.debug("Request to get Projects for user {}", login);
-        return projectRepository.findMine(login, pageable);
+        return projectRepository.findMineByArchived(login, archived, pageable);
     }
 
     /**
@@ -127,40 +165,16 @@ public class ProjectService {
     }
 
     /**
-     * Create project with properties from DTO.
+     * Archive the project by id.
      *
-     * @param createProjectDTO crate project DTO.
-     * @return saved project.
+     * @param id the id of the entity.
      */
     @Transactional
-    public Project create(CreateProjectDTO createProjectDTO) {
-        Project project = new Project()
-            .name(createProjectDTO.getName())
-            .description(createProjectDTO.getDescription())
-            .startTime(createProjectDTO.getStartTime())
-            .endTime(createProjectDTO.getEndTime());
-
-        if (project.getStartTime().isAfter(project.getEndTime())) {
-            throw new ConstraintViolationProblem(
-                Status.BAD_REQUEST,
-                Collections.singletonList(new Violation("endTime", "endTime may not occur before startTime!"))
-            );
+    public void archive(Long id) {
+        log.debug("Request to archive Project : {}", id);
+        if (projectRepository.archive(id) == 0) {
+            throw new IllegalArgumentException("Unable to archive Project!");
         }
-
-        project = projectRepository.save(project);
-
-        User userFromDto = userFromDto(createProjectDTO.getUser());
-        Invitation invitation = new Invitation()
-            .email(userFromDto.getEmail())
-            .user(userFromDto)
-            .project(project)
-            .role(roleRepository.roleAdmin())
-            .accepted(true);
-        invitationRepository.save(invitation);
-
-        return projectRepository
-            .findById(project.getId())
-            .orElseThrow(() -> new IllegalArgumentException("Error while persisting project!"));
     }
 
     @Transactional(readOnly = true)

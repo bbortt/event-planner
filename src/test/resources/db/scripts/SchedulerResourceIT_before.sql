@@ -24,15 +24,10 @@ INSERT INTO section(name, location_id)
 VALUES ('SchedulerResourceIT-section',
         (SELECT id FROM location WHERE name = 'SchedulerResourceIT-location'));
 
-INSERT INTO event(name, start_time, end_time, responsibility_id, jhi_user_id)
+INSERT INTO event(name, start_time, end_time, section_id, responsibility_id, jhi_user_id)
 VALUES ('SchedulerResourceIT-event-1', now(), now(),
+        (SELECT id FROM section WHERE name = 'SchedulerResourceIT-section'),
         (SELECT id FROM responsibility WHERE name = 'SchedulerResourceIT-responsibility'), null),
-       ('SchedulerResourceIT-event-2', now(), now(), null,
-        (SELECT id FROM jhi_user WHERE login = 'SchedulerResourceIT-user'));
-
-INSERT INTO section_has_events (section_id, event_id)
-VALUES ((SELECT id FROM section WHERE name = 'SchedulerResourceIT-section'),
-        (SELECT id FROM event WHERE name = 'SchedulerResourceIT-event-1')),
-       ((SELECT id FROM section WHERE name = 'SchedulerResourceIT-section'),
-        (SELECT id FROM event WHERE name = 'SchedulerResourceIT-event-2'));
-
+       ('SchedulerResourceIT-event-2', now(), now(),
+        (SELECT id FROM section WHERE name = 'SchedulerResourceIT-section'),
+        null, (SELECT id FROM jhi_user WHERE login = 'SchedulerResourceIT-user'));

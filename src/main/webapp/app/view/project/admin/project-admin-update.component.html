@@ -12,7 +12,7 @@
                     <label class="form-control-label" jhiTranslate="eventPlannerApp.project.name"
                            for="field_name">Name</label>
                     <input type="text" class="form-control" name="name" id="field_name"
-                           formControlName="name" autocomplete="off"/>
+                           formControlName="name" autocomplete="off" />
                     <div
                         *ngIf="editForm.get('name')!.invalid && (editForm.get('name')!.dirty || editForm.get('name')!.touched)">
                         <small class="form-text text-danger"
@@ -40,9 +40,11 @@
                            jhiTranslate="eventPlannerApp.project.description"
                            for="field_description">Description</label>
                     <textarea type="text" class="form-control" name="description"
-                              id="field_description" formControlName="description" autocomplete="off">
+                              id="field_description" formControlName="description"
+                              autocomplete="off">
                     </textarea>
-                    <div *ngIf="editForm.get('description')!.invalid && (editForm.get('description')!.dirty || editForm.get('description')!.touched)">
+                    <div
+                        *ngIf="editForm.get('description')!.invalid && (editForm.get('description')!.dirty || editForm.get('description')!.touched)">
                         <small class="form-text text-danger"
                                *ngIf="editForm.get('description')?.errors?.maxlength"
                                jhiTranslate="entity.validation.maxlength"
@@ -50,6 +52,33 @@
                             This field cannot be longer than 300 characters.
                         </small>
                     </div>
+                </div>
+
+                <div class="form-group">
+                    <ngb-accordion id="project-update-advanced-section">
+                        <ngb-panel>
+                            <ng-template ngbPanelTitle>
+                                <div class="d-flex align-items-left advanced-header">
+                                    <span jhiTranslate="eventPlannerApp.project.action.advanced">Advanced</span>
+                                </div>
+                            </ng-template>
+                            <ng-template ngbPanelContent>
+                                <button type="button" id="archive-project"
+                                        class="btn btn-sm btn-negative btn-gray"
+                                        (click)="archive()">
+                                    <fa-icon [icon]="faArchive"></fa-icon>&nbsp;<span
+                                    jhiTranslate="eventPlannerApp.project.action.archive">Archive</span>
+                                </button>
+
+                                <button type="button" id="delete-project"
+                                        class="btn btn-sm btn-negative btn-red"
+                                        (click)="delete()">
+                                    <fa-icon icon="times"></fa-icon>&nbsp;<span
+                                    jhiTranslate="entity.action.delete">Delete</span>
+                                </button>
+                            </ng-template>
+                        </ngb-panel>
+                    </ngb-accordion>
                 </div>
             </div>
 

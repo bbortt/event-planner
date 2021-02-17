@@ -232,7 +232,7 @@ class ProjectResourceIT extends AbstractApplicationContextAwareIT {
             .accepted(Boolean.TRUE)
             .project(project)
             .user(user)
-            .role(roleRepository.roleAdmin());
+            .role(roleRepository.roleContributor());
         em.persist(invitation);
 
         // Get the project
@@ -245,6 +245,95 @@ class ProjectResourceIT extends AbstractApplicationContextAwareIT {
             .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION))
             .andExpect(jsonPath("$.startTime").value(sameInstant(DEFAULT_START_TIME)))
             .andExpect(jsonPath("$.endTime").value(sameInstant(DEFAULT_END_TIME)));
+    }
+
+    @Test
+    @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
+    void getMyProject() throws Exception {
+        // Initialize the database
+        projectRepository.saveAndFlush(project);
+        Invitation invitation = InvitationResourceIT
+            .createEntity(em)
+            .accepted(Boolean.TRUE)
+            .project(project)
+            .user(user)
+            .role(roleRepository.roleContributor());
+        em.persist(invitation);
+
+        // Get the project
+        restProjectMockMvc
+            .perform(get("/api/projects"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.length()").value(1))
+            .andExpect(jsonPath("$[0].id").value(project.getId().intValue()));
+    }
+
+    @Test
+    @Transactional
+    @WithMockUser(value = TEST_ADMIN_LOGIN, roles = { RolesConstants.ADMIN })
+    void getAllProjects() throws Exception {
+        // Initialize the database
+        projectRepository.saveAndFlush(createEntity(em));
+        projectRepository.saveAndFlush(createUpdatedEntity(em));
+
+        // Get the project
+        restProjectMockMvc
+            .perform(get("/api/projects?loadAll=true"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.length()").value(2));
+    }
+
+    @Test
+    @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
+    void getArchivedProjects() throws Exception {
+        // Initialize the database
+        Project archivedProject = createEntity(em).archived(Boolean.TRUE);
+        projectRepository.saveAndFlush(archivedProject);
+        Invitation invitation1 = InvitationResourceIT
+            .createEntity(em)
+            .accepted(Boolean.TRUE)
+            .project(archivedProject)
+            .user(user)
+            .role(roleRepository.roleContributor());
+        em.persist(invitation1);
+
+        Project activeProject = createUpdatedEntity(em);
+        projectRepository.saveAndFlush(activeProject);
+        Invitation invitation2 = InvitationResourceIT
+            .createEntity(em)
+            .accepted(Boolean.TRUE)
+            .project(activeProject)
+            .user(user)
+            .role(roleRepository.roleContributor());
+        em.persist(invitation2);
+
+        // Get the project
+        restProjectMockMvc
+            .perform(get("/api/projects?loadArchived=true"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.length()").value(1))
+            .andExpect(jsonPath("$[0].id").value(archivedProject.getId().intValue()));
+    }
+
+    @Test
+    @Transactional
+    @WithMockUser(value = TEST_ADMIN_LOGIN, roles = { RolesConstants.ADMIN })
+    void getAllArchivedProjects() throws Exception {
+        // Initialize the database
+        projectRepository.saveAndFlush(createEntity(em).archived(Boolean.TRUE));
+        projectRepository.saveAndFlush(createUpdatedEntity(em).archived(Boolean.TRUE));
+
+        // Get the project
+        restProjectMockMvc
+            .perform(get("/api/projects?loadAll=true&loadArchived=true"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.length()").value(2));
     }
 
     @Test
@@ -301,24 +390,96 @@ class ProjectResourceIT extends AbstractApplicationContextAwareIT {
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
     void updateNonExistingProject() throws Exception {
-        int databaseSizeBeforeUpdate = projectRepository.findAll().size();
-
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restProjectMockMvc
             .perform(put("/api/projects").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(project)))
             .andExpect(status().isBadRequest());
-
-        // Validate the Project in the database
-        List<Project> projectList = projectRepository.findAll();
-        assertThat(projectList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
-    @WithMockUser(username = TEST_ADMIN_LOGIN, roles = { RolesConstants.ADMIN })
+    @WithMockUser(TEST_USER_LOGIN)
+    void updateProjectForbiddenForContributors() throws Exception {
+        // Initialize the database
+        projectService.save(project);
+        Invitation invitation = InvitationResourceIT
+            .createEntity(em)
+            .accepted(Boolean.TRUE)
+            .project(project)
+            .user(user)
+            .role(roleRepository.roleContributor());
+        em.persist(invitation);
+
+        Project updatedProject = project.name(UPDATED_NAME);
+
+        restProjectMockMvc
+            .perform(
+                put("/api/projects").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(updatedProject))
+            )
+            .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
+    void archiveProject() throws Exception {
+        // Initialize the database
+        projectService.save(project);
+        Invitation invitation = InvitationResourceIT
+            .createEntity(em)
+            .accepted(Boolean.TRUE)
+            .project(project)
+            .user(user)
+            .role(roleRepository.roleAdmin());
+        em.persist(invitation);
+
+        int databaseSizeBeforeArchive = projectRepository.findAll().size();
+
+        // Delete the project
+        restProjectMockMvc
+            .perform(put("/api/projects/{id}/archive", project.getId()).accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNoContent());
+
+        em.refresh(project);
+        assertThat(project.isArchived()).isTrue();
+    }
+
+    @Test
+    @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
+    void archiveProjectForbiddenForRoleSecretary() throws Exception {
+        // Initialize the database
+        projectService.save(project);
+        Invitation invitation = InvitationResourceIT
+            .createEntity(em)
+            .accepted(Boolean.TRUE)
+            .project(project)
+            .user(user)
+            .role(roleRepository.roleSecretary());
+        em.persist(invitation);
+
+        // Disconnect from session
+        em.detach(project);
+
+        // Delete the project
+        restProjectMockMvc
+            .perform(put("/api/projects/{id}/archive", project.getId()).accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     void deleteProject() throws Exception {
         // Initialize the database
         projectService.save(project);
+        Invitation invitation = InvitationResourceIT
+            .createEntity(em)
+            .accepted(Boolean.TRUE)
+            .project(project)
+            .user(user)
+            .role(roleRepository.roleAdmin());
+        em.persist(invitation);
 
         int databaseSizeBeforeDelete = projectRepository.findAll().size();
 
@@ -335,9 +496,16 @@ class ProjectResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
-    void deleteProjectDeniedForUsers() throws Exception {
+    void deleteProjectForbiddenForRoleSecretary() throws Exception {
         // Initialize the database
         projectService.save(project);
+        Invitation invitation = InvitationResourceIT
+            .createEntity(em)
+            .accepted(Boolean.TRUE)
+            .project(project)
+            .user(user)
+            .role(roleRepository.roleSecretary());
+        em.persist(invitation);
 
         // Delete the project
         restProjectMockMvc.perform(delete("/api/projects/{id}", project.getId())).andExpect(status().isForbidden());

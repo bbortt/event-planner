@@ -15,10 +15,10 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface EventRepository extends JpaRepository<Event, Long> {
-    @Query(value = "SELECT DISTINCT e FROM Event e LEFT JOIN FETCH e.sections", countQuery = "SELECT COUNT(DISTINCT e) FROM Event e")
+    @Query(value = "SELECT DISTINCT e FROM Event e LEFT JOIN FETCH e.section", countQuery = "SELECT COUNT(DISTINCT e) FROM Event e")
     Page<Event> findAllWithEagerRelationships(Pageable pageable);
 
-    @Query("SELECT e FROM Event e LEFT JOIN FETCH e.sections WHERE e.id =:id")
+    @Query("SELECT e FROM Event e LEFT JOIN FETCH e.section WHERE e.id =:id")
     Optional<Event> findOneWithEagerRelationships(@Param("id") Long id);
 
     @Query("SELECT e.name FROM Event e WHERE e.id = :eventId")
@@ -30,11 +30,4 @@ public interface EventRepository extends JpaRepository<Event, Long> {
         value = "DELETE FROM event WHERE id IN (SELECT e.id FROM event e LEFT JOIN section_has_events se ON e.id = se.event_id WHERE se.section_id = :sectionId)"
     )
     void deleteAllBySectionId(@Param("sectionId") Long sectionId);
-
-    @Modifying
-    @Query(
-        nativeQuery = true,
-        value = "DELETE FROM event WHERE id IN (SELECT e.id FROM event e LEFT JOIN section_has_events se ON e.id = se.event_id LEFT JOIN section s ON se.section_id = s.id WHERE s.location_id = :locationId)"
-    )
-    void deleteAllByLocationId(@Param("locationId") Long locationId);
 }

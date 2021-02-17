@@ -24,13 +24,11 @@ public class SectionService {
     private final Logger log = LoggerFactory.getLogger(SectionService.class);
 
     private final ProjectService projectService;
-    private final EventService eventService;
 
     private final SectionRepository sectionRepository;
 
     public SectionService(ProjectService projectService, EventService eventService, SectionRepository sectionRepository) {
         this.projectService = projectService;
-        this.eventService = eventService;
         this.sectionRepository = sectionRepository;
     }
 
@@ -108,19 +106,7 @@ public class SectionService {
     @Transactional
     public void delete(Long id) {
         log.debug("Request to delete Section : {}", id);
-        eventService.deleteAllBySectionId(id);
         sectionRepository.deleteById(id);
-    }
-
-    /**
-     * Delete all Sections corresponding to a Location.
-     *
-     * @param locationId the Location identifier.
-     */
-    @Transactional
-    public void deleteAllByLocationId(Long locationId) {
-        log.debug("Request to delete all Sections by Location : {}", locationId);
-        sectionRepository.deleteAllByLocationId(locationId);
     }
 
     /**

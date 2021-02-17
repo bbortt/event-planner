@@ -120,17 +120,6 @@ public class EventService {
     }
 
     /**
-     * Delete all Events corresponding to a Location.
-     *
-     * @param locationId the Location identifier.
-     */
-    @Transactional
-    public void deleteAllByLocationId(Long locationId) {
-        log.debug("Request to delete all Event by Location : {}", locationId);
-        eventRepository.deleteAllByLocationId(locationId);
-    }
-
-    /**
      * Checks if the current user has access to the `Project` linked to the given `Event`, identified by id. The project access must be given by any of the `roles`. Example usage: `@PreAuthorize("@eventService.hasAccessToEvent(#event, 'ADMIN', 'SECRETARY')")`
      *
      * @param eventId the id of the location with a linked project to check.
@@ -157,11 +146,6 @@ public class EventService {
      */
     @PreAuthorize("isAuthenticated()")
     public boolean hasAccessToEvent(Event event, String... roles) {
-        return event
-            .getSections()
-            .stream()
-            .map(section -> sectionRepository.findById(section.getId()))
-            .flatMap(Optional::stream)
-            .anyMatch(section -> projectService.hasAccessToProject(section.getLocation().getProject(), roles));
+        return projectService.hasAccessToProject(event.getSection().getLocation().getProject(), roles);
     }
 }

@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
@@ -52,14 +53,8 @@ public class Section implements Serializable {
     @JsonIgnoreProperties(value = "sections", allowSetters = true)
     private Location location;
 
-    @ManyToMany
-    @JoinTable(
-        name = "section_has_events",
-        joinColumns = { @JoinColumn(name = "section_id", referencedColumnName = "id") },
-        inverseJoinColumns = { @JoinColumn(name = "event_id", referencedColumnName = "id") }
-    )
-    @BatchSize(size = 20)
-    @JsonIgnoreProperties(value = "sections", allowSetters = true)
+    @OneToMany(mappedBy = "section")
+    @JsonIgnoreProperties(value = "section", allowSetters = true)
     private Set<Event> events = new HashSet<>();
 
     @ManyToOne
@@ -120,13 +115,13 @@ public class Section implements Serializable {
 
     public Section addEvent(Event event) {
         this.events.add(event);
-        event.getSections().add(this);
+        event.setSection(this);
         return this;
     }
 
     public Section removeEvent(Event event) {
         this.events.remove(event);
-        event.getSections().remove(this);
+        event.setSection(this);
         return this;
     }
 
