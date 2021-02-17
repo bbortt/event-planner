@@ -62,6 +62,7 @@ class SectionResourceIT extends AbstractApplicationContextAwareIT {
     private MockMvc restSectionMockMvc;
 
     private Section section;
+    private Invitation invitation;
 
     /**
      * Create an entity for this test.
@@ -112,13 +113,13 @@ class SectionResourceIT extends AbstractApplicationContextAwareIT {
         user.setAuthorities(Collections.singleton(authorityRepository.findById(AuthoritiesConstants.USER).get()));
         em.persist(user);
 
-        Invitation invitation = InvitationResourceIT
-            .createEntity(em)
-            .accepted(Boolean.TRUE)
-            .project(section.getLocation().getProject())
-            .user(user)
-            .role(roleRepository.roleAdmin());
-        em.persist(invitation);
+        invitation =
+            InvitationResourceIT
+                .createEntity(em)
+                .accepted(Boolean.TRUE)
+                .project(section.getLocation().getProject())
+                .user(user)
+                .role(roleRepository.roleContributor());
 
         em.flush();
     }
@@ -127,6 +128,8 @@ class SectionResourceIT extends AbstractApplicationContextAwareIT {
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
     void createSection() throws Exception {
+        em.persist(invitation.role(roleRepository.roleAdmin()));
+
         sectionRepository.deleteAll();
 
         // Create the Section
@@ -145,6 +148,8 @@ class SectionResourceIT extends AbstractApplicationContextAwareIT {
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
     void createSectionWithExistingId() throws Exception {
+        em.persist(invitation.role(roleRepository.roleAdmin()));
+
         int databaseSizeBeforeCreate = sectionRepository.findAll().size();
 
         // Create the Section with an existing ID
@@ -158,6 +163,18 @@ class SectionResourceIT extends AbstractApplicationContextAwareIT {
         // Validate the Section in the database
         List<Section> sectionList = sectionRepository.findAll();
         assertThat(sectionList).hasSize(databaseSizeBeforeCreate);
+    }
+
+    @Test
+    @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
+    void createSectionForbiddenForRoleContributor() throws Exception {
+        em.persist(invitation);
+
+        // An entity with an existing ID cannot be created, so this API call must fail
+        restSectionMockMvc
+            .perform(post("/api/sections").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(section)))
+            .andExpect(status().isForbidden());
     }
 
     @Test
@@ -197,7 +214,7 @@ class SectionResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
-    void getAllSectionsDeniedForUsers() throws Exception {
+    void getAllSectionsForbiddenForAuthorityUser() throws Exception {
         // Initialize the database
         sectionRepository.saveAndFlush(section);
 
@@ -209,6 +226,8 @@ class SectionResourceIT extends AbstractApplicationContextAwareIT {
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
     void getSection() throws Exception {
+        em.persist(invitation.role(roleRepository.roleAdmin()));
+
         // Initialize the database
         sectionRepository.saveAndFlush(section);
 
@@ -232,7 +251,19 @@ class SectionResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
+    void getSectionForbiddenForRoleContributor() throws Exception {
+        em.persist(invitation);
+
+        // Get the section
+        restSectionMockMvc.perform(get("/api/sections/{id}", section.getId())).andExpect(status().isForbidden());
+    }
+
+    @Test
+    @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     void updateSection() throws Exception {
+        em.persist(invitation.role(roleRepository.roleAdmin()));
+
         // Initialize the database
         sectionService.save(section);
 
@@ -265,6 +296,8 @@ class SectionResourceIT extends AbstractApplicationContextAwareIT {
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
     void updateNonExistingSection() throws Exception {
+        em.persist(invitation.role(roleRepository.roleAdmin()));
+
         int databaseSizeBeforeUpdate = sectionRepository.findAll().size();
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
@@ -280,7 +313,25 @@ class SectionResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
+    void updateSectionForbiddenForRoleContributor() throws Exception {
+        em.persist(invitation);
+
+        // Update the section
+        Section updatedSection = createUpdatedEntity(em);
+
+        restSectionMockMvc
+            .perform(
+                put("/api/sections").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(updatedSection))
+            )
+            .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     void deleteSection() throws Exception {
+        em.persist(invitation.role(roleRepository.roleAdmin()));
+
         // Initialize the database
         sectionService.save(section);
 
@@ -299,7 +350,24 @@ class SectionResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
+    void deleteSectionForbiddenForRoleContributor() throws Exception {
+        em.persist(invitation);
+
+        // Initialize the database
+        sectionService.save(section);
+
+        // Delete the section
+        restSectionMockMvc
+            .perform(delete("/api/sections/{id}", section.getId()).accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     void isNameExistingInProject() throws Exception {
+        em.persist(invitation.role(roleRepository.roleAdmin()));
+
         restSectionMockMvc
             .perform(
                 post("/api/sections/location/{locationId}/name-exists", section.getLocation().getId())
@@ -320,5 +388,20 @@ class SectionResourceIT extends AbstractApplicationContextAwareIT {
             )
             .andExpect(status().isOk())
             .andExpect(jsonPath("$").value(Boolean.TRUE));
+    }
+
+    @Test
+    @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
+    void isNameExistingInProjectForbiddenForRoleContributor() throws Exception {
+        em.persist(invitation);
+
+        restSectionMockMvc
+            .perform(
+                post("/api/sections/location/{locationId}/name-exists", section.getLocation().getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(section.getName())
+            )
+            .andExpect(status().isForbidden());
     }
 }

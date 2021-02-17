@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Sql({ "classpath:db/scripts/InvitationServiceIT_before.sql" })
 @Sql(value = { "classpath:db/scripts/InvitationServiceIT_after.sql" }, executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
-public class InvitationServiceIT extends AbstractApplicationContextAwareIT {
+class InvitationServiceIT extends AbstractApplicationContextAwareIT {
 
     @Autowired
     InvitationRepository invitationRepository;
@@ -21,7 +21,7 @@ public class InvitationServiceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    public void invitationNotAcceptedElderThan14DaysDeleted() {
+    void invitationNotAcceptedElderThan14DaysDeleted() {
         int sizeBeforeDeletion = invitationRepository.findAll().size();
 
         invitationService.removeNotAcceptedInvitations();

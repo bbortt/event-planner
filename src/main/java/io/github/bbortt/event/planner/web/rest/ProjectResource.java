@@ -146,7 +146,7 @@ public class ProjectResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/projects/{id}")
-    @PreAuthorize("hasAnyRole(\"" + AuthoritiesConstants.ADMIN + "\")")
+    @PreAuthorize("@projectService.hasAccessToProject(#id, \"" + RolesConstants.ADMIN + "\")")
     public ResponseEntity<Void> deleteProject(@PathVariable Long id) {
         log.debug("REST request to delete Project : {}", id);
         String name = projectService.findNameByProjectId(id).orElseThrow(EntityNotFoundException::new);
@@ -161,7 +161,7 @@ public class ProjectResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @PutMapping("/projects/{id}/archive")
-    @PreAuthorize("hasAnyRole(\"" + AuthoritiesConstants.ADMIN + "\")")
+    @PreAuthorize("@projectService.hasAccessToProject(#id, \"" + RolesConstants.ADMIN + "\")")
     public ResponseEntity<Void> archiveProject(@PathVariable Long id) {
         log.debug("REST request to archive Project : {}", id);
         projectService.archive(id);

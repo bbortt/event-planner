@@ -17,6 +17,12 @@ public interface RoleRepository extends JpaRepository<Role, String> {
     @Query("FROM Role r WHERE r.name = io.github.bbortt.event.planner.security.RolesConstants.ADMIN")
     Role roleAdmin();
 
+    @Query("FROM Role r WHERE r.name = io.github.bbortt.event.planner.security.RolesConstants.SECRETARY")
+    Role roleSecretary();
+
+    @Query("FROM Role r WHERE r.name = io.github.bbortt.event.planner.security.RolesConstants.CONTRIBUTOR")
+    Role roleContributor();
+
     @Query(
         "SELECT CASE WHEN COUNT(i) > 0 THEN TRUE ELSE FALSE END FROM Invitation i" +
         " WHERE i.accepted = true" +

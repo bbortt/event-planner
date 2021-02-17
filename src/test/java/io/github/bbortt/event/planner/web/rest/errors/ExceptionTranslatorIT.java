@@ -62,7 +62,7 @@ class ExceptionTranslatorIT extends AbstractApplicationContextAwareIT {
     }
 
     @Test
-    void testAccessDenied() throws Exception {
+    void testAccessForbidden() throws Exception {
         mockMvc
             .perform(get("/api/exception-translator-test/access-denied"))
             .andExpect(status().isForbidden())

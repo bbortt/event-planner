@@ -17,8 +17,6 @@ import { ProjectConfirmationDialogComponent } from 'app/view/project/admin/proje
 
 import { faArchive } from '@fortawesome/free-solid-svg-icons';
 
-import { ADMIN } from 'app/shared/constants/role.constants';
-
 @Component({
   selector: 'app-project-update',
   templateUrl: './project-admin-update.component.html',
@@ -26,7 +24,6 @@ import { ADMIN } from 'app/shared/constants/role.constants';
 })
 export class ProjectAdminUpdateComponent {
   faArchive = faArchive;
-  roleAdmin = ADMIN.name;
 
   project?: Project;
   isSaving = false;

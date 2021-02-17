@@ -33,7 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * Integration tests for the {@link InvitationResource} REST controller.
  */
-public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
+class InvitationResourceIT extends AbstractApplicationContextAwareIT {
 
     private static final String TEST_USER_LOGIN = "invitationresourceit-login";
     private static final String TEST_USER_EMAIL = "invitationresourceit@login";
@@ -62,8 +62,8 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
     private MockMvc restInvitationMockMvc;
 
     private User testUser;
-
     private Invitation invitation;
+    private Invitation userInvitation;
 
     /**
      * Create an entity for this test.
@@ -141,13 +141,14 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
         adminUser.setEmail(TEST_ADMIN_EMAIL);
         em.persist(adminUser);
 
-        Invitation userInvitation = InvitationResourceIT
-            .createEntity(em)
-            .accepted(Boolean.TRUE)
-            .project(invitation.getProject())
-            .user(adminUser)
-            .email(TEST_ADMIN_EMAIL)
-            .role(roleRepository.roleAdmin());
+        userInvitation =
+            InvitationResourceIT
+                .createEntity(em)
+                .accepted(Boolean.TRUE)
+                .project(invitation.getProject())
+                .user(adminUser)
+                .email(TEST_ADMIN_EMAIL)
+                .role(roleRepository.roleContributor());
         em.persist(userInvitation);
 
         em.flush();
@@ -157,6 +158,8 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
     @Transactional
     @WithMockUser(TEST_ADMIN_LOGIN)
     void createInvitation() throws Exception {
+        em.persist(userInvitation.role(roleRepository.roleAdmin()));
+
         // Create the Invitation
         restInvitationMockMvc
             .perform(
@@ -176,6 +179,8 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
     @Transactional
     @WithMockUser(TEST_ADMIN_LOGIN)
     void cannotCreateADMINInvitation() throws Exception {
+        em.persist(userInvitation.role(roleRepository.roleAdmin()));
+
         invitation.setRole(roleRepository.roleAdmin());
 
         // Create the Invitation
@@ -190,6 +195,8 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
     @Transactional
     @WithMockUser(TEST_ADMIN_LOGIN)
     void createInvitationWithExistingId() throws Exception {
+        em.persist(userInvitation.role(roleRepository.roleAdmin()));
+
         int databaseSizeBeforeCreate = invitationRepository.findAll().size();
 
         // Create the Invitation with an existing ID
@@ -210,13 +217,26 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(TEST_ADMIN_LOGIN)
+    void createInvitationForbiddenForRoleContributor() throws Exception {
+        em.persist(userInvitation);
+
+        // Create the Invitation
+        restInvitationMockMvc
+            .perform(
+                post("/api/invitations").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(invitation))
+            )
+            .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @Transactional
+    @WithMockUser(TEST_ADMIN_LOGIN)
     void checkEmailIsRequired() throws Exception {
         int databaseSizeBeforeTest = invitationRepository.findAll().size();
         // set the field null
         invitation.setEmail(null);
 
         // Create the Invitation, which fails.
-
         restInvitationMockMvc
             .perform(
                 post("/api/invitations").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(invitation))
@@ -268,6 +288,8 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
     @Transactional
     @WithMockUser(TEST_ADMIN_LOGIN)
     void getInvitation() throws Exception {
+        em.persist(userInvitation.role(roleRepository.roleAdmin()));
+
         // Initialize the database
         invitationRepository.saveAndFlush(invitation);
 
@@ -284,6 +306,19 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(TEST_ADMIN_LOGIN)
+    void getInvitationForbiddenForRoleContributor() throws Exception {
+        em.persist(userInvitation);
+
+        // Initialize the database
+        invitationRepository.saveAndFlush(invitation);
+
+        // Get the invitation
+        restInvitationMockMvc.perform(get("/api/invitations/{id}", invitation.getId())).andExpect(status().isForbidden());
+    }
+
+    @Test
+    @Transactional
+    @WithMockUser(TEST_ADMIN_LOGIN)
     void getNonExistingInvitation() throws Exception {
         // Get the invitation
         restInvitationMockMvc.perform(get("/api/invitations/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
@@ -293,6 +328,8 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
     @Transactional
     @WithMockUser(TEST_ADMIN_LOGIN)
     void updateInvitation() throws Exception {
+        em.persist(userInvitation.role(roleRepository.roleAdmin()));
+
         // Initialize the database
         invitationService.save(invitation);
 
@@ -328,6 +365,8 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
     @Transactional
     @WithMockUser(TEST_ADMIN_LOGIN)
     void updateNonExistingInvitation() throws Exception {
+        em.persist(userInvitation.role(roleRepository.roleAdmin()));
+
         int databaseSizeBeforeUpdate = invitationRepository.findAll().size();
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
@@ -343,7 +382,27 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     @WithMockUser(TEST_ADMIN_LOGIN)
+    void updateInvitationForbiddenForRoleContributor() throws Exception {
+        em.persist(userInvitation);
+
+        // Update the invitation
+        Invitation updatedInvitation = createUpdatedEntity(em);
+
+        restInvitationMockMvc
+            .perform(
+                put("/api/invitations")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(updatedInvitation))
+            )
+            .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @Transactional
+    @WithMockUser(TEST_ADMIN_LOGIN)
     void deleteInvitation() throws Exception {
+        em.persist(userInvitation.role(roleRepository.roleAdmin()));
+
         // Initialize the database
         invitationService.save(invitation);
 
@@ -357,6 +416,21 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
         // Validate the database contains one less item
         List<Invitation> invitationList = invitationRepository.findAll();
         assertThat(invitationList).hasSize(databaseSizeBeforeDelete - 1);
+    }
+
+    @Test
+    @Transactional
+    @WithMockUser(TEST_ADMIN_LOGIN)
+    void deleteInvitationForbiddenForRoleContributor() throws Exception {
+        em.persist(userInvitation);
+
+        // Initialize the database
+        invitationService.save(invitation);
+
+        // Delete the invitation
+        restInvitationMockMvc
+            .perform(delete("/api/invitations/{id}", invitation.getId()).accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isForbidden());
     }
 
     @Test
