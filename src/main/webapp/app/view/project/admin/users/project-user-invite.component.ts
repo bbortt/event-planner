@@ -64,7 +64,7 @@ export class ProjectUserInviteComponent {
       accepted: invitation.accepted,
       token: invitation.token,
       color: invitation.color ? invitation.color : DEFAULT_SCHEDULER_COLOR,
-      role: ROLES.find(role => role.name === invitation?.role?.name) || null,
+      role: ROLES.find(role => role.name === invitation?.role?.name)?.name,
       responsibility: invitation.responsibility,
       responsibilityAutocomplete: invitation.responsibility?.name,
     });
