@@ -5,9 +5,6 @@ buildscript {
         gradlePluginPortal()
         maven { url "https://repo.spring.io/plugins-release" }
     }
-    dependencies {
-        //jhipster-needle-gradle-buildscript-dependency - JHipster will add additional gradle build script plugins here
-    }
 }
 
 plugins {
@@ -16,17 +13,10 @@ plugins {
     id "idea"
     id "jacoco"
     id "org.springframework.boot"
-    id "com.google.cloud.tools.jib"
-    id "com.gorylenko.gradle-git-properties"
     id "com.github.node-gradle.node"
-    id "net.ltgt.apt-eclipse"
-    id "net.ltgt.apt-idea"
-    id "net.ltgt.apt"
     id "org.flywaydb.flyway"
     id "org.sonarqube"
-    id "io.spring.nohttp"
     id "com.github.ben-manes.versions" version "0.28.0"
-    //jhipster-needle-gradle-plugins - JHipster will add additional gradle plugins here
 }
 
 group = "io.github.bbortt.event.planner"
@@ -39,7 +29,6 @@ targetCompatibility = 11
 assert System.properties["java.specification.version"] == "1.8" || "11" || "12" || "13" || "14"
 
 apply from: "gradle/sonar.gradle"
-//jhipster-needle-gradle-apply-from - JHipster will add additional gradle scripts to be applied here
 
 if (project.hasProperty("prod")) {
     apply from: "gradle/profile_prod.gradle"
@@ -49,16 +38,6 @@ if (project.hasProperty("prod")) {
 
 if (project.hasProperty("war")) {
     apply from: "gradle/war.gradle"
-}
-
-eclipse {
-    sourceSets {
-        main {
-            java {
-                srcDirs += ["build/generated/sources/annotationProcessor/java/main"]
-            }
-        }
-    }
 }
 
 defaultTasks "bootRun"
@@ -127,20 +106,6 @@ if (!project.hasProperty("runList")) {
     project.ext.runList = "main"
 }
 
-gitProperties {
-    failOnNoGitDirectory = false
-    keys = ["git.branch", "git.commit.id.abbrev", "git.commit.id.describe"]
-}
-
-checkstyle {
-    toolVersion '${checkstyle_version}'
-    configFile file("checkstyle.xml")
-    checkstyleTest.enabled = false
-}
-nohttp {
-    source.include "build.gradle", "README.md"
-}
-
 configurations {
     providedRuntime
     implementation.exclude module: "spring-boot-starter-tomcat"
@@ -157,7 +122,6 @@ repositories {
     mavenLocal()
     mavenCentral()
     jcenter()
-    //jhipster-needle-gradle-repositories - JHipster will add additional repositories
 }
 
 dependencies {
@@ -222,7 +186,6 @@ dependencies {
     testImplementation "com.tngtech.archunit:archunit-junit5-api:${archunit_junit5_version}"
     testRuntimeOnly "com.tngtech.archunit:archunit-junit5-engine:${archunit_junit5_version}"
     testImplementation "com.h2database:h2"
-    //jhipster-needle-gradle-dependency - JHipster will add additional dependencies here
 }
 
 task cleanResources(type: Delete) {

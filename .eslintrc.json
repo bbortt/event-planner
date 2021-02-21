@@ -27,7 +27,9 @@
     "@typescript-eslint/member-ordering": [
       "error",
       {
-        "default": ["static-field", "instance-field", "constructor", "static-method", "instance-method"]
+        "vars": "all",
+        "args": "after-used",
+        "ignoreRestSiblings": false
       }
     ],
     "@typescript-eslint/no-empty-function": "off",

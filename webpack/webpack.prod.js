@@ -8,8 +8,6 @@ const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 
-const sass = require('sass');
-
 const utils = require('./utils.js');
 const commonConfig = require('./webpack.common.js');
 
