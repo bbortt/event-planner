@@ -6,7 +6,7 @@
             <div>
                 <jhi-alert-error></jhi-alert-error>
                 <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="global.form.email.label"
+                    <label class="form-control-label" jhiTranslate="eventPlannerApp.invitation.email"
                            for="field_email"></label>
                     <input type="email"
                            class="form-control"
@@ -45,39 +45,60 @@
                                   formControlName="color"></dx-color-box>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="global.form.role.label"
-                           for="field_role"></label>
-                    <input
-                        *ngIf="editForm.get('role')?.value?.name === roleProjectAdmin.name; else roleSelect"
-                        class="form-control"
-                        name="role"
-                        id="field_role"
-                        value="{{roleProjectAdmin.name}}"
-                        readOnly="true">
-                    <ng-template #roleSelect>
-                        <select formControlName="role"
-                                class="form-control"
-                                name="role"
-                                id="field_role">
-                            <option *ngFor="let role of invitationRoles"
-                                    [jhiTranslate]="role.i18nKey"
-                                    [ngValue]="role"></option>
-                        </select>
-                    </ng-template>
-                    <div
-                        *ngIf="editForm.get('role')!.invalid && editForm.get('role')!.dirty || editForm.get('role')!.touched">
-                        <small class="form-text text-danger"
-                               *ngIf="editForm.get('role')?.errors?.required"
-                               jhiTranslate="entity.validation.required">
-                        </small>
-                    </div>
+                <div
+                    *ngIf="editForm.get('role')?.value === roleProjectAdmin.name; else roleSelect"
+                    class="form-group">
+                    <label class="form-control-label" for="field_role">
+                        <span jhiTranslate="global.invitation.role">Role</span>
+
+                        <input
+                            class="form-control"
+                            name="role"
+                            id="field_role"
+                            value="{{roleProjectAdmin.name}}"
+                            readOnly="true">
+                    </label>
                 </div>
+
+                <ng-template #roleSelect>
+                    <div class="form-group">
+                        <label jhiTranslate="global.invitation.role">
+                            Role
+                        </label>
+
+                        <div
+                            *ngFor="let role of invitationRoles"
+                            class="form-check">
+                            <label
+                                class="form-check-label"
+                                id="field_role_{{role.name}}">
+                                <input
+                                    type="radio"
+                                    id="field_role_{{role.name}}"
+                                    class="form-check-input"
+                                    name="role"
+                                    value="{{role.name}}"
+                                    formControlName="role">
+                                <span>{{role.i18nKey | translate}}</span>
+                            </label>
+                        </div>
+
+                        <div
+                            *ngIf="editForm.get('role')!.invalid && editForm.get('role')!.dirty || editForm.get('role')!.touched">
+                            <small class="form-text text-danger"
+                                   *ngIf="editForm.get('role')?.errors?.required"
+                                   jhiTranslate="entity.validation.required">
+                            </small>
+                        </div>
+                    </div>
+                </ng-template>
 
                 <div class="form-group">
                     <label class="form-control-label"
-                           jhiTranslate="eventPlannerApp.location.responsibility"
-                           for="field_responsibility"> Responsibility </label>
+                           jhiTranslate="eventPlannerApp.invitation.responsibility"
+                           for="field_responsibility">
+                        Responsibility
+                    </label>
                     <dx-autocomplete
                         class="dx-form-control"
                         name="responsibility"
