@@ -26,8 +26,8 @@
         </div>
     </h2>
 
-    <div class="time">{{ project.startTime | date:'longDate' }}
-        - {{ project.endTime | date:'longDate' }}</div>
+    <div class="time">{{ project.startTime.toDate() | date:'longDate' }}
+        - {{ project.endTime.toDate() | date:'longDate' }}</div>
 
     <div *ngIf="project.description" class="description">{{project.description}}</div>
 

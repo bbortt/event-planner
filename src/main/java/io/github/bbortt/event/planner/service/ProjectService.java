@@ -14,6 +14,7 @@ import io.github.bbortt.event.planner.service.dto.UserDTO;
 import io.github.bbortt.event.planner.service.exception.EntityNotFoundException;
 import io.github.bbortt.event.planner.service.exception.ForbiddenRequestException;
 import io.github.bbortt.event.planner.service.exception.IdMustBePresentException;
+import io.github.bbortt.event.planner.service.mapper.ProjectMapper;
 import java.util.Collections;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -34,6 +35,8 @@ import org.zalando.problem.violations.Violation;
 public class ProjectService {
 
     private final Logger log = LoggerFactory.getLogger(ProjectService.class);
+
+    private final ProjectMapper projectMapper = new ProjectMapper();
 
     private final RoleService roleService;
 
@@ -64,11 +67,7 @@ public class ProjectService {
      */
     @Transactional
     public Project create(CreateProjectDTO createProjectDTO) {
-        Project project = new Project()
-            .name(createProjectDTO.getName())
-            .description(createProjectDTO.getDescription())
-            .startTime(createProjectDTO.getStartTime())
-            .endTime(createProjectDTO.getEndTime());
+        Project project = projectMapper.createProjectDTOToProject(createProjectDTO);
 
         if (project.getStartTime().isAfter(project.getEndTime())) {
             throw new ConstraintViolationProblem(

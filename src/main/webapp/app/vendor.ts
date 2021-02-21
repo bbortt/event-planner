@@ -1,6 +1,9 @@
 /* after changing this file run 'npm run webpack:build' */
 import '../content/scss/vendor.scss';
 
+// jQuery
+import 'jquery/dist/jquery.min';
+
 // enable devextreme localization
 import { loadMessages } from 'devextreme/localization';
 

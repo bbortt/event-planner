@@ -16,7 +16,11 @@ bootRun {
     args = []
 }
 
-task webpack_test(type: NpmTask, dependsOn: "npmInstall") {
+task npmLint(type: NpmTask, dependsOn: "npmInstall") {
+    args = ["run", "lint"]
+}
+
+task webpackTest(type: NpmTask, dependsOn: "npmInstall") {
     args = ["run", "webpack:test"]
 }
 
@@ -25,7 +29,8 @@ task webpack(type: NpmTask, dependsOn: "npmInstall") {
     environment = [APP_VERSION: project.version]
 }
 
-webpack.dependsOn webpack_test
+webpack.dependsOn npmLint
+webpack.dependsOn webpackTest
 
 processResources {
     inputs.property('version', version)

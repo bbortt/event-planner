@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Unit tests for {@link UserMapper}.
  */
-class UserMapperTest {
+class UserMapperUnitTest {
 
     private static final String DEFAULT_LOGIN = "johndoe";
     private static final Long DEFAULT_ID = 1L;
