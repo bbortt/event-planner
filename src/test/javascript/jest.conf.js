@@ -9,8 +9,10 @@ module.exports = {
     globals: {
         'ts-jest': {
             stringifyContentPathRegex: '\\.html$',
-            tsConfig: '<rootDir>/tsconfig.json',
-            astTransformers: ['jest-preset-angular/build/InlineFilesTransformer', 'jest-preset-angular/build/StripStylesTransformer']
+            tsconfig: '<rootDir>/tsconfig.json',
+            astTransformers: {
+              before: ['jest-preset-angular/build/InlineFilesTransformer', 'jest-preset-angular/build/StripStylesTransformer']
+            }
         }
     },
     coveragePathIgnorePatterns: [
