@@ -1,37 +1,43 @@
-const webpack = require('webpack');
-const {merge} = require('webpack-merge');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const webpack = require("webpack");
+const { merge } = require("webpack-merge");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
-const BundleAnalyzerPlugin = require(
-  'webpack-bundle-analyzer').BundleAnalyzerPlugin;
-const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
-const TerserPlugin = require('terser-webpack-plugin');
-const WorkboxPlugin = require('workbox-webpack-plugin');
+const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
+const MomentLocalesPlugin = require("moment-locales-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
+const WorkboxPlugin = require("workbox-webpack-plugin");
 
-const utils = require('./utils.js');
-const commonConfig = require('./webpack.common.js');
+const utils = require("./utils.js");
 
-const ENV = 'production';
+const commonConfig = require("./webpack.common.js");
 
-module.exports = merge(commonConfig({env: ENV}), {
+const ENV = "production";
+
+module.exports = merge(commonConfig({ env: ENV }), {
   // Enable source maps. Please note that this will slow down the build.
   // You have to enable it in Terser config below and in tsconfig.json as well
   // devtool: 'source-map',
   entry: {
-    global: './src/main/webapp/content/scss/global.scss',
-    main: './src/main/webapp/app/app.main'
+    global: "./src/main/webapp/content/scss/global.scss",
+    main: "./src/main/webapp/app/app.main"
   },
   output: {
-    path: utils.root('build/resources/main/static/'),
-    filename: 'app/[name].[fullhash].bundle.js',
-    chunkFilename: 'app/[id].[chunkhash].chunk.js'
+    path: utils.root("build/resources/main/static/"),
+    filename: "app/[name].[fullhash].bundle.js",
+    chunkFilename: "app/[id].[chunkhash].chunk.js"
   },
   module: {
     rules: [
       {
         test: /\.scss$/,
-        use: ['to-string-loader', 'css-loader', 'postcss-loader',
-          'sass-loader'],
+        use: ["to-string-loader", "css-loader", "postcss-loader",
+          {
+            loader: "sass-loader",
+            options: {
+              implementation: require("sass")
+            }
+          }
+        ],
         exclude: /(vendor\.scss|global\.scss)/
       },
       {
@@ -40,17 +46,22 @@ module.exports = merge(commonConfig({env: ENV}), {
           {
             loader: MiniCssExtractPlugin.loader,
             options: {
-              publicPath: '../'
+              publicPath: "../"
             }
           },
-          'css-loader',
-          'postcss-loader',
-          'sass-loader'
+          "css-loader",
+          "postcss-loader",
+          {
+            loader: "sass-loader",
+            options: {
+              implementation: require("sass")
+            }
+          }
         ]
       },
       {
         test: /\.css$/,
-        use: ['to-string-loader', 'css-loader'],
+        use: ["to-string-loader", "css-loader"],
         exclude: /(vendor\.css|global\.css)/
       },
       {
@@ -59,11 +70,11 @@ module.exports = merge(commonConfig({env: ENV}), {
           {
             loader: MiniCssExtractPlugin.loader,
             options: {
-              publicPath: '../'
+              publicPath: "../"
             }
           },
-          'css-loader',
-          'postcss-loader'
+          "css-loader",
+          "postcss-loader"
         ]
       }]
   },
@@ -113,21 +124,21 @@ module.exports = merge(commonConfig({env: ENV}), {
     new MiniCssExtractPlugin({
       // Options similar to the same options in webpackOptions.output
       // both options are optional
-      filename: 'content/[name].[contenthash].css',
-      chunkFilename: 'content/[id].css'
+      filename: "content/[name].[contenthash].css",
+      chunkFilename: "content/[id].css"
     }),
     new MomentLocalesPlugin({
       localesToKeep: [
-        'de',
-        'en'
+        "de",
+        "en"
         // jhipster-needle-i18n-language-moment-webpack - JHipster will add/remove languages in this array
       ]
     }),
     new BundleAnalyzerPlugin({
-      analyzerMode: 'static',
+      analyzerMode: "static",
       openAnalyzer: false,
       // Webpack statistics in target folder
-      reportFilename: '../stats.html'
+      reportFilename: "../stats.html"
     }),
     new webpack.LoaderOptionsPlugin({
       minimize: true,
@@ -139,5 +150,5 @@ module.exports = merge(commonConfig({env: ENV}), {
       exclude: [/swagger-ui/]
     })
   ],
-  mode: 'production'
+  mode: "production"
 });
