@@ -17,6 +17,7 @@
     "prettier:format": "prettier --write \"{,src/**/}*.{md,json,ts,css,scss,yml,java}\"",
     "lint": "eslint . --ext .js,.ts",
     "lint:fix": "npm run lint -- --fix",
+    "lint:staged": "lint-staged",
     "postinstall": "ngcc",
     "cleanup": "rimraf build/resources/main/static/",
     "clean-www": "rimraf build/resources/main/static/app/{src,build/}",
