@@ -1,0 +1,44 @@
+def profiles = "dev"
+
+configurations {
+    developmentOnly
+    runtimeClasspath {
+        extendsFrom developmentOnly
+    }
+}
+
+subprojects {
+    pluginManager.withPlugin('java', {
+        dependencies {
+            developmentOnly "org.springframework.boot:spring-boot-devtools:${spring_boot_version}"
+        }
+
+        springBoot {
+            buildInfo {
+                properties {
+                    time = null
+                }
+            }
+        }
+
+        bootRun {
+            args = []
+        }
+
+        processResources {
+            inputs.property('version', version)
+            inputs.property('springProfiles', profiles)
+            filesMatching("**/application.yml") {
+                filter {
+                    it.replace("#project.version#", version)
+                }
+                filter {
+                    it.replace("#spring.profiles.active#", profiles)
+                }
+            }
+        }
+        processResources.dependsOn bootBuildInfo
+
+        bootJar.dependsOn processResources
+    })
+}

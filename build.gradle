@@ -1,0 +1,181 @@
+plugins {
+    id "idea"
+    id "org.sonarqube"
+    id "com.github.ben-manes.versions" version "0.28.0"
+}
+
+group = "io.github.bbortt.event.planner"
+
+description = "Event Planning Tool."
+
+apply from: "gradle/sonar.gradle"
+
+allprojects {
+    version = "${version}"
+
+    buildscript {
+        repositories {
+            mavenLocal()
+            mavenCentral()
+            gradlePluginPortal()
+            maven { url "https://repo.spring.io/plugins-release" }
+        }
+    }
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        jcenter()
+    }
+}
+
+subprojects {
+    pluginManager.withPlugin('java', {
+        sourceCompatibility = 11
+        targetCompatibility = 11
+        assert System.properties["java.specification.version"] == "1.8" || "11" || "12" || "13" || "14"
+
+        apply plugin: 'jacoco'
+
+        dependencies {
+            // import JHipster dependencies BOM
+            implementation platform("io.github.jhipster:jhipster-dependencies:${jhipster_dependencies_version}")
+
+            // Use ", version: jhipster_dependencies_version, changing: true" if you want
+            // to use a SNAPSHOT release instead of a stable release
+            implementation group: "io.github.jhipster", name: "jhipster-framework"
+            implementation "javax.annotation:javax.annotation-api"
+            implementation "io.dropwizard.metrics:metrics-core"
+            implementation "io.micrometer:micrometer-registry-prometheus"
+            implementation "net.logstash.logback:logstash-logback-encoder"
+            implementation "com.fasterxml.jackson.datatype:jackson-datatype-hppc"
+            implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
+            implementation "com.fasterxml.jackson.module:jackson-module-jaxb-annotations"
+            implementation "com.fasterxml.jackson.datatype:jackson-datatype-hibernate5"
+            implementation "com.fasterxml.jackson.core:jackson-annotations"
+            implementation "com.fasterxml.jackson.core:jackson-databind"
+            implementation "com.google.cloud.sql:postgres-socket-factory:${postgres_socket_factory_version}"
+            implementation "org.hibernate:hibernate-core"
+            implementation "com.zaxxer:HikariCP"
+            implementation "javax.transaction:javax.transaction-api"
+            implementation "org.hibernate:hibernate-jcache"
+            implementation "org.hibernate:hibernate-entitymanager"
+            implementation "org.hibernate.validator:hibernate-validator"
+            implementation "org.springframework.boot:spring-boot-loader-tools"
+            implementation "org.springframework.boot:spring-boot-starter-mail"
+            implementation "org.springframework.boot:spring-boot-starter-logging"
+            implementation "org.springframework.boot:spring-boot-starter-actuator"
+            implementation "org.springframework.boot:spring-boot-starter-aop"
+            implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+            testImplementation "org.testcontainers:postgresql"
+            implementation "org.springframework.boot:spring-boot-starter-security"
+            implementation("org.springframework.boot:spring-boot-starter-web") {
+                exclude module: "spring-boot-starter-tomcat"
+            }
+            implementation "org.springframework.boot:spring-boot-starter-undertow"
+            implementation "org.springframework.boot:spring-boot-starter-thymeleaf"
+            implementation "org.zalando:problem-spring-web"
+            implementation "org.springframework.boot:spring-boot-starter-cloud-connectors"
+            implementation "org.springframework.security:spring-security-config"
+            implementation "org.springframework.security:spring-security-data"
+            implementation "org.springframework.security:spring-security-web"
+            implementation "io.jsonwebtoken:jjwt-api"
+            runtimeOnly "io.jsonwebtoken:jjwt-impl"
+            runtimeOnly "io.jsonwebtoken:jjwt-jackson"
+            implementation("io.springfox:springfox-swagger2") {
+                exclude module: "mapstruct"
+            }
+            implementation "io.springfox:springfox-bean-validators"
+            implementation "org.postgresql:postgresql"
+            annotationProcessor "org.hibernate:hibernate-jpamodelgen:${hibernate_version}"
+            annotationProcessor "org.glassfish.jaxb:jaxb-runtime:${jaxb_runtime_version}"
+            annotationProcessor "org.springframework.boot:spring-boot-configuration-processor:${spring_boot_version}"
+            testImplementation("org.springframework.boot:spring-boot-starter-test") {
+                exclude group: "org.junit.vintage", module: "junit-vintage-engine"
+            }
+            testImplementation "org.springframework.security:spring-security-test"
+            testImplementation "org.springframework.boot:spring-boot-test"
+            testImplementation "com.tngtech.archunit:archunit-junit5-api:${archunit_junit5_version}"
+            testRuntimeOnly "com.tngtech.archunit:archunit-junit5-engine:${archunit_junit5_version}"
+        }
+
+        compileJava.dependsOn processResources
+
+        test {
+            useJUnitPlatform()
+            exclude "**/*IT*", "**/*IntTest*", "**/*IntegrationTest*"
+
+            testLogging {
+                events 'FAILED', 'SKIPPED'
+            }
+            // uncomment if the tests reports are not generated
+            // see https://github.com/jhipster/generator-jhipster/pull/2771 and https://github.com/jhipster/generator-jhipster/pull/4484
+            // ignoreFailures true
+            reports.html.enabled = false
+        }
+        bootJar.dependsOn test
+
+        task integrationTest(type: Test) {
+            useJUnitPlatform()
+            description = "Execute integration tests."
+            group = "verification"
+            include "**/*IT*", "**/*IntTest*", "**/*IntegrationTest*"
+
+            testLogging {
+                events 'FAILED', 'SKIPPED'
+            }
+
+            // uncomment if the tests reports are not generated
+            // see https://github.com/jhipster/generator-jhipster/pull/2771 and https://github.com/jhipster/generator-jhipster/pull/4484
+            // ignoreFailures true
+            reports.html.enabled = false
+        }
+        check.dependsOn integrationTest
+
+        task testReport(type: TestReport) {
+            destinationDir = file("$buildDir/reports/tests")
+            reportOn test
+        }
+
+        task integrationTestReport(type: TestReport) {
+            destinationDir = file("$buildDir/reports/tests")
+            reportOn integrationTest
+        }
+
+        configurations {
+            providedRuntime
+            implementation.exclude module: "spring-boot-starter-tomcat"
+        }
+    })
+}
+
+
+if (project.hasProperty("prod")) {
+    apply from: "gradle/profile_prod.gradle"
+} else {
+    apply from: "gradle/profile_dev.gradle"
+}
+
+if (project.hasProperty("nodeInstall")) {
+    node {
+        version = "${node_version}"
+        npmVersion = "${npm_version}"
+        download = true
+    }
+}
+
+defaultTasks "check"
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    jcenter()
+}
+
+task cleanResources(type: Delete) {
+    delete "build/resources"
+}
+
+wrapper {
+    gradleVersion = "6.5"
+}

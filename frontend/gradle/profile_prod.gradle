@@ -1,24 +1,8 @@
-dependencies {
+task npmLint(type: NpmTask, dependsOn: "npmInstall") {
+    args = ["run", "lint"]
 }
 
-def profiles = "prod"
-if (project.hasProperty("no-liquibase")) {
-    profiles += ",no-liquibase"
-}
-
-if (project.hasProperty("swagger")) {
-    profiles += ",swagger"
-}
-
-springBoot {
-    buildInfo()
-}
-
-bootRun {
-    args = []
-}
-
-task webpack_test(type: NpmTask, dependsOn: "npmInstall") {
+task webpackTest(type: NpmTask, dependsOn: "npmInstall") {
     args = ["run", "webpack:test"]
 }
 
@@ -27,19 +11,8 @@ task webpack(type: NpmTask, dependsOn: "npmInstall") {
     environment = [APP_VERSION: project.version]
 }
 
-processResources {
-    inputs.property('version', version)
-    inputs.property('springProfiles', profiles)
-    filesMatching("**/application.yml") {
-        filter {
-            it.replace("#project.version#", version)
-        }
-        filter {
-            it.replace("#spring.profiles.active#", profiles)
-        }
-    }
-}
+check.dependsOn npmLint
+check.dependsOn webpackTest
 
-test.dependsOn webpack_test
-processResources.dependsOn webpack
-bootJar.dependsOn processResources
+webpack.dependsOn check
+build.dependsOn webpack
