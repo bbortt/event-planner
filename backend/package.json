@@ -18,6 +18,6 @@
     "node": ">=12.16.1"
   },
   "scripts": {
-    "prettier:format": "prettier --write \"{,src/**/}*.{md,json,yml}\""
+    "prettier:format": "prettier --write \"{,src/**/}*.{md,json,yml,java}\""
   }
 }

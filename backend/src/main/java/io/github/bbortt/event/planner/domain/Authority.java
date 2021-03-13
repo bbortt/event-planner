@@ -1,13 +1,13 @@
 package io.github.bbortt.event.planner.domain;
 
+import java.io.Serializable;
+import java.util.Objects;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Column;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.io.Serializable;
-import java.util.Objects;
 
 /**
  * An authority (a security role) used by Spring Security.
@@ -15,12 +15,11 @@ import java.util.Objects;
 @Entity
 @Table(name = "jhi_authority")
 public class Authority implements Serializable {
-
     private static final long serialVersionUID = 1L;
 
-    @NotNull
-    @Size(max = 50)
     @Id
+    @NotNull
+    @Size(min = 1, max = 50)
     @Column(length = 50)
     private String name;
 

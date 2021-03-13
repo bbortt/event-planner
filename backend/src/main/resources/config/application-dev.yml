@@ -37,9 +37,9 @@ spring:
       indent-output: true
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:postgresql://localhost:5432/backend
-    username: backend
-    password:
+    url: jdbc:postgresql://localhost:5432/event_planner
+    username: event_planner
+    password: event_planner_password
     hikari:
       poolName: Hikari
       auto-commit: false

@@ -1,21 +1,23 @@
 package io.github.bbortt.event.planner.service.dto;
 
 import io.github.bbortt.event.planner.config.Constants;
-
 import io.github.bbortt.event.planner.domain.Authority;
 import io.github.bbortt.event.planner.domain.User;
-
-import javax.validation.constraints.*;
-import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 /**
  * A DTO representing a user, with his authorities.
  */
 public class UserDTO {
-
-    private String id;
+    private Long id;
 
     @NotBlank
     @Pattern(regexp = Constants.LOGIN_REGEX)
@@ -42,13 +44,15 @@ public class UserDTO {
 
     private String createdBy;
 
-    private Instant createdDate;
+    private ZonedDateTime createdDate;
 
     private String lastModifiedBy;
 
-    private Instant lastModifiedDate;
+    private ZonedDateTime lastModifiedDate;
 
     private Set<String> authorities;
+
+    private Map<Long, String> rolePerProject;
 
     public UserDTO() {
         // Empty constructor needed for Jackson.
@@ -64,19 +68,22 @@ public class UserDTO {
         this.imageUrl = user.getImageUrl();
         this.langKey = user.getLangKey();
         this.createdBy = user.getCreatedBy();
-        this.createdDate = user.getCreatedDate();
+        this.createdDate = ZonedDateTime.ofInstant(user.getCreatedDate(), ZoneId.systemDefault());
         this.lastModifiedBy = user.getLastModifiedBy();
-        this.lastModifiedDate = user.getLastModifiedDate();
-        this.authorities = user.getAuthorities().stream()
-            .map(Authority::getName)
-            .collect(Collectors.toSet());
+        this.lastModifiedDate = ZonedDateTime.ofInstant(user.getLastModifiedDate(), ZoneId.systemDefault());
+        this.authorities = user.getAuthorities().stream().map(Authority::getName).collect(Collectors.toSet());
+        this.rolePerProject =
+            user
+                .getInvitations()
+                .stream()
+                .collect(Collectors.toMap(invitation -> invitation.getProject().getId(), invitation -> invitation.getRole().getName()));
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -144,11 +151,11 @@ public class UserDTO {
         this.createdBy = createdBy;
     }
 
-    public Instant getCreatedDate() {
+    public ZonedDateTime getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(Instant createdDate) {
+    public void setCreatedDate(ZonedDateTime createdDate) {
         this.createdDate = createdDate;
     }
 
@@ -160,11 +167,11 @@ public class UserDTO {
         this.lastModifiedBy = lastModifiedBy;
     }
 
-    public Instant getLastModifiedDate() {
+    public ZonedDateTime getLastModifiedDate() {
         return lastModifiedDate;
     }
 
-    public void setLastModifiedDate(Instant lastModifiedDate) {
+    public void setLastModifiedDate(ZonedDateTime lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
     }
 
@@ -174,6 +181,14 @@ public class UserDTO {
 
     public void setAuthorities(Set<String> authorities) {
         this.authorities = authorities;
+    }
+
+    public Map<Long, String> getRolePerProject() {
+        return rolePerProject;
+    }
+
+    public void setRolePerProject(Map<Long, String> rolePerProject) {
+        this.rolePerProject = rolePerProject;
     }
 
     // prettier-ignore
@@ -192,6 +207,7 @@ public class UserDTO {
             ", lastModifiedBy='" + lastModifiedBy + '\'' +
             ", lastModifiedDate=" + lastModifiedDate +
             ", authorities=" + authorities +
+            ", rolePerProject="+ rolePerProject +
             "}";
     }
 }

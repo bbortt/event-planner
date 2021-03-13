@@ -1,11 +1,23 @@
 package io.github.bbortt.event.planner.domain;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.MapKeyColumn;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 
 /**
  * Persist AuditEvent managed by the Spring Boot actuator.
@@ -15,13 +27,19 @@ import java.util.Map;
 @Entity
 @Table(name = "jhi_persistent_audit_event")
 public class PersistentAuditEvent implements Serializable {
-
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
-    @SequenceGenerator(name = "sequenceGenerator")
     @Column(name = "event_id")
+    @GenericGenerator(
+        name = "jhi_persistent_audit_event_event_id_seq",
+        strategy = PostgreSQLConstants.SEQUENCE_GENERATOR_STRATEGY,
+        parameters = {
+            @Parameter(name = "sequence_name", value = "jhi_persistent_audit_event_event_id_seq"),
+            @Parameter(name = "increment_size", value = "1"),
+        }
+    )
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "jhi_persistent_audit_event_event_id_seq")
     private Long id;
 
     @NotNull
@@ -29,7 +47,7 @@ public class PersistentAuditEvent implements Serializable {
     private String principal;
 
     @Column(name = "event_date")
-    private Instant auditEventDate;
+    private ZonedDateTime auditEventDate;
 
     @Column(name = "event_type")
     private String auditEventType;
@@ -37,7 +55,7 @@ public class PersistentAuditEvent implements Serializable {
     @ElementCollection
     @MapKeyColumn(name = "name")
     @Column(name = "value")
-    @CollectionTable(name = "jhi_persistent_audit_evt_data", joinColumns=@JoinColumn(name="event_id"))
+    @CollectionTable(name = "jhi_persistent_audit_evt_data", joinColumns = @JoinColumn(name = "event_id"))
     private Map<String, String> data = new HashMap<>();
 
     public Long getId() {
@@ -57,10 +75,10 @@ public class PersistentAuditEvent implements Serializable {
     }
 
     public Instant getAuditEventDate() {
-        return auditEventDate;
+        return auditEventDate.toInstant();
     }
 
-    public void setAuditEventDate(Instant auditEventDate) {
+    public void setAuditEventDate(ZonedDateTime auditEventDate) {
         this.auditEventDate = auditEventDate;
     }
 

@@ -1,51 +1,41 @@
 package io.github.bbortt.event.planner.service;
 
-import io.github.bbortt.event.planner.BackendApp;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
+
+import io.github.bbortt.event.planner.AbstractApplicationContextAwareIT;
 import io.github.bbortt.event.planner.config.Constants;
-import io.github.bbortt.event.planner.config.TestSecurityConfiguration;
 import io.github.bbortt.event.planner.domain.User;
 import io.github.bbortt.event.planner.repository.UserRepository;
-import io.github.bbortt.event.planner.security.AuthoritiesConstants;
 import io.github.bbortt.event.planner.service.dto.UserDTO;
-
+import io.github.jhipster.security.RandomUtil;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.Optional;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.auditing.AuditingHandler;
+import org.springframework.data.auditing.DateTimeProvider;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
-import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Integration tests for {@link UserService}.
  */
-@SpringBootTest(classes = {BackendApp.class, TestSecurityConfiguration.class})
 @Transactional
-public class UserServiceIT {
-
+class UserServiceIT extends AbstractApplicationContextAwareIT {
     private static final String DEFAULT_LOGIN = "johndoe";
-
     private static final String DEFAULT_EMAIL = "johndoe@localhost";
-
     private static final String DEFAULT_FIRSTNAME = "john";
-
     private static final String DEFAULT_LASTNAME = "doe";
-
     private static final String DEFAULT_IMAGEURL = "http://placehold.it/50x50";
-
     private static final String DEFAULT_LANGKEY = "dummy";
 
     @Autowired
@@ -54,14 +44,19 @@ public class UserServiceIT {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private AuditingHandler auditingHandler;
+
+    @Mock
+    private DateTimeProvider dateTimeProvider;
+
     private User user;
 
-    private Map<String, Object> userDetails;
-
     @BeforeEach
-    public void init() {
+    void init() {
         user = new User();
         user.setLogin(DEFAULT_LOGIN);
+        user.setPassword(RandomStringUtils.random(60));
         user.setActivated(true);
         user.setEmail(DEFAULT_EMAIL);
         user.setFirstName(DEFAULT_FIRSTNAME);
@@ -69,107 +64,153 @@ public class UserServiceIT {
         user.setImageUrl(DEFAULT_IMAGEURL);
         user.setLangKey(DEFAULT_LANGKEY);
 
-        userDetails = new HashMap<>();
-        userDetails.put("sub", DEFAULT_LOGIN);
-        userDetails.put("email", DEFAULT_EMAIL);
-        userDetails.put("given_name", DEFAULT_FIRSTNAME);
-        userDetails.put("family_name", DEFAULT_LASTNAME);
-        userDetails.put("picture", DEFAULT_IMAGEURL);
+        when(dateTimeProvider.getNow()).thenReturn(Optional.of(LocalDateTime.now()));
+        auditingHandler.setDateTimeProvider(dateTimeProvider);
     }
 
     @Test
     @Transactional
-    public void assertThatAnonymousUserIsNotGet() {
-        user.setId(Constants.ANONYMOUS_USER);
+    void assertThatUserMustExistToResetPassword() {
+        userRepository.saveAndFlush(user);
+        Optional<User> maybeUser = userService.requestPasswordReset("invalid.login@localhost");
+        assertThat(maybeUser).isNotPresent();
+
+        maybeUser = userService.requestPasswordReset(user.getEmail());
+        assertThat(maybeUser).isPresent();
+        assertThat(maybeUser.orElse(null).getEmail()).isEqualTo(user.getEmail());
+        assertThat(maybeUser.orElse(null).getResetDate()).isNotNull();
+        assertThat(maybeUser.orElse(null).getResetKey()).isNotNull();
+    }
+
+    @Test
+    @Transactional
+    void assertThatOnlyActivatedUserCanRequestPasswordReset() {
+        user.setActivated(false);
+        userRepository.saveAndFlush(user);
+
+        Optional<User> maybeUser = userService.requestPasswordReset(user.getLogin());
+        assertThat(maybeUser).isNotPresent();
+        userRepository.delete(user);
+    }
+
+    @Test
+    @Transactional
+    void assertThatResetKeyMustNotBeOlderThan24Hours() {
+        ZonedDateTime daysAgo = ZonedDateTime.now().minus(25, ChronoUnit.HOURS);
+        String resetKey = RandomUtil.generateResetKey();
+        user.setActivated(true);
+        user.setResetDate(daysAgo);
+        user.setResetKey(resetKey);
+        userRepository.saveAndFlush(user);
+
+        Optional<User> maybeUser = userService.completePasswordReset("johndoe2", user.getResetKey());
+        assertThat(maybeUser).isNotPresent();
+        userRepository.delete(user);
+    }
+
+    @Test
+    @Transactional
+    void assertThatResetKeyMustBeValid() {
+        ZonedDateTime daysAgo = ZonedDateTime.now().minus(25, ChronoUnit.HOURS);
+        user.setActivated(true);
+        user.setResetDate(daysAgo);
+        user.setResetKey("1234");
+        userRepository.saveAndFlush(user);
+
+        Optional<User> maybeUser = userService.completePasswordReset("johndoe2", user.getResetKey());
+        assertThat(maybeUser).isNotPresent();
+        userRepository.delete(user);
+    }
+
+    @Test
+    @Transactional
+    void assertThatUserCanResetPassword() {
+        String oldPassword = user.getPassword();
+        ZonedDateTime daysAgo = ZonedDateTime.now().minus(2, ChronoUnit.HOURS);
+        String resetKey = RandomUtil.generateResetKey();
+        user.setActivated(true);
+        user.setResetDate(daysAgo);
+        user.setResetKey(resetKey);
+        userRepository.saveAndFlush(user);
+
+        Optional<User> maybeUser = userService.completePasswordReset("johndoe2", user.getResetKey());
+        assertThat(maybeUser).isPresent();
+        assertThat(maybeUser.orElse(null).getResetDate()).isNull();
+        assertThat(maybeUser.orElse(null).getResetKey()).isNull();
+        assertThat(maybeUser.orElse(null).getPassword()).isNotEqualTo(oldPassword);
+
+        userRepository.delete(user);
+    }
+
+    @Test
+    @Transactional
+    void assertThatNotActivatedUsersWithNotNullActivationKeyCreatedBefore3DaysAreDeleted() {
+        Instant now = Instant.now();
+        when(dateTimeProvider.getNow()).thenReturn(Optional.of(now.minus(4, ChronoUnit.DAYS)));
+        user.setActivated(false);
+        user.setActivationKey(RandomStringUtils.random(20));
+        User dbUser = userRepository.saveAndFlush(user);
+        dbUser.setCreatedDate(now.minus(4, ChronoUnit.DAYS));
+        userRepository.saveAndFlush(user);
+        Instant threeDaysAgo = now.minus(3, ChronoUnit.DAYS);
+        List<User> users = userRepository.findAllByActivatedIsFalseAndActivationKeyIsNotNullAndCreatedDateBefore(threeDaysAgo);
+        assertThat(users).isNotEmpty();
+        userService.removeNotActivatedUsers();
+        users = userRepository.findAllByActivatedIsFalseAndActivationKeyIsNotNullAndCreatedDateBefore(threeDaysAgo);
+        assertThat(users).isEmpty();
+    }
+
+    @Test
+    @Transactional
+    void assertThatNotActivatedUsersWithNullActivationKeyCreatedBefore3DaysAreNotDeleted() {
+        Instant now = Instant.now();
+        when(dateTimeProvider.getNow()).thenReturn(Optional.of(now.minus(4, ChronoUnit.DAYS)));
+        user.setActivated(false);
+        User dbUser = userRepository.saveAndFlush(user);
+        dbUser.setCreatedDate(now.minus(4, ChronoUnit.DAYS));
+        userRepository.saveAndFlush(user);
+        Instant threeDaysAgo = now.minus(3, ChronoUnit.DAYS);
+        List<User> users = userRepository.findAllByActivatedIsFalseAndActivationKeyIsNotNullAndCreatedDateBefore(threeDaysAgo);
+        assertThat(users).isEmpty();
+        userService.removeNotActivatedUsers();
+        Optional<User> maybeDbUser = userRepository.findById(dbUser.getId());
+        assertThat(maybeDbUser).contains(dbUser);
+    }
+
+    @Test
+    @Transactional
+    void assertThatAnonymousUserIsNotGet() {
         user.setLogin(Constants.ANONYMOUS_USER);
         if (!userRepository.findOneByLogin(Constants.ANONYMOUS_USER).isPresent()) {
             userRepository.saveAndFlush(user);
         }
         final PageRequest pageable = PageRequest.of(0, (int) userRepository.count());
         final Page<UserDTO> allManagedUsers = userService.getAllManagedUsers(pageable);
-        assertThat(allManagedUsers.getContent().stream()
-            .noneMatch(user -> Constants.ANONYMOUS_USER.equals(user.getLogin())))
-            .isTrue();
+        assertThat(allManagedUsers.getContent().stream().noneMatch(user -> Constants.ANONYMOUS_USER.equals(user.getLogin()))).isTrue();
     }
 
     @Test
     @Transactional
-    public void testDefaultUserDetails() {
-        OAuth2AuthenticationToken authentication = createMockOAuth2AuthenticationToken(userDetails);
-        UserDTO userDTO = userService.getUserFromAuthentication(authentication);
+    void assertThatFindUsersByEmailOrLoginContaining() {
+        User user1 = new User();
+        user1.setLogin("EinLogin");
+        user1.setEmail("email@ein-login.ch");
+        user1.setPassword(RandomStringUtils.random(60));
+        userRepository.save(user1);
 
-        assertThat(userDTO.getLogin()).isEqualTo(DEFAULT_LOGIN);
-        assertThat(userDTO.getFirstName()).isEqualTo(DEFAULT_FIRSTNAME);
-        assertThat(userDTO.getLastName()).isEqualTo(DEFAULT_LASTNAME);
-        assertThat(userDTO.getEmail()).isEqualTo(DEFAULT_EMAIL);
-        assertThat(userDTO.isActivated()).isTrue();
-        assertThat(userDTO.getLangKey()).isEqualTo(Constants.DEFAULT_LANGUAGE);
-        assertThat(userDTO.getImageUrl()).isEqualTo(DEFAULT_IMAGEURL);
-        assertThat(userDTO.getAuthorities()).contains(AuthoritiesConstants.ANONYMOUS);
-    }
+        User user2 = new User();
+        user2.setLogin("ZweiLogin");
+        user2.setEmail("email@zwei-login.ch");
+        user2.setPassword(RandomStringUtils.random(60));
+        userRepository.save(user2);
 
-    @Test
-    @Transactional
-    public void testUserDetailsWithUsername() {
-        userDetails.put("preferred_username", "TEST");
+        String testLoginIgnoreCase = "NL";
+        assertThat(userService.findByEmailOrLoginContaining(testLoginIgnoreCase)).hasSize(1);
 
-        OAuth2AuthenticationToken authentication = createMockOAuth2AuthenticationToken(userDetails);
-        UserDTO userDTO = userService.getUserFromAuthentication(authentication);
+        String testEmailIgnoreCase = "@ZWEI";
+        assertThat(userService.findByEmailOrLoginContaining(testEmailIgnoreCase)).hasSize(1);
 
-        assertThat(userDTO.getLogin()).isEqualTo("test");
-    }
-
-    @Test
-    @Transactional
-    public void testUserDetailsWithLangKey() {
-        userDetails.put("langKey", DEFAULT_LANGKEY);
-        userDetails.put("locale", "en-US");
-
-        OAuth2AuthenticationToken authentication = createMockOAuth2AuthenticationToken(userDetails);
-        UserDTO userDTO = userService.getUserFromAuthentication(authentication);
-
-        assertThat(userDTO.getLangKey()).isEqualTo(DEFAULT_LANGKEY);
-    }
-
-    @Test
-    @Transactional
-    public void testUserDetailsWithLocale() {
-        userDetails.put("locale", "it-IT");
-
-        OAuth2AuthenticationToken authentication = createMockOAuth2AuthenticationToken(userDetails);
-        UserDTO userDTO = userService.getUserFromAuthentication(authentication);
-
-        assertThat(userDTO.getLangKey()).isEqualTo("it");
-    }
-
-    @Test
-    @Transactional
-    public void testUserDetailsWithUSLocaleUnderscore() {
-        userDetails.put("locale", "en_US");
-
-        OAuth2AuthenticationToken authentication = createMockOAuth2AuthenticationToken(userDetails);
-        UserDTO userDTO = userService.getUserFromAuthentication(authentication);
-
-        assertThat(userDTO.getLangKey()).isEqualTo("en");
-    }
-
-    @Test
-    @Transactional
-    public void testUserDetailsWithUSLocaleDash() {
-        userDetails.put("locale", "en-US");
-
-        OAuth2AuthenticationToken authentication = createMockOAuth2AuthenticationToken(userDetails);
-        UserDTO userDTO = userService.getUserFromAuthentication(authentication);
-
-        assertThat(userDTO.getLangKey()).isEqualTo("en");
-    }
-
-    private OAuth2AuthenticationToken createMockOAuth2AuthenticationToken(Map<String, Object> userDetails) {
-        Collection<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(AuthoritiesConstants.ANONYMOUS));
-        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(Constants.ANONYMOUS_USER, Constants.ANONYMOUS_USER, authorities);
-        usernamePasswordAuthenticationToken.setDetails(userDetails);
-        OAuth2User user = new DefaultOAuth2User(authorities, userDetails, "sub");
-
-        return new OAuth2AuthenticationToken(user, authorities, "oidc");
+        String testDistinct = "login.ch";
+        assertThat(userService.findByEmailOrLoginContaining(testDistinct)).hasSize(2);
     }
 }
