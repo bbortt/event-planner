@@ -7,5 +7,5 @@ group = "io.github.bbortt.event.planner.frontend"
 description = "Event Planning Tool - Webapplication."
 
 if (project.hasProperty("prod")) {
-    apply from: 'gradle/profile_prod.gradle'
+    apply from: "gradle/profile_prod.gradle"
 }
