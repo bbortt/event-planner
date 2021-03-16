@@ -44,7 +44,7 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
     testImplementation "org.testcontainers:postgresql"
     implementation "org.springframework.boot:spring-boot-starter-security"
-    implementation ("org.springframework.boot:spring-boot-starter-web") {
+    implementation("org.springframework.boot:spring-boot-starter-web") {
         exclude module: "spring-boot-starter-tomcat"
     }
     implementation "org.springframework.boot:spring-boot-starter-undertow"
@@ -61,14 +61,14 @@ dependencies {
     implementation "org.springframework.security:spring-security-web"
     implementation "org.springframework.boot:spring-boot-starter-oauth2-client"
     implementation "org.springframework.boot:spring-boot-starter-oauth2-resource-server"
-    implementation ("io.springfox:springfox-swagger2") {
+    implementation("io.springfox:springfox-swagger2") {
         exclude module: "mapstruct"
     }
     implementation "io.springfox:springfox-bean-validators"
     implementation "org.postgresql:postgresql"
     annotationProcessor "org.glassfish.jaxb:jaxb-runtime:${jaxb_runtime_version}"
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor:${spring_boot_version}"
-    testImplementation ("org.springframework.boot:spring-boot-starter-test") {
+    testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude group: "org.junit.vintage", module: "junit-vintage-engine"
     }
     testImplementation "org.springframework.security:spring-security-test"
@@ -78,7 +78,7 @@ dependencies {
     testImplementation "com.h2database:h2"
 }
 
-configurations{
+configurations {
     all {
         resolutionStrategy {
             // Inherited version from Spring Boot can"t be used because of regressions:
@@ -95,5 +95,6 @@ task flywayCleanIntegrationTest(type: org.flywaydb.gradle.task.FlywayCleanTask) 
         password = "${flyway_it_password}"
     }
 }
+flywayCleanIntegrationTest.dependsOn test
 
 integrationTest.dependsOn flywayCleanIntegrationTest

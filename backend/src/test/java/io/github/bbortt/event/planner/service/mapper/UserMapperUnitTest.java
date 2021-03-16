@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
  */
 class UserMapperUnitTest {
     private static final String DEFAULT_LOGIN = "johndoe";
-    private static final Long DEFAULT_ID = 1L;
+    private static final String DEFAULT_ID = "defaultid";
 
     private UserMapper userMapper;
     private User user;
@@ -28,7 +28,6 @@ class UserMapperUnitTest {
         userMapper = new UserMapper();
         user = new User();
         user.setLogin(DEFAULT_LOGIN);
-        user.setPassword(RandomStringUtils.random(60));
         user.setActivated(true);
         user.setEmail("johndoe@localhost");
         user.setFirstName("john");

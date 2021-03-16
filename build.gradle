@@ -55,7 +55,6 @@ subprojects {
             // ignoreFailures true
             reports.html.enabled = false
         }
-        bootJar.dependsOn test
 
         task integrationTest(type: Test) {
             useJUnitPlatform()
@@ -72,6 +71,8 @@ subprojects {
             // ignoreFailures true
             reports.html.enabled = false
         }
+        integrationTest.dependsOn test
+
         check.dependsOn integrationTest
 
         task testReport(type: TestReport) {

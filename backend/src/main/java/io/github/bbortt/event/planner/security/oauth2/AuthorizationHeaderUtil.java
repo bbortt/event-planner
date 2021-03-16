@@ -34,9 +34,10 @@ import org.springframework.web.client.RestTemplate;
 
 @Component
 public class AuthorizationHeaderUtil {
+    private final Logger log = LoggerFactory.getLogger(AuthorizationHeaderUtil.class);
+
     private final OAuth2AuthorizedClientService clientService;
     private final RestTemplateBuilder restTemplateBuilder;
-    private final Logger log = LoggerFactory.getLogger(AuthorizationHeaderUtil.class);
 
     public AuthorizationHeaderUtil(OAuth2AuthorizedClientService clientService, RestTemplateBuilder restTemplateBuilder) {
         this.clientService = clientService;
