@@ -136,11 +136,11 @@ spring:
       client:
         provider:
           oidc:
-            issuer-uri: http://localhost:9080/auth/realms/jhipster
+            issuer-uri: ${APPL_OAUTH2_PROVIDER_URI}
         registration:
           oidc:
-            client-id: internal
-            client-secret: internal
+            client-id: ${APPL_OAUTH2_CLIENT_ID}
+            client-secret: ${APPL_OAUTH2_CLIENT_SECRET}
 
 server:
   servlet:

@@ -200,7 +200,7 @@ public class ProjectService {
     private User userFromDto(UserDTO userDTO) {
         OptionalUserHolder optionalUserHolder = new OptionalUserHolder();
 
-        Optional<Long> userIdFromDTO = Optional.ofNullable(userDTO.getId());
+        Optional<String> userIdFromDTO = Optional.ofNullable(userDTO.getId());
         userIdFromDTO.ifPresent(userId -> optionalUserHolder.optionalUser = userRepository.findById(userId));
 
         if (optionalUserHolder.optionalUser.isEmpty()) {

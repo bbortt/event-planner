@@ -17,12 +17,7 @@ import org.springframework.stereotype.Repository;
  * Spring Data JPA repository for the {@link User} entity.
  */
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
-    Optional<User> findOneByActivationKey(String activationKey);
-
-    List<User> findAllByActivatedIsFalseAndActivationKeyIsNotNullAndCreatedDateBefore(Instant dateTime);
-
-    Optional<User> findOneByResetKey(String resetKey);
+public interface UserRepository extends JpaRepository<User, String> {
 
     Optional<User> findOneByEmailIgnoreCase(String email);
 
@@ -30,9 +25,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @EntityGraph(attributePaths = { "authorities", "invitations" })
     Optional<User> findOneWithAuthoritiesByLogin(String login);
-
-    @EntityGraph(attributePaths = { "authorities", "invitations" })
-    Optional<User> findOneWithAuthoritiesByEmailIgnoreCase(String email);
 
     Page<User> findAllByLoginNot(Pageable pageable, String login);
 

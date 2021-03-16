@@ -17,7 +17,7 @@ import javax.validation.constraints.Size;
  * A DTO representing a user, with his authorities.
  */
 public class UserDTO {
-    private Long id;
+    private String id;
 
     @NotBlank
     @Pattern(regexp = Constants.LOGIN_REGEX)
@@ -44,15 +44,13 @@ public class UserDTO {
 
     private String createdBy;
 
-    private ZonedDateTime createdDate;
+    private ZonedDateTime  createdDate;
 
     private String lastModifiedBy;
 
-    private ZonedDateTime lastModifiedDate;
+    private ZonedDateTime  lastModifiedDate;
 
     private Set<String> authorities;
-
-    private Map<Long, String> rolePerProject;
 
     public UserDTO() {
         // Empty constructor needed for Jackson.
@@ -68,22 +66,19 @@ public class UserDTO {
         this.imageUrl = user.getImageUrl();
         this.langKey = user.getLangKey();
         this.createdBy = user.getCreatedBy();
-        this.createdDate = ZonedDateTime.ofInstant(user.getCreatedDate(), ZoneId.systemDefault());
+        this.createdDate = user.getCreatedDate();
         this.lastModifiedBy = user.getLastModifiedBy();
-        this.lastModifiedDate = ZonedDateTime.ofInstant(user.getLastModifiedDate(), ZoneId.systemDefault());
-        this.authorities = user.getAuthorities().stream().map(Authority::getName).collect(Collectors.toSet());
-        this.rolePerProject =
-            user
-                .getInvitations()
-                .stream()
-                .collect(Collectors.toMap(invitation -> invitation.getProject().getId(), invitation -> invitation.getRole().getName()));
+        this.lastModifiedDate = user.getLastModifiedDate();
+        this.authorities = user.getAuthorities().stream()
+            .map(Authority::getName)
+            .collect(Collectors.toSet());
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -151,11 +146,11 @@ public class UserDTO {
         this.createdBy = createdBy;
     }
 
-    public ZonedDateTime getCreatedDate() {
+    public ZonedDateTime  getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(ZonedDateTime createdDate) {
+    public void setCreatedDate(ZonedDateTime  createdDate) {
         this.createdDate = createdDate;
     }
 
@@ -167,11 +162,11 @@ public class UserDTO {
         this.lastModifiedBy = lastModifiedBy;
     }
 
-    public ZonedDateTime getLastModifiedDate() {
+    public ZonedDateTime  getLastModifiedDate() {
         return lastModifiedDate;
     }
 
-    public void setLastModifiedDate(ZonedDateTime lastModifiedDate) {
+    public void setLastModifiedDate(ZonedDateTime  lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
     }
 
@@ -181,14 +176,6 @@ public class UserDTO {
 
     public void setAuthorities(Set<String> authorities) {
         this.authorities = authorities;
-    }
-
-    public Map<Long, String> getRolePerProject() {
-        return rolePerProject;
-    }
-
-    public void setRolePerProject(Map<Long, String> rolePerProject) {
-        this.rolePerProject = rolePerProject;
     }
 
     // prettier-ignore
@@ -207,7 +194,6 @@ public class UserDTO {
             ", lastModifiedBy='" + lastModifiedBy + '\'' +
             ", lastModifiedDate=" + lastModifiedDate +
             ", authorities=" + authorities +
-            ", rolePerProject="+ rolePerProject +
             "}";
     }
 }

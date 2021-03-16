@@ -22,13 +22,13 @@ public interface InvitationRepository extends JpaRepository<Invitation, Long> {
 
     @Modifying
     @Query("UPDATE Invitation SET user.id = :userId, token = null, accepted = true WHERE token = :token")
-    void assignUserToInvitation(@Param("userId") Long userId, @Param("token") String token);
+    void assignUserToInvitation(@Param("userId") String userId, @Param("token") String token);
 
     Optional<Invitation> findByToken(String token);
 
     Optional<Invitation> findOneByEmailAndProjectId(String email, Long projectId);
 
-    Optional<Invitation> findOneByUserIdAndProjectId(Long userId, Long projectId);
+    Optional<Invitation> findOneByUserIdAndProjectId(String userId, Long projectId);
 
     List<Invitation> findAllByAcceptedIsFalseAndTokenIsNotNullAndCreatedDateBefore(Instant dateTime);
 }

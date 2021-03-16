@@ -104,7 +104,7 @@ public class InvitationService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<Invitation> findOneByUserIdAndProjectId(Long userId, Long projectId) {
+    public Optional<Invitation> findOneByUserIdAndProjectId(String userId, Long projectId) {
         log.debug("Request to get Invitation for User {} in Project {}", userId, projectId);
         return invitationRepository.findOneByUserIdAndProjectId(userId, projectId);
     }

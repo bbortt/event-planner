@@ -17,7 +17,10 @@ import org.springframework.stereotype.Service;
 public class UserMapper {
 
     public List<UserDTO> usersToUserDTOs(List<User> users) {
-        return users.stream().filter(Objects::nonNull).map(this::userToUserDTO).collect(Collectors.toList());
+        return users.stream()
+            .filter(Objects::nonNull)
+            .map(this::userToUserDTO)
+            .collect(Collectors.toList());
     }
 
     public UserDTO userToUserDTO(User user) {
@@ -25,7 +28,10 @@ public class UserMapper {
     }
 
     public List<User> userDTOsToUsers(List<UserDTO> userDTOs) {
-        return userDTOs.stream().filter(Objects::nonNull).map(this::userDTOToUser).collect(Collectors.toList());
+        return userDTOs.stream()
+            .filter(Objects::nonNull)
+            .map(this::userDTOToUser)
+            .collect(Collectors.toList());
     }
 
     public User userDTOToUser(UserDTO userDTO) {
@@ -47,27 +53,22 @@ public class UserMapper {
         }
     }
 
+
     private Set<Authority> authoritiesFromStrings(Set<String> authoritiesAsString) {
         Set<Authority> authorities = new HashSet<>();
 
         if (authoritiesAsString != null) {
-            authorities =
-                authoritiesAsString
-                    .stream()
-                    .map(
-                        string -> {
-                            Authority auth = new Authority();
-                            auth.setName(string);
-                            return auth;
-                        }
-                    )
-                    .collect(Collectors.toSet());
+            authorities = authoritiesAsString.stream().map(string -> {
+                Authority auth = new Authority();
+                auth.setName(string);
+                return auth;
+            }).collect(Collectors.toSet());
         }
 
         return authorities;
     }
 
-    public User userFromId(Long id) {
+    public User userFromId(String id) {
         if (id == null) {
             return null;
         }
