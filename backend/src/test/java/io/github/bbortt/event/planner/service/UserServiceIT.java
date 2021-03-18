@@ -29,33 +29,33 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * Integration tests for {@link UserService}.
  */
-@Transactional
 class UserServiceIT extends AbstractApplicationContextAwareIT {
 
-    private static final String DEFAULT_LOGIN = "johndoe";
-    private static final String DEFAULT_EMAIL = "johndoe@localhost";
-    private static final String DEFAULT_FIRSTNAME = "john";
-    private static final String DEFAULT_LASTNAME = "doe";
-    private static final String DEFAULT_IMAGEURL = "http://placehold.it/50x50";
-    private static final String DEFAULT_LANGKEY = "dummy";
+     static final String DEFAULT_LOGIN = "johndoe";
+     static final String DEFAULT_EMAIL = "johndoe@localhost";
+     static final String DEFAULT_FIRSTNAME = "john";
+     static final String DEFAULT_LASTNAME = "doe";
+     static final String DEFAULT_IMAGEURL = "http://placehold.it/50x50";
+     static final String DEFAULT_LANGKEY = "dummy";
 
     @Autowired
-    private UserRepository userRepository;
+     UserRepository userRepository;
 
     @Autowired
-    private UserService userService;
+     UserService userService;
 
     @Autowired
-    private AuditingHandler auditingHandler;
+     AuditingHandler auditingHandler;
 
     @Mock
-    private DateTimeProvider dateTimeProvider;
+     DateTimeProvider dateTimeProvider;
 
-    private User user;
+     User user;
 
     @BeforeEach
     void init() {
         user = new User();
+        user.setId(DEFAULT_LOGIN);
         user.setLogin(DEFAULT_LOGIN);
         user.setActivated(true);
         user.setEmail(DEFAULT_EMAIL);
@@ -84,11 +84,13 @@ class UserServiceIT extends AbstractApplicationContextAwareIT {
     @Transactional
     void assertThatFindUsersByEmailOrLoginContaining() {
         User user1 = new User();
+        user1.setId("EinLogin");
         user1.setLogin("EinLogin");
         user1.setEmail("email@ein-login.ch");
         userRepository.save(user1);
 
         User user2 = new User();
+        user2.setId("ZweiLogin");
         user2.setLogin("ZweiLogin");
         user2.setEmail("email@zwei-login.ch");
         userRepository.save(user2);

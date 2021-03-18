@@ -11,10 +11,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import io.github.bbortt.event.planner.EventPlannerApp;
+import io.github.bbortt.event.planner.AbstractApplicationContextAwareIT;
+import io.github.bbortt.event.planner.domain.Invitation;
 import io.github.bbortt.event.planner.domain.Location;
 import io.github.bbortt.event.planner.domain.LocationTimeSlot;
+import io.github.bbortt.event.planner.domain.Project;
+import io.github.bbortt.event.planner.domain.User;
 import io.github.bbortt.event.planner.repository.LocationTimeSlotRepository;
+import io.github.bbortt.event.planner.repository.RoleRepository;
+import io.github.bbortt.event.planner.security.RolesConstants;
 import io.github.bbortt.event.planner.service.LocationTimeSlotService;
 import java.time.Instant;
 import java.time.ZoneId;
@@ -25,8 +30,6 @@ import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -35,35 +38,37 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * Integration tests for the {@link LocationTimeSlotResource} REST controller.
  */
-@SpringBootTest(classes = EventPlannerApp.class)
-@AutoConfigureMockMvc
-@WithMockUser
-class LocationTimeSlotResourceIT {
-    private static final ZonedDateTime DEFAULT_START_TIME = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
-    private static final ZonedDateTime UPDATED_START_TIME = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
+class LocationTimeSlotResourceIT extends AbstractApplicationContextAwareIT {
 
-    private static final ZonedDateTime DEFAULT_END_TIME = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
-    private static final ZonedDateTime UPDATED_END_TIME = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
+    static final String TEST_USER_LOGIN = "schedulerresourceit-user";
 
-    @Autowired
-    private LocationTimeSlotRepository locationTimeSlotRepository;
+    static final ZonedDateTime DEFAULT_START_TIME = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
+    static final ZonedDateTime UPDATED_START_TIME = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
+
+    static final ZonedDateTime DEFAULT_END_TIME = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
+    static final ZonedDateTime UPDATED_END_TIME = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
 
     @Autowired
-    private LocationTimeSlotService locationTimeSlotService;
+    RoleRepository roleRepository;
 
     @Autowired
-    private EntityManager em;
+    LocationTimeSlotRepository locationTimeSlotRepository;
 
     @Autowired
-    private MockMvc restLocationTimeSlotMockMvc;
+    LocationTimeSlotService locationTimeSlotService;
 
-    private LocationTimeSlot locationTimeSlot;
+    @Autowired
+    MockMvc restLocationTimeSlotMockMvc;
+
+    @Autowired
+    EntityManager entityManager;
+
+    LocationTimeSlot locationTimeSlot;
 
     /**
      * Create an entity for this test.
      *
-     * This is a static method, as tests for other entities might also need it,
-     * if they test an entity which requires the current entity.
+     * This is a static method, as tests for other entities might also need it, if they test an entity which requires the current entity.
      */
     public static LocationTimeSlot createEntity(EntityManager em) {
         LocationTimeSlot locationTimeSlot = new LocationTimeSlot().startTime(DEFAULT_START_TIME).endTime(DEFAULT_END_TIME);
@@ -83,8 +88,7 @@ class LocationTimeSlotResourceIT {
     /**
      * Create an updated entity for this test.
      *
-     * This is a static method, as tests for other entities might also need it,
-     * if they test an entity which requires the current entity.
+     * This is a static method, as tests for other entities might also need it, if they test an entity which requires the current entity.
      */
     public static LocationTimeSlot createUpdatedEntity(EntityManager em) {
         LocationTimeSlot locationTimeSlot = new LocationTimeSlot().startTime(UPDATED_START_TIME).endTime(UPDATED_END_TIME);
@@ -103,11 +107,30 @@ class LocationTimeSlotResourceIT {
 
     @BeforeEach
     void initTest() {
-        locationTimeSlot = createEntity(em);
+        User user = UserResourceIT.createEntity(entityManager);
+        user.setId(TEST_USER_LOGIN);
+        user.setLogin(TEST_USER_LOGIN);
+        user.setEmail(TEST_USER_LOGIN + "@localhost");
+        entityManager.persist(user);
+
+        Project project = ProjectResourceIT.createEntity(entityManager);
+        project.setName("RoleRepositoryIT-project-1");
+        entityManager.persist(project);
+
+        Invitation invitation = InvitationResourceIT.createEntity(entityManager);
+        invitation.setUser(user);
+        invitation.setEmail("email-invitation-1@localhost");
+        invitation.setProject(project);
+        invitation.setRole(roleRepository.roleAdmin());
+        invitation.setAccepted(Boolean.TRUE);
+        entityManager.persist(invitation);
+
+        locationTimeSlot = createEntity(entityManager);
     }
 
     @Test
     @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     void createLocationTimeSlot() throws Exception {
         int databaseSizeBeforeCreate = locationTimeSlotRepository.findAll().size();
         // Create the LocationTimeSlot
@@ -129,6 +152,7 @@ class LocationTimeSlotResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     void createLocationTimeSlotWithExistingId() throws Exception {
         int databaseSizeBeforeCreate = locationTimeSlotRepository.findAll().size();
 
@@ -151,6 +175,7 @@ class LocationTimeSlotResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     void checkStartTimeIsRequired() throws Exception {
         int databaseSizeBeforeTest = locationTimeSlotRepository.findAll().size();
         // set the field null
@@ -172,6 +197,7 @@ class LocationTimeSlotResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     void checkEndTimeIsRequired() throws Exception {
         int databaseSizeBeforeTest = locationTimeSlotRepository.findAll().size();
         // set the field null
@@ -193,6 +219,7 @@ class LocationTimeSlotResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(value = TEST_USER_LOGIN, roles = {RolesConstants.ADMIN})
     void getAllLocationTimeSlots() throws Exception {
         // Initialize the database
         locationTimeSlotRepository.saveAndFlush(locationTimeSlot);
@@ -209,6 +236,19 @@ class LocationTimeSlotResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
+    void getAllLocationTimeSlotsForbiddenForUsers() throws Exception {
+        // Initialize the database
+        locationTimeSlotRepository.saveAndFlush(locationTimeSlot);
+
+        // Get all the sectionList
+        restLocationTimeSlotMockMvc.perform(get("/api/location-time-slots?sort=id,desc"))
+            .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     void getLocationTimeSlot() throws Exception {
         // Initialize the database
         locationTimeSlotRepository.saveAndFlush(locationTimeSlot);
@@ -225,6 +265,7 @@ class LocationTimeSlotResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     void getNonExistingLocationTimeSlot() throws Exception {
         // Get the locationTimeSlot
         restLocationTimeSlotMockMvc.perform(get("/api/location-time-slots/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
@@ -232,6 +273,7 @@ class LocationTimeSlotResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     void updateLocationTimeSlot() throws Exception {
         // Initialize the database
         locationTimeSlotService.save(locationTimeSlot);
@@ -241,7 +283,7 @@ class LocationTimeSlotResourceIT {
         // Update the locationTimeSlot
         LocationTimeSlot updatedLocationTimeSlot = locationTimeSlotRepository.findById(locationTimeSlot.getId()).get();
         // Disconnect from session so that the updates on updatedLocationTimeSlot are not directly saved in db
-        em.detach(updatedLocationTimeSlot);
+        entityManager.detach(updatedLocationTimeSlot);
         updatedLocationTimeSlot.startTime(UPDATED_START_TIME).endTime(UPDATED_END_TIME);
 
         restLocationTimeSlotMockMvc
@@ -262,6 +304,7 @@ class LocationTimeSlotResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     void updateNonExistingLocationTimeSlot() throws Exception {
         int databaseSizeBeforeUpdate = locationTimeSlotRepository.findAll().size();
 
@@ -281,6 +324,7 @@ class LocationTimeSlotResourceIT {
 
     @Test
     @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     void deleteLocationTimeSlot() throws Exception {
         // Initialize the database
         locationTimeSlotService.save(locationTimeSlot);

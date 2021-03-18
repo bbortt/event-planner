@@ -33,8 +33,8 @@ public class User extends AbstractAuditingEntity implements Serializable {
     private String id;
 
     @NotNull
-    @Pattern(regexp = Constants.LOGIN_REGEX)
     @Size(min = 1, max = 50)
+    @Pattern(regexp = Constants.LOGIN_REGEX)
     @Column(length = 50, unique = true, nullable = false)
     private String login;
 

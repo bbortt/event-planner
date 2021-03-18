@@ -66,9 +66,9 @@ public class UserDTO {
         this.imageUrl = user.getImageUrl();
         this.langKey = user.getLangKey();
         this.createdBy = user.getCreatedBy();
-        this.createdDate = user.getCreatedDate();
+        this.createdDate = ZonedDateTime.ofInstant(user.getCreatedDate(), ZoneId.systemDefault());
         this.lastModifiedBy = user.getLastModifiedBy();
-        this.lastModifiedDate = user.getLastModifiedDate();
+        this.lastModifiedDate = ZonedDateTime.ofInstant(user.getLastModifiedDate(), ZoneId.systemDefault());
         this.authorities = user.getAuthorities().stream()
             .map(Authority::getName)
             .collect(Collectors.toSet());

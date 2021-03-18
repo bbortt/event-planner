@@ -1,6 +1,7 @@
 package io.github.bbortt.event.planner.web.rest;
 
 import io.github.bbortt.event.planner.domain.LocationTimeSlot;
+import io.github.bbortt.event.planner.security.AuthoritiesConstants;
 import io.github.bbortt.event.planner.service.LocationTimeSlotService;
 import io.github.bbortt.event.planner.web.rest.errors.BadRequestAlertException;
 import io.github.jhipster.web.util.HeaderUtil;
@@ -18,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -98,6 +100,7 @@ public class LocationTimeSlotResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of locationTimeSlots in body.
      */
     @GetMapping("/location-time-slots")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<List<LocationTimeSlot>> getAllLocationTimeSlots(Pageable pageable) {
         log.debug("REST request to get a page of LocationTimeSlots");
         Page<LocationTimeSlot> page = locationTimeSlotService.findAll(pageable);

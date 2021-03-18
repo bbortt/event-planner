@@ -33,7 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * Integration tests for the {@link InvitationResource} REST controller.
  */
-class InvitationResourceIT extends AbstractApplicationContextAwareIT {
+public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
     private static final String TEST_USER_LOGIN = "invitationresourceit-login";
     private static final String TEST_USER_EMAIL = "invitationresourceit@login";
     private static final String TEST_ADMIN_LOGIN = "invitationresourceit-admin";
@@ -459,6 +459,7 @@ class InvitationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     void acceptInvitationRightAfterRegistration() throws Exception {
         final String token = "78024294-baf7-414f-9b12-d86c9983a71d";
 
@@ -475,6 +476,7 @@ class InvitationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
+    @WithMockUser(TEST_USER_LOGIN)
     void acceptInvitationRightAfterRegistrationWithInvalidUsername() throws Exception {
         final String token = "78024294-baf7-414f-9b12-d86c9983a71d";
 
