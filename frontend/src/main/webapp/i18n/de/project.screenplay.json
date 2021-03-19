@@ -1,0 +1,20 @@
+{
+  "eventPlannerApp": {
+    "project": {
+      "screenplay": {
+        "tabTitle": "Event Planner | Drehbuch",
+        "sections": {
+          "notFound": "Für diese Location wurden keine Sektionen gefunden"
+        },
+        "filter": {
+          "collapseAll": "Alle schliessen",
+          "expandAll": "Alle öffnen",
+          "interval": "Abstand",
+          "from": "Von",
+          "to": "Bis",
+          "reset": "Zurücksetzen"
+        }
+      }
+    }
+  }
+}

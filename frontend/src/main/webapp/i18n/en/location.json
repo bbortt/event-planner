@@ -1,0 +1,28 @@
+{
+  "eventPlannerApp": {
+    "location": {
+      "home": {
+        "title": "Locations",
+        "createLabel": "Create a new Location",
+        "editLabel": "Edit Location",
+        "createOrEditLabel": "Create or edit a Location",
+        "notFound": "No Locations found"
+      },
+      "created": "New Location {{ param }} was created",
+      "updated": "Location {{ param }} was updated",
+      "deleted": "Location {{ param }} was deleted",
+      "delete": {
+        "question": "Are you sure you want to delete Location {{ name }}?",
+        "warning": "This will delete all Sections and Events contained!"
+      },
+      "detail": {
+        "title": "Location"
+      },
+      "name": "Name",
+      "project": "Project",
+      "responsibility": "Responsibility",
+      "user": "User",
+      "section": "Section"
+    }
+  }
+}

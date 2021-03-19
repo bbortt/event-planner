@@ -10,7 +10,6 @@ import { SessionStorageService } from 'ngx-webstorage';
 import { JhiLanguageService } from 'ng-jhipster';
 
 import { StateStorageService } from 'app/core/auth/state-storage.service';
-import { TrackerService } from 'app/core/tracker/tracker.service';
 
 import { Account } from 'app/core/user/account.model';
 import { Authority } from 'app/shared/constants/authority.constants';
@@ -27,7 +26,6 @@ export class AccountService {
     private languageService: JhiLanguageService,
     private sessionStorage: SessionStorageService,
     private http: HttpClient,
-    private trackerService: TrackerService,
     private stateStorageService: StateStorageService,
     private router: Router
   ) {}
@@ -35,11 +33,6 @@ export class AccountService {
   authenticate(identity: Account | null): void {
     this.userIdentity = identity;
     this.authenticationState.next(this.userIdentity);
-    if (identity) {
-      this.trackerService.connect();
-    } else {
-      this.trackerService.disconnect();
-    }
   }
 
   hasAnyAuthority(authorities: string[] | string): boolean {

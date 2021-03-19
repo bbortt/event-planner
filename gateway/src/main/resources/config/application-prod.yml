@@ -24,6 +24,8 @@ management:
     export:
       prometheus:
         enabled: false
+  server:
+    port: 8090
 
 spring:
   devtools:
@@ -31,11 +33,6 @@ spring:
       enabled: false
     livereload:
       enabled: false
-  mail:
-    host: localhost
-    port: 25
-    username:
-    password:
   thymeleaf:
     cache: true
   sleuth:
@@ -78,8 +75,6 @@ jhipster:
   http:
     cache: # Used by the CachingHttpHeadersFilter
       timeToLiveInDays: 1461
-  mail: # specific JHipster mail property, for standard properties see MailProperties
-    base-url: http://my-server-url-to-change # Modify according to your server's URL
   metrics:
     logs: # Reports metrics in the logs
       enabled: false

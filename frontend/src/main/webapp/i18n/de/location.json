@@ -1,0 +1,28 @@
+{
+  "eventPlannerApp": {
+    "location": {
+      "home": {
+        "title": "Lokalitäten",
+        "createLabel": "Lokalität erstellen",
+        "editLabel": "Lokalität bearbeiten",
+        "createOrEditLabel": "Lokalität erstellen oder bearbeiten",
+        "notFound": "Keine Lokalitäten gefunden"
+      },
+      "created": "Lokalität {{ param }} erstellt",
+      "updated": "Lokalität {{ param }} aktualisiert",
+      "deleted": "Lokalität {{ param }} gelöscht",
+      "delete": {
+        "question": "Soll Lokalität {{ name }} wirklich dauerhaft gelöscht werden?",
+        "warning": "Dies wird alle untergeordneten Abschnitte und Ereignise löschen!"
+      },
+      "detail": {
+        "title": "Lokalität"
+      },
+      "name": "Name",
+      "project": "Project",
+      "responsibility": "Verantwortlichkeit",
+      "user": "Benutzer",
+      "section": "Abschnitt"
+    }
+  }
+}

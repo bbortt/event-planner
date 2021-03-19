@@ -11,7 +11,7 @@ type EntityArrayResponseType = HttpResponse<Role[]>;
 
 @Injectable({ providedIn: 'root' })
 export class RoleService {
-  public resourceUrl = SERVER_API_URL + 'api/roles';
+  public resourceUrl = SERVER_API_URL + 'services/api/roles';
 
   constructor(protected http: HttpClient) {}
 

@@ -1,0 +1,11 @@
+APPL_JWT_SECURITY_KEY: ${bbortt/event-planner/gcp/$APPL_ENV/jwt-security-key}
+APPL_JDBC_URL: ${bbortt/event-planner/gcp/$APPL_ENV/jdbc-url}
+APPL_JDBC_USERNAME: ${bbortt/event-planner/gcp/$APPL_ENV/jdbc-username}
+APPL_JDBC_PASSWORD: ${bbortt/event-planner/gcp/$APPL_ENV/jdbc-password}
+APPL_FLYWAY_USER: ${bbortt/event-planner/gcp/$APPL_ENV/flyway-user}
+APPL_FLYWAY_PASSWORD: ${bbortt/event-planner/gcp/$APPL_ENV/flyway-password}
+APPL_MAIL_HOST: ${bbortt/event-planner/gcp/$APPL_ENV/mail-host}
+APPL_MAIL_PORT: ${bbortt/event-planner/gcp/$APPL_ENV/mail-port}
+APPL_MAIL_USERNAME: ${bbortt/event-planner/gcp/$APPL_ENV/mail-username}
+APPL_MAIL_PASSWORD: ${bbortt/event-planner/gcp/$APPL_ENV/mail-password}
+APPL_MAIL_BASE_URL: ${bbortt/event-planner/gcp/$APPL_ENV/mail-base-url}

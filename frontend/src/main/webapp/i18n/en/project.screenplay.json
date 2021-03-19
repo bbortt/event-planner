@@ -1,0 +1,20 @@
+{
+  "eventPlannerApp": {
+    "project": {
+      "screenplay": {
+        "tabTitle": "Event Planner | Screenplay",
+        "sections": {
+          "notFound": "No Sections found for this Location"
+        },
+        "filter": {
+          "collapseAll": "Collapse All",
+          "expandAll": "Expand All",
+          "interval": "Interval",
+          "from": "From",
+          "to": "To",
+          "reset": "Reset"
+        }
+      }
+    }
+  }
+}

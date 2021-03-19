@@ -48,9 +48,6 @@ management:
   info:
     git:
       mode: full
-  health:
-    mail:
-      enabled: false # When using the MailService, configure an SMTP server and set this to true
   metrics:
     export:
       # Prometheus is the default metrics backend
@@ -151,13 +148,13 @@ jhipster:
     default-include-pattern: /api/.*
     title: EventPlanner API
     description: EventPlanner API documentation
-    version: 0.0.1
+    version: 1.0.0-SNAPSHOT
     terms-of-service-url:
     contact-name:
-    contact-url:
+    contact-url: https://github.com/bbortt/event-planner
     contact-email:
-    license: unlicensed
-    license-url:
+    license: Apache-2.0
+    license-url: http://www.apache.org/licenses/LICENSE-2.0
   security:
     oauth2:
       audience:

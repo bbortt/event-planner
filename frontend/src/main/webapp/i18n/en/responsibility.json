@@ -1,0 +1,28 @@
+{
+  "eventPlannerApp": {
+    "responsibility": {
+      "home": {
+        "title": "Responsibilities",
+        "createLabel": "Create a new Responsibility",
+        "editLabel": "Edit Responsibility",
+        "createOrEditLabel": "Create or edit a Responsibility",
+        "notFound": "No Responsibilities found"
+      },
+      "created": "New Responsibility {{ param }} was created",
+      "updated": "Responsibility {{ param }} was updated",
+      "deleted": "Responsibility {{ param }} was deleted",
+      "delete": {
+        "question": "Are you sure you want to delete Responsibility {{ name }}?"
+      },
+      "detail": {
+        "title": "Responsibility"
+      },
+      "name": "Name",
+      "color": "Color",
+      "project": "Project",
+      "invitation": "Invitation",
+      "location": "Location",
+      "event": "Event"
+    }
+  }
+}

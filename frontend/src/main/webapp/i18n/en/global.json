@@ -4,11 +4,6 @@
     "browsehappy": "You are using an <strong>outdated</strong> browser. Please <a href=\"http://browsehappy.com/?locale=en\">upgrade your browser</a> to improve your experience.",
     "menu": {
       "home": "Home",
-      "jhipster-needle-menu-add-element": "JHipster will add additional menu entries here (do not translate!)",
-      "entities": {
-        "main": "Entities",
-        "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
-      },
       "account": {
         "main": "Account",
         "settings": "Settings",
@@ -17,19 +12,6 @@
         "login": "Sign in",
         "logout": "Sign out",
         "register": "Register"
-      },
-      "admin": {
-        "main": "Administration",
-        "gateway": "Gateway",
-        "userManagement": "User management",
-        "tracker": "User tracker",
-        "metrics": "Metrics",
-        "health": "Health",
-        "configuration": "Configuration",
-        "logs": "Logs",
-        "apidocs": "API",
-        "database": "Database",
-        "jhipster-needle-menu-add-admin-element": "JHipster will add additional menu entries here (do not translate!)"
       },
       "language": "Language"
     },
@@ -42,19 +24,19 @@
       "newpassword.placeholder": "New password",
       "confirmpassword.label": "New password confirmation",
       "confirmpassword.placeholder": "Confirm the new password",
-      "email.label": "Email",
-      "email.placeholder": "Your email"
+      "email.label": "Email address",
+      "email.placeholder": "Your email",
+      "search": "Search",
+      "action": "Action"
     },
     "messages": {
       "info": {
-        "authenticated": {
-          "prefix": "If you want to ",
-          "link": "sign in",
-          "suffix": ", you can try the default accounts:<br/>- Administrator (login=\"admin\" and password=\"admin\") <br/>- User (login=\"user\" and password=\"user\")."
-        },
         "register": {
           "noaccount": "You don't have an account yet?",
           "link": "Register a new account"
+        },
+        "authenticated": {
+          "link": "Sign In"
         }
       },
       "error": {
@@ -98,7 +80,8 @@
       "edit": "Edit",
       "open": "Open",
       "save": "Save",
-      "view": "View"
+      "view": "View",
+      "inviteuser": "Invite user"
     },
     "detail": {
       "field": "Field",
@@ -118,10 +101,13 @@
       "pattern": "This field should follow pattern for {{ pattern }}.",
       "number": "This field should be a number.",
       "datetimelocal": "This field should be a date and time.",
-      "patternLogin": "This field can only contain letters, digits and e-mail addresses."
+      "patternLogin": "This field can only contain letters, digits and e-mail addresses.",
+      "email": "Please enter a valid email address.",
+      "uniqueness": "This value has already been taken."
     }
   },
   "error": {
+    "badRequest": "Bad request",
     "internalServerError": "Internal server error",
     "server.not.reachable": "Server not reachable",
     "url.not.found": "Not found",
@@ -136,5 +122,8 @@
       "not.image": "File was expected to be an image but was found to be \"{{ fileType }}\""
     }
   },
-  "footer": "This is your footer"
+  "footer": {
+    "openSourceNotice": "EventPlanner is Open Source on",
+    "createIssue": "Found an error?"
+  }
 }

@@ -10,7 +10,6 @@ import { Account } from 'app/core/user/account.model';
 import { Authority } from 'app/shared/constants/authority.constants';
 import { StateStorageService } from 'app/core/auth/state-storage.service';
 import { MockLanguageService } from '../../../helpers/mock-language.service';
-import { TrackerService } from 'app/core/tracker/tracker.service';
 import { MockTrackerService } from '../../../helpers/mock-tracker.service';
 import { MockRouter } from '../../../helpers/mock-route.service';
 import { MockStateStorageService } from '../../../helpers/mock-state-storage.service';
@@ -35,7 +34,6 @@ describe('Service Tests', () => {
     let httpMock: HttpTestingController;
     let storageService: MockStateStorageService;
     let router: MockRouter;
-    let trackerService: TrackerService;
 
     beforeEach(() => {
       TestBed.configureTestingModule({
@@ -45,10 +43,6 @@ describe('Service Tests', () => {
           {
             provide: JhiLanguageService,
             useClass: MockLanguageService,
-          },
-          {
-            provide: TrackerService,
-            useClass: MockTrackerService,
           },
           {
             provide: StateStorageService,
@@ -65,7 +59,6 @@ describe('Service Tests', () => {
       httpMock = TestBed.get(HttpTestingController);
       storageService = TestBed.get(StateStorageService);
       router = TestBed.get(Router);
-      trackerService = TestBed.get(TrackerService);
     });
 
     afterEach(() => {
@@ -84,8 +77,6 @@ describe('Service Tests', () => {
         // THEN
         expect(userIdentity).toBeNull();
         expect(service.isAuthenticated()).toBe(false);
-        expect(trackerService.disconnect).toHaveBeenCalled();
-        expect(trackerService.connect).not.toHaveBeenCalled();
       });
 
       it('authenticationState should emit the same account as was in input parameter', () => {
@@ -100,8 +91,6 @@ describe('Service Tests', () => {
         // THEN
         expect(userIdentity).toEqual(expectedResult);
         expect(service.isAuthenticated()).toBe(true);
-        expect(trackerService.connect).toHaveBeenCalled();
-        expect(trackerService.disconnect).not.toHaveBeenCalled();
       });
     });
 

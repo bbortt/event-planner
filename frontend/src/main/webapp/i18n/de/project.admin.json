@@ -1,0 +1,19 @@
+{
+  "eventPlannerApp": {
+    "project": {
+      "admin": {
+        "tabTitle": "Event Planer | Project Konfigurieren",
+        "navbar": {
+          "locations": "Lokalitäten",
+          "users": "Benutzer",
+          "responsibilities": "Verantwortlichkeiten"
+        },
+        "locations": {
+          "sections": {
+            "addLabel": "Abschnitt hinzufügen"
+          }
+        }
+      }
+    }
+  }
+}

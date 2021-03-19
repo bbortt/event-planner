@@ -12,7 +12,7 @@ type EntityArrayResponseType = HttpResponse<Responsibility[]>;
 
 @Injectable({ providedIn: 'root' })
 export class ResponsibilityService {
-  public resourceUrl = SERVER_API_URL + 'api/responsibilities';
+  public resourceUrl = SERVER_API_URL + 'services/api/responsibilities';
 
   constructor(protected http: HttpClient) {}
 

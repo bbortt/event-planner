@@ -1,0 +1,50 @@
+{
+  "eventPlannerApp": {
+    "project": {
+      "action": {
+        "advanced": "Advanced",
+        "archive": "Archive",
+        "warning": "This action will be permanent!"
+      },
+      "home": {
+        "title": "Projects",
+        "createLabel": "Create a new Project",
+        "editLabel": "Edit Project",
+        "screenplayLabel": "Screenplay",
+        "settingsLabel": "Settings",
+        "notFound": "No Projects found"
+      },
+      "mine": {
+        "title": "My Projects",
+        "showArchived": "Show archived",
+        "adminView": "Administrative view",
+        "noDescription": "Project does not have a description.",
+        "loadMore": "Load more projects"
+      },
+      "created": "New Project {{ param }} was created",
+      "updated": "Project {{ param }} was updated",
+      "archived": "Project {{ param }} was archived",
+      "deleted": "Project {{ param }} was deleted",
+      "archive": {
+        "title": "Confirm archive operation",
+        "question": "Are you sure you want to archive Project {{ name }}?"
+      },
+      "delete": {
+        "question": "Are you sure you want to delete Project {{ name }}?"
+      },
+      "detail": {
+        "title": "Project"
+      },
+      "name": "Name",
+      "description": "Description",
+      "startTime": "Start Time",
+      "endTime": "End Time",
+      "archived": "Archived",
+      "responsibility": "Responsibility",
+      "invitation": "Invitation",
+      "location": "Location",
+      "emailOrLogin": "Email or login",
+      "owner": "Owner"
+    }
+  }
+}
