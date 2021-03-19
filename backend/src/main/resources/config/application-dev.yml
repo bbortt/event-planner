@@ -63,8 +63,8 @@ spring:
             issuer-uri: http://localhost:9080/auth/realms/jhipster
         registration:
           oidc:
-            client-id: internal
-            client-secret: internal
+            client-id: backend
+            client-secret: backend
   sleuth:
     sampler:
       probability: 1 # report 100% of traces

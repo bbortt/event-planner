@@ -1,9 +1,8 @@
-node_modules/
-src/main/docker/
-src/test/javascript/protractor.conf.js
-src/test/javascript/jest.conf.js
-webpack/
-target/
-build/
-node/
-postcss.config.js
+node_modules
+target
+build
+package-lock.json
+.git
+.mvn
+gradle
+.gradle

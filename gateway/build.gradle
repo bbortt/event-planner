@@ -11,7 +11,7 @@ description = "Event Planning Tool - Gateway."
 defaultTasks "bootRun"
 
 springBoot {
-    mainClassName = "io.github.bbortt.event.planner.EventPlannerApp"
+    mainClassName = "io.github.bbortt.event.planner.gateway.EventPlannerGateway"
 }
 
 dependencies {
