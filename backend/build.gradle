@@ -15,15 +15,75 @@ springBoot {
 }
 
 dependencies {
+    implementation platform("io.github.jhipster:jhipster-dependencies:${jhipster_dependencies_version}")
+
+    // Use ", version: jhipster_dependencies_version, changing: true" if you want
+    // to use a SNAPSHOT release instead of a stable release
+    implementation group: "io.github.jhipster", name: "jhipster-framework"
+    implementation "javax.annotation:javax.annotation-api"
+    implementation "io.dropwizard.metrics:metrics-core"
+    implementation "io.micrometer:micrometer-registry-prometheus"
+    implementation "net.logstash.logback:logstash-logback-encoder"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-hppc"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
+    implementation "com.fasterxml.jackson.module:jackson-module-jaxb-annotations"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-hibernate5"
+    implementation "com.fasterxml.jackson.core:jackson-annotations"
+    implementation "com.fasterxml.jackson.core:jackson-databind"
+    implementation "org.hibernate:hibernate-core"
+    implementation "com.zaxxer:HikariCP"
+    implementation "javax.transaction:javax.transaction-api"
+    implementation "org.hibernate:hibernate-entitymanager"
+    implementation "org.hibernate.validator:hibernate-validator"
     implementation "org.flywaydb:flyway-core"
+    implementation "org.springframework.boot:spring-boot-loader-tools"
+    implementation "org.springframework.boot:spring-boot-starter-mail"
+    implementation "org.springframework.boot:spring-boot-starter-logging"
+    implementation "org.springframework.boot:spring-boot-starter-actuator"
+    implementation "org.springframework.boot:spring-boot-starter-aop"
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+    testImplementation "org.testcontainers:postgresql"
+    implementation "org.springframework.boot:spring-boot-starter-security"
+    implementation("org.springframework.boot:spring-boot-starter-web") {
+        exclude module: "spring-boot-starter-tomcat"
+    }
+    implementation "org.springframework.boot:spring-boot-starter-undertow"
+    implementation "org.springframework.boot:spring-boot-starter-thymeleaf"
+    implementation "org.zalando:problem-spring-web"
+    implementation "org.springframework.cloud:spring-cloud-starter"
+    implementation "org.springframework.cloud:spring-cloud-starter-netflix-ribbon"
+    implementation "org.springframework.cloud:spring-cloud-starter-netflix-hystrix"
+    implementation "org.springframework.retry:spring-retry"
+    implementation "org.springframework.cloud:spring-cloud-starter-openfeign"
+    implementation "org.springframework.boot:spring-boot-starter-cloud-connectors"
+    implementation "org.springframework.security:spring-security-config"
+    implementation "org.springframework.security:spring-security-data"
+    implementation "org.springframework.security:spring-security-web"
+    implementation "org.springframework.boot:spring-boot-starter-oauth2-client"
+    implementation "org.springframework.boot:spring-boot-starter-oauth2-resource-server"
+    implementation("io.springfox:springfox-swagger2") {
+        exclude module: "mapstruct"
+    }
+    implementation "io.springfox:springfox-bean-validators"
+    implementation "org.postgresql:postgresql"
+    annotationProcessor "org.glassfish.jaxb:jaxb-runtime:${jaxb_runtime_version}"
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor:${spring_boot_version}"
+    testImplementation("org.springframework.boot:spring-boot-starter-test") {
+        exclude group: "org.junit.vintage", module: "junit-vintage-engine"
+    }
+    testImplementation "org.springframework.security:spring-security-test"
+    testImplementation "org.springframework.boot:spring-boot-test"
+    testImplementation "com.tngtech.archunit:archunit-junit5-api:${archunit_junit5_version}"
+    testRuntimeOnly "com.tngtech.archunit:archunit-junit5-engine:${archunit_junit5_version}"
+    testImplementation "com.h2database:h2"
 }
 
-configurations{
+configurations {
     all {
         resolutionStrategy {
-            // Inherited version from Spring Boot can't be used because of regressions:
+            // Inherited version from Spring Boot can"t be used because of regressions:
             // To be removed as soon as spring-boot use the same version
-            force 'org.flywaydb:flyway-core:6.5.1'
+            force "org.flywaydb:flyway-core:6.5.1"
         }
     }
 }
@@ -35,5 +95,6 @@ task flywayCleanIntegrationTest(type: org.flywaydb.gradle.task.FlywayCleanTask) 
         password = "${flyway_it_password}"
     }
 }
+flywayCleanIntegrationTest.dependsOn test
 
 integrationTest.dependsOn flywayCleanIntegrationTest

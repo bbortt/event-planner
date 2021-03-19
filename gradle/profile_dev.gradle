@@ -8,7 +8,7 @@ configurations {
 }
 
 subprojects {
-    pluginManager.withPlugin('java', {
+    pluginManager.withPlugin("java", {
         dependencies {
             developmentOnly "org.springframework.boot:spring-boot-devtools:${spring_boot_version}"
         }
@@ -26,8 +26,8 @@ subprojects {
         }
 
         processResources {
-            inputs.property('version', version)
-            inputs.property('springProfiles', profiles)
+            inputs.property("version", version)
+            inputs.property("springProfiles", profiles)
             filesMatching("**/application.yml") {
                 filter {
                     it.replace("#project.version#", version)

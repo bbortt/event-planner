@@ -5,7 +5,7 @@ if (project.hasProperty("swagger")) {
 }
 
 subprojects {
-    pluginManager.withPlugin('java', {
+    pluginManager.withPlugin("java", {
         springBoot {
             buildInfo()
         }
@@ -15,8 +15,8 @@ subprojects {
         }
 
         processResources {
-            inputs.property('version', version)
-            inputs.property('springProfiles', profiles)
+            inputs.property("version", version)
+            inputs.property("springProfiles", profiles)
             filesMatching("**/application.yml") {
                 filter {
                     it.replace("#project.version#", version)

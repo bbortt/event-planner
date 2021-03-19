@@ -1,5 +1,10 @@
 package io.github.bbortt.event.planner.security;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.security.oauth2.core.oidc.endpoint.OidcParameterNames.ID_TOKEN;
+
+import java.time.Instant;
+import java.util.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -10,12 +15,6 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
-
-import java.time.Instant;
-import java.util.*;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.security.oauth2.core.oidc.endpoint.OidcParameterNames.ID_TOKEN;
 
 /**
  * Test class for the {@link SecurityUtils} utility class.
@@ -38,8 +37,7 @@ public class SecurityUtilsUnitTest {
         claims.put("groups", "ROLE_USER");
         claims.put("sub", 123);
         claims.put("preferred_username", "admin");
-        OidcIdToken idToken = new OidcIdToken(ID_TOKEN, Instant.now(),
-            Instant.now().plusSeconds(60), claims);
+        OidcIdToken idToken = new OidcIdToken(ID_TOKEN, Instant.now(), Instant.now().plusSeconds(60), claims);
         Collection<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(AuthoritiesConstants.USER));
         OidcUser user = new DefaultOidcUser(authorities, idToken);
@@ -83,5 +81,4 @@ public class SecurityUtilsUnitTest {
         assertThat(SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.USER)).isTrue();
         assertThat(SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.ADMIN)).isFalse();
     }
-
 }

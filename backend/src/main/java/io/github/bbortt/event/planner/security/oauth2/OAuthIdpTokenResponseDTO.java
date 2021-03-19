@@ -1,12 +1,10 @@
 package io.github.bbortt.event.planner.security.oauth2;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.io.Serializable;
 import java.util.UUID;
 
 public class OAuthIdpTokenResponseDTO implements Serializable {
-
     @JsonProperty("token_type")
     private String tokenType;
 

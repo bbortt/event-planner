@@ -7,11 +7,18 @@ import io.github.bbortt.event.planner.repository.AuthorityRepository;
 import io.github.bbortt.event.planner.repository.UserRepository;
 import io.github.bbortt.event.planner.security.SecurityUtils;
 import io.github.bbortt.event.planner.service.dto.UserDTO;
-
+import java.time.Instant;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
@@ -19,21 +26,14 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
-import java.util.*;
-import java.util.stream.Collectors;
-
 /**
  * Service class for managing users.
  */
 @Service
-@Transactional
 public class UserService {
-
     private final Logger log = LoggerFactory.getLogger(UserService.class);
 
     private final UserRepository userRepository;
-
     private final AuthorityRepository authorityRepository;
 
     public UserService(UserRepository userRepository, AuthorityRepository authorityRepository) {
@@ -201,5 +201,33 @@ public class UserService {
         }
         user.setActivated(true);
         return user;
+    }
+
+    /**
+     * Find possible User by email or login containing.
+     *
+     * @param emailOrLogin partial email or login.
+     * @return list of possible Users.
+     */
+    @Transactional(readOnly = true)
+    public List<UserDTO> findByEmailOrLoginContaining(String emailOrLogin) {
+        log.debug("Request to get all Users by login or email: {}", emailOrLogin);
+        return userRepository
+            .findTop5ByEmailContainingIgnoreCaseOrLoginContainingIgnoreCase(emailOrLogin, emailOrLogin)
+            .stream()
+            .map(UserDTO::new)
+            .collect(Collectors.toList());
+    }
+
+    /**
+     * Find all Users for the given Project.
+     *
+     * @param projectId the id of the project to retrieve users for.
+     * @return the list of entities.
+     */
+    @Transactional(readOnly = true)
+    public List<User> findAllByProjectId(Long projectId, Sort sort) {
+        log.debug("Request to get all Users for Project {}", projectId);
+        return userRepository.findAllByProjectId(projectId, Sort.by(sort.stream().map(Order::ignoreCase).collect(Collectors.toList())));
     }
 }

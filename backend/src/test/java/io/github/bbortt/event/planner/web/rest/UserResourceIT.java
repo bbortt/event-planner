@@ -1,77 +1,68 @@
 package io.github.bbortt.event.planner.web.rest;
 
-import io.github.bbortt.event.planner.BackendApp;
-import io.github.bbortt.event.planner.config.TestSecurityConfiguration;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import io.github.bbortt.event.planner.AbstractApplicationContextAwareIT;
 import io.github.bbortt.event.planner.domain.Authority;
 import io.github.bbortt.event.planner.domain.User;
 import io.github.bbortt.event.planner.repository.UserRepository;
 import io.github.bbortt.event.planner.security.AuthoritiesConstants;
 import io.github.bbortt.event.planner.service.dto.UserDTO;
 import io.github.bbortt.event.planner.service.mapper.UserMapper;
+import java.time.Instant;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+import java.util.function.Consumer;
+import javax.persistence.EntityManager;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import java.time.Instant;
-import java.util.*;
-import java.util.function.Consumer;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItems;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
 /**
  * Integration tests for the {@link UserResource} REST controller.
  */
-@AutoConfigureMockMvc
 @WithMockUser(authorities = AuthoritiesConstants.ADMIN)
-@SpringBootTest(classes = {BackendApp.class, TestSecurityConfiguration.class})
-public class UserResourceIT {
+public class UserResourceIT extends AbstractApplicationContextAwareIT {
 
-    private static final String DEFAULT_LOGIN = "johndoe";
-
-    private static final String DEFAULT_ID = "id1";
-
-    private static final String DEFAULT_EMAIL = "johndoe@localhost";
-
-    private static final String DEFAULT_FIRSTNAME = "john";
-
-    private static final String DEFAULT_LASTNAME = "doe";
-
-    private static final String DEFAULT_IMAGEURL = "http://placehold.it/50x50";
-
-    private static final String DEFAULT_LANGKEY = "en";
+    static final String DEFAULT_LOGIN = "johndoe";
+    static final String DEFAULT_ID = "id1";
+    static final String DEFAULT_EMAIL = "johndoe@localhost";
+    static final String DEFAULT_FIRSTNAME = "john";
+    static final String DEFAULT_LASTNAME = "doe";
+    static final String DEFAULT_IMAGEURL = "http://placehold.it/50x50";
+    static final String DEFAULT_LANGKEY = "en";
 
     @Autowired
-    private UserRepository userRepository;
+    UserRepository userRepository;
 
     @Autowired
-    private UserMapper userMapper;
+    UserMapper userMapper;
 
     @Autowired
-    private EntityManager em;
+    EntityManager em;
 
     @Autowired
-    private MockMvc restUserMockMvc;
+    MockMvc restUserMockMvc;
 
-    private User user;
+    User user;
 
     /**
      * Create a User.
      *
-     * This is a static method, as tests for other entities might also need it,
-     * if they test an entity which has a required relationship to the User entity.
+     * This is a static method, as tests for other entities might also need it, if they test an entity which has a required relationship to the User entity.
      */
     public static User createEntity(EntityManager em) {
         User user = new User();
@@ -87,7 +78,7 @@ public class UserResourceIT {
     }
 
     @BeforeEach
-    public void initTest() {
+    void initTest() {
         user = createEntity(em);
         user.setLogin(DEFAULT_LOGIN);
         user.setEmail(DEFAULT_EMAIL);
@@ -95,7 +86,7 @@ public class UserResourceIT {
 
     @Test
     @Transactional
-    public void getAllUsers() throws Exception {
+    void getAllUsers() throws Exception {
         // Initialize the database
         userRepository.saveAndFlush(user);
 
@@ -115,7 +106,7 @@ public class UserResourceIT {
 
     @Test
     @Transactional
-    public void getUser() throws Exception {
+    void getUser() throws Exception {
         // Initialize the database
         userRepository.saveAndFlush(user);
 
@@ -134,13 +125,13 @@ public class UserResourceIT {
 
     @Test
     @Transactional
-    public void getNonExistingUser() throws Exception {
+    void getNonExistingUser() throws Exception {
         restUserMockMvc.perform(get("/api/users/unknown"))
             .andExpect(status().isNotFound());
     }
 
     @Test
-    public void testUserEquals() throws Exception {
+    void testUserEquals() throws Exception {
         TestUtil.equalsVerifier(User.class);
         User user1 = new User();
         user1.setId("id1");
@@ -154,7 +145,7 @@ public class UserResourceIT {
     }
 
     @Test
-    public void testUserDTOtoUser() {
+    void testUserDTOtoUser() {
         UserDTO userDTO = new UserDTO();
         userDTO.setId(DEFAULT_ID);
         userDTO.setLogin(DEFAULT_LOGIN);
@@ -185,7 +176,7 @@ public class UserResourceIT {
     }
 
     @Test
-    public void testUserToUserDTO() {
+    void testUserToUserDTO() {
         user.setId(DEFAULT_ID);
         user.setCreatedBy(DEFAULT_LOGIN);
         user.setCreatedDate(Instant.now());
@@ -208,15 +199,15 @@ public class UserResourceIT {
         assertThat(userDTO.getImageUrl()).isEqualTo(DEFAULT_IMAGEURL);
         assertThat(userDTO.getLangKey()).isEqualTo(DEFAULT_LANGKEY);
         assertThat(userDTO.getCreatedBy()).isEqualTo(DEFAULT_LOGIN);
-        assertThat(userDTO.getCreatedDate()).isEqualTo(user.getCreatedDate());
+        assertThat(userDTO.getCreatedDate().toInstant()).isEqualTo(user.getCreatedDate());
         assertThat(userDTO.getLastModifiedBy()).isEqualTo(DEFAULT_LOGIN);
-        assertThat(userDTO.getLastModifiedDate()).isEqualTo(user.getLastModifiedDate());
+        assertThat(userDTO.getLastModifiedDate().toInstant()).isEqualTo(user.getLastModifiedDate());
         assertThat(userDTO.getAuthorities()).containsExactly(AuthoritiesConstants.USER);
         assertThat(userDTO.toString()).isNotNull();
     }
 
     @Test
-    public void testAuthorityEquals() {
+    void testAuthorityEquals() {
         Authority authorityA = new Authority();
         assertThat(authorityA).isEqualTo(authorityA);
         assertThat(authorityA).isNotEqualTo(null);

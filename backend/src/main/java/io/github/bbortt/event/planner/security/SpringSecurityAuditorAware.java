@@ -1,9 +1,7 @@
 package io.github.bbortt.event.planner.security;
 
 import io.github.bbortt.event.planner.config.Constants;
-
 import java.util.Optional;
-
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.stereotype.Component;
 
