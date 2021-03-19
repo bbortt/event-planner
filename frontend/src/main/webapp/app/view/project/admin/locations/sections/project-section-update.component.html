@@ -1,0 +1,113 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+            <h2 id="jhi-section-heading">
+                <span *ngIf="isNew; else updateTitle"
+                      jhiTranslate="eventPlannerApp.section.home.createLabel">Create a new Section</span>
+                <ng-template #updateTitle>
+                    <span
+                        jhiTranslate="eventPlannerApp.section.home.editLabel">Edit Section</span>
+                </ng-template>
+            </h2>
+
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+
+                <div class="form-group">
+                    <label class="form-control-label"
+                           jhiTranslate="eventPlannerApp.section.name"
+                           for="field_name">Name</label>
+                    <input type="text" class="form-control" name="name" id="field_name"
+                           formControlName="name"
+                           autocomplete="off"
+                    />
+
+                    <div
+                        *ngIf="editForm.get('name')!.invalid && (editForm.get('name')!.dirty || editForm.get('name')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('name')?.errors?.required"
+                               jhiTranslate="entity.validation.required">
+                            This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('name')?.errors?.maxlength"
+                               jhiTranslate="entity.validation.maxlength"
+                               [translateValues]="{ max: 50 }">
+                            This field cannot be longer than 50 characters.
+                        </small>
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('name')?.errors?.exists"
+                               jhiTranslate="entity.validation.uniqueness"
+                               [translateValues]="{ max: 50 }">
+                            This value has already been taken.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <input type="radio" value="responsibility" name="responsibilityUser"
+                           [checked]="isResponsibility"
+                           (change)="onRadioChange($event)"> <span
+                    jhiTranslate="eventPlannerApp.section.responsibility">Responsibility</span>
+
+                    <input type="radio" value="user" name="responsibilityUser"
+                           [checked]="!isResponsibility"
+                           (change)="onRadioChange($event)"> <span
+                    jhiTranslate="eventPlannerApp.section.user">User</span>
+                </div>
+
+                <div *ngIf="isResponsibility; else userAutocomplete" class="form-group">
+                    <label class="form-control-label"
+                           jhiTranslate="eventPlannerApp.section.responsibility"
+                           for="field_responsibility">Responsibility</label>
+                    <dx-autocomplete
+                        class="dx-form-control"
+                        name="responsibility"
+                        id="field_responsibility"
+                        formControlName="responsibilityAutocomplete"
+                        [placeholder]="'global.form.search' | translate"
+                        [dataSource]="responsibilities"
+                        valueExpr="name"
+                        (onSelectionChanged)="responsibilitySelected($event)"
+                        [showClearButton]="true"
+                        [isValid]="!(editForm.get('responsibility')!.invalid && (editForm.get('responsibility')!.dirty || editForm.get('responsibility')!.touched))">
+                    </dx-autocomplete>
+                </div>
+
+                <ng-template #userAutocomplete>
+                    <div class="form-group">
+                        <label class="form-control-label"
+                               jhiTranslate="eventPlannerApp.section.user"
+                               for="field_user">User</label>
+                        <dx-autocomplete
+                            class="dx-form-control"
+                            name="user"
+                            id="field_user"
+                            formControlName="userAutocomplete"
+                            [placeholder]="'global.form.search' | translate"
+                            [dataSource]="users"
+                            valueExpr="email"
+                            (onSelectionChanged)="userSelected($event)"
+                            [showClearButton]="true"
+                            [isValid]="!(editForm.get('user')!.invalid && (editForm.get('user')!.dirty || editForm.get('user')!.touched))">
+                        </dx-autocomplete>
+                    </div>
+                </ng-template>
+
+                <div>
+                    <button type="button" id="cancel-save" class="btn btn-negative btn-gray"
+                            (click)="previousState()">
+                        <fa-icon icon="ban"></fa-icon>&nbsp;<span
+                        jhiTranslate="entity.action.cancel">Cancel</span>
+                    </button>
+
+                    <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving"
+                            class="btn btn-negative btn-green">
+                        <fa-icon icon="save"></fa-icon>&nbsp;<span
+                        jhiTranslate="entity.action.save">Save</span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

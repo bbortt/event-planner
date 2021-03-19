@@ -1,0 +1,43 @@
+#page-heading {
+  display: flow-root;
+
+  #projects-clientside-filter {
+    margin-right: 1vw;
+  }
+}
+
+.project-filter {
+  margin-top: 1em;
+  padding-top: 1em;
+  border-top: 2px solid #000;
+  border-bottom: 2px solid #000;
+}
+
+.project-card > div {
+  height: 100%;
+  padding-bottom: 2vh;
+
+  a {
+    color: #212529;
+    font-weight: normal;
+    text-decoration: none;
+  }
+
+  .project-card-content {
+    height: 100%;
+    padding: 1vw;
+
+    border: 2px solid black;
+    border-radius: 5px;
+
+    &.disabled {
+      // from .btn[disabled]
+      opacity: 0.65;
+      box-shadow: none;
+    }
+
+    .project-card-navigation {
+      margin-top: 1vh;
+    }
+  }
+}

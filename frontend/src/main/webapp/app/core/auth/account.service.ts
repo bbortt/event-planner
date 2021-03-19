@@ -1,15 +1,21 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { JhiLanguageService } from 'ng-jhipster';
+
+import { of, Observable, ReplaySubject } from 'rxjs';
+import { catchError, shareReplay, tap } from 'rxjs/operators';
+
 import { SessionStorageService } from 'ngx-webstorage';
-import { Observable, ReplaySubject, of } from 'rxjs';
-import { shareReplay, tap, catchError } from 'rxjs/operators';
+
+import { JhiLanguageService } from 'ng-jhipster';
+
 import { StateStorageService } from 'app/core/auth/state-storage.service';
+import { TrackerService } from 'app/core/tracker/tracker.service';
+
+import { Account } from 'app/core/user/account.model';
+import { Authority } from 'app/shared/constants/authority.constants';
 
 import { SERVER_API_URL } from 'app/app.constants';
-import { Account } from 'app/core/user/account.model';
-import { TrackerService } from '../tracker/tracker.service';
 
 @Injectable({ providedIn: 'root' })
 export class AccountService {
@@ -44,6 +50,21 @@ export class AccountService {
       authorities = [authorities];
     }
     return this.userIdentity.authorities.some((authority: string) => authorities.includes(authority));
+  }
+
+  hasAnyRole(projectId: number, roles: string[] | string): boolean {
+    if (!this.userIdentity || !this.userIdentity.rolePerProject) {
+      return false;
+    }
+    if (this.hasAnyAuthority(Authority.ADMIN)) {
+      return true;
+    }
+    if (!Array.isArray(roles)) {
+      roles = [roles];
+    }
+
+    const projectRole = this.userIdentity.rolePerProject[projectId];
+    return !!projectRole && roles.some((role: string) => projectRole === role);
   }
 
   identity(force?: boolean): Observable<Account | null> {
