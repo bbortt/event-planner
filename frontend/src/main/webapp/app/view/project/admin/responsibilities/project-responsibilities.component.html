@@ -1,0 +1,76 @@
+<div>
+    <h3 id="page-heading">
+        <span jhiTranslate="eventPlannerApp.responsibility.home.title">Responsibilities</span>
+
+        <div class="float-right clearfix">
+            <app-clientside-filter id="responsibilities-clientside-filter" class="float-left"
+                                   (valueChange)="this.filterData($event)"></app-clientside-filter>
+
+            <button id="jh-create-entity"
+                    class="btn btn-negative btn-green jh-create-entity create-responsibility"
+                    [routerLink]="['', {outlets: {modal: ['projects', project!.id, 'responsibilities', 'new']}}]">
+                <fa-icon icon="plus"></fa-icon>
+                <span jhiTranslate="eventPlannerApp.responsibility.home.createLabel">
+                    Create a new Responsibility
+                </span>
+            </button>
+        </div>
+    </h3>
+
+    <br />
+
+    <jhi-alert-error></jhi-alert-error>
+
+    <jhi-alert></jhi-alert>
+
+    <div class="alert alert-warning" id="no-result" *ngIf="loadedResponsibilities?.length === 0">
+        <span
+            jhiTranslate="eventPlannerApp.responsibility.home.notFound">No responsibilities found</span>
+    </div>
+
+    <div class="table-responsive" id="entities"
+         *ngIf="project && loadedResponsibilities?.length != 0">
+        <table class="table table-striped" aria-describedby="page-heading">
+            <thead>
+            <tr>
+                <th scope="col">
+                    <span jhiTranslate="eventPlannerApp.responsibility.name">Name</span>
+                </th>
+                <th scope="col">
+                    <span jhiTranslate="eventPlannerApp.responsibility.color">Color</span>
+                </th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let responsibility of responsibilities ;trackBy: trackId">
+                <td>{{ responsibility.name }}</td>
+                <td>
+                    <div class="btn color-preview"
+                         [ngStyle]="{'background-color': responsibility.color ? responsibility.color : defaultColor}"></div>
+                </td>
+                <td class="text-right">
+                    <div class="btn-group">
+                        <button type="submit"
+                                [routerLink]="['', {outlets: {modal: ['projects', project.id, 'responsibilities', responsibility.id, 'edit']}}]"
+                                class="btn btn-blue btn-sm"
+                                data-toggle="tooltip"
+                                data-placement="bottom"
+                                title="{{ 'entity.action.edit' | translate }}">
+                            <fa-icon icon="pencil-alt"></fa-icon>
+                        </button>
+
+                        <button type="submit" (click)="delete(responsibility)"
+                                class="btn btn-red btn-sm"
+                                data-toggle="tooltip"
+                                data-placement="bottom"
+                                title="{{ 'entity.action.delete' | translate }}">
+                            <fa-icon icon="times"></fa-icon>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

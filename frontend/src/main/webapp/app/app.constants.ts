@@ -6,3 +6,8 @@ export const VERSION = process.env.VERSION;
 export const DEBUG_INFO_ENABLED = Boolean(process.env.DEBUG_INFO_ENABLED);
 export const SERVER_API_URL = process.env.SERVER_API_URL;
 export const BUILD_TIMESTAMP = process.env.BUILD_TIMESTAMP;
+
+export const DEFAULT_DEBOUNCE = 200;
+
+export const DEFAULT_SCHEDULER_CELL_DURATION = 60;
+export const DEFAULT_SCHEDULER_COLOR = '#17a2b8';

@@ -1,0 +1,12 @@
+<ng-container *ngIf="variant === 'login'">
+    <p jhiTranslate="eventPlannerApp.invitation.acceptViaLoginMessage"></p>
+
+    <!--  TODO: Login does not work that way anymore -.- -->
+    <!--  <jhi-login [invitationToken]="token"></jhi-login> -->
+</ng-container>
+<ng-container *ngIf="variant === 'register'">
+    <p jhiTranslate="eventPlannerApp.invitation.acceptViaRegisterMessage"></p>
+
+    <!--  TODO: Registration does not work that way anymore -.- -->
+    <!--  <jhi-register [invitationToken]="token"></jhi-register>-->
+</ng-container>
