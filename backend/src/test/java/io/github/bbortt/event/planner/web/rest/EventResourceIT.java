@@ -20,7 +20,6 @@ import io.github.bbortt.event.planner.repository.AuthorityRepository;
 import io.github.bbortt.event.planner.repository.EventRepository;
 import io.github.bbortt.event.planner.repository.RoleRepository;
 import io.github.bbortt.event.planner.security.AuthoritiesConstants;
-import io.github.bbortt.event.planner.security.RolesConstants;
 import io.github.bbortt.event.planner.service.EventService;
 import java.time.Instant;
 import java.time.ZoneId;
@@ -28,7 +27,6 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,6 +44,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @ExtendWith(MockitoExtension.class)
 class EventResourceIT extends AbstractApplicationContextAwareIT {
+
     private static final String TEST_USER_LOGIN = "eventresourceit-login";
     private static final String TEST_ADMIN_LOGIN = "eventresourceit-admin";
 
@@ -250,7 +249,7 @@ class EventResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(value = TEST_ADMIN_LOGIN, roles = { RolesConstants.ADMIN })
+    @WithMockUser(value = TEST_ADMIN_LOGIN, authorities = {AuthoritiesConstants.ADMIN})
     void getAllEvents() throws Exception {
         // Initialize the database
         eventRepository.saveAndFlush(event);

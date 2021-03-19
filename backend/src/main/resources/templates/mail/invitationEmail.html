@@ -13,7 +13,7 @@
 </head>
 <body>
     <div class="container-md">
-        <p th:text="#{email.activation.greeting(${invitation.email})}">
+        <p th:text="#{email.greeting(${invitation.email})}">
             Dear
         </p>
         <p th:text="#{email.invitation.text1(${project_name})}">
@@ -27,16 +27,16 @@
             </button>
         </p>
         <p>
-            <span th:text="#{email.activation.validity}">The link will be valid for 14 days.</span>
+            <span th:text="#{email.invitation.validity}">The link will be valid for 14 days.</span>
         </p>
         <p>
-            <span th:text="#{email.activation.text2}">Best regards, </span>
+            <span th:text="#{email.regards}">Best regards, </span>
             <br/>
             <em th:text="#{email.signature}">Event-Planner.</em>
         </p>
         <p>
             <small>
-                <span th:text="#{email.activation.link.alternative}">In case the above link does not work:</span>
+                <span th:text="#{email.link.alternative}">In case the above link does not work:</span>
                 <a th:with="url=(@{|${baseUrl}/invitation/login/${invitation.token}|})"
                    th:href="${url}"
                    th:text="${url}">Invitation link</a>.

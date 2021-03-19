@@ -20,7 +20,6 @@ import io.github.bbortt.event.planner.repository.ProjectRepository;
 import io.github.bbortt.event.planner.repository.RoleRepository;
 import io.github.bbortt.event.planner.repository.UserRepository;
 import io.github.bbortt.event.planner.security.AuthoritiesConstants;
-import io.github.bbortt.event.planner.security.RolesConstants;
 import io.github.bbortt.event.planner.service.ProjectService;
 import io.github.bbortt.event.planner.service.dto.CreateProjectDTO;
 import io.github.bbortt.event.planner.service.dto.UserDTO;
@@ -271,7 +270,7 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(value = TEST_ADMIN_LOGIN, roles = { RolesConstants.ADMIN })
+    @WithMockUser(value = TEST_ADMIN_LOGIN, authorities = {AuthoritiesConstants.ADMIN})
     void getAllProjects() throws Exception {
         // Initialize the database
         projectRepository.saveAndFlush(createEntity(em));
@@ -321,7 +320,7 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(value = TEST_ADMIN_LOGIN, roles = { RolesConstants.ADMIN })
+    @WithMockUser(value = TEST_ADMIN_LOGIN, authorities = {AuthoritiesConstants.ADMIN})
     void getAllArchivedProjects() throws Exception {
         // Initialize the database
         projectRepository.saveAndFlush(createEntity(em).archived(Boolean.TRUE));

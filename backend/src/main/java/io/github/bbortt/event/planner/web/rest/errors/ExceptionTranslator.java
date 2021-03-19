@@ -1,6 +1,5 @@
 package io.github.bbortt.event.planner.web.rest.errors;
 
-import io.github.bbortt.event.planner.service.exception.UsernameAlreadyUsedException;
 import io.github.jhipster.web.util.HeaderUtil;
 import java.util.List;
 import java.util.Objects;
@@ -88,37 +87,6 @@ public class ExceptionTranslator implements ProblemHandling, SecurityAdviceTrait
             .with(FIELD_ERRORS_KEY, fieldErrors)
             .build();
         return create(ex, problem, request);
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<Problem> handleEmailAlreadyUsedException(
-        io.github.bbortt.event.planner.service.EmailAlreadyUsedException ex,
-        NativeWebRequest request
-    ) {
-        EmailAlreadyUsedException problem = new EmailAlreadyUsedException();
-        return create(
-            problem,
-            request,
-            HeaderUtil.createFailureAlert(applicationName, true, problem.getEntityName(), problem.getErrorKey(), problem.getMessage())
-        );
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<Problem> handleUsernameAlreadyUsedException(UsernameAlreadyUsedException ex, NativeWebRequest request) {
-        LoginAlreadyUsedException problem = new LoginAlreadyUsedException();
-        return create(
-            problem,
-            request,
-            HeaderUtil.createFailureAlert(applicationName, true, problem.getEntityName(), problem.getErrorKey(), problem.getMessage())
-        );
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<Problem> handleInvalidPasswordException(
-        io.github.bbortt.event.planner.service.InvalidPasswordException ex,
-        NativeWebRequest request
-    ) {
-        return create(new InvalidPasswordException(), request);
     }
 
     @ExceptionHandler

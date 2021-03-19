@@ -19,6 +19,7 @@ import io.github.bbortt.event.planner.domain.Project;
 import io.github.bbortt.event.planner.domain.User;
 import io.github.bbortt.event.planner.repository.LocationTimeSlotRepository;
 import io.github.bbortt.event.planner.repository.RoleRepository;
+import io.github.bbortt.event.planner.security.AuthoritiesConstants;
 import io.github.bbortt.event.planner.security.RolesConstants;
 import io.github.bbortt.event.planner.service.LocationTimeSlotService;
 import java.time.Instant;
@@ -219,7 +220,7 @@ class LocationTimeSlotResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(value = TEST_USER_LOGIN, roles = {RolesConstants.ADMIN})
+    @WithMockUser(value = TEST_USER_LOGIN, authorities = {AuthoritiesConstants.ADMIN})
     void getAllLocationTimeSlots() throws Exception {
         // Initialize the database
         locationTimeSlotRepository.saveAndFlush(locationTimeSlot);
