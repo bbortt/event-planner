@@ -1,29 +1,32 @@
 package io.github.bbortt.event.planner.gateway.service;
 
 import io.github.bbortt.event.planner.gateway.config.Constants;
+import io.github.bbortt.event.planner.gateway.service.dto.AdminUserDTO;
 import io.github.bbortt.event.planner.gateway.service.dto.UserDTO;
-
+import java.util.*;
+import java.util.stream.Collectors;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
-
-import java.util.*;
-import java.util.stream.Collectors;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 /**
  * Service class for managing users.
  */
 @Service
 public class UserService {
+
     /**
      * Returns the user from an OAuth 2.0 login or resource server with JWT.
      *
      * @param authToken the authentication token.
      * @return the user from the authentication.
      */
-    public UserDTO getUserFromAuthentication(AbstractAuthenticationToken authToken) {
+    public Mono<AdminUserDTO> getUserFromAuthentication(AbstractAuthenticationToken authToken) {
         Map<String, Object> attributes;
         if (authToken instanceof OAuth2AuthenticationToken) {
             attributes = ((OAuth2AuthenticationToken) authToken).getPrincipal().getAttributes();
@@ -32,15 +35,14 @@ public class UserService {
         } else {
             throw new IllegalArgumentException("AuthenticationToken is not OAuth2 or JWT!");
         }
-        UserDTO user = getUser(attributes);
-        user.setAuthorities(authToken.getAuthorities().stream()
-            .map(GrantedAuthority::getAuthority)
-            .collect(Collectors.toSet()));
-        return user;
+        AdminUserDTO user = getUser(attributes);
+        user.setAuthorities(authToken.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toSet()));
+        return Mono.just(user);
     }
 
-    private static UserDTO getUser(Map<String, Object> details) {
-        UserDTO user = new UserDTO();
+    private static AdminUserDTO getUser(Map<String, Object> details) {
+        AdminUserDTO user = new AdminUserDTO();
+        Boolean activated = Boolean.TRUE;
         // handle resource server JWT, where sub claim is email and uid is ID
         if (details.get("uid") != null) {
             user.setId((String) details.get("uid"));
@@ -60,7 +62,7 @@ public class UserService {
             user.setLastName((String) details.get("family_name"));
         }
         if (details.get("email_verified") != null) {
-            user.setActivated((Boolean) details.get("email_verified"));
+            activated = (Boolean) details.get("email_verified");
         }
         if (details.get("email") != null) {
             user.setEmail(((String) details.get("email")).toLowerCase());
@@ -85,7 +87,7 @@ public class UserService {
         if (details.get("picture") != null) {
             user.setImageUrl((String) details.get("picture"));
         }
-        user.setActivated(true);
+        user.setActivated(activated);
         return user;
     }
 }

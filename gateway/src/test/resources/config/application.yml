@@ -15,23 +15,28 @@
 
 spring:
   application:
-    name: EventPlanner
+    name: gateway
+  autoconfigure:
+    exclude:
+      - org.springframework.cloud.gateway.config.GatewayMetricsAutoConfiguration
   jackson:
     serialization:
       write-durations-as-timestamps: false
+  mail:
+    host: localhost
   main:
     allow-bean-definition-overriding: true
   messages:
     basename: i18n/messages
   task:
     execution:
-      thread-name-prefix: event-planner-task-
+      thread-name-prefix: gateway-task-
       pool:
         core-size: 1
         max-size: 50
         queue-capacity: 10000
     scheduling:
-      thread-name-prefix: event-planner-scheduling-
+      thread-name-prefix: gateway-scheduling-
       pool:
         size: 1
   thymeleaf:
@@ -56,7 +61,7 @@ server:
 
 jhipster:
   clientApp:
-    name: 'eventPlannerApp'
+    name: 'gatewayApp'
   logging:
     # To test json console appender
     use-json-format: false
@@ -65,11 +70,9 @@ jhipster:
       host: localhost
       port: 5000
       queue-size: 512
-  metrics:
-    logs: # Reports metrics in the logs
-      enabled: true
-      report-frequency: 60 # in seconds
-
+  mail:
+    from: test@localhost
+    base-url: http://127.0.0.1:8080
 # ===================================================================
 # Application specific properties
 # Add your own application properties here, see the ApplicationProperties class

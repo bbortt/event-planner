@@ -9,5 +9,5 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @AutoConfigureMockMvc
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = {EventPlannerApp.class, TestSecurityConfiguration.class}, webEnvironment = WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = {BackendApp.class, TestSecurityConfiguration.class}, webEnvironment = WebEnvironment.RANDOM_PORT)
 public abstract class AbstractApplicationContextAwareIT {}

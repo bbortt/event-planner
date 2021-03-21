@@ -1,68 +1,76 @@
 package io.github.bbortt.event.planner.gateway.web.rest;
 
-import io.github.bbortt.event.planner.gateway.EventPlannerGateway;
+import static io.github.bbortt.event.planner.gateway.web.rest.AccountResourceIT.TEST_USER_LOGIN;
+import static io.github.bbortt.event.planner.gateway.web.rest.TestUtil.ID_TOKEN;
+import static org.springframework.security.test.web.reactive.server.SecurityMockServerConfigurers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import io.github.bbortt.event.planner.gateway.IntegrationTest;
 import io.github.bbortt.event.planner.gateway.config.TestSecurityConfiguration;
 import io.github.bbortt.event.planner.gateway.security.AuthoritiesConstants;
-
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
-import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
-import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.security.test.context.TestSecurityContextHolder;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.Collection;
+import io.github.bbortt.event.planner.gateway.service.UserService;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-
-import static io.github.bbortt.event.planner.gateway.web.rest.AccountResourceIT.TEST_USER_LOGIN;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
+import org.springframework.http.MediaType;
+import org.springframework.security.oauth2.core.oidc.OidcIdToken;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.reactive.server.WebTestClient;
 
 /**
  * Integration tests for the {@link AccountResource} REST controller.
  */
-@AutoConfigureMockMvc
+@AutoConfigureWebTestClient
 @WithMockUser(value = TEST_USER_LOGIN)
-@SpringBootTest(classes = {EventPlannerGateway.class, TestSecurityConfiguration.class})
-public class AccountResourceIT {
+@IntegrationTest
+class AccountResourceIT {
 
     static final String TEST_USER_LOGIN = "test";
 
+    private OidcIdToken idToken;
+
     @Autowired
-    private MockMvc restAccountMockMvc;
+    private WebTestClient webTestClient;
 
-    @Test
-    public void testGetExistingAccount() throws Exception {
-        Map<String, Object> userDetails = new HashMap<>();
-        userDetails.put("sub", TEST_USER_LOGIN);
-        userDetails.put("email", "john.doe@jhipster.com");
-        Collection<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(AuthoritiesConstants.ADMIN));
-        OAuth2User user = new DefaultOAuth2User(authorities, userDetails, "sub");
-        OAuth2AuthenticationToken authentication = new OAuth2AuthenticationToken(user, authorities, "oidc");
-        TestSecurityContextHolder.getContext().setAuthentication(authentication);
-
-        restAccountMockMvc.perform(get("/api/account")
-            .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.login").value(TEST_USER_LOGIN))
-            .andExpect(jsonPath("$.email").value("john.doe@jhipster.com"))
-            .andExpect(jsonPath("$.authorities").value(AuthoritiesConstants.ADMIN));
+    @BeforeEach
+    public void setup() {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("groups", Collections.singletonList(AuthoritiesConstants.ADMIN));
+        claims.put("sub", "jane");
+        claims.put("email", "jane.doe@jhipster.com");
+        this.idToken = new OidcIdToken(ID_TOKEN, Instant.now(), Instant.now().plusSeconds(60), claims);
     }
 
     @Test
-    public void testGetUnknownAccount() throws Exception {
-        restAccountMockMvc.perform(get("/api/account")
-            .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isInternalServerError());
+    void testGetExistingAccount() {
+        webTestClient
+            .mutateWith(mockAuthentication(TestUtil.authenticationToken(idToken)))
+            .mutateWith(csrf())
+            .get()
+            .uri("/api/account")
+            .accept(MediaType.APPLICATION_JSON)
+            .exchange()
+            .expectStatus()
+            .isOk()
+            .expectHeader()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .expectBody()
+            .jsonPath("$.login")
+            .isEqualTo("jane")
+            .jsonPath("$.email")
+            .isEqualTo("jane.doe@jhipster.com")
+            .jsonPath("$.authorities")
+            .isEqualTo(AuthoritiesConstants.ADMIN);
+    }
+
+    @Test
+    void testGetUnknownAccount() {
+        webTestClient.get().uri("/api/account").accept(MediaType.APPLICATION_JSON).exchange().expectStatus().is5xxServerError();
     }
 }

@@ -1,15 +1,19 @@
 package io.github.bbortt.event.planner.gateway.service;
 
-import io.github.bbortt.event.planner.gateway.EventPlannerGateway;
-import io.github.bbortt.event.planner.gateway.config.Constants;
-import io.github.bbortt.event.planner.gateway.config.TestSecurityConfiguration;
-import io.github.bbortt.event.planner.gateway.security.AuthoritiesConstants;
-import io.github.bbortt.event.planner.gateway.service.dto.UserDTO;
+import static org.assertj.core.api.Assertions.assertThat;
 
+import io.github.bbortt.event.planner.gateway.IntegrationTest;
+import io.github.bbortt.event.planner.gateway.config.Constants;
+import io.github.bbortt.event.planner.gateway.security.AuthoritiesConstants;
+import io.github.bbortt.event.planner.gateway.service.dto.AdminUserDTO;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -17,18 +21,11 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
 /**
  * Integration tests for {@link UserService}.
  */
-@SpringBootTest(classes = {EventPlannerGateway.class, TestSecurityConfiguration.class})
-public class UserServiceIT {
+@IntegrationTest
+class UserServiceIT {
 
     private static final String DEFAULT_LOGIN = "johndoe";
 
@@ -49,7 +46,6 @@ public class UserServiceIT {
 
     @BeforeEach
     public void init() {
-
         userDetails = new HashMap<>();
         userDetails.put("sub", DEFAULT_LOGIN);
         userDetails.put("email", DEFAULT_EMAIL);
@@ -59,9 +55,9 @@ public class UserServiceIT {
     }
 
     @Test
-    public void testDefaultUserDetails() {
+    void testDefaultUserDetails() {
         OAuth2AuthenticationToken authentication = createMockOAuth2AuthenticationToken(userDetails);
-        UserDTO userDTO = userService.getUserFromAuthentication(authentication);
+        AdminUserDTO userDTO = userService.getUserFromAuthentication(authentication).block();
 
         assertThat(userDTO.getLogin()).isEqualTo(DEFAULT_LOGIN);
         assertThat(userDTO.getFirstName()).isEqualTo(DEFAULT_FIRSTNAME);
@@ -74,59 +70,63 @@ public class UserServiceIT {
     }
 
     @Test
-    public void testUserDetailsWithUsername() {
+    void testUserDetailsWithUsername() {
         userDetails.put("preferred_username", "TEST");
 
         OAuth2AuthenticationToken authentication = createMockOAuth2AuthenticationToken(userDetails);
-        UserDTO userDTO = userService.getUserFromAuthentication(authentication);
+        AdminUserDTO userDTO = userService.getUserFromAuthentication(authentication).block();
 
         assertThat(userDTO.getLogin()).isEqualTo("test");
     }
 
     @Test
-    public void testUserDetailsWithLangKey() {
+    void testUserDetailsWithLangKey() {
         userDetails.put("langKey", DEFAULT_LANGKEY);
         userDetails.put("locale", "en-US");
 
         OAuth2AuthenticationToken authentication = createMockOAuth2AuthenticationToken(userDetails);
-        UserDTO userDTO = userService.getUserFromAuthentication(authentication);
+        AdminUserDTO userDTO = userService.getUserFromAuthentication(authentication).block();
 
         assertThat(userDTO.getLangKey()).isEqualTo(DEFAULT_LANGKEY);
     }
 
     @Test
-    public void testUserDetailsWithLocale() {
+    void testUserDetailsWithLocale() {
         userDetails.put("locale", "it-IT");
 
         OAuth2AuthenticationToken authentication = createMockOAuth2AuthenticationToken(userDetails);
-        UserDTO userDTO = userService.getUserFromAuthentication(authentication);
+        AdminUserDTO userDTO = userService.getUserFromAuthentication(authentication).block();
 
         assertThat(userDTO.getLangKey()).isEqualTo("it");
     }
 
     @Test
-    public void testUserDetailsWithUSLocaleUnderscore() {
+    void testUserDetailsWithUSLocaleUnderscore() {
         userDetails.put("locale", "en_US");
 
         OAuth2AuthenticationToken authentication = createMockOAuth2AuthenticationToken(userDetails);
-        UserDTO userDTO = userService.getUserFromAuthentication(authentication);
+        AdminUserDTO userDTO = userService.getUserFromAuthentication(authentication).block();
 
         assertThat(userDTO.getLangKey()).isEqualTo("en");
     }
 
     @Test
-    public void testUserDetailsWithUSLocaleDash() {
+    void testUserDetailsWithUSLocaleDash() {
         userDetails.put("locale", "en-US");
 
         OAuth2AuthenticationToken authentication = createMockOAuth2AuthenticationToken(userDetails);
-        UserDTO userDTO = userService.getUserFromAuthentication(authentication);
+        AdminUserDTO userDTO = userService.getUserFromAuthentication(authentication).block();
 
         assertThat(userDTO.getLangKey()).isEqualTo("en");
     }
 
     private OAuth2AuthenticationToken createMockOAuth2AuthenticationToken(Map<String, Object> userDetails) {
         Collection<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(AuthoritiesConstants.ANONYMOUS));
-        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(Constants.ANONYMOUS_USER, Constants.ANONYMOUS_USER, authorities);
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+            "anonymous",
+            "anonymous",
+            authorities
+        );
         usernamePasswordAuthenticationToken.setDetails(userDetails);
         OAuth2User user = new DefaultOAuth2User(authorities, userDetails, "sub");
 

@@ -10,7 +10,7 @@ configurations {
 subprojects {
     pluginManager.withPlugin("java", {
         dependencies {
-            developmentOnly "org.springframework.boot:spring-boot-devtools:${spring_boot_version}"
+            developmentOnly "org.springframework.boot:spring-boot-devtools:${springBootVersion}"
         }
 
         springBoot {

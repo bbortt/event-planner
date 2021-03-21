@@ -24,7 +24,6 @@ module.exports = (options) => merge(commonConfig({env: ENV}), {
         '/management',
         '/swagger-resources',
         '/v2/api-docs',
-        '/h2-console',
         '/oauth2',
         '/login',
         '/auth'
