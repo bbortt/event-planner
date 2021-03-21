@@ -17,7 +17,7 @@ type EntityArrayResponseType = HttpResponse<Event[]>;
 
 @Injectable({ providedIn: 'root' })
 export class EventService {
-  public resourceUrl = SERVER_API_URL + 'services/api/events';
+  public resourceUrl = SERVER_API_URL + 'api/events';
 
   constructor(protected http: HttpClient) {}
 

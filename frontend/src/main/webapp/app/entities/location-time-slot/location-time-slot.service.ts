@@ -13,7 +13,7 @@ type EntityArrayResponseType = HttpResponse<LocationTimeSlot[]>;
 
 @Injectable({ providedIn: 'root' })
 export class LocationTimeSlotService {
-  public resourceUrl = SERVER_API_URL + 'services/api/location-time-slots';
+  public resourceUrl = SERVER_API_URL + 'api/location-time-slots';
 
   constructor(protected http: HttpClient) {}
 

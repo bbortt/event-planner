@@ -17,7 +17,7 @@ import * as moment from 'moment';
 
 @Injectable({ providedIn: 'root' })
 export class SchedulerService {
-  public resourceUrl = SERVER_API_URL + 'services/api/scheduler';
+  public resourceUrl = SERVER_API_URL + 'api/scheduler';
 
   constructor(protected http: HttpClient) {}
 

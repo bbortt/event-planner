@@ -19,7 +19,7 @@ type EntityArrayResponseType = HttpResponse<Section[]>;
 
 @Injectable({ providedIn: 'root' })
 export class SectionService {
-  public resourceUrl = SERVER_API_URL + 'services/api/sections';
+  public resourceUrl = SERVER_API_URL + 'api/sections';
 
   constructor(protected http: HttpClient) {}
 

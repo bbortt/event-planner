@@ -11,7 +11,7 @@ description = "Event Planning Tool - Monolithic Backend."
 
 defaultTasks "bootRun"
 
-bootRun  {
+bootRun {
     main = "io.github.bbortt.event.planner.BackendApp"
 }
 
@@ -47,10 +47,10 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-logging"
     implementation "org.springframework.boot:spring-boot-starter-actuator"
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
-    testImplementation "org.testcontainers:postgresql"
-    implementation "org.apache.kafka:kafka-clients"
+    // TODO: When using kafka:
+    // implementation "org.apache.kafka:kafka-clients"
     implementation "org.springframework.boot:spring-boot-starter-security"
-    implementation ("org.springframework.boot:spring-boot-starter-web") {
+    implementation("org.springframework.boot:spring-boot-starter-web") {
         exclude module: "spring-boot-starter-tomcat"
     }
     implementation "org.springframework.boot:spring-boot-starter-undertow"
@@ -66,8 +66,8 @@ dependencies {
     implementation "org.springframework.security:spring-security-web"
     implementation "org.springframework.boot:spring-boot-starter-oauth2-client"
     implementation "org.springframework.boot:spring-boot-starter-oauth2-resource-server"
-    implementation ("io.springfox:springfox-oas")
-    implementation ("io.springfox:springfox-swagger2")
+    implementation("io.springfox:springfox-oas")
+    implementation("io.springfox:springfox-swagger2")
     implementation "io.springfox:springfox-bean-validators"
     implementation "org.postgresql:postgresql"
     annotationProcessor "org.glassfish.jaxb:jaxb-runtime:${jaxbRuntimeVersion}"
@@ -77,7 +77,6 @@ dependencies {
     testImplementation "org.springframework.boot:spring-boot-test"
     testImplementation "com.tngtech.archunit:archunit-junit5-api:${archunitJunit5Version}"
     testRuntimeOnly "com.tngtech.archunit:archunit-junit5-engine:${archunitJunit5Version}"
-    testImplementation "org.testcontainers:kafka"
 }
 
 configurations {
