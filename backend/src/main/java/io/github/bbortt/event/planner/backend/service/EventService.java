@@ -108,17 +108,6 @@ public class EventService {
     }
 
     /**
-     * Delete all Events corresponding to a Section.
-     *
-     * @param sectionId the Section identifier.
-     */
-    @Transactional
-    public void deleteAllBySectionId(Long sectionId) {
-        log.debug("Request to delete all Event by Section : {}", sectionId);
-        eventRepository.deleteAllBySectionId(sectionId);
-    }
-
-    /**
      * Checks if the current user has access to the `Project` linked to the given `Event`, identified by id. The project access must be given by any of the `roles`. Example usage: `@PreAuthorize("@eventService.hasAccessToEvent(#event, 'ADMIN', 'SECRETARY')")`
      *
      * @param eventId the id of the location with a linked project to check.

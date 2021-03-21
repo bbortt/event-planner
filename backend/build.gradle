@@ -42,6 +42,7 @@ dependencies {
     implementation "javax.transaction:javax.transaction-api"
     implementation "org.hibernate:hibernate-entitymanager"
     implementation "org.hibernate.validator:hibernate-validator"
+    implementation "org.flywaydb:flyway-core"
     implementation "org.springframework.boot:spring-boot-loader-tools"
     implementation "org.springframework.boot:spring-boot-starter-mail"
     implementation "org.springframework.boot:spring-boot-starter-logging"
@@ -77,16 +78,6 @@ dependencies {
     testImplementation "org.springframework.boot:spring-boot-test"
     testImplementation "com.tngtech.archunit:archunit-junit5-api:${archunitJunit5Version}"
     testRuntimeOnly "com.tngtech.archunit:archunit-junit5-engine:${archunitJunit5Version}"
-}
-
-configurations {
-    all {
-        resolutionStrategy {
-            // Inherited version from Spring Boot can"t be used because of regressions:
-            // To be removed as soon as spring-boot use the same version
-            force "org.flywaydb:flyway-core:6.5.1"
-        }
-    }
 }
 
 task flywayCleanIntegrationTest(type: org.flywaydb.gradle.task.FlywayCleanTask) {

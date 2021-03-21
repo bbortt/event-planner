@@ -1,0 +1,32 @@
+name: Unit Test
+on:
+  push:
+    branches:
+      - 'bugfix/*'
+      - 'feature/*'
+      - 'hotfix/*'
+    tags-ignore:
+      - '*'
+jobs:
+  build:
+    name: Unit-Test Application
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Build using Gradle
+        run: |
+          ./gradlew -Pprod --no-daemon -i test
+      - name: Build cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+            ./frontend/node_modules
+          key: ${{ runner.os }}-gradle-${{ hashFiles('build.gradle', 'frontend/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-

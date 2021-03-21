@@ -55,7 +55,6 @@ class SectionServiceUnitTest {
 
         fixture.delete(1234L);
 
-        Mockito.verify(eventServiceMock).deleteAllBySectionId(sectionId);
         Mockito.verify(sectionRepositoryMock).deleteById(sectionId);
     }
 

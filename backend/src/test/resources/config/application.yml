@@ -15,7 +15,7 @@
 
 spring:
   application:
-    name: eventPlanner
+    name: backend
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:postgresql://localhost:5432/event_planner_integration
@@ -27,9 +27,8 @@ spring:
     serialization:
       write-durations-as-timestamps: false
   jpa:
-    database-platform: io.github.jhipster.domain.util.FixedPostgreSQL10Dialect
+    database-platform: tech.jhipster.domain.util.FixedH2Dialect
     open-in-view: false
-    show-sql: true
     hibernate:
       ddl-auto: validate
       naming:
@@ -43,6 +42,9 @@ spring:
       hibernate.generate_statistics: false
       hibernate.hbm2ddl.auto: validate
       hibernate.jdbc.time_zone: UTC
+      hibernate.query.fail_on_pagination_over_collection_fetch: true
+  liquibase:
+    contexts: test
   mail:
     host: localhost
   main:
@@ -51,13 +53,13 @@ spring:
     basename: i18n/messages
   task:
     execution:
-      thread-name-prefix: event-planner-task-
+      thread-name-prefix: backend-task-
       pool:
         core-size: 1
         max-size: 50
         queue-capacity: 10000
     scheduling:
-      thread-name-prefix: event-planner-scheduling-
+      thread-name-prefix: backend-scheduling-
       pool:
         size: 1
   thymeleaf:
@@ -70,10 +72,6 @@ spring:
           oidc:
             issuer-uri: http://DO_NOT_CALL:9080/auth/realms/jhipster
 
-server:
-  port: 10344
-  address: localhost
-
 # ===================================================================
 # JHipster specific properties
 #
@@ -82,7 +80,7 @@ server:
 
 jhipster:
   clientApp:
-    name: 'eventPlannerApp'
+    name: 'backendApp'
   logging:
     # To test json console appender
     use-json-format: false
@@ -94,17 +92,16 @@ jhipster:
   mail:
     from: test@localhost
     base-url: http://127.0.0.1:8080
-  security:
-    authentication:
-      jwt:
-        # This token must be encoded using Base64 (you can type `echo 'secret-key'|base64` on your command line)
-        base64-secret: Njk4YTYxNjNlNTZmNmY0OTNjOGU1ZWI3NWY1MjI3OGFiODNkYTQyMzJhZmQ1YjJiMDUxNmE2OTcxMmRjZTBjMjY3ZjkyZWUwMjhjMThmMTdjMDU2MjBiYTljMDZkM2NiMjE3ODhlMmMyNTlhZTBlNjEyZDdlMmUyNDhmZTJkMDQ=
-        # Token is valid 24 hours
-        token-validity-in-seconds: 86400
-  metrics:
-    logs: # Reports metrics in the logs
-      enabled: true
-      report-frequency: 60 # in seconds
+kafka:
+  bootstrap-servers: localhost:9092
+  consumer:
+    key.deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    value.deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    group.id: backend
+    auto.offset.reset: earliest
+  producer:
+    key.serializer: org.apache.kafka.common.serialization.StringSerializer
+    value.serializer: org.apache.kafka.common.serialization.StringSerializer
 
 # ===================================================================
 # Application specific properties

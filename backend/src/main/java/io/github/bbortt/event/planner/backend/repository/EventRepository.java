@@ -23,11 +23,4 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     @Query("SELECT e.name FROM Event e WHERE e.id = :eventId")
     Optional<String> findNameByEventId(@Param("eventId") Long eventId);
-
-    @Modifying
-    @Query(
-        nativeQuery = true,
-        value = "DELETE FROM event WHERE id IN (SELECT e.id FROM event e LEFT JOIN section_has_events se ON e.id = se.event_id WHERE se.section_id = :sectionId)"
-    )
-    void deleteAllBySectionId(@Param("sectionId") Long sectionId);
 }

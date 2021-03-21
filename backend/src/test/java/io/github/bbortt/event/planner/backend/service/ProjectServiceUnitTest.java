@@ -1,10 +1,8 @@
 package io.github.bbortt.event.planner.backend.service;
 
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasProperty;
-import static org.hamcrest.Matchers.is;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowableOfType;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 
@@ -14,10 +12,10 @@ import io.github.bbortt.event.planner.backend.repository.RoleRepository;
 import io.github.bbortt.event.planner.backend.repository.UserRepository;
 import io.github.bbortt.event.planner.backend.security.AuthoritiesConstants;
 import io.github.bbortt.event.planner.backend.service.dto.CreateProjectDTO;
+import io.github.bbortt.event.planner.backend.service.exception.ForbiddenRequestException;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -60,8 +58,6 @@ class ProjectServiceUnitTest {
 
     @BeforeEach
     void beforeTestSetup() {
-        doReturn(MOCK_USER_LOGIN).when(authenticationMock).getPrincipal();
-
         TestSecurityContextHolder.setAuthentication(authenticationMock);
 
         fixture =
@@ -70,6 +66,8 @@ class ProjectServiceUnitTest {
 
     @Test
     void findMineOrAllByArchivedDoesLoadMine() {
+        doReturn(MOCK_USER_LOGIN).when(authenticationMock).getPrincipal();
+
         Pageable pageable = Pageable.unpaged();
 
         fixture.findMineOrAllByArchived(false, false, pageable);
@@ -81,22 +79,23 @@ class ProjectServiceUnitTest {
 
     @Test
     void findMineOrAllByArchivedThrowsExceptionIfAuthorityAdminMissing() {
-        Assertions.assertThatThrownBy(() -> fixture.findMineOrAllByArchived(true, false, Pageable.unpaged()))
-            .isInstanceOf(IllegalArgumentException.class)
+        ForbiddenRequestException e = assertThrows(ForbiddenRequestException.class, () -> fixture.findMineOrAllByArchived(true, false, Pageable.unpaged()));
+        assertThat(e)
             .hasMessage("You're not allowed to see all projects!");
     }
 
     @Test
     void findMineOrAllByArchivedByArchivedLoadsAllWhenAdminAuthorityAssigned() {
+        boolean archived = true;
         Pageable pageable = Pageable.unpaged();
 
         doReturn(Collections.singletonList(new SimpleGrantedAuthority(AuthoritiesConstants.ADMIN)))
             .when(authenticationMock)
             .getAuthorities();
 
-        fixture.findMineOrAllByArchived(Boolean.TRUE, false, pageable);
+        fixture.findMineOrAllByArchived(Boolean.TRUE, archived, pageable);
 
-        verify(projectRepositoryMock).findAll(pageable);
+        verify(projectRepositoryMock).findAllByArchived(archived, pageable);
     }
 
     @Test
@@ -108,16 +107,11 @@ class ProjectServiceUnitTest {
         createProjectDTO.setStartTime(startTime);
         createProjectDTO.setEndTime(endTime);
 
-        Assertions.assertThatThrownBy(() -> fixture.create(createProjectDTO))
-            .isInstanceOf(ConstraintViolationProblem.class)
-            .hasFieldOrPropertyWithValue("status", is(equalTo(Status.BAD_REQUEST)))
-            .hasFieldOrPropertyWithValue("violations",
-                contains(
-                    allOf(
-                        hasProperty("field", is(equalTo("endTime"))),
-                        hasProperty("message", is(equalTo("endTime may not occur before startTime!")))
-                    )
-                )
-            );
+        ConstraintViolationProblem e = catchThrowableOfType(() -> fixture.create(createProjectDTO), ConstraintViolationProblem.class);
+        assertThat(e)
+            .hasFieldOrPropertyWithValue("status", Status.BAD_REQUEST)
+            .extracting(problem -> ((ConstraintViolationProblem) problem).getViolations().get(0))
+            .hasFieldOrPropertyWithValue("field", "endTime")
+            .hasFieldOrPropertyWithValue("message",  "endTime may not occur before startTime!");
     }
 }
