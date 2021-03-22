@@ -29,5 +29,5 @@ public interface InvitationRepository extends JpaRepository<Invitation, Long> {
 
     Optional<Invitation> findOneByUserIdAndProjectId(String userId, Long projectId);
 
-    List<Invitation> findAllByAcceptedIsFalseAndTokenIsNotNullAndCreatedDateBefore(Instant dateTime);
+    List<Invitation> findAllByAcceptedIsFalseAndTokenIsNotNullAndCreatedDateBefore(Instant createdDate);
 }

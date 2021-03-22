@@ -39,8 +39,6 @@ spring:
     hikari:
       poolName: Hikari
       auto-commit: false
-  jpa:
-    database-platform: tech.jhipster.domain.util.FixedPostgreSQL10Dialect
   thymeleaf:
     cache: true
   sleuth:

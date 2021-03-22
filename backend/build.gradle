@@ -42,7 +42,6 @@ dependencies {
     implementation "javax.transaction:javax.transaction-api"
     implementation "org.hibernate:hibernate-entitymanager"
     implementation "org.hibernate.validator:hibernate-validator"
-    implementation "org.flywaydb:flyway-core"
     implementation "org.springframework.boot:spring-boot-loader-tools"
     implementation "org.springframework.boot:spring-boot-starter-mail"
     implementation "org.springframework.boot:spring-boot-starter-logging"
@@ -89,4 +88,12 @@ task flywayCleanIntegrationTest(type: org.flywaydb.gradle.task.FlywayCleanTask) 
 }
 flywayCleanIntegrationTest.dependsOn test
 
-integrationTest.dependsOn flywayCleanIntegrationTest
+task flywayMigrateIntegrationTest(type: org.flywaydb.gradle.task.FlywayMigrateTask) {
+    flyway {
+        url = "${flyway_it_jdbc_url}"
+        user = "${flyway_it_user}"
+        password = "${flyway_it_password}"
+    }
+}
+flywayMigrateIntegrationTest.dependsOn flywayCleanIntegrationTest
+integrationTest.dependsOn flywayMigrateIntegrationTest

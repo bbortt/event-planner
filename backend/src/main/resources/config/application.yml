@@ -106,6 +106,7 @@ spring:
       repositories:
         bootstrap-mode: deferred
   jpa:
+    database-platform: tech.jhipster.domain.util.FixedPostgreSQL10Dialect
     open-in-view: false
     properties:
       hibernate.jdbc.time_zone: UTC

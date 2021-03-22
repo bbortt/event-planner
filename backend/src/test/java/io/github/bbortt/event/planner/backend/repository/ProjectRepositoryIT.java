@@ -51,15 +51,19 @@ class ProjectRepositoryIT extends AbstractApplicationContextAwareIT {
 
         project1 = ProjectResourceIT.createEntity(entityManager);
         project1.setName("ProjectRepositoryIT-project-1");
+        project1.setArchived(Boolean.FALSE);
         entityManager.persist(project1);
         project2 = ProjectResourceIT.createEntity(entityManager);
         project2.setName("ProjectRepositoryIT-project-2");
+        project2.setArchived(Boolean.FALSE);
         entityManager.persist(project2);
         project3 = ProjectResourceIT.createEntity(entityManager);
         project3.setName("ProjectRepositoryIT-project-3");
+        project3.setArchived(Boolean.TRUE);
         entityManager.persist(project3);
         Project project4 = ProjectResourceIT.createEntity(entityManager);
         project4.setName("ProjectRepositoryIT-project-4");
+        project4.setArchived(Boolean.FALSE);
         entityManager.persist(project4);
 
         Invitation invitation1 = InvitationResourceIT.createEntity(entityManager);
@@ -125,6 +129,7 @@ class ProjectRepositoryIT extends AbstractApplicationContextAwareIT {
     @Transactional
     void archiveUpdatesEntity() {
         projectRepository.archive(project1.getId());
+        entityManager.refresh(project1);
         Assertions.assertThat(project1.isArchived()).isTrue();
     }
 }

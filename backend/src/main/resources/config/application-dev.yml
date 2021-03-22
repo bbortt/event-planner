@@ -39,7 +39,6 @@ spring:
       poolName: Hikari
       auto-commit: false
   jpa:
-    database-platform: tech.jhipster.domain.util.FixedPostgreSQL10Dialect
     show-sql: true
   mail:
     host: localhost
