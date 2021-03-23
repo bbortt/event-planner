@@ -42,7 +42,6 @@ class EventServiceUnitTest {
 
         Event invalidEvent = new Event().user(new User()).responsibility(new Responsibility());
 
-        Assertions.assertThatThrownBy(() -> fixture.save(invalidEvent))
-            .isInstanceOf(BadRequestException.class);
+        Assertions.assertThatThrownBy(() -> fixture.save(invalidEvent)).isInstanceOf(BadRequestException.class);
     }
 }

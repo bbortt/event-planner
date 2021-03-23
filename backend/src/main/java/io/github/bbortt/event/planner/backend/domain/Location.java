@@ -28,6 +28,7 @@ import org.hibernate.annotations.Parameter;
     uniqueConstraints = { @UniqueConstraint(name = "unique_location_per_project", columnNames = { "name", "project_id" }) }
 )
 public class Location implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     @Id

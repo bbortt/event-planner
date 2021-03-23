@@ -15,7 +15,9 @@ class NoOpMailConfiguration {
 
     NoOpMailConfiguration() {
         mockMailService = mock(MailService.class);
-        doNothing().when(mockMailService).sendEmail(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyBoolean(), Mockito.anyBoolean());
+        doNothing()
+            .when(mockMailService)
+            .sendEmail(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyBoolean(), Mockito.anyBoolean());
     }
 
     @Bean

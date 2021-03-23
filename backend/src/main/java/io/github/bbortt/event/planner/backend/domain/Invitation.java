@@ -29,6 +29,7 @@ import org.hibernate.annotations.Parameter;
     }
 )
 public class Invitation extends AbstractAuditingEntity implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     @Id

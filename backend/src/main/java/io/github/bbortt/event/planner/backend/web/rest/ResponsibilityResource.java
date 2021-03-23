@@ -1,14 +1,11 @@
 package io.github.bbortt.event.planner.backend.web.rest;
 
 import io.github.bbortt.event.planner.backend.domain.Responsibility;
-import io.github.bbortt.event.planner.backend.service.ResponsibilityService;
-import io.github.bbortt.event.planner.backend.service.exception.EntityNotFoundException;
 import io.github.bbortt.event.planner.backend.security.AuthoritiesConstants;
 import io.github.bbortt.event.planner.backend.security.RolesConstants;
+import io.github.bbortt.event.planner.backend.service.ResponsibilityService;
+import io.github.bbortt.event.planner.backend.service.exception.EntityNotFoundException;
 import io.github.bbortt.event.planner.backend.web.rest.errors.BadRequestAlertException;
-import tech.jhipster.web.util.HeaderUtil;
-import tech.jhipster.web.util.PaginationUtil;
-import tech.jhipster.web.util.ResponseUtil;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -32,6 +29,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import tech.jhipster.web.util.HeaderUtil;
+import tech.jhipster.web.util.PaginationUtil;
+import tech.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing {@link Responsibility}.
@@ -39,6 +39,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RestController
 @RequestMapping("/api")
 public class ResponsibilityResource {
+
     private final Logger log = LoggerFactory.getLogger(ResponsibilityResource.class);
 
     private static final String ENTITY_NAME = "responsibility";

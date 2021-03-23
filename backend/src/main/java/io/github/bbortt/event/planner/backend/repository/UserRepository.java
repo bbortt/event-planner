@@ -17,7 +17,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface UserRepository extends JpaRepository<User, String> {
-
     Optional<User> findOneByLogin(String login);
 
     @EntityGraph(attributePaths = { "authorities", "invitations" })

@@ -2,15 +2,12 @@ package io.github.bbortt.event.planner.backend.web.rest;
 
 import io.github.bbortt.event.planner.backend.domain.Invitation;
 import io.github.bbortt.event.planner.backend.repository.RoleRepository;
+import io.github.bbortt.event.planner.backend.security.AuthoritiesConstants;
+import io.github.bbortt.event.planner.backend.security.RolesConstants;
 import io.github.bbortt.event.planner.backend.service.InvitationService;
 import io.github.bbortt.event.planner.backend.service.MailService;
 import io.github.bbortt.event.planner.backend.service.ProjectService;
-import io.github.bbortt.event.planner.backend.security.AuthoritiesConstants;
-import io.github.bbortt.event.planner.backend.security.RolesConstants;
 import io.github.bbortt.event.planner.backend.web.rest.errors.BadRequestAlertException;
-import tech.jhipster.web.util.HeaderUtil;
-import tech.jhipster.web.util.PaginationUtil;
-import tech.jhipster.web.util.ResponseUtil;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -36,6 +33,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import tech.jhipster.web.util.HeaderUtil;
+import tech.jhipster.web.util.PaginationUtil;
+import tech.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing {@link Invitation}.
@@ -43,6 +43,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RestController
 @RequestMapping("/api")
 public class InvitationResource {
+
     private final Logger log = LoggerFactory.getLogger(InvitationResource.class);
 
     private static final String ENTITY_NAME = "invitation";

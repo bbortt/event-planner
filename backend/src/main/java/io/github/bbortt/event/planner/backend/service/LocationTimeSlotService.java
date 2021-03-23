@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 public class LocationTimeSlotService {
+
     private final Logger log = LoggerFactory.getLogger(LocationTimeSlotService.class);
 
     private final LocationTimeSlotRepository locationTimeSlotRepository;

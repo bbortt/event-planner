@@ -197,7 +197,7 @@ class LocationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(value = TEST_ADMIN_LOGIN, authorities = {AuthoritiesConstants.ADMIN})
+    @WithMockUser(value = TEST_ADMIN_LOGIN, authorities = { AuthoritiesConstants.ADMIN })
     void getAllLocations() throws Exception {
         // Initialize the database
         locationRepository.saveAndFlush(location);

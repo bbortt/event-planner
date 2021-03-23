@@ -33,6 +33,7 @@ import org.zalando.problem.violations.Violation;
  */
 @Service
 public class ProjectService {
+
     private final Logger log = LoggerFactory.getLogger(ProjectService.class);
 
     private final ProjectMapper projectMapper = new ProjectMapper();
@@ -212,6 +213,7 @@ public class ProjectService {
     }
 
     private class OptionalUserHolder {
+
         Optional<User> optionalUser = Optional.empty();
 
         OptionalUserHolder() {}

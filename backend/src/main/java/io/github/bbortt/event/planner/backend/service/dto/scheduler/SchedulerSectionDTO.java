@@ -3,6 +3,7 @@ package io.github.bbortt.event.planner.backend.service.dto.scheduler;
 import io.github.bbortt.event.planner.backend.domain.Section;
 
 public class SchedulerSectionDTO {
+
     private Long id;
     private String text;
     private Section originalSection;

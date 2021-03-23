@@ -1,12 +1,9 @@
 package io.github.bbortt.event.planner.backend.web.rest;
 
 import io.github.bbortt.event.planner.backend.domain.LocationTimeSlot;
-import io.github.bbortt.event.planner.backend.service.LocationTimeSlotService;
 import io.github.bbortt.event.planner.backend.security.AuthoritiesConstants;
+import io.github.bbortt.event.planner.backend.service.LocationTimeSlotService;
 import io.github.bbortt.event.planner.backend.web.rest.errors.BadRequestAlertException;
-import tech.jhipster.web.util.HeaderUtil;
-import tech.jhipster.web.util.PaginationUtil;
-import tech.jhipster.web.util.ResponseUtil;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -29,6 +26,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import tech.jhipster.web.util.HeaderUtil;
+import tech.jhipster.web.util.PaginationUtil;
+import tech.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing {@link LocationTimeSlot}.
@@ -36,6 +36,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RestController
 @RequestMapping("/api")
 public class LocationTimeSlotResource {
+
     private final Logger log = LoggerFactory.getLogger(LocationTimeSlotResource.class);
 
     private static final String ENTITY_NAME = "locationTimeSlot";

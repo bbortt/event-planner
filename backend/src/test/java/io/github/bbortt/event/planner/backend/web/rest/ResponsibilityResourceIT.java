@@ -222,7 +222,7 @@ class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(value = TEST_ADMIN_LOGIN, authorities = {AuthoritiesConstants.ADMIN})
+    @WithMockUser(value = TEST_ADMIN_LOGIN, authorities = { AuthoritiesConstants.ADMIN })
     void getAllResponsibilitiesIsForAdminsOnly() throws Exception {
         // Initialize the database
         responsibilityRepository.saveAndFlush(responsibility);

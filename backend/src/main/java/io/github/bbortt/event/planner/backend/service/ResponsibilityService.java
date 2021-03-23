@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 public class ResponsibilityService {
+
     private final Logger log = LoggerFactory.getLogger(ResponsibilityService.class);
 
     private final ProjectService projectService;

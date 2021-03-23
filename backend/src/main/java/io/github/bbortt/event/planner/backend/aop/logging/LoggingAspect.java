@@ -32,8 +32,8 @@ public class LoggingAspect {
      */
     @Pointcut(
         "within(@org.springframework.stereotype.Repository *)" +
-            " || within(@org.springframework.stereotype.Service *)" +
-            " || within(@org.springframework.web.bind.annotation.RestController *)"
+        " || within(@org.springframework.stereotype.Service *)" +
+        " || within(@org.springframework.web.bind.annotation.RestController *)"
     )
     public void springBeanPointcut() {
         // Method is empty as this is just a Pointcut, the implementations are in the advices.
@@ -44,8 +44,8 @@ public class LoggingAspect {
      */
     @Pointcut(
         "within(io.github.bbortt.event.planner.backend.repository..*)" +
-            " || within(io.github.bbortt.event.planner.backend.service..*)" +
-            " || within(io.github.bbortt.event.planner.backend.web.rest..*)"
+        " || within(io.github.bbortt.event.planner.backend.service..*)" +
+        " || within(io.github.bbortt.event.planner.backend.web.rest..*)"
     )
     public void applicationPackagePointcut() {
         // Method is empty as this is just a Pointcut, the implementations are in the advices.

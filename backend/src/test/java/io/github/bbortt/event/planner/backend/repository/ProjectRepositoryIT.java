@@ -96,7 +96,6 @@ class ProjectRepositoryIT extends AbstractApplicationContextAwareIT {
         entityManager.persist(invitation4);
     }
 
-
     @Test
     @Transactional
     void findMineByArchivedDoesReturnMyProjectsOnly() {

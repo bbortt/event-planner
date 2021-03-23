@@ -3,6 +3,7 @@ package io.github.bbortt.event.planner.backend.service.dto.scheduler;
 import java.util.List;
 
 public class SchedulerLocationDTO {
+
     private List<SchedulerEventDTO> events;
     private List<SchedulerSectionDTO> sections;
     private List<SchedulerColorGroupDTO> colorGroups;

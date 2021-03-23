@@ -4,6 +4,7 @@ import io.github.bbortt.event.planner.backend.domain.Event;
 import io.github.bbortt.event.planner.backend.domain.Responsibility;
 import io.github.bbortt.event.planner.backend.domain.Section;
 import io.github.bbortt.event.planner.backend.domain.User;
+import io.github.bbortt.event.planner.backend.security.RolesConstants;
 import io.github.bbortt.event.planner.backend.service.InvitationService;
 import io.github.bbortt.event.planner.backend.service.ProjectService;
 import io.github.bbortt.event.planner.backend.service.ResponsibilityService;
@@ -12,7 +13,6 @@ import io.github.bbortt.event.planner.backend.service.dto.scheduler.SchedulerCol
 import io.github.bbortt.event.planner.backend.service.dto.scheduler.SchedulerEventDTO;
 import io.github.bbortt.event.planner.backend.service.dto.scheduler.SchedulerLocationDTO;
 import io.github.bbortt.event.planner.backend.service.dto.scheduler.SchedulerSectionDTO;
-import io.github.bbortt.event.planner.backend.security.RolesConstants;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api")
 public class SchedulerResource {
+
     private static final Logger log = LoggerFactory.getLogger(SchedulerResource.class);
 
     private final InvitationService invitationService;

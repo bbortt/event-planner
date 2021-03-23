@@ -45,8 +45,7 @@ class SectionServiceUnitTest {
 
         Section invalidSection = new Section().user(new User()).responsibility(new Responsibility());
 
-        Assertions.assertThatThrownBy(() -> fixture.save(invalidSection))
-            .isInstanceOf(BadRequestException.class);
+        Assertions.assertThatThrownBy(() -> fixture.save(invalidSection)).isInstanceOf(BadRequestException.class);
     }
 
     @Test

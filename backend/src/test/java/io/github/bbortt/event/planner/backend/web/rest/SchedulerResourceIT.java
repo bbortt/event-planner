@@ -37,12 +37,16 @@ class SchedulerResourceIT extends AbstractApplicationContextAwareIT {
     static final String TEST_USER_LOGIN = "schedulerresourceit-user";
 
     static final String RESPONSIBILITY_COLOR = "this-is-no-color";
+
     @Autowired
     EntityManager entityManager;
+
     Project project;
     Location location;
+
     @Autowired
     EventRepository eventRepository;
+
     @Autowired
     private MockMvc restSchedulerMockMvc;
 

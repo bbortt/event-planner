@@ -27,6 +27,7 @@ import org.hibernate.annotations.Parameter;
     uniqueConstraints = { @UniqueConstraint(name = "unique_responsibility_per_project", columnNames = { "name", "project_id" }) }
 )
 public class Responsibility implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     @Id

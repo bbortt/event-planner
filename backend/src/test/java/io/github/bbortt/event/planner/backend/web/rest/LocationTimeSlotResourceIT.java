@@ -219,7 +219,7 @@ class LocationTimeSlotResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(value = TEST_USER_LOGIN, authorities = {AuthoritiesConstants.ADMIN})
+    @WithMockUser(value = TEST_USER_LOGIN, authorities = { AuthoritiesConstants.ADMIN })
     void getAllLocationTimeSlots() throws Exception {
         // Initialize the database
         locationTimeSlotRepository.saveAndFlush(locationTimeSlot);
@@ -242,8 +242,7 @@ class LocationTimeSlotResourceIT extends AbstractApplicationContextAwareIT {
         locationTimeSlotRepository.saveAndFlush(locationTimeSlot);
 
         // Get all the sectionList
-        restLocationTimeSlotMockMvc.perform(get("/api/location-time-slots?sort=id,desc"))
-            .andExpect(status().isForbidden());
+        restLocationTimeSlotMockMvc.perform(get("/api/location-time-slots?sort=id,desc")).andExpect(status().isForbidden());
     }
 
     @Test

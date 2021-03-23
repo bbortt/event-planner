@@ -28,8 +28,7 @@ public final class TestUtil {
 
     private static final ObjectMapper mapper = createObjectMapper();
 
-    private TestUtil() {
-    }
+    private TestUtil() {}
 
     private static ObjectMapper createObjectMapper() {
         ObjectMapper mapper = new ObjectMapper();

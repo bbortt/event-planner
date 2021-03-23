@@ -15,6 +15,7 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "jhi_authority")
 public class Authority implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     @Id

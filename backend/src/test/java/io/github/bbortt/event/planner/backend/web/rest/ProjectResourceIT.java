@@ -270,7 +270,7 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(value = TEST_ADMIN_LOGIN, authorities = {AuthoritiesConstants.ADMIN})
+    @WithMockUser(value = TEST_ADMIN_LOGIN, authorities = { AuthoritiesConstants.ADMIN })
     void getAllProjects() throws Exception {
         // Initialize the database
         projectRepository.saveAndFlush(createEntity(em));
@@ -320,7 +320,7 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(value = TEST_ADMIN_LOGIN, authorities = {AuthoritiesConstants.ADMIN})
+    @WithMockUser(value = TEST_ADMIN_LOGIN, authorities = { AuthoritiesConstants.ADMIN })
     void getAllArchivedProjects() throws Exception {
         // Initialize the database
         projectRepository.saveAndFlush(createEntity(em).archived(Boolean.TRUE));

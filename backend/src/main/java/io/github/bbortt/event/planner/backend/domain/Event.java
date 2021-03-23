@@ -22,6 +22,7 @@ import org.hibernate.annotations.Parameter;
 @Entity
 @Table(name = "event")
 public class Event implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     @Id

@@ -1,6 +1,7 @@
 package io.github.bbortt.event.planner.backend.service.dto.scheduler;
 
 public class SchedulerColorGroupDTO {
+
     private String id;
     private String color;
 

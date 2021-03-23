@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 public class SectionService {
+
     private final Logger log = LoggerFactory.getLogger(SectionService.class);
 
     private final ProjectService projectService;

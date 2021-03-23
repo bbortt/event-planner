@@ -25,16 +25,13 @@ class ExceptionTranslatorTestController {
     }
 
     @PostMapping("/method-argument")
-    void methodArgument(@Valid @RequestBody TestDTO testDTO) {
-    }
+    void methodArgument(@Valid @RequestBody TestDTO testDTO) {}
 
     @GetMapping("/missing-servlet-request-part")
-    void missingServletRequestPartException(@RequestPart String part) {
-    }
+    void missingServletRequestPartException(@RequestPart String part) {}
 
     @GetMapping("/missing-servlet-request-parameter")
-    void missingServletRequestParameterException(@RequestParam String param) {
-    }
+    void missingServletRequestParameterException(@RequestParam String param) {}
 
     @GetMapping("/access-denied")
     void accessdenied() {
@@ -72,7 +69,5 @@ class ExceptionTranslatorTestController {
 
     @ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "test response status")
     @SuppressWarnings("serial")
-    static class TestResponseStatusException extends RuntimeException {
-
-    }
+    static class TestResponseStatusException extends RuntimeException {}
 }

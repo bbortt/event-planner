@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 public class InvitationService {
+
     private final Logger log = LoggerFactory.getLogger(InvitationService.class);
 
     private final ProjectService projectService;

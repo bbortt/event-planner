@@ -31,7 +31,7 @@ import org.zalando.problem.Status;
 import org.zalando.problem.violations.ConstraintViolationProblem;
 
 @ExtendWith(MockitoExtension.class)
-@TestExecutionListeners({WithSecurityContextTestExecutionListener.class})
+@TestExecutionListeners({ WithSecurityContextTestExecutionListener.class })
 class ProjectServiceUnitTest {
 
     static final String MOCK_USER_LOGIN = "mock-user-login";
@@ -79,9 +79,11 @@ class ProjectServiceUnitTest {
 
     @Test
     void findMineOrAllByArchivedThrowsExceptionIfAuthorityAdminMissing() {
-        ForbiddenRequestException e = assertThrows(ForbiddenRequestException.class, () -> fixture.findMineOrAllByArchived(true, false, Pageable.unpaged()));
-        assertThat(e)
-            .hasMessage("You're not allowed to see all projects!");
+        ForbiddenRequestException e = assertThrows(
+            ForbiddenRequestException.class,
+            () -> fixture.findMineOrAllByArchived(true, false, Pageable.unpaged())
+        );
+        assertThat(e).hasMessage("You're not allowed to see all projects!");
     }
 
     @Test
@@ -112,6 +114,6 @@ class ProjectServiceUnitTest {
             .hasFieldOrPropertyWithValue("status", Status.BAD_REQUEST)
             .extracting(problem -> ((ConstraintViolationProblem) problem).getViolations().get(0))
             .hasFieldOrPropertyWithValue("field", "endTime")
-            .hasFieldOrPropertyWithValue("message",  "endTime may not occur before startTime!");
+            .hasFieldOrPropertyWithValue("message", "endTime may not occur before startTime!");
     }
 }

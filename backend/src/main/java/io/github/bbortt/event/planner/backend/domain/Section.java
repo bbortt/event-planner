@@ -28,6 +28,7 @@ import org.hibernate.annotations.Parameter;
     uniqueConstraints = { @UniqueConstraint(name = "unique_section_per_location", columnNames = { "name", "location_id" }) }
 )
 public class Section implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     @Id

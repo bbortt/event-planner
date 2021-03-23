@@ -1,7 +1,6 @@
 package io.github.bbortt.event.planner.backend.service;
 
 import io.github.bbortt.event.planner.backend.domain.Invitation;
-import tech.jhipster.config.JHipsterProperties;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import javax.mail.MessagingException;
@@ -16,6 +15,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
+import tech.jhipster.config.JHipsterProperties;
 
 /**
  * Service for sending emails.

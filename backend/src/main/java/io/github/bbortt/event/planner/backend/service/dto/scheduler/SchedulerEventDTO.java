@@ -4,6 +4,7 @@ import io.github.bbortt.event.planner.backend.domain.Event;
 import java.time.ZonedDateTime;
 
 public class SchedulerEventDTO {
+
     private String text;
     private String description;
     private ZonedDateTime startDate;

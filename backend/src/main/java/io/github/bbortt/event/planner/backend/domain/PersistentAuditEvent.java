@@ -27,6 +27,7 @@ import org.hibernate.annotations.Parameter;
 @Entity
 @Table(name = "jhi_persistent_audit_event")
 public class PersistentAuditEvent implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     @Id

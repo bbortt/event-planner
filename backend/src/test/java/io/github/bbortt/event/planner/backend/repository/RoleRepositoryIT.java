@@ -30,6 +30,7 @@ class RoleRepositoryIT extends AbstractApplicationContextAwareIT {
 
     Project project1;
     Project project2;
+
     @Autowired
     private InvitationRepository invitationRepository;
 

@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 public class RoleService {
+
     private final Logger log = LoggerFactory.getLogger(RoleService.class);
 
     private final RoleRepository roleRepository;
