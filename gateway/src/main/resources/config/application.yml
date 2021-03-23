@@ -169,7 +169,6 @@ jhipster:
       audience:
         - account
         - api://default
-
 # ===================================================================
 # Application specific properties
 # Add your own application properties here, see the ApplicationProperties class
