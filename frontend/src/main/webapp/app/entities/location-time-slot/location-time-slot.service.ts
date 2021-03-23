@@ -4,18 +4,19 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import * as moment from 'moment';
 
-import { SERVER_API_URL } from 'app/app.constants';
-import { createRequestOption } from 'app/shared/util/request-util';
-import { LocationTimeSlot } from 'app/shared/model/location-time-slot.model';
+import {ApplicationConfigService} from 'app/core/config/application-config.service';
+import {createRequestOption} from 'app/core/request/request-util';
+
+import {LocationTimeSlot} from 'app/entities/location-time-slot/location-time-slot.model';
 
 type EntityResponseType = HttpResponse<LocationTimeSlot>;
 type EntityArrayResponseType = HttpResponse<LocationTimeSlot[]>;
 
 @Injectable({ providedIn: 'root' })
 export class LocationTimeSlotService {
-  public resourceUrl = SERVER_API_URL + 'api/location-time-slots';
+  resourceUrl = this.applicationConfigService.getEndpointFor('api/location-time-slots');
 
-  constructor(protected http: HttpClient) {}
+  constructor(protected http: HttpClient, private applicationConfigService: ApplicationConfigService) {}
 
   create(locationTimeSlot: LocationTimeSlot): Observable<EntityResponseType> {
     const copy = this.convertDateFromClient(locationTimeSlot);
@@ -58,8 +59,8 @@ export class LocationTimeSlotService {
 
   protected convertDateFromServer(res: EntityResponseType): EntityResponseType {
     if (res.body) {
-      res.body.startTime = res.body.startTime ? moment(res.body.startTime) : undefined;
-      res.body.endTime = res.body.endTime ? moment(res.body.endTime) : undefined;
+      res.body.startTime = moment(res.body.startTime) ;
+      res.body.endTime = moment(res.body.endTime) ;
     }
     return res;
   }
@@ -67,8 +68,8 @@ export class LocationTimeSlotService {
   protected convertDateArrayFromServer(res: EntityArrayResponseType): EntityArrayResponseType {
     if (res.body) {
       res.body.forEach((locationTimeSlot: LocationTimeSlot) => {
-        locationTimeSlot.startTime = locationTimeSlot.startTime ? moment(locationTimeSlot.startTime) : undefined;
-        locationTimeSlot.endTime = locationTimeSlot.endTime ? moment(locationTimeSlot.endTime) : undefined;
+        locationTimeSlot.startTime =  moment(locationTimeSlot.startTime) ;
+        locationTimeSlot.endTime = moment(locationTimeSlot.endTime) ;
       });
     }
     return res;

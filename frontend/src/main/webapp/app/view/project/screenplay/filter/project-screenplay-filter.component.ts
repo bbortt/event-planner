@@ -4,12 +4,12 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { take, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
-import { Project } from 'app/shared/model/project.model';
+import { Project } from 'app/entities/project/project.model';
 
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 
 import { DEFAULT_SCHEDULER_CELL_DURATION } from 'app/app.constants';
-import { DATE_FORMAT } from 'app/shared/constants/input.constants';
+import { DATE_FORMAT } from 'app/config/input.constants';
 
 import * as moment from 'moment';
 
@@ -21,7 +21,7 @@ export const ROUTE_INTERVAL_PARAMETER_NAME = 'interval';
 @Component({
   selector: 'app-project-screenplay-filter',
   templateUrl: './project-screenplay-filter.component.html',
-  styleUrls: ['project-screenplay-filter.component.scss'],
+  styleUrls: ['./project-screenplay-filter.component.scss'],
 })
 export class ProjectScreenplayFilterComponent implements OnInit, OnDestroy {
   @Input()
@@ -31,7 +31,7 @@ export class ProjectScreenplayFilterComponent implements OnInit, OnDestroy {
   allExpanded?: EventEmitter<boolean>;
 
   @Output()
-  public onExpandAll = new EventEmitter<boolean>();
+  expandAll = new EventEmitter<boolean>();
 
   chevronDown = faChevronDown;
   chevronUp = faChevronUp;
@@ -74,7 +74,7 @@ export class ProjectScreenplayFilterComponent implements OnInit, OnDestroy {
 
   expandLocations(): void {
     this.locationsExpanded = !this.locationsExpanded;
-    this.onExpandAll.emit(this.locationsExpanded);
+    this.expandAll.emit(this.locationsExpanded);
   }
 
   cellDurationChange(e: { value: number }): void {

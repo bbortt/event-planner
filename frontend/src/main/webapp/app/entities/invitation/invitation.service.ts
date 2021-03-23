@@ -3,21 +3,20 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
 
-import { Invitation } from 'app/shared/model/invitation.model';
-import { Project } from 'app/shared/model/project.model';
+import {ApplicationConfigService} from 'app/core/config/application-config.service';
+import {createRequestOption} from 'app/core/request/request-util';
 
-import { createRequestOption } from 'app/shared/util/request-util';
-
-import { SERVER_API_URL } from 'app/app.constants';
+import {Invitation} from 'app/entities/invitation/invitation.model';
+import {Project} from 'app/entities/project/project.model';
 
 type EntityResponseType = HttpResponse<Invitation>;
 type EntityArrayResponseType = HttpResponse<Invitation[]>;
 
 @Injectable({ providedIn: 'root' })
 export class InvitationService {
-  public resourceUrl = SERVER_API_URL + 'api/invitations';
+  resourceUrl = this.applicationConfigService.getEndpointFor('api/invitations');
 
-  constructor(protected http: HttpClient) {}
+  constructor(protected http: HttpClient, private applicationConfigService: ApplicationConfigService) {}
 
   create(invitation: Invitation): Observable<EntityResponseType> {
     return this.http.post<Invitation>(this.resourceUrl, invitation, { observe: 'response' });

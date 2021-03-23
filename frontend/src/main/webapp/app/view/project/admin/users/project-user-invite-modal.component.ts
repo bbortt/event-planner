@@ -2,7 +2,9 @@ import { AfterViewInit, Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { JhiEventManager } from 'ng-jhipster';
+
+import {EventManager} from 'app/core/util/event-manager.service';
+
 import { ProjectUserInviteComponent } from 'app/view/project/admin/users/project-user-invite.component';
 
 @Component({
@@ -11,7 +13,7 @@ import { ProjectUserInviteComponent } from 'app/view/project/admin/users/project
 export class ProjectUserInviteModalComponent implements AfterViewInit, OnDestroy {
   private modalRef?: NgbModalRef;
 
-  constructor(private modalService: NgbModal, private eventManager: JhiEventManager, private activatedRoute: ActivatedRoute) {}
+  constructor(private modalService: NgbModal, private eventManager: EventManager, private activatedRoute: ActivatedRoute) {}
 
   ngAfterViewInit(): void {
     this.activatedRoute.data.subscribe(({ project, invitation }) => {

@@ -1,22 +1,26 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
+
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import * as moment from 'moment';
 
-import { SERVER_API_URL } from 'app/app.constants';
-import { createRequestOption } from 'app/shared/util/request-util';
-import { Project } from 'app/shared/model/project.model';
-import { ICreateProject } from 'app/shared/model/dto/create-project.model';
+import {ApplicationConfigService} from 'app/core/config/application-config.service';
+import {createRequestOption} from 'app/core/request/request-util';
+
+import { Project } from 'app/entities/project/project.model';
+
+import { ICreateProject } from 'app/entities/dto/create-project.model';
+
+import * as moment from 'moment';
 
 type EntityResponseType = HttpResponse<Project>;
 type EntityArrayResponseType = HttpResponse<Project[]>;
 
 @Injectable({ providedIn: 'root' })
 export class ProjectService {
-  public resourceUrl = SERVER_API_URL + 'api/projects';
+  resourceUrl = this.applicationConfigService.getEndpointFor('api/projects');
 
-  constructor(protected http: HttpClient) {}
+  constructor(protected http: HttpClient, private applicationConfigService: ApplicationConfigService) {}
 
   create(project: ICreateProject): Observable<EntityResponseType> {
     const copy = this.convertDateFromClient(project);
@@ -55,8 +59,8 @@ export class ProjectService {
 
   protected convertDateFromClient(project: Project): Project {
     const copy: Project = Object.assign({}, project, {
-      startTime: project.startTime && project.startTime.isValid() ? project.startTime.toJSON() : undefined,
-      endTime: project.endTime && project.endTime.isValid() ? project.endTime.toJSON() : undefined,
+      startTime:  project.startTime.isValid() ? project.startTime.toJSON() : undefined,
+      endTime:  project.endTime.isValid() ? project.endTime.toJSON() : undefined,
     });
     return copy;
   }

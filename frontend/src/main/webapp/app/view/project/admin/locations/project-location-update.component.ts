@@ -5,16 +5,16 @@ import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 
-import { JhiEventManager } from 'ng-jhipster';
+import {EventManager} from 'app/core/util/event-manager.service';
 
 import { LocationService } from 'app/entities/location/location.service';
 import { ResponsibilityService } from 'app/entities/responsibility/responsibility.service';
-import { UserService } from 'app/core/user/user.service';
+import { UserService } from 'app/entities/user/user.service';
 
-import { Location } from 'app/shared/model/location.model';
-import { Project } from 'app/shared/model/project.model';
-import { Responsibility } from 'app/shared/model/responsibility.model';
-import { User } from 'app/core/user/user.model';
+import { Location } from 'app/entities/location/location.model';
+import { Project } from 'app/entities/project/project.model';
+import { Responsibility } from 'app/entities/responsibility/responsibility.model';
+import { User } from 'app/entities/user/user.model';
 
 import { uniquePropertyValueInProjectValidator } from 'app/entities/validator/unique-property-value-in-project.validator';
 
@@ -49,21 +49,21 @@ export class ProjectLocationUpdateComponent {
     protected locationService: LocationService,
     private responsibilityService: ResponsibilityService,
     private userService: UserService,
-    private eventManager: JhiEventManager,
+    private eventManager: EventManager,
     private fb: FormBuilder
   ) {}
 
-  public updateForm(project: Project, location: Location): void {
+  updateForm(project: Project, location: Location): void {
     this.isNew = !location.id;
     this.isResponsibility = !location.user;
 
     this.responsibilityService
       .findAllByProject(project, { sort: ['name,asc'] })
-      .subscribe((response: HttpResponse<Responsibility[]>) => (this.responsibilities = response.body || []));
+      .subscribe((response: HttpResponse<Responsibility[]>) => (this.responsibilities = response.body ?? []));
 
     this.userService
       .findAllByProject(project, { sort: ['email,asc'] })
-      .subscribe((response: HttpResponse<User[]>) => (this.users = response.body || []));
+      .subscribe((response: HttpResponse<User[]>) => (this.users = response.body ?? []));
 
     this.editForm.patchValue({
       id: location.id,
@@ -117,18 +117,6 @@ export class ProjectLocationUpdateComponent {
     }
   }
 
-  private createFromForm(): Location {
-    const { responsibility, user } = responsibilityOrUserFromForm(this.editForm, this.isResponsibility);
-
-    return {
-      id: this.editForm.get(['id'])!.value,
-      name: this.editForm.get(['name'])!.value,
-      responsibility,
-      user,
-      project: this.editForm.get(['project'])!.value,
-    };
-  }
-
   protected subscribeToSaveResponse(result: Observable<HttpResponse<Location>>): void {
     result.subscribe(
       () => this.onSaveSuccess(),
@@ -144,5 +132,17 @@ export class ProjectLocationUpdateComponent {
 
   protected onSaveError(): void {
     this.isSaving = false;
+  }
+
+  private createFromForm(): Location {
+    const { responsibility, user } = responsibilityOrUserFromForm(this.editForm, this.isResponsibility);
+
+    return {
+      id: this.editForm.get(['id'])!.value,
+      name: this.editForm.get(['name'])!.value,
+      responsibility,
+      user,
+      project: this.editForm.get(['project'])!.value,
+    };
   }
 }

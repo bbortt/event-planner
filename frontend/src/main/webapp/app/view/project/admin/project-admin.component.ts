@@ -3,19 +3,19 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { Subscription } from 'rxjs';
 
-import { JhiEventManager } from 'ng-jhipster';
+import {EventManager} from 'app/core/util/event-manager.service';
 
-import { Project } from 'app/shared/model/project.model';
+import { Project } from 'app/entities/project/project.model';
 import { ProjectService } from 'app/entities/project/project.service';
 
 import { faBook } from '@fortawesome/free-solid-svg-icons';
 
-import { Role } from 'app/shared/constants/role.constants';
+import {Role } from 'app/config/role.constants';
 
 @Component({
   selector: 'app-project-admin',
   templateUrl: './project-admin.component.html',
-  styleUrls: ['project-admin.component.scss'],
+  styleUrls: ['./project-admin.component.scss'],
 })
 export class ProjectAdminComponent implements OnInit, OnDestroy {
   faBook = faBook;
@@ -28,7 +28,7 @@ export class ProjectAdminComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    protected eventManager: JhiEventManager,
+    protected eventManager: EventManager,
     private projectService: ProjectService
   ) {}
 

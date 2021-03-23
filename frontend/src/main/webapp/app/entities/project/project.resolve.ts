@@ -7,7 +7,7 @@ import { flatMap } from 'rxjs/operators';
 
 import { ProjectService } from './project.service';
 
-import { Project } from 'app/shared/model/project.model';
+import { Project } from 'app/entities/project/project.model';
 
 @Injectable({ providedIn: 'root' })
 export class ProjectResolve implements Resolve<Project> {

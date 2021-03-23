@@ -5,12 +5,12 @@ import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 
-import { JhiEventManager } from 'ng-jhipster';
+import {EventManager} from "app/core/util/event-manager.service";
 
 import { ResponsibilityService } from 'app/entities/responsibility/responsibility.service';
 
-import { Project } from 'app/shared/model/project.model';
-import { Responsibility } from 'app/shared/model/responsibility.model';
+import { Project } from 'app/entities/project/project.model';
+import { Responsibility } from 'app/entities/responsibility/responsibility.model';
 
 import { uniquePropertyValueInProjectValidator } from 'app/entities/validator/unique-property-value-in-project.validator';
 
@@ -32,9 +32,9 @@ export class ProjectResponsibilityUpdateComponent {
     project: [],
   });
 
-  constructor(protected responsibilityService: ResponsibilityService, private eventManager: JhiEventManager, private fb: FormBuilder) {}
+  constructor(protected responsibilityService: ResponsibilityService, private eventManager: EventManager, private fb: FormBuilder) {}
 
-  public updateForm(project: Project, responsibility: Responsibility): void {
+  updateForm(project: Project, responsibility: Responsibility): void {
     this.isNew = !responsibility.id;
 
     this.editForm.patchValue({
@@ -77,13 +77,8 @@ export class ProjectResponsibilityUpdateComponent {
     }
   }
 
-  private createFromForm(): Responsibility {
-    return {
-      id: this.editForm.get(['id'])!.value,
-      name: this.editForm.get(['name'])!.value,
-      color: this.editForm.get(['color'])!.value,
-      project: this.editForm.get(['project'])!.value,
-    };
+  trackById(index: number, item: Project): any {
+    return item.id;
   }
 
   protected subscribeToSaveResponse(result: Observable<HttpResponse<Responsibility>>): void {
@@ -103,7 +98,12 @@ export class ProjectResponsibilityUpdateComponent {
     this.isSaving = false;
   }
 
-  trackById(index: number, item: Project): any {
-    return item.id;
+  private createFromForm(): Responsibility {
+    return {
+      id: this.editForm.get(['id'])!.value,
+      name: this.editForm.get(['name'])!.value,
+      color: this.editForm.get(['color'])!.value,
+      project: this.editForm.get(['project'])!.value,
+    };
   }
 }

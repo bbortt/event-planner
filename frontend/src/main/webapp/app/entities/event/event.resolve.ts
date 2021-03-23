@@ -1,10 +1,13 @@
-import { Injectable } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, Router } from '@angular/router';
+
 import { EMPTY, Observable, of } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
-import { Event } from 'app/shared/model/event.model';
+
 import { EventService } from './event.service';
+
+import { Event } from 'app/entities/event/event.model';
 
 @Injectable({ providedIn: 'root' })
 export class EventResolve implements Resolve<Event> {

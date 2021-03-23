@@ -26,7 +26,7 @@ export class AcceptInvitationComponent implements OnDestroy {
     this.variant = activatedRoute.snapshot.data.variant;
     this.activatedRoute.params
       .pipe(
-        tap(params => (this.token = params['token'])),
+        tap(params => this.token = params['token'] as string),
         switchMap(() => this.invitationService.checkTokenValidity(this.token!)),
         tap(isTokenValid => {
           if (!isTokenValid) {

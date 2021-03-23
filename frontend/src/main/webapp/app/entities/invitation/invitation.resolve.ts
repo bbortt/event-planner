@@ -1,10 +1,13 @@
-import { Injectable } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, Router } from '@angular/router';
+
 import { EMPTY, Observable, of } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
-import { Invitation } from 'app/shared/model/invitation.model';
+
 import { InvitationService } from './invitation.service';
+
+import { Invitation } from 'app/entities/invitation/invitation.model';
 
 @Injectable({ providedIn: 'root' })
 export class InvitationResolve implements Resolve<Invitation> {

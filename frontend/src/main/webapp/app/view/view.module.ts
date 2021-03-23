@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { EventPlannerSharedModule } from 'app/shared/shared.module';
+import { SharedModule } from '../shared/shared.module';
 
 import { DxAutocompleteModule, DxDateBoxModule } from 'devextreme-angular';
 
@@ -18,7 +18,7 @@ import { AcceptInvitationComponent } from 'app/view/invitation/accept-invitation
 import { VIEW_ROUTES } from './view.routes';
 
 @NgModule({
-  imports: [EventPlannerSharedModule, DxAutocompleteModule, DxDateBoxModule, RouterModule.forChild(VIEW_ROUTES)],
+  imports: [SharedModule, DxAutocompleteModule, DxDateBoxModule, RouterModule.forChild(VIEW_ROUTES)],
   declarations: [
     HomeComponent,
     MyProjectsComponent,
@@ -30,4 +30,4 @@ import { VIEW_ROUTES } from './view.routes';
   ],
   entryComponents: [HomeComponent],
 })
-export class EventPlannerViewModule {}
+export class ViewModule {}

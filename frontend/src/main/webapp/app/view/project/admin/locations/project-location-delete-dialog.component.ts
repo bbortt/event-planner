@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { JhiEventManager } from 'ng-jhipster';
 
-import { Location } from 'app/shared/model/location.model';
+import {EventManager} from 'app/core/util/event-manager.service';
+
 import { LocationService } from 'app/entities/location/location.service';
+
+import { Location } from 'app/entities/location/location.model';
 
 @Component({
   templateUrl: './project-location-delete-dialog.component.html',
@@ -11,7 +13,7 @@ import { LocationService } from 'app/entities/location/location.service';
 export class ProjectLocationDeleteDialogComponent {
   location?: Location;
 
-  constructor(protected locationService: LocationService, public activeModal: NgbActiveModal, protected eventManager: JhiEventManager) {}
+  constructor(protected locationService: LocationService, public activeModal: NgbActiveModal, protected eventManager: EventManager) {}
 
   cancel(): void {
     this.activeModal.dismiss();

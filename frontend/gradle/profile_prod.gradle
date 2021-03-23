@@ -3,11 +3,11 @@ task npmLint(type: NpmTask, dependsOn: "npmInstall") {
 }
 
 task webpackTest(type: NpmTask, dependsOn: "npmInstall") {
-    args = ["run", "webpack:test"]
+    args = ["run", "webapp:test"]
 }
 
 task webpack(type: NpmTask, dependsOn: "npmInstall") {
-    args = ["run", "webpack:prod"]
+    args = ["run", "webapp:prod"]
     environment = [APP_VERSION: project.version]
 }
 

@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { JhiEventManager } from 'ng-jhipster';
+
+import {EventManager} from 'app/core/util/event-manager.service';
 
 import { ProjectService } from 'app/entities/project/project.service';
 
-import { Project } from 'app/shared/model/project.model';
+import { Project } from 'app/entities/project/project.model';
 
 @Component({
   templateUrl: './project-confirmation-dialog.component.html',
@@ -15,7 +16,7 @@ export class ProjectConfirmationDialogComponent {
   archive = false;
   delete = false;
 
-  constructor(protected projectService: ProjectService, public activeModal: NgbActiveModal, protected eventManager: JhiEventManager) {}
+  constructor(protected projectService: ProjectService, public activeModal: NgbActiveModal, protected eventManager: EventManager) {}
 
   cancel(): void {
     this.activeModal.dismiss();

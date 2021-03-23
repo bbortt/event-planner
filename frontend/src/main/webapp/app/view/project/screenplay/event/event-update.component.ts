@@ -1,29 +1,29 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { HttpResponse } from '@angular/common/http';
-import { FormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {HttpResponse} from '@angular/common/http';
+import {FormBuilder, Validators} from '@angular/forms';
+import {Router} from '@angular/router';
 
-import { Observable, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import {Observable, Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
 
-import { JhiEventManager } from 'ng-jhipster';
+import {AccountService} from 'app/core/auth/account.service';
+import {EventManager} from "app/core/util/event-manager.service";
 
-import { AccountService } from 'app/core/auth/account.service';
+import {EventService} from 'app/entities/event/event.service';
+import {ResponsibilityService} from 'app/entities/responsibility/responsibility.service';
+import {UserService} from 'app/entities/user/user.service';
 
-import { EventService } from 'app/entities/event/event.service';
-import { ResponsibilityService } from 'app/entities/responsibility/responsibility.service';
-import { UserService } from 'app/core/user/user.service';
+import {Event} from 'app/entities/event/event.model';
+import {Location} from 'app/entities/location/location.model';
+import {Project} from 'app/entities/project/project.model';
+import {Responsibility} from 'app/entities/responsibility/responsibility.model';
+import {Section} from 'app/entities/section/section.model';
+import {User} from 'app/entities/user/user.model';
 
-import { Event } from 'app/shared/model/event.model';
-import { Location } from 'app/shared/model/location.model';
-import { Project } from 'app/shared/model/project.model';
-import { Responsibility } from 'app/shared/model/responsibility.model';
-import { Section } from 'app/shared/model/section.model';
-import { User } from 'app/core/user/user.model';
+import {Authority} from 'app/config/authority.constants';
+import {Role} from 'app/config/role.constants';
 
-import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
-import { Authority } from 'app/shared/constants/authority.constants';
-import { Role } from 'app/shared/constants/role.constants';
+import {DATE_TIME_FORMAT} from 'app/config/input.constants';
 
 import responsibilityOrUserFromForm from 'app/shared/util/responsibility-or-user-from-form';
 
@@ -44,9 +44,6 @@ export class EventUpdateComponent implements OnInit, OnDestroy {
   users: User[] = [];
 
   project?: Project;
-  private location?: Location;
-  private section?: Section;
-  private event?: Event;
 
   minEndDate = new Date();
   dateTimeFormat = DATE_TIME_FORMAT;
@@ -65,6 +62,10 @@ export class EventUpdateComponent implements OnInit, OnDestroy {
     userAutocomplete: [],
   });
 
+  private location?: Location;
+  private section?: Section;
+  private event?: Event;
+
   private destroy$ = new Subject();
 
   constructor(
@@ -73,7 +74,7 @@ export class EventUpdateComponent implements OnInit, OnDestroy {
     private eventService: EventService,
     private responsibilityService: ResponsibilityService,
     private userService: UserService,
-    private eventManager: JhiEventManager,
+    private eventManager: EventManager,
     private fb: FormBuilder
   ) {}
 
@@ -88,12 +89,12 @@ export class EventUpdateComponent implements OnInit, OnDestroy {
       .subscribe((startTime: Date) => (this.minEndDate = startTime));
   }
 
-  public ngOnDestroy(): void {
+  ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
 
-  public updateForm(event: Event, newStartTime: Date, newEndTime: Date, isReadonly = true): void {
+  updateForm(event: Event, newStartTime: Date, newEndTime: Date, isReadonly = true): void {
     this.isNew = !event.id;
     this.isReadonly = isReadonly;
 
@@ -118,11 +119,11 @@ export class EventUpdateComponent implements OnInit, OnDestroy {
 
       this.responsibilityService
         .findAllByProject(this.project, { sort: ['name,asc'] })
-        .subscribe((response: HttpResponse<Responsibility[]>) => (this.responsibilities = response.body || []));
+        .subscribe((response: HttpResponse<Responsibility[]>) => this.responsibilities = response.body ?? []);
 
       this.userService
         .findAllByProject(this.project, { sort: ['email,asc'] })
-        .subscribe((response: HttpResponse<User[]>) => (this.users = response.body || []));
+        .subscribe((response: HttpResponse<User[]>) => this.users = response.body ?? []);
     }
 
     this.isResponsibility = !user;
@@ -189,19 +190,11 @@ export class EventUpdateComponent implements OnInit, OnDestroy {
     }
   }
 
-  private createFromForm(): Event {
-    const { responsibility, user } = responsibilityOrUserFromForm(this.editForm, this.isResponsibility);
-
-    return {
-      id: this.editForm.get(['id'])!.value,
-      name: this.editForm.get(['name'])!.value,
-      description: this.editForm.get(['description'])!.value,
-      startTime: moment(this.editForm.get(['startTime'])!.value),
-      endTime: moment(this.editForm.get(['endTime'])!.value),
-      section: this.editForm.get(['section'])!.value,
-      responsibility,
-      user,
-    };
+  isValidInput(formControlName: string): boolean {
+    return !(
+      this.editForm.get(formControlName)!.invalid &&
+      (this.editForm.get(formControlName)!.dirty || this.editForm.get(formControlName)!.touched)
+    );
   }
 
   protected subscribeToSaveResponse(result: Observable<HttpResponse<Event>>): void {
@@ -222,10 +215,18 @@ export class EventUpdateComponent implements OnInit, OnDestroy {
     this.isSaving = false;
   }
 
-  isValidInput(formControlName: string): boolean {
-    return !(
-      this.editForm.get(formControlName)!.invalid &&
-      (this.editForm.get(formControlName)!.dirty || this.editForm.get(formControlName)!.touched)
-    );
+  private createFromForm(): Event {
+    const { responsibility, user } = responsibilityOrUserFromForm(this.editForm, this.isResponsibility);
+
+    return {
+      id: this.editForm.get(['id'])!.value,
+      name: this.editForm.get(['name'])!.value,
+      description: this.editForm.get(['description'])!.value,
+      startTime: moment(this.editForm.get(['startTime'])!.value),
+      endTime: moment(this.editForm.get(['endTime'])!.value),
+      section: this.editForm.get(['section'])!.value,
+      responsibility,
+      user,
+    };
   }
 }

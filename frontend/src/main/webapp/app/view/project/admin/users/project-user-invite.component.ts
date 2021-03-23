@@ -1,27 +1,27 @@
-import { HttpResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 
 import { take } from 'rxjs/operators';
 
-import { JhiEventManager } from 'ng-jhipster';
+import {EventManager} from "app/core/util/event-manager.service";
 
 import { InvitationService } from 'app/entities/invitation/invitation.service';
 import { ResponsibilityService } from 'app/entities/responsibility/responsibility.service';
 
-import { Invitation } from 'app/shared/model/invitation.model';
-import { Project } from 'app/shared/model/project.model';
-import { Responsibility } from 'app/shared/model/responsibility.model';
+import { Invitation } from 'app/entities/invitation/invitation.model';
+import { Project } from 'app/entities/project/project.model';
+import { Responsibility } from 'app/entities/responsibility/responsibility.model';
 
 import { uniquePropertyValueInProjectValidator } from 'app/entities/validator/unique-property-value-in-project.validator';
 
+import { Role,InternalRole, ROLES } from 'app/config/role.constants';
+
 import { DEFAULT_SCHEDULER_COLOR } from 'app/app.constants';
-import { InternalRole, Role, ROLES } from 'app/shared/constants/role.constants';
 
 @Component({
   selector: 'app-project-user-invite',
   templateUrl: './project-user-invite.component.html',
-  styleUrls: ['project-user-invite.component.scss'],
+  styleUrls: ['./project-user-invite.component.scss'],
 })
 export class ProjectUserInviteComponent {
   isSaving = false;
@@ -39,24 +39,25 @@ export class ProjectUserInviteComponent {
   });
 
   roleProjectAdmin = Role.ADMIN;
-  invitationRoles = [Role.SECRETARY, Role.CONTRIBUTOR, Role.VIEWER];
+  invitationRoles = [Role.SECRETARY,Role. CONTRIBUTOR, Role.VIEWER];
+
+  responsibilities: Responsibility[] = [];
 
   private project?: Project;
-  responsibilities: Responsibility[] = [];
 
   constructor(
     private invitationService: InvitationService,
     private fb: FormBuilder,
-    private eventManager: JhiEventManager,
+    private eventManager: EventManager,
     private responsibilityService: ResponsibilityService
   ) {}
 
-  public updateForm(project: Project, invitation: Invitation): void {
+  updateForm(project: Project, invitation: Invitation): void {
     this.isNew = !invitation.id;
     this.project = project;
 
-    this.responsibilityService.findAllByProject(project).subscribe((responsibilities: HttpResponse<Responsibility[]>) => {
-      this.responsibilities = responsibilities.body || [];
+    this.responsibilityService.findAllByProject(project).subscribe(responsibilities => {
+      this.responsibilities = responsibilities.body ?? [];
     });
 
     this.editForm.patchValue({
@@ -65,7 +66,7 @@ export class ProjectUserInviteComponent {
       accepted: invitation.accepted,
       token: invitation.token,
       color: invitation.color ? invitation.color : DEFAULT_SCHEDULER_COLOR,
-      role: ROLES.find(role => role.name === invitation?.role?.name)?.name,
+      role: ROLES.find(role => role.name === invitation.role.name)?.name,
       responsibility: invitation.responsibility,
       responsibilityAutocomplete: invitation.responsibility?.name,
     });
@@ -85,7 +86,7 @@ export class ProjectUserInviteComponent {
       );
   }
 
-  public save(): void {
+  save(): void {
     this.isSaving = false;
     const invitation: Invitation = {
       id: this.editForm.get('id')!.value,
@@ -117,7 +118,7 @@ export class ProjectUserInviteComponent {
     this.editForm.get('responsibility')!.setValue($event.selectedItem);
   }
 
-  public previousState(): void {
+  previousState(): void {
     window.history.back();
   }
 }

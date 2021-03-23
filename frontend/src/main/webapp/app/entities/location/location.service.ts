@@ -4,12 +4,11 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { createRequestOption } from 'app/shared/util/request-util';
+import {ApplicationConfigService} from 'app/core/config/application-config.service';
+import {createRequestOption} from 'app/core/request/request-util';
 
-import { Location } from 'app/shared/model/location.model';
-import { Project } from 'app/shared/model/project.model';
-
-import { SERVER_API_URL } from 'app/app.constants';
+import {Location} from 'app/entities/location/location.model';
+import {Project} from 'app/entities/project/project.model';
 
 import * as moment from 'moment';
 
@@ -18,9 +17,9 @@ type EntityArrayResponseType = HttpResponse<Location[]>;
 
 @Injectable({ providedIn: 'root' })
 export class LocationService {
-  public resourceUrl = SERVER_API_URL + 'api/locations';
+  resourceUrl = this.applicationConfigService.getEndpointFor('api/locations');
 
-  constructor(protected http: HttpClient) {}
+  constructor(protected http: HttpClient, private applicationConfigService: ApplicationConfigService) {}
 
   create(location: Location): Observable<EntityResponseType> {
     return this.http

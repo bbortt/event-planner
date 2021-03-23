@@ -4,13 +4,12 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { createRequestOption } from 'app/shared/util/request-util';
+import {ApplicationConfigService} from 'app/core/config/application-config.service';
+import {createRequestOption} from 'app/core/request/request-util';
 
-import { Event } from 'app/shared/model/event.model';
-import { Location } from 'app/shared/model/location.model';
-import { Section } from 'app/shared/model/section.model';
-
-import { SERVER_API_URL } from 'app/app.constants';
+import { Event } from 'app/entities/event/event.model';
+import { Location } from 'app/entities/location/location.model';
+import { Section } from 'app/entities/section/section.model';
 
 import * as moment from 'moment';
 
@@ -19,9 +18,9 @@ type EntityArrayResponseType = HttpResponse<Section[]>;
 
 @Injectable({ providedIn: 'root' })
 export class SectionService {
-  public resourceUrl = SERVER_API_URL + 'api/sections';
+  resourceUrl = this.applicationConfigService.getEndpointFor('api/sections');
 
-  constructor(protected http: HttpClient) {}
+  constructor(protected http: HttpClient, private applicationConfigService: ApplicationConfigService) {}
 
   create(section: Section): Observable<EntityResponseType> {
     return this.http.post<Section>(this.resourceUrl, section, { observe: 'response' });

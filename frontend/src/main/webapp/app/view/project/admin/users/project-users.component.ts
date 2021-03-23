@@ -6,24 +6,24 @@ import { combineLatest, Subscription } from 'rxjs';
 
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { JhiEventManager } from 'ng-jhipster';
+import {EventManager} from "app/core/util/event-manager.service";
 
 import { InvitationService } from 'app/entities/invitation/invitation.service';
 
-import { Invitation } from 'app/shared/model/invitation.model';
-import { Project } from 'app/shared/model/project.model';
+import { Invitation } from 'app/entities/invitation/invitation.model';
+import { Project } from 'app/entities/project/project.model';
 
 import { ProjectUserInviteDeleteDialogComponent } from 'app/view/project/admin/users/project-user-invite-delete-dialog.component';
 
-import { DEFAULT_SCHEDULER_COLOR } from 'app/app.constants';
-import { ITEMS_PER_PAGE } from 'app/shared/constants/pagination.constants';
+import { Role} from 'app/config/role.constants';
 
-import { Role } from 'app/shared/constants/role.constants';
+import { DEFAULT_SCHEDULER_COLOR } from 'app/app.constants';
+import { ITEMS_PER_PAGE } from 'app/config/pagination.constants';
 
 @Component({
   selector: 'app-project-users',
   templateUrl: './project-users.component.html',
-  styleUrls: ['project-users.component.scss'],
+  styleUrls: ['./project-users.component.scss'],
 })
 export class ProjectUsersComponent implements OnDestroy {
   projectId?: number;
@@ -32,20 +32,20 @@ export class ProjectUsersComponent implements OnDestroy {
   itemsPerPage = ITEMS_PER_PAGE;
   page = 0;
 
+  roleProjectAdmin = Role.ADMIN;
+  defaultColor = DEFAULT_SCHEDULER_COLOR;
+
   private loadedInvitations?: Invitation[];
   private sortOrder: 'asc' | 'desc' = 'asc';
   private sortBy = 'id';
 
   private eventSubscriber?: Subscription;
 
-  roleProjectAdmin = Role.ADMIN;
-  defaultColor = DEFAULT_SCHEDULER_COLOR;
-
   constructor(
     private invitationService: InvitationService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private eventManager: JhiEventManager,
+    private eventManager: EventManager,
     private modalService: NgbModal
   ) {
     combineLatest([this.activatedRoute.data, this.activatedRoute.queryParamMap]).subscribe(([data, params]) => {
@@ -65,8 +65,8 @@ export class ProjectUsersComponent implements OnDestroy {
     }
   }
 
-  public loadPage(page?: number, navigate = true): void {
-    const pageToLoad = page || this.page || 1;
+  loadPage(page?: number, navigate = true): void {
+    const pageToLoad = page ?? this.page;
 
     this.invitationService
       .findAllByProjectId(this.projectId!, {
@@ -77,33 +77,9 @@ export class ProjectUsersComponent implements OnDestroy {
       .subscribe((res: HttpResponse<Invitation[]>) => this.onSuccess(res.body, res.headers, pageToLoad, navigate));
   }
 
-  private onSuccess(data: Invitation[] | null, headers: HttpHeaders, page: number, navigate: boolean): void {
-    this.totalItems = Number(headers.get('X-Total-Count'));
-    this.page = page;
-    if (navigate) {
-      this.router.navigate(['/project', this.projectId, 'admin', 'users'], {
-        queryParams: {
-          page: this.page,
-          size: this.itemsPerPage,
-          sort: this.sortBy + ',' + this.sortOrder,
-        },
-      });
-    }
-    this.loadedInvitations = data || [];
-    this.invitations = this.loadedInvitations;
-  }
-
-  private sort(): string[] {
-    const result = [this.sortBy + ',' + this.sortOrder];
-    if (this.sortBy !== 'id') {
-      result.push('id');
-    }
-    return result;
-  }
-
   filterData(searchString: string): void {
     this.invitations = this.loadedInvitations!.filter((invitation: Invitation) =>
-      invitation.email.toLowerCase().includes(searchString.toLowerCase())
+      invitation.email.toLowerCase().includes((searchString).toLowerCase())
     );
   }
 
@@ -118,5 +94,29 @@ export class ProjectUsersComponent implements OnDestroy {
   delete(invitation: Invitation): void {
     const modalRef = this.modalService.open(ProjectUserInviteDeleteDialogComponent, { backdrop: 'static' });
     modalRef.componentInstance.invitation = invitation;
+  }
+
+  private onSuccess(data: Invitation[] | null, headers: HttpHeaders, page: number, navigate: boolean): void {
+    this.totalItems = Number(headers.get('X-Total-Count'));
+    this.page = page;
+    if (navigate) {
+      this.router.navigate(['/project', this.projectId, 'admin', 'users'], {
+        queryParams: {
+          page: this.page,
+          size: this.itemsPerPage,
+          sort: this.sortBy + ',' + this.sortOrder,
+        },
+      });
+    }
+    this.loadedInvitations = data ?? [];
+    this.invitations = this.loadedInvitations;
+  }
+
+  private sort(): string[] {
+    const result = [this.sortBy + ',' + this.sortOrder];
+    if (this.sortBy !== 'id') {
+      result.push('id');
+    }
+    return result;
   }
 }

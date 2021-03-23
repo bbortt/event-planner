@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 
-import { SchedulerSection } from 'app/shared/model/dto/scheduler-section.model';
+import { SchedulerSection } from 'app/entities/dto/scheduler-section.model';
 
 @Component({
   selector: 'app-scheduler-resource',

@@ -1,10 +1,13 @@
-import { Injectable } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, Router } from '@angular/router';
+
 import { EMPTY, Observable, of } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
-import { Section } from 'app/shared/model/section.model';
+
 import { SectionService } from './section.service';
+
+import { Section } from 'app/entities/section/section.model';
 
 @Injectable({ providedIn: 'root' })
 export class SectionResolve implements Resolve<Section> {

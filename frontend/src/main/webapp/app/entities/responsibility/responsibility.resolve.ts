@@ -1,10 +1,13 @@
-import { Injectable } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, Router } from '@angular/router';
+
 import { EMPTY, Observable, of } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
-import { Responsibility } from 'app/shared/model/responsibility.model';
+
 import { ResponsibilityService } from './responsibility.service';
+
+import { Responsibility } from 'app/entities/responsibility/responsibility.model';
 
 @Injectable({ providedIn: 'root' })
 export class ResponsibilityResolve implements Resolve<Responsibility> {

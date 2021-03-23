@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
-import { JhiEventManager } from 'ng-jhipster';
+import {EventManager} from 'app/core/util/event-manager.service';
 
 import { Subject } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
@@ -12,14 +12,14 @@ import { LoadOptions } from 'devextreme/data/load_options';
 
 import { AccountService } from 'app/core/auth/account.service';
 import { ProjectService } from 'app/entities/project/project.service';
-import { UserService } from 'app/core/user/user.service';
+import { UserService } from 'app/entities/user/user.service';
 
-import { User } from 'app/core/user/user.model';
+import { User } from 'app/entities/user/user.model';
 
-import { ICreateProject } from 'app/shared/model/dto/create-project.model';
+import { ICreateProject } from 'app/entities/dto/create-project.model';
 
-import { Authority } from 'app/shared/constants/authority.constants';
-import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
+import { Authority } from 'app/config/authority.constants';
+import { DATE_TIME_FORMAT } from 'app/config/input.constants';
 
 import * as moment from 'moment';
 
@@ -58,7 +58,7 @@ export class ProjectCreateComponent implements OnInit, OnDestroy {
     private userService: UserService,
     private activatedRoute: ActivatedRoute,
     private fb: FormBuilder,
-    private eventManager: JhiEventManager
+    private eventManager: EventManager
   ) {
     accountService.identity().subscribe(() => {
       if (accountService.hasAnyAuthority(Authority.ADMIN)) {
@@ -68,7 +68,7 @@ export class ProjectCreateComponent implements OnInit, OnDestroy {
 
     this.dataSource = new DataSource({
       load(loadOptions: LoadOptions): Promise<User[]> {
-        return userService.findByEmailOrLogin(loadOptions.searchValue).toPromise();
+        return userService.findByEmailOrLogin(loadOptions.searchValue).toPromise() ;
       },
     });
   }
@@ -80,7 +80,7 @@ export class ProjectCreateComponent implements OnInit, OnDestroy {
       .subscribe((startTime: Date) => (this.endMoment = moment(startTime)));
   }
 
-  public ngOnDestroy(): void {
+  ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
@@ -109,6 +109,13 @@ export class ProjectCreateComponent implements OnInit, OnDestroy {
       });
   }
 
+  isValidInput(formControlName: string): boolean {
+    return !(
+      this.editForm.get(formControlName)!.invalid &&
+      (this.editForm.get(formControlName)!.dirty || this.editForm.get(formControlName)!.touched)
+    );
+  }
+
   private createFromForm(): ICreateProject {
     const newProject: ICreateProject = {
       name: this.editForm.get(['name'])!.value,
@@ -122,13 +129,6 @@ export class ProjectCreateComponent implements OnInit, OnDestroy {
       newProject.user = this.editForm.get(['selectedUser'])!.value;
     }
 
-    return newProject;
-  }
-
-  isValidInput(formControlName: string): boolean {
-    return !(
-      this.editForm.get(formControlName)!.invalid &&
-      (this.editForm.get(formControlName)!.dirty || this.editForm.get(formControlName)!.touched)
-    );
+    return newProject ;
   }
 }

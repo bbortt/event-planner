@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 
-import { EventPlannerSharedModule } from 'app/shared/shared.module';
+import { SharedModule } from 'app/shared/shared.module';
 
 import { DxAutocompleteModule, DxDateBoxModule } from 'devextreme-angular';
 
@@ -8,7 +8,7 @@ import { EventUpdateComponent } from 'app/view/project/screenplay/event/event-up
 import { EventUpdateModalComponent } from 'app/view/project/screenplay/event/event-update-modal.component';
 
 @NgModule({
-  imports: [EventPlannerSharedModule, DxAutocompleteModule, DxDateBoxModule],
+  imports: [SharedModule, DxAutocompleteModule, DxDateBoxModule],
   declarations: [EventUpdateComponent, EventUpdateModalComponent],
 })
 export class EventPlannerEventModule {}

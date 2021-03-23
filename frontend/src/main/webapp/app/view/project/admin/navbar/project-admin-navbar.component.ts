@@ -13,10 +13,10 @@ interface ILink {
 @Component({
   selector: 'app-project-admin-navbar',
   templateUrl: './project-admin-navbar.component.html',
-  styleUrls: ['project-admin-navbar.component.scss'],
+  styleUrls: ['./project-admin-navbar.component.scss'],
 })
 export class ProjectAdminNavbarComponent {
-  public navLinks: ILink[] = [
+  navLinks: ILink[] = [
     {
       label: 'Locations',
       labelKey: 'eventPlannerApp.project.admin.navbar.locations',

@@ -7,11 +7,12 @@ import { Observable } from 'rxjs';
 
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { JhiAlertService, JhiEventManager } from 'ng-jhipster';
+import {AlertService} from 'app/core/util/alert.service';
+import {EventManager} from 'app/core/util/event-manager.service';
 
 import { ProjectService } from 'app/entities/project/project.service';
 
-import { Project } from 'app/shared/model/project.model';
+import { Project } from 'app/entities/project/project.model';
 
 import { ProjectConfirmationDialogComponent } from 'app/view/project/admin/project-confirmation-dialog.component';
 
@@ -41,12 +42,12 @@ export class ProjectAdminUpdateComponent {
     private router: Router,
     protected projectService: ProjectService,
     private modalService: NgbModal,
-    private alertService: JhiAlertService,
-    private eventManager: JhiEventManager,
+    private alertService: AlertService,
+    private eventManager: EventManager,
     private fb: FormBuilder
   ) {}
 
-  public updateForm(project: Project): void {
+  updateForm(project: Project): void {
     this.project = project;
     this.editForm.patchValue({
       id: project.id,
@@ -77,10 +78,10 @@ export class ProjectAdminUpdateComponent {
         if (result) {
           this.router
             .navigate([''])
-            .then(() => this.alertService.success('eventPlannerApp.project.archived', { param: this.project!.name }));
+            .then(() => this.alertService.addAlert({type:'success', translationKey:'eventPlannerApp.project.archived', translationParams: { param: this.project!.name }}));
         }
       })
-      .catch(() => this.alertService.warning('global.error.internalServerError', { param: this.project!.name }));
+      .catch(() =>this.alertService.addAlert({type:'warning', translationKey:'global.error.internalServerError', translationParams: { param: this.project!.name }}));
   }
 
   delete(): void {
@@ -92,21 +93,10 @@ export class ProjectAdminUpdateComponent {
         if (result) {
           this.router
             .navigate([''])
-            .then(() => this.alertService.success('eventPlannerApp.project.deleted', { param: this.project!.name }));
+            .then(() => this.alertService.addAlert({type:'success', translationKey:'eventPlannerApp.project.deleted', translationParams: { param: this.project!.name }}));
         }
       })
-      .catch(() => this.alertService.warning('global.error.internalServerError', { param: this.project!.name }));
-  }
-
-  private createFromForm(): Project {
-    return {
-      id: this.editForm.get(['id'])!.value,
-      name: this.editForm.get(['name'])!.value,
-      description: this.editForm.get(['description'])!.value || null,
-      startTime: this.editForm.get(['startTime'])!.value,
-      endTime: this.editForm.get(['endTime'])!.value,
-      archived: this.editForm.get(['archived'])!.value,
-    };
+      .catch(() =>this.alertService.addAlert({type:'warning', translationKey:'global.error.internalServerError', translationParams: { param: this.project!.name }}));
   }
 
   protected subscribeToSaveResponse(result: Observable<HttpResponse<Project>>): void {
@@ -124,5 +114,16 @@ export class ProjectAdminUpdateComponent {
 
   protected onSaveError(): void {
     this.isSaving = false;
+  }
+
+  private createFromForm(): Project {
+    return {
+      id: this.editForm.get(['id'])!.value,
+      name: this.editForm.get(['name'])!.value,
+      description: this.editForm.get(['description'])!.value || null,
+      startTime: this.editForm.get(['startTime'])!.value,
+      endTime: this.editForm.get(['endTime'])!.value,
+      archived: this.editForm.get(['archived'])!.value,
+    };
   }
 }

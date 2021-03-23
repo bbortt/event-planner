@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 
-import { EventPlannerSharedLibsModule } from 'app/shared/shared-libs.module';
+import { SharedLibsModule } from 'app/shared/shared-libs.module';
 
-import { ClientsideFilterComponent } from './clientside-filter/clientside-filter.component';
+import { ClientsideFilterComponent } from 'app/shared/components/clientside-filter/clientside-filter.component';
 
 @NgModule({
   declarations: [ClientsideFilterComponent],
-  imports: [EventPlannerSharedLibsModule],
+  imports: [SharedLibsModule],
   exports: [ClientsideFilterComponent],
 })
 export class ComponentsModule {}

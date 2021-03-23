@@ -4,22 +4,21 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { Event } from 'app/shared/model/event.model';
+import {ApplicationConfigService} from 'app/core/config/application-config.service';
+import {createRequestOption} from 'app/core/request/request-util';
 
-import { createRequestOption } from 'app/shared/util/request-util';
+import { Event } from 'app/entities/event/event.model';
 
 import * as moment from 'moment';
-
-import { SERVER_API_URL } from 'app/app.constants';
 
 type EntityResponseType = HttpResponse<Event>;
 type EntityArrayResponseType = HttpResponse<Event[]>;
 
 @Injectable({ providedIn: 'root' })
 export class EventService {
-  public resourceUrl = SERVER_API_URL + 'api/events';
+  resourceUrl = this.applicationConfigService.getEndpointFor('api/events');
 
-  constructor(protected http: HttpClient) {}
+  constructor(protected http: HttpClient, private applicationConfigService: ApplicationConfigService) {}
 
   create(event: Event): Observable<EntityResponseType> {
     const copy = this.convertDateFromClient(event);
@@ -52,10 +51,21 @@ export class EventService {
     return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
   }
 
+  convertDates(event: Event): Event {
+    event.startTime = moment(event.startTime);
+    event.endTime = moment(event.endTime);
+
+    const project = event.section.location.project;
+    project.startTime = moment(project.startTime);
+    project.endTime = moment(project.endTime);
+
+    return event;
+  }
+
   protected convertDateFromClient(event: Event): Event {
     const copy: Event = Object.assign({}, event, {
-      startTime: event.startTime && event.startTime.isValid() ? event.startTime.toJSON() : undefined,
-      endTime: event.endTime && event.endTime.isValid() ? event.endTime.toJSON() : undefined,
+      startTime: event.startTime.isValid() ? event.startTime.toJSON() : undefined,
+      endTime:  event.endTime.isValid() ? event.endTime.toJSON() : undefined,
     });
     return copy;
   }
@@ -72,16 +82,5 @@ export class EventService {
       res.body.forEach(this.convertDates);
     }
     return res;
-  }
-
-  convertDates(event: Event): Event {
-    event.startTime = moment(event.startTime);
-    event.endTime = moment(event.endTime);
-
-    const project = event.section.location.project;
-    project.startTime = moment(project.startTime);
-    project.endTime = moment(project.endTime);
-
-    return event;
   }
 }

@@ -1,20 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 
 import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 
-import { JhiEventManager } from 'ng-jhipster';
+import {EventManager} from 'app/core/util/event-manager.service';
 
 import { ResponsibilityService } from 'app/entities/responsibility/responsibility.service';
 import { SectionService } from 'app/entities/section/section.service';
-import { UserService } from 'app/core/user/user.service';
+import { UserService } from 'app/entities/user/user.service';
 
-import { Location } from 'app/shared/model/location.model';
-import { Responsibility } from 'app/shared/model/responsibility.model';
-import { Section } from 'app/shared/model/section.model';
-import { User } from 'app/core/user/user.model';
+import { Location } from 'app/entities/location/location.model';
+import { Responsibility } from 'app/entities/responsibility/responsibility.model';
+import { Section } from 'app/entities/section/section.model';
+import { User } from 'app/entities/user/user.model';
 
 import { uniquePropertyValueInLocationValidator } from 'app/entities/validator/unique-property-value-in-location.validator';
 
@@ -25,7 +25,7 @@ import responsibilityOrUserFromForm from 'app/shared/util/responsibility-or-user
   templateUrl: './project-section-update.component.html',
   styleUrls: ['./project-section-update.component.scss'],
 })
-export class ProjectSectionUpdateComponent implements OnInit {
+export class ProjectSectionUpdateComponent {
   isSaving = false;
   isNew = false;
   isResponsibility = false;
@@ -45,25 +45,23 @@ export class ProjectSectionUpdateComponent implements OnInit {
 
   constructor(
     protected sectionService: SectionService,
-    private eventManager: JhiEventManager,
+    private eventManager: EventManager,
     private fb: FormBuilder,
     private responsibilityService: ResponsibilityService,
     private userService: UserService
   ) {}
 
-  ngOnInit(): void {}
-
-  public updateForm(location: Location, section: Section): void {
+  updateForm(location: Location, section: Section): void {
     this.isNew = !section.id;
     this.isResponsibility = !section.user;
 
     this.responsibilityService
       .findAllByProject(location.project, { sort: ['name,asc'] })
-      .subscribe((response: HttpResponse<Responsibility[]>) => (this.responsibilities = response.body || []));
+      .subscribe((response: HttpResponse<Responsibility[]>) => (this.responsibilities = response.body ?? []));
 
     this.userService
       .findAllByProject(location.project, { sort: ['email,asc'] })
-      .subscribe((response: HttpResponse<User[]>) => (this.users = response.body || []));
+      .subscribe((response: HttpResponse<User[]>) => (this.users = response.body ?? []));
 
     this.editForm.patchValue({
       id: section.id,
@@ -116,18 +114,6 @@ export class ProjectSectionUpdateComponent implements OnInit {
     }
   }
 
-  private createFromForm(): Section {
-    const { responsibility, user } = responsibilityOrUserFromForm(this.editForm, this.isResponsibility);
-
-    return {
-      id: this.editForm.get(['id'])!.value,
-      name: this.editForm.get(['name'])!.value,
-      responsibility,
-      user,
-      location: this.editForm.get(['location'])!.value,
-    };
-  }
-
   protected subscribeToSaveResponse(result: Observable<HttpResponse<Section>>): void {
     result.subscribe(
       () => this.onSaveSuccess(),
@@ -143,5 +129,17 @@ export class ProjectSectionUpdateComponent implements OnInit {
 
   protected onSaveError(): void {
     this.isSaving = false;
+  }
+
+  private createFromForm(): Section {
+    const { responsibility, user } = responsibilityOrUserFromForm(this.editForm, this.isResponsibility);
+
+    return {
+      id: this.editForm.get(['id'])!.value,
+      name: this.editForm.get(['name'])!.value,
+      responsibility,
+      user,
+      location: this.editForm.get(['location'])!.value,
+    };
   }
 }

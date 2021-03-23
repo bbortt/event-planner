@@ -1,21 +1,16 @@
 import { Component } from '@angular/core';
 
-import { AccountService } from 'app/core/auth/account.service';
-import { LoginService } from 'app/core/login/login.service';
+import { AccountService } from '../core/auth/account.service';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['home.component.scss'],
+  styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent {
-  constructor(private accountService: AccountService, private loginService: LoginService) {}
+  constructor(private accountService: AccountService ) {}
 
   isAuthenticated(): boolean {
     return this.accountService.isAuthenticated();
-  }
-
-  login(): void {
-    this.loginService.login();
   }
 }

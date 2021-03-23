@@ -5,8 +5,9 @@ import { ActivatedRouteSnapshot, Resolve, Router } from '@angular/router';
 import { EMPTY, NEVER, Observable, of } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
 
-import { Location } from 'app/shared/model/location.model';
 import { LocationService } from './location.service';
+
+import { Location } from 'app/entities/location/location.model';
 
 @Injectable({ providedIn: 'root' })
 export class LocationResolve implements Resolve<Location> {

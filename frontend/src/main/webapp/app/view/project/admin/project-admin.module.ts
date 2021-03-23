@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { EventPlannerSharedModule } from 'app/shared/shared.module';
+import { SharedModule } from 'app/shared/shared.module';
 import { DxAutocompleteModule, DxColorBoxModule } from 'devextreme-angular';
 
 import { ProjectAdminComponent } from 'app/view/project/admin/project-admin.component';
@@ -31,7 +31,7 @@ import { ProjectConfirmationDialogComponent } from 'app/view/project/admin/proje
 import { PROJECT_ADMIN_ROUTES } from './project-admin.routes';
 
 @NgModule({
-  imports: [EventPlannerSharedModule, DxAutocompleteModule, DxColorBoxModule, RouterModule.forChild(PROJECT_ADMIN_ROUTES)],
+  imports: [SharedModule, DxAutocompleteModule, DxColorBoxModule, RouterModule.forChild(PROJECT_ADMIN_ROUTES)],
   declarations: [
     ProjectAdminComponent,
     ProjectAdminUpdateModalComponent,

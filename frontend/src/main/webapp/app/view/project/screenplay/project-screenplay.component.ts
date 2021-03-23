@@ -1,28 +1,28 @@
-import { Component, EventEmitter, OnInit } from '@angular/core';
-import { ActivatedRoute, Data, ParamMap, Router } from '@angular/router';
-import { HttpResponse } from '@angular/common/http';
+import {Component, EventEmitter, OnInit} from '@angular/core';
+import {ActivatedRoute, Data, ParamMap, Router} from '@angular/router';
+import {HttpResponse} from '@angular/common/http';
 
-import { combineLatest, of } from 'rxjs';
-import { map, switchMap, take, tap } from 'rxjs/operators';
+import {combineLatest, of} from 'rxjs';
+import {map, switchMap, take, tap} from 'rxjs/operators';
 
-import { NgbPanelChangeEvent } from '@ng-bootstrap/ng-bootstrap';
+import {NgbPanelChangeEvent} from '@ng-bootstrap/ng-bootstrap';
 
-import { LocationService } from 'app/entities/location/location.service';
-import { ResponsibilityService } from 'app/entities/responsibility/responsibility.service';
+import {LocationService} from 'app/entities/location/location.service';
+import {ResponsibilityService} from 'app/entities/responsibility/responsibility.service';
 
-import { Location } from 'app/shared/model/location.model';
-import { Project } from 'app/shared/model/project.model';
+import {Location} from 'app/entities/location/location.model';
+import {Project} from 'app/entities/project/project.model';
 
-import { Role } from 'app/shared/constants/role.constants';
+import {faChevronDown, faChevronUp, faCog} from '@fortawesome/free-solid-svg-icons';
 
-import { faChevronDown, faChevronUp, faCog } from '@fortawesome/free-solid-svg-icons';
+import {Role} from 'app/config/role.constants';
 
 const ROUTE_ACTIVE_LOCATIONS_PARAM_NAME = 'activeLocations';
 
 @Component({
   selector: 'app-screenplay',
   templateUrl: './project-screenplay.component.html',
-  styleUrls: ['project-screenplay.component.scss'],
+  styleUrls: ['./project-screenplay.component.scss'],
 })
 export class ProjectScreenplayComponent implements OnInit {
   faCog = faCog;
@@ -47,7 +47,7 @@ export class ProjectScreenplayComponent implements OnInit {
   ngOnInit(): void {
     combineLatest([this.activatedRoute.data, this.activatedRoute.queryParamMap])
       .pipe(
-        tap((value: [Data, ParamMap]) => (this.project = value[0].project)),
+        tap((value: [Data, ParamMap]) => this.project = value[0].project as Project),
         switchMap((value: [Data, ParamMap]) =>
           combineLatest([
             this.locationService.findAllByProject(value[0].project, { sort: ['name,asc'] }),
@@ -55,7 +55,7 @@ export class ProjectScreenplayComponent implements OnInit {
           ])
         ),
         map((value: [HttpResponse<Location[]>, string]) => ({
-          locations: value[0].body || [],
+          locations: value[0].body ?? [],
           activeIds: value[1],
         })),
         take(1)

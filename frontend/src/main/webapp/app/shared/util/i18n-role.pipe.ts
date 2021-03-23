@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { ROLES } from 'app/shared/constants/role.constants';
+import { ROLES } from 'app/config/role.constants';
 
 /**
  * Resolves a role by the provided `roleName` and returns its i18nKey.

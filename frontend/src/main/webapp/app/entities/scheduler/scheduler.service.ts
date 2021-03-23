@@ -1,25 +1,26 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
 
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
 
-import { Location } from 'app/shared/model/location.model';
-import { Project } from 'app/shared/model/project.model';
+import {ApplicationConfigService} from 'app/core/config/application-config.service';
 
-import { SchedulerColorGroup } from 'app/shared/model/dto/scheduler-color-group.model';
-import { SchedulerEvent } from 'app/shared/model/dto/scheduler-event.model';
-import { SchedulerLocation } from 'app/shared/model/dto/scheduler-location.model';
+import {Location} from 'app/entities/location/location.model';
+import {Project} from 'app/entities/project/project.model';
 
-import { SERVER_API_URL } from 'app/app.constants';
+import {SchedulerColorGroup} from 'app/entities/dto/scheduler-color-group.model';
+import {SchedulerEvent} from 'app/entities/dto/scheduler-event.model';
+import {SchedulerLocation} from 'app/entities/dto/scheduler-location.model';
 
 import * as moment from 'moment';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class SchedulerService {
-  public resourceUrl = SERVER_API_URL + 'api/scheduler';
+  resourceUrl = this.applicationConfigService.getEndpointFor('api/scheduler');
 
-  constructor(protected http: HttpClient) {}
+  constructor(protected http: HttpClient, private applicationConfigService: ApplicationConfigService) {
+  }
 
   getSchedulerResponsibilities(project: Project): Observable<SchedulerColorGroup[]> {
     return this.http.get<SchedulerColorGroup[]>(`${this.resourceUrl}/project/${project.id!}/responsibilities`);
@@ -33,8 +34,10 @@ export class SchedulerService {
 
   protected convertDTOsFromServer(data: SchedulerLocation): SchedulerLocation {
     data.events.forEach((schedulerEvent: SchedulerEvent) => {
-      schedulerEvent.originalEvent!.startTime = moment(schedulerEvent.originalEvent!.startTime);
-      schedulerEvent.originalEvent!.endTime = moment(schedulerEvent.originalEvent!.endTime);
+      if (schedulerEvent.originalEvent) {
+        schedulerEvent.originalEvent.startTime = moment(schedulerEvent.originalEvent.startTime);
+        schedulerEvent.originalEvent.endTime = moment(schedulerEvent.originalEvent.endTime);
+      }
     });
     return data;
   }

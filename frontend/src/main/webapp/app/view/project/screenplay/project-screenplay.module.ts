@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { EventPlannerSharedModule } from 'app/shared/shared.module';
+import { SharedModule } from 'app/shared/shared.module';
 
 import { DxDateBoxModule, DxSchedulerModule, DxSliderModule, DxTemplateModule } from 'devextreme-angular';
 
@@ -18,7 +18,7 @@ import { PROJECT_SCREENPLAY_ROUTES } from './project-screenplay.routes';
 
 @NgModule({
   imports: [
-    EventPlannerSharedModule,
+    SharedModule,
     DxSliderModule,
     DxDateBoxModule,
     DxSchedulerModule,

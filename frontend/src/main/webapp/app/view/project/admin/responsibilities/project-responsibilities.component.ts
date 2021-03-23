@@ -1,12 +1,15 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { JhiEventManager } from 'ng-jhipster';
+
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { Project } from 'app/shared/model/project.model';
-import { Responsibility } from 'app/shared/model/responsibility.model';
+import { Subscription } from 'rxjs';
+
+import {EventManager} from 'app/core/util/event-manager.service';
+
+import { Project } from 'app/entities/project/project.model';
+import { Responsibility } from 'app/entities/responsibility/responsibility.model';
 
 import { ResponsibilityService } from 'app/entities/responsibility/responsibility.service';
 
@@ -17,7 +20,7 @@ import { DEFAULT_SCHEDULER_COLOR } from 'app/app.constants';
 @Component({
   selector: 'app-project-responsibilities',
   templateUrl: './project-responsibilities.component.html',
-  styleUrls: ['project-responsibilities.component.scss'],
+  styleUrls: ['./project-responsibilities.component.scss'],
 })
 export class ProjectResponsibilitiesComponent implements OnInit, OnDestroy {
   project?: Project;
@@ -32,7 +35,7 @@ export class ProjectResponsibilitiesComponent implements OnInit, OnDestroy {
     protected responsibilityService: ResponsibilityService,
     protected activatedRoute: ActivatedRoute,
     protected router: Router,
-    protected eventManager: JhiEventManager,
+    protected eventManager: EventManager,
     protected modalService: NgbModal
   ) {}
 
@@ -54,7 +57,7 @@ export class ProjectResponsibilitiesComponent implements OnInit, OnDestroy {
     this.responsibilityService
       .findAllByProject(this.project!, { sort: ['name,asc'] })
       .subscribe((response: HttpResponse<Responsibility[]>) => {
-        this.loadedResponsibilities = response.body || [];
+        this.loadedResponsibilities = response.body ?? [];
         this.responsibilities = this.loadedResponsibilities;
       });
   }
@@ -70,7 +73,7 @@ export class ProjectResponsibilitiesComponent implements OnInit, OnDestroy {
 
   filterData(searchString: string): void {
     this.responsibilities = this.loadedResponsibilities!.filter((responsibility: Responsibility) =>
-      responsibility.name?.toLowerCase().includes(searchString.toLowerCase())
+      responsibility.name.toLowerCase().includes(searchString.toLowerCase())
     );
   }
 

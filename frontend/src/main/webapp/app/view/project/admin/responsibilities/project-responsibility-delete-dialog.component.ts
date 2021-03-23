@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { JhiEventManager } from 'ng-jhipster';
 
-import { Responsibility } from 'app/shared/model/responsibility.model';
+import {EventManager} from 'app/core/util/event-manager.service';
+
 import { ResponsibilityService } from 'app/entities/responsibility/responsibility.service';
+
+import { Responsibility } from 'app/entities/responsibility/responsibility.model';
 
 @Component({
   templateUrl: './project-responsibility-delete-dialog.component.html',
@@ -14,7 +16,7 @@ export class ProjectResponsibilityDeleteDialogComponent {
   constructor(
     protected responsibilityService: ResponsibilityService,
     public activeModal: NgbActiveModal,
-    protected eventManager: JhiEventManager
+    protected eventManager: EventManager
   ) {}
 
   cancel(): void {

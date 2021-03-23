@@ -7,9 +7,9 @@ export interface InfoResponse {
 
 export class ProfileInfo {
   constructor(
-    public activeProfiles?: string[],
-    public ribbonEnv?: string,
-    public inProduction?: boolean,
-    public swaggerEnabled?: boolean
+   public activeProfiles?: string[],
+   public  ribbonEnv?: string,
+   public  inProduction?: boolean,
+   public openAPIEnabled?: boolean
   ) {}
 }

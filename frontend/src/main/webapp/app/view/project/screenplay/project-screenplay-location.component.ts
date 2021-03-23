@@ -6,33 +6,33 @@ import { Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 
 import { TranslateService } from '@ngx-translate/core';
+
 import { AccountService } from 'app/core/auth/account.service';
+import {EventManager} from "app/core/util/event-manager.service";
 
-import { JhiEventManager } from 'ng-jhipster';
-
-import { AppointmentEvent } from 'app/shared/model/scheduler/appointment-event';
+import { AppointmentEvent } from 'app/entities/scheduler/appointment-event';
 
 import { EventService } from 'app/entities/event/event.service';
 import { SchedulerService } from 'app/entities/scheduler/scheduler.service';
 
-import { Event } from 'app/shared/model/event.model';
-import { Location } from 'app/shared/model/location.model';
-import { Project } from 'app/shared/model/project.model';
+import { Event } from 'app/entities/event/event.model';
+import { Location } from 'app/entities/location/location.model';
+import { Project } from 'app/entities/project/project.model';
 
-import { SchedulerColorGroup } from 'app/shared/model/dto/scheduler-color-group.model';
-import { SchedulerEvent } from 'app/shared/model/dto/scheduler-event.model';
-import { SchedulerLocation } from 'app/shared/model/dto/scheduler-location.model';
-import { SchedulerSection } from 'app/shared/model/dto/scheduler-section.model';
-import SchedulerInformation from 'app/shared/model/scheduler/scheduler-information';
-
-import { Authority } from 'app/shared/constants/authority.constants';
-import { Role } from 'app/shared/constants/role.constants';
+import { SchedulerColorGroup } from 'app/entities/dto/scheduler-color-group.model';
+import { SchedulerEvent } from 'app/entities/dto/scheduler-event.model';
+import { SchedulerLocation } from 'app/entities/dto/scheduler-location.model';
+import { SchedulerSection } from 'app/entities/dto/scheduler-section.model';
+import SchedulerInformation from 'app/entities/scheduler/scheduler-information';
 
 import {
   ROUTE_CELL_DURATION_PARAMETER_NAME,
   ROUTE_FROM_PARAMETER_NAME,
   ROUTE_INTERVAL_PARAMETER_NAME,
 } from 'app/view/project/screenplay/filter/project-screenplay-filter.component';
+
+import { Authority} from 'app/config/authority.constants';
+import { Role } from 'app/config/role.constants';
 
 import { DEFAULT_SCHEDULER_CELL_DURATION } from 'app/app.constants';
 
@@ -46,20 +46,20 @@ import * as moment from 'moment';
 })
 export class ProjectScreenplayLocationComponent implements OnInit, OnDestroy {
   @Input()
-  public location?: Location;
+  location?: Location;
 
   schedulerStartDate?: Date;
   cellDuration?: number;
   interval?: number;
 
-  public project?: Project;
+  project?: Project;
 
-  public isViewer = true;
-  public schedulerInformation: SchedulerInformation = { allowDeleting: false };
+  isViewer = true;
+  schedulerInformation: SchedulerInformation = { allowDeleting: false };
 
-  public events: SchedulerEvent[] = [];
-  public sections: SchedulerSection[] = [];
-  public colors: SchedulerColorGroup[] = [];
+  events: SchedulerEvent[] = [];
+  sections: SchedulerSection[] = [];
+  colors: SchedulerColorGroup[] = [];
 
   private destroy$ = new Subject<void>();
 
@@ -70,7 +70,7 @@ export class ProjectScreenplayLocationComponent implements OnInit, OnDestroy {
     private accountService: AccountService,
     private schedulerService: SchedulerService,
     private eventService: EventService,
-    private eventManager: JhiEventManager
+    private eventManager: EventManager
   ) {}
 
   ngOnInit(): void {
@@ -86,16 +86,16 @@ export class ProjectScreenplayLocationComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$)
       )
       .subscribe(({ cellDuration, from, interval }: { cellDuration?: number; from?: Date; interval?: number }) => {
-        this.cellDuration = cellDuration || this.cellDuration || DEFAULT_SCHEDULER_CELL_DURATION;
-        this.schedulerStartDate = from ? moment(from).toDate() : this.schedulerStartDate || this.project!.startTime.toDate();
-        this.interval = interval || this.interval || this.project!.endTime.diff(this.project!.startTime, 'days') + 1;
+        this.cellDuration = cellDuration ?? this.cellDuration ?? DEFAULT_SCHEDULER_CELL_DURATION;
+        this.schedulerStartDate = from ? moment(from).toDate() : this.schedulerStartDate ?? this.project!.startTime.toDate();
+        this.interval = interval ?? this.interval ?? this.project!.endTime.diff(this.project!.startTime, 'days') + 1;
       });
 
     this.reset();
 
     this.isViewer =
       !this.accountService.hasAnyAuthority(Authority.ADMIN) &&
-      (!this.project || this.accountService.hasAnyRole(this.project.id!, Role.VIEWER.name));
+      this.accountService.hasAnyRole(this.project.id!, Role.VIEWER.name);
 
     this.schedulerInformation = {
       ...this.schedulerInformation,
@@ -109,22 +109,6 @@ export class ProjectScreenplayLocationComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-  }
-
-  private reset(): void {
-    const events: SchedulerEvent[] = [];
-    const sections: SchedulerSection[] = [];
-    const colors: SchedulerColorGroup[] = [];
-
-    this.schedulerService.getSchedulerInformation(this.location!).subscribe((data: SchedulerLocation) => {
-      data.events.forEach((event: SchedulerEvent) => events.push(event));
-      data.sections.forEach((section: SchedulerSection) => sections.push(section));
-      data.colorGroups.forEach((colorGroup: SchedulerColorGroup) => colors.push(colorGroup));
-    });
-
-    this.sections = sections;
-    this.events = events;
-    this.colors = colors;
   }
 
   configureAppointmentForm(e: AppointmentEvent): void {
@@ -188,6 +172,22 @@ export class ProjectScreenplayLocationComponent implements OnInit, OnDestroy {
       endTime: moment(event.endDate),
     };
 
-    return { ...event.originalEvent!, ...updatedEvent };
+    return { ...event.originalEvent, ...updatedEvent } as Event;
+  }
+
+  private reset(): void {
+    const events: SchedulerEvent[] = [];
+    const sections: SchedulerSection[] = [];
+    const colors: SchedulerColorGroup[] = [];
+
+    this.schedulerService.getSchedulerInformation(this.location!).subscribe((data: SchedulerLocation) => {
+      data.events.forEach((event: SchedulerEvent) => events.push(event));
+      data.sections.forEach((section: SchedulerSection) => sections.push(section));
+      data.colorGroups.forEach((colorGroup: SchedulerColorGroup) => colors.push(colorGroup));
+    });
+
+    this.sections = sections;
+    this.events = events;
+    this.colors = colors;
   }
 }

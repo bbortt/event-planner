@@ -2,7 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HttpHeaders, HttpResponse } from '@angular/common/http';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 
-import { JhiEventManager, JhiParseLinks } from 'ng-jhipster';
+import {EventManager} from 'app/core/util/event-manager.service';
+import {ParseLinks} from 'app/core/util/parse-links.service';
 
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -12,11 +13,11 @@ import { finalize, map, mergeMap, take, tap } from 'rxjs/operators';
 import { ProjectService } from 'app/entities/project/project.service';
 import { AccountService } from 'app/core/auth/account.service';
 
-import { Project } from 'app/shared/model/project.model';
+import { Project } from 'app/entities/project/project.model';
 
 import { faArrowDown, faBook, faCog } from '@fortawesome/free-solid-svg-icons';
-import { Authority } from 'app/shared/constants/authority.constants';
-import { Role } from 'app/shared/constants/role.constants';
+import { Authority } from 'app/config/authority.constants';
+import { Role } from 'app/config/role.constants';
 
 type PagedEntity = { page: number; projects: Project[]; links: { next?: number; last: number } };
 
@@ -57,11 +58,11 @@ export class MyProjectsComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private eventManager: JhiEventManager,
+    private eventManager: EventManager,
     private modalService: NgbModal,
     private projectService: ProjectService,
     private accountService: AccountService,
-    private parseLinks: JhiParseLinks
+    private parseLinks: ParseLinks
   ) {}
 
   ngOnInit(): void {
@@ -115,14 +116,11 @@ export class MyProjectsComponent implements OnInit, OnDestroy {
       )
       .subscribe((pagedEntity: PagedEntity) => {
         const newProjects = pagedEntity.projects;
-
-        if (newProjects) {
           page = pagedEntity.page;
           projects.push(...newProjects);
           filteredProjects.push(newProjects);
           links = pagedEntity.links;
           loadMoreButtonEnabled = 'next' in links;
-        }
       });
   }
 
@@ -132,29 +130,12 @@ export class MyProjectsComponent implements OnInit, OnDestroy {
       .pipe(finalize(() => this.fillLastRow(this.filteredProjects)))
       .subscribe((pagedEntity: PagedEntity) => {
         const { page, projects, links } = pagedEntity;
-
-        if (!projects) {
-          return;
-        }
-
         this.page = page;
         this.projects.push(...projects);
         this.filteredProjects.push(projects);
         this.links = links;
         this.loadMoreButtonEnabled = !!links.next;
       });
-  }
-
-  private loadPage(page: number): Observable<PagedEntity> {
-    return this.projectService
-      .query({
-        page,
-        size: this.itemsPerPage,
-        sort: this.sort(),
-        loadArchived: this.showArchivedProjects,
-        loadAll: this.accountService.hasAnyAuthority(Authority.ADMIN) && this.showAllProjects,
-      })
-      .pipe(map((res: HttpResponse<Project[]>) => this.paginateSomeEntities(page, res.body, res.headers)));
   }
 
   trackId(index: number, item: Project): number {
@@ -179,7 +160,7 @@ export class MyProjectsComponent implements OnInit, OnDestroy {
       this.reset();
     }
 
-    const matchingProjects = this.projects.filter((project: Project) => project.name?.toLowerCase().includes(searchString.toLowerCase()));
+    const matchingProjects = this.projects.filter((project: Project) => project.name.toLowerCase().includes(searchString.toLowerCase()));
 
     this.filteredProjects = [];
 
@@ -194,6 +175,18 @@ export class MyProjectsComponent implements OnInit, OnDestroy {
     this.fillLastRow(this.filteredProjects);
   }
 
+  private loadPage(page: number): Observable<PagedEntity> {
+    return this.projectService
+      .query({
+        page,
+        size: this.itemsPerPage,
+        sort: this.sort(),
+        loadArchived: this.showArchivedProjects,
+        loadAll: this.accountService.hasAnyAuthority(Authority.ADMIN) && this.showAllProjects,
+      })
+      .pipe(map((res: HttpResponse<Project[]>) => this.paginateSomeEntities(page, res.body, res.headers)));
+  }
+
   private fillLastRow(rows: Project[][]): void {
     while (rows[rows.length - 1] && rows[rows.length - 1].length % 3 !== 0) {
       rows[rows.length - 1].push({} as Project);
@@ -204,6 +197,6 @@ export class MyProjectsComponent implements OnInit, OnDestroy {
   private paginateSomeEntities(page: number, newProjects: Project[] | null, headers: HttpHeaders): PagedEntity {
     const headersLink = headers.get('link');
     const links = this.parseLinks.parse(headersLink ? headersLink : '');
-    return { page, projects: newProjects || [], links };
+    return { page, projects: newProjects ?? [],links:{next: links['next'], last: links['last'] } };
   }
 }

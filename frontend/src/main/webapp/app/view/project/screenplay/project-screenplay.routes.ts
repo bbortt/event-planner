@@ -6,7 +6,7 @@ import { UserRouteRoleAccessService } from 'app/core/auth/user-route-role-access
 
 import { ProjectScreenplayComponent } from 'app/view/project/screenplay/project-screenplay.component';
 
-import { Role } from 'app/shared/constants/role.constants';
+import { Role } from 'app/config/role.constants';
 
 export const PROJECT_SCREENPLAY_ROUTES: Routes = [
   {

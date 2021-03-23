@@ -1,10 +1,13 @@
-import { Injectable } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, Router } from '@angular/router';
+
 import { EMPTY, Observable, of } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
-import { Role } from 'app/shared/model/role.model';
+
 import { RoleService } from './role.service';
+
+import { Role } from 'app/entities/role/role.model';
 
 @Injectable({ providedIn: 'root' })
 export class RoleResolve implements Resolve<Role> {

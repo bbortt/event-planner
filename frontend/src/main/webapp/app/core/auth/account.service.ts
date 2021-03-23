@@ -1,20 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-
-import { of, Observable, ReplaySubject } from 'rxjs';
-import { catchError, shareReplay, tap } from 'rxjs/operators';
-
+import { TranslateService } from '@ngx-translate/core';
 import { SessionStorageService } from 'ngx-webstorage';
-
-import { JhiLanguageService } from 'ng-jhipster';
+import { Observable, ReplaySubject, of } from 'rxjs';
+import { shareReplay, tap, catchError } from 'rxjs/operators';
 
 import { StateStorageService } from 'app/core/auth/state-storage.service';
-
-import { Account } from 'app/core/user/account.model';
-import { Authority } from 'app/shared/constants/authority.constants';
-
-import { SERVER_API_URL } from 'app/app.constants';
+import { ApplicationConfigService } from '../config/application-config.service';
+import { Account } from 'app/core/auth/account.model';
+import {Authority} from "app/config/authority.constants";
 
 @Injectable({ providedIn: 'root' })
 export class AccountService {
@@ -23,11 +18,12 @@ export class AccountService {
   private accountCache$?: Observable<Account | null>;
 
   constructor(
-    private languageService: JhiLanguageService,
+    private translateService: TranslateService,
     private sessionStorage: SessionStorageService,
     private http: HttpClient,
     private stateStorageService: StateStorageService,
-    private router: Router
+    private router: Router,
+    private applicationConfigService: ApplicationConfigService
   ) {}
 
   authenticate(identity: Account | null): void {
@@ -36,7 +32,7 @@ export class AccountService {
   }
 
   hasAnyAuthority(authorities: string[] | string): boolean {
-    if (!this.userIdentity || !this.userIdentity.authorities) {
+    if (!this.userIdentity) {
       return false;
     }
     if (!Array.isArray(authorities)) {
@@ -46,7 +42,7 @@ export class AccountService {
   }
 
   hasAnyRole(projectId: number, roles: string[] | string): boolean {
-    if (!this.userIdentity || !this.userIdentity.rolePerProject) {
+    if (!this.userIdentity) {
       return false;
     }
     if (this.hasAnyAuthority(Authority.ADMIN)) {
@@ -56,24 +52,22 @@ export class AccountService {
       roles = [roles];
     }
 
-    const projectRole = this.userIdentity.rolePerProject[projectId];
+    const projectRole = this.userIdentity.rolePerProject.get(projectId);
     return !!projectRole && roles.some((role: string) => projectRole === role);
   }
 
   identity(force?: boolean): Observable<Account | null> {
     if (!this.accountCache$ || force || !this.isAuthenticated()) {
       this.accountCache$ = this.fetch().pipe(
-        catchError(() => {
-          return of(null);
-        }),
+        catchError(() => of(null)),
         tap((account: Account | null) => {
           this.authenticate(account);
 
           // After retrieve the account info, the language will be changed to
           // the user's preferred language configured in the account setting
-          if (account && account.langKey) {
-            const langKey = this.sessionStorage.retrieve('locale') || account.langKey;
-            this.languageService.changeLanguage(langKey);
+          if (account?.langKey) {
+            const langKey = this.sessionStorage.retrieve('locale') ?? account.langKey;
+            this.translateService.use(langKey);
           }
 
           if (account) {
@@ -95,11 +89,11 @@ export class AccountService {
   }
 
   getImageUrl(): string {
-    return this.userIdentity ? this.userIdentity.imageUrl : '';
+    return this.userIdentity?.imageUrl ?? '';
   }
 
   private fetch(): Observable<Account> {
-    return this.http.get<Account>(SERVER_API_URL + 'api/account');
+    return this.http.get<Account>(this.applicationConfigService.getEndpointFor('api/account'));
   }
 
   private navigateToStoredUrl(): void {
