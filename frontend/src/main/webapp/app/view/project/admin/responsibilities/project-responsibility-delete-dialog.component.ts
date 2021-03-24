@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
-import {EventManager} from 'app/core/util/event-manager.service';
+import { EventManager } from 'app/core/util/event-manager.service';
 
 import { ResponsibilityService } from 'app/entities/responsibility/responsibility.service';
 

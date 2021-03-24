@@ -3,8 +3,8 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
 
-import {IUser, getUserIdentifier, User} from './user.model';
-import {Project} from "app/entities/project/project.model";
+import { IUser, getUserIdentifier, User } from './user.model';
+import { Project } from 'app/entities/project/project.model';
 
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { Pagination } from 'app/core/request/request.model';

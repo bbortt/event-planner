@@ -1,29 +1,29 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {HttpResponse} from '@angular/common/http';
-import {FormBuilder, Validators} from '@angular/forms';
-import {Router} from '@angular/router';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { HttpResponse } from '@angular/common/http';
+import { FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
-import {Observable, Subject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
-import {AccountService} from 'app/core/auth/account.service';
-import {EventManager} from "app/core/util/event-manager.service";
+import { AccountService } from 'app/core/auth/account.service';
+import { EventManager } from 'app/core/util/event-manager.service';
 
-import {EventService} from 'app/entities/event/event.service';
-import {ResponsibilityService} from 'app/entities/responsibility/responsibility.service';
-import {UserService} from 'app/entities/user/user.service';
+import { EventService } from 'app/entities/event/event.service';
+import { ResponsibilityService } from 'app/entities/responsibility/responsibility.service';
+import { UserService } from 'app/entities/user/user.service';
 
-import {Event} from 'app/entities/event/event.model';
-import {Location} from 'app/entities/location/location.model';
-import {Project} from 'app/entities/project/project.model';
-import {Responsibility} from 'app/entities/responsibility/responsibility.model';
-import {Section} from 'app/entities/section/section.model';
-import {User} from 'app/entities/user/user.model';
+import { Event } from 'app/entities/event/event.model';
+import { Location } from 'app/entities/location/location.model';
+import { Project } from 'app/entities/project/project.model';
+import { Responsibility } from 'app/entities/responsibility/responsibility.model';
+import { Section } from 'app/entities/section/section.model';
+import { User } from 'app/entities/user/user.model';
 
-import {Authority} from 'app/config/authority.constants';
-import {Role} from 'app/config/role.constants';
+import { Authority } from 'app/config/authority.constants';
+import { Role } from 'app/config/role.constants';
 
-import {DATE_TIME_FORMAT} from 'app/config/input.constants';
+import { DATE_TIME_FORMAT } from 'app/config/input.constants';
 
 import responsibilityOrUserFromForm from 'app/shared/util/responsibility-or-user-from-form';
 
@@ -119,11 +119,11 @@ export class EventUpdateComponent implements OnInit, OnDestroy {
 
       this.responsibilityService
         .findAllByProject(this.project, { sort: ['name,asc'] })
-        .subscribe((response: HttpResponse<Responsibility[]>) => this.responsibilities = response.body ?? []);
+        .subscribe((response: HttpResponse<Responsibility[]>) => (this.responsibilities = response.body ?? []));
 
       this.userService
         .findAllByProject(this.project, { sort: ['email,asc'] })
-        .subscribe((response: HttpResponse<User[]>) => this.users = response.body ?? []);
+        .subscribe((response: HttpResponse<User[]>) => (this.users = response.body ?? []));
     }
 
     this.isResponsibility = !user;

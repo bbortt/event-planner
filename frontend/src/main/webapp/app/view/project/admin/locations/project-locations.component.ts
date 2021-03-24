@@ -5,7 +5,7 @@ import { ActivatedRoute, Data, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
-import {EventManager} from 'app/core/util/event-manager.service';
+import { EventManager } from 'app/core/util/event-manager.service';
 
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -45,7 +45,7 @@ export class ProjectLocationsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.activatedRoute.data
       .pipe(
-        tap((data: Data) => this.project = data.project as Project),
+        tap((data: Data) => (this.project = data.project as Project)),
         tap(() => this.loadLocations())
       )
       .subscribe(() => {
@@ -71,9 +71,7 @@ export class ProjectLocationsComponent implements OnInit, OnDestroy {
   }
 
   filterData(searchString: string): void {
-    this.locations = this.loadedLocations!.filter((location: Location) =>
-      location.name.toLowerCase().includes(searchString.toLowerCase())
-    );
+    this.locations = this.loadedLocations!.filter((location: Location) => location.name.toLowerCase().includes(searchString.toLowerCase()));
   }
 
   protected onSuccess(data: Location[] | null): void {

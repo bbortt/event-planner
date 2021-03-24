@@ -1,9 +1,12 @@
 import { FormGroup } from '@angular/forms';
 
 import { Responsibility } from 'app/entities/responsibility/responsibility.model';
-import {Account} from 'app/core/auth/account.model';
+import { Account } from 'app/core/auth/account.model';
 
-const responsibilityOrUserFromForm = (editForm: FormGroup, isResponsibility: boolean): { responsibility?: Responsibility; user?: Account } => {
+const responsibilityOrUserFromForm = (
+  editForm: FormGroup,
+  isResponsibility: boolean
+): { responsibility?: Responsibility; user?: Account } => {
   let responsibility;
   let user;
 

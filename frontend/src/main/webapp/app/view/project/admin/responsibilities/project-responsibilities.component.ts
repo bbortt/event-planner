@@ -6,7 +6,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { Subscription } from 'rxjs';
 
-import {EventManager} from 'app/core/util/event-manager.service';
+import { EventManager } from 'app/core/util/event-manager.service';
 
 import { Project } from 'app/entities/project/project.model';
 import { Responsibility } from 'app/entities/responsibility/responsibility.model';

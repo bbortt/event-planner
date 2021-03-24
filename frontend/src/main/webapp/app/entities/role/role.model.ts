@@ -1,4 +1,4 @@
-import {Invitation} from 'app/entities/invitation/invitation.model';
+import { Invitation } from 'app/entities/invitation/invitation.model';
 
 export interface Role {
   name: string;

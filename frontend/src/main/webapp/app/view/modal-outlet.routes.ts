@@ -41,7 +41,7 @@ export const MODAL_OUTLET_ROUTES: Routes = [
     path: 'projects/:projectId/responsibilities/new',
     component: ProjectResponsibilityModalComponent,
     data: {
-      roles: [Role.ADMIN.name,Role. SECRETARY.name],
+      roles: [Role.ADMIN.name, Role.SECRETARY.name],
     },
     canActivate: [UserRouteRoleAccessService],
     resolve: {
@@ -53,7 +53,7 @@ export const MODAL_OUTLET_ROUTES: Routes = [
     path: 'projects/:projectId/responsibilities/:responsibilityId/edit',
     component: ProjectResponsibilityModalComponent,
     data: {
-      roles: [Role.ADMIN.name,Role. SECRETARY.name],
+      roles: [Role.ADMIN.name, Role.SECRETARY.name],
     },
     canActivate: [UserRouteRoleAccessService],
     resolve: {
@@ -66,7 +66,7 @@ export const MODAL_OUTLET_ROUTES: Routes = [
     path: 'projects/:projectId/users/invite/new',
     component: ProjectUserInviteModalComponent,
     data: {
-      roles: [Role.ADMIN.name,Role. SECRETARY.name],
+      roles: [Role.ADMIN.name, Role.SECRETARY.name],
     },
     canActivate: [UserRouteRoleAccessService],
     resolve: {
@@ -78,7 +78,7 @@ export const MODAL_OUTLET_ROUTES: Routes = [
     path: 'projects/:projectId/users/invite/:invitationId/edit',
     component: ProjectUserInviteModalComponent,
     data: {
-      roles: [Role.ADMIN.name,Role. SECRETARY.name],
+      roles: [Role.ADMIN.name, Role.SECRETARY.name],
     },
     canActivate: [UserRouteRoleAccessService],
     resolve: {
@@ -141,7 +141,7 @@ export const MODAL_OUTLET_ROUTES: Routes = [
     path: 'projects/:projectId/locations/:locationId/sections/:sectionId/events/new',
     component: EventUpdateModalComponent,
     data: {
-      roles: [Role.ADMIN.name, Role.SECRETARY.name,Role. CONTRIBUTOR.name],
+      roles: [Role.ADMIN.name, Role.SECRETARY.name, Role.CONTRIBUTOR.name],
     },
     canActivate: [UserRouteRoleAccessService],
     resolve: {
@@ -155,7 +155,7 @@ export const MODAL_OUTLET_ROUTES: Routes = [
     path: 'projects/:projectId/locations/:locationId/sections/:sectionId/events/:eventId',
     component: EventUpdateModalComponent,
     data: {
-      roles: [Role.ADMIN.name,Role. SECRETARY.name, Role.CONTRIBUTOR.name,Role. VIEWER.name],
+      roles: [Role.ADMIN.name, Role.SECRETARY.name, Role.CONTRIBUTOR.name, Role.VIEWER.name],
     },
     canActivate: [UserRouteRoleAccessService],
     resolve: {
@@ -170,7 +170,7 @@ export const MODAL_OUTLET_ROUTES: Routes = [
     path: 'projects/:projectId/locations/:locationId/sections/:sectionId/events/:eventId/edit',
     component: EventUpdateModalComponent,
     data: {
-      roles: [Role.ADMIN.name, Role.SECRETARY.name,Role. CONTRIBUTOR.name],
+      roles: [Role.ADMIN.name, Role.SECRETARY.name, Role.CONTRIBUTOR.name],
     },
     canActivate: [UserRouteRoleAccessService],
     resolve: {

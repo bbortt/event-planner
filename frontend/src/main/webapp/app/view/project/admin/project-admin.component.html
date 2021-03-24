@@ -1,41 +1,40 @@
 <div *ngIf="project">
-    <h2 id="page-heading">
-        <span>{{project?.name}}</span>
-        <small jhiTranslate="eventPlannerApp.project.home.settingsLabel">Settings</small>
+  <h2 id="page-heading">
+    <span>{{ project?.name }}</span>
+    <small jhiTranslate="eventPlannerApp.project.home.settingsLabel">Settings</small>
 
-        <div class="float-right clearfix">
-            <button type="submit"
-                    id="btn-edit-project"
-                    *appHasAnyRole="{ projectId: project?.id!, roles: roleAdmin }"
-                    [routerLink]="['', {outlets: {modal: ['projects', project.id, 'edit']}}]"
-                    class="btn btn-negative btn-blue btn-md">
-                <fa-icon icon="pencil-alt"></fa-icon>
-                <span jhiTranslate="entity.action.edit">
-                    Edit
-                </span>
-            </button>
+    <div class="float-right clearfix">
+      <button
+        type="submit"
+        id="btn-edit-project"
+        *appHasAnyRole="{ projectId: project?.id!, roles: roleAdmin }"
+        [routerLink]="['', { outlets: { modal: ['projects', project.id, 'edit'] } }]"
+        class="btn btn-negative btn-blue btn-md"
+      >
+        <fa-icon icon="pencil-alt"></fa-icon>
+        <span jhiTranslate="entity.action.edit"> Edit </span>
+      </button>
 
-            <button id="jh-screenplay-{{project.id}}"
-                    [routerLink]="['/project', project.id, 'screenplay']"
-                    class="btn btn-negative btn-gray btn-md">
-                <fa-icon [icon]="faBook"></fa-icon>
-                <span jhiTranslate="eventPlannerApp.project.home.screenplayLabel">
-                    Screenplay
-                </span>
-            </button>
-        </div>
-    </h2>
+      <button
+        id="jh-screenplay-{{ project.id }}"
+        [routerLink]="['/project', project.id, 'screenplay']"
+        class="btn btn-negative btn-gray btn-md"
+      >
+        <fa-icon [icon]="faBook"></fa-icon>
+        <span jhiTranslate="eventPlannerApp.project.home.screenplayLabel"> Screenplay </span>
+      </button>
+    </div>
+  </h2>
 
-    <div class="time">{{ project.startTime.toDate() | date:'longDate' }}
-        - {{ project.endTime.toDate() | date:'longDate' }}</div>
+  <div class="time">{{ project.startTime.toDate() | date: 'longDate' }} - {{ project.endTime.toDate() | date: 'longDate' }}</div>
 
-    <div *ngIf="project.description" class="description">{{project.description}}</div>
+  <div *ngIf="project.description" class="description">{{ project.description }}</div>
 
-    <br/>
+  <br />
 
-    <app-project-admin-navbar></app-project-admin-navbar>
+  <app-project-admin-navbar></app-project-admin-navbar>
 
-    <br/>
+  <br />
 
-    <router-outlet></router-outlet>
+  <router-outlet></router-outlet>
 </div>

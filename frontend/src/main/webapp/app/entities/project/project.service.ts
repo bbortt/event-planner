@@ -4,8 +4,8 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import {ApplicationConfigService} from 'app/core/config/application-config.service';
-import {createRequestOption} from 'app/core/request/request-util';
+import { ApplicationConfigService } from 'app/core/config/application-config.service';
+import { createRequestOption } from 'app/core/request/request-util';
 
 import { Project } from 'app/entities/project/project.model';
 
@@ -59,8 +59,8 @@ export class ProjectService {
 
   protected convertDateFromClient(project: Project): Project {
     const copy: Project = Object.assign({}, project, {
-      startTime:  project.startTime.isValid() ? project.startTime.toJSON() : undefined,
-      endTime:  project.endTime.isValid() ? project.endTime.toJSON() : undefined,
+      startTime: project.startTime.isValid() ? project.startTime.toJSON() : undefined,
+      endTime: project.endTime.isValid() ? project.endTime.toJSON() : undefined,
     });
     return copy;
   }

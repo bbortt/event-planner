@@ -3,7 +3,7 @@ import { FormBuilder, FormControl, Validators } from '@angular/forms';
 
 import { take } from 'rxjs/operators';
 
-import {EventManager} from "app/core/util/event-manager.service";
+import { EventManager } from 'app/core/util/event-manager.service';
 
 import { InvitationService } from 'app/entities/invitation/invitation.service';
 import { ResponsibilityService } from 'app/entities/responsibility/responsibility.service';
@@ -14,7 +14,7 @@ import { Responsibility } from 'app/entities/responsibility/responsibility.model
 
 import { uniquePropertyValueInProjectValidator } from 'app/entities/validator/unique-property-value-in-project.validator';
 
-import { Role,InternalRole, ROLES } from 'app/config/role.constants';
+import { Role, InternalRole, ROLES } from 'app/config/role.constants';
 
 import { DEFAULT_SCHEDULER_COLOR } from 'app/app.constants';
 
@@ -39,7 +39,7 @@ export class ProjectUserInviteComponent {
   });
 
   roleProjectAdmin = Role.ADMIN;
-  invitationRoles = [Role.SECRETARY,Role. CONTRIBUTOR, Role.VIEWER];
+  invitationRoles = [Role.SECRETARY, Role.CONTRIBUTOR, Role.VIEWER];
 
   responsibilities: Responsibility[] = [];
 

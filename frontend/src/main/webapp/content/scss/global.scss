@@ -199,4 +199,100 @@ ui bootstrap tweaks
   white-space: nowrap;
 }
 
-/* jhipster-needle-scss-add-main JHipster will add new css style */
+/* ==========================================================================
+custom button style
+========================================================================== */
+.btn.btn-negative {
+  border: 2px solid #000 !important;
+  padding: 0.5rem 1rem;
+}
+
+.btn.btn-red:hover {
+  color: #fff;
+  background-color: $danger;
+}
+
+.btn.btn-blue:hover {
+  color: #fff;
+  background-color: $primary;
+}
+
+.btn.btn-green:hover {
+  color: #fff;
+  background-color: $success;
+}
+
+.btn.btn-gray:hover {
+  color: #fff;
+  background-color: #6c757d;
+}
+
+.btn-group {
+  .btn {
+    margin-right: 1vh;
+    border-radius: $border-radius !important;
+  }
+
+  .btn:last-child {
+    margin-right: 0;
+  }
+}
+
+/* ==========================================================================
+custom modal styling
+========================================================================== */
+.modal-content {
+  padding-top: 3vh;
+  padding-bottom: 3vh;
+}
+
+.modal-header,
+.modal-footer {
+  border: unset !important;
+}
+
+/* ==========================================================================
+devextreme inputs in combination with scss class `form-control` styling
+========================================================================== */
+@import '~bootstrap/scss/bootstrap';
+
+.dx-form-control {
+  @extend .form-control;
+
+  padding: 0;
+  min-height: 0;
+
+  &.dx-state-readonly {
+    border-style: none;
+  }
+
+  .dx-texteditor-input[readonly] {
+    @extend .form-control, [readonly];
+  }
+}
+
+.dx-calendar-navigator {
+  .dx-calendar-caption-button {
+    left: 0;
+  }
+
+  .dx-button {
+    position: relative;
+  }
+}
+
+.dx-toolbar {
+  .dx-popup-done {
+    @extend .btn;
+    @extend .btn-negative;
+    @extend .btn-green;
+    padding: 0.25rem 0.5rem;
+  }
+
+  .dx-popup-cancel {
+    @extend .btn;
+    @extend .btn-negative;
+    @extend .btn-gray;
+    padding: 0.25rem 0.5rem;
+  }
+}

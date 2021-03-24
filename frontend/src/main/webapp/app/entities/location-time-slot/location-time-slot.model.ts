@@ -1,4 +1,4 @@
-import {Location} from 'app/entities/location/location.model';
+import { Location } from 'app/entities/location/location.model';
 
 import { Moment } from 'moment';
 

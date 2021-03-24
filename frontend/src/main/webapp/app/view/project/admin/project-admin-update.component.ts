@@ -7,8 +7,8 @@ import { Observable } from 'rxjs';
 
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-import {AlertService} from 'app/core/util/alert.service';
-import {EventManager} from 'app/core/util/event-manager.service';
+import { AlertService } from 'app/core/util/alert.service';
+import { EventManager } from 'app/core/util/event-manager.service';
 
 import { ProjectService } from 'app/entities/project/project.service';
 
@@ -76,12 +76,22 @@ export class ProjectAdminUpdateComponent {
     modalRef.result
       .then((result: boolean) => {
         if (result) {
-          this.router
-            .navigate([''])
-            .then(() => this.alertService.addAlert({type:'success', translationKey:'eventPlannerApp.project.archived', translationParams: { param: this.project!.name }}));
+          this.router.navigate(['']).then(() =>
+            this.alertService.addAlert({
+              type: 'success',
+              translationKey: 'eventPlannerApp.project.archived',
+              translationParams: { param: this.project!.name },
+            })
+          );
         }
       })
-      .catch(() =>this.alertService.addAlert({type:'warning', translationKey:'global.error.internalServerError', translationParams: { param: this.project!.name }}));
+      .catch(() =>
+        this.alertService.addAlert({
+          type: 'warning',
+          translationKey: 'global.error.internalServerError',
+          translationParams: { param: this.project!.name },
+        })
+      );
   }
 
   delete(): void {
@@ -91,12 +101,22 @@ export class ProjectAdminUpdateComponent {
     modalRef.result
       .then((result: boolean) => {
         if (result) {
-          this.router
-            .navigate([''])
-            .then(() => this.alertService.addAlert({type:'success', translationKey:'eventPlannerApp.project.deleted', translationParams: { param: this.project!.name }}));
+          this.router.navigate(['']).then(() =>
+            this.alertService.addAlert({
+              type: 'success',
+              translationKey: 'eventPlannerApp.project.deleted',
+              translationParams: { param: this.project!.name },
+            })
+          );
         }
       })
-      .catch(() =>this.alertService.addAlert({type:'warning', translationKey:'global.error.internalServerError', translationParams: { param: this.project!.name }}));
+      .catch(() =>
+        this.alertService.addAlert({
+          type: 'warning',
+          translationKey: 'global.error.internalServerError',
+          translationParams: { param: this.project!.name },
+        })
+      );
   }
 
   protected subscribeToSaveResponse(result: Observable<HttpResponse<Project>>): void {

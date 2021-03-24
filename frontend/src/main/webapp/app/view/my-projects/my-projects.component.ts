@@ -2,8 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HttpHeaders, HttpResponse } from '@angular/common/http';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 
-import {EventManager} from 'app/core/util/event-manager.service';
-import {ParseLinks} from 'app/core/util/parse-links.service';
+import { EventManager } from 'app/core/util/event-manager.service';
+import { ParseLinks } from 'app/core/util/parse-links.service';
 
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -116,11 +116,11 @@ export class MyProjectsComponent implements OnInit, OnDestroy {
       )
       .subscribe((pagedEntity: PagedEntity) => {
         const newProjects = pagedEntity.projects;
-          page = pagedEntity.page;
-          projects.push(...newProjects);
-          filteredProjects.push(newProjects);
-          links = pagedEntity.links;
-          loadMoreButtonEnabled = 'next' in links;
+        page = pagedEntity.page;
+        projects.push(...newProjects);
+        filteredProjects.push(newProjects);
+        links = pagedEntity.links;
+        loadMoreButtonEnabled = 'next' in links;
       });
   }
 
@@ -197,6 +197,6 @@ export class MyProjectsComponent implements OnInit, OnDestroy {
   private paginateSomeEntities(page: number, newProjects: Project[] | null, headers: HttpHeaders): PagedEntity {
     const headersLink = headers.get('link');
     const links = this.parseLinks.parse(headersLink ? headersLink : '');
-    return { page, projects: newProjects ?? [],links:{next: links['next'], last: links['last'] } };
+    return { page, projects: newProjects ?? [], links: { next: links['next'], last: links['last'] } };
   }
 }

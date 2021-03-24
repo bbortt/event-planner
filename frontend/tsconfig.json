@@ -8,7 +8,7 @@
     "strict": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "outDir": "target/classes/static/app",
+    "outDir": "build/app",
     "lib": ["es2018", "dom"],
     "baseUrl": "./",
     "paths": {

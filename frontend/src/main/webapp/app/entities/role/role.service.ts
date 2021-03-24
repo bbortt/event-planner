@@ -3,10 +3,10 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
 
-import {createRequestOption} from 'app/core/request/request-util';
-import {ApplicationConfigService} from 'app/core/config/application-config.service';
+import { createRequestOption } from 'app/core/request/request-util';
+import { ApplicationConfigService } from 'app/core/config/application-config.service';
 
-import {Role} from 'app/entities/role/role.model';
+import { Role } from 'app/entities/role/role.model';
 
 type EntityResponseType = HttpResponse<Role>;
 type EntityArrayResponseType = HttpResponse<Role[]>;

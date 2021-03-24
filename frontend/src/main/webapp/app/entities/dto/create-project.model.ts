@@ -1,4 +1,4 @@
-import {User} from 'app/entities/user/user.model';
+import { User } from 'app/entities/user/user.model';
 
 import { Moment } from 'moment';
 

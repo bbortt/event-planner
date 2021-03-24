@@ -4,8 +4,8 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import {ApplicationConfigService} from 'app/core/config/application-config.service';
-import {createRequestOption} from 'app/core/request/request-util';
+import { ApplicationConfigService } from 'app/core/config/application-config.service';
+import { createRequestOption } from 'app/core/request/request-util';
 
 import { Event } from 'app/entities/event/event.model';
 import { Location } from 'app/entities/location/location.model';

@@ -8,7 +8,7 @@ import { map, takeUntil } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
 
 import { AccountService } from 'app/core/auth/account.service';
-import {EventManager} from "app/core/util/event-manager.service";
+import { EventManager } from 'app/core/util/event-manager.service';
 
 import { AppointmentEvent } from 'app/entities/scheduler/appointment-event';
 
@@ -31,7 +31,7 @@ import {
   ROUTE_INTERVAL_PARAMETER_NAME,
 } from 'app/view/project/screenplay/filter/project-screenplay-filter.component';
 
-import { Authority} from 'app/config/authority.constants';
+import { Authority } from 'app/config/authority.constants';
 import { Role } from 'app/config/role.constants';
 
 import { DEFAULT_SCHEDULER_CELL_DURATION } from 'app/app.constants';
@@ -94,8 +94,7 @@ export class ProjectScreenplayLocationComponent implements OnInit, OnDestroy {
     this.reset();
 
     this.isViewer =
-      !this.accountService.hasAnyAuthority(Authority.ADMIN) &&
-      this.accountService.hasAnyRole(this.project.id!, Role.VIEWER.name);
+      !this.accountService.hasAnyAuthority(Authority.ADMIN) && this.accountService.hasAnyRole(this.project.id!, Role.VIEWER.name);
 
     this.schedulerInformation = {
       ...this.schedulerInformation,

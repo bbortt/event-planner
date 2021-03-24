@@ -6,7 +6,7 @@ import { combineLatest, Subscription } from 'rxjs';
 
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-import {EventManager} from "app/core/util/event-manager.service";
+import { EventManager } from 'app/core/util/event-manager.service';
 
 import { InvitationService } from 'app/entities/invitation/invitation.service';
 
@@ -15,7 +15,7 @@ import { Project } from 'app/entities/project/project.model';
 
 import { ProjectUserInviteDeleteDialogComponent } from 'app/view/project/admin/users/project-user-invite-delete-dialog.component';
 
-import { Role} from 'app/config/role.constants';
+import { Role } from 'app/config/role.constants';
 
 import { DEFAULT_SCHEDULER_COLOR } from 'app/app.constants';
 import { ITEMS_PER_PAGE } from 'app/config/pagination.constants';
@@ -79,7 +79,7 @@ export class ProjectUsersComponent implements OnDestroy {
 
   filterData(searchString: string): void {
     this.invitations = this.loadedInvitations!.filter((invitation: Invitation) =>
-      invitation.email.toLowerCase().includes((searchString).toLowerCase())
+      invitation.email.toLowerCase().includes(searchString.toLowerCase())
     );
   }
 

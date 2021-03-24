@@ -1,21 +1,21 @@
-import {Component, EventEmitter, OnInit} from '@angular/core';
-import {ActivatedRoute, Data, ParamMap, Router} from '@angular/router';
-import {HttpResponse} from '@angular/common/http';
+import { Component, EventEmitter, OnInit } from '@angular/core';
+import { ActivatedRoute, Data, ParamMap, Router } from '@angular/router';
+import { HttpResponse } from '@angular/common/http';
 
-import {combineLatest, of} from 'rxjs';
-import {map, switchMap, take, tap} from 'rxjs/operators';
+import { combineLatest, of } from 'rxjs';
+import { map, switchMap, take, tap } from 'rxjs/operators';
 
-import {NgbPanelChangeEvent} from '@ng-bootstrap/ng-bootstrap';
+import { NgbPanelChangeEvent } from '@ng-bootstrap/ng-bootstrap';
 
-import {LocationService} from 'app/entities/location/location.service';
-import {ResponsibilityService} from 'app/entities/responsibility/responsibility.service';
+import { LocationService } from 'app/entities/location/location.service';
+import { ResponsibilityService } from 'app/entities/responsibility/responsibility.service';
 
-import {Location} from 'app/entities/location/location.model';
-import {Project} from 'app/entities/project/project.model';
+import { Location } from 'app/entities/location/location.model';
+import { Project } from 'app/entities/project/project.model';
 
-import {faChevronDown, faChevronUp, faCog} from '@fortawesome/free-solid-svg-icons';
+import { faChevronDown, faChevronUp, faCog } from '@fortawesome/free-solid-svg-icons';
 
-import {Role} from 'app/config/role.constants';
+import { Role } from 'app/config/role.constants';
 
 const ROUTE_ACTIVE_LOCATIONS_PARAM_NAME = 'activeLocations';
 
@@ -47,7 +47,7 @@ export class ProjectScreenplayComponent implements OnInit {
   ngOnInit(): void {
     combineLatest([this.activatedRoute.data, this.activatedRoute.queryParamMap])
       .pipe(
-        tap((value: [Data, ParamMap]) => this.project = value[0].project as Project),
+        tap((value: [Data, ParamMap]) => (this.project = value[0].project as Project)),
         switchMap((value: [Data, ParamMap]) =>
           combineLatest([
             this.locationService.findAllByProject(value[0].project, { sort: ['name,asc'] }),

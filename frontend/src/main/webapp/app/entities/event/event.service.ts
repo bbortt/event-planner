@@ -4,8 +4,8 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import {ApplicationConfigService} from 'app/core/config/application-config.service';
-import {createRequestOption} from 'app/core/request/request-util';
+import { ApplicationConfigService } from 'app/core/config/application-config.service';
+import { createRequestOption } from 'app/core/request/request-util';
 
 import { Event } from 'app/entities/event/event.model';
 
@@ -65,7 +65,7 @@ export class EventService {
   protected convertDateFromClient(event: Event): Event {
     const copy: Event = Object.assign({}, event, {
       startTime: event.startTime.isValid() ? event.startTime.toJSON() : undefined,
-      endTime:  event.endTime.isValid() ? event.endTime.toJSON() : undefined,
+      endTime: event.endTime.isValid() ? event.endTime.toJSON() : undefined,
     });
     return copy;
   }

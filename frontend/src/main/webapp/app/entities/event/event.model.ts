@@ -1,6 +1,6 @@
-import {Responsibility} from 'app/entities/responsibility/responsibility.model';
-import {Section} from 'app/entities/section/section.model';
-import {Account} from 'app/core/auth/account.model';
+import { Responsibility } from 'app/entities/responsibility/responsibility.model';
+import { Section } from 'app/entities/section/section.model';
+import { Account } from 'app/core/auth/account.model';
 
 import { Moment } from 'moment';
 

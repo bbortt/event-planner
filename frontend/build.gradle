@@ -6,6 +6,22 @@ plugins {
 group = "io.github.bbortt.event.planner.frontend"
 description = "Event Planning Tool - Webapplication."
 
-if (project.hasProperty("prod")) {
-    apply from: "gradle/profile_prod.gradle"
+task webpackTest(type: NpmTask, dependsOn: "npmInstall") {
+    args = ["run", "webapp:test"]
 }
+
+check.dependsOn webpackTest
+
+task npmLint(type: NpmTask, dependsOn: "npmInstall") {
+    args = ["run", "lint"]
+}
+
+check.dependsOn npmLint
+
+task webpack(type: NpmTask, dependsOn: "npmInstall") {
+    args = ["run", "webapp:prod"]
+    environment = [APP_VERSION: project.version]
+}
+webpack.dependsOn check
+
+build.dependsOn webpack

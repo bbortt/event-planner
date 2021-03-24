@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
-import {EventManager} from 'app/core/util/event-manager.service';
+import { EventManager } from 'app/core/util/event-manager.service';
 
 import { Subject } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
@@ -68,7 +68,7 @@ export class ProjectCreateComponent implements OnInit, OnDestroy {
 
     this.dataSource = new DataSource({
       load(loadOptions: LoadOptions): Promise<User[]> {
-        return userService.findByEmailOrLogin(loadOptions.searchValue).toPromise() ;
+        return userService.findByEmailOrLogin(loadOptions.searchValue).toPromise();
       },
     });
   }
@@ -129,6 +129,6 @@ export class ProjectCreateComponent implements OnInit, OnDestroy {
       newProject.user = this.editForm.get(['selectedUser'])!.value;
     }
 
-    return newProject ;
+    return newProject;
   }
 }

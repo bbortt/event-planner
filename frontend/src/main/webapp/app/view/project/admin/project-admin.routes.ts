@@ -9,7 +9,7 @@ import { ProjectLocationsComponent } from 'app/view/project/admin/locations/proj
 import { ProjectResponsibilitiesComponent } from 'app/view/project/admin/responsibilities/project-responsibilities.component';
 import { ProjectUsersComponent } from 'app/view/project/admin/users/project-users.component';
 
-import {Role} from 'app/config/role.constants';
+import { Role } from 'app/config/role.constants';
 
 export const PROJECT_ADMIN_ROUTES: Routes = [
   {

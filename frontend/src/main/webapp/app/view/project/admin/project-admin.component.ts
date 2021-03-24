@@ -3,14 +3,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { Subscription } from 'rxjs';
 
-import {EventManager} from 'app/core/util/event-manager.service';
+import { EventManager } from 'app/core/util/event-manager.service';
 
 import { Project } from 'app/entities/project/project.model';
 import { ProjectService } from 'app/entities/project/project.service';
 
 import { faBook } from '@fortawesome/free-solid-svg-icons';
 
-import {Role } from 'app/config/role.constants';
+import { Role } from 'app/config/role.constants';
 
 @Component({
   selector: 'app-project-admin',

@@ -8,7 +8,7 @@ import { AccountService } from '../core/auth/account.service';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent {
-  constructor(private accountService: AccountService ) {}
+  constructor(private accountService: AccountService) {}
 
   isAuthenticated(): boolean {
     return this.accountService.isAuthenticated();
