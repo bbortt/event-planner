@@ -10,7 +10,7 @@ This application is configured for Service Discovery and Configuration with . On
 To start your application in the dev profile, run:
 
 ```
-./gradlew
+./gradlew :event-planner-backend
 ```
 
 For further instructions on how to develop with JHipster, have a look at [Using JHipster in development][].
@@ -22,24 +22,16 @@ For further instructions on how to develop with JHipster, have a look at [Using 
 To build the final jar and optimize the backend application for production, run:
 
 ```
-./gradlew -Pprod clean bootJar
+./gradlew :event-plannerbackend:bootJar -Pprod
 ```
 
 To ensure everything worked, run:
 
 ```
-java -jar build/libs/*.jar
+java -jar backend/build/libs/*.jar
 ```
 
 Refer to [Using JHipster in production][] for more details.
-
-### Packaging as war
-
-To package your application as a war in order to deploy it to an application server, run:
-
-```
-./gradlew -Pprod -Pwar clean bootWar
-```
 
 ## Testing
 
@@ -53,13 +45,7 @@ For more information, refer to the [Running tests page][].
 
 ### Code quality
 
-Sonar is used to analyse code quality. You can start a local Sonar server (accessible on http://localhost:9001) with:
-
-```
-docker-compose -f src/main/docker/sonar.yml up -d
-```
-
-Note: we have turned off authentication in [src/main/docker/sonar.yml](src/main/docker/sonar.yml) for out of the box experience while trying out SonarQube, for real use cases turn it back on.
+Sonar is used to analyse code quality.
 
 You can run a Sonar analysis with using the [sonar-scanner](https://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner) or by using the gradle plugin.
 
@@ -78,26 +64,13 @@ You can use Docker to improve your JHipster development experience. A number of 
 For example, to start a postgresql database in a docker container, run:
 
 ```
-docker-compose -f src/main/docker/postgresql.yml up -d
+docker-compose -f docker/postgresql.yml up -d
 ```
 
 To stop it and remove the container, run:
 
 ```
-docker-compose -f src/main/docker/postgresql.yml down
-```
-
-You can also fully dockerize your application and all the services that it depends on.
-To achieve this, first build a docker image of your app by running:
-
-```
-./gradlew bootJar -Pprod jibDockerBuild
-```
-
-Then run:
-
-```
-docker-compose -f src/main/docker/app.yml up -d
+docker-compose -f docker/postgresql.yml down
 ```
 
 For more information refer to [Using Docker and Docker-Compose][], this page also contains information on the docker-compose sub-generator (`jhipster docker-compose`), which is able to generate docker configurations for one or several JHipster applications.

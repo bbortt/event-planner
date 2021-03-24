@@ -93,7 +93,6 @@
     "friendly-errors-webpack-plugin": "1.7.0",
     "html-loader": "2.1.2",
     "html-webpack-plugin": "5.3.1",
-    "husky": "^5.0.9",
     "jest": "26.6.3",
     "jest-date-mock": "1.0.8",
     "jest-junit": "12.0.0",

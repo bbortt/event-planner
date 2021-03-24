@@ -1,0 +1,9 @@
+{
+  "hooks": {
+    "pre-commit": [
+      "npm run lint:staged:backend",
+      "npm run lint:staged:frontend",
+      "npm run lint:staged:gateway"
+    ]
+  }
+}

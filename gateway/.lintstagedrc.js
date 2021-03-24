@@ -1,3 +1,3 @@
 module.exports = {
-  '{,src/**/}*.{json,md,yml,java}': ['prettier --write']
+  '{gateway,gateway/src/**/}*.{json,md,yml,java}': ['prettier --write']
 };

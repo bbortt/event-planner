@@ -1,5 +1,5 @@
 {
-  "name": "event-planner-gateway",
+  "name": "event-planner",
   "version": "1.0.0-SNAPSHOT",
   "description": "Event Planning Tool.",
   "private": true,
@@ -11,7 +11,6 @@
     }
   ],
   "devDependencies": {
-    "husky": "5.1.3",
     "lint-staged": "10.5.4",
     "prettier": "2.2.1",
     "prettier-plugin-java": "1.0.2"
@@ -20,7 +19,8 @@
     "node": ">=12.16.1"
   },
   "scripts": {
-    "lint:staged": "lint-staged",
-    "prettier:format": "prettier --write \"{,src/**/}*.{md,json,yml,java}\""
+    "lint:staged:backend": "lint-staged -c backend/.lintstagedrc.js",
+    "lint:staged:frontend": "lint-staged -c frontend/.lintstagedrc.js",
+    "lint:staged:gateway": "lint-staged -c gateway/.lintstagedrc.js"
   }
 }
