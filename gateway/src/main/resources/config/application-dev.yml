@@ -61,6 +61,10 @@ spring:
           predicates:
             - Path=/api/**
           uri: http://localhost:8081/api/
+        - id: backend
+          predicates:
+            - Path=/**
+          uri: http://localhost:9000/
 
 server:
   port: 8080

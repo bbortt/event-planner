@@ -10,7 +10,6 @@ import io.github.bbortt.event.planner.backend.web.rest.ProjectResourceIT;
 import io.github.bbortt.event.planner.backend.web.rest.UserResourceIT;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import org.assertj.core.api.Assertions;

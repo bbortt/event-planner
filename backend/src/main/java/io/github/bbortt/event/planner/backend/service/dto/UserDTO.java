@@ -8,7 +8,6 @@ import io.github.bbortt.event.planner.backend.domain.User;
 public class UserDTO {
 
     private String id;
-
     private String login;
 
     public UserDTO() {

@@ -1,3 +1,6 @@
+import org.flywaydb.gradle.task.FlywayCleanTask
+import org.flywaydb.gradle.task.FlywayMigrateTask
+
 plugins {
     id "java"
     id "idea"
@@ -79,21 +82,17 @@ dependencies {
     testRuntimeOnly "com.tngtech.archunit:archunit-junit5-engine:${archunitJunit5Version}"
 }
 
-task flywayCleanIntegrationTest(type: org.flywaydb.gradle.task.FlywayCleanTask) {
-    flyway {
-        url = "${flyway_it_jdbc_url}"
-        user = "${flyway_it_user}"
-        password = "${flyway_it_password}"
-    }
+task flywayCleanIntegrationTest(type: FlywayCleanTask) {
+    url = "${flyway_it_jdbc_url}"
+    user = "${flyway_it_user}"
+    password = "${flyway_it_password}"
 }
 flywayCleanIntegrationTest.dependsOn test
 
-task flywayMigrateIntegrationTest(type: org.flywaydb.gradle.task.FlywayMigrateTask) {
-    flyway {
-        url = "${flyway_it_jdbc_url}"
-        user = "${flyway_it_user}"
-        password = "${flyway_it_password}"
-    }
+task flywayMigrateIntegrationTest(type: FlywayMigrateTask) {
+    url = "${flyway_it_jdbc_url}"
+    user = "${flyway_it_user}"
+    password = "${flyway_it_password}"
 }
 flywayMigrateIntegrationTest.dependsOn flywayCleanIntegrationTest
 integrationTest.dependsOn flywayMigrateIntegrationTest

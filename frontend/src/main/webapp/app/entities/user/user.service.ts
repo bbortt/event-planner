@@ -43,7 +43,7 @@ export class UserService {
   }
 
   findByEmailOrLogin(emailOrLogin: string): Observable<User[]> {
-    return this.http.post<User[]>(`${this.resourceUrl}/findByEmailOrLogin`, { emailOrLogin });
+    return this.http.get<User[]>(`${this.resourceUrl}/findByEmailOrLogin/${emailOrLogin}`);
   }
 
   findAllByProject(project: Project, req?: any): Observable<EntityArrayResponseType> {

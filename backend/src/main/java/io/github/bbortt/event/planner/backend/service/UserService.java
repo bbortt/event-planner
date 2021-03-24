@@ -239,8 +239,12 @@ public class UserService {
      * @return the list of entities.
      */
     @Transactional(readOnly = true)
-    public List<User> findAllByProjectId(Long projectId, Sort sort) {
+    public List<UserDTO> findAllByProjectId(Long projectId, Sort sort) {
         log.debug("Request to get all Users for Project {}", projectId);
-        return userRepository.findAllByProjectId(projectId, Sort.by(sort.stream().map(Order::ignoreCase).collect(Collectors.toList())));
+        return userRepository
+            .findAllByProjectId(projectId, Sort.by(sort.stream().map(Order::ignoreCase).collect(Collectors.toList())))
+            .stream()
+            .map(UserDTO::new)
+            .collect(Collectors.toList());
     }
 }

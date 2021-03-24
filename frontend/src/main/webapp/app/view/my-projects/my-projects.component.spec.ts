@@ -1,21 +1,21 @@
 jest.mock('@angular/router');
 jest.mock('app/core/auth/account.service');
 
-import {HttpResponse} from '@angular/common/http';
-import {HttpClientTestingModule} from '@angular/common/http/testing';
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
-import {ActivatedRoute, Router} from '@angular/router';
+import { HttpResponse } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ActivatedRoute, Router } from '@angular/router';
 
-import {of} from 'rxjs';
+import { of } from 'rxjs';
 
-import {TranslateModule} from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 
-import {AccountService} from 'app/core/auth/account.service';
-import {ProjectService} from 'app/entities/project/project.service';
+import { AccountService } from 'app/core/auth/account.service';
+import { ProjectService } from 'app/entities/project/project.service';
 
-import {Project} from 'app/entities/project/project.model';
+import { Project } from 'app/entities/project/project.model';
 
-import {MyProjectsComponent} from 'app/view/my-projects/my-projects.component';
+import { MyProjectsComponent } from 'app/view/my-projects/my-projects.component';
 
 import objectContaining = jasmine.objectContaining;
 
@@ -31,7 +31,7 @@ describe('Component Tests', () => {
         TestBed.configureTestingModule({
           imports: [HttpClientTestingModule, TranslateModule.forRoot()],
           declarations: [MyProjectsComponent],
-          providers: [Router, ActivatedRoute,AccountService, ProjectService]
+          providers: [Router, ActivatedRoute, AccountService, ProjectService],
         })
           .overrideTemplate(MyProjectsComponent, '')
           .compileComponents();
@@ -48,7 +48,7 @@ describe('Component Tests', () => {
     describe('loadPage', () => {
       beforeEach(() => {
         // GIVEN
-        projectService.query = jest.fn(()=>of({} as HttpResponse<Project[]>));
+        projectService.query = jest.fn(() => of({} as HttpResponse<Project[]>));
       });
 
       it('Should call query projectService for archived on load', () => {
@@ -63,10 +63,12 @@ describe('Component Tests', () => {
         comp.loadPage();
 
         // THEN
-        expect(projectService.query).toHaveBeenCalledWith(objectContaining({
-          loadArchived: true,
-          loadAll: false
-        }));
+        expect(projectService.query).toHaveBeenCalledWith(
+          objectContaining({
+            loadArchived: true,
+            loadAll: false,
+          })
+        );
       });
 
       it('Should call query projectService for all on ADMIN load', () => {
@@ -81,10 +83,12 @@ describe('Component Tests', () => {
         comp.loadPage();
 
         // THEN
-        expect(projectService.query).toHaveBeenCalledWith(objectContaining({
-          loadArchived: false,
-          loadAll: true
-        }));
+        expect(projectService.query).toHaveBeenCalledWith(
+          objectContaining({
+            loadArchived: false,
+            loadAll: true,
+          })
+        );
       });
 
       it('Should not call query projectService for all', () => {
@@ -99,10 +103,12 @@ describe('Component Tests', () => {
         comp.loadPage();
 
         // THEN
-        expect(projectService.query).toHaveBeenCalledWith(objectContaining({
-          loadArchived: false,
-          loadAll: false
-        }));
+        expect(projectService.query).toHaveBeenCalledWith(
+          objectContaining({
+            loadArchived: false,
+            loadAll: false,
+          })
+        );
       });
     });
   });

@@ -1,19 +1,19 @@
-jest.mock('@ng-bootstrap/ng-bootstrap')
+jest.mock('@ng-bootstrap/ng-bootstrap');
 jest.mock('app/core/util/event-manager.service');
 
-import {HttpClientTestingModule} from '@angular/common/http/testing';
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { of } from 'rxjs';
 
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import {TranslateModule} from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 
-import {EventManager} from 'app/core/util/event-manager.service';
+import { EventManager } from 'app/core/util/event-manager.service';
 
-import {ProjectService} from 'app/entities/project/project.service';
+import { ProjectService } from 'app/entities/project/project.service';
 
-import {ProjectConfirmationDialogComponent} from 'app/view/project/admin/project-confirmation-dialog.component';
+import { ProjectConfirmationDialogComponent } from 'app/view/project/admin/project-confirmation-dialog.component';
 
 describe('Component Tests', () => {
   describe('Project Confirm Dialog Component', () => {
@@ -21,14 +21,14 @@ describe('Component Tests', () => {
     let fixture: ComponentFixture<ProjectConfirmationDialogComponent>;
     let mockEventManager: EventManager;
     let mockActiveModal: NgbActiveModal;
-    let projectService:ProjectService;
+    let projectService: ProjectService;
 
     beforeEach(
       waitForAsync(() => {
         TestBed.configureTestingModule({
-          imports:[HttpClientTestingModule,TranslateModule.forRoot()],
+          imports: [HttpClientTestingModule, TranslateModule.forRoot()],
           declarations: [ProjectConfirmationDialogComponent],
-          providers: [NgbActiveModal,EventManager]
+          providers: [NgbActiveModal, EventManager],
         })
           .overrideTemplate(ProjectConfirmationDialogComponent, '')
           .compileComponents();
@@ -44,7 +44,7 @@ describe('Component Tests', () => {
     });
 
     describe('confirm', () => {
-      it('Should call delete service on confirm',  () => {
+      it('Should call delete service on confirm', () => {
         // GIVEN
         const projectId = 1;
         spyOn(projectService, 'delete').and.returnValue(of({}));

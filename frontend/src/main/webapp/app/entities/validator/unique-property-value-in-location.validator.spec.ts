@@ -1,4 +1,4 @@
-import {promiseAsObservable} from '../../../../../test/helpers/promise-as-observable';
+import { promiseAsObservable } from '../../../../../test/helpers/promise-as-observable';
 
 import { FormControl, ValidationErrors } from '@angular/forms';
 

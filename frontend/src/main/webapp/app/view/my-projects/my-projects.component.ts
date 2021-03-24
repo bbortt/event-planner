@@ -70,8 +70,8 @@ export class MyProjectsComponent implements OnInit, OnDestroy {
       .pipe(
         take(1),
         tap((params: Params) => {
-          this.showArchivedProjects = !!params[ROUTE_PARAM_SHOW_ARCHIVED];
-          this.showAllProjects = !!params[ROUTE_PARAM_SHOW_ALL];
+          this.showArchivedProjects = params[ROUTE_PARAM_SHOW_ARCHIVED] === 'true';
+          this.showAllProjects = params[ROUTE_PARAM_SHOW_ALL] === 'true';
         })
       )
       .subscribe(() => {

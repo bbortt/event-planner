@@ -8,7 +8,7 @@ import { AlertErrorComponent } from './alert/alert-error.component';
 import { ItemCountComponent } from './pagination/item-count.component';
 
 import { HasAnyAuthorityDirective } from './auth/has-any-authority.directive';
-import {HasAnyRoleDirective} from 'app/shared/auth/has-any-role.directive';
+import { HasAnyRoleDirective } from 'app/shared/auth/has-any-role.directive';
 import { SortByDirective } from './sort/sort-by.directive';
 import { SortDirective } from './sort/sort.directive';
 import { TranslateDirective } from './language/translate.directive';

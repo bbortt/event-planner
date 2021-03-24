@@ -58,6 +58,7 @@
     "@ngx-translate/http-loader": "6.0.0",
     "bootstrap": "4.6.0",
     "dayjs": "1.10.4",
+    "devextreme": "^20.2.6",
     "devextreme-angular": "^20.2.6",
     "ngx-infinite-scroll": "10.0.1",
     "ngx-webstorage": "7.0.1",

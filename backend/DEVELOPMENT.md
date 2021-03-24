@@ -59,7 +59,7 @@ For more information, refer to the [Code quality page][].
 
 ## Using Docker to simplify development (optional)
 
-You can use Docker to improve your JHipster development experience. A number of docker-compose configuration are available in the [src/main/docker](src/main/docker) folder to launch required third party services.
+You can use Docker to improve your JHipster development experience. A number of docker-compose configuration are available in the [docker](../docker) folder to launch required third party services.
 
 For example, to start a postgresql database in a docker container, run:
 
@@ -74,6 +74,14 @@ docker-compose -f docker/postgresql.yml down
 ```
 
 For more information refer to [Using Docker and Docker-Compose][], this page also contains information on the docker-compose sub-generator (`jhipster docker-compose`), which is able to generate docker configurations for one or several JHipster applications.
+
+### Migrations
+
+Migrations happen via Gradle Flyway Plugin. The following is a sample command for localhost (run from root):
+
+```
+$ ./gradlew :event-planner-backend:flywayMigrate -Dflyway.url=jdbc:postgresql://localhost:5432/backend -Dflyway.user=backend_user -Dflyway.password=backend_password
+```
 
 ## Continuous Integration (optional)
 

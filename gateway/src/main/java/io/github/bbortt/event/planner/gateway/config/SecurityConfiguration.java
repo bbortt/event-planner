@@ -87,8 +87,6 @@ public class SecurityConfiguration {
                 .frameOptions().disable()
         .and()
             .authorizeExchange()
-            .pathMatchers("/").permitAll()
-            .pathMatchers("/*.*").permitAll()
             .pathMatchers("/api/auth-info").permitAll()
             .pathMatchers("/api/admin/**").hasAuthority(AuthoritiesConstants.ADMIN)
             .pathMatchers("/api/**").authenticated()
@@ -97,7 +95,8 @@ public class SecurityConfiguration {
             .pathMatchers("/management/health/**").permitAll()
             .pathMatchers("/management/info").permitAll()
             .pathMatchers("/management/prometheus").permitAll()
-            .pathMatchers("/management/**").hasAuthority(AuthoritiesConstants.ADMIN);
+            .pathMatchers("/management/**").hasAuthority(AuthoritiesConstants.ADMIN)
+            .anyExchange().permitAll();
 
         http.oauth2Login()
             .and()

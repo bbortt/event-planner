@@ -13,9 +13,9 @@ jobs:
       postgres:
         image: postgres:13.2-alpine
         env:
-          POSTGRES_DB: event_planner_integration
-          POSTGRES_USER: event_planner
-          POSTGRES_PASSWORD: event_planner_password
+          POSTGRES_DB: backend_integration
+          POSTGRES_USER: backend_user
+          POSTGRES_PASSWORD: backend_password
         ports:
           - 5432:5432
         options: >-
