@@ -10,7 +10,7 @@ This application is configured for Service Discovery and Configuration with . On
 To start your application in the dev profile, run:
 
 ```
-./gradlew :event-planner-backend
+./gradlew :backend
 ```
 
 For further instructions on how to develop with JHipster, have a look at [Using JHipster in development][].
@@ -80,7 +80,7 @@ For more information refer to [Using Docker and Docker-Compose][], this page als
 Migrations happen via Gradle Flyway Plugin. The following is a sample command for localhost (run from root):
 
 ```
-$ ./gradlew :event-planner-backend:flywayMigrate -Dflyway.url=jdbc:postgresql://localhost:5432/backend -Dflyway.user=backend_user -Dflyway.password=backend_password
+$ ./gradlew :backend:flywayMigrate -Dflyway.url=jdbc:postgresql://localhost:5432/backend -Dflyway.user=backend_user -Dflyway.password=backend_password
 ```
 
 ## Continuous Integration (optional)

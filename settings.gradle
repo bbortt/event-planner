@@ -10,10 +10,13 @@ pluginManagement {
 rootProject.name = "event-planner"
 
 include "backend"
-findProject(":backend")?.name = "event-planner-backend"
+findProject(":backend")?.name = "backend"
 
 include "frontend"
-findProject(":frontend")?.name = "event-planner-frontend"
+findProject(":frontend")?.name = "frontend"
 
 include "gateway"
-findProject(":gateway")?.name = "event-planner-gateway"
+findProject(":gateway")?.name = "gateway"
+
+include "services:users"
+findProject(":service:user")?.name = "user"

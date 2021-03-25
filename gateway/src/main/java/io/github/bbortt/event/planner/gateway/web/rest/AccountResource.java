@@ -1,8 +1,6 @@
 package io.github.bbortt.event.planner.gateway.web.rest;
 
-import io.github.bbortt.event.planner.gateway.security.SecurityUtils;
 import io.github.bbortt.event.planner.gateway.service.UserService;
-import io.github.bbortt.event.planner.gateway.service.dto.AdminUserDTO;
 import io.github.bbortt.event.planner.gateway.service.dto.UserDTO;
 import java.security.Principal;
 import org.slf4j.Logger;
@@ -46,7 +44,7 @@ public class AccountResource {
      */
     @GetMapping("/account")
     @SuppressWarnings("unchecked")
-    public Mono<AdminUserDTO> getAccount(Principal principal) {
+    public Mono<UserDTO> getAccount(Principal principal) {
         if (principal instanceof AbstractAuthenticationToken) {
             return userService.getUserFromAuthentication((AbstractAuthenticationToken) principal);
         } else {

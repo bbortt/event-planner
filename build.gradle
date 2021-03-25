@@ -33,7 +33,7 @@ subprojects {
     pluginManager.withPlugin("java", {
         sourceCompatibility = 11
         targetCompatibility = 11
-        assert System.properties["java.specification.version"] == "1.8" || "11" || "12" || "13" || "14"
+        assert System.properties["java.specification.version"] == "1.8" || "11" || "12" || "13" || "14" || "15"
 
         apply plugin: "jacoco"
 
@@ -74,6 +74,17 @@ subprojects {
         integrationTest.dependsOn test
 
         check.dependsOn integrationTest
+
+        // Regarding: https://github.com/reactor/BlockHound/issues/33
+        tasks.withType(Test).all {
+            if (JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_13)
+                || JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_14)
+                || JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_15)) {
+                jvmArgs += [
+                    "-XX:+AllowRedefinitionToAddDeleteMethods"
+                ]
+            }
+        }
 
         task testReport(type: TestReport) {
             destinationDir = file("$buildDir/reports/tests")

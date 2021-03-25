@@ -10,7 +10,7 @@ This application is configured for Service Discovery and Configuration with . On
 To start your application in the dev profile, run:
 
 ```
-./gradlew :event-planner-gateway
+./gradlew :gateway
 ```
 
 For further instructions on how to develop with JHipster, have a look at [Using JHipster in development][].

@@ -116,7 +116,7 @@ update src/main/webapp/app/app.module.ts
 To build the final jar and optimize the web application application for production, run:
 
 ```
-./gradlew :event-planner-frontend:build -Pprod
+./gradlew :frontend:build -Pprod
 ```
 
 This will concatenate and minify the client CSS and JavaScript files. It will also modify `index.html` so it references these new files.

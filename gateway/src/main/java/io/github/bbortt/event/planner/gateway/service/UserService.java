@@ -1,7 +1,6 @@
 package io.github.bbortt.event.planner.gateway.service;
 
 import io.github.bbortt.event.planner.gateway.config.Constants;
-import io.github.bbortt.event.planner.gateway.service.dto.AdminUserDTO;
 import io.github.bbortt.event.planner.gateway.service.dto.UserDTO;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -10,9 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
 
 /**
  * Service class for managing users.
@@ -26,7 +23,7 @@ public class UserService {
      * @param authToken the authentication token.
      * @return the user from the authentication.
      */
-    public Mono<AdminUserDTO> getUserFromAuthentication(AbstractAuthenticationToken authToken) {
+    public Mono<UserDTO> getUserFromAuthentication(AbstractAuthenticationToken authToken) {
         Map<String, Object> attributes;
         if (authToken instanceof OAuth2AuthenticationToken) {
             attributes = ((OAuth2AuthenticationToken) authToken).getPrincipal().getAttributes();
@@ -35,13 +32,13 @@ public class UserService {
         } else {
             throw new IllegalArgumentException("AuthenticationToken is not OAuth2 or JWT!");
         }
-        AdminUserDTO user = getUser(attributes);
+        UserDTO user = getUser(attributes);
         user.setAuthorities(authToken.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toSet()));
         return Mono.just(user);
     }
 
-    private static AdminUserDTO getUser(Map<String, Object> details) {
-        AdminUserDTO user = new AdminUserDTO();
+    private static UserDTO getUser(Map<String, Object> details) {
+        UserDTO user = new UserDTO();
         Boolean activated = Boolean.TRUE;
         // handle resource server JWT, where sub claim is email and uid is ID
         if (details.get("uid") != null) {

@@ -2,7 +2,6 @@ plugins {
     id "java"
     id "idea"
     id "org.springframework.boot"
-    id "com.github.node-gradle.node"
 }
 
 group = "io.github.bbortt.event.planner.gateway"
@@ -60,6 +59,7 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-oauth2-client"
     implementation "org.springframework.boot:spring-boot-starter-oauth2-resource-server"
     implementation "org.springframework.data:spring-data-commons"
+    implementation "io.projectreactor.kafka:reactor-kafka"
     implementation ("io.springfox:springfox-oas")
     implementation ("io.springfox:springfox-swagger2")
     implementation "io.springfox:springfox-bean-validators"

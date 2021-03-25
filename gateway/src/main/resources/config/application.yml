@@ -135,6 +135,12 @@ info:
   # Comma separated list of profiles that will trigger the ribbon to show
   display-ribbon-on-profiles: 'dev'
 
+kafka:
+  bootstrap-servers: ${APPL_KAFKA_BOOTSTRAP_SERVERS}
+  producer:
+    key.serializer: org.apache.kafka.common.serialization.StringSerializer
+    value.serializer: org.apache.kafka.common.serialization.StringSerializer
+
 # ===================================================================
 # JHipster specific properties
 #
