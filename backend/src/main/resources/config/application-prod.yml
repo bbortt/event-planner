@@ -31,14 +31,6 @@ spring:
       enabled: false
     livereload:
       enabled: false
-  datasource:
-    type: com.zaxxer.hikari.HikariDataSource
-    url: ${APPL_JDBC_URL:${spring.datasource.username}}
-    username: ${APPL_JDBC_USERNAME}
-    password: ${APPL_JDBC_PASSWORD:${spring.datasource.username}}
-    hikari:
-      poolName: Hikari
-      auto-commit: false
   thymeleaf:
     cache: true
   sleuth:
@@ -61,9 +53,6 @@ spring:
           auth: true
           ssl.enable: true
           ssl.trust: ${spring.mail.host}
-  flyway:
-    user: ${APPL_FLYWAY_USER:${spring.datasource.username}}
-    password: ${APPL_FLYWAY_PASSWORD:${spring.datasource.password}}
 
 server:
   port: 8080

@@ -16,19 +16,33 @@
 spring:
   application:
     name: users
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:postgresql://localhost:5432/service_user_integration
+    username: service_user_user
+    password: service_user_password
+    hikari:
+      auto-commit: false
   jackson:
     serialization:
       write-durations-as-timestamps: false
+  jpa:
+    properties:
+      hibernate.id.new_generator_mappings: true
+      hibernate.connection.provider_disables_autocommit: true
+      hibernate.cache.use_second_level_cache: false
+      hibernate.cache.use_query_cache: false
+      hibernate.generate_statistics: false
+      hibernate.hbm2ddl.auto: validate
+      hibernate.jdbc.time_zone: UTC
+      hibernate.query.fail_on_pagination_over_collection_fetch: true
+    show-sql: true
   mail:
     host: localhost
   main:
     allow-bean-definition-overriding: true
   messages:
     basename: i18n/messages
-  r2dbc:
-    url: r2dbc:postgresql://localhost:5432/service_user_integration
-    username: service_user_user
-    password: service_user_password
   task:
     execution:
       thread-name-prefix: users-task-
@@ -84,7 +98,6 @@ kafka:
   producer:
     key.serializer: org.apache.kafka.common.serialization.StringSerializer
     value.serializer: org.apache.kafka.common.serialization.StringSerializer
-
 # ===================================================================
 # Application specific properties
 # Add your own application properties here, see the ApplicationProperties class

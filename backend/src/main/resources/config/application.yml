@@ -105,6 +105,14 @@ spring:
     jpa:
       repositories:
         bootstrap-mode: deferred
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: ${APPL_JDBC_URL:${spring.datasource.username}}
+    username: ${APPL_JDBC_USERNAME}
+    password: ${APPL_JDBC_PASSWORD:${spring.datasource.username}}
+    hikari:
+      poolName: Hikari
+      auto-commit: false
   jpa:
     database-platform: tech.jhipster.domain.util.FixedPostgreSQL10Dialect
     open-in-view: false

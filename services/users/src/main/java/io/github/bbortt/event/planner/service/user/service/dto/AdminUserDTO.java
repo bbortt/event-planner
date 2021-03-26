@@ -1,9 +1,8 @@
 package io.github.bbortt.event.planner.service.user.service.dto;
 
-import io.github.bbortt.event.planner.service.user.domain.User;
 import io.github.bbortt.event.planner.service.user.config.Constants;
 import io.github.bbortt.event.planner.service.user.domain.Authority;
-
+import io.github.bbortt.event.planner.service.user.domain.User;
 import java.time.Instant;
 import java.util.Set;
 import java.util.stream.Collectors;

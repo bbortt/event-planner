@@ -14,7 +14,7 @@ description = "Event Planning Tool - Monolithic Backend."
 defaultTasks "bootRun"
 
 bootRun {
-    main = "io.github.bbortt.event.planner.BackendApp"
+    main = "io.github.bbortt.event.planner.backend.BackendApp"
 }
 
 dependencies {

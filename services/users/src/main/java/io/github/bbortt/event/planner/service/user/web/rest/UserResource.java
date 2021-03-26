@@ -1,31 +1,30 @@
 package io.github.bbortt.event.planner.service.user.web.rest;
 
-import io.github.bbortt.event.planner.service.user.domain.User;
+import io.github.bbortt.event.planner.service.user.config.Constants;
 import io.github.bbortt.event.planner.service.user.security.AuthoritiesConstants;
 import io.github.bbortt.event.planner.service.user.service.UserService;
 import io.github.bbortt.event.planner.service.user.service.dto.AdminUserDTO;
-import java.util.ArrayList;
-
+import java.util.*;
+import javax.validation.constraints.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.util.UriComponentsBuilder;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.PaginationUtil;
+import tech.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing users.
  * <p>
- * This class accesses the {@link User} entity, and needs to fetch its collection of authorities.
+ * This class accesses the {@link io.github.bbortt.event.planner.service.user.domain.User} entity, and needs to fetch its collection of authorities.
  * <p>
  * For a normal use-case, it would be better to have an eager relationship between User and Authority,
  * and send everything to the client side: there would be no View Model and DTO, a lot less code, and an outer-join
@@ -64,20 +63,17 @@ public class UserResource {
     /**
      * {@code GET /admin/users} : get all users with all the details - calling this are only allowed for the administrators.
      *
-     * @param request a {@link ServerHttpRequest} request.
      * @param pageable the pagination information.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body all users.
      */
     @GetMapping("/users")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
-    public Mono<ResponseEntity<Flux<AdminUserDTO>>> getAllUsers(ServerHttpRequest request, Pageable pageable) {
+    public ResponseEntity<List<AdminUserDTO>> getAllUsers(Pageable pageable) {
         log.debug("REST request to get all User for an admin");
 
-        return userService
-            .countManagedUsers()
-            .map(total -> new PageImpl<>(new ArrayList<>(), pageable, total))
-            .map(page -> PaginationUtil.generatePaginationHttpHeaders(UriComponentsBuilder.fromHttpRequest(request), page))
-            .map(headers -> ResponseEntity.ok().headers(headers).body(userService.getAllManagedUsers(pageable)));
+        final Page<AdminUserDTO> page = userService.getAllManagedUsers(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
     /**
@@ -88,11 +84,8 @@ public class UserResource {
      */
     @GetMapping("/users/{login}")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
-    public Mono<AdminUserDTO> getUser(@PathVariable String login) {
+    public ResponseEntity<AdminUserDTO> getUser(@PathVariable @Pattern(regexp = Constants.LOGIN_REGEX) String login) {
         log.debug("REST request to get User : {}", login);
-        return userService
-            .getUserWithAuthoritiesByLogin(login)
-            .map(AdminUserDTO::new)
-            .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND)));
+        return ResponseUtil.wrapOrNotFound(userService.getUserWithAuthoritiesByLogin(login).map(AdminUserDTO::new));
     }
 }

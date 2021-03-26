@@ -19,13 +19,13 @@ import tech.jhipster.config.JHipsterConstants;
 
 @SpringBootApplication
 @EnableConfigurationProperties({ ApplicationProperties.class })
-public class UserApp {
+public class UsersApp {
 
-    private static final Logger log = LoggerFactory.getLogger(UserApp.class);
+    private static final Logger log = LoggerFactory.getLogger(UsersApp.class);
 
     private final Environment env;
 
-    public UserApp(Environment env) {
+    public UsersApp(Environment env) {
         this.env = env;
     }
 
@@ -63,7 +63,7 @@ public class UserApp {
      * @param args the command line arguments.
      */
     public static void main(String[] args) {
-        SpringApplication app = new SpringApplication(UserApp.class);
+        SpringApplication app = new SpringApplication(UsersApp.class);
         DefaultProfileUtil.addDefaultProfile(app);
         Environment env = app.run(args).getEnvironment();
         logApplicationStartup(env);

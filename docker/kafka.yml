@@ -3,13 +3,13 @@ version: '3.3'
 services:
   zookeeper:
     image: confluentinc/cp-zookeeper:5.5.3
+    container_name: event-planner_zookeeper
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
   kafka:
     image: confluentinc/cp-kafka:5.5.3
-    # If you want to expose these ports outside your dev PC,
-    # remove the "127.0.0.1:" prefix
+    container_name: event-planner_kafka
     ports:
       - 9092:9092
     environment:

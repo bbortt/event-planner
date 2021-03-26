@@ -2,13 +2,12 @@ package io.github.bbortt.event.planner.service.user.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import io.github.bbortt.event.planner.service.user.IntegrationTest;
+import io.github.bbortt.event.planner.service.user.config.Constants;
 import io.github.bbortt.event.planner.service.user.domain.User;
 import io.github.bbortt.event.planner.service.user.repository.UserRepository;
 import io.github.bbortt.event.planner.service.user.security.AuthoritiesConstants;
-import io.github.bbortt.event.planner.service.user.IntegrationTest;
-import io.github.bbortt.event.planner.service.user.config.Constants;
 import io.github.bbortt.event.planner.service.user.service.dto.AdminUserDTO;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -16,17 +15,21 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Integration tests for {@link UserService}.
  */
 @IntegrationTest
+@Transactional
 class UserServiceIT {
 
     private static final String DEFAULT_LOGIN = "johndoe";
@@ -53,8 +56,6 @@ class UserServiceIT {
 
     @BeforeEach
     public void init() {
-        userRepository.deleteAllUserAuthorities().block();
-        userRepository.deleteAll().block();
         user = new User();
         user.setLogin(DEFAULT_LOGIN);
         user.setActivated(true);
@@ -63,7 +64,6 @@ class UserServiceIT {
         user.setLastName(DEFAULT_LASTNAME);
         user.setImageUrl(DEFAULT_IMAGEURL);
         user.setLangKey(DEFAULT_LANGKEY);
-        user.setCreatedBy(Constants.SYSTEM);
 
         userDetails = new HashMap<>();
         userDetails.put("sub", DEFAULT_LOGIN);
@@ -74,9 +74,10 @@ class UserServiceIT {
     }
 
     @Test
+    @Transactional
     void testDefaultUserDetails() {
         OAuth2AuthenticationToken authentication = createMockOAuth2AuthenticationToken(userDetails);
-        AdminUserDTO userDTO = userService.getUserFromAuthentication(authentication).block();
+        AdminUserDTO userDTO = userService.getUserFromAuthentication(authentication);
 
         assertThat(userDTO.getLogin()).isEqualTo(DEFAULT_LOGIN);
         assertThat(userDTO.getFirstName()).isEqualTo(DEFAULT_FIRSTNAME);
@@ -89,52 +90,57 @@ class UserServiceIT {
     }
 
     @Test
+    @Transactional
     void testUserDetailsWithUsername() {
         userDetails.put("preferred_username", "TEST");
 
         OAuth2AuthenticationToken authentication = createMockOAuth2AuthenticationToken(userDetails);
-        AdminUserDTO userDTO = userService.getUserFromAuthentication(authentication).block();
+        AdminUserDTO userDTO = userService.getUserFromAuthentication(authentication);
 
         assertThat(userDTO.getLogin()).isEqualTo("test");
     }
 
     @Test
+    @Transactional
     void testUserDetailsWithLangKey() {
         userDetails.put("langKey", DEFAULT_LANGKEY);
         userDetails.put("locale", "en-US");
 
         OAuth2AuthenticationToken authentication = createMockOAuth2AuthenticationToken(userDetails);
-        AdminUserDTO userDTO = userService.getUserFromAuthentication(authentication).block();
+        AdminUserDTO userDTO = userService.getUserFromAuthentication(authentication);
 
         assertThat(userDTO.getLangKey()).isEqualTo(DEFAULT_LANGKEY);
     }
 
     @Test
+    @Transactional
     void testUserDetailsWithLocale() {
         userDetails.put("locale", "it-IT");
 
         OAuth2AuthenticationToken authentication = createMockOAuth2AuthenticationToken(userDetails);
-        AdminUserDTO userDTO = userService.getUserFromAuthentication(authentication).block();
+        AdminUserDTO userDTO = userService.getUserFromAuthentication(authentication);
 
         assertThat(userDTO.getLangKey()).isEqualTo("it");
     }
 
     @Test
+    @Transactional
     void testUserDetailsWithUSLocaleUnderscore() {
         userDetails.put("locale", "en_US");
 
         OAuth2AuthenticationToken authentication = createMockOAuth2AuthenticationToken(userDetails);
-        AdminUserDTO userDTO = userService.getUserFromAuthentication(authentication).block();
+        AdminUserDTO userDTO = userService.getUserFromAuthentication(authentication);
 
         assertThat(userDTO.getLangKey()).isEqualTo("en");
     }
 
     @Test
+    @Transactional
     void testUserDetailsWithUSLocaleDash() {
         userDetails.put("locale", "en-US");
 
         OAuth2AuthenticationToken authentication = createMockOAuth2AuthenticationToken(userDetails);
-        AdminUserDTO userDTO = userService.getUserFromAuthentication(authentication).block();
+        AdminUserDTO userDTO = userService.getUserFromAuthentication(authentication);
 
         assertThat(userDTO.getLangKey()).isEqualTo("en");
     }

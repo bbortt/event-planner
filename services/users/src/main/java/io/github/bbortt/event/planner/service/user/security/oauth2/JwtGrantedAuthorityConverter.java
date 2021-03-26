@@ -1,7 +1,6 @@
 package io.github.bbortt.event.planner.service.user.security.oauth2;
 
 import io.github.bbortt.event.planner.service.user.security.SecurityUtils;
-
 import java.util.Collection;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.core.GrantedAuthority;

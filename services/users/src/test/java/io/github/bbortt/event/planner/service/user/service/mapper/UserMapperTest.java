@@ -9,8 +9,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -75,8 +73,8 @@ class UserMapperTest {
         List<User> users = userMapper.userDTOsToUsers(usersDto);
 
         assertThat(users).isNotEmpty().size().isEqualTo(1);
-        Assertions.assertThat(users.get(0).getAuthorities()).isNotNull();
-        Assertions.assertThat(users.get(0).getAuthorities()).isNotEmpty();
+        assertThat(users.get(0).getAuthorities()).isNotNull();
+        assertThat(users.get(0).getAuthorities()).isNotEmpty();
         assertThat(users.get(0).getAuthorities().iterator().next().getName()).isEqualTo("ADMIN");
     }
 
@@ -90,8 +88,8 @@ class UserMapperTest {
         List<User> users = userMapper.userDTOsToUsers(usersDto);
 
         assertThat(users).isNotEmpty().size().isEqualTo(1);
-        Assertions.assertThat(users.get(0).getAuthorities()).isNotNull();
-        Assertions.assertThat(users.get(0).getAuthorities()).isEmpty();
+        assertThat(users.get(0).getAuthorities()).isNotNull();
+        assertThat(users.get(0).getAuthorities()).isEmpty();
     }
 
     @Test
@@ -103,8 +101,8 @@ class UserMapperTest {
         User user = userMapper.userDTOToUser(userDto);
 
         assertThat(user).isNotNull();
-        Assertions.assertThat(user.getAuthorities()).isNotNull();
-        Assertions.assertThat(user.getAuthorities()).isNotEmpty();
+        assertThat(user.getAuthorities()).isNotNull();
+        assertThat(user.getAuthorities()).isNotEmpty();
         assertThat(user.getAuthorities().iterator().next().getName()).isEqualTo("ADMIN");
     }
 
@@ -115,8 +113,8 @@ class UserMapperTest {
         User user = userMapper.userDTOToUser(userDto);
 
         assertThat(user).isNotNull();
-        Assertions.assertThat(user.getAuthorities()).isNotNull();
-        Assertions.assertThat(user.getAuthorities()).isEmpty();
+        assertThat(user.getAuthorities()).isNotNull();
+        assertThat(user.getAuthorities()).isEmpty();
     }
 
     @Test

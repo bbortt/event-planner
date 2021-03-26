@@ -2,19 +2,14 @@ package io.github.bbortt.event.planner.service.user.kafka.consumer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.bbortt.event.planner.service.user.config.KafkaProperties;
-import io.github.bbortt.event.planner.service.user.repository.UserRepository;
+import io.github.bbortt.event.planner.service.user.domain.User;
+import io.github.bbortt.event.planner.service.user.service.UserService;
 import io.github.bbortt.event.planner.service.user.service.dto.AdminUserDTO;
 import io.github.bbortt.event.planner.service.user.service.mapper.UserMapper;
-import java.util.Collections;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.context.event.ApplicationStartedEvent;
-import org.springframework.context.event.EventListener;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
-import reactor.kafka.receiver.KafkaReceiver;
-import reactor.kafka.receiver.ReceiverOptions;
 
 @Component
 public class UserInformationConsumer {
@@ -23,45 +18,29 @@ public class UserInformationConsumer {
 
     private static final String TOPIC = "audit";
 
-    private final KafkaReceiver<String, String> receiver;
-
     private final UserMapper userMapper;
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     private final ObjectMapper objectMapper;
 
-    public UserInformationConsumer(KafkaProperties kafkaProperties, UserMapper userMapper, UserRepository userRepository) {
-        this.receiver = KafkaReceiver.create(ReceiverOptions.<String, String>create(kafkaProperties.getConsumerProps())
-            .subscription(Collections.singletonList(TOPIC)));
-
+    public UserInformationConsumer(UserMapper userMapper, UserService userService) {
         this.userMapper = userMapper;
-        this.userRepository = userRepository;
+        this.userService = userService;
 
         objectMapper = new ObjectMapper();
     }
 
-    @EventListener(ApplicationStartedEvent.class)
-    public void consumeAuditEvents() {
+    @KafkaListener(topics = {TOPIC}, containerFactory = "groupedListenerContainerFactory")
+    public void consumeUserInformation(String userInformation) throws JsonProcessingException {
         log.info("Starting to consume audit events..");
 
-        receiver.receive()
-            .doOnNext(receiverRecord -> receiverRecord.receiverOffset().acknowledge())
-            .map(ConsumerRecord::value)
-            .<AdminUserDTO>handle((serializedUserDTO, sink) -> {
-                try {
-                    AdminUserDTO adminUserDTO = objectMapper.readValue(serializedUserDTO, AdminUserDTO.class);
-                    sink.next(adminUserDTO);
-                } catch (JsonProcessingException e) {
-                    sink.error(e);
-                }
-            })
-            .map(userMapper::userDTOToUser)
-            .doOnNext(user -> {
-                if (log.isDebugEnabled()) {
-                    log.debug("Updating user information: {}", user);
-                }
-            })
-            .doOnNext(userRepository::save)
-            .subscribe();
+        AdminUserDTO adminUserDTO = objectMapper.readValue(userInformation, AdminUserDTO.class);
+        User user = userMapper.userDTOToUser(adminUserDTO);
+
+        if (log.isDebugEnabled()) {
+            log.debug("Updating user information: {}", user);
+        }
+
+        userService.syncUser(user);
     }
 }

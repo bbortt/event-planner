@@ -13,16 +13,16 @@ class ArchTest {
     void servicesAndRepositoriesShouldNotDependOnWebLayer() {
         JavaClasses importedClasses = new ClassFileImporter()
             .withImportOption(ImportOption.Predefined.DO_NOT_INCLUDE_TESTS)
-            .importPackages("io.github.bbortt.event.planner.services.user");
+            .importPackages("io.github.bbortt.event.planner.service.user");
 
         noClasses()
             .that()
-            .resideInAnyPackage("io.github.bbortt.event.planner.services.user.service..")
+            .resideInAnyPackage("io.github.bbortt.event.planner.service.user.service..")
             .or()
-            .resideInAnyPackage("io.github.bbortt.event.planner.services.user.repository..")
+            .resideInAnyPackage("io.github.bbortt.event.planner.service.user.repository..")
             .should()
             .dependOnClassesThat()
-            .resideInAnyPackage("..io.github.bbortt.event.planner.services.user.web..")
+            .resideInAnyPackage("..io.github.bbortt.event.planner.service.user.web..")
             .because("Services and repositories should not depend on web layer")
             .check(importedClasses);
     }

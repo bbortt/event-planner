@@ -2,18 +2,16 @@ package io.github.bbortt.event.planner.service.user.web.rest;
 
 import io.github.bbortt.event.planner.service.user.service.UserService;
 import io.github.bbortt.event.planner.service.user.service.dto.UserDTO;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.PaginationUtil;
 
 @RestController
@@ -31,19 +29,16 @@ public class PublicUserResource {
     /**
      * {@code GET /users} : get all users with only the public informations - calling this are allowed for anyone.
      *
-     * @param request a {@link ServerHttpRequest} request.
      * @param pageable the pagination information.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body all users.
      */
     @GetMapping("/users")
-    public Mono<ResponseEntity<Flux<UserDTO>>> getAllPublicUsers(ServerHttpRequest request, Pageable pageable) {
+    public ResponseEntity<List<UserDTO>> getAllPublicUsers(Pageable pageable) {
         log.debug("REST request to get all public User names");
 
-        return userService
-            .countManagedUsers()
-            .map(total -> new PageImpl<>(new ArrayList<>(), pageable, total))
-            .map(page -> PaginationUtil.generatePaginationHttpHeaders(UriComponentsBuilder.fromHttpRequest(request), page))
-            .map(headers -> ResponseEntity.ok().headers(headers).body(userService.getAllPublicUsers(pageable)));
+        final Page<UserDTO> page = userService.getAllPublicUsers(pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
     /**
@@ -51,7 +46,7 @@ public class PublicUserResource {
      * @return a string list of all roles.
      */
     @GetMapping("/authorities")
-    public Mono<List<String>> getAuthorities() {
-        return userService.getAuthorities().collectList();
+    public List<String> getAuthorities() {
+        return userService.getAuthorities();
     }
 }

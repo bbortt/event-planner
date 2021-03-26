@@ -17,7 +17,7 @@ logging:
   level:
     ROOT: INFO
     tech.jhipster: INFO
-    io.github.bbortt.event.planner.services.user: INFO
+    io.github.bbortt.event.planner.service.user: INFO
 
 management:
   metrics:
@@ -31,6 +31,16 @@ spring:
       enabled: false
     livereload:
       enabled: false
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:postgresql://localhost:5432/users
+    username: users
+    password:
+    hikari:
+      poolName: Hikari
+      auto-commit: false
+  jpa:
+    database-platform: tech.jhipster.domain.util.FixedPostgreSQL10Dialect
   thymeleaf:
     cache: true
   sleuth:
@@ -87,7 +97,6 @@ jhipster:
       host: localhost
       port: 5000
       queue-size: 512
-
 # ===================================================================
 # Application specific properties
 # Add your own application properties here, see the ApplicationProperties class

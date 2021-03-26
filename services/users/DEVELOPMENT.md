@@ -80,7 +80,7 @@ For more information refer to [Using Docker and Docker-Compose][], this page als
 Migrations happen via Gradle Flyway Plugin. The following is a sample command for localhost (run from root):
 
 ```
-$ ./gradlew :users:flywayMigrate -Dflyway.url=jdbc:postgresql://localhost:5432/users -Dflyway.user=users_user -Dflyway.password=users_password
+$ ./gradlew :users:flywayMigrate -Dflyway.url=jdbc:postgresql://localhost:5432/service_user -Dflyway.user=service_user_user -Dflyway.password=service_user_password
 ```
 
 ## Continuous Integration (optional)

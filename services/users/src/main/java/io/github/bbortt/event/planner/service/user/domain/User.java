@@ -6,24 +6,19 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.BatchSize;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.Transient;
-import org.springframework.data.relational.core.mapping.Column;
-import org.springframework.data.relational.core.mapping.Table;
 
 /**
  * A user.
  */
-@Table("jhi_user")
+@Entity
+@Table(name = "jhi_user")
 public class User extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -34,32 +29,34 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @NotNull
     @Pattern(regexp = Constants.LOGIN_REGEX)
     @Size(min = 1, max = 50)
+    @Column(length = 50, unique = true, nullable = false)
     private String login;
 
     @Size(max = 50)
-    @Column("first_name")
+    @Column(name = "first_name", length = 50)
     private String firstName;
 
     @Size(max = 50)
-    @Column("last_name")
+    @Column(name = "last_name", length = 50)
     private String lastName;
 
     @Email
     @Size(min = 5, max = 254)
+    @Column(length = 254, unique = true)
     private String email;
 
     @NotNull
+    @Column(nullable = false)
     private boolean activated = false;
 
     @Size(min = 2, max = 10)
-    @Column("lang_key")
+    @Column(name = "lang_key", length = 10)
     private String langKey;
 
     @Size(max = 256)
-    @Column("image_url")
+    @Column(name = "image_url", length = 256)
     private String imageUrl;
 
-    @Transient
     @JsonIgnore
     @ManyToMany
     @JoinTable(

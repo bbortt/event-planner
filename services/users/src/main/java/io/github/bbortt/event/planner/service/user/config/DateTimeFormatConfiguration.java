@@ -3,13 +3,13 @@ package io.github.bbortt.event.planner.service.user.config;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.format.datetime.standard.DateTimeFormatterRegistrar;
-import org.springframework.web.reactive.config.WebFluxConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * Configure the converters to use the ISO format for dates by default.
  */
 @Configuration
-public class DateTimeFormatConfiguration implements WebFluxConfigurer {
+public class DateTimeFormatConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addFormatters(FormatterRegistry registry) {

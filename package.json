@@ -23,6 +23,7 @@
   "scripts": {
     "lint:staged:backend": "lint-staged -c backend/.lintstagedrc.js",
     "lint:staged:frontend": "lint-staged -c frontend/.lintstagedrc.js",
-    "lint:staged:gateway": "lint-staged -c gateway/.lintstagedrc.js"
+    "lint:staged:gateway": "lint-staged -c gateway/.lintstagedrc.js",
+    "lint:staged:service:user": "lint-staged -c services/users/.lintstagedrc.js"
   }
 }

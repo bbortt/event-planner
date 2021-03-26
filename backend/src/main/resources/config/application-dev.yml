@@ -31,13 +31,9 @@ spring:
     serialization:
       indent-output: true
   datasource:
-    type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:postgresql://localhost:5432/backend
     username: backend_user
     password: backend_password
-    hikari:
-      poolName: Hikari
-      auto-commit: false
   jpa:
     show-sql: true
   mail:

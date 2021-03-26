@@ -43,9 +43,9 @@ public class LoggingAspect {
      * Pointcut that matches all Spring beans in the application's main packages.
      */
     @Pointcut(
-        "within(io.github.bbortt.event.planner.services.user.repository..*)" +
-        " || within(io.github.bbortt.event.planner.services.user.service..*)" +
-        " || within(io.github.bbortt.event.planner.services.user.web.rest..*)"
+        "within(io.github.bbortt.event.planner.service.user.repository..*)" +
+        " || within(io.github.bbortt.event.planner.service.user.service..*)" +
+        " || within(io.github.bbortt.event.planner.service.user.web.rest..*)"
     )
     public void applicationPackagePointcut() {
         // Method is empty as this is just a Pointcut, the implementations are in the advices.
