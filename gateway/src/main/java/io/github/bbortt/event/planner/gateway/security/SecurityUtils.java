@@ -2,6 +2,7 @@ package io.github.bbortt.event.planner.gateway.security;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,15 +21,21 @@ public final class SecurityUtils {
     private SecurityUtils() {}
 
     /**
+     * Get the current authentication object.
+     *
+     * @return the current authentication object.
+     */
+    public static Mono<Authentication> getCurrentAuthenticationToken() {
+        return ReactiveSecurityContextHolder.getContext().map(SecurityContext::getAuthentication);
+    }
+
+    /**
      * Get the login of the current user.
      *
      * @return the login of the current user.
      */
     public static Mono<String> getCurrentUserLogin() {
-        return ReactiveSecurityContextHolder
-            .getContext()
-            .map(SecurityContext::getAuthentication)
-            .flatMap(authentication -> Mono.justOrEmpty(extractPrincipal(authentication)));
+        return SecurityUtils.getCurrentAuthenticationToken().flatMap(authentication -> Mono.justOrEmpty(extractPrincipal(authentication)));
     }
 
     private static String extractPrincipal(Authentication authentication) {

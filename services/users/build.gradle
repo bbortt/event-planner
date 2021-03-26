@@ -26,12 +26,6 @@ bootRun {
     main = "io.github.bbortt.event.planner.service.user.UserApp"
 }
 
-idea {
-    module {
-        excludeDirs += files("node_modules")
-    }
-}
-
 dependencies {
     implementation platform("tech.jhipster:jhipster-dependencies:${jhipsterDependenciesVersion}")
 
@@ -90,8 +84,6 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher:${junitPlatformLauncherVersion}'
     testImplementation "com.tngtech.archunit:archunit-junit5-api:${archunitJunit5Version}"
     testRuntimeOnly "com.tngtech.archunit:archunit-junit5-engine:${archunitJunit5Version}"
-    testImplementation "com.h2database:h2"
-    testImplementation "io.r2dbc:r2dbc-h2"
 }
 
 task flywayCleanIntegrationTest(type: FlywayCleanTask) {

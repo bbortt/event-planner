@@ -68,7 +68,6 @@ spring:
           oidc:
             client-id: internal
             client-secret: internal
-            scope: openid,profile,email
 
 server:
   port: 8081

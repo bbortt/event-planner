@@ -1,21 +1,77 @@
 package io.github.bbortt.event.planner.gateway.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.bbortt.event.planner.gateway.config.Constants;
+import io.github.bbortt.event.planner.gateway.config.KafkaProperties;
 import io.github.bbortt.event.planner.gateway.service.dto.UserDTO;
-import java.util.*;
+import java.util.Map;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
+import reactor.kafka.sender.KafkaSender;
+import reactor.kafka.sender.SenderOptions;
+import reactor.kafka.sender.SenderRecord;
+import reactor.kafka.sender.SenderResult;
 
 /**
  * Service class for managing users.
  */
 @Service
 public class UserService {
+
+    private static final Logger log = LoggerFactory.getLogger(UserService.class);
+
+    private static final String TOPIC = "audit";
+
+    private final KafkaSender<String, String> sender;
+
+    private final ObjectMapper objectMapper;
+
+    public UserService(KafkaProperties kafkaProperties) {
+        this.sender = KafkaSender.create(SenderOptions.create(kafkaProperties.getProducerProps()));
+
+        this.objectMapper = new ObjectMapper();
+    }
+
+    public void publishUserInformation(UserDTO userDTO) {
+        log.info("Publish user information: {}", userDTO);
+
+        Mono
+            .just(userDTO)
+            .<String>handle(
+                (dto, sink) -> {
+                    try {
+                        sink.next(objectMapper.writeValueAsString(userDTO));
+                    } catch (JsonProcessingException e) {
+                        sink.error(e);
+                    }
+                }
+            )
+            .map(serializedUserDTO -> SenderRecord.create(TOPIC, null, null, userDTO.getId(), serializedUserDTO, null))
+            .as(sender::send)
+            .next()
+            .map(SenderResult::recordMetadata)
+            .subscribe(
+                recordMetadata -> {
+                    if (log.isDebugEnabled()) {
+                        log.debug(
+                            "Audit published: { topic: {}, partition: {}, offset: {}, timestamp: {} }",
+                            recordMetadata.topic(),
+                            recordMetadata.partition(),
+                            recordMetadata.offset(),
+                            recordMetadata.timestamp()
+                        );
+                    }
+                }
+            );
+    }
 
     /**
      * Returns the user from an OAuth 2.0 login or resource server with JWT.

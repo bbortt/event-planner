@@ -17,12 +17,6 @@ bootRun {
     main = "io.github.bbortt.event.planner.BackendApp"
 }
 
-idea {
-    module {
-        excludeDirs += files("node_modules")
-    }
-}
-
 dependencies {
     implementation platform("tech.jhipster:jhipster-dependencies:${jhipsterDependenciesVersion}")
 

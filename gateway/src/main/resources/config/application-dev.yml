@@ -57,11 +57,17 @@ spring:
   cloud:
     gateway:
       routes:
+        - id: service-user
+          predicates:
+            - Path=/api/users/**
+          filters:
+            - RewritePath=/api/users/(?<segment>.*), /api/$\{segment}
+          uri: http://localhost:8082/api/
         - id: backend
           predicates:
             - Path=/api/**
           uri: http://localhost:8081/api/
-        - id: backend
+        - id: frontend
           predicates:
             - Path=/**
           uri: http://localhost:9000/

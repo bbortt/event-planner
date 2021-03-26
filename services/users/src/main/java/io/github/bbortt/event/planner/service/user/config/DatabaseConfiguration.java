@@ -32,7 +32,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import tech.jhipster.config.JHipsterConstants;
 
 @Configuration
-@EnableR2dbcRepositories("io.github.bbortt.event.planner.services.user.repository")
+@EnableR2dbcRepositories("io.github.bbortt.event.planner.service.user.repository")
 @EnableTransactionManagement
 public class DatabaseConfiguration {
 

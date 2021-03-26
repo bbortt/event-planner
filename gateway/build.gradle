@@ -13,12 +13,6 @@ bootRun {
     main = "io.github.bbortt.event.planner.gateway.GatewayApp"
 }
 
-idea {
-    module {
-        excludeDirs += files("node_modules")
-    }
-}
-
 dependencies {
     implementation platform("tech.jhipster:jhipster-dependencies:${jhipsterDependenciesVersion}")
     implementation group: "tech.jhipster", name: "jhipster-framework", {

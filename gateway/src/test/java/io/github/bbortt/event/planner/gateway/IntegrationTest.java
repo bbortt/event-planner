@@ -1,6 +1,5 @@
 package io.github.bbortt.event.planner.gateway;
 
-import io.github.bbortt.event.planner.gateway.GatewayApp;
 import io.github.bbortt.event.planner.gateway.config.TestSecurityConfiguration;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
