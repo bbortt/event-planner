@@ -29,12 +29,12 @@ public interface RoleRepository extends JpaRepository<Role, String> {
         "SELECT CASE WHEN COUNT(i) > 0 THEN TRUE ELSE FALSE END FROM Invitation i" +
         " WHERE i.accepted = true" +
         "  AND i.project = :project" +
-        "  AND i.user.login = :currentUserLogin" +
+        "  AND i.jhiUserId = :jhiUserId" +
         "  AND i.role.name in :roles"
     )
     boolean hasAnyRoleInProject(
         @Param("project") Project project,
-        @Param("currentUserLogin") String currentUserLogin,
+        @Param("jhiUserId") String jhiUserId,
         @Param("roles") List<String> roles
     );
 }

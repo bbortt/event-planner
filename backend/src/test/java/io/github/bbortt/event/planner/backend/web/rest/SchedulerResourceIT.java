@@ -16,7 +16,6 @@ import io.github.bbortt.event.planner.backend.domain.Location;
 import io.github.bbortt.event.planner.backend.domain.Project;
 import io.github.bbortt.event.planner.backend.domain.Responsibility;
 import io.github.bbortt.event.planner.backend.domain.Section;
-import io.github.bbortt.event.planner.backend.domain.User;
 import io.github.bbortt.event.planner.backend.repository.EventRepository;
 import java.util.List;
 import javax.persistence.EntityManager;

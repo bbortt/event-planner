@@ -21,23 +21,15 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
         value = "select p from Project p" +
         " left join Invitation i" +
         "  on p = i.project" +
-        " left join User u" +
-        "  on i.user = u" +
         "    where p.archived = :archived" +
-        "    and u.login = :currentUserLogin",
+        "    and i.jhiUserId = :jhiUserId",
         countQuery = "select count(p.id) from Project p" +
         " left join Invitation i" +
         "  on p = i.project" +
-        " left join User u" +
-        "  on i.user = u" +
         "    where p.archived = :archived" +
-        "    and u.login = :currentUserLogin"
+        "    and i.jhiUserId = :jhiUserId"
     )
-    Page<Project> findMineByArchived(
-        @Param("currentUserLogin") String currentUserLogin,
-        @Param("archived") boolean archived,
-        Pageable pageable
-    );
+    Page<Project> findMineByArchived(@Param("jhiUserId") String jhiUserId, @Param("archived") boolean archived, Pageable pageable);
 
     @Query("SELECT p.name FROM Project p WHERE p.id = :projectId")
     Optional<String> findNameByProjectId(@Param("projectId") Long projectId);

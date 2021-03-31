@@ -45,7 +45,7 @@ public class LocationService {
     public Location save(Location location) {
         log.debug("Request to save Location : {}", location);
 
-        if (location.getResponsibility() != null && location.getUser() != null) {
+        if (location.getResponsibility() != null && location.getJhiUserId() != null) {
             log.error("Location does contain responsibility AND user!");
             throw new BadRequestException();
         }

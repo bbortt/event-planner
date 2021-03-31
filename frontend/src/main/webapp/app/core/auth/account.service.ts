@@ -1,14 +1,19 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+
 import { TranslateService } from '@ngx-translate/core';
 import { SessionStorageService } from 'ngx-webstorage';
-import { Observable, ReplaySubject, of } from 'rxjs';
-import { shareReplay, tap, catchError } from 'rxjs/operators';
 
-import { StateStorageService } from 'app/core/auth/state-storage.service';
+import { forkJoin, Observable, of, ReplaySubject } from 'rxjs';
+import { catchError, map, shareReplay, tap } from 'rxjs/operators';
+
 import { ApplicationConfigService } from '../config/application-config.service';
+import { ProjectService } from 'app/entities/project/project.service';
+import { StateStorageService } from 'app/core/auth/state-storage.service';
+
 import { Account } from 'app/core/auth/account.model';
+
 import { Authority } from 'app/config/authority.constants';
 
 @Injectable({ providedIn: 'root' })
@@ -23,7 +28,8 @@ export class AccountService {
     private http: HttpClient,
     private stateStorageService: StateStorageService,
     private router: Router,
-    private applicationConfigService: ApplicationConfigService
+    private applicationConfigService: ApplicationConfigService,
+    private projectService: ProjectService
   ) {}
 
   authenticate(identity: Account | null): void {
@@ -52,7 +58,7 @@ export class AccountService {
       roles = [roles];
     }
 
-    const projectRole = this.userIdentity.rolePerProject.get(projectId);
+    const projectRole = this.userIdentity.rolePerProject.get(`${projectId}`);
     return !!projectRole && roles.some((role: string) => projectRole === role);
   }
 
@@ -93,7 +99,15 @@ export class AccountService {
   }
 
   private fetch(): Observable<Account> {
-    return this.http.get<Account>(this.applicationConfigService.getEndpointFor('api/account'));
+    return forkJoin({
+      account: this.http.get<Account>(this.applicationConfigService.getEndpointFor('api/account')),
+      rolePerProject: this.projectService.myRolePerProject(),
+    }).pipe(
+      map(({ account, rolePerProject }: { account: Account; rolePerProject: Map<number, string> }) => {
+        account.rolePerProject = new Map(Object.entries(rolePerProject));
+        return account;
+      })
+    );
   }
 
   private navigateToStoredUrl(): void {

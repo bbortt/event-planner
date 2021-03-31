@@ -2,7 +2,6 @@ package io.github.bbortt.event.planner.backend.service;
 
 import io.github.bbortt.event.planner.backend.domain.Event;
 import io.github.bbortt.event.planner.backend.domain.Responsibility;
-import io.github.bbortt.event.planner.backend.domain.User;
 import io.github.bbortt.event.planner.backend.repository.EventRepository;
 import io.github.bbortt.event.planner.backend.repository.SectionRepository;
 import io.github.bbortt.event.planner.backend.service.exception.BadRequestException;

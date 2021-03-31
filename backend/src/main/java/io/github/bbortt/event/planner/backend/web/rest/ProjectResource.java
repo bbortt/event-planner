@@ -2,6 +2,7 @@ package io.github.bbortt.event.planner.backend.web.rest;
 
 import io.github.bbortt.event.planner.backend.domain.Project;
 import io.github.bbortt.event.planner.backend.security.RolesConstants;
+import io.github.bbortt.event.planner.backend.service.InvitationService;
 import io.github.bbortt.event.planner.backend.service.ProjectService;
 import io.github.bbortt.event.planner.backend.service.dto.CreateProjectDTO;
 import io.github.bbortt.event.planner.backend.service.exception.EntityNotFoundException;
@@ -9,7 +10,9 @@ import io.github.bbortt.event.planner.backend.web.rest.errors.BadRequestAlertExc
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,9 +51,11 @@ public class ProjectResource {
     private String applicationName;
 
     private final ProjectService projectService;
+    private final InvitationService invitationService;
 
-    public ProjectResource(ProjectService projectService) {
+    public ProjectResource(ProjectService projectService, InvitationService invitationService) {
         this.projectService = projectService;
+        this.invitationService = invitationService;
     }
 
     /**
@@ -112,6 +117,21 @@ public class ProjectResource {
 
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    /**
+     * {@code GET  /projects/myRoles} : get each role per project.
+     *
+     * @return the list of role per projects in body.
+     */
+    @GetMapping("/projects/myRoles")
+    @PreAuthorize("isAuthenticated()")
+    public Map<Long, String> myRolePerProject() {
+        log.debug("REST request to get Roles per Project");
+        return invitationService
+            .findMine()
+            .stream()
+            .collect(Collectors.toMap(invitation -> invitation.getProject().getId(), invitation -> invitation.getRole().getName()));
     }
 
     /**

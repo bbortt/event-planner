@@ -8,6 +8,6 @@ export class Account {
     public lastName: string | null,
     public login: string,
     public imageUrl: string | null,
-    public rolePerProject: Map<number, string>
+    public rolePerProject: Map<string, string>
   ) {}
 }

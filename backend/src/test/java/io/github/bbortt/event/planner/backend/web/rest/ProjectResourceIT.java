@@ -12,16 +12,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import io.github.bbortt.event.planner.backend.AbstractApplicationContextAwareIT;
 import io.github.bbortt.event.planner.backend.domain.Invitation;
 import io.github.bbortt.event.planner.backend.domain.Project;
-import io.github.bbortt.event.planner.backend.domain.User;
-import io.github.bbortt.event.planner.backend.repository.AuthorityRepository;
 import io.github.bbortt.event.planner.backend.repository.InvitationRepository;
 import io.github.bbortt.event.planner.backend.repository.ProjectRepository;
 import io.github.bbortt.event.planner.backend.repository.RoleRepository;
-import io.github.bbortt.event.planner.backend.repository.UserRepository;
 import io.github.bbortt.event.planner.backend.security.AuthoritiesConstants;
 import io.github.bbortt.event.planner.backend.service.ProjectService;
 import io.github.bbortt.event.planner.backend.service.dto.CreateProjectDTO;
-import io.github.bbortt.event.planner.backend.service.dto.UserDTO;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZoneOffset;

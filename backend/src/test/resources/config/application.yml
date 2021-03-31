@@ -72,7 +72,7 @@ spring:
 
 jhipster:
   clientApp:
-    name: 'backendApp'
+    name: 'eventPlannerApp'
   logging:
     # To test json console appender
     use-json-format: false

@@ -1,12 +1,11 @@
-import { User } from 'app/entities/user/user.model';
+import { Account } from 'app/core/auth/account.model';
 
 import { Moment } from 'moment';
 
 export interface ICreateProject {
   name: string;
+  description?: string;
   startTime: Moment;
   endTime: Moment;
-  archived: boolean;
-  description?: string;
-  user?: User;
+  userInformation?: Account;
 }

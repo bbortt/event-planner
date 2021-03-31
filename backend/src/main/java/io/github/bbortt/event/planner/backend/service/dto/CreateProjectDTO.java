@@ -1,12 +1,15 @@
 package io.github.bbortt.event.planner.backend.service.dto;
 
 import java.time.ZonedDateTime;
+import javax.persistence.Column;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 public class CreateProjectDTO {
 
-    @NotNull
+    @NotEmpty
     @Size(min = 1, max = 50)
     private String name;
 
@@ -19,7 +22,7 @@ public class CreateProjectDTO {
     @NotNull
     private ZonedDateTime endTime;
 
-    UserDTO user = new UserDTO();
+    private AdminUserDTO userInformation;
 
     public String getName() {
         return name;
@@ -53,11 +56,11 @@ public class CreateProjectDTO {
         this.endTime = endTime;
     }
 
-    public UserDTO getUser() {
-        return user;
+    public AdminUserDTO getUserInformation() {
+        return userInformation;
     }
 
-    public void setUser(UserDTO user) {
-        this.user = user;
+    public void setUserInformation(AdminUserDTO userInformationDTO) {
+        this.userInformation = userInformationDTO;
     }
 }

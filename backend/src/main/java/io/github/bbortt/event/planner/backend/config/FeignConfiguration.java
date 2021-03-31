@@ -7,8 +7,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 @Configuration
-@EnableFeignClients(basePackages = "io.github.bbortt.event.planner.backend")
 @Import(FeignClientsConfiguration.class)
+@EnableFeignClients(basePackages = "io.github.bbortt.event.planner.backend")
 public class FeignConfiguration {
 
     /**

@@ -17,17 +17,19 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface InvitationRepository extends JpaRepository<Invitation, Long> {
+    List<Invitation> findAllByJhiUserId(String jhiUserId);
+
     Page<Invitation> findAllByProjectId(Long projectId, Pageable pageable);
 
     @Modifying
-    @Query("UPDATE Invitation SET user.id = :userId, token = null, accepted = true WHERE token = :token")
-    void assignUserToInvitation(@Param("userId") String userId, @Param("token") String token);
+    @Query("UPDATE Invitation SET jhiUserId = :jhiUserId, token = null, accepted = true WHERE token = :token")
+    void assignUserToInvitation(@Param("jhiUserId") String jhiUserId, @Param("token") String token);
 
     Optional<Invitation> findByToken(String token);
 
     Optional<Invitation> findOneByEmailAndProjectId(String email, Long projectId);
 
-    Optional<Invitation> findOneByUserIdAndProjectId(String userId, Long projectId);
+    Optional<Invitation> findOneByJhiUserIdAndProjectId(String jhiUserId, Long projectId);
 
     List<Invitation> findAllByAcceptedIsFalseAndTokenIsNotNullAndCreatedDateBefore(Instant createdDate);
 }

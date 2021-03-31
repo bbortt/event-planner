@@ -1,14 +1,14 @@
 package io.github.bbortt.event.planner.backend.service;
 
 import io.github.bbortt.event.planner.backend.domain.Invitation;
-import io.github.bbortt.event.planner.backend.domain.User;
 import io.github.bbortt.event.planner.backend.repository.InvitationRepository;
-import io.github.bbortt.event.planner.backend.repository.UserRepository;
 import io.github.bbortt.event.planner.backend.security.SecurityUtils;
+import io.github.bbortt.event.planner.backend.service.dto.AdminUserDTO;
 import io.github.bbortt.event.planner.backend.service.exception.EntityNotFoundException;
 import io.github.bbortt.event.planner.backend.service.exception.IdMustBePresentException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,15 +28,15 @@ public class InvitationService {
 
     private final Logger log = LoggerFactory.getLogger(InvitationService.class);
 
+    private final UserService userService;
     private final ProjectService projectService;
 
     private final InvitationRepository invitationRepository;
-    private final UserRepository userRepository;
 
-    public InvitationService(ProjectService projectService, InvitationRepository invitationRepository, UserRepository userRepository) {
+    public InvitationService(UserService userService, ProjectService projectService, InvitationRepository invitationRepository) {
+        this.userService = userService;
         this.projectService = projectService;
         this.invitationRepository = invitationRepository;
-        this.userRepository = userRepository;
     }
 
     /**
@@ -99,15 +100,9 @@ public class InvitationService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<Invitation> findOneByEmailAndProjectId(String email, Long projectId) {
-        log.debug("Request to get Invitation by Email {} in Project {}", email, projectId);
-        return invitationRepository.findOneByEmailAndProjectId(email, projectId);
-    }
-
-    @Transactional(readOnly = true)
-    public Optional<Invitation> findOneByUserIdAndProjectId(String userId, Long projectId) {
-        log.debug("Request to get Invitation for User {} in Project {}", userId, projectId);
-        return invitationRepository.findOneByUserIdAndProjectId(userId, projectId);
+    public Optional<Invitation> findOneByJhiUserIdAndProjectId(String jhiUserId, Long projectId) {
+        log.debug("Request to get Invitation for User {} in Project {}", jhiUserId, projectId);
+        return invitationRepository.findOneByJhiUserIdAndProjectId(jhiUserId, projectId);
     }
 
     /**
@@ -132,8 +127,7 @@ public class InvitationService {
     @Transactional
     public void assignUserByLoginToInvitation(String login, String token) {
         log.debug("Request to accept invitation for user '{}' by token : {}", login, token);
-        User user = userRepository.findOneByLogin(login.toLowerCase()).orElseThrow(IllegalArgumentException::new);
-        invitationRepository.assignUserToInvitation(user.getId(), token);
+        invitationRepository.assignUserToInvitation(userService.findUserByLogin(login).getId(), token);
     }
 
     /**
@@ -176,6 +170,16 @@ public class InvitationService {
                     invitationRepository.delete(invitation);
                 }
             );
+    }
+
+    /**
+     * Returns all invitations of current user login / id.
+     * @return the current users invitations.
+     */
+    public List<Invitation> findMine() {
+        String jhiUserId = userService.getCurrentUser().getId();
+        log.debug("Request to get my invitations: {}", jhiUserId);
+        return invitationRepository.findAllByJhiUserId(jhiUserId);
     }
 
     /**

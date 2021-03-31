@@ -9,7 +9,6 @@ import static org.mockito.Mockito.verify;
 import io.github.bbortt.event.planner.backend.repository.InvitationRepository;
 import io.github.bbortt.event.planner.backend.repository.ProjectRepository;
 import io.github.bbortt.event.planner.backend.repository.RoleRepository;
-import io.github.bbortt.event.planner.backend.repository.UserRepository;
 import io.github.bbortt.event.planner.backend.security.AuthoritiesConstants;
 import io.github.bbortt.event.planner.backend.service.dto.CreateProjectDTO;
 import io.github.bbortt.event.planner.backend.service.exception.ForbiddenRequestException;

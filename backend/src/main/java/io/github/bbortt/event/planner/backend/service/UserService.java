@@ -1,144 +1,55 @@
 package io.github.bbortt.event.planner.backend.service;
 
+import io.github.bbortt.event.planner.backend.client.UserServiceFeignClient;
 import io.github.bbortt.event.planner.backend.config.Constants;
-import io.github.bbortt.event.planner.backend.domain.Authority;
-import io.github.bbortt.event.planner.backend.domain.User;
-import io.github.bbortt.event.planner.backend.repository.AuthorityRepository;
-import io.github.bbortt.event.planner.backend.repository.UserRepository;
 import io.github.bbortt.event.planner.backend.security.SecurityUtils;
 import io.github.bbortt.event.planner.backend.service.dto.AdminUserDTO;
-import io.github.bbortt.event.planner.backend.service.dto.UserDTO;
-import java.time.Instant;
-import java.util.Collection;
-import java.util.List;
+import io.github.bbortt.event.planner.backend.service.exception.EntityNotFoundException;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Order;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Service class for managing users.
- */
 @Service
 public class UserService {
 
-    private final Logger log = LoggerFactory.getLogger(UserService.class);
+    private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
-    private final UserRepository userRepository;
+    private final UserServiceFeignClient userService;
 
-    private final AuthorityRepository authorityRepository;
-
-    public UserService(UserRepository userRepository, AuthorityRepository authorityRepository) {
-        this.userRepository = userRepository;
-        this.authorityRepository = authorityRepository;
+    public UserService(UserServiceFeignClient userService) {
+        this.userService = userService;
     }
 
     /**
-     * Update basic information (first name, last name, email, language) for the current user.
-     *
-     * @param firstName first name of user.
-     * @param lastName  last name of user.
-     * @param email     email id of user.
-     * @param langKey   language key.
-     * @param imageUrl  image URL of user.
+     * Return the current user information, if any.
+     * @return the current user information
      */
-    public void updateUser(String firstName, String lastName, String email, String langKey, String imageUrl) {
-        SecurityUtils
-            .getCurrentUserLogin()
-            .flatMap(userRepository::findOneByLogin)
-            .ifPresent(
-                user -> {
-                    user.setFirstName(firstName);
-                    user.setLastName(lastName);
-                    if (email != null) {
-                        user.setEmail(email.toLowerCase());
-                    }
-                    user.setLangKey(langKey);
-                    user.setImageUrl(imageUrl);
-                    log.debug("Changed Information for User: {}", user);
-                }
-            );
-    }
-
-    @Transactional(readOnly = true)
-    public Page<AdminUserDTO> getAllManagedUsers(Pageable pageable) {
-        return userRepository.findAll(pageable).map(AdminUserDTO::new);
-    }
-
-    @Transactional(readOnly = true)
-    public Page<UserDTO> getAllPublicUsers(Pageable pageable) {
-        return userRepository.findAllByIdNotNullAndActivatedIsTrue(pageable).map(UserDTO::new);
-    }
-
-    @Transactional(readOnly = true)
-    public Optional<User> getUserWithAuthoritiesByLogin(String login) {
-        return userRepository.findOneWithAuthoritiesByLogin(login);
-    }
-
-    /**
-     * Gets a list of all the authorities.
-     * @return a list of all the authorities.
-     */
-    @Transactional(readOnly = true)
-    public List<String> getAuthorities() {
-        return authorityRepository.findAll().stream().map(Authority::getName).collect(Collectors.toList());
-    }
-
-    private User syncUserWithIdP(Map<String, Object> details, User user) {
-        // save authorities in to sync user roles/groups between IdP and JHipster's local database
-        Collection<String> dbAuthorities = getAuthorities();
-        Collection<String> userAuthorities = user.getAuthorities().stream().map(Authority::getName).collect(Collectors.toList());
-        for (String authority : userAuthorities) {
-            if (!dbAuthorities.contains(authority)) {
-                log.debug("Saving authority '{}' in local database", authority);
-                Authority authorityToSave = new Authority();
-                authorityToSave.setName(authority);
-                authorityRepository.save(authorityToSave);
-            }
-        }
-        // save account in to sync users between IdP and JHipster's local database
-        Optional<User> existingUser = userRepository.findOneByLogin(user.getLogin());
-        if (existingUser.isPresent()) {
-            // if IdP sends last updated information, use it to determine if an update should happen
-            if (details.get("updated_at") != null) {
-                Instant dbModifiedDate = existingUser.get().getLastModifiedDate();
-                Instant idpModifiedDate = (Instant) details.get("updated_at");
-                if (idpModifiedDate.isAfter(dbModifiedDate)) {
-                    log.debug("Updating user '{}' in local database", user.getLogin());
-                    updateUser(user.getFirstName(), user.getLastName(), user.getEmail(), user.getLangKey(), user.getImageUrl());
-                }
-                // no last updated info, blindly update
-            } else {
-                log.debug("Updating user '{}' in local database", user.getLogin());
-                updateUser(user.getFirstName(), user.getLastName(), user.getEmail(), user.getLangKey(), user.getImageUrl());
-            }
-        } else {
-            log.debug("Saving user '{}' in local database", user.getLogin());
-            userRepository.save(user);
-        }
-        return user;
+    @PreAuthorize("isAuthenticated()")
+    public AdminUserDTO getCurrentUser() {
+        log.debug("Request to get current user information");
+        return SecurityUtils
+            .getCurrentAuthenticationToken()
+            .filter(authenticationToken -> AbstractAuthenticationToken.class.isAssignableFrom(authenticationToken.getClass()))
+            .map(authenticationMono -> ((AbstractAuthenticationToken) authenticationMono))
+            .map(this::getUserFromAuthentication)
+            .orElseThrow(IllegalArgumentException::new);
     }
 
     /**
      * Returns the user from an OAuth 2.0 login or resource server with JWT.
-     * Synchronizes the user in the local repository.
      *
      * @param authToken the authentication token.
      * @return the user from the authentication.
      */
-    @Transactional
-    public AdminUserDTO getUserFromAuthentication(AbstractAuthenticationToken authToken) {
+    private AdminUserDTO getUserFromAuthentication(AbstractAuthenticationToken authToken) {
         Map<String, Object> attributes;
         if (authToken instanceof OAuth2AuthenticationToken) {
             attributes = ((OAuth2AuthenticationToken) authToken).getPrincipal().getAttributes();
@@ -147,26 +58,13 @@ public class UserService {
         } else {
             throw new IllegalArgumentException("AuthenticationToken is not OAuth2 or JWT!");
         }
-        User user = getUser(attributes);
-        user.setAuthorities(
-            authToken
-                .getAuthorities()
-                .stream()
-                .map(GrantedAuthority::getAuthority)
-                .map(
-                    authority -> {
-                        Authority auth = new Authority();
-                        auth.setName(authority);
-                        return auth;
-                    }
-                )
-                .collect(Collectors.toSet())
-        );
-        return new AdminUserDTO(syncUserWithIdP(attributes, user));
+        AdminUserDTO user = getUser(attributes);
+        user.setAuthorities(authToken.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toSet()));
+        return user;
     }
 
-    private static User getUser(Map<String, Object> details) {
-        User user = new User();
+    private static AdminUserDTO getUser(Map<String, Object> details) {
+        AdminUserDTO user = new AdminUserDTO();
         Boolean activated = Boolean.TRUE;
         // handle resource server JWT, where sub claim is email and uid is ID
         if (details.get("uid") != null) {
@@ -216,35 +114,7 @@ public class UserService {
         return user;
     }
 
-    /**
-     * Find possible User by email or login containing.
-     *
-     * @param emailOrLogin partial email or login.
-     * @return list of possible Users.
-     */
-    @Transactional(readOnly = true)
-    public List<UserDTO> findByEmailOrLoginContaining(String emailOrLogin) {
-        log.debug("Request to get all Users by login or email: {}", emailOrLogin);
-        return userRepository
-            .findTop5ByEmailContainingIgnoreCaseOrLoginContainingIgnoreCase(emailOrLogin, emailOrLogin)
-            .stream()
-            .map(UserDTO::new)
-            .collect(Collectors.toList());
-    }
-
-    /**
-     * Find all Users for the given Project.
-     *
-     * @param projectId the id of the project to retrieve users for.
-     * @return the list of entities.
-     */
-    @Transactional(readOnly = true)
-    public List<UserDTO> findAllByProjectId(Long projectId, Sort sort) {
-        log.debug("Request to get all Users for Project {}", projectId);
-        return userRepository
-            .findAllByProjectId(projectId, Sort.by(sort.stream().map(Order::ignoreCase).collect(Collectors.toList())))
-            .stream()
-            .map(UserDTO::new)
-            .collect(Collectors.toList());
+    public AdminUserDTO findUserByLogin(String login) {
+        return userService.findUserByLogin(login).orElseThrow(EntityNotFoundException::new);
     }
 }

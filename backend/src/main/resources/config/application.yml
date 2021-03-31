@@ -185,7 +185,7 @@ info:
 
 jhipster:
   clientApp:
-    name: 'backendApp'
+    name: 'eventPlannerApp'
   # By default CORS is disabled. Uncomment to enable.
   # cors:
   #   allowed-origins: "*"
@@ -224,6 +224,7 @@ kafka:
   producer:
     key.serializer: org.apache.kafka.common.serialization.StringSerializer
     value.serializer: org.apache.kafka.common.serialization.StringSerializer
+
 # ===================================================================
 # Application specific properties
 # Add your own application properties here, see the ApplicationProperties class
@@ -233,4 +234,6 @@ kafka:
 # https://www.jhipster.tech/common-application-properties/
 # ===================================================================
 
-# application:
+application:
+  userService:
+    baseUrl: ${APPL_USER_SERVICE_BASE_URL}

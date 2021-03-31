@@ -2,9 +2,7 @@ package io.github.bbortt.event.planner.backend.service.mapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import io.github.bbortt.event.planner.backend.domain.User;
 import io.github.bbortt.event.planner.backend.service.dto.AdminUserDTO;
-import io.github.bbortt.event.planner.backend.service.dto.UserDTO;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;

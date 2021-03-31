@@ -14,8 +14,6 @@ import io.github.bbortt.event.planner.backend.AbstractApplicationContextAwareIT;
 import io.github.bbortt.event.planner.backend.domain.Event;
 import io.github.bbortt.event.planner.backend.domain.Invitation;
 import io.github.bbortt.event.planner.backend.domain.Section;
-import io.github.bbortt.event.planner.backend.domain.User;
-import io.github.bbortt.event.planner.backend.repository.AuthorityRepository;
 import io.github.bbortt.event.planner.backend.repository.EventRepository;
 import io.github.bbortt.event.planner.backend.repository.RoleRepository;
 import io.github.bbortt.event.planner.backend.security.AuthoritiesConstants;

@@ -65,10 +65,9 @@ public class Invitation extends AbstractAuditingEntity implements Serializable {
     @JsonIgnoreProperties(value = "invitations", allowSetters = true)
     private Project project;
 
-    @ManyToOne
-    @JoinColumn(name = "jhi_user_id", updatable = false)
-    @JsonIgnoreProperties(value = "invitations", allowSetters = true)
-    private User user;
+    @Size(max = 100)
+    @Column(name = "jhi_user_id")
+    private String jhiUserId;
 
     @ManyToOne(optional = false)
     @NotNull
@@ -153,16 +152,16 @@ public class Invitation extends AbstractAuditingEntity implements Serializable {
         return this;
     }
 
-    public User getUser() {
-        return user;
+    public String getJhiUserId() {
+        return jhiUserId;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setJhiUserId(String jhiUserId) {
+        this.jhiUserId = jhiUserId;
     }
 
-    public Invitation user(User user) {
-        this.user = user;
+    public Invitation jhiUserId(String jhiUserId) {
+        this.jhiUserId = jhiUserId;
         return this;
     }
 
@@ -217,7 +216,8 @@ public class Invitation extends AbstractAuditingEntity implements Serializable {
             "id=" + getId() +
             ", email='" + getEmail() + "'" +
             ", accepted='" + isAccepted() + "'" +
-            ", color='" +getColor() + "'" +
+            ", color='" + getColor() + "'" +
+            ", jhiUserId='" + getJhiUserId() + "'" +
             "}";
     }
 }

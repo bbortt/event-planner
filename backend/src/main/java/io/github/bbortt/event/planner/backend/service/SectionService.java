@@ -42,7 +42,7 @@ public class SectionService {
     public Section save(Section section) {
         log.debug("Request to save Section : {}", section);
 
-        if (section.getResponsibility() != null && section.getUser() != null) {
+        if (section.getResponsibility() != null && section.getJhiUserId() != null) {
             log.error("Section does contain responsibility AND user!");
             throw new BadRequestException();
         }

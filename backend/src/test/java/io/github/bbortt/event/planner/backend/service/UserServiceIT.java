@@ -4,8 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import io.github.bbortt.event.planner.backend.AbstractApplicationContextAwareIT;
 import io.github.bbortt.event.planner.backend.config.Constants;
-import io.github.bbortt.event.planner.backend.domain.User;
-import io.github.bbortt.event.planner.backend.repository.UserRepository;
 import io.github.bbortt.event.planner.backend.security.AuthoritiesConstants;
 import io.github.bbortt.event.planner.backend.service.dto.AdminUserDTO;
 import java.util.Collection;

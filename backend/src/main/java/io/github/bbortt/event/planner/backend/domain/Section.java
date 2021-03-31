@@ -58,10 +58,9 @@ public class Section implements Serializable {
     @JsonIgnoreProperties(value = "sections", allowSetters = true)
     private Responsibility responsibility;
 
-    @ManyToOne
-    @JoinColumn(name = "jhi_user_id")
-    @JsonIgnoreProperties(value = "sections", allowSetters = true)
-    private User user;
+    @Size(max = 100)
+    @Column(name = "jhi_user_id")
+    private String jhiUserId;
 
     public Long getId() {
         return id;
@@ -135,16 +134,16 @@ public class Section implements Serializable {
         return this;
     }
 
-    public User getUser() {
-        return user;
+    public String getJhiUserId() {
+        return jhiUserId;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setJhiUserId(String jhiUserId) {
+        this.jhiUserId = jhiUserId;
     }
 
-    public Section user(User user) {
-        this.user = user;
+    public Section jhiUserId(String jhiUserId) {
+        this.jhiUserId = jhiUserId;
         return this;
     }
 
@@ -170,6 +169,7 @@ public class Section implements Serializable {
         return "Section{" +
             "id=" + getId() +
             ", name='" + getName() + "'" +
+            ", jhiUserId='" + getJhiUserId() + "'" +
             "}";
     }
 }

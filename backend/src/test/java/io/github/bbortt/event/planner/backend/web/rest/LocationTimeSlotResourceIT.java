@@ -15,7 +15,6 @@ import io.github.bbortt.event.planner.backend.domain.Invitation;
 import io.github.bbortt.event.planner.backend.domain.Location;
 import io.github.bbortt.event.planner.backend.domain.LocationTimeSlot;
 import io.github.bbortt.event.planner.backend.domain.Project;
-import io.github.bbortt.event.planner.backend.domain.User;
 import io.github.bbortt.event.planner.backend.repository.LocationTimeSlotRepository;
 import io.github.bbortt.event.planner.backend.repository.RoleRepository;
 import io.github.bbortt.event.planner.backend.security.AuthoritiesConstants;

@@ -4,7 +4,6 @@ import static org.mockito.Mockito.doReturn;
 
 import io.github.bbortt.event.planner.backend.domain.Location;
 import io.github.bbortt.event.planner.backend.domain.Responsibility;
-import io.github.bbortt.event.planner.backend.domain.User;
 import io.github.bbortt.event.planner.backend.repository.LocationRepository;
 import io.github.bbortt.event.planner.backend.service.exception.BadRequestException;
 import java.util.Optional;

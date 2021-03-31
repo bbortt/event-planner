@@ -91,6 +91,7 @@ jhipster:
       host: localhost
       port: 5000
       queue-size: 512
+
 # ===================================================================
 # Application specific properties
 # Add your own application properties here, see the ApplicationProperties class
@@ -100,4 +101,6 @@ jhipster:
 # https://www.jhipster.tech/common-application-properties/
 # ===================================================================
 
-# application:
+application:
+  userService:
+    baseUrl: http://localhost:8082

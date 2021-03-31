@@ -59,7 +59,7 @@ spring:
       routes:
         - id: service-user
           predicates:
-            - Path=/api/users/**
+            - Path=/services/users/**
           filters:
             - RewritePath=/api/users/(?<segment>.*), /api/$\{segment}
           uri: http://localhost:8082/api/

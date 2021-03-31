@@ -38,7 +38,7 @@ export class ProjectCreateComponent implements OnInit, OnDestroy {
     description: [null, [Validators.maxLength(300)]],
     startTime: [null, [Validators.required]],
     endTime: [null, [Validators.required]],
-    selectedUser: [null, [Validators.required]],
+    selectedUser: [null],
     selectedUserAutocomplete: [null],
   });
 
@@ -121,12 +121,11 @@ export class ProjectCreateComponent implements OnInit, OnDestroy {
       name: this.editForm.get(['name'])!.value,
       startTime: moment(this.editForm.get(['startTime'])!.value),
       endTime: moment(this.editForm.get(['endTime'])!.value),
-      archived: false,
       description: this.editForm.get(['description'])!.value,
     };
 
     if (this.accountService.hasAnyAuthority(Authority.ADMIN)) {
-      newProject.user = this.editForm.get(['selectedUser'])!.value;
+      newProject.userInformation = this.editForm.get(['selectedUser'])!.value;
     }
 
     return newProject;

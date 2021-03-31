@@ -60,10 +60,9 @@ public class Location implements Serializable {
     @OneToMany(mappedBy = "location")
     private Set<LocationTimeSlot> locationTimeSlots = new HashSet<>();
 
-    @ManyToOne
-    @JoinColumn(name = "jhi_user_id")
-    @JsonIgnoreProperties(value = "location", allowSetters = true)
-    private User user;
+    @Size(max = 100)
+    @Column(name = "jhi_user_id")
+    private String jhiUserId;
 
     public Long getId() {
         return id;
@@ -157,16 +156,16 @@ public class Location implements Serializable {
         return this;
     }
 
-    public User getUser() {
-        return user;
+    public String getJhiUserId() {
+        return jhiUserId;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setJhiUserId(String jhiUserId) {
+        this.jhiUserId = jhiUserId;
     }
 
-    public Location user(User user) {
-        this.user = user;
+    public Location jhiUserId(String jhiUserId) {
+        this.jhiUserId = jhiUserId;
         return this;
     }
 
@@ -192,6 +191,7 @@ public class Location implements Serializable {
         return "Location{" +
             "id=" + getId() +
             ", name='" + getName() + "'" +
+            ", jhiUserId='" + getJhiUserId() + "'" +
             "}";
     }
 }

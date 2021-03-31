@@ -59,10 +59,9 @@ public class Event implements Serializable {
     @JsonIgnoreProperties(value = "events", allowSetters = true)
     private Responsibility responsibility;
 
-    @ManyToOne
-    @JoinColumn(name = "jhi_user_id")
-    @JsonIgnoreProperties(value = "events", allowSetters = true)
-    private User user;
+    @Size(max = 100)
+    @Column(name = "jhi_user_id")
+    private String jhiUserId;
 
     public Long getId() {
         return id;
@@ -150,16 +149,16 @@ public class Event implements Serializable {
         return this;
     }
 
-    public User getUser() {
-        return user;
+    public String getJhiUserId() {
+        return jhiUserId;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setJhiUserId(String jhiUserId) {
+        this.jhiUserId = jhiUserId;
     }
 
-    public Event user(User user) {
-        this.user = user;
+    public Event jhiUserId(String jhiUserId) {
+        this.jhiUserId = jhiUserId;
         return this;
     }
 
@@ -188,6 +187,7 @@ public class Event implements Serializable {
             ", description='" + getDescription() + "'" +
             ", startTime='" + getStartTime() + "'" +
             ", endTime='" + getEndTime() + "'" +
+            ", jhiUserId='" + getJhiUserId() + "'" +
             "}";
     }
 }

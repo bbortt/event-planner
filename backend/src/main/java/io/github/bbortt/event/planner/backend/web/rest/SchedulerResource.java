@@ -3,7 +3,6 @@ package io.github.bbortt.event.planner.backend.web.rest;
 import io.github.bbortt.event.planner.backend.domain.Event;
 import io.github.bbortt.event.planner.backend.domain.Responsibility;
 import io.github.bbortt.event.planner.backend.domain.Section;
-import io.github.bbortt.event.planner.backend.domain.User;
 import io.github.bbortt.event.planner.backend.security.RolesConstants;
 import io.github.bbortt.event.planner.backend.service.InvitationService;
 import io.github.bbortt.event.planner.backend.service.ProjectService;
@@ -126,12 +125,12 @@ public class SchedulerResource {
         if (event.getResponsibility() != null) {
             color = event.getResponsibility().getColor();
             colorGroupId = Responsibility.class.getSimpleName().toLowerCase() + "-" + event.getResponsibility().getId();
-        } else if (event.getUser() != null) {
+        } else if (event.getJhiUserId() != null) {
             color =
-                this.invitationService.findOneByUserIdAndProjectId(event.getUser().getId(), section.getLocation().getProject().getId())
+                this.invitationService.findOneByJhiUserIdAndProjectId(event.getJhiUserId(), section.getLocation().getProject().getId())
                     .orElseThrow(IllegalArgumentException::new)
                     .getColor();
-            colorGroupId = User.class.getSimpleName().toLowerCase() + "-" + event.getUser().getId();
+            colorGroupId = "user-" + event.getJhiUserId();
         }
 
         return new SchedulerColorGroupDTO(colorGroupId, color);
@@ -146,8 +145,8 @@ public class SchedulerResource {
 
         if (event.getResponsibility() != null) {
             colorGroupId = Responsibility.class.getSimpleName().toLowerCase() + "-" + event.getResponsibility().getId();
-        } else if (event.getUser() != null) {
-            colorGroupId = User.class.getSimpleName().toLowerCase() + "-" + event.getUser().getId();
+        } else if (event.getJhiUserId() != null) {
+            colorGroupId = "user-" + event.getJhiUserId();
         }
 
         return new SchedulerEventDTO(

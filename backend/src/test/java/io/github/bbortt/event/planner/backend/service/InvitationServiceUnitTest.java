@@ -4,7 +4,6 @@ import static org.mockito.Mockito.doReturn;
 
 import io.github.bbortt.event.planner.backend.domain.Responsibility;
 import io.github.bbortt.event.planner.backend.repository.InvitationRepository;
-import io.github.bbortt.event.planner.backend.repository.UserRepository;
 import java.util.Optional;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

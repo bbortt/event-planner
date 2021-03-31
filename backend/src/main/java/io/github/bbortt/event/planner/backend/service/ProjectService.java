@@ -2,15 +2,13 @@ package io.github.bbortt.event.planner.backend.service;
 
 import io.github.bbortt.event.planner.backend.domain.Invitation;
 import io.github.bbortt.event.planner.backend.domain.Project;
-import io.github.bbortt.event.planner.backend.domain.User;
 import io.github.bbortt.event.planner.backend.repository.InvitationRepository;
 import io.github.bbortt.event.planner.backend.repository.ProjectRepository;
 import io.github.bbortt.event.planner.backend.repository.RoleRepository;
-import io.github.bbortt.event.planner.backend.repository.UserRepository;
 import io.github.bbortt.event.planner.backend.security.AuthoritiesConstants;
 import io.github.bbortt.event.planner.backend.security.SecurityUtils;
+import io.github.bbortt.event.planner.backend.service.dto.AdminUserDTO;
 import io.github.bbortt.event.planner.backend.service.dto.CreateProjectDTO;
-import io.github.bbortt.event.planner.backend.service.dto.UserDTO;
 import io.github.bbortt.event.planner.backend.service.exception.EntityNotFoundException;
 import io.github.bbortt.event.planner.backend.service.exception.ForbiddenRequestException;
 import io.github.bbortt.event.planner.backend.service.exception.IdMustBePresentException;
@@ -22,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.zalando.problem.Status;
@@ -40,20 +39,20 @@ public class ProjectService {
 
     private final RoleService roleService;
 
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final RoleRepository roleRepository;
     private final ProjectRepository projectRepository;
     private final InvitationRepository invitationRepository;
 
     public ProjectService(
+        UserService userService,
         RoleService roleService,
-        UserRepository userRepository,
         RoleRepository roleRepository,
         ProjectRepository projectRepository,
         InvitationRepository invitationRepository
     ) {
+        this.userService = userService;
         this.roleService = roleService;
-        this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.projectRepository = projectRepository;
         this.invitationRepository = invitationRepository;
@@ -78,10 +77,11 @@ public class ProjectService {
 
         project = projectRepository.save(project);
 
-        User userFromDto = userFromDto(createProjectDTO.getUser());
+        AdminUserDTO userInformation = Optional.ofNullable(createProjectDTO.getUserInformation()).orElseGet(userService::getCurrentUser);
+
         Invitation invitation = new Invitation()
-            .email(userFromDto.getEmail())
-            .user(userFromDto)
+            .jhiUserId(userInformation.getId())
+            .email(userInformation.getEmail())
             .project(project)
             .role(roleRepository.roleAdmin())
             .accepted(true);
@@ -111,6 +111,7 @@ public class ProjectService {
      * @return the list of entities.
      */
     @Transactional(readOnly = true)
+    @PreAuthorize("isAuthenticated()")
     public Page<Project> findMineOrAllByArchived(boolean all, boolean archived, Pageable pageable) {
         if (all) {
             if (!SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.ADMIN)) {
@@ -121,11 +122,10 @@ public class ProjectService {
             return projectRepository.findAllByArchived(archived, pageable);
         }
 
-        String login = SecurityUtils
-            .getCurrentUserLogin()
-            .orElseThrow(() -> new IllegalArgumentException("Cannot find current user login!"));
-        log.debug("Request to get Projects for user {}", login);
-        return projectRepository.findMineByArchived(login, archived, pageable);
+        String jhiUserId = userService.getCurrentUser().getId();
+        log.debug("Request to get Projects for user {}", jhiUserId);
+
+        return projectRepository.findMineByArchived(jhiUserId, archived, pageable);
     }
 
     /**
@@ -190,32 +190,5 @@ public class ProjectService {
         }
 
         return roleService.hasAnyRoleInProject(projectRepository.findById(projectId).orElseThrow(EntityNotFoundException::new), roles);
-    }
-
-    /**
-     * Read existing user from {@code UserDTO} or security context.
-     *
-     * @param userDTO the {@code UserDTO}.
-     * @return the creator of the project.
-     */
-    private User userFromDto(UserDTO userDTO) {
-        OptionalUserHolder optionalUserHolder = new OptionalUserHolder();
-
-        Optional<String> userIdFromDTO = Optional.ofNullable(userDTO.getId());
-        userIdFromDTO.ifPresent(userId -> optionalUserHolder.optionalUser = userRepository.findById(userId));
-
-        if (optionalUserHolder.optionalUser.isEmpty()) {
-            Optional<String> currentUserLogin = SecurityUtils.getCurrentUserLogin();
-            currentUserLogin.ifPresent(userLogin -> optionalUserHolder.optionalUser = userRepository.findOneByLogin(userLogin));
-        }
-
-        return optionalUserHolder.optionalUser.orElseThrow(() -> new IllegalArgumentException("Cannot assign user! No login available!"));
-    }
-
-    private class OptionalUserHolder {
-
-        Optional<User> optionalUser = Optional.empty();
-
-        OptionalUserHolder() {}
     }
 }

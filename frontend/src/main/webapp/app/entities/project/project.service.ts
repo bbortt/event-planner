@@ -25,7 +25,7 @@ export class ProjectService {
   create(project: ICreateProject): Observable<EntityResponseType> {
     const copy = this.convertDateFromClient(project);
     return this.http
-      .post<ICreateProject>(this.resourceUrl, copy, { observe: 'response' })
+      .post<Project>(this.resourceUrl, copy, { observe: 'response' })
       .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
   }
 
@@ -57,8 +57,12 @@ export class ProjectService {
     return this.http.put(`${this.resourceUrl}/${id}/archive`, {}, { observe: 'response' });
   }
 
-  protected convertDateFromClient(project: Project): Project {
-    const copy: Project = Object.assign({}, project, {
+  myRolePerProject(): Observable<Map<number, string>> {
+    return this.http.get<Map<number, string>>(`${this.resourceUrl}/myRoles`);
+  }
+
+  protected convertDateFromClient(project: Project | ICreateProject): Project | ICreateProject {
+    const copy: Project | ICreateProject = Object.assign({}, project, {
       startTime: project.startTime.isValid() ? project.startTime.toJSON() : undefined,
       endTime: project.endTime.isValid() ? project.endTime.toJSON() : undefined,
     });

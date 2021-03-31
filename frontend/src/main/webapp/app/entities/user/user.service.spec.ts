@@ -48,58 +48,6 @@ describe('Service Tests', () => {
         });
         expect(expectedResult).toEqual(500);
       });
-
-      describe('addUserToCollectionIfMissing', () => {
-        it('should add a User to an empty array', () => {
-          const user: IUser = { id: 'ABC' };
-          expectedResult = service.addUserToCollectionIfMissing([], user);
-          expect(expectedResult).toHaveLength(1);
-          expect(expectedResult).toContain(user);
-        });
-
-        it('should not add a User to an array that contains it', () => {
-          const user: IUser = { id: 'ABC' };
-          const userCollection: IUser[] = [
-            {
-              ...user,
-            },
-            { id: 'CBA' },
-          ];
-          expectedResult = service.addUserToCollectionIfMissing(userCollection, user);
-          expect(expectedResult).toHaveLength(2);
-        });
-
-        it("should add a User to an array that doesn't contain it", () => {
-          const user: IUser = { id: 'ABC' };
-          const userCollection: IUser[] = [{ id: 'CBA' }];
-          expectedResult = service.addUserToCollectionIfMissing(userCollection, user);
-          expect(expectedResult).toHaveLength(2);
-          expect(expectedResult).toContain(user);
-        });
-
-        it('should add only unique User to an array', () => {
-          const userArray: IUser[] = [{ id: 'ABC' }, { id: 'CBA' }, { id: 'RSS' }];
-          const userCollection: IUser[] = [{ id: 'CBA' }];
-          expectedResult = service.addUserToCollectionIfMissing(userCollection, ...userArray);
-          expect(expectedResult).toHaveLength(3);
-        });
-
-        it('should accept varargs', () => {
-          const user: IUser = { id: 'ABC' };
-          const user2: IUser = { id: 'CBA' };
-          expectedResult = service.addUserToCollectionIfMissing([], user, user2);
-          expect(expectedResult).toHaveLength(2);
-          expect(expectedResult).toContain(user);
-          expect(expectedResult).toContain(user2);
-        });
-
-        it('should accept null and undefined values', () => {
-          const user: IUser = { id: 'ABC' };
-          expectedResult = service.addUserToCollectionIfMissing([], null, user, undefined);
-          expect(expectedResult).toHaveLength(1);
-          expect(expectedResult).toContain(user);
-        });
-      });
     });
   });
 });

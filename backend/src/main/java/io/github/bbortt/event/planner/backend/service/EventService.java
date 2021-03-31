@@ -44,7 +44,7 @@ public class EventService {
     public Event save(Event event) {
         log.debug("Request to save Event : {}", event);
 
-        if (event.getResponsibility() != null && event.getUser() != null) {
+        if (event.getResponsibility() != null && event.getJhiUserId() != null) {
             log.error("Event does contain responsibility AND user!");
             throw new BadRequestException();
         }
