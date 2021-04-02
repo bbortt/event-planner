@@ -23,12 +23,16 @@ import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.test.context.TestSecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,12 +58,6 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
     private static final ZonedDateTime UPDATED_END_TIME = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private AuthorityRepository authorityRepository;
-
-    @Autowired
     private RoleRepository roleRepository;
 
     @Autowired
@@ -77,7 +75,7 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
     @Autowired
     private MockMvc restProjectMockMvc;
 
-    private User user;
+    private Map<String, Object> userDetails;
     private Project project;
 
     /**
@@ -110,13 +108,10 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
 
     @BeforeEach
     void initTest() {
+        userDetails = new HashMap<>();
+        userDetails.put("sub", TEST_USER_LOGIN);
+
         project = createEntity(em);
-
-        user = UserResourceIT.createEntity(em);
-        user.setLogin(TEST_USER_LOGIN);
-        user.setAuthorities(Collections.singleton(authorityRepository.findById(AuthoritiesConstants.USER).get()));
-        em.persist(user);
-
         em.flush();
     }
 
@@ -124,9 +119,11 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
     @Transactional
     @WithMockUser(TEST_USER_LOGIN)
     void createProject() throws Exception {
-        projectRepository.deleteAll();
+        userDetails.put("email", TEST_USER_LOGIN + "@localhost");
+        OAuth2AuthenticationToken authentication = TestUtil.createMockOAuth2AuthenticationToken(userDetails);
+        TestSecurityContextHolder.setAuthentication(authentication);
 
-        User user = userRepository.save(UserResourceIT.createEntity(em));
+        projectRepository.deleteAll();
 
         // Create the Project
         CreateProjectDTO createProjectDTO = new CreateProjectDTO();
@@ -134,10 +131,6 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
         createProjectDTO.setDescription(project.getDescription());
         createProjectDTO.setStartTime(project.getStartTime());
         createProjectDTO.setEndTime(project.getEndTime());
-
-        UserDTO userDTO = new UserDTO();
-        userDTO.setId(user.getId());
-        createProjectDTO.setUser(userDTO);
 
         restProjectMockMvc
             .perform(
@@ -225,7 +218,7 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
             .createEntity(em)
             .accepted(Boolean.TRUE)
             .project(project)
-            .user(user)
+            .jhiUserId(TEST_USER_LOGIN)
             .role(roleRepository.roleContributor());
         em.persist(invitation);
 
@@ -243,15 +236,17 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void getMyProject() throws Exception {
+        OAuth2AuthenticationToken authentication = TestUtil.createMockOAuth2AuthenticationToken(userDetails);
+        TestSecurityContextHolder.setAuthentication(authentication);
+
         // Initialize the database
         projectRepository.saveAndFlush(project);
         Invitation invitation = InvitationResourceIT
             .createEntity(em)
             .accepted(Boolean.TRUE)
             .project(project)
-            .user(user)
+            .jhiUserId(TEST_USER_LOGIN)
             .role(roleRepository.roleContributor());
         em.persist(invitation);
 
@@ -282,8 +277,10 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void getArchivedProjects() throws Exception {
+        OAuth2AuthenticationToken authentication = TestUtil.createMockOAuth2AuthenticationToken(userDetails);
+        TestSecurityContextHolder.setAuthentication(authentication);
+
         // Initialize the database
         Project archivedProject = createEntity(em).archived(Boolean.TRUE);
         projectRepository.saveAndFlush(archivedProject);
@@ -291,7 +288,7 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
             .createEntity(em)
             .accepted(Boolean.TRUE)
             .project(archivedProject)
-            .user(user)
+            .jhiUserId(TEST_USER_LOGIN)
             .role(roleRepository.roleContributor());
         em.persist(invitation1);
 
@@ -301,7 +298,7 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
             .createEntity(em)
             .accepted(Boolean.TRUE)
             .project(activeProject)
-            .user(user)
+            .jhiUserId(TEST_USER_LOGIN)
             .role(roleRepository.roleContributor());
         em.persist(invitation2);
 
@@ -348,7 +345,7 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
             .createEntity(em)
             .accepted(Boolean.TRUE)
             .project(project)
-            .user(user)
+            .jhiUserId(TEST_USER_LOGIN)
             .role(roleRepository.roleAdmin());
         em.persist(invitation);
 
@@ -400,7 +397,7 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
             .createEntity(em)
             .accepted(Boolean.TRUE)
             .project(project)
-            .user(user)
+            .jhiUserId(TEST_USER_LOGIN)
             .role(roleRepository.roleContributor());
         em.persist(invitation);
 
@@ -423,7 +420,7 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
             .createEntity(em)
             .accepted(Boolean.TRUE)
             .project(project)
-            .user(user)
+            .jhiUserId(TEST_USER_LOGIN)
             .role(roleRepository.roleAdmin());
         em.persist(invitation);
 
@@ -448,7 +445,7 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
             .createEntity(em)
             .accepted(Boolean.TRUE)
             .project(project)
-            .user(user)
+            .jhiUserId(TEST_USER_LOGIN)
             .role(roleRepository.roleSecretary());
         em.persist(invitation);
 
@@ -471,7 +468,7 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
             .createEntity(em)
             .accepted(Boolean.TRUE)
             .project(project)
-            .user(user)
+            .jhiUserId(TEST_USER_LOGIN)
             .role(roleRepository.roleAdmin());
         em.persist(invitation);
 
@@ -497,7 +494,7 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
             .createEntity(em)
             .accepted(Boolean.TRUE)
             .project(project)
-            .user(user)
+            .jhiUserId(TEST_USER_LOGIN)
             .role(roleRepository.roleSecretary());
         em.persist(invitation);
 

@@ -103,4 +103,6 @@ kafka:
 # https://www.jhipster.tech/common-application-properties/
 # ===================================================================
 
-# application:
+application:
+  userService:
+    baseUrl: http://DO_NOT_CALL:8080

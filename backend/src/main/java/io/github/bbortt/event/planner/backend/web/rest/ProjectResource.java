@@ -124,9 +124,9 @@ public class ProjectResource {
      *
      * @return the list of role per projects in body.
      */
-    @GetMapping("/projects/myRoles")
+    @GetMapping("/projects/rolePerProject")
     @PreAuthorize("isAuthenticated()")
-    public Map<Long, String> myRolePerProject() {
+    public Map<Long, String> getRolePerProject() {
         log.debug("REST request to get Roles per Project");
         return invitationService
             .findMine()

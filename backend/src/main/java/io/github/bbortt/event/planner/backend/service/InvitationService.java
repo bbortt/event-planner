@@ -114,19 +114,7 @@ public class InvitationService {
     @PreAuthorize("isAuthenticated()")
     public void assignCurrentUserToInvitation(String token) {
         log.debug("Request to accept invitation for current user by token : {}", token);
-        String login = SecurityUtils.getCurrentUserLogin().orElseThrow(IllegalArgumentException::new);
-        assignUserByLoginToInvitation(login, token);
-    }
-
-    /**
-     * Accept the invitation identified by the given token, assign the user identified by `login`.
-     *
-     * @param login the user login.
-     * @param token the invitation token.
-     */
-    @Transactional
-    public void assignUserByLoginToInvitation(String login, String token) {
-        log.debug("Request to accept invitation for user '{}' by token : {}", login, token);
+        String login = userService.getCurrentUser().getLogin();
         invitationRepository.assignUserToInvitation(userService.findUserByLogin(login).getId(), token);
     }
 

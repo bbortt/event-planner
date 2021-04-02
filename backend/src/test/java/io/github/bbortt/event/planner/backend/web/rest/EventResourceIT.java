@@ -68,9 +68,6 @@ class EventResourceIT extends AbstractApplicationContextAwareIT {
     private EventService eventService;
 
     @Autowired
-    private AuthorityRepository authorityRepository;
-
-    @Autowired
     private RoleRepository roleRepository;
 
     @Autowired
@@ -135,16 +132,11 @@ class EventResourceIT extends AbstractApplicationContextAwareIT {
     void initTest() {
         event = createEntity(em);
 
-        User user = UserResourceIT.createEntity(em);
-        user.setLogin(TEST_USER_LOGIN);
-        user.setAuthorities(Collections.singleton(authorityRepository.findById(AuthoritiesConstants.USER).get()));
-        em.persist(user);
-
         Invitation invitation = InvitationResourceIT
             .createEntity(em)
             .accepted(Boolean.TRUE)
             .project(event.getSection().getLocation().getProject())
-            .user(user)
+            .jhiUserId(TEST_USER_LOGIN)
             .role(roleRepository.roleContributor());
         em.persist(invitation);
 

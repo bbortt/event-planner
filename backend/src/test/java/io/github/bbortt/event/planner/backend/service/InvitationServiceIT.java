@@ -33,12 +33,6 @@ class InvitationServiceIT extends AbstractApplicationContextAwareIT {
 
     @BeforeEach
     void initTest() {
-        User user1 = UserResourceIT.createEntity(entityManager);
-        user1.setId(USER_LOGIN);
-        user1.setLogin(USER_LOGIN);
-        user1.setEmail(USER_LOGIN + "@localhost");
-        entityManager.persist(user1);
-
         Project project1 = ProjectResourceIT.createEntity(entityManager);
         project1.setName("InvitationServiceIT-project-1");
         entityManager.persist(project1);
@@ -47,13 +41,13 @@ class InvitationServiceIT extends AbstractApplicationContextAwareIT {
         entityManager.persist(project2);
 
         Invitation invitation1 = InvitationResourceIT.createEntity(entityManager);
-        invitation1.setUser(user1);
+        invitation1.jhiUserId(USER_LOGIN);
         invitation1.setEmail("email-invitation-1@localhost");
         invitation1.setProject(project1);
         invitation1.setToken("11bb6dab-cb44-4495-a312-d8cefd2a309f");
         entityManager.persist(invitation1);
         obsoletInvitation = InvitationResourceIT.createEntity(entityManager);
-        obsoletInvitation.setUser(user1);
+        obsoletInvitation.jhiUserId(USER_LOGIN);
         obsoletInvitation.setEmail("email-invitation-2@localhost");
         obsoletInvitation.setProject(project2);
         obsoletInvitation.setToken("cab99a71-7064-4314-9699-e820745bc01f");

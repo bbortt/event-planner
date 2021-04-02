@@ -51,18 +51,12 @@ class SchedulerResourceIT extends AbstractApplicationContextAwareIT {
 
     @BeforeEach
     void initTest() {
-        User user = UserResourceIT.createEntity(entityManager);
-        user.setId(TEST_USER_LOGIN);
-        user.setLogin(TEST_USER_LOGIN);
-        user.setEmail(TEST_USER_LOGIN + "@localhost");
-        entityManager.persist(user);
-
         project = ProjectResourceIT.createEntity(entityManager);
         project.setName("RoleRepositoryIT-project-1");
         entityManager.persist(project);
 
         Invitation invitation = InvitationResourceIT.createEntity(entityManager);
-        invitation.setUser(user);
+        invitation.jhiUserId(TEST_USER_LOGIN);
         invitation.setEmail("email-invitation-1@localhost");
         invitation.setProject(project);
         invitation.setAccepted(Boolean.TRUE);
@@ -89,7 +83,7 @@ class SchedulerResourceIT extends AbstractApplicationContextAwareIT {
 
         Event event2 = EventResourceIT.createEntity(entityManager);
         event2.setName("SchedulerResourceIT-event-1");
-        event2.setUser(user);
+        event2.jhiUserId(TEST_USER_LOGIN);
         event2.setSection(section);
         entityManager.persist(event2);
     }

@@ -47,9 +47,6 @@ class LocationResourceIT extends AbstractApplicationContextAwareIT {
     private LocationService locationService;
 
     @Autowired
-    private AuthorityRepository authorityRepository;
-
-    @Autowired
     private RoleRepository roleRepository;
 
     @Autowired
@@ -58,7 +55,6 @@ class LocationResourceIT extends AbstractApplicationContextAwareIT {
     @Autowired
     private MockMvc restLocationMockMvc;
 
-    private User user;
     private Location location;
     private Invitation invitation;
 
@@ -106,17 +102,12 @@ class LocationResourceIT extends AbstractApplicationContextAwareIT {
     void initTest() {
         location = createEntity(em);
 
-        user = UserResourceIT.createEntity(em);
-        user.setLogin(TEST_USER_LOGIN);
-        user.setAuthorities(Collections.singleton(authorityRepository.findById(AuthoritiesConstants.USER).get()));
-        em.persist(user);
-
         invitation =
             InvitationResourceIT
                 .createEntity(em)
                 .accepted(Boolean.TRUE)
                 .project(location.getProject())
-                .user(user)
+                .jhiUserId(TEST_USER_LOGIN)
                 .role(roleRepository.roleContributor());
 
         em.flush();
@@ -262,7 +253,7 @@ class LocationResourceIT extends AbstractApplicationContextAwareIT {
             .createEntity(em)
             .accepted(Boolean.TRUE)
             .project(project)
-            .user(user)
+            .jhiUserId(TEST_USER_LOGIN)
             .role(roleRepository.roleContributor());
         em.persist(invitation);
 

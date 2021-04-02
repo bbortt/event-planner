@@ -3,6 +3,7 @@ package io.github.bbortt.event.planner.backend.web.rest;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasItems;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -12,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import io.github.bbortt.event.planner.backend.AbstractApplicationContextAwareIT;
+import io.github.bbortt.event.planner.backend.client.UserServiceFeignClient;
 import io.github.bbortt.event.planner.backend.domain.Invitation;
 import io.github.bbortt.event.planner.backend.domain.Project;
 import io.github.bbortt.event.planner.backend.domain.Role;
@@ -19,12 +21,19 @@ import io.github.bbortt.event.planner.backend.repository.InvitationRepository;
 import io.github.bbortt.event.planner.backend.repository.RoleRepository;
 import io.github.bbortt.event.planner.backend.security.AuthoritiesConstants;
 import io.github.bbortt.event.planner.backend.service.InvitationService;
+import io.github.bbortt.event.planner.backend.service.dto.AdminUserDTO;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.test.context.TestSecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,6 +54,9 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
     private static final Boolean DEFAULT_ACCEPTED = false;
     private static final Boolean UPDATED_ACCEPTED = true;
 
+    @MockBean
+    private UserServiceFeignClient userServiceClientMock;
+
     @Autowired
     private InvitationRepository invitationRepository;
 
@@ -60,7 +72,7 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
     @Autowired
     private MockMvc restInvitationMockMvc;
 
-    private User testUser;
+    private Map<String, Object> userDetails;
     private Invitation invitation;
     private Invitation userInvitation;
 
@@ -127,25 +139,19 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
 
     @BeforeEach
     void initTest() {
+        userDetails = new HashMap<>();
+        userDetails.put("sub", TEST_USER_LOGIN);
+        userDetails.put("email", TEST_USER_EMAIL);
+
         invitation = createEntity(em);
-
-        testUser = UserResourceIT.createEntity(em);
-        testUser.setLogin(TEST_USER_LOGIN);
-        testUser.setEmail(TEST_USER_EMAIL);
-        invitation.user(testUser).email(TEST_USER_EMAIL);
-        em.persist(testUser);
-
-        User adminUser = UserResourceIT.createEntity(em);
-        adminUser.setLogin(TEST_ADMIN_LOGIN);
-        adminUser.setEmail(TEST_ADMIN_EMAIL);
-        em.persist(adminUser);
+        invitation.jhiUserId(TEST_USER_LOGIN).email(TEST_USER_EMAIL);
 
         userInvitation =
             InvitationResourceIT
                 .createEntity(em)
                 .accepted(Boolean.TRUE)
                 .project(invitation.getProject())
-                .user(adminUser)
+                .jhiUserId(TEST_ADMIN_LOGIN)
                 .email(TEST_ADMIN_EMAIL)
                 .role(roleRepository.roleContributor());
         em.persist(userInvitation);
@@ -442,8 +448,14 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void acceptInvitationForCurrentUser() throws Exception {
+        OAuth2AuthenticationToken authentication = TestUtil.createMockOAuth2AuthenticationToken(userDetails);
+        TestSecurityContextHolder.setAuthentication(authentication);
+
+        AdminUserDTO userDTO = new AdminUserDTO();
+        userDTO.setId(TEST_USER_LOGIN);
+        when(userServiceClientMock.findUserByLogin(TEST_USER_LOGIN)).thenReturn(Optional.of(userDTO));
+
         final String token = "810b88eb-4d1b-430b-905c-ad5a387bca3b";
 
         invitation.token(token);
@@ -455,36 +467,5 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
 
         assertThat(invitation).hasFieldOrPropertyWithValue("token", null);
         assertThat(invitation).hasFieldOrPropertyWithValue("accepted", Boolean.TRUE);
-    }
-
-    @Test
-    @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
-    void acceptInvitationRightAfterRegistration() throws Exception {
-        final String token = "78024294-baf7-414f-9b12-d86c9983a71d";
-
-        invitation.token(token);
-        em.persist(invitation);
-
-        restInvitationMockMvc.perform(post("/api/invitations/accept/" + testUser.getLogin()).content(token)).andExpect(status().isOk());
-
-        em.refresh(invitation);
-
-        assertThat(invitation).hasFieldOrPropertyWithValue("token", null);
-        assertThat(invitation).hasFieldOrPropertyWithValue("accepted", Boolean.TRUE);
-    }
-
-    @Test
-    @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
-    void acceptInvitationRightAfterRegistrationWithInvalidUsername() throws Exception {
-        final String token = "78024294-baf7-414f-9b12-d86c9983a71d";
-
-        invitation.token(token);
-        em.persist(invitation);
-
-        restInvitationMockMvc
-            .perform(post("/api/invitations/accept/InvalidLoginName").content(token))
-            .andExpect(status().isInternalServerError());
     }
 }

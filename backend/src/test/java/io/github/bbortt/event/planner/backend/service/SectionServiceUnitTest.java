@@ -36,13 +36,13 @@ class SectionServiceUnitTest {
 
     @Test
     void saveDoesAcceptEitherResponsibilityOrUser() {
-        Section sectionWithUser = new Section().user(new User());
+        Section sectionWithUser = new Section().jhiUserId("test-jhi-user-id");
         fixture.save(sectionWithUser);
 
         Section sectionWithResponsibility = new Section().responsibility(new Responsibility());
         fixture.save(sectionWithResponsibility);
 
-        Section invalidSection = new Section().user(new User()).responsibility(new Responsibility());
+        Section invalidSection = new Section().jhiUserId("test-jhi-user-id").responsibility(new Responsibility());
 
         Assertions.assertThatThrownBy(() -> fixture.save(invalidSection)).isInstanceOf(BadRequestException.class);
     }

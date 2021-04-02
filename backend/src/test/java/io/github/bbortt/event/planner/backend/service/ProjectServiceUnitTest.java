@@ -10,11 +10,13 @@ import io.github.bbortt.event.planner.backend.repository.InvitationRepository;
 import io.github.bbortt.event.planner.backend.repository.ProjectRepository;
 import io.github.bbortt.event.planner.backend.repository.RoleRepository;
 import io.github.bbortt.event.planner.backend.security.AuthoritiesConstants;
+import io.github.bbortt.event.planner.backend.service.dto.AdminUserDTO;
 import io.github.bbortt.event.planner.backend.service.dto.CreateProjectDTO;
 import io.github.bbortt.event.planner.backend.service.exception.ForbiddenRequestException;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
+import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,10 +41,10 @@ class ProjectServiceUnitTest {
     Authentication authenticationMock;
 
     @Mock
-    RoleService roleServiceMock;
+    UserService userServiceMock;
 
     @Mock
-    UserRepository userRepositoryMock;
+    RoleService roleServiceMock;
 
     @Mock
     RoleRepository roleRepositoryMock;
@@ -53,19 +55,23 @@ class ProjectServiceUnitTest {
     @Mock
     InvitationRepository invitationRepositoryMock;
 
+    AdminUserDTO adminUserDTO;
+
     ProjectService fixture;
 
     @BeforeEach
     void beforeTestSetup() {
         TestSecurityContextHolder.setAuthentication(authenticationMock);
 
-        fixture =
-            new ProjectService(roleServiceMock, userRepositoryMock, roleRepositoryMock, projectRepositoryMock, invitationRepositoryMock);
+        adminUserDTO = new AdminUserDTO();
+
+        fixture = new ProjectService(userServiceMock, roleServiceMock, roleRepositoryMock, projectRepositoryMock, invitationRepositoryMock);
     }
 
     @Test
     void findMineOrAllByArchivedDoesLoadMine() {
-        doReturn(MOCK_USER_LOGIN).when(authenticationMock).getPrincipal();
+        adminUserDTO.setId(MOCK_USER_LOGIN);
+        doReturn(adminUserDTO).when(userServiceMock).getCurrentUser();
 
         Pageable pageable = Pageable.unpaged();
 

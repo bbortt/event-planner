@@ -47,9 +47,6 @@ class SectionResourceIT extends AbstractApplicationContextAwareIT {
     private SectionService sectionService;
 
     @Autowired
-    private AuthorityRepository authorityRepository;
-
-    @Autowired
     private RoleRepository roleRepository;
 
     @Autowired
@@ -105,17 +102,12 @@ class SectionResourceIT extends AbstractApplicationContextAwareIT {
     void initTest() {
         section = createEntity(em);
 
-        User user = UserResourceIT.createEntity(em);
-        user.setLogin(TEST_USER_LOGIN);
-        user.setAuthorities(Collections.singleton(authorityRepository.findById(AuthoritiesConstants.USER).get()));
-        em.persist(user);
-
         invitation =
             InvitationResourceIT
                 .createEntity(em)
                 .accepted(Boolean.TRUE)
                 .project(section.getLocation().getProject())
-                .user(user)
+                .jhiUserId(TEST_USER_LOGIN)
                 .role(roleRepository.roleContributor());
 
         em.flush();

@@ -6,10 +6,14 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import io.github.bbortt.event.planner.backend.security.AuthoritiesConstants;
 import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeParseException;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -20,6 +24,12 @@ import org.hamcrest.TypeSafeDiagnosingMatcher;
 import org.springframework.format.datetime.standard.DateTimeFormatterRegistrar;
 import org.springframework.format.support.DefaultFormattingConversionService;
 import org.springframework.format.support.FormattingConversionService;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 /**
  * Utility class for testing REST controllers.
@@ -150,5 +160,24 @@ public final class TestUtil {
         public void describeTo(Description description) {
             description.appendText("a String representing the same ZonedDateTime as ").appendValue(date);
         }
+    }
+
+    /**
+     * Create {@code OAuth2AuthenticationToken} to inject into the {@code TestSecurityContext}.
+     *
+     * @param userDetails The user details to inject
+     * @return A valid authentication token
+     */
+    public static OAuth2AuthenticationToken createMockOAuth2AuthenticationToken(Map<String, Object> userDetails) {
+        Collection<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(AuthoritiesConstants.ANONYMOUS));
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+            "anonymous",
+            "anonymous",
+            authorities
+        );
+        usernamePasswordAuthenticationToken.setDetails(userDetails);
+        OAuth2User user = new DefaultOAuth2User(authorities, userDetails, "sub");
+
+        return new OAuth2AuthenticationToken(user, authorities, "oidc");
     }
 }

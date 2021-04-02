@@ -101,7 +101,7 @@ export class AccountService {
   private fetch(): Observable<Account> {
     return forkJoin({
       account: this.http.get<Account>(this.applicationConfigService.getEndpointFor('api/account')),
-      rolePerProject: this.projectService.myRolePerProject(),
+      rolePerProject: this.projectService.getRolePerProject(),
     }).pipe(
       map(({ account, rolePerProject }: { account: Account; rolePerProject: Map<number, string> }) => {
         account.rolePerProject = new Map(Object.entries(rolePerProject));

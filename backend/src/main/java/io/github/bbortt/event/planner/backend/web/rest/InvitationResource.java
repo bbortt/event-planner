@@ -183,12 +183,6 @@ public class InvitationResource {
         invitationService.assignCurrentUserToInvitation(token);
     }
 
-    @PostMapping("/invitations/accept/{login}")
-    public void assignUserByLoginToInvitation(@NotEmpty @RequestBody String token, @NotEmpty @PathVariable String login) {
-        log.debug("REST request to accept invitation for user '{}' by token : {}", login, token);
-        invitationService.assignUserByLoginToInvitation(login, token);
-    }
-
     @PostMapping("/invitations/token-validity")
     public boolean checkTokenValidity(@NotEmpty @RequestBody String token) {
         log.debug("REST request to check token validity : {}", token);

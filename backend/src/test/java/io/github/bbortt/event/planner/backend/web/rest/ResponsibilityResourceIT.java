@@ -50,9 +50,6 @@ class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT {
     private ResponsibilityService responsibilityService;
 
     @Autowired
-    private AuthorityRepository authorityRepository;
-
-    @Autowired
     private RoleRepository roleRepository;
 
     @Autowired
@@ -63,9 +60,6 @@ class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT {
 
     @Autowired
     private MockMvc restResponsibilityMockMvc;
-
-    @Autowired
-    private UserRepository userRepository;
 
     private Responsibility responsibility;
     private Invitation invitation;
@@ -114,17 +108,12 @@ class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT {
     void initTest() {
         responsibility = createEntity(em);
 
-        User user = UserResourceIT.createEntity(em);
-        user.setLogin(TEST_USER_LOGIN);
-        user.setAuthorities(Collections.singleton(authorityRepository.findById(AuthoritiesConstants.USER).get()));
-        em.persist(user);
-
         invitation =
             InvitationResourceIT
                 .createEntity(em)
                 .accepted(Boolean.TRUE)
                 .project(responsibility.getProject())
-                .user(user)
+                .jhiUserId(TEST_USER_LOGIN)
                 .role(roleRepository.roleContributor());
 
         em.flush();
@@ -407,14 +396,21 @@ class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT {
         Project project1 = projectRepository.saveAndFlush(ProjectResourceIT.createEntity(em));
         Project project2 = projectRepository.saveAndFlush(ProjectResourceIT.createEntity(em));
 
-        User user = userRepository
-            .findOneByLogin(TEST_USER_LOGIN)
-            .orElseThrow(() -> new EntityNotFoundException("User with login " + TEST_USER_LOGIN + " not found"));
         em.persist(
-            InvitationResourceIT.createEntity(em).accepted(Boolean.TRUE).project(project1).user(user).role(roleRepository.roleContributor())
+            InvitationResourceIT
+                .createEntity(em)
+                .accepted(Boolean.TRUE)
+                .project(project1)
+                .jhiUserId(TEST_USER_LOGIN)
+                .role(roleRepository.roleContributor())
         );
         em.persist(
-            InvitationResourceIT.createEntity(em).accepted(Boolean.TRUE).project(project2).user(user).role(roleRepository.roleContributor())
+            InvitationResourceIT
+                .createEntity(em)
+                .accepted(Boolean.TRUE)
+                .project(project2)
+                .jhiUserId(TEST_USER_LOGIN)
+                .role(roleRepository.roleContributor())
         );
         em.flush();
 

@@ -33,13 +33,13 @@ class EventServiceUnitTest {
 
     @Test
     void saveDoesAcceptEitherResponsibilityOrUser() {
-        Event eventWithUser = new Event().user(new User());
+        Event eventWithUser = new Event().jhiUserId("test-jhi-user-id");
         fixture.save(eventWithUser);
 
         Event eventWithResponsibility = new Event().responsibility(new Responsibility());
         fixture.save(eventWithResponsibility);
 
-        Event invalidEvent = new Event().user(new User()).responsibility(new Responsibility());
+        Event invalidEvent = new Event().jhiUserId("test-jhi-user-id").responsibility(new Responsibility());
 
         Assertions.assertThatThrownBy(() -> fixture.save(invalidEvent)).isInstanceOf(BadRequestException.class);
     }

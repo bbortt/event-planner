@@ -2,17 +2,21 @@ jest.mock('@angular/router');
 jest.mock('@ngx-translate/core');
 jest.mock('app/core/auth/state-storage.service');
 
-import { Router } from '@angular/router';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+
+import { Router } from '@angular/router';
+
 import { TranslateService } from '@ngx-translate/core';
 import { NgxWebstorageModule } from 'ngx-webstorage';
 
-import { Account } from 'app/core/auth/account.model';
-import { Authority } from 'app/config/authority.constants';
+import { AccountService } from './account.service';
+import { ProjectService } from 'app/entities/project/project.service';
 import { StateStorageService } from 'app/core/auth/state-storage.service';
 
-import { AccountService } from './account.service';
+import { Account } from 'app/core/auth/account.model';
+
+import { Authority } from 'app/config/authority.constants';
 
 function accountWithAuthorities(authorities: string[]): Account {
   return {
@@ -38,7 +42,7 @@ describe('Service Tests', () => {
     beforeEach(() => {
       TestBed.configureTestingModule({
         imports: [HttpClientTestingModule, NgxWebstorageModule.forRoot()],
-        providers: [TranslateService, StateStorageService, Router],
+        providers: [TranslateService, StateStorageService, Router, ProjectService],
       });
 
       service = TestBed.inject(AccountService);
@@ -84,7 +88,8 @@ describe('Service Tests', () => {
       it('should call /account only once if not logged out after first authentication and should call /account again if user has logged out', () => {
         // Given the user is authenticated
         service.identity().subscribe();
-        httpMock.expectOne({ method: 'GET' }).flush({});
+        httpMock.expectOne({ method: 'GET', url: 'api/account' }).flush({});
+        httpMock.expectOne({ method: 'GET', url: 'api/projects/rolePerProject' }).flush({});
 
         // When I call
         service.identity().subscribe();
@@ -98,7 +103,8 @@ describe('Service Tests', () => {
         service.identity().subscribe();
 
         // Then there is a new request
-        httpMock.expectOne({ method: 'GET' });
+        httpMock.expectOne({ method: 'GET', url: 'api/account' });
+        httpMock.expectOne({ method: 'GET', url: 'api/projects/rolePerProject' });
       });
 
       describe('navigateToStoredUrl', () => {
@@ -108,7 +114,8 @@ describe('Service Tests', () => {
 
           // WHEN
           service.identity().subscribe();
-          httpMock.expectOne({ method: 'GET' }).flush({});
+          httpMock.expectOne({ method: 'GET', url: 'api/account' }).flush({});
+          httpMock.expectOne({ method: 'GET', url: 'api/projects/rolePerProject' }).flush({});
 
           // THEN
           expect(mockStorageService.getUrl).toHaveBeenCalledTimes(1);
@@ -119,7 +126,20 @@ describe('Service Tests', () => {
         it('should not navigate to the previous stored url when authentication fails', () => {
           // WHEN
           service.identity().subscribe();
-          httpMock.expectOne({ method: 'GET' }).error(new ErrorEvent(''));
+          httpMock.expectOne({ method: 'GET', url: 'api/account' }).error(new ErrorEvent(''));
+          httpMock.expectOne({ method: 'GET', url: 'api/projects/rolePerProject' });
+
+          // THEN
+          expect(mockStorageService.getUrl).not.toHaveBeenCalled();
+          expect(mockStorageService.clearUrl).not.toHaveBeenCalled();
+          expect(mockRouter.navigateByUrl).not.toHaveBeenCalled();
+        });
+
+        it('should not navigate to the previous stored url when getting roles failes', () => {
+          // WHEN
+          service.identity().subscribe();
+          httpMock.expectOne({ method: 'GET', url: 'api/account' }).flush({});
+          httpMock.expectOne({ method: 'GET', url: 'api/projects/rolePerProject' }).error(new ErrorEvent(''));
 
           // THEN
           expect(mockStorageService.getUrl).not.toHaveBeenCalled();
@@ -133,7 +153,8 @@ describe('Service Tests', () => {
 
           // WHEN
           service.identity().subscribe();
-          httpMock.expectOne({ method: 'GET' }).flush({});
+          httpMock.expectOne({ method: 'GET', url: 'api/account' }).flush({});
+          httpMock.expectOne({ method: 'GET', url: 'api/projects/rolePerProject' }).flush({});
 
           // THEN
           expect(mockStorageService.getUrl).toHaveBeenCalledTimes(1);

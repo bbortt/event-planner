@@ -6,7 +6,6 @@ import io.github.bbortt.event.planner.backend.security.SecurityUtils;
 import io.github.bbortt.event.planner.backend.service.dto.AdminUserDTO;
 import io.github.bbortt.event.planner.backend.service.exception.EntityNotFoundException;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,10 +21,10 @@ public class UserService {
 
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
-    private final UserServiceFeignClient userService;
+    private final UserServiceFeignClient userServiceClient;
 
-    public UserService(UserServiceFeignClient userService) {
-        this.userService = userService;
+    public UserService(UserServiceFeignClient userServiceClient) {
+        this.userServiceClient = userServiceClient;
     }
 
     /**
@@ -115,6 +114,6 @@ public class UserService {
     }
 
     public AdminUserDTO findUserByLogin(String login) {
-        return userService.findUserByLogin(login).orElseThrow(EntityNotFoundException::new);
+        return userServiceClient.findUserByLogin(login).orElseThrow(EntityNotFoundException::new);
     }
 }

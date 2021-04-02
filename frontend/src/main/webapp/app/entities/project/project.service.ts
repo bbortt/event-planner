@@ -57,8 +57,8 @@ export class ProjectService {
     return this.http.put(`${this.resourceUrl}/${id}/archive`, {}, { observe: 'response' });
   }
 
-  myRolePerProject(): Observable<Map<number, string>> {
-    return this.http.get<Map<number, string>>(`${this.resourceUrl}/myRoles`);
+  getRolePerProject(): Observable<Map<number, string>> {
+    return this.http.get<Map<number, string>>(`${this.resourceUrl}/rolePerProject`);
   }
 
   protected convertDateFromClient(project: Project | ICreateProject): Project | ICreateProject {

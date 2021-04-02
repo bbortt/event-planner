@@ -16,19 +16,19 @@ import org.mockito.junit.jupiter.MockitoExtension;
 public class InvitationServiceUnitTest {
 
     @Mock
+    UserService userServiceMock;
+
+    @Mock
     ProjectService projectServiceMock;
 
     @Mock
     InvitationRepository invitationRepositoryMock;
 
-    @Mock
-    UserRepository userRepositoryMock;
-
     InvitationService fixture;
 
     @BeforeEach
     public void beforeTestSetup() {
-        fixture = new InvitationService(projectServiceMock, invitationRepositoryMock, userRepositoryMock);
+        fixture = new InvitationService(userServiceMock, projectServiceMock, invitationRepositoryMock);
     }
 
     @Test

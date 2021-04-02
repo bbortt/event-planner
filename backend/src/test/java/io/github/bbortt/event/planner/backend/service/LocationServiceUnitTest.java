@@ -33,13 +33,13 @@ class LocationServiceUnitTest {
 
     @Test
     void saveDoesAcceptEitherResponsibilityOrUser() {
-        Location locationWithUser = new Location().user(new User());
+        Location locationWithUser = new Location().jhiUserId("test-jhi-user-id");
         fixture.save(locationWithUser);
 
         Location locationWithResponsibility = new Location().responsibility(new Responsibility());
         fixture.save(locationWithResponsibility);
 
-        Location invalidLocation = new Location().user(new User()).responsibility(new Responsibility());
+        Location invalidLocation = new Location().jhiUserId("test-jhi-user-id").responsibility(new Responsibility());
 
         Assertions.assertThatThrownBy(() -> fixture.save(invalidLocation)).isInstanceOf(BadRequestException.class);
     }
