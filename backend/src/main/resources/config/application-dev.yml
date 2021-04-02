@@ -91,6 +91,9 @@ jhipster:
       host: localhost
       port: 5000
       queue-size: 512
+  mail: # specific JHipster mail property, for standard properties see MailProperties
+    base-url: http://localhost:9000
+    from: localhost
 
 # ===================================================================
 # Application specific properties

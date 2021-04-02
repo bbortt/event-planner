@@ -4,7 +4,9 @@ import io.github.bbortt.event.planner.backend.domain.Project;
 import io.github.bbortt.event.planner.backend.security.RolesConstants;
 import io.github.bbortt.event.planner.backend.service.InvitationService;
 import io.github.bbortt.event.planner.backend.service.ProjectService;
+import io.github.bbortt.event.planner.backend.service.dto.AdminUserDTO;
 import io.github.bbortt.event.planner.backend.service.dto.CreateProjectDTO;
+import io.github.bbortt.event.planner.backend.service.dto.UserDTO;
 import io.github.bbortt.event.planner.backend.service.exception.EntityNotFoundException;
 import io.github.bbortt.event.planner.backend.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
@@ -12,6 +14,7 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 import org.slf4j.Logger;
@@ -124,8 +127,8 @@ public class ProjectResource {
      *
      * @return the list of role per projects in body.
      */
-    @GetMapping("/projects/rolePerProject")
     @PreAuthorize("isAuthenticated()")
+    @GetMapping("/projects/rolePerProject")
     public Map<Long, String> getRolePerProject() {
         log.debug("REST request to get Roles per Project");
         return invitationService
@@ -185,5 +188,29 @@ public class ProjectResource {
         log.debug("REST request to archive Project : {}", id);
         projectService.archive(id);
         return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * {@code GET  /projects/:id/users} : get all users for the "id" project.
+     *
+     * @param id the id of the project to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the users, or with status {@code 404 (Not Found)}.
+     */
+    @GetMapping("/projects/{id}/users")
+    @PreAuthorize(
+        "@projectService.hasAccessToProject(#id, \"" +
+        RolesConstants.ADMIN +
+        "\", \"" +
+        RolesConstants.SECRETARY +
+        "\", \"" +
+        RolesConstants.CONTRIBUTOR +
+        "\", \"" +
+        RolesConstants.VIEWER +
+        "\")"
+    )
+    public ResponseEntity<Set<UserDTO>> getProjectUsers(@PathVariable Long id) {
+        log.debug("REST request to get Users for Project : {}", id);
+        Set<UserDTO> users = projectService.findUsersByProject(id);
+        return ResponseEntity.ok(users);
     }
 }

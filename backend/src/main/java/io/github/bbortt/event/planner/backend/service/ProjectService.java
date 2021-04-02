@@ -9,18 +9,21 @@ import io.github.bbortt.event.planner.backend.security.AuthoritiesConstants;
 import io.github.bbortt.event.planner.backend.security.SecurityUtils;
 import io.github.bbortt.event.planner.backend.service.dto.AdminUserDTO;
 import io.github.bbortt.event.planner.backend.service.dto.CreateProjectDTO;
+import io.github.bbortt.event.planner.backend.service.dto.UserDTO;
 import io.github.bbortt.event.planner.backend.service.exception.EntityNotFoundException;
 import io.github.bbortt.event.planner.backend.service.exception.ForbiddenRequestException;
 import io.github.bbortt.event.planner.backend.service.exception.IdMustBePresentException;
 import io.github.bbortt.event.planner.backend.service.mapper.ProjectMapper;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.zalando.problem.Status;
@@ -38,21 +41,21 @@ public class ProjectService {
     private final ProjectMapper projectMapper = new ProjectMapper();
 
     private final RoleService roleService;
-
     private final UserService userService;
+
     private final RoleRepository roleRepository;
     private final ProjectRepository projectRepository;
     private final InvitationRepository invitationRepository;
 
     public ProjectService(
-        UserService userService,
         RoleService roleService,
+        UserService userService,
         RoleRepository roleRepository,
         ProjectRepository projectRepository,
         InvitationRepository invitationRepository
     ) {
-        this.userService = userService;
         this.roleService = roleService;
+        this.userService = userService;
         this.roleRepository = roleRepository;
         this.projectRepository = projectRepository;
         this.invitationRepository = invitationRepository;
@@ -77,7 +80,9 @@ public class ProjectService {
 
         project = projectRepository.save(project);
 
-        AdminUserDTO userInformation = Optional.ofNullable(createProjectDTO.getUserInformation()).orElseGet(userService::getCurrentUser);
+        AdminUserDTO userInformation = Optional
+            .ofNullable(createProjectDTO.getUserInformation())
+            .orElseGet(() -> SecurityUtils.getCurrentUser().orElseThrow(IllegalArgumentException::new));
 
         Invitation invitation = new Invitation()
             .jhiUserId(userInformation.getId())
@@ -122,7 +127,7 @@ public class ProjectService {
             return projectRepository.findAllByArchived(archived, pageable);
         }
 
-        String jhiUserId = userService.getCurrentUser().getId();
+        String jhiUserId = SecurityUtils.getCurrentUser().orElseThrow(IllegalArgumentException::new).getId();
         log.debug("Request to get Projects for user {}", jhiUserId);
 
         return projectRepository.findMineByArchived(jhiUserId, archived, pageable);
@@ -174,6 +179,21 @@ public class ProjectService {
         if (projectRepository.archive(id) == 0) {
             throw new IllegalArgumentException("Unable to archive Project!");
         }
+    }
+
+    @Transactional(readOnly = true)
+    public Set<UserDTO> findUsersByProject(Long projectId) {
+        log.debug("Request to get Users for Project : {}", projectId);
+
+        List<String> jhiUserIds = projectRepository
+            .findById(projectId)
+            .orElseThrow(EntityNotFoundException::new)
+            .getInvitations()
+            .stream()
+            .map(Invitation::getJhiUserId)
+            .collect(Collectors.toList());
+
+        return userService.findAllById(jhiUserIds);
     }
 
     @Transactional(readOnly = true)

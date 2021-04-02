@@ -19,4 +19,4 @@ include "gateway"
 findProject(":gateway")?.name = "gateway"
 
 include "services:users"
-findProject(":service:user")?.name = "user"
+findProject(":services:users")?.name = "user"

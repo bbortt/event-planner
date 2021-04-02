@@ -7,6 +7,7 @@ import io.github.bbortt.event.planner.backend.security.RolesConstants;
 import io.github.bbortt.event.planner.backend.service.InvitationService;
 import io.github.bbortt.event.planner.backend.service.MailService;
 import io.github.bbortt.event.planner.backend.service.ProjectService;
+import io.github.bbortt.event.planner.backend.service.exception.EntityNotFoundException;
 import io.github.bbortt.event.planner.backend.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;

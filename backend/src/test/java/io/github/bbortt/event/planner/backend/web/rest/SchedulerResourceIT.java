@@ -17,14 +17,15 @@ import io.github.bbortt.event.planner.backend.domain.Project;
 import io.github.bbortt.event.planner.backend.domain.Responsibility;
 import io.github.bbortt.event.planner.backend.domain.Section;
 import io.github.bbortt.event.planner.backend.repository.EventRepository;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.TestSecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,24 +34,29 @@ import org.springframework.transaction.annotation.Transactional;
  */
 class SchedulerResourceIT extends AbstractApplicationContextAwareIT {
 
-    static final String TEST_USER_LOGIN = "schedulerresourceit-user";
+    private static final String TEST_USER_LOGIN = "schedulerresourceit-user";
 
-    static final String RESPONSIBILITY_COLOR = "this-is-no-color";
-
-    @Autowired
-    EntityManager entityManager;
-
-    Project project;
-    Location location;
+    private static final String RESPONSIBILITY_COLOR = "this-is-no-color";
 
     @Autowired
-    EventRepository eventRepository;
+    private EntityManager entityManager;
+
+    @Autowired
+    private EventRepository eventRepository;
 
     @Autowired
     private MockMvc restSchedulerMockMvc;
 
+    private Map<String, Object> userDetails;
+    private Project project;
+    private Location location;
+
     @BeforeEach
     void initTest() {
+        userDetails = new HashMap<>();
+        userDetails.put("sub", TEST_USER_LOGIN);
+        TestSecurityContextHolder.setAuthentication(TestUtil.createMockOAuth2AuthenticationToken(userDetails));
+
         project = ProjectResourceIT.createEntity(entityManager);
         project.setName("RoleRepositoryIT-project-1");
         entityManager.persist(project);
@@ -90,7 +96,6 @@ class SchedulerResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void getColorGroupsPerProject() throws Exception {
         restSchedulerMockMvc
             .perform(get("/api/scheduler/project/" + project.getId() + "/responsibilities"))
@@ -102,10 +107,9 @@ class SchedulerResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     @Disabled("TODO: Test this when frontend is up!")
     void getSchedulerLocation() throws Exception {
-        List<Event> all = eventRepository.findAll();
+        eventRepository.findAll();
 
         restSchedulerMockMvc
             .perform(get("/api/scheduler/project/" + project.getId() + "/location/" + location.getId()))

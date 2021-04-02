@@ -175,18 +175,15 @@ export class ProjectScreenplayLocationComponent implements OnInit, OnDestroy {
   }
 
   private reset(): void {
-    const events: SchedulerEvent[] = [];
-    const sections: SchedulerSection[] = [];
-    const colors: SchedulerColorGroup[] = [];
-
     this.schedulerService.getSchedulerInformation(this.location!).subscribe((data: SchedulerLocation) => {
-      data.events.forEach((event: SchedulerEvent) => events.push(event));
-      data.sections.forEach((section: SchedulerSection) => sections.push(section));
-      data.colorGroups.forEach((colorGroup: SchedulerColorGroup) => colors.push(colorGroup));
+      const { events, sections, colorGroups } = data;
+      this.resetData(events, sections, colorGroups);
     });
+  }
 
-    this.sections = sections;
+  private resetData(events: SchedulerEvent[], sections: SchedulerSection[], colors: SchedulerColorGroup[]): void {
     this.events = events;
+    this.sections = sections;
     this.colors = colors;
   }
 }

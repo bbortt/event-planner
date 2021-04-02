@@ -31,7 +31,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.test.context.TestSecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -43,7 +43,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
 
     private static final String TEST_USER_LOGIN = "projectresourceit-login";
-    private static final String TEST_ADMIN_LOGIN = "projectresourceit-admin";
 
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
@@ -110,6 +109,8 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
     void initTest() {
         userDetails = new HashMap<>();
         userDetails.put("sub", TEST_USER_LOGIN);
+        userDetails.put("email", TEST_USER_LOGIN + "@localhost");
+        TestSecurityContextHolder.setAuthentication(TestUtil.createMockOAuth2AuthenticationToken(userDetails));
 
         project = createEntity(em);
         em.flush();
@@ -117,12 +118,7 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void createProject() throws Exception {
-        userDetails.put("email", TEST_USER_LOGIN + "@localhost");
-        OAuth2AuthenticationToken authentication = TestUtil.createMockOAuth2AuthenticationToken(userDetails);
-        TestSecurityContextHolder.setAuthentication(authentication);
-
         projectRepository.deleteAll();
 
         // Create the Project
@@ -131,6 +127,7 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
         createProjectDTO.setDescription(project.getDescription());
         createProjectDTO.setStartTime(project.getStartTime());
         createProjectDTO.setEndTime(project.getEndTime());
+        createProjectDTO.setUserInformation(null);
 
         restProjectMockMvc
             .perform(
@@ -210,7 +207,6 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void getProject() throws Exception {
         // Initialize the database
         projectRepository.saveAndFlush(project);
@@ -237,9 +233,6 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     void getMyProject() throws Exception {
-        OAuth2AuthenticationToken authentication = TestUtil.createMockOAuth2AuthenticationToken(userDetails);
-        TestSecurityContextHolder.setAuthentication(authentication);
-
         // Initialize the database
         projectRepository.saveAndFlush(project);
         Invitation invitation = InvitationResourceIT
@@ -261,8 +254,14 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(value = TEST_ADMIN_LOGIN, authorities = { AuthoritiesConstants.ADMIN })
     void getAllProjects() throws Exception {
+        TestSecurityContextHolder.setAuthentication(
+            TestUtil.createMockOAuth2AuthenticationToken(
+                userDetails,
+                Collections.singletonList(new SimpleGrantedAuthority(AuthoritiesConstants.ADMIN))
+            )
+        );
+
         // Initialize the database
         projectRepository.saveAndFlush(createEntity(em));
         projectRepository.saveAndFlush(createUpdatedEntity(em));
@@ -278,9 +277,6 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     void getArchivedProjects() throws Exception {
-        OAuth2AuthenticationToken authentication = TestUtil.createMockOAuth2AuthenticationToken(userDetails);
-        TestSecurityContextHolder.setAuthentication(authentication);
-
         // Initialize the database
         Project archivedProject = createEntity(em).archived(Boolean.TRUE);
         projectRepository.saveAndFlush(archivedProject);
@@ -313,8 +309,14 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(value = TEST_ADMIN_LOGIN, authorities = { AuthoritiesConstants.ADMIN })
     void getAllArchivedProjects() throws Exception {
+        TestSecurityContextHolder.setAuthentication(
+            TestUtil.createMockOAuth2AuthenticationToken(
+                userDetails,
+                Collections.singletonList(new SimpleGrantedAuthority(AuthoritiesConstants.ADMIN))
+            )
+        );
+
         // Initialize the database
         projectRepository.saveAndFlush(createEntity(em).archived(Boolean.TRUE));
         projectRepository.saveAndFlush(createUpdatedEntity(em).archived(Boolean.TRUE));
@@ -329,7 +331,6 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void getNonExistingProject() throws Exception {
         // Get the project
         restProjectMockMvc.perform(get("/api/projects/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
@@ -337,7 +338,6 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void updateProject() throws Exception {
         // Initialize the database
         projectService.save(project);
@@ -389,7 +389,6 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void updateProjectForbiddenForContributors() throws Exception {
         // Initialize the database
         projectService.save(project);
@@ -412,7 +411,6 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void archiveProject() throws Exception {
         // Initialize the database
         projectService.save(project);
@@ -437,7 +435,6 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void archiveProjectForbiddenForRoleSecretary() throws Exception {
         // Initialize the database
         projectService.save(project);
@@ -460,7 +457,6 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void deleteProject() throws Exception {
         // Initialize the database
         projectService.save(project);
@@ -486,7 +482,6 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void deleteProjectForbiddenForRoleSecretary() throws Exception {
         // Initialize the database
         projectService.save(project);

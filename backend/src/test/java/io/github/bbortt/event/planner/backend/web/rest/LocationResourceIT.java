@@ -19,12 +19,16 @@ import io.github.bbortt.event.planner.backend.repository.RoleRepository;
 import io.github.bbortt.event.planner.backend.security.AuthoritiesConstants;
 import io.github.bbortt.event.planner.backend.service.LocationService;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.test.context.TestSecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,7 +39,6 @@ import org.springframework.transaction.annotation.Transactional;
 class LocationResourceIT extends AbstractApplicationContextAwareIT {
 
     private static final String TEST_USER_LOGIN = "locationresourceit-login";
-    private static final String TEST_ADMIN_LOGIN = "locationresourceit-admin";
 
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
@@ -55,6 +58,7 @@ class LocationResourceIT extends AbstractApplicationContextAwareIT {
     @Autowired
     private MockMvc restLocationMockMvc;
 
+    private Map<String, Object> userDetails;
     private Location location;
     private Invitation invitation;
 
@@ -100,6 +104,10 @@ class LocationResourceIT extends AbstractApplicationContextAwareIT {
 
     @BeforeEach
     void initTest() {
+        userDetails = new HashMap<>();
+        userDetails.put("sub", TEST_USER_LOGIN);
+        TestSecurityContextHolder.setAuthentication(TestUtil.createMockOAuth2AuthenticationToken(userDetails));
+
         location = createEntity(em);
 
         invitation =
@@ -115,7 +123,6 @@ class LocationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void createLocation() throws Exception {
         em.persist(invitation.role(roleRepository.roleAdmin()));
 
@@ -135,7 +142,6 @@ class LocationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void createLocationWithExistingId() throws Exception {
         em.persist(invitation.role(roleRepository.roleAdmin()));
 
@@ -156,7 +162,6 @@ class LocationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void createLocationForbiddenForRoleContributor() throws Exception {
         em.persist(invitation);
 
@@ -168,7 +173,6 @@ class LocationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void checkNameIsRequired() throws Exception {
         int databaseSizeBeforeTest = locationRepository.findAll().size();
         // set the field null
@@ -186,8 +190,14 @@ class LocationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(value = TEST_ADMIN_LOGIN, authorities = { AuthoritiesConstants.ADMIN })
     void getAllLocations() throws Exception {
+        TestSecurityContextHolder.setAuthentication(
+            TestUtil.createMockOAuth2AuthenticationToken(
+                userDetails,
+                Collections.singletonList(new SimpleGrantedAuthority(AuthoritiesConstants.ADMIN))
+            )
+        );
+
         // Initialize the database
         locationRepository.saveAndFlush(location);
 
@@ -202,7 +212,6 @@ class LocationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void getAllLocationsForbiddenForUsers() throws Exception {
         // Initialize the database
         locationRepository.saveAndFlush(location);
@@ -213,7 +222,6 @@ class LocationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void getLocation() throws Exception {
         em.persist(invitation.role(roleRepository.roleAdmin()));
 
@@ -231,7 +239,6 @@ class LocationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void getLocationForbiddenForRoleContributor() throws Exception {
         em.persist(invitation);
 
@@ -241,7 +248,6 @@ class LocationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void getLocationsByProjectIdDoesSortIgnoreCase() throws Exception {
         // Initialize the database
         locationRepository.saveAndFlush(location);
@@ -276,7 +282,6 @@ class LocationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void getNonExistingLocation() throws Exception {
         // Get the location
         restLocationMockMvc.perform(get("/api/locations/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
@@ -284,7 +289,6 @@ class LocationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void updateLocation() throws Exception {
         em.persist(invitation.role(roleRepository.roleAdmin()));
 
@@ -318,7 +322,6 @@ class LocationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void updateNonExistingLocation() throws Exception {
         em.persist(invitation.role(roleRepository.roleAdmin()));
 
@@ -336,7 +339,6 @@ class LocationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void updateLocationForbiddenForRoleContributor() throws Exception {
         em.persist(invitation);
 
@@ -352,7 +354,6 @@ class LocationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void deleteLocation() throws Exception {
         em.persist(invitation.role(roleRepository.roleAdmin()));
 
@@ -373,7 +374,6 @@ class LocationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void deleteLocationForbiddenForRoleContributor() throws Exception {
         em.persist(invitation);
 
@@ -388,7 +388,6 @@ class LocationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void isNameExistingInProject() throws Exception {
         em.persist(invitation.role(roleRepository.roleAdmin()));
 
@@ -416,7 +415,6 @@ class LocationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void isNameExistingInProjectForbiddenForRoleContributor() throws Exception {
         em.persist(invitation);
 

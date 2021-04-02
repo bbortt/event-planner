@@ -69,8 +69,8 @@ public class Invitation extends AbstractAuditingEntity implements Serializable {
     @Column(name = "jhi_user_id")
     private String jhiUserId;
 
-    @ManyToOne(optional = false)
     @NotNull
+    @ManyToOne(optional = false)
     @JsonIgnoreProperties(value = "invitations", allowSetters = true)
     private Role role;
 

@@ -14,7 +14,7 @@ import { Responsibility } from 'app/entities/responsibility/responsibility.model
 
 import { uniquePropertyValueInProjectValidator } from 'app/entities/validator/unique-property-value-in-project.validator';
 
-import { Role, InternalRole, ROLES } from 'app/config/role.constants';
+import { InternalRole, Role, ROLES } from 'app/config/role.constants';
 
 import { DEFAULT_SCHEDULER_COLOR } from 'app/app.constants';
 
@@ -33,7 +33,8 @@ export class ProjectUserInviteComponent {
     token: [null],
     accepted: [false],
     color: [DEFAULT_SCHEDULER_COLOR, [Validators.required, Validators.minLength(3), Validators.maxLength(23)]],
-    role: [Role.CONTRIBUTOR, [Validators.required]],
+    role: [Role.CONTRIBUTOR.name, [Validators.required]],
+    jhiUserId: [null],
     responsibility: [null],
     responsibilityAutocomplete: [],
   });
@@ -60,16 +61,19 @@ export class ProjectUserInviteComponent {
       this.responsibilities = responsibilities.body ?? [];
     });
 
-    this.editForm.patchValue({
-      id: invitation.id,
-      email: invitation.email,
-      accepted: invitation.accepted,
-      token: invitation.token,
-      color: invitation.color ? invitation.color : DEFAULT_SCHEDULER_COLOR,
-      role: ROLES.find(role => role.name === invitation.role.name)?.name,
-      responsibility: invitation.responsibility,
-      responsibilityAutocomplete: invitation.responsibility?.name,
-    });
+    if (!this.isNew) {
+      this.editForm.patchValue({
+        id: invitation.id,
+        email: invitation.email,
+        accepted: invitation.accepted,
+        token: invitation.token,
+        color: invitation.color ? invitation.color : DEFAULT_SCHEDULER_COLOR,
+        role: this.roleByName(invitation.role.name)?.name,
+        jhiUserId: invitation.jhiUserId,
+        responsibility: invitation.responsibility,
+        responsibilityAutocomplete: invitation.responsibility?.name,
+      });
+    }
 
     this.editForm
       .get('email')
@@ -95,10 +99,9 @@ export class ProjectUserInviteComponent {
       token: this.editForm.get('token')!.value,
       color: this.editForm.get('color')!.value,
       project: this.project!,
+      jhiUserId: this.editForm.get('jhiUserId')!.value,
+      role: this.roleByName(this.editForm.get('role')!.value)!,
       responsibility: this.editForm.get('responsibilityAutocomplete')!.value ? this.editForm.get('responsibility')!.value : null,
-      role: {
-        name: (this.editForm.get('role')!.value as InternalRole).name,
-      },
     };
 
     if (invitation.id) {
@@ -120,5 +123,9 @@ export class ProjectUserInviteComponent {
 
   previousState(): void {
     window.history.back();
+  }
+
+  private roleByName(roleName: string): InternalRole | undefined {
+    return ROLES.find(role => role.name === roleName);
   }
 }

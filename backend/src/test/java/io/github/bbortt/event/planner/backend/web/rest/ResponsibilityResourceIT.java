@@ -20,13 +20,17 @@ import io.github.bbortt.event.planner.backend.repository.RoleRepository;
 import io.github.bbortt.event.planner.backend.security.AuthoritiesConstants;
 import io.github.bbortt.event.planner.backend.service.ResponsibilityService;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.test.context.TestSecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,11 +38,9 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * Integration tests for the {@link ResponsibilityResource} REST controller.
  */
-@WithMockUser
 class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT {
 
     private static final String TEST_USER_LOGIN = "responsibilityresourceit-login";
-    private static final String TEST_ADMIN_LOGIN = "responsibilityresourceit-admin";
 
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
@@ -61,6 +63,7 @@ class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT {
     @Autowired
     private MockMvc restResponsibilityMockMvc;
 
+    private Map<String, Object> userDetails;
     private Responsibility responsibility;
     private Invitation invitation;
 
@@ -106,6 +109,10 @@ class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT {
 
     @BeforeEach
     void initTest() {
+        userDetails = new HashMap<>();
+        userDetails.put("sub", TEST_USER_LOGIN);
+        TestSecurityContextHolder.setAuthentication(TestUtil.createMockOAuth2AuthenticationToken(userDetails));
+
         responsibility = createEntity(em);
 
         invitation =
@@ -121,7 +128,6 @@ class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void createResponsibility() throws Exception {
         em.persist(invitation.role(roleRepository.roleAdmin()));
 
@@ -145,7 +151,6 @@ class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void createResponsibilityWithExistingId() throws Exception {
         em.persist(invitation.role(roleRepository.roleAdmin()));
 
@@ -170,7 +175,6 @@ class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void createResponsibilityForbiddenForRoleContributor() throws Exception {
         em.persist(invitation);
 
@@ -186,7 +190,6 @@ class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void checkNameIsRequired() throws Exception {
         int databaseSizeBeforeTest = responsibilityRepository.findAll().size();
         // set the field null
@@ -208,8 +211,14 @@ class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(value = TEST_ADMIN_LOGIN, authorities = { AuthoritiesConstants.ADMIN })
     void getAllResponsibilitiesIsForAdminsOnly() throws Exception {
+        TestSecurityContextHolder.setAuthentication(
+            TestUtil.createMockOAuth2AuthenticationToken(
+                userDetails,
+                Collections.singletonList(new SimpleGrantedAuthority(AuthoritiesConstants.ADMIN))
+            )
+        );
+
         // Initialize the database
         responsibilityRepository.saveAndFlush(responsibility);
 
@@ -224,7 +233,6 @@ class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void getAllResponsibilitiesForbiddenForUsers() throws Exception {
         // Initialize the database
         responsibilityRepository.saveAndFlush(responsibility);
@@ -235,7 +243,6 @@ class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void getResponsibility() throws Exception {
         em.persist(invitation.role(roleRepository.roleAdmin()));
 
@@ -253,7 +260,6 @@ class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void getNonExistingResponsibility() throws Exception {
         // Get the responsibility
         restResponsibilityMockMvc.perform(get("/api/responsibilities/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
@@ -261,7 +267,6 @@ class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void getResponsibilityForbiddenForRoleContributor() throws Exception {
         em.persist(invitation);
 
@@ -274,11 +279,9 @@ class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void updateResponsibility() throws Exception {
-        em.persist(invitation.role(roleRepository.roleAdmin()));
-
         // Initialize the database
+        em.persist(invitation.role(roleRepository.roleAdmin()));
         responsibilityService.save(responsibility);
 
         int databaseSizeBeforeUpdate = responsibilityRepository.findAll().size();
@@ -310,7 +313,6 @@ class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void updateNonExistingResponsibility() throws Exception {
         em.persist(invitation.role(roleRepository.roleAdmin()));
 
@@ -332,7 +334,6 @@ class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void updateResponsibilityForbiddenForRoleContributor() throws Exception {
         em.persist(invitation);
 
@@ -350,7 +351,6 @@ class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void deleteResponsibility() throws Exception {
         em.persist(invitation.role(roleRepository.roleAdmin()));
 
@@ -371,7 +371,6 @@ class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void deleteResponsibilityForbiddenForRoleContributor() throws Exception {
         em.persist(invitation);
 
@@ -386,7 +385,6 @@ class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void getResponsibilitiesPerProject() throws Exception {
         // Test data
         final String responsibility2Name = "Responsibility1";
@@ -436,7 +434,6 @@ class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void isNameExistingInProject() throws Exception {
         em.persist(invitation.role(roleRepository.roleAdmin()));
 
@@ -464,7 +461,6 @@ class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void isNameExistingInProjectForbiddenForRoleContributor() throws Exception {
         em.persist(invitation);
 

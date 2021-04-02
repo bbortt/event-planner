@@ -25,8 +25,11 @@
       "role": "Rolle",
       "responsibility": "Verantwortung",
       "color": "Farbe",
-      "acceptViaLoginMessage": "Melden Sie sich an, um die Einladung zu akzeptieren.",
-      "acceptViaRegisterMessage": "Registrieren Sie sich, um die Einladung zu akzeptieren."
+      "acceptViaLoginMessage": "Bitte melden Sie sich an, um die Einladung an zu nehmen.",
+      "accepting": {
+        "failed": "Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut!",
+        "success": "Einladung erfolgreich akzeptiert."
+      }
     }
   }
 }

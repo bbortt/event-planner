@@ -10,7 +10,7 @@ export interface Invitation {
   token?: string;
   color?: string;
   project: Project;
-  user?: User;
+  jhiUserId?: string;
   role: Role;
   responsibility?: Responsibility;
 }

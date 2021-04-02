@@ -1,15 +1,17 @@
 package io.github.bbortt.event.planner.backend.security;
 
+import io.github.bbortt.event.planner.backend.config.Constants;
+import io.github.bbortt.event.planner.backend.service.dto.AdminUserDTO;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.ReactiveSecurityContextHolder;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 
@@ -27,6 +29,82 @@ public final class SecurityUtils {
      */
     public static Optional<Authentication> getCurrentAuthenticationToken() {
         return Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication());
+    }
+
+    /**
+     * Return the current user information, if any.
+     * @return the current user information
+     */
+    public static Optional<AdminUserDTO> getCurrentUser() {
+        return getCurrentAuthenticationToken()
+            .filter(authenticationToken -> AbstractAuthenticationToken.class.isAssignableFrom(authenticationToken.getClass()))
+            .map(authenticationMono -> ((AbstractAuthenticationToken) authenticationMono))
+            .map(SecurityUtils::getUserFromAuthentication);
+    }
+
+    private static AdminUserDTO getUserFromAuthentication(AbstractAuthenticationToken authToken) {
+        Map<String, Object> attributes;
+        if (authToken instanceof OAuth2AuthenticationToken) {
+            attributes = ((OAuth2AuthenticationToken) authToken).getPrincipal().getAttributes();
+        } else if (authToken instanceof JwtAuthenticationToken) {
+            attributes = ((JwtAuthenticationToken) authToken).getTokenAttributes();
+        } else {
+            throw new IllegalArgumentException("AuthenticationToken is not OAuth2 or JWT!");
+        }
+        AdminUserDTO user = getUser(attributes);
+        user.setAuthorities(authToken.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toSet()));
+        return user;
+    }
+
+    private static AdminUserDTO getUser(Map<String, Object> details) {
+        AdminUserDTO user = new AdminUserDTO();
+        Boolean activated = Boolean.TRUE;
+        // handle resource server JWT, where sub claim is email and uid is ID
+        if (details.get("uid") != null) {
+            user.setId((String) details.get("uid"));
+            user.setLogin((String) details.get("sub"));
+        } else {
+            user.setId((String) details.get("sub"));
+        }
+        if (details.get("preferred_username") != null) {
+            user.setLogin(((String) details.get("preferred_username")).toLowerCase());
+        } else if (user.getLogin() == null) {
+            user.setLogin(user.getId());
+        }
+        if (details.get("given_name") != null) {
+            user.setFirstName((String) details.get("given_name"));
+        }
+        if (details.get("family_name") != null) {
+            user.setLastName((String) details.get("family_name"));
+        }
+        if (details.get("email_verified") != null) {
+            activated = (Boolean) details.get("email_verified");
+        }
+        if (details.get("email") != null) {
+            user.setEmail(((String) details.get("email")).toLowerCase());
+        } else {
+            user.setEmail((String) details.get("sub"));
+        }
+        if (details.get("langKey") != null) {
+            user.setLangKey((String) details.get("langKey"));
+        } else if (details.get("locale") != null) {
+            // trim off country code if it exists
+            String locale = (String) details.get("locale");
+            if (locale.contains("_")) {
+                locale = locale.substring(0, locale.indexOf('_'));
+            } else if (locale.contains("-")) {
+                locale = locale.substring(0, locale.indexOf('-'));
+            }
+            user.setLangKey(locale.toLowerCase());
+        } else {
+            // set langKey to default if not specified by IdP
+            user.setLangKey(Constants.DEFAULT_LANGUAGE);
+        }
+        if (details.get("picture") != null) {
+            user.setImageUrl((String) details.get("picture"));
+        }
+        user.setActivated(activated);
+        return user;
     }
 
     /**

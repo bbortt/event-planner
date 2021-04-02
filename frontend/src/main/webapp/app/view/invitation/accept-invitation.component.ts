@@ -2,10 +2,13 @@ import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { Subject } from 'rxjs';
-import { filter, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { catchError, filter, switchMap, takeUntil, tap } from 'rxjs/operators';
 
 import { AccountService } from 'app/core/auth/account.service';
+import { AlertService } from 'app/core/util/alert.service';
 import { InvitationService } from 'app/entities/invitation/invitation.service';
+import { LoginService } from 'app/login/login.service';
+import { StateStorageService } from 'app/core/auth/state-storage.service';
 
 @Component({
   selector: 'app-accept-invitation',
@@ -13,17 +16,18 @@ import { InvitationService } from 'app/entities/invitation/invitation.service';
 })
 export class AcceptInvitationComponent implements OnDestroy {
   token?: string;
-  variant: 'login' | 'register';
 
   private destroy$ = new Subject<void>();
 
   constructor(
-    private activatedRoute: ActivatedRoute,
-    private invitationService: InvitationService,
     private router: Router,
-    private accountService: AccountService
+    private activatedRoute: ActivatedRoute,
+    private accountService: AccountService,
+    private alertService: AlertService,
+    private invitationService: InvitationService,
+    private loginService: LoginService,
+    private stateStorageService: StateStorageService
   ) {
-    this.variant = activatedRoute.snapshot.data.variant;
     this.activatedRoute.params
       .pipe(
         tap(params => (this.token = params['token'] as string)),
@@ -37,16 +41,33 @@ export class AcceptInvitationComponent implements OnDestroy {
         filter(Boolean),
         filter(() => this.accountService.isAuthenticated()),
         switchMap(() => this.invitationService.assignCurrentUserToInvitation(this.token!)),
+        catchError(err => {
+          this.alertService.addAlert({
+            type: 'danger',
+            translationKey: 'eventPlannerApp.invitation.accepting.failed',
+          });
+          throw err;
+        }),
         switchMap(() => this.accountService.identity(true)),
         takeUntil(this.destroy$)
       )
       .subscribe(() => {
-        this.router.navigate(['/']);
+        this.router.navigate(['/']).then(() =>
+          this.alertService.addAlert({
+            type: 'success',
+            translationKey: 'eventPlannerApp.invitation.accepting.success',
+          })
+        );
       });
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  login(): void {
+    this.stateStorageService.storeUrl(this.router.routerState.snapshot.url);
+    this.loginService.login();
   }
 }

@@ -1,9 +1,13 @@
 package io.github.bbortt.event.planner.service.user.web.rest;
 
+import static io.github.bbortt.event.planner.service.user.domain.User_.login;
+
 import io.github.bbortt.event.planner.service.user.config.Constants;
 import io.github.bbortt.event.planner.service.user.security.AuthoritiesConstants;
+import io.github.bbortt.event.planner.service.user.security.ScopesConstants;
 import io.github.bbortt.event.planner.service.user.service.UserService;
 import io.github.bbortt.event.planner.service.user.service.dto.AdminUserDTO;
+import io.github.bbortt.event.planner.service.user.service.dto.UserDTO;
 import java.util.*;
 import javax.validation.constraints.Pattern;
 import org.slf4j.Logger;
@@ -11,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,7 +51,7 @@ import tech.jhipster.web.util.ResponseUtil;
  * Another option would be to have a specific JPA entity graph to handle this case.
  */
 @RestController
-@RequestMapping("/api/admin")
+@RequestMapping("/api")
 public class UserResource {
 
     private final Logger log = LoggerFactory.getLogger(UserResource.class);
@@ -60,32 +65,40 @@ public class UserResource {
         this.userService = userService;
     }
 
-    /**
-     * {@code GET /admin/users} : get all users with all the details - calling this are only allowed for the administrators.
-     *
-     * @param pageable the pagination information.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body all users.
-     */
     @GetMapping("/users")
-    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
-    public ResponseEntity<List<AdminUserDTO>> getAllUsers(Pageable pageable) {
-        log.debug("REST request to get all User for an admin");
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<List<AdminUserDTO>> getUsers( @RequestParam("ids") List<String> jhiUserIds) {
+        log.debug("REST request to get Usesr by id: {}",jhiUserIds);
+        List<AdminUserDTO>users  = userService.findAllById(jhiUserIds);
+        return ResponseEntity.ok(users);
+    }
 
-        final Page<AdminUserDTO> page = userService.getAllManagedUsers(pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    @GetMapping("/users/{jhiUserId}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<AdminUserDTO> getUser( @PathVariable  String jhiUserId) {
+        log.debug("REST request to get User by login: {}",jhiUserId);
+        Optional<AdminUserDTO>user  = userService.findOne(jhiUserId);
+        return ResponseUtil.wrapOrNotFound(user);
+    }
+
+    @GetMapping("/users/findByLogin/{login}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<AdminUserDTO> findByLogin( @PathVariable  String login) {
+        log.debug("REST request to get User by login: {}",login);
+        Optional<AdminUserDTO>user  = userService.findOneByLogin(login);
+        return ResponseUtil.wrapOrNotFound(user);
     }
 
     /**
-     * {@code GET /admin/users/:login} : get the "login" user.
+     * {@code POST /users/findByEmailOrLogin} : find possible User by login or email.
      *
-     * @param login the login of the user to find.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the "login" user, or with status {@code 404 (Not Found)}.
+     * @param emailOrLogin partial email or login.
+     * @return list of possible User.
      */
-    @GetMapping("/users/{login}")
+    @GetMapping("/users/findByEmailOrLogin/{emailOrLogin}")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
-    public ResponseEntity<AdminUserDTO> getUser(@PathVariable @Pattern(regexp = Constants.LOGIN_REGEX) String login) {
-        log.debug("REST request to get User : {}", login);
-        return ResponseUtil.wrapOrNotFound(userService.getUserWithAuthoritiesByLogin(login).map(AdminUserDTO::new));
+    public ResponseEntity<List<UserDTO>> findByEmailOrLogin(@PathVariable String emailOrLogin) {
+        log.debug("REST request to search User by email or login: {}", emailOrLogin);
+        return ResponseEntity.ok(userService.findByEmailOrLoginContaining(emailOrLogin));
     }
 }

@@ -81,7 +81,7 @@ public class RoleService {
             SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.ADMIN) ||
             roleRepository.hasAnyRoleInProject(
                 project,
-                SecurityUtils.getCurrentUserLogin().orElseThrow(IllegalArgumentException::new),
+                SecurityUtils.getCurrentUser().orElseThrow(IllegalArgumentException::new).getId(),
                 Arrays.asList(roles)
             )
         );

@@ -15,6 +15,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
@@ -40,55 +42,10 @@ public class UserService {
         this.authorityRepository = authorityRepository;
     }
 
-    /**
-     * Update basic information (first name, last name, email, language) for the current user.
-     *
-     * @param firstName first name of user.
-     * @param lastName  last name of user.
-     * @param email     email id of user.
-     * @param langKey   language key.
-     * @param imageUrl  image URL of user.
-     */
-    public void updateUser(String firstName, String lastName, String email, String langKey, String imageUrl) {
-        SecurityUtils
-            .getCurrentUserLogin()
-            .flatMap(userRepository::findOneByLogin)
-            .ifPresent(
-                user -> {
-                    user.setFirstName(firstName);
-                    user.setLastName(lastName);
-                    if (email != null) {
-                        user.setEmail(email.toLowerCase());
-                    }
-                    user.setLangKey(langKey);
-                    user.setImageUrl(imageUrl);
-                    log.debug("Changed Information for User: {}", user);
-                }
-            );
-    }
-
-    @Transactional(readOnly = true)
-    public Page<AdminUserDTO> getAllManagedUsers(Pageable pageable) {
-        return userRepository.findAll(pageable).map(AdminUserDTO::new);
-    }
-
-    @Transactional(readOnly = true)
-    public Page<UserDTO> getAllPublicUsers(Pageable pageable) {
-        return userRepository.findAllByIdNotNullAndActivatedIsTrue(pageable).map(UserDTO::new);
-    }
-
-    @Transactional(readOnly = true)
-    public Optional<User> getUserWithAuthoritiesByLogin(String login) {
-        return userRepository.findOneWithAuthoritiesByLogin(login);
-    }
-
-    /**
-     * Gets a list of all the authorities.
-     * @return a list of all the authorities.
-     */
-    @Transactional(readOnly = true)
-    public List<String> getAuthorities() {
-        return authorityRepository.findAll().stream().map(Authority::getName).collect(Collectors.toList());
+@Transactional(readOnly = true)
+    public Optional<AdminUserDTO> findOne(String jhiUserId) {
+        return userRepository.findById(jhiUserId)
+            .map(AdminUserDTO::new);
     }
 
     @Transactional
@@ -131,6 +88,28 @@ public class UserService {
         return user;
     }
 
+    private List<String> getAuthorities() {
+        return authorityRepository.findAll().stream().map(Authority::getName).collect(Collectors.toList());
+    }
+
+    private void updateUser(String firstName, String lastName, String email, String langKey, String imageUrl) {
+        SecurityUtils
+            .getCurrentUserLogin()
+            .flatMap(userRepository::findOneByLogin)
+            .ifPresent(
+                user -> {
+                    user.setFirstName(firstName);
+                    user.setLastName(lastName);
+                    if (email != null) {
+                        user.setEmail(email.toLowerCase());
+                    }
+                    user.setLangKey(langKey);
+                    user.setImageUrl(imageUrl);
+                    log.debug("Changed Information for User: {}", user);
+                }
+            );
+    }
+
     /**
      * Returns the user from an OAuth 2.0 login or resource server with JWT.
      * Synchronizes the user in the local repository.
@@ -138,8 +117,7 @@ public class UserService {
      * @param authToken the authentication token.
      * @return the user from the authentication.
      */
-    @Transactional
-    public AdminUserDTO getUserFromAuthentication(AbstractAuthenticationToken authToken) {
+     AdminUserDTO getUserFromAuthentication(AbstractAuthenticationToken authToken) {
         Map<String, Object> attributes;
         if (authToken instanceof OAuth2AuthenticationToken) {
             attributes = ((OAuth2AuthenticationToken) authToken).getPrincipal().getAttributes();
@@ -166,7 +144,7 @@ public class UserService {
         return new AdminUserDTO(syncUserWithIdP(attributes, user));
     }
 
-    private static User getUser(Map<String, Object> details) {
+    private  User getUser(Map<String, Object> details) {
         User user = new User();
         Boolean activated = Boolean.TRUE;
         // handle resource server JWT, where sub claim is email and uid is ID
@@ -215,5 +193,34 @@ public class UserService {
         }
         user.setActivated(activated);
         return user;
+    }
+
+    /**
+     * Find possible User by email or login containing.
+     *
+     * @param emailOrLogin partial email or login.
+     * @return list of possible Users.
+     */
+    @Transactional(readOnly = true)
+    public List<UserDTO> findByEmailOrLoginContaining(String emailOrLogin) {
+        log.debug("Request to get all Users by login or email: {}", emailOrLogin);
+        return userRepository
+            .findTop5ByEmailContainingIgnoreCaseOrLoginContainingIgnoreCase(emailOrLogin, emailOrLogin)
+            .stream()
+            .map(UserDTO::new)
+            .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+  public Optional<AdminUserDTO> findOneByLogin(String login) {
+        return userRepository.findOneByLogin(login)
+            .map(AdminUserDTO::new);
+  }
+
+    @Transactional(readOnly = true)
+    public List<AdminUserDTO> findAllById(List<String> jhiUserIds) {
+        return userRepository.findAllById(jhiUserIds)
+    .stream().map(AdminUserDTO::new)
+    .collect(Collectors.toList());
     }
 }

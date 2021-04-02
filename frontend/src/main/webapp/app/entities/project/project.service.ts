@@ -9,6 +9,8 @@ import { createRequestOption } from 'app/core/request/request-util';
 
 import { Project } from 'app/entities/project/project.model';
 
+import { Account } from 'app/core/auth/account.model';
+
 import { ICreateProject } from 'app/entities/dto/create-project.model';
 
 import * as moment from 'moment';
@@ -59,6 +61,10 @@ export class ProjectService {
 
   getRolePerProject(): Observable<Map<number, string>> {
     return this.http.get<Map<number, string>>(`${this.resourceUrl}/rolePerProject`);
+  }
+
+  getAllUsers(project: Project): Observable<Account[]> {
+    return this.http.get<Account[]>(`${this.resourceUrl}/${project.id!}/users`);
   }
 
   protected convertDateFromClient(project: Project | ICreateProject): Project | ICreateProject {

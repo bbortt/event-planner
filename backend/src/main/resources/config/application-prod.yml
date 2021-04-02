@@ -24,6 +24,8 @@ management:
     export:
       prometheus:
         enabled: false
+  server:
+    port: 8090
 
 spring:
   devtools:
@@ -42,17 +44,6 @@ spring:
     locator:
       discovery:
         enabled: true
-  mail:
-    host: ${APPL_MAIL_HOST}
-    port: ${APPL_MAIL_PORT:25}
-    username: ${APPL_MAIL_USERNAME}
-    password: ${APPL_MAIL_PASSWORD}
-    properties:
-      mail:
-        smtp:
-          auth: true
-          ssl.enable: true
-          ssl.trust: ${spring.mail.host}
 
 server:
   port: 8080

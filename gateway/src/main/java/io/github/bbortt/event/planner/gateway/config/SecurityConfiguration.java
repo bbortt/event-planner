@@ -86,6 +86,7 @@ public class SecurityConfiguration {
             .authorizeExchange()
             .pathMatchers("/api/auth-info").permitAll()
             .pathMatchers("/api/admin/**").hasAuthority(AuthoritiesConstants.ADMIN)
+            .pathMatchers("/api/invitations/token-validity").permitAll()
             .pathMatchers("/api/**").authenticated()
             .pathMatchers("/services/**").authenticated()
             .pathMatchers("/management/health").permitAll()

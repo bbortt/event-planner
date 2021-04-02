@@ -89,7 +89,7 @@
               valueExpr="email"
               (onSelectionChanged)="userSelected($event)"
               [showClearButton]="true"
-              [isValid]="!(editForm.get('user')!.invalid && (editForm.get('user')!.dirty || editForm.get('user')!.touched))"
+              [isValid]="!(editForm.get('jhiUserId')!.invalid && (editForm.get('jhiUserId')!.dirty || editForm.get('jhiUserId')!.touched))"
             >
             </dx-autocomplete>
           </div>

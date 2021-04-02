@@ -23,24 +23,23 @@ import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.persistence.EntityManager;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.test.context.TestSecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Integration tests for the {@link EventResource} REST controller.
  */
-@ExtendWith(MockitoExtension.class)
 class EventResourceIT extends AbstractApplicationContextAwareIT {
 
     private static final String TEST_USER_LOGIN = "eventresourceit-login";
@@ -61,9 +60,6 @@ class EventResourceIT extends AbstractApplicationContextAwareIT {
     @Autowired
     private EventRepository eventRepository;
 
-    @Mock
-    private EventService eventServiceMock;
-
     @Autowired
     private EventService eventService;
 
@@ -76,6 +72,7 @@ class EventResourceIT extends AbstractApplicationContextAwareIT {
     @Autowired
     private MockMvc restEventMockMvc;
 
+    private Map<String, Object> userDetails;
     private Event event;
 
     /**
@@ -130,6 +127,10 @@ class EventResourceIT extends AbstractApplicationContextAwareIT {
 
     @BeforeEach
     void initTest() {
+        userDetails = new HashMap<>();
+        userDetails.put("sub", TEST_USER_LOGIN);
+        TestSecurityContextHolder.setAuthentication(TestUtil.createMockOAuth2AuthenticationToken(userDetails));
+
         event = createEntity(em);
 
         Invitation invitation = InvitationResourceIT
@@ -145,7 +146,6 @@ class EventResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void createEvent() throws Exception {
         eventRepository.deleteAll();
 
@@ -166,7 +166,6 @@ class EventResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void createEventWithExistingId() throws Exception {
         int databaseSizeBeforeCreate = eventRepository.findAll().size();
 
@@ -185,7 +184,6 @@ class EventResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void checkNameIsRequired() throws Exception {
         int databaseSizeBeforeTest = eventRepository.findAll().size();
         // set the field null
@@ -203,7 +201,6 @@ class EventResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void checkStartTimeIsRequired() throws Exception {
         int databaseSizeBeforeTest = eventRepository.findAll().size();
         // set the field null
@@ -221,7 +218,6 @@ class EventResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void checkEndTimeIsRequired() throws Exception {
         int databaseSizeBeforeTest = eventRepository.findAll().size();
         // set the field null
@@ -239,8 +235,14 @@ class EventResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(value = TEST_ADMIN_LOGIN, authorities = { AuthoritiesConstants.ADMIN })
     void getAllEvents() throws Exception {
+        TestSecurityContextHolder.setAuthentication(
+            TestUtil.createMockOAuth2AuthenticationToken(
+                userDetails,
+                Collections.singletonList(new SimpleGrantedAuthority(AuthoritiesConstants.ADMIN))
+            )
+        );
+
         // Initialize the database
         eventRepository.saveAndFlush(event);
 
@@ -258,7 +260,6 @@ class EventResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void getAllEventsForbiddenForUsers() throws Exception {
         // Initialize the database
         eventRepository.saveAndFlush(event);
@@ -269,7 +270,6 @@ class EventResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void getEvent() throws Exception {
         // Initialize the database
         eventRepository.saveAndFlush(event);
@@ -288,7 +288,6 @@ class EventResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void getNonExistingEvent() throws Exception {
         // Get the event
         restEventMockMvc.perform(get("/api/events/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
@@ -296,7 +295,6 @@ class EventResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void updateEvent() throws Exception {
         // Initialize the database
         eventService.save(event);
@@ -329,7 +327,6 @@ class EventResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void updateNonExistingEvent() throws Exception {
         int databaseSizeBeforeUpdate = eventRepository.findAll().size();
 
@@ -345,7 +342,6 @@ class EventResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void deleteEvent() throws Exception {
         // Initialize the database
         eventService.save(event);

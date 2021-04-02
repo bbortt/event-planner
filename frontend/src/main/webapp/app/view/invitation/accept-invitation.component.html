@@ -1,12 +1,7 @@
-<ng-container *ngIf="variant === 'login'">
-  <p jhiTranslate="eventPlannerApp.invitation.acceptViaLoginMessage"></p>
+<jhi-alert></jhi-alert>
 
-  <!-- TODO: This does not work with OAuth2! -->
-  <!--  <jhi-login [invitationToken]="token"></jhi-login>-->
-</ng-container>
-<ng-container *ngIf="variant === 'register'">
-  <p jhiTranslate="eventPlannerApp.invitation.acceptViaRegisterMessage"></p>
+<div class="alert alert-info">
+  <span jhiTranslate="eventPlannerApp.invitation.acceptViaLoginMessage"></span>
+</div>
 
-  <!-- TODO: This does not work with OAuth2! -->
-  <!--  <jhi-register [invitationToken]="token"></jhi-register>-->
-</ng-container>
+<button type="button" class="btn btn-outline-dark" (click)="login()" jhiTranslate="global.menu.account.login">Sign in</button>

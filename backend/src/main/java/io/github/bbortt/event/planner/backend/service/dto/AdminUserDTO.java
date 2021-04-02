@@ -160,7 +160,7 @@ public class AdminUserDTO {
     // prettier-ignore
     @Override
     public String toString() {
-        return "AdminUserDTO{" +
+        return "UserDTO{" +
             "login='" + login + '\'' +
             ", firstName='" + firstName + '\'' +
             ", lastName='" + lastName + '\'' +

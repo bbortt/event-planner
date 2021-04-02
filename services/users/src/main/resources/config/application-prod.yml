@@ -24,6 +24,8 @@ management:
     export:
       prometheus:
         enabled: false
+  server:
+    port: 8090
 
 spring:
   devtools:

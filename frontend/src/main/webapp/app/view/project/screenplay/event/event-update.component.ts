@@ -3,13 +3,14 @@ import { HttpResponse } from '@angular/common/http';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { Observable, Subject } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { AccountService } from 'app/core/auth/account.service';
 import { EventManager } from 'app/core/util/event-manager.service';
 
 import { EventService } from 'app/entities/event/event.service';
+import { ProjectService } from 'app/entities/project/project.service';
 import { ResponsibilityService } from 'app/entities/responsibility/responsibility.service';
 import { UserService } from 'app/entities/user/user.service';
 
@@ -18,16 +19,18 @@ import { Location } from 'app/entities/location/location.model';
 import { Project } from 'app/entities/project/project.model';
 import { Responsibility } from 'app/entities/responsibility/responsibility.model';
 import { Section } from 'app/entities/section/section.model';
-import { User } from 'app/entities/user/user.model';
 
 import { Authority } from 'app/config/authority.constants';
 import { Role } from 'app/config/role.constants';
+
+import { Account } from 'app/core/auth/account.model';
 
 import { DATE_TIME_FORMAT } from 'app/config/input.constants';
 
 import responsibilityOrUserFromForm from 'app/shared/util/responsibility-or-user-from-form';
 
 import * as moment from 'moment';
+import { User } from 'app/entities/user/user.model';
 
 @Component({
   selector: 'app-event-update',
@@ -41,7 +44,7 @@ export class EventUpdateComponent implements OnInit, OnDestroy {
   isReadonly = true;
 
   responsibilities: Responsibility[] = [];
-  users: User[] = [];
+  users: Account[] = [];
 
   project?: Project;
 
@@ -58,7 +61,7 @@ export class EventUpdateComponent implements OnInit, OnDestroy {
     section: [null, [Validators.required]],
     responsibility: [],
     responsibilityAutocomplete: [],
-    user: [],
+    jhiUserId: [],
     userAutocomplete: [],
   });
 
@@ -70,12 +73,13 @@ export class EventUpdateComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
+    private eventManager: EventManager,
+    private fb: FormBuilder,
     private accountService: AccountService,
     private eventService: EventService,
+    private projectService: ProjectService,
     private responsibilityService: ResponsibilityService,
-    private userService: UserService,
-    private eventManager: EventManager,
-    private fb: FormBuilder
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
@@ -106,47 +110,48 @@ export class EventUpdateComponent implements OnInit, OnDestroy {
     this.minEndDate = newStartTime;
 
     const { id, name, description, section } = event;
-    let { responsibility, user } = event;
+    let { responsibility, jhiUserId } = event;
 
     if (!isReadonly) {
-      if (this.section.responsibility || this.section.user) {
+      if (this.section.responsibility || this.section.jhiUserId) {
         responsibility = this.section.responsibility;
-        user = this.section.user;
-      } else if (this.location.responsibility || this.location.user) {
+        jhiUserId = this.section.jhiUserId;
+      } else if (this.location.responsibility || this.location.jhiUserId) {
         responsibility = this.location.responsibility;
-        user = this.location.user;
+        jhiUserId = this.location.jhiUserId;
       }
 
       this.responsibilityService
         .findAllByProject(this.project, { sort: ['name,asc'] })
         .subscribe((response: HttpResponse<Responsibility[]>) => (this.responsibilities = response.body ?? []));
 
-      this.userService
-        .findAllByProject(this.project, { sort: ['email,asc'] })
-        .subscribe((response: HttpResponse<User[]>) => (this.users = response.body ?? []));
+      this.projectService.getAllUsers(this.project).subscribe((users: Account[]) => (this.users = users));
     }
 
-    this.isResponsibility = !user;
-    this.editForm.patchValue({
-      id,
-      name,
-      description,
-      startTime: newStartTime,
-      endTime: newEndTime,
-      section,
-      responsibility,
-      responsibilityAutocomplete: responsibility?.name,
-      user,
-      userAutocomplete: user?.email,
-    });
+    this.isResponsibility = !jhiUserId;
+
+    (jhiUserId ? this.userService.find(jhiUserId) : of({ body: {} } as HttpResponse<User>)).subscribe((response: HttpResponse<User>) =>
+      this.editForm.patchValue({
+        id,
+        name,
+        description,
+        startTime: newStartTime,
+        endTime: newEndTime,
+        section,
+        responsibility,
+        responsibilityAutocomplete: responsibility?.name,
+        jhiUserId,
+        userAutocomplete: response.body?.email,
+      })
+    );
   }
 
   responsibilitySelected($event: any): void {
     this.editForm.get('responsibility')!.setValue($event.selectedItem);
   }
 
-  userSelected($event: any): void {
-    this.editForm.get('user')!.setValue($event.selectedItem);
+  userSelected($event: { selectedItem: User }): void {
+    this.editForm.get('jhiUserId')!.setValue($event.selectedItem.id);
   }
 
   onRadioChange($event: any): void {
@@ -216,7 +221,7 @@ export class EventUpdateComponent implements OnInit, OnDestroy {
   }
 
   private createFromForm(): Event {
-    const { responsibility, user } = responsibilityOrUserFromForm(this.editForm, this.isResponsibility);
+    const { responsibility, jhiUserId } = responsibilityOrUserFromForm(this.editForm, this.isResponsibility);
 
     return {
       id: this.editForm.get(['id'])!.value,
@@ -226,7 +231,7 @@ export class EventUpdateComponent implements OnInit, OnDestroy {
       endTime: moment(this.editForm.get(['endTime'])!.value),
       section: this.editForm.get(['section'])!.value,
       responsibility,
-      user,
+      jhiUserId,
     };
   }
 }

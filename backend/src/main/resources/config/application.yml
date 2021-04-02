@@ -59,7 +59,7 @@ management:
       readiness:
         include: readinessState,datasource
     mail:
-      enabled: false # When using the MailService, configure an SMTP server and set this to true
+      enabled: true
   metrics:
     export:
       # Prometheus is the default metrics backend
@@ -134,6 +134,17 @@ spring:
       naming:
         physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
         implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+  mail:
+    host: ${APPL_MAIL_HOST}
+    port: ${APPL_MAIL_PORT:25}
+    username: ${APPL_MAIL_USERNAME}
+    password: ${APPL_MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          ssl.enable: true
+          ssl.trust: ${spring.mail.host}
   messages:
     basename: i18n/messages
   main:
@@ -195,6 +206,7 @@ jhipster:
   #   allow-credentials: true
   #   max-age: 1800
   mail:
+    base-url: ${APPL_MAIL_BASE_URL}
     from: ${APPL_MAIL_SENDER:${spring.mail.username}}
   api-docs:
     default-include-pattern: ${server.servlet.context-path:}/api/.*

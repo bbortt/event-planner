@@ -25,8 +25,11 @@
       "role": "Role",
       "responsibility": "Responsibility",
       "color": "Color",
-      "acceptViaLoginMessage": "Log in to accept the invitation.",
-      "acceptViaRegisterMessage": "Register to accept the invitation."
+      "acceptViaLoginMessage": "Please log in to accept the invitation.",
+      "accepting": {
+        "failed": "An error occured. Please try again later!",
+        "success": "Invitation accepted."
+      }
     }
   }
 }

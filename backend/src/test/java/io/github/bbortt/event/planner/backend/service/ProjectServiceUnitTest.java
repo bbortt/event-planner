@@ -10,21 +10,27 @@ import io.github.bbortt.event.planner.backend.repository.InvitationRepository;
 import io.github.bbortt.event.planner.backend.repository.ProjectRepository;
 import io.github.bbortt.event.planner.backend.repository.RoleRepository;
 import io.github.bbortt.event.planner.backend.security.AuthoritiesConstants;
-import io.github.bbortt.event.planner.backend.service.dto.AdminUserDTO;
 import io.github.bbortt.event.planner.backend.service.dto.CreateProjectDTO;
 import io.github.bbortt.event.planner.backend.service.exception.ForbiddenRequestException;
+import io.github.bbortt.event.planner.backend.web.rest.TestUtil;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.test.context.TestSecurityContextHolder;
 import org.springframework.security.test.context.support.WithSecurityContextTestExecutionListener;
 import org.springframework.test.context.TestExecutionListeners;
@@ -38,13 +44,10 @@ class ProjectServiceUnitTest {
     static final String MOCK_USER_LOGIN = "mock-user-login";
 
     @Mock
-    Authentication authenticationMock;
+    RoleService roleServiceMock;
 
     @Mock
     UserService userServiceMock;
-
-    @Mock
-    RoleService roleServiceMock;
 
     @Mock
     RoleRepository roleRepositoryMock;
@@ -55,23 +58,20 @@ class ProjectServiceUnitTest {
     @Mock
     InvitationRepository invitationRepositoryMock;
 
-    AdminUserDTO adminUserDTO;
-
+    Map<String, Object> userDetails;
     ProjectService fixture;
 
     @BeforeEach
     void beforeTestSetup() {
-        TestSecurityContextHolder.setAuthentication(authenticationMock);
+        userDetails = new HashMap<>();
+        userDetails.put("sub", MOCK_USER_LOGIN);
 
-        adminUserDTO = new AdminUserDTO();
-
-        fixture = new ProjectService(userServiceMock, roleServiceMock, roleRepositoryMock, projectRepositoryMock, invitationRepositoryMock);
+        fixture = new ProjectService(roleServiceMock, userServiceMock, roleRepositoryMock, projectRepositoryMock, invitationRepositoryMock);
     }
 
     @Test
     void findMineOrAllByArchivedDoesLoadMine() {
-        adminUserDTO.setId(MOCK_USER_LOGIN);
-        doReturn(adminUserDTO).when(userServiceMock).getCurrentUser();
+        TestSecurityContextHolder.setAuthentication(TestUtil.createMockOAuth2AuthenticationToken(userDetails));
 
         Pageable pageable = Pageable.unpaged();
 
@@ -96,9 +96,12 @@ class ProjectServiceUnitTest {
         boolean archived = true;
         Pageable pageable = Pageable.unpaged();
 
-        doReturn(Collections.singletonList(new SimpleGrantedAuthority(AuthoritiesConstants.ADMIN)))
-            .when(authenticationMock)
-            .getAuthorities();
+        TestSecurityContextHolder.setAuthentication(
+            TestUtil.createMockOAuth2AuthenticationToken(
+                userDetails,
+                Collections.singletonList(new SimpleGrantedAuthority(AuthoritiesConstants.ADMIN))
+            )
+        );
 
         fixture.findMineOrAllByArchived(Boolean.TRUE, archived, pageable);
 

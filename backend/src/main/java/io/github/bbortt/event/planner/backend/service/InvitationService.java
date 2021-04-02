@@ -3,7 +3,6 @@ package io.github.bbortt.event.planner.backend.service;
 import io.github.bbortt.event.planner.backend.domain.Invitation;
 import io.github.bbortt.event.planner.backend.repository.InvitationRepository;
 import io.github.bbortt.event.planner.backend.security.SecurityUtils;
-import io.github.bbortt.event.planner.backend.service.dto.AdminUserDTO;
 import io.github.bbortt.event.planner.backend.service.exception.EntityNotFoundException;
 import io.github.bbortt.event.planner.backend.service.exception.IdMustBePresentException;
 import java.time.Instant;
@@ -16,7 +15,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -114,7 +112,7 @@ public class InvitationService {
     @PreAuthorize("isAuthenticated()")
     public void assignCurrentUserToInvitation(String token) {
         log.debug("Request to accept invitation for current user by token : {}", token);
-        String login = userService.getCurrentUser().getLogin();
+        String login = SecurityUtils.getCurrentUser().orElseThrow(IllegalArgumentException::new).getLogin();
         invitationRepository.assignUserToInvitation(userService.findUserByLogin(login).getId(), token);
     }
 
@@ -165,7 +163,7 @@ public class InvitationService {
      * @return the current users invitations.
      */
     public List<Invitation> findMine() {
-        String jhiUserId = userService.getCurrentUser().getId();
+        String jhiUserId = SecurityUtils.getCurrentUser().orElseThrow(IllegalArgumentException::new).getId();
         log.debug("Request to get my invitations: {}", jhiUserId);
         return invitationRepository.findAllByJhiUserId(jhiUserId);
     }

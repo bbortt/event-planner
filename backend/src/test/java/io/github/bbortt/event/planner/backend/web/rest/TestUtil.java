@@ -170,6 +170,19 @@ public final class TestUtil {
      */
     public static OAuth2AuthenticationToken createMockOAuth2AuthenticationToken(Map<String, Object> userDetails) {
         Collection<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(AuthoritiesConstants.ANONYMOUS));
+        return createMockOAuth2AuthenticationToken(userDetails, authorities);
+    }
+
+    /**
+     * Create {@code OAuth2AuthenticationToken} to inject into the {@code TestSecurityContext}.
+     *
+     * @param userDetails The user details to inject
+     * @return A valid authentication token
+     */
+    public static OAuth2AuthenticationToken createMockOAuth2AuthenticationToken(
+        Map<String, Object> userDetails,
+        Collection<GrantedAuthority> authorities
+    ) {
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
             "anonymous",
             "anonymous",

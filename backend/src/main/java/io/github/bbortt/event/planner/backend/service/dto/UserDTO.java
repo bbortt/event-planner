@@ -1,8 +1,4 @@
-package io.github.bbortt.event.planner.service.user.service.dto;
-
-import io.github.bbortt.event.planner.service.user.domain.User;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.Size;
+package io.github.bbortt.event.planner.backend.service.dto;
 
 /**
  * A DTO representing a user, with only the public attributes.
@@ -15,12 +11,6 @@ public class UserDTO {
 
     public UserDTO() {
         // Empty constructor needed for Jackson.
-    }
-
-    public UserDTO(User user) {
-        this.id = user.getId();
-        this.login = user.getLogin();
-        this.email = user.getEmail();
     }
 
     public String getId() {

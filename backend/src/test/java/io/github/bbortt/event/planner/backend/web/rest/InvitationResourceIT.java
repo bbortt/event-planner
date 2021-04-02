@@ -22,6 +22,7 @@ import io.github.bbortt.event.planner.backend.repository.RoleRepository;
 import io.github.bbortt.event.planner.backend.security.AuthoritiesConstants;
 import io.github.bbortt.event.planner.backend.service.InvitationService;
 import io.github.bbortt.event.planner.backend.service.dto.AdminUserDTO;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,9 +33,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.test.context.TestSecurityContextHolder;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -140,8 +140,9 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
     @BeforeEach
     void initTest() {
         userDetails = new HashMap<>();
-        userDetails.put("sub", TEST_USER_LOGIN);
-        userDetails.put("email", TEST_USER_EMAIL);
+        userDetails.put("sub", TEST_ADMIN_LOGIN);
+        userDetails.put("email", TEST_ADMIN_EMAIL);
+        TestSecurityContextHolder.setAuthentication(TestUtil.createMockOAuth2AuthenticationToken(userDetails));
 
         invitation = createEntity(em);
         invitation.jhiUserId(TEST_USER_LOGIN).email(TEST_USER_EMAIL);
@@ -161,7 +162,6 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_ADMIN_LOGIN)
     void createInvitation() throws Exception {
         em.persist(userInvitation.role(roleRepository.roleAdmin()));
 
@@ -182,7 +182,6 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_ADMIN_LOGIN)
     void cannotCreateADMINInvitation() throws Exception {
         em.persist(userInvitation.role(roleRepository.roleAdmin()));
 
@@ -198,7 +197,6 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_ADMIN_LOGIN)
     void createInvitationWithExistingId() throws Exception {
         em.persist(userInvitation.role(roleRepository.roleAdmin()));
 
@@ -221,7 +219,6 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_ADMIN_LOGIN)
     void createInvitationForbiddenForRoleContributor() throws Exception {
         em.persist(userInvitation);
 
@@ -235,7 +232,6 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_ADMIN_LOGIN)
     void checkEmailIsRequired() throws Exception {
         int databaseSizeBeforeTest = invitationRepository.findAll().size();
         // set the field null
@@ -254,7 +250,6 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_ADMIN_LOGIN)
     void checkAcceptedIsRequired() throws Exception {
         int databaseSizeBeforeTest = invitationRepository.findAll().size();
         // set the field null
@@ -274,8 +269,14 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(username = TEST_ADMIN_LOGIN, authorities = AuthoritiesConstants.ADMIN)
     void getAllInvitations() throws Exception {
+        TestSecurityContextHolder.setAuthentication(
+            TestUtil.createMockOAuth2AuthenticationToken(
+                userDetails,
+                Collections.singletonList(new SimpleGrantedAuthority(AuthoritiesConstants.ADMIN))
+            )
+        );
+
         // Initialize the database
         invitationRepository.saveAndFlush(invitation);
 
@@ -291,7 +292,6 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_ADMIN_LOGIN)
     void getInvitation() throws Exception {
         em.persist(userInvitation.role(roleRepository.roleAdmin()));
 
@@ -310,7 +310,6 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_ADMIN_LOGIN)
     void getInvitationForbiddenForRoleContributor() throws Exception {
         em.persist(userInvitation);
 
@@ -323,7 +322,6 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_ADMIN_LOGIN)
     void getNonExistingInvitation() throws Exception {
         // Get the invitation
         restInvitationMockMvc.perform(get("/api/invitations/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
@@ -331,7 +329,6 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_ADMIN_LOGIN)
     void updateInvitation() throws Exception {
         em.persist(userInvitation.role(roleRepository.roleAdmin()));
 
@@ -368,7 +365,6 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_ADMIN_LOGIN)
     void updateNonExistingInvitation() throws Exception {
         em.persist(userInvitation.role(roleRepository.roleAdmin()));
 
@@ -386,7 +382,6 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_ADMIN_LOGIN)
     void updateInvitationForbiddenForRoleContributor() throws Exception {
         em.persist(userInvitation);
 
@@ -404,7 +399,6 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_ADMIN_LOGIN)
     void deleteInvitation() throws Exception {
         em.persist(userInvitation.role(roleRepository.roleAdmin()));
 
@@ -425,7 +419,6 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_ADMIN_LOGIN)
     void deleteInvitationForbiddenForRoleContributor() throws Exception {
         em.persist(userInvitation);
 
@@ -441,6 +434,8 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     void acceptInvitationWithoutCurrentUser() throws Exception {
+        TestSecurityContextHolder.clearContext();
+
         restInvitationMockMvc
             .perform(post("/api/invitations/accept").content("a0d5206e-4a3f-49f9-b92d-8bf7bcd5a9ab"))
             .andExpect(status().isUnauthorized());
@@ -449,12 +444,13 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     void acceptInvitationForCurrentUser() throws Exception {
-        OAuth2AuthenticationToken authentication = TestUtil.createMockOAuth2AuthenticationToken(userDetails);
-        TestSecurityContextHolder.setAuthentication(authentication);
+        userDetails.put("sub", TEST_USER_LOGIN);
+        userDetails.put("email", TEST_USER_EMAIL);
+        TestSecurityContextHolder.setAuthentication(TestUtil.createMockOAuth2AuthenticationToken(userDetails));
 
-        AdminUserDTO userDTO = new AdminUserDTO();
-        userDTO.setId(TEST_USER_LOGIN);
-        when(userServiceClientMock.findUserByLogin(TEST_USER_LOGIN)).thenReturn(Optional.of(userDTO));
+        AdminUserDTO adminUserDTO = new AdminUserDTO();
+        adminUserDTO.setId(TEST_USER_LOGIN);
+        when(userServiceClientMock.findUserByLogin(TEST_USER_LOGIN)).thenReturn(Optional.of(adminUserDTO));
 
         final String token = "810b88eb-4d1b-430b-905c-ad5a387bca3b";
 

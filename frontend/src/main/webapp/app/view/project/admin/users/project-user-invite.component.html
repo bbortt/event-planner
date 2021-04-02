@@ -39,7 +39,7 @@
 
         <div *ngIf="editForm.get('role')?.value === roleProjectAdmin.name; else roleSelect" class="form-group">
           <label class="form-control-label" for="field_role">
-            <span jhiTranslate="global.invitation.role">Role</span>
+            <span jhiTranslate="eventPlannerApp.invitation.role">Role</span>
 
             <input class="form-control" name="role" id="field_role" value="{{ roleProjectAdmin.name }}" readOnly="true" />
           </label>
@@ -47,7 +47,7 @@
 
         <ng-template #roleSelect>
           <div class="form-group">
-            <label jhiTranslate="global.invitation.role"> Role </label>
+            <label jhiTranslate="eventPlannerApp.invitation.role"> Role </label>
 
             <div *ngFor="let role of invitationRoles" class="form-check">
               <label class="form-check-label" id="field_role_{{ role.name }}">

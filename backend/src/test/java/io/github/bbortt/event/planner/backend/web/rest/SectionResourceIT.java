@@ -19,13 +19,16 @@ import io.github.bbortt.event.planner.backend.repository.SectionRepository;
 import io.github.bbortt.event.planner.backend.security.AuthoritiesConstants;
 import io.github.bbortt.event.planner.backend.service.SectionService;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.test.context.TestSecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,7 +38,6 @@ import org.springframework.transaction.annotation.Transactional;
 class SectionResourceIT extends AbstractApplicationContextAwareIT {
 
     private static final String TEST_USER_LOGIN = "sectionresourceit-login";
-    private static final String TEST_ADMIN_LOGIN = "sectionresourceit-admin";
 
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
@@ -55,6 +57,7 @@ class SectionResourceIT extends AbstractApplicationContextAwareIT {
     @Autowired
     private MockMvc restSectionMockMvc;
 
+    private Map<String, Object> userDetails;
     private Section section;
     private Invitation invitation;
 
@@ -100,6 +103,10 @@ class SectionResourceIT extends AbstractApplicationContextAwareIT {
 
     @BeforeEach
     void initTest() {
+        userDetails = new HashMap<>();
+        userDetails.put("sub", TEST_USER_LOGIN);
+        TestSecurityContextHolder.setAuthentication(TestUtil.createMockOAuth2AuthenticationToken(userDetails));
+
         section = createEntity(em);
 
         invitation =
@@ -115,7 +122,6 @@ class SectionResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void createSection() throws Exception {
         em.persist(invitation.role(roleRepository.roleAdmin()));
 
@@ -135,7 +141,6 @@ class SectionResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void createSectionWithExistingId() throws Exception {
         em.persist(invitation.role(roleRepository.roleAdmin()));
 
@@ -156,7 +161,6 @@ class SectionResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void createSectionForbiddenForRoleContributor() throws Exception {
         em.persist(invitation);
 
@@ -168,7 +172,6 @@ class SectionResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void checkNameIsRequired() throws Exception {
         int databaseSizeBeforeTest = sectionRepository.findAll().size();
         // set the field null
@@ -186,8 +189,14 @@ class SectionResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(value = TEST_ADMIN_LOGIN, authorities = { AuthoritiesConstants.ADMIN })
     void getAllSections() throws Exception {
+        TestSecurityContextHolder.setAuthentication(
+            TestUtil.createMockOAuth2AuthenticationToken(
+                userDetails,
+                Collections.singletonList(new SimpleGrantedAuthority(AuthoritiesConstants.ADMIN))
+            )
+        );
+
         // Initialize the database
         sectionRepository.saveAndFlush(section);
 
@@ -202,7 +211,6 @@ class SectionResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void getAllSectionsForbiddenForAuthorityUser() throws Exception {
         // Initialize the database
         sectionRepository.saveAndFlush(section);
@@ -213,7 +221,6 @@ class SectionResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void getSection() throws Exception {
         em.persist(invitation.role(roleRepository.roleAdmin()));
 
@@ -231,7 +238,6 @@ class SectionResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void getNonExistingSection() throws Exception {
         // Get the section
         restSectionMockMvc.perform(get("/api/sections/{id}", Long.MAX_VALUE)).andExpect(status().isNotFound());
@@ -239,7 +245,6 @@ class SectionResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void getSectionForbiddenForRoleContributor() throws Exception {
         em.persist(invitation);
 
@@ -249,7 +254,6 @@ class SectionResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void updateSection() throws Exception {
         em.persist(invitation.role(roleRepository.roleAdmin()));
 
@@ -283,7 +287,6 @@ class SectionResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void updateNonExistingSection() throws Exception {
         em.persist(invitation.role(roleRepository.roleAdmin()));
 
@@ -301,7 +304,6 @@ class SectionResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void updateSectionForbiddenForRoleContributor() throws Exception {
         em.persist(invitation);
 
@@ -317,7 +319,6 @@ class SectionResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void deleteSection() throws Exception {
         em.persist(invitation.role(roleRepository.roleAdmin()));
 
@@ -338,7 +339,6 @@ class SectionResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void deleteSectionForbiddenForRoleContributor() throws Exception {
         em.persist(invitation);
 
@@ -353,7 +353,6 @@ class SectionResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void isNameExistingInProject() throws Exception {
         em.persist(invitation.role(roleRepository.roleAdmin()));
 
@@ -381,7 +380,6 @@ class SectionResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    @WithMockUser(TEST_USER_LOGIN)
     void isNameExistingInProjectForbiddenForRoleContributor() throws Exception {
         em.persist(invitation);
 
