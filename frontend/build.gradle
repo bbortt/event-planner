@@ -1,6 +1,8 @@
 plugins {
     id "base"
     id "com.github.node-gradle.node"
+    id "jacoco"
+    id "org.sonarqube"
 }
 
 group = "io.github.bbortt.event.planner.frontend"

@@ -4,13 +4,17 @@ import io.github.bbortt.event.planner.backend.domain.Event;
 import io.github.bbortt.event.planner.backend.security.AuthoritiesConstants;
 import io.github.bbortt.event.planner.backend.security.RolesConstants;
 import io.github.bbortt.event.planner.backend.service.EventService;
-import io.github.bbortt.event.planner.backend.service.ProjectService;
+import io.github.bbortt.event.planner.backend.service.dto.EventDTO;
 import io.github.bbortt.event.planner.backend.service.exception.EntityNotFoundException;
+import io.github.bbortt.event.planner.backend.service.mapper.EventMapper;
+import io.github.bbortt.event.planner.backend.service.mapper.LocationMapper;
+import io.github.bbortt.event.planner.backend.service.mapper.SectionMapper;
 import io.github.bbortt.event.planner.backend.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,11 +53,16 @@ public class EventResource {
     private String applicationName;
 
     private final EventService eventService;
-    private final ProjectService projectService;
 
-    public EventResource(EventService eventService, ProjectService projectService) {
+    private final LocationMapper locationMapper;
+    private final SectionMapper sectionMapper;
+    private final EventMapper eventMapper;
+
+    public EventResource(EventService eventService, LocationMapper locationMapper, SectionMapper sectionMapper, EventMapper eventMapper) {
         this.eventService = eventService;
-        this.projectService = projectService;
+        this.locationMapper = locationMapper;
+        this.sectionMapper = sectionMapper;
+        this.eventMapper = eventMapper;
     }
 
     /**
@@ -73,16 +82,16 @@ public class EventResource {
         RolesConstants.CONTRIBUTOR +
         "\")"
     )
-    public ResponseEntity<Event> createEvent(@Valid @RequestBody Event event) throws URISyntaxException {
+    public ResponseEntity<EventDTO> createEvent(@Valid @RequestBody EventDTO event) throws URISyntaxException {
         log.debug("REST request to save Event : {}", event);
         if (event.getId() != null) {
             throw new BadRequestAlertException("A new event cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Event result = eventService.save(event);
+        Event result = eventService.save(fromDTO(event));
         return ResponseEntity
             .created(new URI("/api/events/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getName()))
-            .body(result);
+            .body(toDTO(result));
     }
 
     /**
@@ -102,16 +111,16 @@ public class EventResource {
         RolesConstants.CONTRIBUTOR +
         "\")"
     )
-    public ResponseEntity<Event> updateEvent(@Valid @RequestBody Event event) throws URISyntaxException {
+    public ResponseEntity<EventDTO> updateEvent(@Valid @RequestBody EventDTO event) throws URISyntaxException {
         log.debug("REST request to update Event : {}", event);
         if (event.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        Event result = eventService.save(event);
+        Event result = eventService.save(fromDTO(event));
         return ResponseEntity
             .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, event.getName()))
-            .body(result);
+            .body(toDTO(result));
     }
 
     /**
@@ -123,7 +132,7 @@ public class EventResource {
      */
     @GetMapping("/events")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
-    public ResponseEntity<List<Event>> getAllEvents(
+    public ResponseEntity<List<EventDTO>> getAllEvents(
         Pageable pageable,
         @RequestParam(required = false, defaultValue = "false") boolean eagerload
     ) {
@@ -135,7 +144,7 @@ public class EventResource {
             page = eventService.findAll(pageable);
         }
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
-        return ResponseEntity.ok().headers(headers).body(page.getContent());
+        return ResponseEntity.ok().headers(headers).body(page.getContent().stream().map(this::toDTO).collect(Collectors.toList()));
     }
 
     /**
@@ -156,10 +165,10 @@ public class EventResource {
         RolesConstants.VIEWER +
         "\")"
     )
-    public ResponseEntity<Event> getEvent(@PathVariable Long id) {
+    public ResponseEntity<EventDTO> getEvent(@PathVariable Long id) {
         log.debug("REST request to get Event : {}", id);
         Optional<Event> event = eventService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(event);
+        return ResponseUtil.wrapOrNotFound(event.map(this::toDTO));
     }
 
     /**
@@ -183,5 +192,23 @@ public class EventResource {
         String name = eventService.findNameByEventId(id).orElseThrow(EntityNotFoundException::new);
         eventService.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, name)).build();
+    }
+
+    private Event fromDTO(EventDTO eventDTO) {
+        return eventMapper.eventFromDTO(
+            eventDTO,
+            sectionMapper.sectionFromDTO(
+                eventDTO.getSection(),
+                locationMapper.locationFromDTO(eventDTO.getSection().getLocation(), null),
+                null
+            )
+        );
+    }
+
+    private EventDTO toDTO(Event event) {
+        return eventMapper.dtoFromEvent(
+            event,
+            sectionMapper.dtoFromSection(event.getSection(), locationMapper.dtoFromLocation(event.getSection().getLocation(), null), null)
+        );
     }
 }

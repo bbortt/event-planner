@@ -70,6 +70,11 @@ public class Section implements Serializable {
         this.id = id;
     }
 
+    public Section id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public String getName() {
         return name;
     }

@@ -71,6 +71,11 @@ public class Event implements Serializable {
         this.id = id;
     }
 
+    public Event id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public String getName() {
         return name;
     }

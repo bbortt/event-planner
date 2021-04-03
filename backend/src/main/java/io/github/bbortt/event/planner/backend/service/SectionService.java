@@ -2,6 +2,7 @@ package io.github.bbortt.event.planner.backend.service;
 
 import io.github.bbortt.event.planner.backend.domain.Section;
 import io.github.bbortt.event.planner.backend.repository.SectionRepository;
+import io.github.bbortt.event.planner.backend.service.dto.SectionDTO;
 import io.github.bbortt.event.planner.backend.service.exception.BadRequestException;
 import io.github.bbortt.event.planner.backend.service.exception.EntityNotFoundException;
 import io.github.bbortt.event.planner.backend.service.exception.IdMustBePresentException;
@@ -137,18 +138,18 @@ public class SectionService {
         }
 
         Section section = findOne(sectionId).orElseThrow(EntityNotFoundException::new);
-        return hasAccessToSection(section, roles);
+        return projectService.hasAccessToProject(section.getLocation().getProject(), roles);
     }
 
     /**
-     * Checks if the current user has access to the `Project` linked to the given `Section`. The project access must be given by any of the `roles`. Example usage: `@PreAuthorize("@sectionService.hasAccessToSection(#section, 'ADMIN', 'SECRETARY')")`
+     * Checks if the current user has access to the `Project` linked to the given `Section`. The project access must be given by any of the `roles`. Example usage: `@PreAuthorize("@sectionService.hasAccessToSection(#sectionDTO, 'ADMIN', 'SECRETARY')")`
      *
-     * @param section the entity with a linked project to check.
+     * @param sectionDTO the entity with a linked project to check.
      * @param roles   to look out for.
      * @return true if the project access has any of the roles.
      */
     @PreAuthorize("isAuthenticated()")
-    public boolean hasAccessToSection(Section section, String... roles) {
-        return projectService.hasAccessToProject(section.getLocation().getProject(), roles);
+    public boolean hasAccessToSection(SectionDTO sectionDTO, String... roles) {
+        return projectService.hasAccessToProject(sectionDTO.getLocation().getProject(), roles);
     }
 }

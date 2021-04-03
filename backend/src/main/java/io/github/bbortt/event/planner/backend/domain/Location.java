@@ -1,6 +1,7 @@
 package io.github.bbortt.event.planner.backend.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.github.bbortt.event.planner.backend.service.dto.LocationDTO;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -70,6 +71,11 @@ public class Location implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Location id(Long id) {
+        this.id = id;
+        return this;
     }
 
     public String getName() {
@@ -142,6 +148,11 @@ public class Location implements Serializable {
 
     public void setLocationTimeSlots(Set<LocationTimeSlot> locationTimeSlots) {
         this.locationTimeSlots = locationTimeSlots;
+    }
+
+    public Location locationTimeSlots(Set<LocationTimeSlot> locationTimeSlots) {
+        this.locationTimeSlots = locationTimeSlots;
+        return this;
     }
 
     public Location addLocationTimeSlot(LocationTimeSlot locationTimeSlot) {

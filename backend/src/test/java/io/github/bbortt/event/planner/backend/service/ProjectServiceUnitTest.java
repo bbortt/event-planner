@@ -12,6 +12,7 @@ import io.github.bbortt.event.planner.backend.repository.RoleRepository;
 import io.github.bbortt.event.planner.backend.security.AuthoritiesConstants;
 import io.github.bbortt.event.planner.backend.service.dto.CreateProjectDTO;
 import io.github.bbortt.event.planner.backend.service.exception.ForbiddenRequestException;
+import io.github.bbortt.event.planner.backend.service.mapper.ProjectMapper;
 import io.github.bbortt.event.planner.backend.web.rest.TestUtil;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
@@ -66,7 +67,15 @@ class ProjectServiceUnitTest {
         userDetails = new HashMap<>();
         userDetails.put("sub", MOCK_USER_LOGIN);
 
-        fixture = new ProjectService(roleServiceMock, userServiceMock, roleRepositoryMock, projectRepositoryMock, invitationRepositoryMock);
+        fixture =
+            new ProjectService(
+                roleServiceMock,
+                userServiceMock,
+                roleRepositoryMock,
+                projectRepositoryMock,
+                invitationRepositoryMock,
+                new ProjectMapper()
+            );
     }
 
     @Test

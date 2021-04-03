@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 
 import { EventManager } from 'app/core/util/event-manager.service';
@@ -10,7 +10,6 @@ import { EventManager } from 'app/core/util/event-manager.service';
 import { ResponsibilityService } from 'app/entities/responsibility/responsibility.service';
 import { ProjectService } from 'app/entities/project/project.service';
 import { SectionService } from 'app/entities/section/section.service';
-import { UserService } from 'app/entities/user/user.service';
 
 import { Location } from 'app/entities/location/location.model';
 import { Responsibility } from 'app/entities/responsibility/responsibility.model';
@@ -51,14 +50,13 @@ export class ProjectSectionUpdateComponent {
     private eventManager: EventManager,
     private fb: FormBuilder,
     private responsibilityService: ResponsibilityService,
-    private projectService: ProjectService,
-    private userService: UserService
+    private projectService: ProjectService
   ) {}
 
   updateForm(location: Location, section: Section): void {
     this.isNew = !section.id;
 
-    const { id, name, responsibility, jhiUserId } = section;
+    const { id, name, responsibility, user } = section;
 
     this.responsibilityService
       .findAllByProject(location.project, { sort: ['name,asc'] })
@@ -66,19 +64,17 @@ export class ProjectSectionUpdateComponent {
 
     this.projectService.getAllUsers(location.project).subscribe((users: Account[]) => (this.users = users));
 
-    this.isResponsibility = !jhiUserId;
+    this.isResponsibility = !user;
 
-    (jhiUserId ? this.userService.find(jhiUserId) : of({ body: {} } as HttpResponse<User>)).subscribe((response: HttpResponse<User>) =>
-      this.editForm.patchValue({
-        id,
-        name,
-        responsibility,
-        responsibilityAutocomplete: section.responsibility?.name,
-        jhiUserId,
-        userAutocomplete: response.body?.email,
-        location,
-      })
-    );
+    this.editForm.patchValue({
+      id,
+      name,
+      responsibility,
+      responsibilityAutocomplete: section.responsibility?.name,
+      user,
+      userAutocomplete: user?.email,
+      location,
+    });
 
     this.editForm
       .get('name')
@@ -139,14 +135,14 @@ export class ProjectSectionUpdateComponent {
   }
 
   private createFromForm(): Section {
-    const { responsibility, jhiUserId } = responsibilityOrUserFromForm(this.editForm, this.isResponsibility);
+    const { responsibility, user } = responsibilityOrUserFromForm(this.editForm, this.isResponsibility);
 
     return {
       id: this.editForm.get(['id'])!.value,
       name: this.editForm.get(['name'])!.value,
-      responsibility,
-      jhiUserId,
       location: this.editForm.get(['location'])!.value,
+      responsibility,
+      user,
     };
   }
 }

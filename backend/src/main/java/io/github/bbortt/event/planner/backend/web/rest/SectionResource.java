@@ -3,15 +3,18 @@ package io.github.bbortt.event.planner.backend.web.rest;
 import io.github.bbortt.event.planner.backend.domain.Section;
 import io.github.bbortt.event.planner.backend.security.AuthoritiesConstants;
 import io.github.bbortt.event.planner.backend.security.RolesConstants;
-import io.github.bbortt.event.planner.backend.service.InvitationService;
-import io.github.bbortt.event.planner.backend.service.ProjectService;
 import io.github.bbortt.event.planner.backend.service.SectionService;
+import io.github.bbortt.event.planner.backend.service.dto.SectionDTO;
 import io.github.bbortt.event.planner.backend.service.exception.EntityNotFoundException;
+import io.github.bbortt.event.planner.backend.service.mapper.EventMapper;
+import io.github.bbortt.event.planner.backend.service.mapper.LocationMapper;
+import io.github.bbortt.event.planner.backend.service.mapper.SectionMapper;
 import io.github.bbortt.event.planner.backend.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,13 +52,21 @@ public class SectionResource {
     private String applicationName;
 
     private final SectionService sectionService;
-    private final ProjectService projectService;
-    private final InvitationService invitationService;
 
-    public SectionResource(SectionService sectionService, ProjectService projectService, InvitationService invitationService) {
+    private final LocationMapper locationMapper;
+    private final SectionMapper sectionMapper;
+    private final EventMapper eventMapper;
+
+    public SectionResource(
+        SectionService sectionService,
+        LocationMapper locationMapper,
+        SectionMapper sectionMapper,
+        EventMapper eventMapper
+    ) {
         this.sectionService = sectionService;
-        this.projectService = projectService;
-        this.invitationService = invitationService;
+        this.locationMapper = locationMapper;
+        this.sectionMapper = sectionMapper;
+        this.eventMapper = eventMapper;
     }
 
     /**
@@ -67,16 +78,16 @@ public class SectionResource {
      */
     @PostMapping("/sections")
     @PreAuthorize("@sectionService.hasAccessToSection(#section, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")")
-    public ResponseEntity<Section> createSection(@Valid @RequestBody Section section) throws URISyntaxException {
+    public ResponseEntity<SectionDTO> createSection(@Valid @RequestBody SectionDTO section) throws URISyntaxException {
         log.debug("REST request to save Section : {}", section);
         if (section.getId() != null) {
             throw new BadRequestAlertException("A new section cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Section result = sectionService.save(section);
+        Section result = sectionService.save(fromDTO(section));
         return ResponseEntity
             .created(new URI("/api/sections/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getName()))
-            .body(result);
+            .body(toDTO(result));
     }
 
     /**
@@ -88,16 +99,16 @@ public class SectionResource {
      */
     @PutMapping("/sections")
     @PreAuthorize("@sectionService.hasAccessToSection(#section, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")")
-    public ResponseEntity<Section> updateSection(@Valid @RequestBody Section section) throws URISyntaxException {
+    public ResponseEntity<SectionDTO> updateSection(@Valid @RequestBody SectionDTO section) throws URISyntaxException {
         log.debug("REST request to update Section : {}", section);
         if (section.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        Section result = sectionService.save(section);
+        Section result = sectionService.save(fromDTO(section));
         return ResponseEntity
             .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, section.getName()))
-            .body(result);
+            .body(toDTO(result));
     }
 
     /**
@@ -108,11 +119,11 @@ public class SectionResource {
      */
     @GetMapping("/sections")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
-    public ResponseEntity<List<Section>> getAllSections(Pageable pageable) {
+    public ResponseEntity<List<SectionDTO>> getAllSections(Pageable pageable) {
         log.debug("REST request to get a page of Sections");
         Page<Section> page = sectionService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
-        return ResponseEntity.ok().headers(headers).body(page.getContent());
+        return ResponseEntity.ok().headers(headers).body(page.getContent().stream().map(this::toDTO).collect(Collectors.toList()));
     }
 
     /**
@@ -133,10 +144,10 @@ public class SectionResource {
         RolesConstants.VIEWER +
         "\")"
     )
-    public ResponseEntity<Section> getSection(@PathVariable Long id) {
+    public ResponseEntity<SectionDTO> getSection(@PathVariable Long id) {
         log.debug("REST request to get Section : {}", id);
         Optional<Section> section = sectionService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(section);
+        return ResponseUtil.wrapOrNotFound(section.map(this::toDTO));
     }
 
     /**
@@ -169,5 +180,21 @@ public class SectionResource {
         String name = sectionService.findNameBySectionId(id).orElseThrow(EntityNotFoundException::new);
         sectionService.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, name)).build();
+    }
+
+    private Section fromDTO(SectionDTO sectionDTO) {
+        return sectionMapper.sectionFromDTO(
+            sectionDTO,
+            locationMapper.locationFromDTO(sectionDTO.getLocation(), null),
+            sectionDTO.getEvents().stream().map(eventDTO -> eventMapper.eventFromDTO(eventDTO, null)).collect(Collectors.toSet())
+        );
+    }
+
+    private SectionDTO toDTO(Section section) {
+        return sectionMapper.dtoFromSection(
+            section,
+            locationMapper.dtoFromLocation(section.getLocation(), null),
+            section.getEvents().stream().map(event -> eventMapper.dtoFromEvent(event, null)).collect(Collectors.toSet())
+        );
     }
 }

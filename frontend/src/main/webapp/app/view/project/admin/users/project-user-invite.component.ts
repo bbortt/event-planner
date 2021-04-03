@@ -34,7 +34,7 @@ export class ProjectUserInviteComponent {
     accepted: [false],
     color: [DEFAULT_SCHEDULER_COLOR, [Validators.required, Validators.minLength(3), Validators.maxLength(23)]],
     role: [Role.CONTRIBUTOR.name, [Validators.required]],
-    jhiUserId: [null],
+    user: [null],
     responsibility: [null],
     responsibilityAutocomplete: [],
   });
@@ -69,7 +69,7 @@ export class ProjectUserInviteComponent {
         token: invitation.token,
         color: invitation.color ? invitation.color : DEFAULT_SCHEDULER_COLOR,
         role: this.roleByName(invitation.role.name)?.name,
-        jhiUserId: invitation.jhiUserId,
+        user: invitation.user,
         responsibility: invitation.responsibility,
         responsibilityAutocomplete: invitation.responsibility?.name,
       });
@@ -99,7 +99,7 @@ export class ProjectUserInviteComponent {
       token: this.editForm.get('token')!.value,
       color: this.editForm.get('color')!.value,
       project: this.project!,
-      jhiUserId: this.editForm.get('jhiUserId')!.value,
+      user: this.editForm.get('user')!.value,
       role: this.roleByName(this.editForm.get('role')!.value)!,
       responsibility: this.editForm.get('responsibilityAutocomplete')!.value ? this.editForm.get('responsibility')!.value : null,
     };

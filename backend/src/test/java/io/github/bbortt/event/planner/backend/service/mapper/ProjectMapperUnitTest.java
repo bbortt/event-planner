@@ -16,12 +16,12 @@ class ProjectMapperUnitTest {
     }
 
     @Test
-    void createProjectDTOToProjectReturnsNullOnNullInput() {
-        Assertions.assertThat(fixture.createProjectDTOToProject(null)).isNull();
+    void projectFromCreateProjectDTOReturnsNullOnNullInput() {
+        Assertions.assertThat(fixture.projectFromCreateProjectDTO(null)).isNull();
     }
 
     @Test
-    void createProjectDTOToProjectDoesReturnProject() {
+    void projectFromCreateProjectDTODoesReturnProject() {
         CreateProjectDTO createProjectDTO = new CreateProjectDTO();
         createProjectDTO.setName("name");
         createProjectDTO.setDescription("description");
@@ -29,7 +29,7 @@ class ProjectMapperUnitTest {
         createProjectDTO.setEndTime(ZonedDateTime.now());
 
         Assertions
-            .assertThat(fixture.createProjectDTOToProject(createProjectDTO))
+            .assertThat(fixture.projectFromCreateProjectDTO(createProjectDTO))
             .hasFieldOrPropertyWithValue("name", createProjectDTO.getName())
             .hasFieldOrPropertyWithValue("description", createProjectDTO.getDescription())
             .hasFieldOrPropertyWithValue("startTime", createProjectDTO.getStartTime())

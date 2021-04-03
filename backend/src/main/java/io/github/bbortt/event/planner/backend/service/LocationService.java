@@ -2,6 +2,7 @@ package io.github.bbortt.event.planner.backend.service;
 
 import io.github.bbortt.event.planner.backend.domain.Location;
 import io.github.bbortt.event.planner.backend.repository.LocationRepository;
+import io.github.bbortt.event.planner.backend.service.dto.LocationDTO;
 import io.github.bbortt.event.planner.backend.service.exception.BadRequestException;
 import io.github.bbortt.event.planner.backend.service.exception.EntityNotFoundException;
 import io.github.bbortt.event.planner.backend.service.exception.IdMustBePresentException;
@@ -152,18 +153,18 @@ public class LocationService {
         }
 
         Location location = findOne(locationId).orElseThrow(EntityNotFoundException::new);
-        return hasAccessToLocation(location, roles);
+        return projectService.hasAccessToProject(location.getProject(), roles);
     }
 
     /**
      * Checks if the current user has access to the `Project` linked to the given `Location`. The project access must be given by any of the `roles`. Example usage: `@PreAuthorize("@locationService.hasAccessToLocation(#location, 'ADMIN', 'SECRETARY')")`
      *
-     * @param location the entity with a linked project to check.
+     * @param locationDTO the entity with a linked project to check.
      * @param roles to look out for.
      * @return true if the project access has any of the roles.
      */
     @PreAuthorize("isAuthenticated()")
-    public boolean hasAccessToLocation(Location location, String... roles) {
-        return projectService.hasAccessToProject(location.getProject(), roles);
+    public boolean hasAccessToLocation(LocationDTO locationDTO, String... roles) {
+        return projectService.hasAccessToProject(locationDTO.getProject(), roles);
     }
 }

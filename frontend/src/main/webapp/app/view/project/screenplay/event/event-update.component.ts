@@ -3,7 +3,7 @@ import { HttpResponse } from '@angular/common/http';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { Observable, of, Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { AccountService } from 'app/core/auth/account.service';
@@ -12,7 +12,6 @@ import { EventManager } from 'app/core/util/event-manager.service';
 import { EventService } from 'app/entities/event/event.service';
 import { ProjectService } from 'app/entities/project/project.service';
 import { ResponsibilityService } from 'app/entities/responsibility/responsibility.service';
-import { UserService } from 'app/entities/user/user.service';
 
 import { Event } from 'app/entities/event/event.model';
 import { Location } from 'app/entities/location/location.model';
@@ -61,7 +60,7 @@ export class EventUpdateComponent implements OnInit, OnDestroy {
     section: [null, [Validators.required]],
     responsibility: [],
     responsibilityAutocomplete: [],
-    jhiUserId: [],
+    user: [],
     userAutocomplete: [],
   });
 
@@ -78,8 +77,7 @@ export class EventUpdateComponent implements OnInit, OnDestroy {
     private accountService: AccountService,
     private eventService: EventService,
     private projectService: ProjectService,
-    private responsibilityService: ResponsibilityService,
-    private userService: UserService
+    private responsibilityService: ResponsibilityService
   ) {}
 
   ngOnInit(): void {
@@ -110,15 +108,15 @@ export class EventUpdateComponent implements OnInit, OnDestroy {
     this.minEndDate = newStartTime;
 
     const { id, name, description, section } = event;
-    let { responsibility, jhiUserId } = event;
+    let { responsibility, user } = event;
 
     if (!isReadonly) {
-      if (this.section.responsibility || this.section.jhiUserId) {
+      if (this.section.responsibility || this.section.user) {
         responsibility = this.section.responsibility;
-        jhiUserId = this.section.jhiUserId;
-      } else if (this.location.responsibility || this.location.jhiUserId) {
+        user = this.section.user;
+      } else if (this.location.responsibility || this.location.user) {
         responsibility = this.location.responsibility;
-        jhiUserId = this.location.jhiUserId;
+        user = this.location.user;
       }
 
       this.responsibilityService
@@ -128,22 +126,19 @@ export class EventUpdateComponent implements OnInit, OnDestroy {
       this.projectService.getAllUsers(this.project).subscribe((users: Account[]) => (this.users = users));
     }
 
-    this.isResponsibility = !jhiUserId;
-
-    (jhiUserId ? this.userService.find(jhiUserId) : of({ body: {} } as HttpResponse<User>)).subscribe((response: HttpResponse<User>) =>
-      this.editForm.patchValue({
-        id,
-        name,
-        description,
-        startTime: newStartTime,
-        endTime: newEndTime,
-        section,
-        responsibility,
-        responsibilityAutocomplete: responsibility?.name,
-        jhiUserId,
-        userAutocomplete: response.body?.email,
-      })
-    );
+    this.isResponsibility = !user;
+    this.editForm.patchValue({
+      id,
+      name,
+      description,
+      startTime: newStartTime,
+      endTime: newEndTime,
+      section,
+      responsibility,
+      responsibilityAutocomplete: responsibility?.name,
+      user,
+      userAutocomplete: user?.email,
+    });
   }
 
   responsibilitySelected($event: any): void {
@@ -221,7 +216,7 @@ export class EventUpdateComponent implements OnInit, OnDestroy {
   }
 
   private createFromForm(): Event {
-    const { responsibility, jhiUserId } = responsibilityOrUserFromForm(this.editForm, this.isResponsibility);
+    const { responsibility, user } = responsibilityOrUserFromForm(this.editForm, this.isResponsibility);
 
     return {
       id: this.editForm.get(['id'])!.value,
@@ -231,7 +226,7 @@ export class EventUpdateComponent implements OnInit, OnDestroy {
       endTime: moment(this.editForm.get(['endTime'])!.value),
       section: this.editForm.get(['section'])!.value,
       responsibility,
-      jhiUserId,
+      user,
     };
   }
 }

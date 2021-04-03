@@ -1,6 +1,5 @@
 plugins {
     id "idea"
-    id "org.sonarqube"
     id "com.github.ben-manes.versions" version "0.28.0"
 }
 
@@ -34,8 +33,6 @@ subprojects {
         sourceCompatibility = 11
         targetCompatibility = 11
         assert System.properties["java.specification.version"] == "1.8" || "11" || "12" || "13" || "14" || "15"
-
-        apply plugin: "jacoco"
 
         dependencies {
             // TODO: Will align dependencies later

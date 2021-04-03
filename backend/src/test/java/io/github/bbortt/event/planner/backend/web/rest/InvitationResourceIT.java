@@ -22,6 +22,7 @@ import io.github.bbortt.event.planner.backend.repository.RoleRepository;
 import io.github.bbortt.event.planner.backend.security.AuthoritiesConstants;
 import io.github.bbortt.event.planner.backend.service.InvitationService;
 import io.github.bbortt.event.planner.backend.service.dto.AdminUserDTO;
+import io.github.bbortt.event.planner.backend.service.dto.UserDTO;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -270,6 +271,13 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     void getAllInvitations() throws Exception {
+        UserDTO userDTO = new UserDTO();
+        userDTO.setId(TEST_USER_LOGIN);
+        when(userServiceClientMock.getById(TEST_USER_LOGIN)).thenReturn(Optional.of(userDTO));
+        UserDTO adminDTO = new UserDTO();
+        adminDTO.setId(TEST_ADMIN_LOGIN);
+        when(userServiceClientMock.getById(TEST_ADMIN_LOGIN)).thenReturn(Optional.of(adminDTO));
+
         TestSecurityContextHolder.setAuthentication(
             TestUtil.createMockOAuth2AuthenticationToken(
                 userDetails,
@@ -287,12 +295,17 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(invitation.getId().intValue())))
             .andExpect(jsonPath("$.[*].email").value(hasItems(TEST_USER_EMAIL, TEST_ADMIN_EMAIL)))
-            .andExpect(jsonPath("$.[*].accepted").value(hasItem(DEFAULT_ACCEPTED.booleanValue())));
+            .andExpect(jsonPath("$.[*].accepted").value(hasItem(DEFAULT_ACCEPTED.booleanValue())))
+            .andExpect(jsonPath("$.[*].user.id").value(hasItems(TEST_USER_LOGIN, TEST_ADMIN_LOGIN)));
     }
 
     @Test
     @Transactional
     void getInvitation() throws Exception {
+        UserDTO userDTO = new UserDTO();
+        userDTO.setId(TEST_USER_LOGIN);
+        when(userServiceClientMock.getById(TEST_USER_LOGIN)).thenReturn(Optional.of(userDTO));
+
         em.persist(userInvitation.role(roleRepository.roleAdmin()));
 
         // Initialize the database
@@ -305,7 +318,8 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(invitation.getId().intValue()))
             .andExpect(jsonPath("$.email").value(invitation.getEmail()))
-            .andExpect(jsonPath("$.accepted").value(DEFAULT_ACCEPTED.booleanValue()));
+            .andExpect(jsonPath("$.accepted").value(DEFAULT_ACCEPTED.booleanValue()))
+            .andExpect(jsonPath("$.user.id").value(TEST_USER_LOGIN));
     }
 
     @Test

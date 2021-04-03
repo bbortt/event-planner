@@ -38,8 +38,6 @@ public class ProjectService {
 
     private final Logger log = LoggerFactory.getLogger(ProjectService.class);
 
-    private final ProjectMapper projectMapper = new ProjectMapper();
-
     private final RoleService roleService;
     private final UserService userService;
 
@@ -47,18 +45,22 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final InvitationRepository invitationRepository;
 
+    private final ProjectMapper projectMapper;
+
     public ProjectService(
         RoleService roleService,
         UserService userService,
         RoleRepository roleRepository,
         ProjectRepository projectRepository,
-        InvitationRepository invitationRepository
+        InvitationRepository invitationRepository,
+        ProjectMapper projectMapper
     ) {
         this.roleService = roleService;
         this.userService = userService;
         this.roleRepository = roleRepository;
         this.projectRepository = projectRepository;
         this.invitationRepository = invitationRepository;
+        this.projectMapper = projectMapper;
     }
 
     /**
@@ -69,7 +71,7 @@ public class ProjectService {
      */
     @Transactional
     public Project create(CreateProjectDTO createProjectDTO) {
-        Project project = projectMapper.createProjectDTOToProject(createProjectDTO);
+        Project project = projectMapper.projectFromCreateProjectDTO(createProjectDTO);
 
         if (project.getStartTime().isAfter(project.getEndTime())) {
             throw new ConstraintViolationProblem(

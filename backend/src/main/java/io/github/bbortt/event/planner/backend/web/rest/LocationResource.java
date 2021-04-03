@@ -4,13 +4,17 @@ import io.github.bbortt.event.planner.backend.domain.Location;
 import io.github.bbortt.event.planner.backend.security.AuthoritiesConstants;
 import io.github.bbortt.event.planner.backend.security.RolesConstants;
 import io.github.bbortt.event.planner.backend.service.LocationService;
-import io.github.bbortt.event.planner.backend.service.ProjectService;
+import io.github.bbortt.event.planner.backend.service.dto.LocationDTO;
 import io.github.bbortt.event.planner.backend.service.exception.EntityNotFoundException;
+import io.github.bbortt.event.planner.backend.service.mapper.EventMapper;
+import io.github.bbortt.event.planner.backend.service.mapper.LocationMapper;
+import io.github.bbortt.event.planner.backend.service.mapper.SectionMapper;
 import io.github.bbortt.event.planner.backend.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,11 +53,21 @@ public class LocationResource {
     private String applicationName;
 
     private final LocationService locationService;
-    private final ProjectService projectService;
 
-    public LocationResource(LocationService locationService, ProjectService projectService) {
+    private final LocationMapper locationMapper;
+    private final SectionMapper sectionMapper;
+    private final EventMapper eventMapper;
+
+    public LocationResource(
+        LocationService locationService,
+        LocationMapper locationMapper,
+        SectionMapper sectionMapper,
+        EventMapper eventMapper
+    ) {
         this.locationService = locationService;
-        this.projectService = projectService;
+        this.locationMapper = locationMapper;
+        this.sectionMapper = sectionMapper;
+        this.eventMapper = eventMapper;
     }
 
     /**
@@ -65,16 +79,16 @@ public class LocationResource {
      */
     @PostMapping("/locations")
     @PreAuthorize("@locationService.hasAccessToLocation(#location, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")")
-    public ResponseEntity<Location> createLocation(@Valid @RequestBody Location location) throws URISyntaxException {
+    public ResponseEntity<LocationDTO> createLocation(@Valid @RequestBody LocationDTO location) throws URISyntaxException {
         log.debug("REST request to save Location : {}", location);
         if (location.getId() != null) {
             throw new BadRequestAlertException("A new location cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Location result = locationService.save(location);
+        Location result = locationService.save(fromDTO(location));
         return ResponseEntity
             .created(new URI("/api/locations/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getName()))
-            .body(result);
+            .body(toDTO(result));
     }
 
     /**
@@ -86,16 +100,16 @@ public class LocationResource {
      */
     @PutMapping("/locations")
     @PreAuthorize("@locationService.hasAccessToLocation(#location, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")")
-    public ResponseEntity<Location> updateLocation(@Valid @RequestBody Location location) throws URISyntaxException {
+    public ResponseEntity<LocationDTO> updateLocation(@Valid @RequestBody LocationDTO location) throws URISyntaxException {
         log.debug("REST request to update Location : {}", location);
         if (location.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        Location result = locationService.save(location);
+        Location result = locationService.save(fromDTO(location));
         return ResponseEntity
             .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, location.getName()))
-            .body(result);
+            .body(toDTO(result));
     }
 
     /**
@@ -106,11 +120,11 @@ public class LocationResource {
      */
     @GetMapping("/locations")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
-    public ResponseEntity<List<Location>> getAllLocations(Pageable pageable) {
+    public ResponseEntity<List<LocationDTO>> getAllLocations(Pageable pageable) {
         log.debug("REST request to get a page of Locations");
         Page<Location> page = locationService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
-        return ResponseEntity.ok().headers(headers).body(page.getContent());
+        return ResponseEntity.ok().headers(headers).body(page.getContent().stream().map(this::toDTO).collect(Collectors.toList()));
     }
 
     /**
@@ -131,10 +145,10 @@ public class LocationResource {
         RolesConstants.VIEWER +
         "\")"
     )
-    public ResponseEntity<Location> getLocation(@PathVariable Long id) {
+    public ResponseEntity<LocationDTO> getLocation(@PathVariable Long id) {
         log.debug("REST request to get Location : {}", id);
         Optional<Location> location = locationService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(location);
+        return ResponseUtil.wrapOrNotFound(location.map(this::toDTO));
     }
 
     /**
@@ -156,10 +170,12 @@ public class LocationResource {
         RolesConstants.VIEWER +
         "\")"
     )
-    public ResponseEntity<List<Location>> getLocationsByProjectId(@PathVariable Long projectId, Sort sort) {
+    public ResponseEntity<List<LocationDTO>> getLocationsByProjectId(@PathVariable Long projectId, Sort sort) {
         log.debug("REST Request to get Locations by projectId {}", projectId);
         List<Location> locations = locationService.findAllByProjectId(projectId, sort);
-        return ResponseEntity.ok(locations);
+        return ResponseEntity.ok(
+            locations.stream().map(location -> locationMapper.dtoFromLocation(location, null)).collect(Collectors.toList())
+        );
     }
 
     /**
@@ -170,10 +186,10 @@ public class LocationResource {
      */
     @GetMapping("/locations/project/{projectId}/sections")
     @PreAuthorize("@projectService.hasAccessToProject(#projectId, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")")
-    public ResponseEntity<List<Location>> getLocationsByProjectIdJoinSections(@PathVariable Long projectId) {
+    public ResponseEntity<List<LocationDTO>> getLocationsByProjectIdJoinSections(@PathVariable Long projectId) {
         log.debug("REST Request to get Locations inclusive Sections by projectId {}", projectId);
         List<Location> locations = locationService.findAllByProjectIdJoinSections(projectId);
-        return ResponseEntity.ok(locations);
+        return ResponseEntity.ok(locations.stream().map(this::toDTO).collect(Collectors.toList()));
     }
 
     /**
@@ -204,5 +220,34 @@ public class LocationResource {
         String name = locationService.findNameByLocationId(id).orElseThrow(EntityNotFoundException::new);
         locationService.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, name)).build();
+    }
+
+    private Location fromDTO(LocationDTO locationDTO) {
+        return locationMapper.locationFromDTO(
+            locationDTO,
+            locationDTO
+                .getSections()
+                .stream()
+                .map(
+                    sectionDTO ->
+                        sectionMapper.sectionFromDTO(
+                            sectionDTO,
+                            null,
+                            sectionDTO
+                                .getEvents()
+                                .stream()
+                                .map(eventDTO -> eventMapper.eventFromDTO(eventDTO, null))
+                                .collect(Collectors.toSet())
+                        )
+                )
+                .collect(Collectors.toSet())
+        );
+    }
+
+    private LocationDTO toDTO(Location location) {
+        return locationMapper.dtoFromLocation(
+            location,
+            location.getSections().stream().map(section -> sectionMapper.dtoFromSection(section, null, null)).collect(Collectors.toSet())
+        );
     }
 }

@@ -67,7 +67,7 @@ module.exports = (config, options) => {
         analyzerMode: 'static',
         openAnalyzer: false,
         // Webpack statistics in target folder
-        reportFilename: '../stats.html',
+        reportFilename: '../target/stats.html',
       }),
       new webpack.LoaderOptionsPlugin({
         minimize: true,
@@ -95,7 +95,7 @@ module.exports = (config, options) => {
         // If this URL is left empty (""), then it will be relative to the current context.
         // If you use an API server, in `prod` mode, you will need to enable CORS
         // (see the `jhipster.cors` common JHipster property in the `application-*.yml` configurations)
-        SERVER_API_URL: `''`,
+        SERVER_API_URL: `'${process.env.hasOwnProperty('SERVER_API_URL') ? process.env.SERVER_API_URL : ''}'`,
       },
     }),
     new MergeJsonWebpackPlugin({

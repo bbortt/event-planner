@@ -6,6 +6,7 @@ import io.github.bbortt.event.planner.backend.service.dto.UserDTO;
 import io.github.bbortt.event.planner.backend.service.exception.EntityNotFoundException;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.Supplier;
@@ -23,6 +24,11 @@ public class UserService {
 
     public UserService(UserServiceFeignClient userServiceClient) {
         this.userServiceClient = userServiceClient;
+    }
+
+    public Optional<UserDTO> getById(String jhiUserId) {
+        log.debug("Find User by id : {}", jhiUserId);
+        return userServiceClient.getById(jhiUserId);
     }
 
     public AdminUserDTO findUserByLogin(String login) {

@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @AuthorizedFeignClient(name = "userService", url = "${application.userService.baseUrl}", path = "/api/users")
 public interface UserServiceFeignClient {
+    @GetMapping("/{jhiUserId}")
+    Optional<UserDTO> getById(@PathVariable("jhiUserId") String jhiUserId);
+
     @GetMapping("/findByLogin/{login}")
     Optional<AdminUserDTO> findUserByLogin(@PathVariable("login") String login);
 

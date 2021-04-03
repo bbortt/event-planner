@@ -3,6 +3,7 @@ package io.github.bbortt.event.planner.backend.service;
 import io.github.bbortt.event.planner.backend.domain.Event;
 import io.github.bbortt.event.planner.backend.repository.EventRepository;
 import io.github.bbortt.event.planner.backend.repository.SectionRepository;
+import io.github.bbortt.event.planner.backend.service.dto.EventDTO;
 import io.github.bbortt.event.planner.backend.service.exception.BadRequestException;
 import io.github.bbortt.event.planner.backend.service.exception.EntityNotFoundException;
 import io.github.bbortt.event.planner.backend.service.exception.IdMustBePresentException;
@@ -123,18 +124,18 @@ public class EventService {
         }
 
         Event event = findOne(eventId).orElseThrow(EntityNotFoundException::new);
-        return hasAccessToEvent(event, roles);
+        return projectService.hasAccessToProject(event.getSection().getLocation().getProject(), roles);
     }
 
     /**
      * Checks if the current user has access to the `Project` linked to the given `Event`. The project access must be given by any of the `roles`. Example usage: `@PreAuthorize("@eventService.hasAccessToSection(#event, 'ADMIN', 'SECRETARY')")`
      *
-     * @param event the entity with a linked project to check.
+     * @param eventDTO the entity with a linked project to check.
      * @param roles to look out for.
      * @return true if the project access has any of the roles.
      */
     @PreAuthorize("isAuthenticated()")
-    public boolean hasAccessToEvent(Event event, String... roles) {
-        return projectService.hasAccessToProject(event.getSection().getLocation().getProject(), roles);
+    public boolean hasAccessToEvent(EventDTO eventDTO, String... roles) {
+        return projectService.hasAccessToProject(eventDTO.getSection().getLocation().getProject(), roles);
     }
 }

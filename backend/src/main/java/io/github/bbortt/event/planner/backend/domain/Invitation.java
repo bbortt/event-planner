@@ -87,6 +87,11 @@ public class Invitation extends AbstractAuditingEntity implements Serializable {
         this.id = id;
     }
 
+    public Invitation id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public String getEmail() {
         return email;
     }

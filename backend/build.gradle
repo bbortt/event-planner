@@ -6,6 +6,8 @@ plugins {
     id "idea"
     id "org.springframework.boot"
     id "org.flywaydb.flyway"
+    id "jacoco"
+    id "org.sonarqube"
 }
 
 group = "io.github.bbortt.event.planner.backend"

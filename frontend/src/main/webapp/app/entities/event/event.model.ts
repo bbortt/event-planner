@@ -1,5 +1,6 @@
 import { Responsibility } from 'app/entities/responsibility/responsibility.model';
 import { Section } from 'app/entities/section/section.model';
+import { User } from 'app/entities/user/user.model';
 
 import { Moment } from 'moment';
 
@@ -11,5 +12,5 @@ export interface Event {
   endTime: Moment;
   section: Section;
   responsibility?: Responsibility;
-  jhiUserId?: string;
+  user?: User;
 }

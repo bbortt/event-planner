@@ -7,13 +7,16 @@ import io.github.bbortt.event.planner.backend.security.RolesConstants;
 import io.github.bbortt.event.planner.backend.service.InvitationService;
 import io.github.bbortt.event.planner.backend.service.MailService;
 import io.github.bbortt.event.planner.backend.service.ProjectService;
+import io.github.bbortt.event.planner.backend.service.dto.InvitationDTO;
 import io.github.bbortt.event.planner.backend.service.exception.EntityNotFoundException;
+import io.github.bbortt.event.planner.backend.service.mapper.InvitationMapper;
 import io.github.bbortt.event.planner.backend.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import org.slf4j.Logger;
@@ -49,25 +52,27 @@ public class InvitationResource {
 
     private static final String ENTITY_NAME = "invitation";
 
-    private final InvitationService invitationService;
-    private final ProjectService projectService;
     private final MailService mailService;
 
+    private final InvitationService invitationService;
+
     private final RoleRepository roleRepository;
+
+    private final InvitationMapper invitationMapper;
 
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
     public InvitationResource(
-        InvitationService invitationService,
-        ProjectService projectService,
         MailService mailService,
-        RoleRepository roleRepository
+        InvitationService invitationService,
+        RoleRepository roleRepository,
+        InvitationMapper invitationMapper
     ) {
-        this.invitationService = invitationService;
-        this.projectService = projectService;
         this.mailService = mailService;
+        this.invitationService = invitationService;
         this.roleRepository = roleRepository;
+        this.invitationMapper = invitationMapper;
     }
 
     /**
@@ -81,7 +86,7 @@ public class InvitationResource {
     @PreAuthorize(
         "@projectService.hasAccessToProject(#invitation.project, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")"
     )
-    public ResponseEntity<Invitation> createInvitation(@Valid @RequestBody Invitation invitation) throws URISyntaxException {
+    public ResponseEntity<InvitationDTO> createInvitation(@Valid @RequestBody InvitationDTO invitation) throws URISyntaxException {
         log.debug("REST request to save Invitation : {}", invitation);
         if (invitation.getId() != null) {
             throw new BadRequestAlertException("A new invitation cannot already have an ID", ENTITY_NAME, "idexists");
@@ -90,14 +95,14 @@ public class InvitationResource {
             throw new BadRequestAlertException("Cannot invite a second project administrator", ENTITY_NAME, "badRequest");
         }
         invitation.setToken(UUID.randomUUID().toString());
-        Invitation result = invitationService.save(invitation);
+        Invitation result = invitationService.save(invitationMapper.invitationFromDTO(invitation));
 
-        mailService.sendInvitationMail(invitation);
+        mailService.sendInvitationMail(result);
 
         return ResponseEntity
             .created(new URI("/api/invitations/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
-            .body(result);
+            .body(invitationMapper.dtoFromInvitation(result));
     }
 
     /**
@@ -111,16 +116,16 @@ public class InvitationResource {
     @PreAuthorize(
         "@projectService.hasAccessToProject(#invitation.project, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")"
     )
-    public ResponseEntity<Invitation> updateInvitation(@Valid @RequestBody Invitation invitation) throws URISyntaxException {
+    public ResponseEntity<InvitationDTO> updateInvitation(@Valid @RequestBody InvitationDTO invitation) throws URISyntaxException {
         log.debug("REST request to update Invitation : {}", invitation);
         if (invitation.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        Invitation result = invitationService.save(invitation);
+        Invitation result = invitationService.save(invitationMapper.invitationFromDTO(invitation));
         return ResponseEntity
             .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, invitation.getId().toString()))
-            .body(result);
+            .body(invitationMapper.dtoFromInvitation(result));
     }
 
     /**
@@ -131,11 +136,14 @@ public class InvitationResource {
      */
     @GetMapping("/invitations")
     @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
-    public ResponseEntity<List<Invitation>> getAllInvitations(Pageable pageable) {
+    public ResponseEntity<List<InvitationDTO>> getAllInvitations(Pageable pageable) {
         log.debug("REST request to get a page of Invitations");
         Page<Invitation> page = invitationService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
-        return ResponseEntity.ok().headers(headers).body(page.getContent());
+        return ResponseEntity
+            .ok()
+            .headers(headers)
+            .body(page.getContent().stream().map(invitationMapper::dtoFromInvitation).collect(Collectors.toList()));
     }
 
     /**
@@ -146,18 +154,22 @@ public class InvitationResource {
      */
     @GetMapping("/invitations/{id}")
     @PreAuthorize("@invitationService.hasAccessToInvitation(#id, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")")
-    public ResponseEntity<Invitation> getInvitation(@PathVariable Long id) {
+    public ResponseEntity<InvitationDTO> getInvitation(@PathVariable Long id) {
         log.debug("REST request to get Invitation : {}", id);
         Optional<Invitation> invitation = invitationService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(invitation);
+        return ResponseUtil.wrapOrNotFound(invitation.map(invitationMapper::dtoFromInvitation));
     }
 
     @GetMapping("/invitations/project/{projectId}")
     @PreAuthorize("@projectService.hasAccessToProject(#projectId, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")")
-    public ResponseEntity<List<Invitation>> getInvitationsByProjectId(@PathVariable("projectId") Long projectId, Pageable pageable) {
+    public ResponseEntity<List<InvitationDTO>> getInvitationsByProjectId(@PathVariable("projectId") Long projectId, Pageable pageable) {
         Page<Invitation> page = invitationService.findAllByProjectId(projectId, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+        return new ResponseEntity<>(
+            page.getContent().stream().map(invitationMapper::dtoFromInvitation).collect(Collectors.toList()),
+            headers,
+            HttpStatus.OK
+        );
     }
 
     /**
