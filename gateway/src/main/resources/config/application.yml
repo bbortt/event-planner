@@ -123,6 +123,8 @@ spring:
             client-id: ${APPL_OIDC_CLIENT_ID}
             client-secret: ${APPL_OIDC_CLIENT_SECRET}
             scope: openid,profile,email
+  session:
+    store-type: none
 
 server:
   servlet:

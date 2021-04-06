@@ -1,0 +1,14 @@
+# This configuration is intended for development purpose, it's **your** responsibility to harden it for production
+version: '3.3'
+services:
+  redis:
+    image: redis:6.2.1-alpine
+    container_name: event-planner_redis
+    volumes:
+      - redisdata:/var/lib/redis
+    environment:
+      - REDIS_REPLICATION_MODE=master
+    ports:
+      - 6379:6379
+volumes:
+  redisdata:

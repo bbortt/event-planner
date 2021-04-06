@@ -55,6 +55,8 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-oauth2-client"
     implementation "org.springframework.boot:spring-boot-starter-oauth2-resource-server"
     implementation "org.springframework.data:spring-data-commons"
+    implementation "org.springframework.session:spring-session-data-redis"
+    implementation "io.lettuce:lettuce-core"
     implementation "io.projectreactor.kafka:reactor-kafka"
     implementation ("io.springfox:springfox-oas")
     implementation ("io.springfox:springfox-swagger2")

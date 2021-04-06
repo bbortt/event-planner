@@ -13,6 +13,7 @@ import { ProjectService } from 'app/entities/project/project.service';
 import { StateStorageService } from 'app/core/auth/state-storage.service';
 
 import { Account } from 'app/core/auth/account.model';
+import { AlertService } from 'app/core/util/alert.service';
 
 import { Authority } from 'app/config/authority.constants';
 
@@ -29,6 +30,7 @@ export class AccountService {
     private stateStorageService: StateStorageService,
     private router: Router,
     private applicationConfigService: ApplicationConfigService,
+    private alertService: AlertService,
     private projectService: ProjectService
   ) {}
 
@@ -101,7 +103,16 @@ export class AccountService {
   private fetch(): Observable<Account> {
     return forkJoin({
       account: this.http.get<Account>(this.applicationConfigService.getEndpointFor('api/account')),
-      rolePerProject: this.projectService.getRolePerProject(),
+      rolePerProject: this.projectService.getRolePerProject().pipe(
+        catchError(() => {
+          this.alertService.addAlert({
+            type: 'danger',
+            message: 'The project permissions could not be loaded. Please try again later!',
+            translationKey: 'global.messages.error.fetchRolesFailed',
+          });
+          return of(new Map());
+        })
+      ),
     }).pipe(
       map(({ account, rolePerProject }: { account: Account; rolePerProject: Map<number, string> }) => {
         account.rolePerProject = new Map(Object.entries(rolePerProject));

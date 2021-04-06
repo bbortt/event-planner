@@ -135,14 +135,14 @@ describe('Service Tests', () => {
           expect(mockRouter.navigateByUrl).not.toHaveBeenCalled();
         });
 
-        it('should not navigate to the previous stored url when getting roles failes', () => {
+        it('should navigate to the previous stored url even when getting roles failes', () => {
           // WHEN
           service.identity().subscribe();
           httpMock.expectOne({ method: 'GET', url: 'api/account' }).flush({});
           httpMock.expectOne({ method: 'GET', url: 'api/projects/rolePerProject' }).error(new ErrorEvent(''));
 
           // THEN
-          expect(mockStorageService.getUrl).not.toHaveBeenCalled();
+          expect(mockStorageService.getUrl).toHaveBeenCalled();
           expect(mockStorageService.clearUrl).not.toHaveBeenCalled();
           expect(mockRouter.navigateByUrl).not.toHaveBeenCalled();
         });

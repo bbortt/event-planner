@@ -47,7 +47,8 @@
         }
       },
       "error": {
-        "dontmatch": "Das bestätigte Passwort entspricht nicht dem neuen Passwort!"
+        "dontmatch": "Das bestätigte Passwort entspricht nicht dem neuen Passwort!",
+        "fetchRolesFailed": "Die Projektrollen konnten nicht abgefragt werden. Bitte versuchen Sie es später erneut!"
       },
       "validate": {
         "newpassword": {

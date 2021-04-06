@@ -47,7 +47,8 @@
         }
       },
       "error": {
-        "dontmatch": "The password and its confirmation do not match!"
+        "dontmatch": "The password and its confirmation do not match!",
+        "fetchRolesFailed": "The project permissions could not be loaded. Please try again later!"
       },
       "validate": {
         "newpassword": {
