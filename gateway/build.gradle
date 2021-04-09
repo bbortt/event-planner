@@ -3,7 +3,6 @@ plugins {
     id "idea"
     id "org.springframework.boot"
     id "jacoco"
-    id "org.sonarqube"
 }
 
 group = "io.github.bbortt.event.planner.gateway"

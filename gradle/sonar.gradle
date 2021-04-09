@@ -14,8 +14,16 @@ pluginManager.withPlugin("jacoco", {
     }
 })
 
-pluginManager.withPlugin("org.sonarqube", {
-    file("sonar-project.properties").withReader {
+sonarqube {
+    properties {
+        property "sonar.projectKey", "bbortt_event-planner"
+        property "sonar.projectName", "Event Planning Tool"
+        property "sonar.projectVersion", "${version}"
+    }
+}
+
+pluginManager.withPlugin("java", {
+    file("sonar-subprojects.properties").withReader {
         Properties sonarProperties = new Properties()
         sonarProperties.load(it)
 

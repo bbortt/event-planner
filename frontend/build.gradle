@@ -2,7 +2,6 @@ plugins {
     id "base"
     id "com.github.node-gradle.node"
     id "jacoco"
-    id "org.sonarqube"
 }
 
 group = "io.github.bbortt.event.planner.frontend"
@@ -27,3 +26,9 @@ task webpack(type: NpmTask, dependsOn: "npmInstall") {
 webpack.dependsOn check
 
 build.dependsOn webpack
+
+sonarqube {
+    properties {
+        property "sonar.typescript.lcov.reportPaths", "target/test-results/lcov.info"
+    }
+}
