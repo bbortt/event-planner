@@ -1,0 +1,6 @@
+spring:
+  cloud:
+    kubernetes:
+      config:
+        paths:
+          - /home/eventplanner/config

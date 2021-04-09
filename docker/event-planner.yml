@@ -1,0 +1,115 @@
+# This configuration is intended for development purpose, it's **your** responsibility to harden it for production
+version: '3.3'
+services:
+  # General
+  postgres:
+    extends:
+      file: postgres.yml
+      service: postgres
+    networks:
+      - persistency
+  redis:
+    extends:
+      file: redis.yml
+      service: redis
+    networks:
+      - cacheing
+  keycloak:
+    extends:
+      file: keycloak.yml
+      service: keycloak
+    networks:
+      - internal
+  kafka:
+    extends:
+      file: kafka.yml
+      service: kafka
+    networks:
+      - kafka
+      - zookeeper
+  zookeeper:
+    extends:
+      file: kafka.yml
+      service: zookeeper
+    networks:
+      - zookeeper
+  # Gateway
+  gateway:
+    image: ep_gateway:local
+    container_name: event-planner_gateway
+    ports:
+      - 80:8080
+    volumes:
+      - ./gateway/application.yml:/home/eventplanner/config/application.yml
+    environment:
+      # note: this must be the keycloak *public* url!
+      # on localhost, edit your hosts file: keycloak -> 127.0.0.1
+      APPL_OIDC_ISSUER_URI: http://keycloak:9080/auth/realms/jhipster
+      APPL_OIDC_CLIENT_ID: web_app
+      APPL_OIDC_CLIENT_SECRET: web_app
+    networks:
+      - cacheing
+      - internal
+    depends_on:
+      - redis
+      - kafka
+      - keycloak
+  # Frontend
+  frontend:
+    image: ep_frontend:local
+    container_name: event-planner_frontend
+    networks:
+      - internal
+    depends_on:
+      - gateway
+  # Legacy Backend
+  backend:
+    image: ep_backend:local
+    container_name: event-planner_backend
+    environment:
+      APPL_JDBC_URL: jdbc:postgresql://postgres:5432/backend
+      APPL_JDBC_USERNAME: backend_user
+      APPL_JDBC_PASSWORD: backend_password
+      APPL_MAIL_HOST: localhost
+      APPL_MAIL_PORT: 25
+      APPL_MAIL_USERNAME: localhost
+      APPL_MAIL_PASSWORD: localhost
+      APPL_MAIL_BASE_URL: http://localhost
+      APPL_OIDC_ISSUER_URI: http://keycloak:9080/auth/realms/jhipster
+      APPL_OIDC_CLIENT_ID: internal
+      APPL_OIDC_CLIENT_SECRET: internal
+      APPL_USER_SERVICE_BASE_URL: http://service_user:8080
+    networks:
+      - persistency
+      - internal
+    depends_on:
+      - postgres
+      - keycloak
+  # Service User
+  service_user:
+    image: ep_service_user:local
+    container_name: event-planner_service_user
+    environment:
+      APPL_JDBC_URL: jdbc:postgresql://postgres:5432/service_user
+      APPL_JDBC_USERNAME: service_user_user
+      APPL_JDBC_PASSWORD: service_user_password
+      APPL_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      APPL_OIDC_ISSUER_URI: http://keycloak:9080/auth/realms/jhipster
+      APPL_OIDC_CLIENT_ID: internal
+      APPL_OIDC_CLIENT_SECRET: internal
+    networks:
+      - persistency
+      - kafka
+      - internal
+    depends_on:
+      - postgres
+      - keycloak
+networks:
+  persistency:
+  cacheing:
+  kafka:
+  zookeeper:
+  internal:
+volumes:
+  pgdata:
+  redisdata:

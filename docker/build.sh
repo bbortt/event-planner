@@ -5,27 +5,30 @@
 
 set -ex
 
-version=local
+# Buildtime Variables
+export version=local
 
 # Gradle build
-./gradlew clean build -Pprod -Pversion=$version
+./gradlew build \
+    -Pprod \
+    -Pversion=$version
 
 # Gateway Docker image
 cd gateway && \
-docker build . --build-arg JAR_FILE=gateway-$version.jar -t event-planner_gateway:$version && \
+docker build . --no-cache --build-arg JAR_FILE=gateway-$version.jar -t ep_gateway:$version && \
  cd ..
 
 # Backend Docker image
 cd backend && \
- docker build . --build-arg JAR_FILE=backend-$version.jar -t event-planner_backend:$version && \
+ docker build . --no-cache --build-arg JAR_FILE=backend-$version.jar -t ep_backend:$version && \
  cd ..
 
 # Service User Docker image
 cd services/users && \
- docker build . --build-arg JAR_FILE=user-$version.jar -t event-planner-service_user:$version && \
+ docker build . --no-cache --build-arg JAR_FILE=user-$version.jar -t ep_service_user:$version && \
  cd ../..
 
 # Frontend Docker image
 cd frontend && \
- docker build . -t event-planner_frontend:$version && \
+ docker build . --no-cache -t ep_frontend:$version && \
  cd ..

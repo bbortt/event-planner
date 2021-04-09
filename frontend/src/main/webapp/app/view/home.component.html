@@ -7,7 +7,7 @@
     <div [ngSwitch]="isAuthenticated()">
       <div class="alert alert-warning" *ngSwitchCase="false">
         <span jhiTranslate="global.messages.info.register.noaccount">You don't have an account yet?</span>&nbsp;
-        <a class="alert-link" routerLink="account/register" jhiTranslate="global.messages.info.register.link">Register a new account</a>
+        <a class="alert-link" (click)="login()" jhiTranslate="global.messages.info.register.link">Register a new account</a>
       </div>
 
       <app-my-projects *ngSwitchCase="true"></app-my-projects>
