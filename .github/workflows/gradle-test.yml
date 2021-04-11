@@ -26,7 +26,7 @@ jobs:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-            ./node_modules
-          key: ${{ runner.os }}-gradle-${{ hashFiles('build.gradle', 'package-lock.json') }}
+            ./frontend/node_modules
+          key: ${{ runner.os }}-gradle-${{ hashFiles('build.gradle', 'frontend/package.json') }}
           restore-keys: |
             ${{ runner.os }}-gradle-

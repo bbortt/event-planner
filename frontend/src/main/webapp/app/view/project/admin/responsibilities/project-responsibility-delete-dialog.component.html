@@ -1,0 +1,31 @@
+<div class="row justify-content-center">
+  <div class="col-10">
+    <form *ngIf="responsibility" name="deleteForm" (ngSubmit)="confirmDelete(responsibility?.id!)">
+      <div class="modal-header">
+        <h2 class="modal-title" jhiTranslate="entity.delete.title">Confirm delete operation</h2>
+      </div>
+
+      <div class="modal-body">
+        <jhi-alert-error></jhi-alert-error>
+
+        <p
+          id="jhi-delete-responsibility-heading"
+          jhiTranslate="eventPlannerApp.responsibility.delete.question"
+          [translateValues]="{ name: responsibility.name }"
+        >
+          Are you sure you want to delete this Responsibility?
+        </p>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-negative btn-gray" data-dismiss="modal" (click)="cancel()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+
+        <button id="jhi-confirm-delete-responsibility" type="submit" class="btn btn-negative btn-red">
+          <fa-icon icon="times"></fa-icon>&nbsp;<span jhiTranslate="entity.action.delete">Delete</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

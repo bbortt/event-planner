@@ -1,0 +1,18 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: service-user
+          predicates:
+            - Path=/services/users/**
+          filters:
+            - RewritePath=/services/users/(?<segment>.*), /api/users/$\{segment}
+          uri: http://service_user:8080/api/
+        - id: backend
+          predicates:
+            - Path=/api/**
+          uri: http://backend:8080/api/
+        - id: frontend
+          predicates:
+            - Path=/**
+          uri: http://frontend/

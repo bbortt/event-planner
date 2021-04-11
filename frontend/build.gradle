@@ -1,0 +1,34 @@
+plugins {
+    id "base"
+    id "com.github.node-gradle.node"
+    id "jacoco"
+}
+
+group = "io.github.bbortt.event.planner.frontend"
+description = "Event Planning Tool - Webapplication."
+
+task webpackTest(type: NpmTask, dependsOn: "npmInstall") {
+    args = ["run", "webapp:test"]
+}
+
+check.dependsOn webpackTest
+
+task npmLint(type: NpmTask, dependsOn: "npmInstall") {
+    args = ["run", "lint"]
+}
+
+check.dependsOn npmLint
+
+task webpack(type: NpmTask, dependsOn: "npmInstall") {
+    args = ["run", "webapp:prod"]
+    environment = [APP_VERSION: project.version]
+}
+webpack.dependsOn check
+
+build.dependsOn webpack
+
+sonarqube {
+    properties {
+        property "sonar.typescript.lcov.reportPaths", "target/test-results/lcov.info"
+    }
+}

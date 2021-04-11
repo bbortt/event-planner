@@ -11,9 +11,8 @@ jobs:
     runs-on: ubuntu-20.04
     services:
       postgres:
-        image: postgres:13.1-alpine
+        image: postgres:13.2-alpine
         env:
-          POSTGRES_DB: event_planner_integration
           POSTGRES_USER: event_planner
           POSTGRES_PASSWORD: event_planner_password
         ports:
@@ -29,6 +28,9 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
+      - name: Provide PostgreSQL Databases
+        run: |
+          PGPASSWORD=event_planner_password psql -h localhost -U event_planner -f ./docker/postgres/init.sql
       - name: Build using Gradle
         run: |
           ./gradlew -Pprod --no-daemon -i \
@@ -47,7 +49,7 @@ jobs:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-            ./node_modules
-          key: ${{ runner.os }}-gradle-${{ hashFiles('build.gradle', 'package-lock.json') }}
+            ./frontend/node_modules
+          key: ${{ runner.os }}-gradle-${{ hashFiles('build.gradle', 'frontend/package.json') }}
           restore-keys: |
             ${{ runner.os }}-gradle-

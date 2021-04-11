@@ -1,0 +1,16 @@
+# This configuration is intended for development purpose, it's **your** responsibility to harden it for production
+version: '3.3'
+services:
+  postgres:
+    image: postgres:13-alpine
+    container_name: event-planner_postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/docker_postgres_init.sql
+    environment:
+      - POSTGRES_USER=event_planner
+      - POSTGRES_PASSWORD=event_planner_password
+    ports:
+      - 5432:5432
+volumes:
+  pgdata:

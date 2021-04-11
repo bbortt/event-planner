@@ -1,3 +1,5 @@
+def profiles = "dev"
+
 configurations {
     developmentOnly
     runtimeClasspath {
@@ -5,38 +7,38 @@ configurations {
     }
 }
 
-dependencies {
-    developmentOnly "org.springframework.boot:spring-boot-devtools:${spring_boot_version}"
-}
-
-def profiles = "dev"
-if (project.hasProperty("tls")) {
-    profiles += ",tls"
-}
-
-springBoot {
-    buildInfo {
-        properties {
-            time = null
+subprojects {
+    pluginManager.withPlugin("java", {
+        dependencies {
+            developmentOnly "org.springframework.boot:spring-boot-devtools:${springBootVersion}"
         }
-    }
-}
 
-bootRun {
-    args = []
-}
-
-processResources {
-    inputs.property('version', version)
-    inputs.property('springProfiles', profiles)
-    filesMatching("**/application.yml") {
-        filter {
-            it.replace("#project.version#", version)
+        springBoot {
+            buildInfo {
+                properties {
+                    time = null
+                }
+            }
         }
-        filter {
-            it.replace("#spring.profiles.active#", profiles)
-        }
-    }
-}
 
-bootJar.dependsOn processResources
+        bootRun {
+            args = []
+        }
+
+        processResources {
+            inputs.property("version", version)
+            inputs.property("springProfiles", profiles)
+            filesMatching("**/application.yml") {
+                filter {
+                    it.replace("#project.version#", version)
+                }
+                filter {
+                    it.replace("#spring.profiles.active#", profiles)
+                }
+            }
+        }
+        processResources.dependsOn bootBuildInfo
+
+        bootJar.dependsOn processResources
+    })
+}

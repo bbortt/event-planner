@@ -1,0 +1,146 @@
+package io.github.bbortt.event.planner.gateway.service;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.bbortt.event.planner.gateway.config.Constants;
+import io.github.bbortt.event.planner.gateway.config.KafkaProperties;
+import io.github.bbortt.event.planner.gateway.service.dto.UserDTO;
+import java.util.Map;
+import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
+import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
+import reactor.kafka.sender.KafkaSender;
+import reactor.kafka.sender.SenderOptions;
+import reactor.kafka.sender.SenderRecord;
+import reactor.kafka.sender.SenderResult;
+
+/**
+ * Service class for managing users.
+ */
+@Service
+public class UserService {
+
+    private static final Logger log = LoggerFactory.getLogger(UserService.class);
+
+    private static final String TOPIC = "audit";
+
+    private final KafkaSender<String, String> sender;
+
+    private final ObjectMapper objectMapper;
+
+    public UserService(KafkaProperties kafkaProperties) {
+        this.sender = KafkaSender.create(SenderOptions.create(kafkaProperties.getProducerProps()));
+
+        this.objectMapper = new ObjectMapper();
+    }
+
+    public void publishUserInformation(UserDTO userDTO) {
+        log.info("Publish user information: {}", userDTO);
+
+        Mono
+            .just(userDTO)
+            .<String>handle(
+                (dto, sink) -> {
+                    try {
+                        sink.next(objectMapper.writeValueAsString(userDTO));
+                    } catch (JsonProcessingException e) {
+                        sink.error(e);
+                    }
+                }
+            )
+            .map(serializedUserDTO -> SenderRecord.create(TOPIC, null, null, userDTO.getId(), serializedUserDTO, null))
+            .as(sender::send)
+            .next()
+            .map(SenderResult::recordMetadata)
+            .subscribe(
+                recordMetadata -> {
+                    if (log.isDebugEnabled()) {
+                        log.debug(
+                            "Audit published: { topic: {}, partition: {}, offset: {}, timestamp: {} }",
+                            recordMetadata.topic(),
+                            recordMetadata.partition(),
+                            recordMetadata.offset(),
+                            recordMetadata.timestamp()
+                        );
+                    }
+                }
+            );
+    }
+
+    /**
+     * Returns the user from an OAuth 2.0 login or resource server with JWT.
+     *
+     * @param authToken the authentication token.
+     * @return the user from the authentication.
+     */
+    public Mono<UserDTO> getUserFromAuthentication(AbstractAuthenticationToken authToken) {
+        Map<String, Object> attributes;
+        if (authToken instanceof OAuth2AuthenticationToken) {
+            attributes = ((OAuth2AuthenticationToken) authToken).getPrincipal().getAttributes();
+        } else if (authToken instanceof JwtAuthenticationToken) {
+            attributes = ((JwtAuthenticationToken) authToken).getTokenAttributes();
+        } else {
+            throw new IllegalArgumentException("AuthenticationToken is not OAuth2 or JWT!");
+        }
+        UserDTO user = getUser(attributes);
+        user.setAuthorities(authToken.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toSet()));
+        return Mono.just(user);
+    }
+
+    private static UserDTO getUser(Map<String, Object> details) {
+        UserDTO user = new UserDTO();
+        Boolean activated = Boolean.TRUE;
+        // handle resource server JWT, where sub claim is email and uid is ID
+        if (details.get("uid") != null) {
+            user.setId((String) details.get("uid"));
+            user.setLogin((String) details.get("sub"));
+        } else {
+            user.setId((String) details.get("sub"));
+        }
+        if (details.get("preferred_username") != null) {
+            user.setLogin(((String) details.get("preferred_username")).toLowerCase());
+        } else if (user.getLogin() == null) {
+            user.setLogin(user.getId());
+        }
+        if (details.get("given_name") != null) {
+            user.setFirstName((String) details.get("given_name"));
+        }
+        if (details.get("family_name") != null) {
+            user.setLastName((String) details.get("family_name"));
+        }
+        if (details.get("email_verified") != null) {
+            activated = (Boolean) details.get("email_verified");
+        }
+        if (details.get("email") != null) {
+            user.setEmail(((String) details.get("email")).toLowerCase());
+        } else {
+            user.setEmail((String) details.get("sub"));
+        }
+        if (details.get("langKey") != null) {
+            user.setLangKey((String) details.get("langKey"));
+        } else if (details.get("locale") != null) {
+            // trim off country code if it exists
+            String locale = (String) details.get("locale");
+            if (locale.contains("_")) {
+                locale = locale.substring(0, locale.indexOf('_'));
+            } else if (locale.contains("-")) {
+                locale = locale.substring(0, locale.indexOf('-'));
+            }
+            user.setLangKey(locale.toLowerCase());
+        } else {
+            // set langKey to default if not specified by IdP
+            user.setLangKey(Constants.DEFAULT_LANGUAGE);
+        }
+        if (details.get("picture") != null) {
+            user.setImageUrl((String) details.get("picture"));
+        }
+        user.setActivated(activated);
+        return user;
+    }
+}

@@ -1,0 +1,12 @@
+<div *ngIf="resource">
+  {{ resource.text }}
+  <br />
+  <br />
+  <div *ngIf="resource.originalSection.responsibility" class="resource-responsibility">
+    {{ resource.originalSection.responsibility!.name }}
+  </div>
+
+  <div *ngIf="resource.originalSection.user" class="resource-responsibility">
+    {{ resource.originalSection.user!.email }}
+  </div>
+</div>

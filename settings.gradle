@@ -1,10 +1,22 @@
 pluginManagement {
      plugins {
-          id 'org.springframework.boot' version "${spring_boot_version}"
-          id 'com.github.node-gradle.node' version "${gradle_node_plugin_version}"
-          id "org.flywaydb.flyway" version "${flyway_plugin_version}"
-          id 'org.sonarqube' version "${sonarqube_plugin_version}"
+          id "org.springframework.boot" version "${springBootVersion}"
+          id "com.github.node-gradle.node" version "${gradleNodePluginVersion}"
+          id "org.flywaydb.flyway" version "${flywayPluginVersion}"
+		  id "org.sonarqube" version "${sonarqubePluginVersion}"
      }
 }
 
 rootProject.name = "event-planner"
+
+include "backend"
+findProject(":backend")?.name = "backend"
+
+include "frontend"
+findProject(":frontend")?.name = "frontend"
+
+include "gateway"
+findProject(":gateway")?.name = "gateway"
+
+include "services:users"
+findProject(":services:users")?.name = "user"

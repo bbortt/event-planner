@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "target": "es2015",
+    "module": "es2020",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "experimentalDecorators": true,
+    "strict": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "outDir": "build/app",
+    "lib": ["es2018", "dom"],
+    "baseUrl": "./",
+    "paths": {
+      "app/*": ["src/main/webapp/app/*"]
+    },
+    "importHelpers": true,
+    "downlevelIteration": true,
+    "declaration": false,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true
+  },
+  "angularCompilerOptions": {
+    "strictInjectionParameters": true,
+    "strictTemplates": true,
+    "strictInputAccessModifiers": true,
+    "preserveWhitespaces": true
+  },
+  "exclude": ["src/test/javascript/cypress"]
+}

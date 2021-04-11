@@ -1,0 +1,43 @@
+<div class="alert alert-warning" id="no-result" *ngIf="sections?.length === 0; else scheduler">
+  <span jhiTranslate="eventPlannerApp.project.screenplay.sections.notFound">Location does not contain any sections</span>
+</div>
+
+<ng-template #scheduler>
+  <div
+    *ngIf="cellDuration && schedulerStartDate && interval"
+    class="app-project-screenplay-location"
+    [ngClass]="{ 'screenplay-readonly': isViewer }"
+  >
+    <dx-scheduler
+      [dataSource]="events"
+      appointmentTemplate="eventTemplate"
+      resourceCellTemplate="resourceTemplate"
+      [currentDate]="schedulerStartDate"
+      [min]="project!.startTime.toDate()"
+      [max]="project!.endTime.toDate()"
+      [groups]="['sectionId']"
+      currentView="custom-project-view"
+      [showAllDayPanel]="false"
+      [crossScrollingEnabled]="true"
+      [showCurrentTimeIndicator]="false"
+      [editing]="schedulerInformation"
+      (onAppointmentFormOpening)="configureAppointmentForm($event)"
+      (onAppointmentUpdated)="onAppointmentDragged($event)"
+      (onAppointmentClick)="openEventDetails($event)"
+    >
+      <dxi-view type="timelineDay" name="custom-project-view" [cellDuration]="cellDuration" [intervalCount]="interval"> </dxi-view>
+
+      <dxi-resource fieldExpr="sectionId" [dataSource]="sections"></dxi-resource>
+
+      <dxi-resource fieldExpr="colorGroupId" [dataSource]="colors" [useColorAsDefault]="true"></dxi-resource>
+
+      <div *dxTemplate="let model of 'eventTemplate'">
+        <app-scheduler-appointment [appointment]="model.appointmentData"></app-scheduler-appointment>
+      </div>
+
+      <div *dxTemplate="let model of 'resourceTemplate'">
+        <app-scheduler-resource [resource]="model.data"></app-scheduler-resource>
+      </div>
+    </dx-scheduler>
+  </div>
+</ng-template>
