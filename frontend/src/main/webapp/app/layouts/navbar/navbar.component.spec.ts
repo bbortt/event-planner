@@ -11,9 +11,7 @@ import { of } from 'rxjs';
 import { SessionStorageService } from 'ngx-webstorage';
 import { TranslateService } from '@ngx-translate/core';
 
-import { ProfileInfo } from 'app/layouts/profiles/profile-info.model';
 import { AccountService } from 'app/core/auth/account.service';
-import { ProfileService } from 'app/layouts/profiles/profile.service';
 import { LoginService } from 'app/login/login.service';
 
 import { NavbarComponent } from './navbar.component';
@@ -23,7 +21,6 @@ describe('Component Tests', () => {
     let comp: NavbarComponent;
     let fixture: ComponentFixture<NavbarComponent>;
     let mockAccountService: AccountService;
-    let profileService: ProfileService;
 
     beforeEach(
       waitForAsync(() => {
@@ -41,18 +38,17 @@ describe('Component Tests', () => {
       fixture = TestBed.createComponent(NavbarComponent);
       comp = fixture.componentInstance;
       mockAccountService = TestBed.inject(AccountService);
-      profileService = TestBed.inject(ProfileService);
     });
 
-    it('Should call profileService.getProfileInfo on init', () => {
+    it('Should call accountService.identity on init', () => {
       // GIVEN
-      spyOn(profileService, 'getProfileInfo').and.returnValue(of(new ProfileInfo()));
+      spyOn(mockAccountService, 'identity').and.returnValue(of({}));
 
       // WHEN
       comp.ngOnInit();
 
       // THEN
-      expect(profileService.getProfileInfo).toHaveBeenCalled();
+      expect(mockAccountService.identity).toHaveBeenCalled();
     });
 
     it('Should call accountService.isAuthenticated on authentication', () => {
