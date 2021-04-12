@@ -54,7 +54,10 @@
         <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="account-menu" data-cy="accountMenu">
           <span *ngIf="!getImageUrl()">
             <fa-icon icon="user"></fa-icon>
-            <span jhiTranslate="global.menu.account.main">Account</span>
+<span *ngIf="!isAuthenticated()" jhiTranslate="global.menu.account.main">
+                            Account
+                        </span>
+                        <span id="home-logged-message" *ngIf="account">{{ account.login }}</span>
           </span>
           <span *ngIf="getImageUrl()">
             <img [src]="getImageUrl()" class="profile-image rounded-circle" alt="Avatar" />
