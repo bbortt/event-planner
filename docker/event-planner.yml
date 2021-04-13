@@ -33,20 +33,34 @@ services:
       service: zookeeper
     networks:
       - zookeeper
-  # Gateway
-  gateway:
-    image: ep_gateway:local
-    container_name: event-planner_gateway
+  # Gateways
+  gateway_01:
+    extends:
+      file: ./gateway/gateway.template.yml
+      service: gateway
+    container_name: event-planner_gateway_01
     ports:
       - 80:8080
-    volumes:
-      - ./gateway/application.yml:/home/eventplanner/config/application.yml
     environment:
-      # note: this must be the keycloak *public* url!
-      # on localhost, edit your hosts file: keycloak -> 127.0.0.1
-      APPL_OIDC_ISSUER_URI: http://keycloak:9080/auth/realms/jhipster
-      APPL_OIDC_CLIENT_ID: web_app
-      APPL_OIDC_CLIENT_SECRET: web_app
+      APPL_REDIS_HOST: redis
+      APPL_REDIS_PORT: 6379
+    networks:
+      - cacheing
+      - internal
+    depends_on:
+      - redis
+      - kafka
+      - keycloak
+  gateway_02:
+    extends:
+      file: ./gateway/gateway.template.yml
+      service: gateway
+    container_name: event-planner_gateway_02
+    ports:
+      - 8080:8080
+    environment:
+      APPL_REDIS_HOST: redis
+      APPL_REDIS_PORT: 6379
     networks:
       - cacheing
       - internal
@@ -61,7 +75,8 @@ services:
     networks:
       - internal
     depends_on:
-      - gateway
+      - gateway_01
+      - gateway_02
   # Legacy Backend
   backend:
     image: ep_backend:local

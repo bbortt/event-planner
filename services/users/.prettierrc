@@ -8,7 +8,7 @@ useTabs: false
 # js and ts rules:
 arrowParens: avoid
 
-# jsx and tsx rules:
+# jsx rules:
 jsxBracketSameLine: false
 
 # java rules:

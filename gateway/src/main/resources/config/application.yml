@@ -81,6 +81,9 @@ spring:
       httpclient:
         pool:
           max-connections: 1000
+    kubernetes:
+      discovery:
+        enabled: false
   profiles:
     # The commented value for `active` can be replaced with valid Spring profiles to load.
     # Otherwise, it will be filled in by gradle when building the JAR file

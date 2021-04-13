@@ -16,3 +16,5 @@ spring:
           predicates:
             - Path=/**
           uri: http://frontend/
+  profiles:
+    active: prod, redis
