@@ -1,18 +1,12 @@
 {
   "name": "frontend",
   "version": "0.0.1-SNAPSHOT",
-  "description": "Description for frontend",
   "private": true,
+  "description": "Description for frontend",
   "license": "Apache-2.0",
-  "licenses": [
-    {
-      "type": "Apache-2.0",
-      "url": "http://www.apache.org/licenses/LICENSE-2.0"
-    }
-  ],
   "scripts": {
-    "prettier:check": "prettier --check \"{,src/**/,webpack/}*.{md,json,yml,html,js,ts,tsx,css,scss}\"",
-    "prettier:format": "prettier --write \"{,src/**/,webpack/}*.{md,json,yml,html,js,ts,tsx,css,scss}\"",
+    "prettier:check": "prettier --check \"{,src/**/,webpack/}*.{md,json,yml,html,js,ts,css,scss}\"",
+    "prettier:format": "prettier --write \"{,src/**/,webpack/}*.{md,json,yml,html,js,ts,css,scss}\"",
     "lint": "eslint . --ext .js,.ts",
     "lint:fix": "npm run lint -- --fix",
     "cleanup": "rimraf build/",
@@ -119,5 +113,11 @@
   "jestSonar": {
     "reportPath": "target/test-results/jest",
     "reportFile": "TESTS-results-sonar.xml"
-  }
+  },
+  "licenses": [
+    {
+      "type": "Apache-2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0"
+    }
+  ]
 }
