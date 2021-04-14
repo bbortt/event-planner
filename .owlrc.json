@@ -4,7 +4,7 @@
       "npm run lint:staged:backend",
       "npm run lint:staged:frontend",
       "npm run lint:staged:gateway",
-      "npm run lint:staged:service:user"
+      "npm run lint:staged:services:user"
     ]
   }
 }

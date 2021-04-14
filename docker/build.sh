@@ -13,22 +13,8 @@ export version=local
     -Pprod \
     -Pversion=$version
 
-# Gateway Docker image
-cd gateway && \
-docker build . --no-cache --build-arg JAR_FILE=gateway-$version.jar -t ep_gateway:$version && \
- cd ..
-
-# Backend Docker image
-cd backend && \
- docker build . --no-cache --build-arg JAR_FILE=backend-$version.jar -t ep_backend:$version && \
- cd ..
-
-# Service User Docker image
-cd services/users && \
- docker build . --no-cache --build-arg JAR_FILE=user-$version.jar -t ep_service_user:$version && \
- cd ../..
-
-# Frontend Docker image
-cd frontend && \
- docker build . --no-cache -t ep_frontend:$version && \
- cd ..
+# Docker build
+docker build gateway --no-cache --build-arg JAR_FILE=gateway-$version.jar -t event-planner/gateway:$version
+docker build backend --no-cache --build-arg JAR_FILE=backend-$version.jar -t event-planner/backend:$version
+docker build services/user --no-cache --build-arg JAR_FILE=user-$version.jar -t event-planner/services-user:$version
+docker build frontend --no-cache -t event-planner/frontend:$version

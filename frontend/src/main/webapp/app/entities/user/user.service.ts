@@ -14,7 +14,7 @@ type EntityResponseType = HttpResponse<User>;
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
-  resourceUrl = this.applicationConfigService.getEndpointFor('services/users');
+  resourceUrl = this.applicationConfigService.getEndpointFor('services/user/users');
 
   constructor(private http: HttpClient, private applicationConfigService: ApplicationConfigService) {}
 
