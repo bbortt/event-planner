@@ -110,8 +110,6 @@ spring:
       thread-name-prefix: gateway-scheduling-
       pool:
         size: 2
-  thymeleaf:
-    mode: HTML
   output:
     ansi:
       console-available: true
