@@ -1,0 +1,92 @@
+import org.flywaydb.gradle.task.FlywayCleanTask
+import org.flywaydb.gradle.task.FlywayMigrateTask
+
+plugins {
+    id "java"
+    id "idea"
+    id "org.springframework.boot"
+    id "org.flywaydb.flyway"
+    id "jacoco"
+}
+
+group = "io.github.bbortt.event.planner.service.user"
+description = "Event Planning Tool - User Service."
+
+defaultTasks "bootRun"
+
+bootRun {
+    main = "io.github.bbortt.event.planner.service.user.UserApp"
+}
+
+dependencies {
+    implementation platform("tech.jhipster:jhipster-dependencies:${jhipsterDependenciesVersion}")
+
+    // Use ", version: jhipsterDependenciesVersion, changing: true" if you want
+    // to use a SNAPSHOT release instead of a stable release
+    implementation group: "tech.jhipster", name: "jhipster-framework"
+    implementation "javax.annotation:javax.annotation-api"
+    implementation "io.dropwizard.metrics:metrics-core"
+    implementation "io.micrometer:micrometer-registry-prometheus"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-hppc"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
+    implementation "com.fasterxml.jackson.module:jackson-module-jaxb-annotations"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-hibernate5"
+    implementation "com.fasterxml.jackson.core:jackson-annotations"
+    implementation "com.fasterxml.jackson.core:jackson-databind"
+    implementation "org.hibernate:hibernate-core"
+    implementation "com.zaxxer:HikariCP"
+    implementation "org.apache.commons:commons-lang3"
+    implementation "javax.transaction:javax.transaction-api"
+    implementation "org.hibernate:hibernate-entitymanager"
+    implementation "org.hibernate.validator:hibernate-validator"
+    implementation "org.springframework.boot:spring-boot-loader-tools"
+    implementation "org.springframework.boot:spring-boot-starter-mail"
+    implementation "org.springframework.boot:spring-boot-starter-logging"
+    implementation "org.springframework.boot:spring-boot-starter-actuator"
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+    implementation "org.springframework.kafka:spring-kafka"
+    implementation "org.springframework.boot:spring-boot-starter-security"
+    implementation ("org.springframework.boot:spring-boot-starter-web") {
+        exclude module: "spring-boot-starter-tomcat"
+    }
+    implementation "org.springframework.boot:spring-boot-starter-undertow"
+    implementation "org.springframework.boot:spring-boot-starter-thymeleaf"
+    implementation "org.zalando:problem-spring-web"
+    implementation "org.springframework.cloud:spring-cloud-starter"
+    implementation "org.springframework.cloud:spring-cloud-starter-netflix-hystrix"
+    implementation "org.springframework.retry:spring-retry"
+    implementation "org.springframework.cloud:spring-cloud-starter-openfeign"
+    implementation "org.springframework.security:spring-security-config"
+
+    implementation "org.springframework.security:spring-security-data"
+    implementation "org.springframework.security:spring-security-web"
+    implementation "org.springframework.boot:spring-boot-starter-oauth2-client"
+    implementation "org.springframework.boot:spring-boot-starter-oauth2-resource-server"
+    implementation ("io.springfox:springfox-oas")
+    implementation ("io.springfox:springfox-swagger2")
+    implementation "io.springfox:springfox-bean-validators"
+    implementation "org.postgresql:postgresql"
+    annotationProcessor "org.glassfish.jaxb:jaxb-runtime:${jaxbRuntimeVersion}"
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor:${springBootVersion}"
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation "org.springframework.security:spring-security-test"
+    testImplementation "org.springframework.boot:spring-boot-test"
+    testImplementation "com.tngtech.archunit:archunit-junit5-api:${archunitJunit5Version}"
+    testRuntimeOnly "com.tngtech.archunit:archunit-junit5-engine:${archunitJunit5Version}"
+    //jhipster-needle-gradle-dependency - JHipster will add additional dependencies here
+}
+
+task flywayCleanIntegrationTest(type: FlywayCleanTask) {
+    url = "${flyway_it_jdbc_url}"
+    user = "${flyway_it_user}"
+    password = "${flyway_it_password}"
+}
+flywayCleanIntegrationTest.dependsOn test
+
+task flywayMigrateIntegrationTest(type: FlywayMigrateTask) {
+    url = "${flyway_it_jdbc_url}"
+    user = "${flyway_it_user}"
+    password = "${flyway_it_password}"
+}
+flywayMigrateIntegrationTest.dependsOn flywayCleanIntegrationTest
+integrationTest.dependsOn flywayMigrateIntegrationTest

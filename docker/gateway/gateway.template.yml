@@ -2,7 +2,7 @@
 version: '3.3'
 services:
   gateway:
-    image: ep_gateway:local
+    image: event-planner/gateway:local
     volumes:
       - ./application.yml:/home/eventplanner/config/application.yml
     environment:
