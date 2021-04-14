@@ -40,8 +40,6 @@ spring:
       auto-commit: false
   jpa:
     database-platform: tech.jhipster.domain.util.FixedPostgreSQL10Dialect
-  thymeleaf:
-    cache: true
   sleuth:
     sampler:
       probability: 1 # report 100% of traces

@@ -31,8 +31,6 @@ spring:
       enabled: false
     livereload:
       enabled: false
-  thymeleaf:
-    cache: true
   sleuth:
     sampler:
       probability: 1 # report 100% of traces
