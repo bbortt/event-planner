@@ -1,29 +1,21 @@
 package io.github.bbortt.event.planner.service.user.web.rest;
 
-import static io.github.bbortt.event.planner.service.user.domain.User_.login;
-
-import io.github.bbortt.event.planner.service.user.config.Constants;
 import io.github.bbortt.event.planner.service.user.security.AuthoritiesConstants;
-import io.github.bbortt.event.planner.service.user.security.ScopesConstants;
 import io.github.bbortt.event.planner.service.user.service.UserService;
 import io.github.bbortt.event.planner.service.user.service.dto.AdminUserDTO;
 import io.github.bbortt.event.planner.service.user.service.dto.UserDTO;
-import java.util.*;
-import javax.validation.constraints.Pattern;
+import java.util.List;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import tech.jhipster.web.util.HeaderUtil;
-import tech.jhipster.web.util.PaginationUtil;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import tech.jhipster.web.util.ResponseUtil;
 
 /**
