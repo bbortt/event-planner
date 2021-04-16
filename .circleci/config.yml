@@ -19,6 +19,7 @@ jobs:
       - restore_cache:
           key: nodemodules-{{ checksum "frontend/package-lock.json" }}
       - run: |
+          sudo apt update && \
           sudo apt install -y postgresql-client && \
           PGPASSWORD=event_planner_password psql -h localhost -U event_planner -f ./docker/postgres/init.sql
       - run: ./gradlew -Pversion=$PIPELINE_NUMBER -Pprod -PnodeInstall --no-daemon -i build
