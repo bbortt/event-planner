@@ -31,10 +31,7 @@ jobs:
         run: |
           PGPASSWORD=event_planner_password psql -h localhost -U event_planner -f ./docker/postgres/init.sql
       - name: Build using Gradle
-        run: |
-          ./gradlew -Pprod --no-daemon -i build
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
+        run: ./gradlew -Pprod --no-daemon -i build
       - name: Build cache
         uses: actions/cache@v2
         with:
