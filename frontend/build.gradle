@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "io.github.bbortt.event.planner.frontend"
-description = "Event Planning Tool - Webapplication."
+description = "Event Planning Tool - Web Application."
 
 sonarqube {
     properties {
@@ -13,10 +13,14 @@ sonarqube {
     }
 }
 
+node {
+    version = "14.16.1"
+    npmVersion = "6.14.12"
+    npmInstallCommand = "ci"
+}
+
 if (project.hasProperty("nodeInstall")) {
     node {
-        version = "${nodeVersion}"
-        npmVersion = "${npmVersion}"
         download = true
     }
 }
