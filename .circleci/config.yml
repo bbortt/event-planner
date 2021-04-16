@@ -8,6 +8,7 @@ jobs:
       - image: cimg/openjdk:11.0-browsers
       - image: circleci/postgres:13.1
         environment:
+          POSTGRES_DB: event_planner
           POSTGRES_USER: event_planner
           POSTGRES_PASSWORD: event_planner_password
     environment:
