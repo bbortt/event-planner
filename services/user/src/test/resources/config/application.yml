@@ -17,7 +17,6 @@ spring:
   application:
     name: users
   datasource:
-    type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:postgresql://localhost:5432/service_user_integration
     username: service_user_user
     password: service_user_password

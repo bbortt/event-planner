@@ -34,7 +34,6 @@ spring:
     livereload:
       enabled: false
   datasource:
-    type: com.zaxxer.hikari.HikariDataSource
     hikari:
       poolName: Hikari
       auto-commit: false
