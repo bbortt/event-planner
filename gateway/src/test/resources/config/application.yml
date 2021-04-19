@@ -37,8 +37,6 @@ spring:
       thread-name-prefix: gateway-scheduling-
       pool:
         size: 1
-  thymeleaf:
-    mode: HTML
   # Allow SecurityConfiguration to initialize w/o specifying an empty issuer-uri is OK
   security:
     oauth2:

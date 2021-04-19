@@ -18,5 +18,5 @@ findProject(":frontend")?.name = "frontend"
 include "gateway"
 findProject(":gateway")?.name = "gateway"
 
-include "services:users"
-findProject(":services:users")?.name = "user"
+include "services:user"
+findProject(":services:user")?.name = "user"

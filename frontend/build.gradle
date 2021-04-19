@@ -5,30 +5,51 @@ plugins {
 }
 
 group = "io.github.bbortt.event.planner.frontend"
-description = "Event Planning Tool - Webapplication."
-
-task webpackTest(type: NpmTask, dependsOn: "npmInstall") {
-    args = ["run", "webapp:test"]
-}
-
-check.dependsOn webpackTest
-
-task npmLint(type: NpmTask, dependsOn: "npmInstall") {
-    args = ["run", "lint"]
-}
-
-check.dependsOn npmLint
-
-task webpack(type: NpmTask, dependsOn: "npmInstall") {
-    args = ["run", "webapp:prod"]
-    environment = [APP_VERSION: project.version]
-}
-webpack.dependsOn check
-
-build.dependsOn webpack
+description = "Event Planning Tool - Web Application."
 
 sonarqube {
     properties {
         property "sonar.typescript.lcov.reportPaths", "target/test-results/lcov.info"
     }
 }
+
+node {
+    version = "14.16.1"
+    npmVersion = "6.14.12"
+    npmInstallCommand = "ci"
+}
+
+if (project.hasProperty("nodeInstall")) {
+    node {
+        download = true
+    }
+}
+
+// Reporting
+task npmAudit(type: NpmTask, dependsOn: "npmInstall") {
+    args = ["audit"]
+}
+dependencyUpdates.dependsOn npmAudit
+task npmOutdated(type: NpmTask, dependsOn: "npmInstall") {
+    args = ["outdated"]
+}
+dependencyUpdates.dependsOn npmOutdated
+
+// Testing
+task webpackTest(type: NpmTask, dependsOn: "npmInstall") {
+    args = ["run", "webapp:test"]
+}
+check.dependsOn webpackTest
+
+task npmLint(type: NpmTask, dependsOn: "npmInstall") {
+    args = ["run", "lint"]
+}
+check.dependsOn npmLint
+
+// Building
+task webpack(type: NpmTask, dependsOn: "npmInstall") {
+    args = ["run", "webapp:prod"]
+    environment = [APP_VERSION: project.version]
+}
+webpack.dependsOn check
+build.dependsOn webpack

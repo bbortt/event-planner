@@ -29,15 +29,14 @@ jobs:
         with:
           java-version: 11
       - name: Provide PostgreSQL Databases
-        run: |
-          PGPASSWORD=event_planner_password psql -h localhost -U event_planner -f ./docker/postgres/init.sql
+        run: PGPASSWORD=event_planner_password psql -h localhost -U event_planner -f ./docker/postgres/init.sql
       - name: Build using Gradle
         run: |
           ./gradlew -Pprod --no-daemon -i \
           -Dsonar.host.url=https://sonarcloud.io \
           -Dsonar.organization=bbortt-github \
           -Dsonar.login=$SONAR_TOKEN \
-          dependencyUpdates check jacocoTestReport sonarqube
+          check jacocoTestReport sonarqube
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

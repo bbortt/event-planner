@@ -32,8 +32,6 @@ spring:
       indent-output: true
   messages:
     cache-duration: PT1S # 1 second, see the ISO 8601 standard
-  thymeleaf:
-    cache: false
   sleuth:
     sampler:
       probability: 1 # report 100% of traces
@@ -59,9 +57,9 @@ spring:
       routes:
         - id: service-user
           predicates:
-            - Path=/services/users/**
+            - Path=/services/user/**
           filters:
-            - RewritePath=/services/users/(?<segment>.*), /api/users/$\{segment}
+            - RewritePath=/services/user/(?<segment>.*), /api/$\{segment}
           uri: http://localhost:8082/api/
         - id: backend
           predicates:

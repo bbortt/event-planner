@@ -17,7 +17,6 @@ spring:
   application:
     name: backend
   datasource:
-    type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:postgresql://localhost:5432/backend_integration
     username: backend_user
     password: backend_password

@@ -1,0 +1,44 @@
+name: JDK15 Preview
+on:
+  push:
+    branches:
+      - canary
+      - release
+jobs:
+  build:
+    name: JDK15 Preview Build
+    runs-on: ubuntu-20.04
+    services:
+      postgres:
+        image: postgres:13.2-alpine
+        env:
+          POSTGRES_USER: event_planner
+          POSTGRES_PASSWORD: event_planner_password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 15
+      - name: Provide PostgreSQL Databases
+        run: |
+          PGPASSWORD=event_planner_password psql -h localhost -U event_planner -f ./docker/postgres/init.sql
+      - name: Build using Gradle
+        run: ./gradlew -Pprod --no-daemon -i build
+      - name: Build cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+            ./frontend/node_modules
+          key: ${{ runner.os }}-gradle-${{ hashFiles('build.gradle', 'frontend/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
