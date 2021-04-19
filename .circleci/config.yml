@@ -52,7 +52,7 @@ jobs:
     steps:
       - checkout
       - attach_workspace:
-          at: build
+          at: ./
       - secrethub/install
       - setup_remote_docker
       - run: .circleci/docker_build.sh $PIPELINE_NUMBER
