@@ -77,3 +77,16 @@ spec:
             items:
               - key: application.yaml
                 path: application.yaml
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gateway
+spec:
+  selector:
+    app: gateway
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+      protocol: TCP
