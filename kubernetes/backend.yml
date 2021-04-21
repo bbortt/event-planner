@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  labels:
+    app: backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: bbortt/event-planner-backend:local
+          env:
+            - name: APPL_JDBC_URL
+              value: "jdbc:postgresql://kubernetes.docker.internal:5432/backend"
+            - name: APPL_JDBC_USERNAME
+              value: "backend_user"
+            - name: APPL_JDBC_PASSWORD
+              value: "backend_password"
+            - name: APPL_MAIL_HOST
+              value: "localhost"
+            - name: APPL_MAIL_PORT
+              value: "25"
+            - name: APPL_MAIL_USERNAME
+              value: "localhost"
+            - name: APPL_MAIL_PASSWORD
+              value: "localhost"
+            - name: APPL_MAIL_BASE_URL
+              value: "http://localhost"
+            - name: APPL_OIDC_ISSUER_URI
+              value: "http://kubernetes.docker.internal:9080/auth/realms/jhipster"
+            - name: APPL_OIDC_CLIENT_ID
+              value: "internal"
+            - name: APPL_OIDC_CLIENT_SECRET
+              value: "internal"
+            - name: APPL_USER_SERVICE_BASE_URL
+              value: "http://services-user:8080"
+          resources:
+            requests:
+              memory: 128Mi
+            limits:
+              memory: 256Mi
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+            - name: management
+              containerPort: 8090
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /management/health/liveness
+              port: management
+            initialDelaySeconds: 120
+            timeoutSeconds: 2
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 2
+          readinessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /management/health/readiness
+              port: management
+            initialDelaySeconds: 10
+            timeoutSeconds: 2
+            periodSeconds: 5
+            successThreshold: 1
+            failureThreshold: 20
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+spec:
+  selector:
+    app: backend
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+      protocol: TCP

@@ -74,8 +74,6 @@ configuration:
 services:
   # Legacy Backend
   backend:
-    image: event-planner/backend:local
-    container_name: event-planner_backend
     environment:
       APPL_JDBC_URL: jdbc:postgresql://postgres:5432/backend
       APPL_JDBC_USERNAME: backend_user
