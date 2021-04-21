@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: bbortt/event-planner-frontend:468
+          image: bbortt/event-planner-frontend:local
           resources:
             requests:
               memory: 128Mi
@@ -26,6 +26,26 @@ spec:
             - name: http
               containerPort: 80
               protocol: TCP
+          livenessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /
+              port: http
+            initialDelaySeconds: 120
+            timeoutSeconds: 2
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 2
+          readinessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /
+              port: http
+            initialDelaySeconds: 10
+            timeoutSeconds: 2
+            periodSeconds: 5
+            successThreshold: 1
+            failureThreshold: 20
 ---
 apiVersion: v1
 kind: Service

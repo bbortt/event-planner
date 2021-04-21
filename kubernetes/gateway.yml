@@ -43,7 +43,7 @@ spec:
     spec:
       containers:
         - name: gateway
-          image: bbortt/event-planner-gateway:468
+          image: bbortt/event-planner-gateway:local
           env:
             - name: APPL_KAFKA_BOOTSTRAP_SERVERS
               value: "kubernetes.docker.internal:9092"
@@ -66,6 +66,29 @@ spec:
             - name: http
               containerPort: 8080
               protocol: TCP
+            - name: management
+              containerPort: 8090
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /management/health/liveness
+              port: management
+            initialDelaySeconds: 120
+            timeoutSeconds: 2
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 2
+          readinessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /management/health/readiness
+              port: management
+            initialDelaySeconds: 10
+            timeoutSeconds: 2
+            periodSeconds: 5
+            successThreshold: 1
+            failureThreshold: 20
           volumeMounts:
             - name: application-yaml
               mountPath: "/home/eventplanner/config"

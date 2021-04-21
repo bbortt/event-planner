@@ -14,7 +14,7 @@ export version=local
     -Pversion=$version
 
 # Docker build
-docker build gateway --no-cache --build-arg JAR_FILE=gateway-$version.jar -t event-planner/gateway:$version
-docker build backend --no-cache --build-arg JAR_FILE=backend-$version.jar -t event-planner/backend:$version
-docker build services/user --no-cache --build-arg JAR_FILE=user-$version.jar -t event-planner/services-user:$version
-docker build frontend --no-cache -t event-planner/frontend:$version
+docker build gateway --no-cache --build-arg JAR_FILE=gateway-$version.jar -t bbortt/event-planner-gateway:$version
+docker build backend --no-cache --build-arg JAR_FILE=backend-$version.jar -t bbortt/event-planner-backend:$version
+docker build services/user --no-cache --build-arg JAR_FILE=user-$version.jar -t bbortt/event-planner-services-user:$version
+docker build frontend --no-cache -t bbortt/event-planner-frontend:$version

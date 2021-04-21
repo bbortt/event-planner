@@ -70,7 +70,7 @@ services:
       - keycloak
   # Frontend
   frontend:
-    image: event-planner/frontend:local
+    image: bbortt/event-planner-frontend:local
     container_name: event-planner_frontend
     networks:
       - internal
@@ -79,7 +79,7 @@ services:
       - gateway_02
   # Legacy Backend
   backend:
-    image: event-planner/backend:local
+    image: bbortt/event-planner-backend:local
     container_name: event-planner_backend
     environment:
       APPL_JDBC_URL: jdbc:postgresql://postgres:5432/backend
@@ -102,7 +102,7 @@ services:
       - keycloak
   # Service User
   service_user:
-    image: event-planner/services-user:local
+    image: bbortt/event-planner-services-user:local
     container_name: event-planner_service_user
     environment:
       APPL_JDBC_URL: jdbc:postgresql://postgres:5432/service_user

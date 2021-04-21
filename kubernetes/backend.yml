@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: bbortt/event-planner-backend:468
+          image: bbortt/event-planner-backend:local
           env:
             - name: APPL_JDBC_URL
               value: "jdbc:postgresql://kubernetes.docker.internal:5432/backend"
@@ -51,6 +51,29 @@ spec:
             - name: http
               containerPort: 8080
               protocol: TCP
+            - name: management
+              containerPort: 8090
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /management/health/liveness
+              port: management
+            initialDelaySeconds: 120
+            timeoutSeconds: 2
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 2
+          readinessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /management/health/readiness
+              port: management
+            initialDelaySeconds: 10
+            timeoutSeconds: 2
+            periodSeconds: 5
+            successThreshold: 1
+            failureThreshold: 20
 ---
 apiVersion: v1
 kind: Service
