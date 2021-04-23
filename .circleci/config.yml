@@ -58,6 +58,7 @@ jobs:
       - run: .circleci/docker_build.sh $PIPELINE_NUMBER
       - run: echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_USERNAME --password-stdin
       - run: .circleci/docker_push.sh $PIPELINE_NUMBER
+      - run: .circleci/git_tag_and_push.sh $PIPELINE_NUMBER
 workflows:
   release:
     jobs:
