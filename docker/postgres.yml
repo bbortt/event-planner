@@ -6,11 +6,17 @@ services:
     container_name: event-planner_postgres
     volumes:
       - pgdata:/var/lib/postgresql/data
-      - ./postgres/init.sql:/docker-entrypoint-initdb.d/docker_postgres_init.sql
     environment:
       - POSTGRES_USER=event_planner
       - POSTGRES_PASSWORD=event_planner_password
     ports:
       - 5432:5432
+  migration:
+    build: 'postgres'
+    container_name: event-planner_flyway
+    volumes:
+      - ./postgres:/flyway/sql
+    depends_on:
+      - postgres
 volumes:
   pgdata:

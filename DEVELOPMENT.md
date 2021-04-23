@@ -11,7 +11,7 @@ testing commands.
 Unit tests are bound to the `test` phase. Integration tests should be executed when `check` has been
 invoked. The `check` phase does depend on a PostgreSQL installation running on `localhost:5432`. You
 could kickstart an environment via docker-compose: `docker-compose -f docker/postgres.yml up -d`.
-The `init.sql` is also located there.
+The init scripts are also located there.
 
 For example
 the [fullbuild](https://github.com/bbortt/event-planner/actions/workflows/gradle-fullbuild.yml)
