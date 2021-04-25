@@ -10,5 +10,3 @@ RUN touch /var/run/nginx.pid && \
 COPY src/main/docker/nginx.conf /etc/nginx/nginx.conf
 COPY src/main/docker/site.conf /etc/nginx/conf.d/default.conf
 COPY build /usr/share/nginx/html
-
-USER nginx
