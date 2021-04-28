@@ -26,7 +26,6 @@ spring:
         registration:
           oidc:
             client-id: web_app
-            client-secret: web_app
             scope: openid,profile,email
 ```
 

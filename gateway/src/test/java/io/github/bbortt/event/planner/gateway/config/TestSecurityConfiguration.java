@@ -52,8 +52,7 @@ public class TestSecurityConfiguration {
             .providerConfigurationMetadata(metadata)
             .userNameAttributeName("id")
             .clientName("Client Name")
-            .clientId("client-id")
-            .clientSecret("client-secret");
+            .clientId("client-id");
     }
 
     @Bean
