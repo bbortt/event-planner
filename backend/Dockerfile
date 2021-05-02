@@ -1,4 +1,4 @@
-FROM openjdk:15-slim
+FROM adoptopenjdk:15-jre-hotspot
 MAINTAINER Timon Borter <bbortt.github.io>
 
 ENTRYPOINT ["java", "-jar", "backend.jar"]
