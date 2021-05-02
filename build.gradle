@@ -36,7 +36,13 @@ subprojects {
         assert System.properties["java.specification.version"] == "1.8" || "11" || "12" || "13" || "14" || "15"
 
         dependencies {
-            // TODO: Will align dependencies later
+            annotationProcessor "org.springframework.boot:spring-boot-configuration-processor:${springBootVersion}"
+
+            implementation platform("tech.jhipster:jhipster-dependencies:${jhipsterDependenciesVersion}")
+
+            implementation "io.dropwizard.metrics:metrics-core"
+            implementation "io.micrometer:micrometer-registry-prometheus"
+            implementation "org.springframework.boot:spring-boot-starter-actuator"
         }
 
         compileJava.dependsOn processResources
