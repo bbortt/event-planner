@@ -56,7 +56,6 @@ services:
       # on localhost, edit your hosts file: keycloak -> 127.0.0.1
       APPL_OIDC_ISSUER_URI: http://keycloak:9080/auth/realms/jhipster
       APPL_OIDC_CLIENT_ID: web_app
-      APPL_OIDC_CLIENT_SECRET: web_app
       APPL_REDIS_HOST: redis
       APPL_REDIS_PORT: 6379
 ```
