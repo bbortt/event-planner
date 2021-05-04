@@ -29,7 +29,7 @@ jobs:
           java-version: 15
       - name: Provide PostgreSQL Databases
         run: |
-          PGPASSWORD=event_planner_password psql -h localhost -U event_planner -f ./docker/postgres/init.sql
+          PGPASSWORD=event_planner_password psql -h localhost -U event_planner -f .github/workflows/postgres/init.sql
       - name: Build using Gradle
         run: ./gradlew -Pprod --no-daemon -i build
       - name: Build cache
