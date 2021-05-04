@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 #
 # Configure nginx-files.conf from template:
-#   $APPL_NGINX_PROFILE_LOGSTASH whether to send logs to logstash
+#   $APPL_LOGSTASH_HOST An optional Logstash host
 
-if [[ -n $APPL_NGINX_PROFILE_LOGSTASH ]]; then
-    cp ./nginx-logstash.conf /etc/nginx/nginx.conf
+if [[ -n $APPL_LOGSTASH_HOST ]]; then
+    cat ./nginx-logstash.conf | envsubst '$APPL_LOGSTASH_HOST,$APPL_LOGSTASH_PORT' > /etc/nginx/nginx.conf
 else
     cp ./nginx-files.conf /etc/nginx/nginx.conf
 fi

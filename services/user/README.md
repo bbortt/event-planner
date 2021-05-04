@@ -78,6 +78,13 @@ services:
       APPL_OIDC_CLIENT_SECRET: internal
 ```
 
+### Logstash
+
+Activate the `logstash` profile in order to send logs to Logstash (TCP). This requires the  following
+environment variables to be set:
+* `APPL_LOGSTASH_HOST`: The Logstash host.
+* `APPL_LOGSTASH_PORT`: The Logstash port.
+
 ## License
 
 This project is licensed under the terms of
