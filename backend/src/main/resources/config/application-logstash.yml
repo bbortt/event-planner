@@ -1,0 +1,7 @@
+jhipster:
+  logging:
+    logstash:
+      enabled: true
+      host: ${APPL_LOGSTASH_HOST}
+      port: ${APPL_LOGSTASH_PORT}
+      queue-size: 512
