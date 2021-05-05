@@ -9,9 +9,9 @@ set -ex
 export version=local
 
 # Gradle build
-#./gradlew build \
-#    -Pprod \
-#    -Pversion=$version
+./gradlew build \
+    -Pprod \
+    -Pversion=$version
 
 # Docker build
 docker build gateway --no-cache --build-arg JAR_FILE=gateway-$version.jar -t bbortt/event-planner-gateway:$version
