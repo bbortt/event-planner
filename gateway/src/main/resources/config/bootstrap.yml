@@ -5,4 +5,4 @@ spring:
     kubernetes:
       config:
         paths:
-          - /home/eventplanner/config
+          - /home/eventplanner/config/application.yml
