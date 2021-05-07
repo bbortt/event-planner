@@ -1,4 +1,4 @@
-FROM nginx:1.17.5-alpine
+FROM nginx:1.20.0-alpine
 MAINTAINER Timon Borter <bbortt.github.io>
 
 EXPOSE 80
