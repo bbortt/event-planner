@@ -4,7 +4,7 @@ MAINTAINER Timon Borter <bbortt.github.io>
 EXPOSE 80
 
 RUN \
-  mkdir /appl/nginx && \
+  mkdir /appl && mkdir /appl/nginx && \
   touch /var/run/nginx.pid && \
   chown -R nginx:nginx /var/run/nginx.pid && \
   chown -R nginx:nginx /var/cache/nginx
