@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { AccountService } from '../core/auth/account.service';
 import { LoginService } from 'app/login/login.service';
+
 import { Account } from 'app/core/auth/account.model';
 
 @Component({
