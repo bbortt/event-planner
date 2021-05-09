@@ -1,11 +1,11 @@
 import { Account } from 'app/core/auth/account.model';
 
-import { Moment } from 'moment';
+import { Dayjs } from 'dayjs';
 
 export interface ICreateProject {
   name: string;
   description?: string;
-  startTime: Moment;
-  endTime: Moment;
+  startTime: Dayjs;
+  endTime: Dayjs;
   userInformation?: Account;
 }

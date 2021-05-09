@@ -11,7 +11,7 @@ import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import { DEFAULT_SCHEDULER_CELL_DURATION } from 'app/app.constants';
 import { DATE_FORMAT } from 'app/config/input.constants';
 
-import * as moment from 'moment';
+import * as dayjs from 'dayjs';
 
 export const ROUTE_CELL_DURATION_PARAMETER_NAME = 'duration';
 export const ROUTE_FROM_PARAMETER_NAME = 'showFrom';
@@ -59,9 +59,9 @@ export class ProjectScreenplayFilterComponent implements OnInit, OnDestroy {
       const to = params[ROUTE_TO_PARAMETER_NAME];
 
       this.cellDuration = cellDuration || DEFAULT_SCHEDULER_CELL_DURATION;
-      this.from = (from ? moment(from) : this.project!.startTime).toDate();
+      this.from = (from ? dayjs(from) : this.project!.startTime).toDate();
       this.minToDate = this.from;
-      this.to = (to ? moment(to) : this.project!.endTime).toDate();
+      this.to = (to ? dayjs(to) : this.project!.endTime).toDate();
 
       this.recalculateInterval();
     });
@@ -102,8 +102,8 @@ export class ProjectScreenplayFilterComponent implements OnInit, OnDestroy {
 
   private recalculateInterval(): void {
     // TODO: Devextreme timelineDay does not accept comma values
-    // this.interval = (moment(this.to).diff(moment(this.from), 'hours') + 1) / 24;
-    this.interval = moment(this.to).diff(moment(this.from), 'days') + 1;
+    // this.interval = (dayjs(this.to).diff(dayjs(this.from), 'hours') + 1) / 24;
+    this.interval = dayjs(this.to).diff(dayjs(this.from), 'days') + 1;
     this.afterFilterChange();
   }
 
@@ -112,8 +112,8 @@ export class ProjectScreenplayFilterComponent implements OnInit, OnDestroy {
       relativeTo: this.activatedRoute,
       queryParams: {
         [ROUTE_CELL_DURATION_PARAMETER_NAME]: this.cellDuration,
-        [ROUTE_FROM_PARAMETER_NAME]: moment(this.from).toJSON(),
-        [ROUTE_TO_PARAMETER_NAME]: moment(this.to).toJSON(),
+        [ROUTE_FROM_PARAMETER_NAME]: dayjs(this.from).toJSON(),
+        [ROUTE_TO_PARAMETER_NAME]: dayjs(this.to).toJSON(),
         [ROUTE_INTERVAL_PARAMETER_NAME]: this.interval,
       },
       queryParamsHandling: 'merge',

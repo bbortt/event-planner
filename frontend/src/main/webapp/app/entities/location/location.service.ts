@@ -10,7 +10,7 @@ import { createRequestOption } from 'app/core/request/request-util';
 import { Location } from 'app/entities/location/location.model';
 import { Project } from 'app/entities/project/project.model';
 
-import * as moment from 'moment';
+import * as dayjs from 'dayjs';
 
 type EntityResponseType = HttpResponse<Location>;
 type EntityArrayResponseType = HttpResponse<Location[]>;
@@ -87,7 +87,7 @@ export class LocationService {
   }
 
   private convertDates(location: Location): void {
-    location.project.startTime = moment(location.project.startTime);
-    location.project.endTime = moment(location.project.endTime);
+    location.project.startTime = dayjs(location.project.startTime);
+    location.project.endTime = dayjs(location.project.endTime);
   }
 }

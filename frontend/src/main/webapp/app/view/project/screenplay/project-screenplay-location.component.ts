@@ -36,7 +36,7 @@ import { Role } from 'app/config/role.constants';
 
 import { DEFAULT_SCHEDULER_CELL_DURATION } from 'app/app.constants';
 
-import * as moment from 'moment';
+import * as dayjs from 'dayjs';
 
 @Component({
   selector: 'app-project-screenplay-location',
@@ -87,7 +87,7 @@ export class ProjectScreenplayLocationComponent implements OnInit, OnDestroy {
       )
       .subscribe(({ cellDuration, from, interval }: { cellDuration?: number; from?: Date; interval?: number }) => {
         this.cellDuration = cellDuration ?? this.cellDuration ?? DEFAULT_SCHEDULER_CELL_DURATION;
-        this.schedulerStartDate = from ? moment(from).toDate() : this.schedulerStartDate ?? this.project!.startTime.toDate();
+        this.schedulerStartDate = from ? dayjs(from).toDate() : this.schedulerStartDate ?? this.project!.startTime.toDate();
         this.interval = interval ?? this.interval ?? this.project!.endTime.diff(this.project!.startTime, 'days') + 1;
       });
 
@@ -115,8 +115,8 @@ export class ProjectScreenplayLocationComponent implements OnInit, OnDestroy {
     e.cancel = true;
 
     const event = e.appointmentData;
-    const startTime = moment(event.startDate).toJSON();
-    const endTime = moment(event.endDate).toJSON();
+    const startTime = dayjs(event.startDate).toJSON();
+    const endTime = dayjs(event.endDate).toJSON();
 
     const route = ['projects', this.project!.id!, 'locations', this.location!.id!, 'sections', event.sectionId, 'events'];
     if (event.originalEvent) {
@@ -167,8 +167,8 @@ export class ProjectScreenplayLocationComponent implements OnInit, OnDestroy {
 
   updateDraggedEvent(event: SchedulerEvent): Event {
     const updatedEvent = {
-      startTime: moment(event.startDate),
-      endTime: moment(event.endDate),
+      startTime: dayjs(event.startDate),
+      endTime: dayjs(event.endDate),
     };
 
     return { ...event.originalEvent, ...updatedEvent } as Event;
