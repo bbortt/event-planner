@@ -6,8 +6,8 @@
       <div>
         <jhi-alert-error></jhi-alert-error>
 
-        <div class="form-group">
-          <label class="form-control-label" jhiTranslate="eventPlannerApp.project.name" for="field_name">Name</label>
+        <div class="col mb-3">
+          <label class="form-label" jhiTranslate="eventPlannerApp.project.name" for="field_name">Name</label>
           <input type="text" class="form-control" name="name" id="field_name" formControlName="name" autocomplete="off" />
           <div *ngIf="editForm.get('name')!.invalid && (editForm.get('name')!.dirty || editForm.get('name')!.touched)">
             <small class="form-text text-danger" *ngIf="editForm.get('name')?.errors?.required" jhiTranslate="entity.validation.required">
@@ -32,8 +32,8 @@
           </div>
         </div>
 
-        <div class="form-group">
-          <label class="form-control-label" jhiTranslate="eventPlannerApp.project.description" for="field_description">Description</label>
+        <div class="col mb-3">
+          <label class="form-label" jhiTranslate="eventPlannerApp.project.description" for="field_description">Description</label>
           <textarea
             type="text"
             class="form-control"
@@ -63,14 +63,15 @@
           </div>
         </div>
 
-        <div class="form-group">
-          <label class="form-control-label" jhiTranslate="eventPlannerApp.project.startTime" for="field_startTime">Start Time</label>
+        <div class="col mb-3">
+          <label class="form-label" jhiTranslate="eventPlannerApp.project.startTime" for="field_startTime">Start Time</label>
           <div class="d-flex">
             <dx-date-box
               class="dx-form-control"
               name="startTime"
               id="field_startTime"
               type="datetime"
+              [readOnly]="false"
               [showClearButton]="false"
               [openOnFieldClick]="true"
               [displayFormat]="dateTimeFormat"
@@ -99,8 +100,8 @@
           </div>
         </div>
 
-        <div class="form-group">
-          <label class="form-control-label" jhiTranslate="eventPlannerApp.project.endTime" for="field_endTime">End Time</label>
+        <div class="col mb-3">
+          <label class="form-label" jhiTranslate="eventPlannerApp.project.endTime" for="field_endTime">End Time</label>
           <div class="d-flex">
             <dx-date-box
               class="dx-form-control"
@@ -135,8 +136,8 @@
           </div>
         </div>
 
-        <div class="form-group" *jhiHasAnyAuthority="authorityAdmin">
-          <label class="form-control-label" jhiTranslate="eventPlannerApp.project.owner" for="field_selectedUser">Owner</label>
+        <div class="col mb-3" *jhiHasAnyAuthority="authorityAdmin">
+          <label class="form-label" jhiTranslate="eventPlannerApp.project.owner" for="field_selectedUser">Owner</label>
           <dx-autocomplete
             class="dx-form-control"
             name="selectedUser"

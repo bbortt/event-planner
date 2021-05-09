@@ -15,6 +15,10 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface LocationRepository extends JpaRepository<Location, Long> {
+    @Override
+    @EntityGraph(attributePaths = { "project", "responsibility", "sections" })
+    Optional<Location> findById(Long id);
+
     @EntityGraph(attributePaths = { "project", "responsibility" })
     List<Location> findAllByProjectId(Long projectId, Sort sort);
 

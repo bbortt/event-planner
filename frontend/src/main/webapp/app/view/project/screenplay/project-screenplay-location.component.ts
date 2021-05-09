@@ -169,6 +169,7 @@ export class ProjectScreenplayLocationComponent implements OnInit, OnDestroy {
     const updatedEvent = {
       startTime: dayjs(event.startDate),
       endTime: dayjs(event.endDate),
+      section: { id: event.sectionId },
     };
 
     return { ...event.originalEvent, ...updatedEvent } as Event;

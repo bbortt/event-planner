@@ -11,8 +11,8 @@
       <div>
         <jhi-alert-error></jhi-alert-error>
 
-        <div class="form-group">
-          <label class="form-control-label" jhiTranslate="eventPlannerApp.location.name" for="field_name">Name</label>
+        <div class="col mb-3">
+          <label class="form-label" jhiTranslate="eventPlannerApp.location.name" for="field_name">Name</label>
           <input type="text" class="form-control" name="name" id="field_name" formControlName="name" autocomplete="off" />
 
           <div *ngIf="editForm.get('name')!.invalid && (editForm.get('name')!.dirty || editForm.get('name')!.touched)">
@@ -38,62 +38,52 @@
           </div>
         </div>
 
-        <div class="form-group">
-          <input
-            type="radio"
-            value="responsibility"
-            name="responsibilityUser"
-            [checked]="isResponsibility"
-            (change)="onRadioChange($event)"
-          />
-          <span jhiTranslate="eventPlannerApp.location.responsibility">Responsibility</span>
-
-          <input type="radio" value="user" name="responsibilityUser" [checked]="!isResponsibility" (change)="onRadioChange($event)" />
-          <span jhiTranslate="eventPlannerApp.location.user">User</span>
+        <div class="col mb-3">
+          <div class="form-check form-check-inline">
+            <input
+              type="radio"
+              value="responsibility"
+              name="responsibilityUser"
+              class="form-check-input"
+              [checked]="isResponsibility"
+              (change)="onRadioChange($event)"
+            />
+            <span class="form-check-label" jhiTranslate="eventPlannerApp.location.responsibility">Responsibility</span>
+          </div>
+          <div class="form-check form-check-inline">
+            <input
+              type="radio"
+              value="user"
+              name="responsibilityUser"
+              class="form-check-input"
+              [checked]="!isResponsibility"
+              (change)="onRadioChange($event)"
+            />
+            <span class="form-check-label" jhiTranslate="eventPlannerApp.location.user">User</span>
+          </div>
         </div>
 
-        <div *ngIf="isResponsibility; else userAutocomplete" class="form-group">
-          <label class="form-control-label" jhiTranslate="eventPlannerApp.location.responsibility" for="field_responsibility"
+        <div class="col mb-3">
+          <label *ngIf="isResponsibility" class="form-label" jhiTranslate="eventPlannerApp.location.responsibility" for="field_autocomplete"
             >Responsibility</label
+          >
+          <label *ngIf="!isResponsibility" class="form-label" jhiTranslate="eventPlannerApp.location.user" for="field_autocomplete"
+            >User</label
           >
           <dx-autocomplete
             class="dx-form-control"
-            name="responsibility"
-            id="field_responsibility"
-            formControlName="responsibilityAutocomplete"
+            [name]="isResponsibility ? 'responsibility' : 'user'"
+            id="field_autocomplete"
+            [formControlName]="isResponsibility ? 'responsibilityAutocomplete' : 'userAutocomplete'"
             [placeholder]="'global.form.search' | translate"
-            [dataSource]="responsibilities"
+            [dataSource]="isResponsibility ? responsibilities : users"
             valueExpr="name"
-            (onSelectionChanged)="responsibilitySelected($event)"
+            (onSelectionChanged)="isResponsibility ? responsibilitySelected($event) : userSelected($event)"
             [showClearButton]="true"
-            [isValid]="
-              !(
-                editForm.get('responsibility')!.invalid &&
-                (editForm.get('responsibility')!.dirty || editForm.get('responsibility')!.touched)
-              )
-            "
+            [isValid]="isValidAutocomplete()"
           >
           </dx-autocomplete>
         </div>
-
-        <ng-template #userAutocomplete>
-          <div class="form-group">
-            <label class="form-control-label" jhiTranslate="eventPlannerApp.location.user" for="field_user">User</label>
-            <dx-autocomplete
-              class="dx-form-control"
-              name="user"
-              id="field_user"
-              formControlName="userAutocomplete"
-              [placeholder]="'global.form.search' | translate"
-              [dataSource]="users"
-              valueExpr="email"
-              (onSelectionChanged)="userSelected($event)"
-              [showClearButton]="true"
-              [isValid]="!(editForm.get('user')!.invalid && (editForm.get('user')!.dirty || editForm.get('user')!.touched))"
-            >
-            </dx-autocomplete>
-          </div>
-        </ng-template>
 
         <div>
           <button type="button" id="cancel-save" class="btn btn-negative btn-gray" (click)="previousState()">

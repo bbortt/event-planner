@@ -119,6 +119,17 @@ export class ProjectLocationUpdateComponent {
     }
   }
 
+  isValidAutocomplete(): boolean {
+    return (
+      (this.isResponsibility &&
+        !(
+          this.editForm.get('responsibility')!.invalid &&
+          (this.editForm.get('responsibility')!.dirty || this.editForm.get('responsibility')!.touched)
+        )) ||
+      !(this.editForm.get('user')!.invalid && (this.editForm.get('user')!.dirty || this.editForm.get('user')!.touched))
+    );
+  }
+
   protected subscribeToSaveResponse(result: Observable<HttpResponse<Location>>): void {
     result.subscribe(
       () => this.onSaveSuccess(),

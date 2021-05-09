@@ -3,6 +3,7 @@ package io.github.bbortt.event.planner.backend.repository;
 import io.github.bbortt.event.planner.backend.domain.Section;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,6 +14,10 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface SectionRepository extends JpaRepository<Section, Long> {
+    @Override
+    @EntityGraph(attributePaths = { "location", "location.project", "events", "responsibility" })
+    Optional<Section> findById(Long aLong);
+
     @Query("SELECT DISTINCT s FROM Section s LEFT JOIN FETCH s.events WHERE s.location.id = :locationId ORDER BY s.name")
     List<Section> findAllByLocationIdJoinEventsOrderByNameAsc(@Param("locationId") Long locationId);
 

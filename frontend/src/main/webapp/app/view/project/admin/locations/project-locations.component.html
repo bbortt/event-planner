@@ -1,11 +1,11 @@
 <div>
-  <h3 id="page-heading">
+  <h3 class="page-heading">
     <span jhiTranslate="eventPlannerApp.location.home.title">Location</span>
 
-    <div class="float-right clearfix">
+    <div class="float-end clearfix">
       <app-clientside-filter
         id="locations-clientside-filter"
-        class="float-left"
+        class="float-start"
         (valueChange)="this.filterData($event)"
       ></app-clientside-filter>
 
@@ -15,7 +15,7 @@
         [routerLink]="['', { outlets: { modal: ['projects', project!.id, 'locations', 'new'] } }]"
       >
         <fa-icon icon="plus"></fa-icon>
-        <span jhiTranslate="eventPlannerApp.location.home.createLabel"> Create a new Location </span>
+        <span jhiTranslate="eventPlannerApp.location.home.createLabel">Create a new Location</span>
       </button>
     </div>
   </h3>
@@ -40,7 +40,7 @@
                 {{ location.name }}
               </span>
 
-              <div class="btn-group float-right clearfix">
+              <div class="btn-group float-end clearfix">
                 <button
                   type="submit"
                   [routerLink]="['', { outlets: { modal: ['projects', project!.id, 'locations', location.id, 'edit'] } }]"
@@ -106,7 +106,7 @@
                     </td>
 
                     <td>
-                      <div class="btn-group float-right clearfix">
+                      <div class="btn-group float-end clearfix">
                         <button
                           type="submit"
                           [routerLink]="[

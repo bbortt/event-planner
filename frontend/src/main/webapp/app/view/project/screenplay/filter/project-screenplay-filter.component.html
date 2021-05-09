@@ -25,65 +25,57 @@
     </li>
 
     <li class="nav-item col-lg-3 col-md-6 col-xs-12">
-      <div class="form-group">
-        <label class="form-control-label" jhiTranslate="eventPlannerApp.project.screenplay.filter.interval" for="field_cellDuration"
-          >Interval</label
-        >
-        <dx-slider
-          name="cellDuration"
-          id="field_cellDuration"
-          [min]="15"
-          [max]="60"
-          [step]="15"
-          [value]="cellDuration"
-          (onValueChanged)="cellDurationChange($event)"
-        >
-          <dxo-tooltip [enabled]="true" [format]="format"> </dxo-tooltip>
-          <dxo-label [visible]="true" [format]="format" position="top"></dxo-label>
-        </dx-slider>
-      </div>
+      <label class="form-label" jhiTranslate="eventPlannerApp.project.screenplay.filter.interval" for="field_cellDuration">Interval</label>
+      <dx-slider
+        name="cellDuration"
+        id="field_cellDuration"
+        [min]="15"
+        [max]="60"
+        [step]="15"
+        [value]="cellDuration"
+        (onValueChanged)="cellDurationChange($event)"
+      >
+        <dxo-tooltip [enabled]="true" [format]="format"> </dxo-tooltip>
+        <dxo-label [visible]="true" [format]="format" position="top"></dxo-label>
+      </dx-slider>
     </li>
 
     <li class="nav-item col-lg-3 col-md-4 col-sm-6 col-xs-12">
-      <div class="form-group">
-        <label class="form-control-label" jhiTranslate="eventPlannerApp.project.screenplay.filter.from" for="field_from">From</label>
-        <dx-date-box
-          class="dx-form-control"
-          name="from"
-          id="field_from"
-          type="date"
-          [(value)]="from"
-          (valueChange)="dateValueChanged()"
-          [showClearButton]="false"
-          [openOnFieldClick]="true"
-          [displayFormat]="dateFormat"
-          [min]="project!.startTime!.toDate()"
-          [max]="project!.endTime!.toDate()"
-          placeholder="{{ dateFormat }}"
-        >
-        </dx-date-box>
-      </div>
+      <label class="form-label" jhiTranslate="eventPlannerApp.project.screenplay.filter.from" for="field_from">From</label>
+      <dx-date-box
+        class="dx-form-control"
+        name="from"
+        id="field_from"
+        type="date"
+        [(value)]="from"
+        (valueChange)="dateValueChanged()"
+        [showClearButton]="false"
+        [openOnFieldClick]="true"
+        [displayFormat]="dateFormat"
+        [min]="project!.startTime!.toDate()"
+        [max]="project!.endTime!.toDate()"
+        placeholder="{{ dateFormat }}"
+      >
+      </dx-date-box>
     </li>
 
     <li class="nav-item col-lg-3 col-md-4 col-sm-6 col-xs-12">
-      <div class="form-group">
-        <label class="form-control-label" jhiTranslate="eventPlannerApp.project.screenplay.filter.to" for="field_to">To</label>
-        <dx-date-box
-          class="dx-form-control"
-          name="to"
-          id="field_to"
-          type="date"
-          [(value)]="to"
-          (valueChange)="dateValueChanged()"
-          [showClearButton]="false"
-          [openOnFieldClick]="true"
-          [displayFormat]="dateFormat"
-          [min]="minToDate"
-          [max]="project!.endTime!.toDate()"
-          placeholder="{{ dateFormat }}"
-        >
-        </dx-date-box>
-      </div>
+      <label class="form-label" jhiTranslate="eventPlannerApp.project.screenplay.filter.to" for="field_to">To</label>
+      <dx-date-box
+        class="dx-form-control"
+        name="to"
+        id="field_to"
+        type="date"
+        [(value)]="to"
+        (valueChange)="dateValueChanged()"
+        [showClearButton]="false"
+        [openOnFieldClick]="true"
+        [displayFormat]="dateFormat"
+        [min]="minToDate"
+        [max]="project!.endTime!.toDate()"
+        placeholder="{{ dateFormat }}"
+      >
+      </dx-date-box>
     </li>
   </ul>
 </nav>
