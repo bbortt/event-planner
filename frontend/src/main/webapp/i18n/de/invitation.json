@@ -26,6 +26,7 @@
       "responsibility": "Verantwortung",
       "color": "Farbe",
       "acceptViaLoginMessage": "Bitte melden Sie sich an, um die Einladung an zu nehmen.",
+      "beingRedirectedShortlyMessage": "Die Einladung wird angenommen, Sie werden in kürze weitergeleitet.",
       "accepting": {
         "failed": "Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut!",
         "success": "Einladung erfolgreich akzeptiert."

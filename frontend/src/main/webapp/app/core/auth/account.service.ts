@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { SessionStorageService } from 'ngx-webstorage';
 
-import { forkJoin, Observable, of, ReplaySubject } from 'rxjs';
+import { forkJoin, Observable, of, ReplaySubject, Subject } from 'rxjs';
 import { catchError, map, shareReplay, tap } from 'rxjs/operators';
 
 import { ApplicationConfigService } from '../config/application-config.service';
@@ -19,9 +19,10 @@ import { Authority } from 'app/config/authority.constants';
 
 @Injectable({ providedIn: 'root' })
 export class AccountService {
+  private loading?: Observable<Account>;
   private userIdentity: Account | null = null;
   private authenticationState = new ReplaySubject<Account | null>(1);
-  private accountCache$?: Observable<Account | null>;
+  private accountCache?: Observable<Account | null>;
 
   constructor(
     private translateService: TranslateService,
@@ -65,8 +66,8 @@ export class AccountService {
   }
 
   identity(force?: boolean): Observable<Account | null> {
-    if (!this.accountCache$ || force || !this.isAuthenticated()) {
-      this.accountCache$ = this.fetch().pipe(
+    if (!this.accountCache || force || !this.isAuthenticated()) {
+      this.accountCache = this.fetch().pipe(
         catchError(() => of(null)),
         tap((account: Account | null) => {
           this.authenticate(account);
@@ -85,7 +86,7 @@ export class AccountService {
         shareReplay()
       );
     }
-    return this.accountCache$;
+    return this.accountCache;
   }
 
   isAuthenticated(): boolean {
@@ -101,6 +102,13 @@ export class AccountService {
   }
 
   private fetch(): Observable<Account> {
+    const loading = new Subject<Account>();
+    if (!this.loading) {
+      this.loading = loading;
+    } else {
+      return this.loading;
+    }
+
     return forkJoin({
       account: this.http.get<Account>(this.applicationConfigService.getEndpointFor('api/account')),
       rolePerProject: this.projectService.getRolePerProject().pipe(
@@ -117,7 +125,8 @@ export class AccountService {
       map(({ account, rolePerProject }: { account: Account; rolePerProject: Map<number, string> }) => {
         account.rolePerProject = new Map(Object.entries(rolePerProject));
         return account;
-      })
+      }),
+      tap((account: Account) => loading.next(account))
     );
   }
 

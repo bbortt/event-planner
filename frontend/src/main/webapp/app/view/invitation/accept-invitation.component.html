@@ -1,7 +1,15 @@
 <jhi-alert></jhi-alert>
 
-<div class="alert alert-info">
-  <span jhiTranslate="eventPlannerApp.invitation.acceptViaLoginMessage"></span>
+<div *ngIf="!authenticated; else redirectMessage">
+  <div class="alert alert-info">
+    <span jhiTranslate="eventPlannerApp.invitation.acceptViaLoginMessage"></span>
+  </div>
+
+  <button type="button" class="btn btn-outline-dark" (click)="login()" jhiTranslate="global.menu.account.login">Sign in</button>
 </div>
 
-<button type="button" class="btn btn-outline-dark" (click)="login()" jhiTranslate="global.menu.account.login">Sign in</button>
+<ng-template #redirectMessage>
+  <div class="alert alert-info">
+    <span jhiTranslate="eventPlannerApp.invitation.beingRedirectedShortlyMessage"></span>
+  </div>
+</ng-template>

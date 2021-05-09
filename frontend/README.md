@@ -9,14 +9,15 @@ in `DEVELOPMENT.md`.
 
 ## Runtime Configuration
 
-Because the application is intended to run _behind_  the Gateway there is no special configuration
+Because the application is intended to run _behind_ the Gateway there is no special configuration
 required. The Gateway can take perfectly care of authorization and redirecting.
 
 ### Logstash
 
 You can send logs to Logstash when setting the following variables:
-* `APPL_LOGSTASH_HOST`: The Logstash host.
-* `APPL_LOGSTASH_PORT`: The Logstash port.
+
+- `APPL_LOGSTASH_HOST`: The Logstash host.
+- `APPL_LOGSTASH_PORT`: The Logstash port.
 
 ## License
 
