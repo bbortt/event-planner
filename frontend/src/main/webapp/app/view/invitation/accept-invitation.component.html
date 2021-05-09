@@ -1,6 +1,6 @@
 <jhi-alert></jhi-alert>
 
-<div *ngIf="!authenticated; else redirectMessage">
+<div *ngIf="!isAuthenticated; else redirectMessage">
   <div class="alert alert-info">
     <span jhiTranslate="eventPlannerApp.invitation.acceptViaLoginMessage"></span>
   </div>

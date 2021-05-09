@@ -86,7 +86,7 @@ describe('Service Tests', () => {
 
     describe('identity', () => {
       it('should call /account only once if not logged out after first authentication and should call /account again if user has logged out', () => {
-        // Given the user is authenticated
+        // Given the user is isAuthenticated
         service.identity().subscribe();
         httpMock.expectOne({ method: 'GET', url: 'api/account' }).flush({});
         httpMock.expectOne({ method: 'GET', url: 'api/projects/rolePerProject' }).flush({});

@@ -4,7 +4,6 @@ import io.github.bbortt.event.planner.backend.domain.Project;
 import io.github.bbortt.event.planner.backend.security.RolesConstants;
 import io.github.bbortt.event.planner.backend.service.InvitationService;
 import io.github.bbortt.event.planner.backend.service.ProjectService;
-import io.github.bbortt.event.planner.backend.service.dto.AdminUserDTO;
 import io.github.bbortt.event.planner.backend.service.dto.CreateProjectDTO;
 import io.github.bbortt.event.planner.backend.service.dto.UserDTO;
 import io.github.bbortt.event.planner.backend.service.exception.EntityNotFoundException;

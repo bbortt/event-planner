@@ -15,7 +15,7 @@ import { StateStorageService } from 'app/core/auth/state-storage.service';
   templateUrl: './accept-invitation.component.html',
 })
 export class AcceptInvitationComponent implements OnDestroy {
-  authenticated = false;
+  isAuthenticated = false;
   token?: string;
 
   private destroy$ = new Subject<void>();
@@ -29,7 +29,7 @@ export class AcceptInvitationComponent implements OnDestroy {
     private loginService: LoginService,
     private stateStorageService: StateStorageService
   ) {
-    this.authenticated = this.accountService.isAuthenticated();
+    this.isAuthenticated = this.accountService.isAuthenticated();
 
     this.activatedRoute.params
       .pipe(
