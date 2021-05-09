@@ -35,12 +35,12 @@ describe('Component Tests', () => {
       mockAccountService.getAuthenticationState = jest.fn(() => of(null));
     });
 
-    it('Should call accountService.isAuthenticated when it checks authentication', () => {
+    it('Should call accountService.identity when it checks authentication', () => {
       // WHEN
-      comp.isAuthenticated();
+      comp.ngOnInit();
 
       // THEN
-      expect(mockAccountService.isAuthenticated).toHaveBeenCalled();
+      expect(mockAccountService.identity).toHaveBeenCalled();
     });
   });
 });

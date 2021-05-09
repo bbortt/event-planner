@@ -10,6 +10,7 @@ import io.github.bbortt.event.planner.backend.security.SecurityUtils;
 import io.github.bbortt.event.planner.backend.service.dto.AdminUserDTO;
 import io.github.bbortt.event.planner.backend.service.dto.CreateProjectDTO;
 import io.github.bbortt.event.planner.backend.service.dto.UserDTO;
+import io.github.bbortt.event.planner.backend.service.exception.BadRequestException;
 import io.github.bbortt.event.planner.backend.service.exception.EntityNotFoundException;
 import io.github.bbortt.event.planner.backend.service.exception.ForbiddenRequestException;
 import io.github.bbortt.event.planner.backend.service.exception.IdMustBePresentException;
@@ -201,6 +202,10 @@ public class ProjectService {
     @Transactional(readOnly = true)
     @PreAuthorize("isAuthenticated()")
     public boolean hasAccessToProject(Project project, String... roles) {
+        if (project == null) {
+            throw new BadRequestException();
+        }
+
         return hasAccessToProject(project.getId(), roles);
     }
 

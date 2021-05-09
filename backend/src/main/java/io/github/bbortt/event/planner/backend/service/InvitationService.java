@@ -3,6 +3,7 @@ package io.github.bbortt.event.planner.backend.service;
 import io.github.bbortt.event.planner.backend.domain.Invitation;
 import io.github.bbortt.event.planner.backend.repository.InvitationRepository;
 import io.github.bbortt.event.planner.backend.security.SecurityUtils;
+import io.github.bbortt.event.planner.backend.service.exception.BadRequestException;
 import io.github.bbortt.event.planner.backend.service.exception.EntityNotFoundException;
 import io.github.bbortt.event.planner.backend.service.exception.IdMustBePresentException;
 import java.time.Instant;
@@ -195,6 +196,10 @@ public class InvitationService {
      */
     @PreAuthorize("isAuthenticated()")
     public boolean hasAccessToInvitation(Invitation invitation, String... roles) {
+        if (invitation == null) {
+            throw new BadRequestException();
+        }
+
         return projectService.hasAccessToProject(invitation.getProject(), roles);
     }
 }
