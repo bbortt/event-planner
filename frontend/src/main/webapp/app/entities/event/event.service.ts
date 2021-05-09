@@ -9,7 +9,7 @@ import { createRequestOption } from 'app/core/request/request-util';
 
 import { Event } from 'app/entities/event/event.model';
 
-import * as moment from 'moment';
+import * as dayjs from 'dayjs';
 
 type EntityResponseType = HttpResponse<Event>;
 type EntityArrayResponseType = HttpResponse<Event[]>;
@@ -52,12 +52,12 @@ export class EventService {
   }
 
   convertDates(event: Event): Event {
-    event.startTime = moment(event.startTime);
-    event.endTime = moment(event.endTime);
+    event.startTime = dayjs(event.startTime);
+    event.endTime = dayjs(event.endTime);
 
     const project = event.section.location.project;
-    project.startTime = moment(project.startTime);
-    project.endTime = moment(project.endTime);
+    project.startTime = dayjs(project.startTime);
+    project.endTime = dayjs(project.endTime);
 
     return event;
   }

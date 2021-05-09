@@ -10,7 +10,7 @@ This application is configured for Service Discovery and Configuration with . On
 To start your application in the dev profile, run:
 
 ```
-./gradlew :users
+./gradlew :services:user
 ```
 
 For further instructions on how to develop with JHipster, have a look at [Using JHipster in development][].
@@ -80,7 +80,7 @@ For more information refer to [Using Docker and Docker-Compose][], this page als
 Migrations happen via Gradle Flyway Plugin. The following is a sample command for localhost (run from root):
 
 ```
-$ ./gradlew :users:flywayMigrate -Dflyway.url=jdbc:postgresql://localhost:5432/service_user -Dflyway.user=service_user_user -Dflyway.password=service_user_password
+$ ./gradlew :services:user:flywayMigrate -Dflyway.url=jdbc:postgresql://localhost:5432/service_user -Dflyway.user=service_user_user -Dflyway.password=service_user_password
 ```
 
 ## Continuous Integration (optional)

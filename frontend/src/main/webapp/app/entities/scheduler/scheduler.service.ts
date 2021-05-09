@@ -13,7 +13,7 @@ import { SchedulerColorGroup } from 'app/entities/dto/scheduler-color-group.mode
 import { SchedulerEvent } from 'app/entities/dto/scheduler-event.model';
 import { SchedulerLocation } from 'app/entities/dto/scheduler-location.model';
 
-import * as moment from 'moment';
+import * as dayjs from 'dayjs';
 
 @Injectable({ providedIn: 'root' })
 export class SchedulerService {
@@ -34,8 +34,8 @@ export class SchedulerService {
   protected convertDTOsFromServer(data: SchedulerLocation): SchedulerLocation {
     data.events.forEach((schedulerEvent: SchedulerEvent) => {
       if (schedulerEvent.originalEvent) {
-        schedulerEvent.originalEvent.startTime = moment(schedulerEvent.originalEvent.startTime);
-        schedulerEvent.originalEvent.endTime = moment(schedulerEvent.originalEvent.endTime);
+        schedulerEvent.originalEvent.startTime = dayjs(schedulerEvent.originalEvent.startTime);
+        schedulerEvent.originalEvent.endTime = dayjs(schedulerEvent.originalEvent.endTime);
       }
     });
     return data;

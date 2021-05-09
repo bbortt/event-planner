@@ -26,6 +26,7 @@
       "responsibility": "Responsibility",
       "color": "Color",
       "acceptViaLoginMessage": "Please log in to accept the invitation.",
+      "beingRedirectedShortlyMessage": "The invitation is being accepted, we will redirect you shortly.",
       "accepting": {
         "failed": "An error occured. Please try again later!",
         "success": "Invitation accepted."
