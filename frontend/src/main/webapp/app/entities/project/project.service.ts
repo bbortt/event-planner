@@ -13,7 +13,7 @@ import { Account } from 'app/core/auth/account.model';
 
 import { ICreateProject } from 'app/entities/dto/create-project.model';
 
-import * as moment from 'moment';
+import * as dayjs from 'dayjs';
 
 type EntityResponseType = HttpResponse<Project>;
 type EntityArrayResponseType = HttpResponse<Project[]>;
@@ -77,8 +77,8 @@ export class ProjectService {
 
   protected convertDateFromServer(res: EntityResponseType): EntityResponseType {
     if (res.body) {
-      res.body.startTime = moment(res.body.startTime);
-      res.body.endTime = moment(res.body.endTime);
+      res.body.startTime = dayjs(res.body.startTime);
+      res.body.endTime = dayjs(res.body.endTime);
     }
     return res;
   }
@@ -86,8 +86,8 @@ export class ProjectService {
   protected convertDateArrayFromServer(res: EntityArrayResponseType): EntityArrayResponseType {
     if (res.body) {
       res.body.forEach((project: Project) => {
-        project.startTime = moment(project.startTime);
-        project.endTime = moment(project.endTime);
+        project.startTime = dayjs(project.startTime);
+        project.endTime = dayjs(project.endTime);
       });
     }
     return res;

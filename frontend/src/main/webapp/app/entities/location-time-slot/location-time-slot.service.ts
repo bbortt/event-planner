@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import * as moment from 'moment';
+import * as dayjs from 'dayjs';
 
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { createRequestOption } from 'app/core/request/request-util';
@@ -59,8 +59,8 @@ export class LocationTimeSlotService {
 
   protected convertDateFromServer(res: EntityResponseType): EntityResponseType {
     if (res.body) {
-      res.body.startTime = moment(res.body.startTime);
-      res.body.endTime = moment(res.body.endTime);
+      res.body.startTime = dayjs(res.body.startTime);
+      res.body.endTime = dayjs(res.body.endTime);
     }
     return res;
   }
@@ -68,8 +68,8 @@ export class LocationTimeSlotService {
   protected convertDateArrayFromServer(res: EntityArrayResponseType): EntityArrayResponseType {
     if (res.body) {
       res.body.forEach((locationTimeSlot: LocationTimeSlot) => {
-        locationTimeSlot.startTime = moment(locationTimeSlot.startTime);
-        locationTimeSlot.endTime = moment(locationTimeSlot.endTime);
+        locationTimeSlot.startTime = dayjs(locationTimeSlot.startTime);
+        locationTimeSlot.endTime = dayjs(locationTimeSlot.endTime);
       });
     }
     return res;

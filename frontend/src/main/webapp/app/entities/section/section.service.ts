@@ -11,7 +11,7 @@ import { Event } from 'app/entities/event/event.model';
 import { Location } from 'app/entities/location/location.model';
 import { Section } from 'app/entities/section/section.model';
 
-import * as moment from 'moment';
+import * as dayjs from 'dayjs';
 
 type EntityResponseType = HttpResponse<Section>;
 type EntityArrayResponseType = HttpResponse<Section[]>;
@@ -58,12 +58,12 @@ export class SectionService {
 
   private convertDates(section: Section): Section {
     const project = section.location.project;
-    project.startTime = moment(project.startTime);
-    project.endTime = moment(project.endTime);
+    project.startTime = dayjs(project.startTime);
+    project.endTime = dayjs(project.endTime);
 
     section.events?.forEach((event: Event) => {
-      event.startTime = moment(event.startTime);
-      event.endTime = moment(event.endTime);
+      event.startTime = dayjs(event.startTime);
+      event.endTime = dayjs(event.endTime);
     });
 
     return section;

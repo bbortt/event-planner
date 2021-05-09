@@ -23,13 +23,13 @@ import { Authority } from 'app/config/authority.constants';
 import { Role } from 'app/config/role.constants';
 
 import { Account } from 'app/core/auth/account.model';
+import { User } from 'app/entities/user/user.model';
 
 import { DATE_TIME_FORMAT } from 'app/config/input.constants';
 
 import responsibilityOrUserFromForm from 'app/shared/util/responsibility-or-user-from-form';
 
-import * as moment from 'moment';
-import { User } from 'app/entities/user/user.model';
+import * as dayjs from 'dayjs';
 
 @Component({
   selector: 'app-event-update',
@@ -222,8 +222,8 @@ export class EventUpdateComponent implements OnInit, OnDestroy {
       id: this.editForm.get(['id'])!.value,
       name: this.editForm.get(['name'])!.value,
       description: this.editForm.get(['description'])!.value,
-      startTime: moment(this.editForm.get(['startTime'])!.value),
-      endTime: moment(this.editForm.get(['endTime'])!.value),
+      startTime: dayjs(this.editForm.get(['startTime'])!.value),
+      endTime: dayjs(this.editForm.get(['endTime'])!.value),
       section: this.editForm.get(['section'])!.value,
       responsibility,
       user,

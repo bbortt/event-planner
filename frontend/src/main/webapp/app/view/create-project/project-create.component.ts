@@ -21,7 +21,7 @@ import { ICreateProject } from 'app/entities/dto/create-project.model';
 import { Authority } from 'app/config/authority.constants';
 import { DATE_TIME_FORMAT } from 'app/config/input.constants';
 
-import * as moment from 'moment';
+import * as dayjs from 'dayjs';
 
 @Component({
   selector: 'app-project-create',
@@ -44,8 +44,8 @@ export class ProjectCreateComponent implements OnInit, OnDestroy {
 
   dataSource: DataSource;
 
-  startMoment = moment();
-  endMoment = moment();
+  startMoment = dayjs();
+  endMoment = dayjs();
   dateTimeFormat = DATE_TIME_FORMAT;
 
   authorityAdmin = Authority.ADMIN;
@@ -77,7 +77,7 @@ export class ProjectCreateComponent implements OnInit, OnDestroy {
     this.editForm
       .get('startTime')!
       .valueChanges.pipe(takeUntil(this.destroy$))
-      .subscribe((startTime: Date) => (this.endMoment = moment(startTime)));
+      .subscribe((startTime: Date) => (this.endMoment = dayjs(startTime)));
   }
 
   ngOnDestroy(): void {
@@ -119,8 +119,8 @@ export class ProjectCreateComponent implements OnInit, OnDestroy {
   private createFromForm(): ICreateProject {
     const newProject: ICreateProject = {
       name: this.editForm.get(['name'])!.value,
-      startTime: moment(this.editForm.get(['startTime'])!.value),
-      endTime: moment(this.editForm.get(['endTime'])!.value),
+      startTime: dayjs(this.editForm.get(['startTime'])!.value),
+      endTime: dayjs(this.editForm.get(['endTime'])!.value),
       description: this.editForm.get(['description'])!.value,
     };
 

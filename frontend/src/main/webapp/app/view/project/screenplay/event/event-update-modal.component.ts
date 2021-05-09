@@ -7,7 +7,7 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 
 import { EventUpdateComponent } from 'app/view/project/screenplay/event/event-update.component';
 
-import * as moment from 'moment';
+import * as dayjs from 'dayjs';
 
 @Component({
   template: '',
@@ -22,9 +22,9 @@ export class EventUpdateModalComponent implements AfterViewInit, OnDestroy {
       const { section, event } = routeParams[1];
 
       let startTime = routeParams[0].startTime;
-      startTime = startTime ? moment(startTime).toDate() : event.startTime;
+      startTime = startTime ? dayjs(startTime).toDate() : event.startTime;
       let endTime = routeParams[0].endTime;
-      endTime = endTime ? moment(endTime).toDate() : event.endTime;
+      endTime = endTime ? dayjs(endTime).toDate() : event.endTime;
 
       const url = routeParams[2];
       const lastSegment = url[url.length - 1].path;
