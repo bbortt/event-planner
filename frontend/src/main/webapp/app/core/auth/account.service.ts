@@ -19,10 +19,10 @@ import { Authority } from 'app/config/authority.constants';
 
 @Injectable({ providedIn: 'root' })
 export class AccountService {
-  private loading?: Observable<Account>;
   private userIdentity: Account | null = null;
   private authenticationState = new ReplaySubject<Account | null>(1);
   private accountCache?: Observable<Account | null>;
+  private isFetching = false;
 
   constructor(
     private translateService: TranslateService,
@@ -102,12 +102,14 @@ export class AccountService {
   }
 
   private fetch(): Observable<Account> {
-    const loading = new Subject<Account>();
-    if (!this.loading) {
-      this.loading = loading;
-    } else {
-      return this.loading;
+    const accountResolver = new Subject<Account>();
+    if (!this.accountCache) {
+      this.accountCache = accountResolver;
+    } else if (this.isFetching) {
+      return accountResolver;
     }
+
+    this.isFetching = true;
 
     return forkJoin({
       account: this.http.get<Account>(this.applicationConfigService.getEndpointFor('api/account')),
@@ -126,7 +128,10 @@ export class AccountService {
         account.rolePerProject = new Map(Object.entries(rolePerProject));
         return account;
       }),
-      tap((account: Account) => loading.next(account))
+      tap((account: Account) => {
+        accountResolver.next(account);
+        this.isFetching = false;
+      })
     );
   }
 
