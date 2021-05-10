@@ -165,6 +165,10 @@ public class LocationService {
      */
     @PreAuthorize("isAuthenticated()")
     public boolean hasAccessToLocation(LocationDTO locationDTO, String... roles) {
+        if (locationDTO == null) {
+            throw new BadRequestException();
+        }
+
         return projectService.hasAccessToProject(locationDTO.getProject(), roles);
     }
 }

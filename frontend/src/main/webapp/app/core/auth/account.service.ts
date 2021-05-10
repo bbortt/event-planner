@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { SessionStorageService } from 'ngx-webstorage';
 
-import { forkJoin, Observable, of, ReplaySubject, Subject } from 'rxjs';
+import { forkJoin, Observable, of, ReplaySubject } from 'rxjs';
 import { catchError, map, shareReplay, tap } from 'rxjs/operators';
 
 import { ApplicationConfigService } from '../config/application-config.service';
@@ -66,7 +66,7 @@ export class AccountService {
   }
 
   identity(force?: boolean): Observable<Account | null> {
-    if (!this.accountCache || force || !this.isAuthenticated()) {
+    if ((!this.accountCache && !this.isFetching) || force || !this.isAuthenticated()) {
       this.accountCache = this.fetch().pipe(
         catchError(() => of(null)),
         tap((account: Account | null) => {
@@ -86,7 +86,8 @@ export class AccountService {
         shareReplay()
       );
     }
-    return this.accountCache;
+
+    return this.accountCache as Observable<Account>;
   }
 
   isAuthenticated(): boolean {
@@ -102,13 +103,6 @@ export class AccountService {
   }
 
   private fetch(): Observable<Account> {
-    const accountResolver = new Subject<Account>();
-    if (!this.accountCache) {
-      this.accountCache = accountResolver;
-    } else if (this.isFetching) {
-      return accountResolver;
-    }
-
     this.isFetching = true;
 
     return forkJoin({
@@ -128,10 +122,7 @@ export class AccountService {
         account.rolePerProject = new Map(Object.entries(rolePerProject));
         return account;
       }),
-      tap((account: Account) => {
-        accountResolver.next(account);
-        this.isFetching = false;
-      })
+      tap(() => (this.isFetching = false))
     );
   }
 

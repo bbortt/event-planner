@@ -150,6 +150,10 @@ public class SectionService {
      */
     @PreAuthorize("isAuthenticated()")
     public boolean hasAccessToSection(SectionDTO sectionDTO, String... roles) {
+        if (sectionDTO == null) {
+            throw new BadRequestException();
+        }
+
         return projectService.hasAccessToProject(sectionDTO.getLocation().getProject(), roles);
     }
 }

@@ -1,4 +1,4 @@
-#page-heading {
+.page-heading {
   display: flow-root;
 
   #projects-clientside-filter {
@@ -40,4 +40,8 @@
       margin-top: 1vh;
     }
   }
+}
+
+.btn-load-more {
+  max-width: max-content;
 }

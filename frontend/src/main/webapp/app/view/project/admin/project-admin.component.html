@@ -1,9 +1,9 @@
 <div *ngIf="project">
-  <h2 id="page-heading">
+  <h2 class="page-heading">
     <span>{{ project?.name }}</span>
     <small jhiTranslate="eventPlannerApp.project.home.settingsLabel">Settings</small>
 
-    <div class="float-right clearfix">
+    <div class="float-end clearfix">
       <button
         type="submit"
         id="btn-edit-project"
@@ -12,7 +12,7 @@
         class="btn btn-negative btn-blue btn-md"
       >
         <fa-icon icon="pencil-alt"></fa-icon>
-        <span jhiTranslate="entity.action.edit"> Edit </span>
+        <span jhiTranslate="entity.action.edit">Edit</span>
       </button>
 
       <button
@@ -21,7 +21,7 @@
         class="btn btn-negative btn-gray btn-md"
       >
         <fa-icon [icon]="faBook"></fa-icon>
-        <span jhiTranslate="eventPlannerApp.project.home.screenplayLabel"> Screenplay </span>
+        <span jhiTranslate="eventPlannerApp.project.home.screenplayLabel">Screenplay</span>
       </button>
     </div>
   </h2>

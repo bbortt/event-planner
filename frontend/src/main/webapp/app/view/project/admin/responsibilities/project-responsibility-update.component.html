@@ -13,8 +13,8 @@
       <div>
         <jhi-alert-error></jhi-alert-error>
 
-        <div class="form-group">
-          <label class="form-control-label" jhiTranslate="eventPlannerApp.responsibility.name" for="field_name">Name</label>
+        <div class="col mb-3">
+          <label class="form-label" jhiTranslate="eventPlannerApp.responsibility.name" for="field_name">Name</label>
           <input type="text" class="form-control" name="name" id="field_name" formControlName="name" />
           <div *ngIf="editForm.get('name')!.invalid && (editForm.get('name')!.dirty || editForm.get('name')!.touched)">
             <small class="form-text text-danger" *ngIf="editForm.get('name')?.errors?.required" jhiTranslate="entity.validation.required">
@@ -47,8 +47,8 @@
           </div>
         </div>
 
-        <div class="form-group">
-          <label class="form-control-label" jhiTranslate="eventPlannerApp.responsibility.color" for="field_color">Color</label>
+        <div class="col mb-3">
+          <label class="form-label" jhiTranslate="eventPlannerApp.responsibility.color" for="field_color">Color</label>
           <dx-color-box class="dx-form-control" name="color" id="field_color" formControlName="color"></dx-color-box>
         </div>
       </div>

@@ -136,6 +136,10 @@ public class EventService {
      */
     @PreAuthorize("isAuthenticated()")
     public boolean hasAccessToEvent(EventDTO eventDTO, String... roles) {
+        if (eventDTO == null) {
+            throw new BadRequestException();
+        }
+
         return projectService.hasAccessToProject(eventDTO.getSection().getLocation().getProject(), roles);
     }
 }

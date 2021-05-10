@@ -18,12 +18,13 @@
       [groups]="['sectionId']"
       currentView="custom-project-view"
       [showAllDayPanel]="false"
-      [crossScrollingEnabled]="true"
+      [crossScrollingEnabled]="false"
       [showCurrentTimeIndicator]="false"
       [editing]="schedulerInformation"
       (onAppointmentFormOpening)="configureAppointmentForm($event)"
       (onAppointmentUpdated)="onAppointmentDragged($event)"
       (onAppointmentClick)="openEventDetails($event)"
+      maxAppointmentsPerCell="unlimited"
     >
       <dxi-view type="timelineDay" name="custom-project-view" [cellDuration]="cellDuration" [intervalCount]="interval"> </dxi-view>
 

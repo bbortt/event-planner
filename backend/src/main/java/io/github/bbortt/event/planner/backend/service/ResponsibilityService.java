@@ -2,6 +2,7 @@ package io.github.bbortt.event.planner.backend.service;
 
 import io.github.bbortt.event.planner.backend.domain.Responsibility;
 import io.github.bbortt.event.planner.backend.repository.ResponsibilityRepository;
+import io.github.bbortt.event.planner.backend.service.exception.BadRequestException;
 import io.github.bbortt.event.planner.backend.service.exception.EntityNotFoundException;
 import io.github.bbortt.event.planner.backend.service.exception.IdMustBePresentException;
 import java.util.List;
@@ -148,6 +149,10 @@ public class ResponsibilityService {
      */
     @PreAuthorize("isAuthenticated()")
     public boolean hasAccessToResponsibility(Responsibility responsibility, String... roles) {
+        if (responsibility == null) {
+            throw new BadRequestException();
+        }
+
         return projectService.hasAccessToProject(responsibility.getProject(), roles);
     }
 }

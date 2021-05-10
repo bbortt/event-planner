@@ -1,9 +1,9 @@
 <div>
-  <h3 id="page-heading">
+  <h3 class="page-heading">
     <span jhiTranslate="eventPlannerApp.project.admin.navbar.users"></span>
 
-    <div class="float-right clearfix">
-      <app-clientside-filter id="users-clientside-filter" class="float-left" (valueChange)="filterData($event)"></app-clientside-filter>
+    <div class="float-end clearfix">
+      <app-clientside-filter id="users-clientside-filter" class="float-start" (valueChange)="filterData($event)"></app-clientside-filter>
 
       <button
         id="jh-create-entity"
