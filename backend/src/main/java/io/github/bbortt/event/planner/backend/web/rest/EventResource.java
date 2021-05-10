@@ -103,7 +103,7 @@ public class EventResource {
      */
     @PutMapping("/events")
     @PreAuthorize(
-        "@eventService.hasAccessToEvent(#event.id, \"" +
+        "@eventService.hasAccessToEvent(#event, \"" +
         RolesConstants.ADMIN +
         "\", \"" +
         RolesConstants.SECRETARY +

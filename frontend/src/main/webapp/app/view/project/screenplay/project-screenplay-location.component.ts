@@ -2,8 +2,8 @@ import { Component, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular
 import { HttpResponse } from '@angular/common/http';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 
-import { Subject } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
+import { Observable, of, Subject } from 'rxjs';
+import { catchError, map, switchMap, takeUntil } from 'rxjs/operators';
 
 import { TranslateService } from '@ngx-translate/core';
 
@@ -14,6 +14,7 @@ import { AppointmentEvent } from 'app/entities/scheduler/appointment-event';
 
 import { EventService } from 'app/entities/event/event.service';
 import { SchedulerService } from 'app/entities/scheduler/scheduler.service';
+import { SectionService } from 'app/entities/section/section.service';
 
 import { Event } from 'app/entities/event/event.model';
 import { Location } from 'app/entities/location/location.model';
@@ -37,6 +38,7 @@ import { Role } from 'app/config/role.constants';
 import { DEFAULT_SCHEDULER_CELL_DURATION } from 'app/app.constants';
 
 import * as dayjs from 'dayjs';
+import { Section } from 'app/entities/section/section.model';
 
 @Component({
   selector: 'app-project-screenplay-location',
@@ -69,6 +71,7 @@ export class ProjectScreenplayLocationComponent implements OnInit, OnDestroy {
     private translateService: TranslateService,
     private accountService: AccountService,
     private schedulerService: SchedulerService,
+    private sectionService: SectionService,
     private eventService: EventService,
     private eventManager: EventManager
   ) {}
@@ -110,11 +113,11 @@ export class ProjectScreenplayLocationComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  configureAppointmentForm(e: AppointmentEvent): void {
+  configureAppointmentForm(appointmentEvent: AppointmentEvent): void {
     // Cancel devextreme form
-    e.cancel = true;
+    appointmentEvent.cancel = true;
 
-    const event = e.appointmentData;
+    const event = appointmentEvent.appointmentData;
     const startTime = dayjs(event.startDate).toJSON();
     const endTime = dayjs(event.endDate).toJSON();
 
@@ -133,25 +136,27 @@ export class ProjectScreenplayLocationComponent implements OnInit, OnDestroy {
   /*
    * This is for the 'drag & drop' update (times only). Any click on an item results in `this.configureAppointmentForm` beeing called.
    */
-  onAppointmentDragged(e: AppointmentEvent): void {
-    this.eventService.update(this.updateDraggedEvent(e.appointmentData)).subscribe(
-      (response: HttpResponse<Event>) => {
-        if (response.status !== 200) {
-          this.reset();
-        }
-      },
-      () => this.reset()
-    );
+  onAppointmentDragged(appointmentEvent: AppointmentEvent): void {
+    this.updateDraggedEvent(appointmentEvent.appointmentData)
+      .pipe(switchMap((event: Event) => this.eventService.update(event)))
+      .subscribe(
+        (response: HttpResponse<Event>) => {
+          if (response.status !== 200) {
+            this.reset();
+          }
+        },
+        () => this.reset()
+      );
   }
 
   /*
    * Open `Event` details instead of the devextreme tooltip.
    */
-  openEventDetails(e: AppointmentEvent): void {
+  openEventDetails(appointmentEvent: AppointmentEvent): void {
     // Cancel devextreme tooltip
-    e.cancel = true;
+    appointmentEvent.cancel = true;
 
-    const event = e.appointmentData;
+    const event = appointmentEvent.appointmentData;
     const route = [
       'projects',
       this.project!.id!,
@@ -165,14 +170,32 @@ export class ProjectScreenplayLocationComponent implements OnInit, OnDestroy {
     this.router.navigate([{ outlets: { modal: route } }]);
   }
 
-  updateDraggedEvent(event: SchedulerEvent): Event {
-    const updatedEvent = {
-      startTime: dayjs(event.startDate),
-      endTime: dayjs(event.endDate),
-      section: { id: event.sectionId },
-    };
+  private updateDraggedEvent(schedulerEvent: SchedulerEvent): Observable<Event> {
+    return of(schedulerEvent).pipe(
+      map(
+        (event: SchedulerEvent) =>
+          ({
+            startTime: dayjs(event.startDate),
+            endTime: dayjs(event.endDate),
+            section: event.originalEvent?.section,
+          } as Event)
+      ),
+      map((updatedEvent: Event) => ({ ...schedulerEvent.originalEvent, ...updatedEvent })),
+      switchMap((updatedEvent: Event) =>
+        schedulerEvent.sectionId === schedulerEvent.originalEvent?.section.id
+          ? of(updatedEvent)
+          : this.sectionService.find(schedulerEvent.sectionId).pipe(
+              catchError(() => of({ body: schedulerEvent.originalEvent?.section } as HttpResponse<Section>)),
+              switchMap((response: HttpResponse<Section>) => {
+                if (response.body) {
+                  updatedEvent.section = response.body;
+                }
 
-    return { ...event.originalEvent, ...updatedEvent } as Event;
+                return of(updatedEvent);
+              })
+            )
+      )
+    );
   }
 
   private reset(): void {
