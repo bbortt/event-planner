@@ -44,6 +44,9 @@ class ProjectServiceUnitTest {
     UserService userServiceMock;
 
     @Mock
+    EventHistoryService eventHistoryServiceMock;
+
+    @Mock
     RoleRepository roleRepositoryMock;
 
     @Mock
@@ -64,6 +67,7 @@ class ProjectServiceUnitTest {
             new ProjectService(
                 roleServiceMock,
                 userServiceMock,
+                eventHistoryServiceMock,
                 roleRepositoryMock,
                 projectRepositoryMock,
                 invitationRepositoryMock,
@@ -125,5 +129,15 @@ class ProjectServiceUnitTest {
             .extracting(problem -> ((ConstraintViolationProblem) problem).getViolations().get(0))
             .hasFieldOrPropertyWithValue("field", "endTime")
             .hasFieldOrPropertyWithValue("message", "endTime may not occur before startTime!");
+    }
+
+    @Test
+    void deleteTriggersHistoryDeletionToo() {
+        Long projectId = 1234L;
+
+        fixture.delete(projectId);
+
+        verify(projectRepositoryMock).deleteById(projectId);
+        verify(eventHistoryServiceMock).deleteHistoryByProject(projectId);
     }
 }

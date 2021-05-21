@@ -6,6 +6,8 @@ import static org.mockito.Mockito.verify;
 import io.github.bbortt.event.planner.backend.domain.Event;
 import io.github.bbortt.event.planner.backend.domain.EventHistory;
 import io.github.bbortt.event.planner.backend.domain.EventHistoryAction;
+import io.github.bbortt.event.planner.backend.domain.Location;
+import io.github.bbortt.event.planner.backend.domain.Project;
 import io.github.bbortt.event.planner.backend.domain.Section;
 import io.github.bbortt.event.planner.backend.event.EventHistoryEvent;
 import io.github.bbortt.event.planner.backend.service.EventHistoryService;
@@ -45,7 +47,7 @@ class EventHistoryEventListenerUnitTest {
 
     @Test
     void eventHistoryEventPersistsCREATEHistoryEntity() {
-        Event event = new Event().section(new Section().id(2345L));
+        Event event = new Event().section(new Section().id(2345L).location(new Location().project(new Project())));
         EventHistoryAction action = EventHistoryAction.CREATE;
 
         fixture.eventHistoryEvent(new EventHistoryEvent(this, event, action));
@@ -62,7 +64,7 @@ class EventHistoryEventListenerUnitTest {
 
     @Test
     void eventHistoryEventPersistsUPDATEHistoryEntity() {
-        Event updateEvent = new Event().id(1234L).section(new Section().id(2345L));
+        Event updateEvent = new Event().id(1234L).section(new Section().id(2345L).location(new Location().project(new Project())));
         EventHistoryAction updateAction = EventHistoryAction.UPDATE;
 
         fixture.eventHistoryEvent(new EventHistoryEvent(this, updateEvent, updateAction));

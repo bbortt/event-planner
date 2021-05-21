@@ -33,6 +33,9 @@ public class EventHistory implements Serializable {
     @Column(name = "event_id", nullable = false, updatable = false)
     private Long eventId;
 
+    @Column(name = "project_id", nullable = false, updatable = false)
+    private Long projectId;
+
     @Column(name = "action", columnDefinition = "bpchar(6)", nullable = false, updatable = false)
     private EventHistoryAction action;
 
@@ -82,12 +85,25 @@ public class EventHistory implements Serializable {
         return eventId;
     }
 
-    public void setEventId(Long eventId) {
-        this.eventId = eventId;
+    public void setEvent(Event event) {
+        this.eventId = event.getId();
     }
 
-    public EventHistory eventId(Long eventId) {
-        this.eventId = eventId;
+    public EventHistory event(Event event) {
+        this.eventId = event.getId();
+        return this;
+    }
+
+    public Long getProjectId() {
+        return projectId;
+    }
+
+    public void setProject(Project project) {
+        this.projectId = project.getId();
+    }
+
+    public EventHistory project(Project project) {
+        this.projectId = project.getId();
         return this;
     }
 

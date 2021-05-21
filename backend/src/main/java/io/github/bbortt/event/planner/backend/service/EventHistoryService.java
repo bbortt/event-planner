@@ -29,4 +29,15 @@ public class EventHistoryService {
         log.debug("Request to save EventHistory : {}", eventHistory);
         return eventHistoryRepository.save(eventHistory);
     }
+
+    /**
+     * Delete the event history for a specific project.
+     *
+     * @param projectId the project id
+     */
+    @Transactional
+    public void deleteHistoryByProject(Long projectId) {
+        log.debug("Request to delete EventHistory by projectId : {}", projectId);
+        eventHistoryRepository.deleteAllByProjectId(projectId);
+    }
 }

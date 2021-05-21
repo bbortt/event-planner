@@ -34,7 +34,8 @@ public class EventHistoryEventListener {
 
     private EventHistory createEventHistory(Event event, EventHistoryAction action, String createdBy) {
         return new EventHistory()
-            .eventId(event.getId())
+            .event(event)
+            .project(event.getSection().getLocation().getProject())
             .action(action)
             .name(event.getName())
             .description(event.getDescription())
