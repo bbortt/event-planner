@@ -78,13 +78,8 @@ public class Invitation extends AbstractAuditingEntity implements Serializable {
     @JsonIgnoreProperties(value = "invitations", allowSetters = true)
     private Responsibility responsibility;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Invitation id(Long id) {
@@ -195,8 +190,6 @@ public class Invitation extends AbstractAuditingEntity implements Serializable {
         this.responsibility = responsibility;
         return this;
     }
-
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
     public boolean equals(Object o) {

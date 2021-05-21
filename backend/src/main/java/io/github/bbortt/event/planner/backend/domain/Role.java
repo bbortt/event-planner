@@ -29,7 +29,6 @@ public class Role implements Serializable {
     @OneToMany(mappedBy = "role")
     private Set<Invitation> invitations = new HashSet<>();
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here
     public String getName() {
         return name;
     }
@@ -67,8 +66,6 @@ public class Role implements Serializable {
         invitation.setRole(null);
         return this;
     }
-
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
     public boolean equals(Object o) {

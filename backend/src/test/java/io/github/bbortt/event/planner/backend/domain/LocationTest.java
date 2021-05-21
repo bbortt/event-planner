@@ -11,13 +11,13 @@ class LocationTest {
     void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(Location.class);
         Location location1 = new Location();
-        location1.setId(1L);
+        location1.id(1L);
         Location location2 = new Location();
-        location2.setId(location1.getId());
+        location2.id(location1.getId());
         assertThat(location1).isEqualTo(location2);
-        location2.setId(2L);
+        location2.id(2L);
         assertThat(location1).isNotEqualTo(location2);
-        location1.setId(null);
+        location1.id(null);
         assertThat(location1).isNotEqualTo(location2);
     }
 }

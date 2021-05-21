@@ -52,10 +52,12 @@ public class Event implements Serializable {
     private ZonedDateTime endTime;
 
     @ManyToOne
+    @JoinColumn(name = "section_id", nullable = false)
     @JsonIgnoreProperties(value = "events", allowSetters = true)
     private Section section;
 
     @ManyToOne
+    @JoinColumn(name = "responsibility_id")
     @JsonIgnoreProperties(value = "events", allowSetters = true)
     private Responsibility responsibility;
 
@@ -65,10 +67,6 @@ public class Event implements Serializable {
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Event id(Long id) {

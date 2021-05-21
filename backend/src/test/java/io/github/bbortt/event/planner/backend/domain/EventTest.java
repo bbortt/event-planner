@@ -11,13 +11,13 @@ class EventTest {
     void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(Event.class);
         Event event1 = new Event();
-        event1.setId(1L);
+        event1.id(1L);
         Event event2 = new Event();
-        event2.setId(event1.getId());
+        event2.id(event1.getId());
         assertThat(event1).isEqualTo(event2);
-        event2.setId(2L);
+        event2.id(2L);
         assertThat(event1).isNotEqualTo(event2);
-        event1.setId(null);
+        event1.id(null);
         assertThat(event1).isNotEqualTo(event2);
     }
 }

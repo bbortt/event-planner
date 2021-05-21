@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.test.context.TestSecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 

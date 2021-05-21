@@ -11,13 +11,13 @@ class ProjectTest {
     void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(Project.class);
         Project project1 = new Project();
-        project1.setId(1L);
+        project1.id(1L);
         Project project2 = new Project();
-        project2.setId(project1.getId());
+        project2.id(project1.getId());
         assertThat(project1).isEqualTo(project2);
-        project2.setId(2L);
+        project2.id(2L);
         assertThat(project1).isNotEqualTo(project2);
-        project1.setId(null);
+        project1.id(null);
         assertThat(project1).isNotEqualTo(project2);
     }
 }

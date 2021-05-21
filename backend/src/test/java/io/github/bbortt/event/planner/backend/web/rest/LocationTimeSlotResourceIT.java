@@ -150,7 +150,7 @@ class LocationTimeSlotResourceIT extends AbstractApplicationContextAwareIT {
         int databaseSizeBeforeCreate = locationTimeSlotRepository.findAll().size();
 
         // Create the LocationTimeSlot with an existing ID
-        locationTimeSlot.setId(1L);
+        locationTimeSlot.id(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restLocationTimeSlotMockMvc

@@ -24,14 +24,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.test.context.TestSecurityContextHolder;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -157,7 +155,7 @@ class ResponsibilityResourceIT extends AbstractApplicationContextAwareIT {
         int databaseSizeBeforeCreate = responsibilityRepository.findAll().size();
 
         // Create the Responsibility with an existing ID
-        responsibility.setId(1L);
+        responsibility.id(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restResponsibilityMockMvc

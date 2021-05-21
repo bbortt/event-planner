@@ -29,7 +29,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.test.context.TestSecurityContextHolder;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -148,7 +147,7 @@ class LocationResourceIT extends AbstractApplicationContextAwareIT {
         int databaseSizeBeforeCreate = locationRepository.findAll().size();
 
         // Create the Location with an existing ID
-        location.setId(1L);
+        location.id(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restLocationMockMvc

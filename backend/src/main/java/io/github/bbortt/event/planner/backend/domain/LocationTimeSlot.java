@@ -53,13 +53,13 @@ public class LocationTimeSlot implements Serializable {
     @JsonIgnoreProperties(value = "locationTimeSlots", allowSetters = true)
     private Location location;
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public LocationTimeSlot id(Long id) {
         this.id = id;
+        return this;
     }
 
     public ZonedDateTime getStartTime() {
@@ -100,8 +100,6 @@ public class LocationTimeSlot implements Serializable {
     public void setLocation(Location location) {
         this.location = location;
     }
-
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
     public boolean equals(Object o) {
