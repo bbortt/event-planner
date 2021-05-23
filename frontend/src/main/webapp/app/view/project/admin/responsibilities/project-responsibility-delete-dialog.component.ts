@@ -14,9 +14,9 @@ export class ProjectResponsibilityDeleteDialogComponent {
   responsibility?: Responsibility;
 
   constructor(
-    protected responsibilityService: ResponsibilityService,
+    private responsibilityService: ResponsibilityService,
     public activeModal: NgbActiveModal,
-    protected eventManager: EventManager
+    private eventManager: EventManager
   ) {}
 
   cancel(): void {

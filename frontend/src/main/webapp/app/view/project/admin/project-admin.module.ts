@@ -2,13 +2,15 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { SharedModule } from 'app/shared/shared.module';
-import { DxAutocompleteModule, DxColorBoxModule } from 'devextreme-angular';
+import { DxAutocompleteModule, DxColorBoxModule, DxDateBoxModule } from 'devextreme-angular';
 
 import { ProjectAdminComponent } from 'app/view/project/admin/project-admin.component';
 import { ProjectAdminUpdateComponent } from 'app/view/project/admin/project-admin-update.component';
 import { ProjectAdminUpdateModalComponent } from 'app/view/project/admin/project-admin-update-modal.component';
 
 import { ProjectAdminNavbarComponent } from 'app/view/project/admin/navbar/project-admin-navbar.component';
+
+import { ProjectEventsHistoryComponent } from 'app/view/project/admin/history/project-events-history.component';
 
 import { ProjectLocationsComponent } from 'app/view/project/admin/locations/project-locations.component';
 import { ProjectLocationUpdateComponent } from 'app/view/project/admin/locations/project-location-update.component';
@@ -31,12 +33,13 @@ import { ProjectConfirmationDialogComponent } from 'app/view/project/admin/proje
 import { PROJECT_ADMIN_ROUTES } from './project-admin.routes';
 
 @NgModule({
-  imports: [SharedModule, DxAutocompleteModule, DxColorBoxModule, RouterModule.forChild(PROJECT_ADMIN_ROUTES)],
+  imports: [SharedModule, DxAutocompleteModule, DxColorBoxModule, DxDateBoxModule, RouterModule.forChild(PROJECT_ADMIN_ROUTES)],
   declarations: [
     ProjectAdminComponent,
     ProjectAdminUpdateModalComponent,
     ProjectAdminUpdateComponent,
     ProjectAdminNavbarComponent,
+    ProjectEventsHistoryComponent,
     ProjectLocationsComponent,
     ProjectLocationUpdateComponent,
     ProjectLocationModalComponent,

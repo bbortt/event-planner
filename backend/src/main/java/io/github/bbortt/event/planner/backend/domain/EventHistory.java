@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.time.ZonedDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -36,6 +38,7 @@ public class EventHistory implements Serializable {
     @Column(name = "project_id", nullable = false, updatable = false)
     private Long projectId;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "action", columnDefinition = "bpchar(6)", nullable = false, updatable = false)
     private EventHistoryAction action;
 
@@ -56,7 +59,7 @@ public class EventHistory implements Serializable {
     @Column(name = "end_time", nullable = false, updatable = false)
     private ZonedDateTime endTime;
 
-    @Column(name = "section_id", updatable = false)
+    @Column(name = "section_id", nullable = false, updatable = false)
     private Long sectionId;
 
     @Column(name = "responsibility_id", updatable = false)

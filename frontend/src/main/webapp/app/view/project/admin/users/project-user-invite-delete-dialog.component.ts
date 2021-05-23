@@ -13,7 +13,7 @@ import { Invitation } from 'app/entities/invitation/invitation.model';
 export class ProjectUserInviteDeleteDialogComponent {
   invitation?: Invitation;
 
-  constructor(protected invitationService: InvitationService, public activeModal: NgbActiveModal, protected eventManager: EventManager) {}
+  constructor(private invitationService: InvitationService, private activeModal: NgbActiveModal, private eventManager: EventManager) {}
 
   cancel(): void {
     this.activeModal.dismiss();

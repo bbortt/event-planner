@@ -48,7 +48,7 @@ export class ProjectLocationUpdateComponent {
   });
 
   constructor(
-    protected locationService: LocationService,
+    private locationService: LocationService,
     private eventManager: EventManager,
     private fb: FormBuilder,
     private responsibilityService: ResponsibilityService,

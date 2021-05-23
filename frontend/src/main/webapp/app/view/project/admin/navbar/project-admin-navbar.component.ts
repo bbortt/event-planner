@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 import { IconDefinition } from '@fortawesome/fontawesome-common-types';
-import { faCheck, faMapMarkerAlt, faUserAlt } from '@fortawesome/free-solid-svg-icons';
+import { faHistory, faCheck, faMapMarkerAlt, faUserAlt } from '@fortawesome/free-solid-svg-icons';
 
 interface ILink {
   label: string;
@@ -34,6 +34,12 @@ export class ProjectAdminNavbarComponent {
       labelKey: 'eventPlannerApp.project.admin.navbar.responsibilities',
       icon: faCheck,
       routerLink: 'responsibilities',
+    },
+    {
+      label: 'History',
+      labelKey: 'eventPlannerApp.project.admin.navbar.eventHistory',
+      icon: faHistory,
+      routerLink: 'events/history',
     },
   ];
 }

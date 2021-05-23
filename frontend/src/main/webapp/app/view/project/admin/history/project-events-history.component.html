@@ -1,0 +1,85 @@
+<div>
+  <h3 class="page-heading">
+    <span jhiTranslate="eventPlannerApp.project.admin.navbar.eventHistory">History</span>
+
+    <div class="float-end clearfix">
+      <div class="col mb-3">
+        <div class="d-flex">
+          <dx-date-box
+            class="dx-form-control"
+            name="eventsSince"
+            id="field_eventsSince"
+            type="datetime"
+            [readOnly]="false"
+            [showClearButton]="false"
+            [openOnFieldClick]="true"
+            [displayFormat]="dateTimeFormat"
+            [formControl]="eventsSince"
+            [max]="now.toDate()"
+            placeholder="{{ eventsSinceLabel }}"
+          >
+          </dx-date-box>
+        </div>
+      </div>
+    </div>
+  </h3>
+
+  <br />
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="eventHistory.length === 0">
+    <span jhiTranslate="eventPlannerApp.project.admin.eventHistory.notFound">No History found</span>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="eventHistory.length != 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr>
+          <!--        <th scope="col">-->
+          <!--          <span jhiTranslate="eventPlannerApp.project.admin.eventHistory.name">Name</span>-->
+          <!--        </th>-->
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <!--      <tr *ngFor="let responsibility of responsibilities; trackBy: trackId">-->
+        <!--        <td>{{ responsibility.name }}</td>-->
+        <!--        <td>-->
+        <!--          <div-->
+        <!--            class="btn color-preview"-->
+        <!--            [ngStyle]="{ 'background-color': responsibility.color ? responsibility.color : defaultColor }"-->
+        <!--          ></div>-->
+        <!--        </td>-->
+        <!--        <td class="text-right">-->
+        <!--          <div class="btn-group">-->
+        <!--            <button-->
+        <!--              type="submit"-->
+        <!--              [routerLink]="['', { outlets: { modal: ['projects', project.id, 'responsibilities', responsibility.id, 'edit'] } }]"-->
+        <!--              class="btn btn-blue btn-sm"-->
+        <!--              data-toggle="tooltip"-->
+        <!--              data-placement="bottom"-->
+        <!--              title="{{ 'entity.action.edit' | translate }}"-->
+        <!--            >-->
+        <!--              <fa-icon icon="pencil-alt"></fa-icon>-->
+        <!--            </button>-->
+
+        <!--            <button-->
+        <!--              type="submit"-->
+        <!--              (click)="delete(responsibility)"-->
+        <!--              class="btn btn-red btn-sm"-->
+        <!--              data-toggle="tooltip"-->
+        <!--              data-placement="bottom"-->
+        <!--              title="{{ 'entity.action.delete' | translate }}"-->
+        <!--            >-->
+        <!--              <fa-icon icon="times"></fa-icon>-->
+        <!--            </button>-->
+        <!--          </div>-->
+        <!--        </td>-->
+        <!--      </tr>-->
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -6,12 +6,19 @@
         "navbar": {
           "locations": "Lokalitäten",
           "users": "Benutzer",
-          "responsibilities": "Verantwortlichkeiten"
+          "responsibilities": "Verantwortlichkeiten",
+          "eventHistory": "Verlauf"
         },
         "locations": {
           "sections": {
             "addLabel": "Abschnitt hinzufügen"
           }
+        },
+        "eventHistory": {
+          "filter": {
+            "eventsSince": "Zeige seit"
+          },
+          "notFound": "Keine History Einträge gefunden"
         }
       }
     }

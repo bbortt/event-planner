@@ -6,12 +6,19 @@
         "navbar": {
           "locations": "Locations",
           "users": "Users",
-          "responsibilities": "Responsibilities"
+          "responsibilities": "Responsibilities",
+          "eventHistory": "History"
         },
         "locations": {
           "sections": {
             "addLabel": "Add Section"
           }
+        },
+        "eventHistory": {
+          "filter": {
+            "eventsSince": "Show since"
+          },
+          "notFound": "No History entries found"
         }
       }
     }

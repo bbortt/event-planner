@@ -32,11 +32,11 @@ export class ProjectResponsibilitiesComponent implements OnInit, OnDestroy {
   eventSubscriber?: Subscription;
 
   constructor(
-    protected responsibilityService: ResponsibilityService,
-    protected activatedRoute: ActivatedRoute,
-    protected router: Router,
-    protected eventManager: EventManager,
-    protected modalService: NgbModal
+    private responsibilityService: ResponsibilityService,
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
+    private eventManager: EventManager,
+    private modalService: NgbModal
   ) {}
 
   ngOnInit(): void {

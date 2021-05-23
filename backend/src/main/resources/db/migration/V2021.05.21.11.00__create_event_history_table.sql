@@ -10,7 +10,7 @@ CREATE TABLE event_history
     end_time          TIMESTAMP WITH TIME ZONE NOT NULL,
     responsibility_id BIGINT,
     jhi_user_id       CHARACTER VARYING(100),
-    section_id        BIGINT,
+    section_id        BIGINT                   NOT NULL,
     created_by        CHARACTER VARYING(50)    NOT NULL,
     created_date      TIMESTAMP WITH TIME ZONE
 );
