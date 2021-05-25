@@ -7,7 +7,10 @@ import io.github.bbortt.event.planner.backend.security.RolesConstants;
 import io.github.bbortt.event.planner.backend.service.EventHistoryService;
 import io.github.bbortt.event.planner.backend.service.ProjectService;
 import io.github.bbortt.event.planner.backend.service.dto.EventDTO;
+import java.time.ZonedDateTime;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -56,9 +59,20 @@ public class EventHistoryResource {
      */
     @GetMapping("/projects/{projectId}")
     @PreAuthorize("@projectService.hasAccessToProject(#projectId, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")")
-    public ResponseEntity<List<EventHistory>> getAllEvents(@PathVariable Long projectId, Pageable pageable) {
+    public ResponseEntity<List<EventHistory>> getAllEvents(
+        @PathVariable Long projectId,
+        @RequestParam(name = "showSince", required = false) Optional<ZonedDateTime> showSince,
+        Pageable pageable
+    ) {
         log.debug("REST request to get a page of EventHistory entries for Project {}", projectId);
-        Page<EventHistory> page = eventHistoryService.findAllByProjectId(projectId, pageable);
+
+        Page<EventHistory> page;
+        if (showSince.isPresent()) {
+            page = eventHistoryService.findAllByProjectIdSince(projectId, showSince.get(), pageable);
+        } else {
+            page = eventHistoryService.findAllByProjectId(projectId, pageable);
+        }
+
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }

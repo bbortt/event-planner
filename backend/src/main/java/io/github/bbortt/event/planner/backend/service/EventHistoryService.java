@@ -2,9 +2,11 @@ package io.github.bbortt.event.planner.backend.service;
 
 import io.github.bbortt.event.planner.backend.domain.Event;
 import io.github.bbortt.event.planner.backend.domain.EventHistory;
+import io.github.bbortt.event.planner.backend.domain.Project;
 import io.github.bbortt.event.planner.backend.repository.EventHistoryRepository;
 import io.github.bbortt.event.planner.backend.service.exception.EntityNotFoundException;
 import io.github.bbortt.event.planner.backend.service.exception.IdMustBePresentException;
+import java.time.ZonedDateTime;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +55,7 @@ public class EventHistoryService {
     /**
      * Read the whole event history for a specified project.
      *
+     * @param projectId the project identifier
      * @param pageable the pageable information
      * @return the event history
      */
@@ -60,6 +63,20 @@ public class EventHistoryService {
     public Page<EventHistory> findAllByProjectId(Long projectId, Pageable pageable) {
         log.debug("REST request to get a page of EventHistory entries for Project {}", projectId);
         return eventHistoryRepository.findAllByProjectId(projectId, pageable);
+    }
+
+    /**
+     * Read the whole event history for a specified project, since given date.
+     *
+     * @param projectId the project identifier
+     * @param showSince show since date
+     * @param pageable the pageable information
+     * @return the event history
+     */
+    @Transactional(readOnly = true)
+    public Page<EventHistory> findAllByProjectIdSince(Long projectId, ZonedDateTime showSince, Pageable pageable) {
+        log.debug("REST request to get a page of EventHistory entries for Project {} since {}", projectId, showSince);
+        return eventHistoryRepository.findAllByProjectIdAndCreatedDateGreaterThanEqual(projectId, showSince, pageable);
     }
 
     @Transactional(readOnly = true)
@@ -75,6 +92,7 @@ public class EventHistoryService {
             throw new IdMustBePresentException();
         }
 
-        return roleService.hasAnyRoleInProject(eventHistoryRepository.findProjectById(eventHistoryId), roles);
+        Project project = eventHistoryRepository.findProjectById(eventHistoryId).orElseThrow(EntityNotFoundException::new);
+        return roleService.hasAnyRoleInProject(project, roles);
     }
 }

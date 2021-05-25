@@ -10,7 +10,7 @@ import { ProjectAdminUpdateModalComponent } from 'app/view/project/admin/project
 
 import { ProjectAdminNavbarComponent } from 'app/view/project/admin/navbar/project-admin-navbar.component';
 
-import { ProjectEventsHistoryComponent } from 'app/view/project/admin/history/project-events-history.component';
+import { ProjectEventHistoryComponent } from 'app/view/project/admin/history/project-event-history.component';
 
 import { ProjectLocationsComponent } from 'app/view/project/admin/locations/project-locations.component';
 import { ProjectLocationUpdateComponent } from 'app/view/project/admin/locations/project-location-update.component';
@@ -39,7 +39,7 @@ import { PROJECT_ADMIN_ROUTES } from './project-admin.routes';
     ProjectAdminUpdateModalComponent,
     ProjectAdminUpdateComponent,
     ProjectAdminNavbarComponent,
-    ProjectEventsHistoryComponent,
+    ProjectEventHistoryComponent,
     ProjectLocationsComponent,
     ProjectLocationUpdateComponent,
     ProjectLocationModalComponent,

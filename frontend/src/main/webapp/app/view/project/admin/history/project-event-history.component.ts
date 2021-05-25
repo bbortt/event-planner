@@ -5,8 +5,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { TranslateService } from '@ngx-translate/core';
 
-import { combineLatest, Subscription } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { combineLatest, Subject } from 'rxjs';
+import { map, takeUntil, tap } from 'rxjs/operators';
 
 import { EventManager } from 'app/core/util/event-manager.service';
 
@@ -22,10 +22,10 @@ import * as dayjs from 'dayjs';
 
 @Component({
   selector: 'app-project-events-history',
-  templateUrl: './project-events-history.component.html',
-  styleUrls: ['./project-events-history.component.scss'],
+  templateUrl: './project-event-history.component.html',
+  styleUrls: ['./project-event-history.component.scss'],
 })
-export class ProjectEventsHistoryComponent implements OnInit, OnDestroy {
+export class ProjectEventHistoryComponent implements OnInit, OnDestroy {
   project?: Project;
   eventHistory: EventHistory[] = [];
 
@@ -39,10 +39,10 @@ export class ProjectEventsHistoryComponent implements OnInit, OnDestroy {
   now = dayjs();
   dateTimeFormat = DATE_TIME_FORMAT;
 
-  eventsSince = new FormControl(null, [Validators.required]);
-  eventsSinceLabel = 'Show since';
+  showSinceFormControl = new FormControl(null, [Validators.required]);
+  showSinceLabel = 'Show since';
 
-  private eventSubscriber?: Subscription;
+  private destroy$ = new Subject();
 
   constructor(
     private eventHistoryService: EventHistoryService,
@@ -55,40 +55,56 @@ export class ProjectEventsHistoryComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     combineLatest([this.activatedRoute.data, this.activatedRoute.queryParamMap])
       .pipe(
-        tap(([data, params]) => {
-          const page = params.get('page');
+        tap(([data, queryParamMap]) => {
+          const page = queryParamMap.get('page');
           this.page = page !== null ? +page : 1;
-          const sort = (params.get('sort') ?? data['defaultSort']).split(',');
+          const sort = (queryParamMap.get('sort') ?? data['defaultSort']).split(',');
           this.predicate = sort[0];
           this.ascending = sort[1] === 'asc';
+          this.project = data.project;
         }),
-        map(([{ project }]) => project as Project)
+        map(([, queryParamMap]) => queryParamMap.get('showSince')),
+        map((showSince, index) => {
+          if (index === 0 && showSince) {
+            this.showSinceFormControl.setValue(showSince);
+          }
+
+          return showSince;
+        }),
+        takeUntil(this.destroy$)
       )
-      .subscribe((project: Project) => {
-        this.project = project;
-
-        // eslint-disable-next-line no-console
-        console.log('project: ', this.project);
-
-        this.loadAll();
+      .subscribe(showSince => {
+        if (showSince) {
+          this.loadSince(dayjs(showSince));
+        } else {
+          this.loadAll();
+        }
       });
 
-    this.translateService.get('eventPlannerApp.project.admin.eventHistory.filter.eventsSince').subscribe(result => {
+    this.translateService.get('eventPlannerApp.project.admin.eventHistory.filter.showSince').subscribe(result => {
       if (typeof result === 'string') {
-        this.eventsSinceLabel = result;
+        this.showSinceLabel = result;
       }
+    });
+
+    this.showSinceFormControl.valueChanges.pipe(takeUntil(this.destroy$)).subscribe((showSince: Date) => {
+      this.router.navigate(['.'], {
+        relativeTo: this.activatedRoute,
+        queryParams: {
+          showSince: dayjs(showSince).toJSON(),
+        },
+      });
     });
   }
 
   ngOnDestroy(): void {
-    if (this.eventSubscriber) {
-      this.eventManager.destroy(this.eventSubscriber);
-    }
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   transition(): void {
-    this.router.navigate(['./'], {
-      relativeTo: this.activatedRoute.parent,
+    this.router.navigate(['.'], {
+      relativeTo: this.activatedRoute,
       queryParams: {
         page: this.page,
         sort: this.predicate + ',' + (this.ascending ? 'asc' : 'desc'),
@@ -101,9 +117,6 @@ export class ProjectEventsHistoryComponent implements OnInit, OnDestroy {
   }
 
   loadAll(): void {
-    // eslint-disable-next-line no-console
-    console.log('load all: ', this.project);
-
     this.isLoading = true;
     this.eventHistoryService
       .query(this.project!, {
@@ -112,15 +125,33 @@ export class ProjectEventsHistoryComponent implements OnInit, OnDestroy {
         sort: this.sort(),
       })
       .subscribe(
-        (res: HttpResponse<EventHistory[]>) => {
-          // eslint-disable-next-line no-console
-          console.log('response');
-
-          this.isLoading = false;
-          this.onSuccess(res.body, res.headers);
-        },
-        () => (this.isLoading = false)
+        (res: HttpResponse<EventHistory[]>) => this.onLoadComplete(res),
+        () => this.onLoadError()
       );
+  }
+
+  private loadSince(showSince: dayjs.Dayjs): void {
+    this.isLoading = true;
+    this.eventHistoryService
+      .query(this.project!, {
+        page: this.page - 1,
+        size: this.itemsPerPage,
+        sort: this.sort(),
+        showSince: showSince.toJSON(),
+      })
+      .subscribe(
+        (res: HttpResponse<EventHistory[]>) => this.onLoadComplete(res),
+        () => this.onLoadError()
+      );
+  }
+
+  private onLoadComplete(res: HttpResponse<EventHistory[]>): void {
+    this.isLoading = false;
+    this.onSuccess(res.body, res.headers);
+  }
+
+  private onLoadError(): void {
+    this.isLoading = false;
   }
 
   private sort(): string[] {
