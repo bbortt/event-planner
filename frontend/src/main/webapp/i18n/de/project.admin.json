@@ -18,7 +18,12 @@
           "filter": {
             "eventsSince": "Zeige seit"
           },
-          "notFound": "Keine History Einträge gefunden"
+          "notFound": "Keine History Einträge gefunden",
+          "createdBy": "Verändert von",
+          "createdDate": "Verändert um",
+          "action": "Aktion",
+          "eventId": "Event ID",
+          "name": "Name"
         }
       }
     }

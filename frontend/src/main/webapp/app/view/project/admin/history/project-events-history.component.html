@@ -34,52 +34,63 @@
     <span jhiTranslate="eventPlannerApp.project.admin.eventHistory.notFound">No History found</span>
   </div>
 
-  <div class="table-responsive" id="entities" *ngIf="eventHistory.length != 0">
+  <div class="table-responsive w-100" *ngIf="project">
     <table class="table table-striped" aria-describedby="page-heading">
       <thead>
-        <tr>
-          <!--        <th scope="col">-->
-          <!--          <span jhiTranslate="eventPlannerApp.project.admin.eventHistory.name">Name</span>-->
-          <!--        </th>-->
+        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" [callback]="transition.bind(this)">
+          <th scope="col" jhiSortBy="createdBy">
+            <span jhiTranslate="eventPlannerApp.project.admin.eventHistory.createdBy">Created By</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="createdDate">
+            <span jhiTranslate="eventPlannerApp.project.admin.eventHistory.createdDate">Created Date</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="action">
+            <span jhiTranslate="eventPlannerApp.project.admin.eventHistory.action">Action</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="eventId">
+            <span jhiTranslate="eventPlannerApp.project.admin.eventHistory.eventId">Event ID</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="name">
+            <span jhiTranslate="eventPlannerApp.project.admin.eventHistory.name">Name</span> <fa-icon icon="sort"></fa-icon>
+          </th>
           <th scope="col"></th>
         </tr>
       </thead>
       <tbody>
-        <!--      <tr *ngFor="let responsibility of responsibilities; trackBy: trackId">-->
-        <!--        <td>{{ responsibility.name }}</td>-->
-        <!--        <td>-->
-        <!--          <div-->
-        <!--            class="btn color-preview"-->
-        <!--            [ngStyle]="{ 'background-color': responsibility.color ? responsibility.color : defaultColor }"-->
-        <!--          ></div>-->
-        <!--        </td>-->
-        <!--        <td class="text-right">-->
-        <!--          <div class="btn-group">-->
-        <!--            <button-->
-        <!--              type="submit"-->
-        <!--              [routerLink]="['', { outlets: { modal: ['projects', project.id, 'responsibilities', responsibility.id, 'edit'] } }]"-->
-        <!--              class="btn btn-blue btn-sm"-->
-        <!--              data-toggle="tooltip"-->
-        <!--              data-placement="bottom"-->
-        <!--              title="{{ 'entity.action.edit' | translate }}"-->
-        <!--            >-->
-        <!--              <fa-icon icon="pencil-alt"></fa-icon>-->
-        <!--            </button>-->
-
-        <!--            <button-->
-        <!--              type="submit"-->
-        <!--              (click)="delete(responsibility)"-->
-        <!--              class="btn btn-red btn-sm"-->
-        <!--              data-toggle="tooltip"-->
-        <!--              data-placement="bottom"-->
-        <!--              title="{{ 'entity.action.delete' | translate }}"-->
-        <!--            >-->
-        <!--              <fa-icon icon="times"></fa-icon>-->
-        <!--            </button>-->
-        <!--          </div>-->
-        <!--        </td>-->
-        <!--      </tr>-->
+        <tr *ngFor="let eventHistoryEntry of eventHistory; trackBy: trackIdentity">
+          <td>{{ eventHistoryEntry.createdBy }}</td>
+          <td>{{ eventHistoryEntry.createdDate.toDate() | date: 'short' }}</td>
+          <td>{{ eventHistoryEntry.action }}</td>
+          <td>{{ eventHistoryEntry.eventId }}</td>
+          <td>{{ eventHistoryEntry.name }}</td>
+          <td>
+            <!--          <div class="btn-group">-->
+            <!--            <button type="submit" [routerLink]="['./', eventHistoryEntry.id, 'view']" class="btn btn-negative btn-gray btn-sm">-->
+            <!--              <fa-icon icon="eye"></fa-icon>-->
+            <!--              <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>-->
+            <!--            </button>-->
+            <!--          </div>-->
+          </td>
+        </tr>
       </tbody>
     </table>
+  </div>
+
+  <div *ngIf="eventHistory" class="row-no-stretch">
+    <div class="row justify-content-center">
+      <jhi-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></jhi-item-count>
+    </div>
+
+    <div class="row justify-content-center">
+      <ngb-pagination
+        [collectionSize]="totalItems"
+        [(page)]="page"
+        [pageSize]="itemsPerPage"
+        [maxSize]="5"
+        [rotate]="true"
+        [boundaryLinks]="true"
+        (pageChange)="transition()"
+      ></ngb-pagination>
+    </div>
   </div>
 </div>

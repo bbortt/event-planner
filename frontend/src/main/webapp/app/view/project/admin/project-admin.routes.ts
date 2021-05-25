@@ -50,6 +50,9 @@ export const PROJECT_ADMIN_ROUTES: Routes = [
       {
         path: 'events/history',
         component: ProjectEventsHistoryComponent,
+        data: {
+          defaultSort: 'id,asc',
+        },
         resolve: {
           project: ProjectResolve,
         },

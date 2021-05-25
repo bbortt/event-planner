@@ -22,7 +22,7 @@
 
   <jhi-alert></jhi-alert>
 
-  <div class="table-responsive" id="entities" *ngIf="invitations">
+  <div class="table-responsive w-100">
     <table class="table table-striped" aria-describedby="page-heading">
       <thead>
         <tr>
@@ -86,7 +86,7 @@
     </table>
   </div>
 
-  <div *ngIf="invitations && invitations.length > 0">
+  <div *ngIf="invitations && invitations.length > 0" class="row-no-stretch">
     <div class="row justify-content-center">
       <jhi-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></jhi-item-count>
     </div>
