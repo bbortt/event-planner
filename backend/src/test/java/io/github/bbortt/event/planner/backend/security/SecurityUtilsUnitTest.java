@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -23,10 +24,15 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 /**
  * Test class for the {@link SecurityUtils} utility class.
  */
-public class SecurityUtilsUnitTest {
+class SecurityUtilsUnitTest {
+
+    @AfterEach
+    void afterEachTeardown() {
+        SecurityContextHolder.clearContext();
+    }
 
     @Test
-    public void testGetCurrentUserLogin() {
+    void testGetCurrentUserLogin() {
         SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
         securityContext.setAuthentication(new UsernamePasswordAuthenticationToken("admin", "admin"));
         SecurityContextHolder.setContext(securityContext);
@@ -35,7 +41,7 @@ public class SecurityUtilsUnitTest {
     }
 
     @Test
-    public void testGetCurrentUserLoginForOAuth2() {
+    void testGetCurrentUserLoginForOAuth2() {
         SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
         Map<String, Object> claims = new HashMap<>();
         claims.put("groups", "ROLE_USER");
@@ -55,7 +61,7 @@ public class SecurityUtilsUnitTest {
     }
 
     @Test
-    public void testIsAuthenticated() {
+    void testIsAuthenticated() {
         SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
         securityContext.setAuthentication(new UsernamePasswordAuthenticationToken("admin", "admin"));
         SecurityContextHolder.setContext(securityContext);
@@ -64,7 +70,7 @@ public class SecurityUtilsUnitTest {
     }
 
     @Test
-    public void testAnonymousIsNotAuthenticated() {
+    void testAnonymousIsNotAuthenticated() {
         SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
         Collection<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(AuthoritiesConstants.ANONYMOUS));
@@ -75,7 +81,7 @@ public class SecurityUtilsUnitTest {
     }
 
     @Test
-    public void testIsCurrentUserInRole() {
+    void testIsCurrentUserInRole() {
         SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
         Collection<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(AuthoritiesConstants.USER));

@@ -2,6 +2,8 @@ package io.github.bbortt.event.planner.backend.web.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -16,10 +18,13 @@ import io.github.bbortt.event.planner.backend.domain.EventHistory;
 import io.github.bbortt.event.planner.backend.domain.EventHistoryAction;
 import io.github.bbortt.event.planner.backend.domain.Invitation;
 import io.github.bbortt.event.planner.backend.domain.Section;
+import io.github.bbortt.event.planner.backend.event.EventHistoryEvent;
+import io.github.bbortt.event.planner.backend.event.listener.EventHistoryEventListener;
 import io.github.bbortt.event.planner.backend.repository.EventHistoryRepository;
 import io.github.bbortt.event.planner.backend.repository.EventRepository;
 import io.github.bbortt.event.planner.backend.repository.RoleRepository;
 import io.github.bbortt.event.planner.backend.security.AuthoritiesConstants;
+import io.github.bbortt.event.planner.backend.service.EventHistoryService;
 import io.github.bbortt.event.planner.backend.service.EventService;
 import java.time.Instant;
 import java.time.ZoneId;
@@ -34,7 +39,9 @@ import javax.persistence.EntityManager;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.test.context.TestSecurityContextHolder;
@@ -78,6 +85,9 @@ class EventResourceIT extends AbstractApplicationContextAwareIT {
 
     @Autowired
     private MockMvc restEventMockMvc;
+
+    @MockBean
+    private EventHistoryEventListener eventHistoryEventListener;
 
     private Map<String, Object> userDetails;
     private Event event;
@@ -171,21 +181,12 @@ class EventResourceIT extends AbstractApplicationContextAwareIT {
         assertThat(testEvent.getStartTime()).isEqualTo(DEFAULT_START_TIME);
         assertThat(testEvent.getEndTime()).isEqualTo(DEFAULT_END_TIME);
 
-        // Validate the EventHistory in the database
-        List<EventHistory> eventHistoryList = eventHistoryRepository.findAll();
-        assertThat(eventHistoryList).hasSize(1);
-        EventHistory eventHistory = eventHistoryList.get(0);
-        assertOnEventHistory(eventHistory, testEvent, EventHistoryAction.CREATE);
-    }
+        ArgumentCaptor<EventHistoryEvent> captor = ArgumentCaptor.forClass(EventHistoryEvent.class);
+        verify(eventHistoryEventListener).eventHistoryEvent(captor.capture());
 
-    private void assertOnEventHistory(EventHistory eventHistory, Event testEvent, EventHistoryAction action) {
-        assertThat(eventHistory.getEventId()).isEqualTo(testEvent.getId());
-        assertThat(eventHistory.getAction()).isEqualTo(action);
-        assertThat(eventHistory.getName()).isEqualTo(testEvent.getName());
-        assertThat(eventHistory.getDescription()).isEqualTo(testEvent.getDescription());
-        assertThat(eventHistory.getStartTime()).isEqualTo(testEvent.getStartTime());
-        assertThat(eventHistory.getEndTime()).isEqualTo(testEvent.getEndTime());
-        assertThat(eventHistory.getSectionId()).isEqualTo(testEvent.getSection().getId());
+        EventHistoryEvent eventHistoryEvent = captor.getValue();
+        assertThat(eventHistoryEvent.getEvent()).isEqualTo(testEvent);
+        assertThat(eventHistoryEvent.getAction()).isEqualTo(EventHistoryAction.CREATE);
     }
 
     @Test
@@ -320,8 +321,6 @@ class EventResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     void updateEvent() throws Exception {
-        int historySizeBeforeTest = eventHistoryRepository.findAll().size();
-
         // Initialize the database
         eventService.save(event);
 
@@ -350,14 +349,12 @@ class EventResourceIT extends AbstractApplicationContextAwareIT {
         assertThat(testEvent.getStartTime()).isEqualTo(UPDATED_START_TIME);
         assertThat(testEvent.getEndTime()).isEqualTo(UPDATED_END_TIME);
 
-        // Validate the EventHistory in the database
-        List<EventHistory> eventHistoryList = eventHistoryRepository.findAll();
-        assertThat(eventHistoryList).hasSize(historySizeBeforeTest + 2);
-        EventHistory eventHistory = eventHistoryList
-            .stream()
-            .max(Comparator.comparing(EventHistory::getId))
-            .orElseThrow(() -> new IllegalArgumentException("Cannot find event history entry!"));
-        assertOnEventHistory(eventHistory, testEvent, EventHistoryAction.UPDATE);
+        ArgumentCaptor<EventHistoryEvent> captor = ArgumentCaptor.forClass(EventHistoryEvent.class);
+        verify(eventHistoryEventListener, times(2)).eventHistoryEvent(captor.capture());
+
+        EventHistoryEvent eventHistoryEvent = captor.getAllValues().get(1);
+        assertThat(eventHistoryEvent.getEvent()).isEqualTo(event);
+        assertThat(eventHistoryEvent.getAction()).isEqualTo(EventHistoryAction.UPDATE);
     }
 
     @Test
@@ -378,8 +375,6 @@ class EventResourceIT extends AbstractApplicationContextAwareIT {
     @Test
     @Transactional
     void deleteEvent() throws Exception {
-        int historySizeBeforeTest = eventHistoryRepository.findAll().size();
-
         // Initialize the database
         eventService.save(event);
 
@@ -394,13 +389,11 @@ class EventResourceIT extends AbstractApplicationContextAwareIT {
         List<Event> eventList = eventRepository.findAll();
         assertThat(eventList).hasSize(databaseSizeBeforeDelete - 1);
 
-        // Validate the EventHistory in the database
-        List<EventHistory> eventHistoryList = eventHistoryRepository.findAll();
-        assertThat(eventHistoryList).hasSize(historySizeBeforeTest + 2);
-        EventHistory eventHistory = eventHistoryList
-            .stream()
-            .max(Comparator.comparing(EventHistory::getId))
-            .orElseThrow(() -> new IllegalArgumentException("Cannot find event history entry!"));
-        assertOnEventHistory(eventHistory, event, EventHistoryAction.DELETE);
+        ArgumentCaptor<EventHistoryEvent> captor = ArgumentCaptor.forClass(EventHistoryEvent.class);
+        verify(eventHistoryEventListener, times(2)).eventHistoryEvent(captor.capture());
+
+        EventHistoryEvent eventHistoryEvent = captor.getAllValues().get(1);
+        assertThat(eventHistoryEvent.getEvent()).isEqualTo(event);
+        assertThat(eventHistoryEvent.getAction()).isEqualTo(EventHistoryAction.DELETE);
     }
 }
