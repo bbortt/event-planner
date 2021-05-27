@@ -64,13 +64,13 @@ public class Project implements Serializable {
     @OneToMany(mappedBy = "project")
     private Set<Location> locations = new HashSet<>();
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public Project id(Long id) {
         this.id = id;
+        return this;
     }
 
     public String getName() {
@@ -212,8 +212,6 @@ public class Project implements Serializable {
         location.setProject(null);
         return this;
     }
-
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
     public boolean equals(Object o) {

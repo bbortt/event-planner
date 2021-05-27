@@ -13,7 +13,7 @@ import { Location } from 'app/entities/location/location.model';
 export class ProjectLocationDeleteDialogComponent {
   location?: Location;
 
-  constructor(protected locationService: LocationService, public activeModal: NgbActiveModal, protected eventManager: EventManager) {}
+  constructor(private locationService: LocationService, private activeModal: NgbActiveModal, private eventManager: EventManager) {}
 
   cancel(): void {
     this.activeModal.dismiss();

@@ -147,7 +147,7 @@ class SectionResourceIT extends AbstractApplicationContextAwareIT {
         int databaseSizeBeforeCreate = sectionRepository.findAll().size();
 
         // Create the Section with an existing ID
-        section.setId(1L);
+        section.id(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restSectionMockMvc

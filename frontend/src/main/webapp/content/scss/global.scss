@@ -317,3 +317,12 @@ devextreme inputs in combination with scss class `form-control` styling
 .dx-theme-generic-typography a {
   color: #533f03;
 }
+
+/* ==========================================================================
+Bootstrap 5 pagination "hack"
+========================================================================== */
+.row-no-stretch {
+  .row > * {
+    width: unset;
+  }
+}

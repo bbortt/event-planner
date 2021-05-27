@@ -41,6 +41,7 @@ public class ProjectService {
 
     private final RoleService roleService;
     private final UserService userService;
+    private final EventHistoryService eventHistoryService;
 
     private final RoleRepository roleRepository;
     private final ProjectRepository projectRepository;
@@ -51,6 +52,7 @@ public class ProjectService {
     public ProjectService(
         RoleService roleService,
         UserService userService,
+        EventHistoryService eventHistoryService,
         RoleRepository roleRepository,
         ProjectRepository projectRepository,
         InvitationRepository invitationRepository,
@@ -58,6 +60,7 @@ public class ProjectService {
     ) {
         this.roleService = roleService;
         this.userService = userService;
+        this.eventHistoryService = eventHistoryService;
         this.roleRepository = roleRepository;
         this.projectRepository = projectRepository;
         this.invitationRepository = invitationRepository;
@@ -169,6 +172,7 @@ public class ProjectService {
     public void delete(Long id) {
         log.debug("Request to delete Project : {}", id);
         projectRepository.deleteById(id);
+        eventHistoryService.deleteHistoryByProject(id);
     }
 
     /**

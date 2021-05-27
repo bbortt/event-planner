@@ -204,7 +204,7 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
         int databaseSizeBeforeCreate = invitationRepository.findAll().size();
 
         // Create the Invitation with an existing ID
-        invitation.setId(1L);
+        invitation.id(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restInvitationMockMvc

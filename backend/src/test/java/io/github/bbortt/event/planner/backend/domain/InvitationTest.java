@@ -11,13 +11,13 @@ class InvitationTest {
     void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(Invitation.class);
         Invitation invitation1 = new Invitation();
-        invitation1.setId(1L);
+        invitation1.id(1L);
         Invitation invitation2 = new Invitation();
-        invitation2.setId(invitation1.getId());
+        invitation2.id(invitation1.getId());
         assertThat(invitation1).isEqualTo(invitation2);
-        invitation2.setId(2L);
+        invitation2.id(2L);
         assertThat(invitation1).isNotEqualTo(invitation2);
-        invitation1.setId(null);
+        invitation1.id(null);
         assertThat(invitation1).isNotEqualTo(invitation2);
     }
 }

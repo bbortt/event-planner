@@ -6,7 +6,7 @@
       <app-clientside-filter
         id="locations-clientside-filter"
         class="float-start"
-        (valueChange)="this.filterData($event)"
+        (valueChange)="filterData($event)"
       ></app-clientside-filter>
 
       <button
@@ -79,7 +79,7 @@
             </div>
 
             <div class="location-card-section mb-auto">
-              <table class="table table-striped">
+              <table class="table table-striped" aria-describedby="page-heading">
                 <thead class="d-none">
                   <tr>
                     <th>{{ 'eventPlannerApp.location.section' | translate }}</th>

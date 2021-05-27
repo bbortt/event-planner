@@ -32,7 +32,7 @@ export class ProjectResponsibilityUpdateComponent {
     project: [],
   });
 
-  constructor(protected responsibilityService: ResponsibilityService, private eventManager: EventManager, private fb: FormBuilder) {}
+  constructor(private responsibilityService: ResponsibilityService, private eventManager: EventManager, private fb: FormBuilder) {}
 
   updateForm(project: Project, responsibility: Responsibility): void {
     this.isNew = !responsibility.id;

@@ -1,6 +1,8 @@
 package io.github.bbortt.event.planner.backend.service;
 
 import io.github.bbortt.event.planner.backend.domain.Event;
+import io.github.bbortt.event.planner.backend.domain.EventHistoryAction;
+import io.github.bbortt.event.planner.backend.event.EventHistoryEvent;
 import io.github.bbortt.event.planner.backend.repository.EventRepository;
 import io.github.bbortt.event.planner.backend.repository.SectionRepository;
 import io.github.bbortt.event.planner.backend.service.dto.EventDTO;
@@ -10,6 +12,7 @@ import io.github.bbortt.event.planner.backend.service.exception.IdMustBePresentE
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,12 +27,20 @@ public class EventService {
 
     private final Logger log = LoggerFactory.getLogger(EventService.class);
 
+    private final ApplicationEventPublisher publisher;
+
     private final ProjectService projectService;
 
     private final SectionRepository sectionRepository;
     private final EventRepository eventRepository;
 
-    public EventService(ProjectService projectService, SectionRepository sectionRepository, EventRepository eventRepository) {
+    public EventService(
+        ApplicationEventPublisher publisher,
+        ProjectService projectService,
+        SectionRepository sectionRepository,
+        EventRepository eventRepository
+    ) {
+        this.publisher = publisher;
         this.projectService = projectService;
         this.sectionRepository = sectionRepository;
         this.eventRepository = eventRepository;
@@ -50,7 +61,16 @@ public class EventService {
             throw new BadRequestException();
         }
 
-        return eventRepository.save(event);
+        boolean isNew = event.getId() == null;
+        eventRepository.save(event);
+
+        if (isNew) {
+            publisher.publishEvent(new EventHistoryEvent(this, event, EventHistoryAction.CREATE));
+        } else {
+            publisher.publishEvent(new EventHistoryEvent(this, event, EventHistoryAction.UPDATE));
+        }
+
+        return event;
     }
 
     /**
@@ -87,26 +107,15 @@ public class EventService {
     }
 
     /**
-     * Get event name by id.
-     *
-     * @param id the id of the entity.
-     * @return name of the entity.
-     */
-    @Transactional(readOnly = true)
-    public Optional<String> findNameByEventId(Long id) {
-        log.debug("Request to get name of Event : {}", id);
-        return eventRepository.findNameByEventId(id);
-    }
-
-    /**
      * Delete the event by id.
      *
-     * @param id the id of the entity.
+     * @param event the entity.
      */
     @Transactional
-    public void delete(Long id) {
-        log.debug("Request to delete Event : {}", id);
-        eventRepository.deleteById(id);
+    public void delete(Event event) {
+        log.debug("Request to delete Event : {}", event);
+        eventRepository.deleteById(event.getId());
+        publisher.publishEvent(new EventHistoryEvent(this, event, EventHistoryAction.DELETE));
     }
 
     /**

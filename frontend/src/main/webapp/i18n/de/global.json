@@ -76,7 +76,7 @@
     "ribbon": {
       "dev": "Development"
     },
-    "item-count": "Ergebnis {{first}} - {{second}} von {{total}} Elemente."
+    "item-count": "Ergebnis {{first}} - {{second}} von {{total}} Elementen."
   },
   "entity": {
     "action": {

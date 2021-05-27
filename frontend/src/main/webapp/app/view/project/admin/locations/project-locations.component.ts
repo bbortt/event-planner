@@ -35,11 +35,11 @@ export class ProjectLocationsComponent implements OnInit, OnDestroy {
   roleAdmin = Role.ADMIN.name;
 
   constructor(
-    protected locationService: LocationService,
-    protected activatedRoute: ActivatedRoute,
-    protected router: Router,
-    protected eventManager: EventManager,
-    protected modalService: NgbModal
+    private locationService: LocationService,
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
+    private eventManager: EventManager,
+    private modalService: NgbModal
   ) {}
 
   ngOnInit(): void {

@@ -12,12 +12,18 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextHolder;
 import reactor.util.context.Context;
 
 /**
  * Test class for the {@link SecurityUtils} utility class.
  */
 class SecurityUtilsUnitTest {
+
+    @AfterEach
+    void afterEachTeardown() {
+        SecurityContextHolder.clearContext();
+    }
 
     @Test
     void testgetCurrentUserLogin() {

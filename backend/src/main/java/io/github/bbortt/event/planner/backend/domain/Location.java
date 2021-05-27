@@ -1,7 +1,6 @@
 package io.github.bbortt.event.planner.backend.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import io.github.bbortt.event.planner.backend.service.dto.LocationDTO;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -10,7 +9,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -67,10 +65,6 @@ public class Location implements Serializable {
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Location id(Long id) {

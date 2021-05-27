@@ -64,13 +64,13 @@ public class Responsibility implements Serializable {
     @OneToMany(mappedBy = "responsibility")
     private Set<Event> events = new HashSet<>();
 
-    // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public Responsibility id(Long id) {
         this.id = id;
+        return this;
     }
 
     public String getName() {
@@ -186,8 +186,6 @@ public class Responsibility implements Serializable {
         event.setResponsibility(null);
         return this;
     }
-
-    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
     public boolean equals(Object o) {

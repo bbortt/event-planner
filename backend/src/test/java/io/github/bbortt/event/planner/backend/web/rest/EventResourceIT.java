@@ -2,6 +2,8 @@ package io.github.bbortt.event.planner.backend.web.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -12,17 +14,24 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import io.github.bbortt.event.planner.backend.AbstractApplicationContextAwareIT;
 import io.github.bbortt.event.planner.backend.domain.Event;
+import io.github.bbortt.event.planner.backend.domain.EventHistory;
+import io.github.bbortt.event.planner.backend.domain.EventHistoryAction;
 import io.github.bbortt.event.planner.backend.domain.Invitation;
 import io.github.bbortt.event.planner.backend.domain.Section;
+import io.github.bbortt.event.planner.backend.event.EventHistoryEvent;
+import io.github.bbortt.event.planner.backend.event.listener.EventHistoryEventListener;
+import io.github.bbortt.event.planner.backend.repository.EventHistoryRepository;
 import io.github.bbortt.event.planner.backend.repository.EventRepository;
 import io.github.bbortt.event.planner.backend.repository.RoleRepository;
 import io.github.bbortt.event.planner.backend.security.AuthoritiesConstants;
+import io.github.bbortt.event.planner.backend.service.EventHistoryService;
 import io.github.bbortt.event.planner.backend.service.EventService;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +39,9 @@ import javax.persistence.EntityManager;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.test.context.TestSecurityContextHolder;
@@ -61,6 +72,9 @@ class EventResourceIT extends AbstractApplicationContextAwareIT {
     private EventRepository eventRepository;
 
     @Autowired
+    private EventHistoryRepository eventHistoryRepository;
+
+    @Autowired
     private EventService eventService;
 
     @Autowired
@@ -71,6 +85,9 @@ class EventResourceIT extends AbstractApplicationContextAwareIT {
 
     @Autowired
     private MockMvc restEventMockMvc;
+
+    @MockBean
+    private EventHistoryEventListener eventHistoryEventListener;
 
     private Map<String, Object> userDetails;
     private Event event;
@@ -148,6 +165,7 @@ class EventResourceIT extends AbstractApplicationContextAwareIT {
     @Transactional
     void createEvent() throws Exception {
         eventRepository.deleteAll();
+        eventHistoryRepository.deleteAll();
 
         // Create the Event
         restEventMockMvc
@@ -162,6 +180,13 @@ class EventResourceIT extends AbstractApplicationContextAwareIT {
         assertThat(testEvent.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
         assertThat(testEvent.getStartTime()).isEqualTo(DEFAULT_START_TIME);
         assertThat(testEvent.getEndTime()).isEqualTo(DEFAULT_END_TIME);
+
+        ArgumentCaptor<EventHistoryEvent> captor = ArgumentCaptor.forClass(EventHistoryEvent.class);
+        verify(eventHistoryEventListener).eventHistoryEvent(captor.capture());
+
+        EventHistoryEvent eventHistoryEvent = captor.getValue();
+        assertThat(eventHistoryEvent.getEvent()).isEqualTo(testEvent);
+        assertThat(eventHistoryEvent.getAction()).isEqualTo(EventHistoryAction.CREATE);
     }
 
     @Test
@@ -170,7 +195,7 @@ class EventResourceIT extends AbstractApplicationContextAwareIT {
         int databaseSizeBeforeCreate = eventRepository.findAll().size();
 
         // Create the Event with an existing ID
-        event.setId(1L);
+        event.id(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restEventMockMvc
@@ -323,6 +348,13 @@ class EventResourceIT extends AbstractApplicationContextAwareIT {
         assertThat(testEvent.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
         assertThat(testEvent.getStartTime()).isEqualTo(UPDATED_START_TIME);
         assertThat(testEvent.getEndTime()).isEqualTo(UPDATED_END_TIME);
+
+        ArgumentCaptor<EventHistoryEvent> captor = ArgumentCaptor.forClass(EventHistoryEvent.class);
+        verify(eventHistoryEventListener, times(2)).eventHistoryEvent(captor.capture());
+
+        EventHistoryEvent eventHistoryEvent = captor.getAllValues().get(1);
+        assertThat(eventHistoryEvent.getEvent()).isEqualTo(event);
+        assertThat(eventHistoryEvent.getAction()).isEqualTo(EventHistoryAction.UPDATE);
     }
 
     @Test
@@ -356,5 +388,12 @@ class EventResourceIT extends AbstractApplicationContextAwareIT {
         // Validate the database contains one less item
         List<Event> eventList = eventRepository.findAll();
         assertThat(eventList).hasSize(databaseSizeBeforeDelete - 1);
+
+        ArgumentCaptor<EventHistoryEvent> captor = ArgumentCaptor.forClass(EventHistoryEvent.class);
+        verify(eventHistoryEventListener, times(2)).eventHistoryEvent(captor.capture());
+
+        EventHistoryEvent eventHistoryEvent = captor.getAllValues().get(1);
+        assertThat(eventHistoryEvent.getEvent()).isEqualTo(event);
+        assertThat(eventHistoryEvent.getAction()).isEqualTo(EventHistoryAction.DELETE);
     }
 }

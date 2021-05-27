@@ -189,9 +189,12 @@ public class EventResource {
     )
     public ResponseEntity<Void> deleteEvent(@PathVariable Long id) {
         log.debug("REST request to delete Event : {}", id);
-        String name = eventService.findNameByEventId(id).orElseThrow(EntityNotFoundException::new);
-        eventService.delete(id);
-        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, name)).build();
+        Event event = eventService.findOne(id).orElseThrow(EntityNotFoundException::new);
+        eventService.delete(event);
+        return ResponseEntity
+            .noContent()
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, event.getName()))
+            .build();
     }
 
     private Event fromDTO(EventDTO eventDTO) {
