@@ -21,13 +21,6 @@ export const VIEW_ROUTES: Routes = [
     },
   },
   {
-    path: 'invitation/register/:token',
-    component: AcceptInvitationComponent,
-    data: {
-      variant: 'register',
-    },
-  },
-  {
     path: 'project',
     loadChildren: () => import('./project/project.module').then(m => m.EventPlannerProjectModule),
   },
