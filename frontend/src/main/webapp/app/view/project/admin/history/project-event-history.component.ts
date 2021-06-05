@@ -81,7 +81,7 @@ export class ProjectEventHistoryComponent implements OnInit, OnDestroy {
         }
       });
 
-    this.translateService.get('eventPlannerApp.project.admin.eventHistory.filter.showSince').subscribe(result => {
+    this.translateService.get('eventPlannerApp.project.admin.eventHistory.filter.eventsSince').subscribe(result => {
       if (typeof result === 'string') {
         this.showSinceLabel = result;
       }
