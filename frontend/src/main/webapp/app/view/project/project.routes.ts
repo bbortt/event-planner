@@ -11,6 +11,10 @@ export const PROJECT_ROUTES: Routes = [
     loadChildren: () => import('./admin/project-admin.module').then(m => m.EventPlannerProjectAdminModule),
   },
   {
+    path: ':projectId/calendar',
+    loadChildren: () => import('./calendar/project-calendar.module').then(m => m.EventPlannerProjectCalendarModule),
+  },
+  {
     path: ':projectId/screenplay',
     loadChildren: () => import('./screenplay/project-screenplay.module').then(m => m.EventPlannerProjectScreenplayModule),
   },

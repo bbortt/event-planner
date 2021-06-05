@@ -8,6 +8,7 @@
       },
       "home": {
         "title": "Projekte",
+        "calendarLabel": "Kalender",
         "createLabel": "Projekt erstellen",
         "editLabel": "Projekt bearbeiten",
         "screenplayLabel": "Drehbuch",

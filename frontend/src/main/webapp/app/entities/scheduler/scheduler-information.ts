@@ -1,4 +1,4 @@
-type SchedulerInformation = {
+export type SchedulerInformation = {
   allowAdding?: boolean;
   allowDeleting?: boolean;
   allowDragging?: boolean;
@@ -7,5 +7,3 @@ type SchedulerInformation = {
   allowTimeZoneEditing?: boolean;
   allowUpdating?: boolean;
 };
-
-export default SchedulerInformation;

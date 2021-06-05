@@ -9,6 +9,7 @@ public class SchedulerEventDTO {
     private String description;
     private ZonedDateTime startDate;
     private ZonedDateTime endDate;
+    private Long locationId;
     private Long sectionId;
     private String colorGroupId;
     private Event originalEvent;
@@ -18,6 +19,7 @@ public class SchedulerEventDTO {
         String description,
         ZonedDateTime startDate,
         ZonedDateTime endDate,
+        Long locationId,
         Long sectionId,
         String colorGroupId,
         Event originalEvent
@@ -26,6 +28,7 @@ public class SchedulerEventDTO {
         this.description = description;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.locationId = locationId;
         this.sectionId = sectionId;
         this.colorGroupId = colorGroupId;
         this.originalEvent = originalEvent;
@@ -61,6 +64,14 @@ public class SchedulerEventDTO {
 
     public void setEndDate(ZonedDateTime endDate) {
         this.endDate = endDate;
+    }
+
+    public Long getLocationId() {
+        return locationId;
+    }
+
+    public void setLocationId(Long locationId) {
+        this.locationId = locationId;
     }
 
     public Long getSectionId() {

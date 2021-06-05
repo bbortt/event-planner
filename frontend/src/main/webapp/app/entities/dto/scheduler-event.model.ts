@@ -5,6 +5,7 @@ export interface SchedulerEvent {
   description?: string;
   startDate: Date;
   endDate: Date;
+  locationId: number;
   sectionId: number;
   colorGroupId: number;
   originalEvent?: Event;

@@ -47,16 +47,16 @@ export class ProjectScreenplayComponent implements OnInit {
   ngOnInit(): void {
     combineLatest([this.activatedRoute.data, this.activatedRoute.queryParamMap])
       .pipe(
-        tap((value: [Data, ParamMap]) => (this.project = value[0].project as Project)),
-        switchMap((value: [Data, ParamMap]) =>
+        tap(([data]: [Data, ParamMap]) => (this.project = data.project as Project)),
+        switchMap(([data, paramMap]: [Data, ParamMap]) =>
           combineLatest([
-            this.locationService.findAllByProject(value[0].project, { sort: ['name,asc'] }),
-            of(value[1].get(ROUTE_ACTIVE_LOCATIONS_PARAM_NAME) as string),
+            this.locationService.findAllByProject(data.project, { sort: ['name,asc'] }),
+            of(paramMap.get(ROUTE_ACTIVE_LOCATIONS_PARAM_NAME) as string),
           ])
         ),
-        map((value: [HttpResponse<Location[]>, string]) => ({
-          locations: value[0].body ?? [],
-          activeIds: value[1],
+        map(([res, activeIds]: [HttpResponse<Location[]>, string]) => ({
+          locations: res.body ?? [],
+          activeIds,
         })),
         take(1)
       )

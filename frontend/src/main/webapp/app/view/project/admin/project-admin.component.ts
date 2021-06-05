@@ -8,7 +8,7 @@ import { EventManager } from 'app/core/util/event-manager.service';
 import { Project } from 'app/entities/project/project.model';
 import { ProjectService } from 'app/entities/project/project.service';
 
-import { faBook } from '@fortawesome/free-solid-svg-icons';
+import { faBook, faCalendar } from '@fortawesome/free-solid-svg-icons';
 
 import { Role } from 'app/config/role.constants';
 
@@ -19,6 +19,7 @@ import { Role } from 'app/config/role.constants';
 })
 export class ProjectAdminComponent implements OnInit, OnDestroy {
   faBook = faBook;
+  faCalendar = faCalendar;
 
   roleAdmin = Role.ADMIN.name;
 
