@@ -1,5 +1,5 @@
 import { HttpResponse } from '@angular/common/http';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Data, Router } from '@angular/router';
 
 import { combineLatest, Observable, of, Subscription } from 'rxjs';
@@ -16,10 +16,12 @@ import { SchedulerEvent } from 'app/entities/dto/scheduler-event.model';
 import { SchedulerLocation } from 'app/entities/dto/scheduler-location.model';
 import { SchedulerSection } from 'app/entities/dto/scheduler-section.model';
 
+import { AccountService } from 'app/core/auth/account.service';
 import { EventService } from 'app/entities/event/event.service';
 import { LocationService } from 'app/entities/location/location.service';
 import { SectionService } from 'app/entities/section/section.service';
 
+import { Authority } from 'app/config/authority.constants';
 import { Event } from 'app/entities/event/event.model';
 import { Location } from 'app/entities/location/location.model';
 import { Role } from 'app/config/role.constants';
@@ -34,6 +36,7 @@ import * as dayjs from 'dayjs';
   selector: 'app-calendar',
   templateUrl: './project-calendar.component.html',
   styleUrls: ['./project-calendar.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class ProjectCalendarComponent implements OnInit, OnDestroy {
   faCog = faCog;
@@ -41,6 +44,8 @@ export class ProjectCalendarComponent implements OnInit, OnDestroy {
 
   isViewer = true;
   schedulerInformation: SchedulerInformation = { allowDeleting: !this.isViewer };
+
+  currentDate: Date = new Date();
 
   project?: Project;
   locations?: Location[];
@@ -52,6 +57,7 @@ export class ProjectCalendarComponent implements OnInit, OnDestroy {
   private eventSubscriber?: Subscription;
 
   constructor(
+    private accountService: AccountService,
     private eventService: EventService,
     private sectionService: SectionService,
     private locationService: LocationService,
@@ -64,10 +70,23 @@ export class ProjectCalendarComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.activatedRoute.data
       .pipe(
-        tap((data: Data) => (this.project = data.project as Project)),
+        tap((data: Data) => {
+          this.project = data.project as Project;
+          this.currentDate = this.project.startTime.toDate();
+          this.isViewer =
+            !this.accountService.hasAnyAuthority(Authority.ADMIN) && this.accountService.hasAnyRole(this.project.id!, Role.VIEWER.name);
+        }),
         switchMap((data: Data) => this.locationService.findAllByProject(data.project, { sort: ['name,asc'] })),
         map((res: HttpResponse<Location[]>) => res.body ?? []),
         tap((locations: Location[]) => (this.locations = locations)),
+        tap(
+          () =>
+            (this.schedulerInformation = {
+              ...this.schedulerInformation,
+              allowAdding: !this.isViewer,
+              allowDragging: !this.isViewer,
+            })
+        ),
         take(1)
       )
       .subscribe(() => {
@@ -81,6 +100,10 @@ export class ProjectCalendarComponent implements OnInit, OnDestroy {
     this.eventSubscriber?.unsubscribe();
   }
 
+  currentDateChange($event: any): void {
+    this.currentDate = $event;
+  }
+
   configureAppointmentForm(appointmentEvent: AppointmentEvent): void {
     // Cancel devextreme form
     appointmentEvent.cancel = true;
@@ -90,11 +113,18 @@ export class ProjectCalendarComponent implements OnInit, OnDestroy {
     const endTime = dayjs(event.endDate).toJSON();
 
     const locationId = this.sections.find(section => section.id === event.sectionId)?.originalSection!.location.id;
-    const route = ['projects', this.project!.id!, 'locations', locationId, 'sections', event.sectionId, 'events'];
-    if (event.originalEvent) {
-      route.push(event.originalEvent.id, 'edit');
+
+    let route: (string | number)[] = [];
+    if (locationId) {
+      route = ['projects', this.project!.id!, 'locations', locationId, 'sections', event.sectionId, 'events'];
+
+      if (event.originalEvent) {
+        route.push(event.originalEvent.id!, 'edit');
+      } else {
+        route.push('new');
+      }
     } else {
-      route.push('new');
+      route = ['projects', this.project!.id!, 'events', 'new'];
     }
 
     this.router.navigate([{ outlets: { modal: route } }], {

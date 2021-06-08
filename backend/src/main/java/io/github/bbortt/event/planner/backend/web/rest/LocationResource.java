@@ -190,7 +190,15 @@ public class LocationResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the location, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/locations/project/{projectId}/sections")
-    @PreAuthorize("@projectService.hasAccessToProject(#projectId, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")")
+    @PreAuthorize(
+        "@projectService.hasAccessToProject(#projectId, \"" +
+        RolesConstants.ADMIN +
+        "\", \"" +
+        RolesConstants.SECRETARY +
+        "\", \"" +
+        RolesConstants.CONTRIBUTOR +
+        "\")"
+    )
     public ResponseEntity<List<LocationDTO>> getLocationsByProjectIdJoinSections(@PathVariable Long projectId) {
         log.debug("REST Request to get Locations inclusive Sections by projectId {}", projectId);
         List<Location> locations = locationService.findAllByProjectIdJoinSections(projectId);

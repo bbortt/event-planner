@@ -10,8 +10,10 @@ import { AccountService } from 'app/core/auth/account.service';
 import { EventManager } from 'app/core/util/event-manager.service';
 
 import { EventService } from 'app/entities/event/event.service';
+import { LocationService } from 'app/entities/location/location.service';
 import { ProjectService } from 'app/entities/project/project.service';
 import { ResponsibilityService } from 'app/entities/responsibility/responsibility.service';
+import { SectionService } from 'app/entities/section/section.service';
 
 import { Event } from 'app/entities/event/event.model';
 import { Location } from 'app/entities/location/location.model';
@@ -37,15 +39,20 @@ import * as dayjs from 'dayjs';
 })
 export class EventUpdateComponent implements OnInit, OnDestroy {
   isNew = false;
+  fromScratch = false;
   isSaving = false;
 
   isViewer = true;
   isReadonly = true;
 
+  locations: Location[] = [];
+  sections: Section[] = [];
   responsibilities: Responsibility[] = [];
   users: Account[] = [];
 
   project?: Project;
+  location?: Location;
+  section?: Section;
 
   minEndDate = new Date();
   dateTimeFormat = DATE_TIME_FORMAT;
@@ -57,15 +64,15 @@ export class EventUpdateComponent implements OnInit, OnDestroy {
     description: [],
     startTime: [new Date(), [Validators.required]],
     endTime: [new Date(), [Validators.required]],
+    locationAutocomplete: [null, [Validators.required]],
     section: [null, [Validators.required]],
+    sectionAutocomplete: [null, [Validators.required]],
     responsibility: [],
     responsibilityAutocomplete: [],
     user: [],
     userAutocomplete: [],
   });
 
-  private location?: Location;
-  private section?: Section;
   private event?: Event;
 
   private destroy$ = new Subject();
@@ -75,8 +82,10 @@ export class EventUpdateComponent implements OnInit, OnDestroy {
     private eventManager: EventManager,
     private fb: FormBuilder,
     private accountService: AccountService,
-    private eventService: EventService,
     private projectService: ProjectService,
+    private locationService: LocationService,
+    private sectionService: SectionService,
+    private eventService: EventService,
     private responsibilityService: ResponsibilityService
   ) {}
 
@@ -105,6 +114,8 @@ export class EventUpdateComponent implements OnInit, OnDestroy {
     this.location = this.section.location;
     this.project = this.location.project;
 
+    this.fromScratch = !this.location.id && !this.section.id;
+
     this.minEndDate = newStartTime;
 
     const { id, name, description, section } = event;
@@ -118,6 +129,10 @@ export class EventUpdateComponent implements OnInit, OnDestroy {
         responsibility = this.location.responsibility;
         user = this.location.user;
       }
+
+      this.locationService
+        .findAllByProjectInclusiveSections(this.project)
+        .subscribe((response: HttpResponse<Location[]>) => (this.locations = response.body ?? []));
 
       this.responsibilityService
         .findAllByProject(this.project, { sort: ['name,asc'] })
@@ -133,12 +148,27 @@ export class EventUpdateComponent implements OnInit, OnDestroy {
       description,
       startTime: newStartTime,
       endTime: newEndTime,
+      locationAutocomplete: this.location.name,
       section,
+      sectionAutocomplete: section.name,
       responsibility,
       responsibilityAutocomplete: responsibility?.name,
       user,
       userAutocomplete: user?.email,
     });
+  }
+
+  locationSelected($event: { selectedItem: Location }): void {
+    const { selectedItem } = $event;
+    this.sections = selectedItem.sections ?? [];
+    this.location = selectedItem;
+  }
+
+  sectionSelected($event: { selectedItem: Section }): void {
+    const { selectedItem } = $event;
+    selectedItem.location = this.location!;
+    this.section = selectedItem;
+    this.editForm.get('section')!.setValue(selectedItem);
   }
 
   responsibilitySelected($event: any): void {

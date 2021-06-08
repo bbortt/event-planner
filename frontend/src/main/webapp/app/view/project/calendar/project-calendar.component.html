@@ -3,12 +3,11 @@
     <span>{{ project?.name }}</span>
     <small jhiTranslate="eventPlannerApp.project.home.calendarLabel">Screenplay</small>
 
-    <div class="btn-group float-end clearfix">
+    <div class="btn-group float-end clearfix" *ngIf="!isViewer">
       <button
         id="add-event-{{ project?.id }}"
-        [routerLink]="['projects', this.project!.id!, 'events', 'new']"
+        [routerLink]="['', { outlets: { modal: ['projects', this.project!.id!, 'events', 'new'] } }]"
         class="btn btn-negative btn-green"
-        disabled
       >
         <fa-icon icon="plus"></fa-icon>
         <span jhiTranslate="eventPlannerApp.project.calendar.filter.addEvent">Add Event</span>
@@ -34,25 +33,29 @@
 
   <jhi-alert></jhi-alert>
 
-  <dx-scheduler
-    [dataSource]="events"
-    [views]="['day', 'week', 'month']"
-    [currentDate]="project!.startTime.toDate()"
-    [min]="project!.startTime.toDate()"
-    [max]="project!.endTime.toDate()"
-    [groups]="['sectionId']"
-    height="70vh"
-    [showAllDayPanel]="false"
-    [editing]="schedulerInformation"
-    [showCurrentTimeIndicator]="false"
-    (onAppointmentClick)="openEventDetails($event)"
-    (onAppointmentDeleted)="onAppointmentDeleted($event)"
-    (onAppointmentFormOpening)="configureAppointmentForm($event)"
-    (onAppointmentUpdated)="onAppointmentDragged($event)"
-  >
-    <!-- [crossScrollingEnabled]="false"-->
+  <div id="project-calendar" [ngClass]="{ 'calendar-readonly': isViewer }">
+    <dx-scheduler
+      [dataSource]="events"
+      [views]="['day', 'week', 'month']"
+      [currentDate]="currentDate"
+      (currentDateChange)="currentDateChange($event)"
+      [min]="project!.startTime.toDate()"
+      [max]="project!.endTime.toDate()"
+      height="70vh"
+      [showAllDayPanel]="true"
+      [editing]="schedulerInformation"
+      [showCurrentTimeIndicator]="false"
+      (onAppointmentClick)="openEventDetails($event)"
+      (onAppointmentDeleted)="onAppointmentDeleted($event)"
+      (onAppointmentFormOpening)="configureAppointmentForm($event)"
+      (onAppointmentUpdated)="onAppointmentDragged($event)"
+    >
+      <!-- TODO: Can filter this later! -->
+      <!-- [groups]="['sectionId']"-->
+      <!-- [crossScrollingEnabled]="false"-->
 
-    <dxi-resource fieldExpr="sectionId" [dataSource]="sections"></dxi-resource>
-    <dxi-resource fieldExpr="colorGroupId" [dataSource]="colors" [useColorAsDefault]="true"></dxi-resource>
-  </dx-scheduler>
+      <dxi-resource fieldExpr="sectionId" [dataSource]="sections"></dxi-resource>
+      <dxi-resource fieldExpr="colorGroupId" [dataSource]="colors" [useColorAsDefault]="true"></dxi-resource>
+    </dx-scheduler>
+  </div>
 </div>

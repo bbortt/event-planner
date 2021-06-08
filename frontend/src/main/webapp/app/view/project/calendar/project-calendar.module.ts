@@ -5,7 +5,7 @@ import { SharedModule } from 'app/shared/shared.module';
 
 import { DxSchedulerModule } from 'devextreme-angular';
 
-import { EventPlannerEventModule } from 'app/view/project/screenplay/event/event.module';
+import { EventPlannerEventModule } from 'app/entities/event/event.module';
 
 import { ProjectCalendarComponent } from 'app/view/project/calendar/project-calendar.component';
 

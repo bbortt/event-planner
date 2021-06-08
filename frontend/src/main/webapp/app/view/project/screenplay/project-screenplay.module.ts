@@ -5,7 +5,7 @@ import { SharedModule } from 'app/shared/shared.module';
 
 import { DxDateBoxModule, DxSchedulerModule, DxSliderModule, DxTemplateModule } from 'devextreme-angular';
 
-import { EventPlannerEventModule } from 'app/view/project/screenplay/event/event.module';
+import { EventPlannerEventModule } from 'app/entities/event/event.module';
 
 import { ProjectScreenplayComponent } from 'app/view/project/screenplay/project-screenplay.component';
 import { ProjectScreenplayFilterComponent } from 'app/view/project/screenplay/filter/project-screenplay-filter.component';

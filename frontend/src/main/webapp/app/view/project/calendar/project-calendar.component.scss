@@ -1,0 +1,14 @@
+#project-calendar {
+  &.calendar-readonly {
+    .dx-draggable,
+    .dx-scheduler-date-table-cell {
+      cursor: default;
+      pointer-events: none;
+    }
+
+    .dx-scheduler-appointment {
+      cursor: pointer;
+      pointer-events: all;
+    }
+  }
+}
