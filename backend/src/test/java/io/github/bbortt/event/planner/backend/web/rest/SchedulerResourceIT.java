@@ -96,17 +96,6 @@ class SchedulerResourceIT extends AbstractApplicationContextAwareIT {
 
     @Test
     @Transactional
-    void getColorGroupsPerProject() throws Exception {
-        restSchedulerMockMvc
-            .perform(get("/api/scheduler/project/" + project.getId() + "/responsibilities"))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItems(startsWith("responsibility-"))))
-            .andExpect(jsonPath("$.[*].color").value(hasItem(RESPONSIBILITY_COLOR)));
-    }
-
-    @Test
-    @Transactional
     @Disabled("TODO: Test this when frontend is up!")
     void getSchedulerLocation() throws Exception {
         eventRepository.findAll();

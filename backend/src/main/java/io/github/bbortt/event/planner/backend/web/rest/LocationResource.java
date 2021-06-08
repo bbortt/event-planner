@@ -1,10 +1,13 @@
 package io.github.bbortt.event.planner.backend.web.rest;
 
 import io.github.bbortt.event.planner.backend.domain.Location;
+import io.github.bbortt.event.planner.backend.domain.Section;
 import io.github.bbortt.event.planner.backend.security.AuthoritiesConstants;
 import io.github.bbortt.event.planner.backend.security.RolesConstants;
 import io.github.bbortt.event.planner.backend.service.LocationService;
 import io.github.bbortt.event.planner.backend.service.dto.LocationDTO;
+import io.github.bbortt.event.planner.backend.service.dto.SectionDTO;
+import io.github.bbortt.event.planner.backend.service.dto.scheduler.SchedulerSectionDTO;
 import io.github.bbortt.event.planner.backend.service.exception.EntityNotFoundException;
 import io.github.bbortt.event.planner.backend.service.mapper.EventMapper;
 import io.github.bbortt.event.planner.backend.service.mapper.LocationMapper;
@@ -12,8 +15,10 @@ import io.github.bbortt.event.planner.backend.service.mapper.SectionMapper;
 import io.github.bbortt.event.planner.backend.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 import org.slf4j.Logger;
@@ -185,7 +190,15 @@ public class LocationResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the location, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/locations/project/{projectId}/sections")
-    @PreAuthorize("@projectService.hasAccessToProject(#projectId, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")")
+    @PreAuthorize(
+        "@projectService.hasAccessToProject(#projectId, \"" +
+        RolesConstants.ADMIN +
+        "\", \"" +
+        RolesConstants.SECRETARY +
+        "\", \"" +
+        RolesConstants.CONTRIBUTOR +
+        "\")"
+    )
     public ResponseEntity<List<LocationDTO>> getLocationsByProjectIdJoinSections(@PathVariable Long projectId) {
         log.debug("REST Request to get Locations inclusive Sections by projectId {}", projectId);
         List<Location> locations = locationService.findAllByProjectIdJoinSections(projectId);
@@ -247,7 +260,13 @@ public class LocationResource {
     private LocationDTO toDTO(Location location) {
         return locationMapper.dtoFromLocation(
             location,
-            location.getSections().stream().map(section -> sectionMapper.dtoFromSection(section, null, null)).collect(Collectors.toSet())
+            location
+                .getSections()
+                .stream()
+                .map(section -> sectionMapper.dtoFromSection(section, null, null))
+                .collect(
+                    Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(SectionDTO::getName, String.CASE_INSENSITIVE_ORDER)))
+                )
         );
     }
 }

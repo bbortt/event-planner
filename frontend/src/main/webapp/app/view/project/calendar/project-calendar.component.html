@@ -1,0 +1,61 @@
+<div>
+  <h2 class="page-heading">
+    <span>{{ project?.name }}</span>
+    <small jhiTranslate="eventPlannerApp.project.home.calendarLabel">Screenplay</small>
+
+    <div class="btn-group float-end clearfix" *ngIf="!isViewer">
+      <button
+        id="add-event-{{ project?.id }}"
+        [routerLink]="['', { outlets: { modal: ['projects', this.project!.id!, 'events', 'new'] } }]"
+        class="btn btn-negative btn-green"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span jhiTranslate="eventPlannerApp.project.calendar.filter.addEvent">Add Event</span>
+      </button>
+
+      <button
+        id="settings-{{ project?.id }}"
+        *appHasAnyRole="{ projectId: project?.id!, roles: adminRoles }"
+        [routerLink]="['/project', project?.id, 'admin']"
+        class="btn btn-negative btn-gray"
+      >
+        <fa-icon [icon]="faCog"></fa-icon>
+        <span jhiTranslate="eventPlannerApp.project.home.settingsLabel">Settings</span>
+      </button>
+    </div>
+  </h2>
+
+  <br />
+
+  <br />
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div id="project-calendar" [ngClass]="{ 'calendar-readonly': isViewer }">
+    <dx-scheduler
+      [dataSource]="events"
+      [views]="['day', 'week', 'month']"
+      [currentDate]="currentDate"
+      (currentDateChange)="currentDateChange($event)"
+      [min]="project!.startTime.toDate()"
+      [max]="project!.endTime.toDate()"
+      height="70vh"
+      [showAllDayPanel]="true"
+      [editing]="schedulerInformation"
+      [showCurrentTimeIndicator]="false"
+      (onAppointmentClick)="openEventDetails($event)"
+      (onAppointmentDeleted)="onAppointmentDeleted($event)"
+      (onAppointmentFormOpening)="configureAppointmentForm($event)"
+      (onAppointmentUpdated)="onAppointmentDragged($event)"
+    >
+      <!-- TODO: Can filter this later! -->
+      <!-- [groups]="['sectionId']"-->
+      <!-- [crossScrollingEnabled]="false"-->
+
+      <dxi-resource fieldExpr="sectionId" [dataSource]="sections"></dxi-resource>
+      <dxi-resource fieldExpr="colorGroupId" [dataSource]="colors" [useColorAsDefault]="true"></dxi-resource>
+    </dx-scheduler>
+  </div>
+</div>

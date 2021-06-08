@@ -1,5 +1,5 @@
 <div class="row justify-content-center">
-  <div class="col-8">
+  <div class="col-8" *ngIf="project">
     <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
       <h2 id="jhi-event-heading">
         <div *ngIf="isReadonly; else createTitle">
@@ -76,7 +76,7 @@
         </div>
 
         <div class="col mb-3">
-          <label class="form-label" jhiTranslate="eventPlannerApp.project.startTime" for="field_startTime">Start Time</label>
+          <label class="form-label" jhiTranslate="eventPlannerApp.event.startTime" for="field_startTime">Start Time</label>
           <div class="d-flex">
             <dx-date-box
               class="dx-form-control"
@@ -87,8 +87,8 @@
               [openOnFieldClick]="true"
               [displayFormat]="dateTimeFormat"
               formControlName="startTime"
-              [min]="project!.startTime.toDate()"
-              [max]="project!.endTime.toDate()"
+              [min]="project.startTime.toDate()"
+              [max]="project.endTime.toDate()"
               placeholder="dd.MM.yyyy HH:mm"
               [isValid]="isValidInput('startTime')"
               [readOnly]="isReadonly"
@@ -114,7 +114,7 @@
         </div>
 
         <div class="col mb-3">
-          <label class="form-label" jhiTranslate="eventPlannerApp.project.endTime" for="field_endTime">End Time</label>
+          <label class="form-label" jhiTranslate="eventPlannerApp.event.endTime" for="field_endTime">End Time</label>
           <div class="d-flex">
             <dx-date-box
               class="dx-form-control"
@@ -126,7 +126,7 @@
               [displayFormat]="dateTimeFormat"
               formControlName="endTime"
               [min]="minEndDate"
-              [max]="project!.endTime.toDate()"
+              [max]="project.endTime.toDate()"
               placeholder="dd.MM.yyyy HH:mm"
               [isValid]="isValidInput('endTime')"
               [readOnly]="isReadonly"
@@ -149,6 +149,42 @@
               This field should be a date and time.
             </small>
           </div>
+        </div>
+
+        <div class="col mb-3" *ngIf="fromScratch || isReadonly">
+          <label class="form-label" jhiTranslate="eventPlannerApp.section.location" for="field_location">Location</label>
+          <dx-autocomplete
+            class="dx-form-control"
+            name="location"
+            id="field_location"
+            formControlName="locationAutocomplete"
+            [placeholder]="'global.form.search' | translate"
+            [dataSource]="locations"
+            valueExpr="name"
+            (onSelectionChanged)="locationSelected($event)"
+            [showClearButton]="true"
+            [isValid]="isValidInput('locationAutocomplete')"
+            [readOnly]="isReadonly"
+          >
+          </dx-autocomplete>
+        </div>
+
+        <div class="col mb-3" *ngIf="(fromScratch && location?.id) || isReadonly">
+          <label class="form-label" jhiTranslate="eventPlannerApp.event.section" for="field_section">Section</label>
+          <dx-autocomplete
+            class="dx-form-control"
+            name="section"
+            id="field_section"
+            formControlName="sectionAutocomplete"
+            [placeholder]="'global.form.search' | translate"
+            [dataSource]="locations"
+            valueExpr="name"
+            (onSelectionChanged)="sectionSelected($event)"
+            [showClearButton]="true"
+            [isValid]="isValidInput('section')"
+            [readOnly]="isReadonly"
+          >
+          </dx-autocomplete>
         </div>
 
         <div class="col mb-3">
@@ -193,7 +229,7 @@
             valueExpr="name"
             (onSelectionChanged)="isResponsibility ? responsibilitySelected($event) : userSelected($event)"
             [showClearButton]="true"
-            [isValid]="isReadonly ? isValidInput('responsibility') : isValidInput('user')"
+            [isValid]="isResponsibility ? isValidInput('responsibility') : isValidInput('user')"
             [readOnly]="isReadonly"
           >
           </dx-autocomplete>

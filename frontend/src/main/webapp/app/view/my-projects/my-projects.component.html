@@ -87,7 +87,7 @@
               <div class="project-card-navigation">
                 <div class="btn-group">
                   <button
-                    id="jh-screenplay-{{ project.id }}"
+                    id="screenplay-{{ project.id }}"
                     [routerLink]="['project', project.id, 'screenplay']"
                     class="btn btn-negative btn-gray"
                   >
@@ -95,11 +95,7 @@
                     <span class="d-sm-none d-lg-inline" jhiTranslate="eventPlannerApp.project.home.screenplayLabel">Screenplay</span>
                   </button>
 
-                  <button
-                    id="jh-settings-{{ project.id }}"
-                    [routerLink]="['project', project.id, 'admin']"
-                    class="btn btn-negative btn-gray"
-                  >
+                  <button id="settings-{{ project.id }}" [routerLink]="['project', project.id, 'admin']" class="btn btn-negative btn-gray">
                     <fa-icon [icon]="faCog"></fa-icon>
                     <span class="d-sm-none d-lg-inline" jhiTranslate="eventPlannerApp.project.home.settingsLabel">Settings</span>
                   </button>

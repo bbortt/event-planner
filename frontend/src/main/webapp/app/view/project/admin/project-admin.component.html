@@ -15,8 +15,13 @@
         <span jhiTranslate="entity.action.edit">Edit</span>
       </button>
 
+      <button id="calendar-{{ project.id }}" [routerLink]="['/project', project.id, 'calendar']" class="btn btn-negative btn-gray btn-md">
+        <fa-icon [icon]="faCalendar"></fa-icon>
+        <span jhiTranslate="eventPlannerApp.project.home.calendarLabel">Calendar</span>
+      </button>
+
       <button
-        id="jh-screenplay-{{ project.id }}"
+        id="screenplay-{{ project.id }}"
         [routerLink]="['/project', project.id, 'screenplay']"
         class="btn btn-negative btn-gray btn-md"
       >

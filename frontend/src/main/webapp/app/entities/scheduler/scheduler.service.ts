@@ -7,9 +7,7 @@ import { map } from 'rxjs/operators';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 
 import { Location } from 'app/entities/location/location.model';
-import { Project } from 'app/entities/project/project.model';
 
-import { SchedulerColorGroup } from 'app/entities/dto/scheduler-color-group.model';
 import { SchedulerEvent } from 'app/entities/dto/scheduler-event.model';
 import { SchedulerLocation } from 'app/entities/dto/scheduler-location.model';
 
@@ -20,10 +18,6 @@ export class SchedulerService {
   resourceUrl = this.applicationConfigService.getEndpointFor('api/scheduler');
 
   constructor(protected http: HttpClient, private applicationConfigService: ApplicationConfigService) {}
-
-  getSchedulerResponsibilities(project: Project): Observable<SchedulerColorGroup[]> {
-    return this.http.get<SchedulerColorGroup[]>(`${this.resourceUrl}/project/${project.id!}/responsibilities`);
-  }
 
   getSchedulerInformation(location: Location): Observable<SchedulerLocation> {
     return this.http

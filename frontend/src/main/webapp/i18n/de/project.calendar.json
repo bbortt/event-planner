@@ -1,0 +1,15 @@
+{
+  "eventPlannerApp": {
+    "project": {
+      "calendar": {
+        "tabTitle": "Event Planner | Kalender",
+        "sections": {
+          "notFound": "Für diese Lokalität wurden keine Abschnitte gefunden"
+        },
+        "filter": {
+          "addEvent": "Neuer Event"
+        }
+      }
+    }
+  }
+}

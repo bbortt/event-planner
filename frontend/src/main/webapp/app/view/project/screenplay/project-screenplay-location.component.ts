@@ -22,9 +22,9 @@ import { Project } from 'app/entities/project/project.model';
 
 import { SchedulerColorGroup } from 'app/entities/dto/scheduler-color-group.model';
 import { SchedulerEvent } from 'app/entities/dto/scheduler-event.model';
+import { SchedulerInformation } from 'app/entities/scheduler/scheduler-information';
 import { SchedulerLocation } from 'app/entities/dto/scheduler-location.model';
 import { SchedulerSection } from 'app/entities/dto/scheduler-section.model';
-import SchedulerInformation from 'app/entities/scheduler/scheduler-information';
 
 import {
   ROUTE_CELL_DURATION_PARAMETER_NAME,
@@ -57,7 +57,7 @@ export class ProjectScreenplayLocationComponent implements OnInit, OnDestroy {
   project?: Project;
 
   isViewer = true;
-  schedulerInformation: SchedulerInformation = { allowDeleting: false };
+  schedulerInformation: SchedulerInformation = { allowDeleting: !this.isViewer };
 
   events: SchedulerEvent[] = [];
   sections: SchedulerSection[] = [];
@@ -134,7 +134,7 @@ export class ProjectScreenplayLocationComponent implements OnInit, OnDestroy {
   }
 
   /*
-   * This is for the 'drag & drop' update (times only). Any click on an item results in `this.configureAppointmentForm` beeing called.
+   * This is for the 'drag & drop' update (times only). Any click on an item results in `this.configureAppointmentForm` being called.
    */
   onAppointmentDragged(appointmentEvent: AppointmentEvent): void {
     this.updateDraggedEvent(appointmentEvent.appointmentData)

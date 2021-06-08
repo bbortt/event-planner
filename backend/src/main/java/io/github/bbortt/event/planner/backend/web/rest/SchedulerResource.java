@@ -16,10 +16,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,34 +46,6 @@ public class SchedulerResource {
         this.sectionService = sectionService;
         this.projectService = projectService;
         this.responsibilityService = responsibilityService;
-    }
-
-    @GetMapping("/scheduler/project/{projectId}/responsibilities")
-    @PreAuthorize(
-        "@projectService.hasAccessToProject(#projectId, \"" +
-        RolesConstants.ADMIN +
-        "\", \"" +
-        RolesConstants.SECRETARY +
-        "\", \"" +
-        RolesConstants.CONTRIBUTOR +
-        "\", \"" +
-        RolesConstants.VIEWER +
-        "\")"
-    )
-    public ResponseEntity<List<SchedulerColorGroupDTO>> getProjectColorGroups(@PathVariable Long projectId) {
-        log.debug("REST Request to get color groups by projectId {}", projectId);
-        List<Responsibility> responsibilities = responsibilityService.findAllByProjectId(projectId, Sort.unsorted());
-        List<SchedulerColorGroupDTO> schedulerColorGroups = responsibilities
-            .stream()
-            .map(
-                responsibility ->
-                    new SchedulerColorGroupDTO(
-                        Responsibility.class.getSimpleName().toLowerCase() + "-" + responsibility.getId(),
-                        responsibility.getColor()
-                    )
-            )
-            .collect(Collectors.toList());
-        return ResponseEntity.ok(schedulerColorGroups);
     }
 
     @GetMapping("/scheduler/project/{projectId}/location/{locationId}")
@@ -154,6 +124,7 @@ public class SchedulerResource {
             event.getDescription(),
             event.getStartTime(),
             event.getEndTime(),
+            section.getLocation().getId(),
             section.getId(),
             colorGroupId,
             event
