@@ -22,7 +22,9 @@ import io.github.bbortt.event.planner.backend.repository.RoleRepository;
 import io.github.bbortt.event.planner.backend.security.AuthoritiesConstants;
 import io.github.bbortt.event.planner.backend.service.InvitationService;
 import io.github.bbortt.event.planner.backend.service.dto.AdminUserDTO;
+import io.github.bbortt.event.planner.backend.service.dto.InvitationDTO;
 import io.github.bbortt.event.planner.backend.service.dto.UserDTO;
+import io.github.bbortt.event.planner.backend.service.mapper.InvitationMapper;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -66,6 +68,9 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
 
     @Autowired
     private InvitationService invitationService;
+
+    @Autowired
+    private InvitationMapper invitationMapper;
 
     @Autowired
     private EntityManager em;
@@ -169,7 +174,9 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
         // Create the Invitation
         restInvitationMockMvc
             .perform(
-                post("/api/invitations").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(invitation))
+                post("/api/invitations")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(invitationMapper.dtoFromInvitation(invitation)))
             )
             .andExpect(status().isCreated());
 
@@ -361,7 +368,7 @@ public class InvitationResourceIT extends AbstractApplicationContextAwareIT {
             .perform(
                 put("/api/invitations")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(updatedInvitation))
+                    .content(TestUtil.convertObjectToJsonBytes(invitationMapper.dtoFromInvitation(invitation)))
             )
             .andExpect(status().isOk());
 

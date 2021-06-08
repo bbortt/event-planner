@@ -13,6 +13,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,9 +27,15 @@ public class UserService {
         this.userServiceClient = userServiceClient;
     }
 
-    public Optional<UserDTO> getById(String jhiUserId) {
+    public UserDTO getById(String jhiUserId) {
         log.debug("Find User by id : {}", jhiUserId);
-        return userServiceClient.getById(jhiUserId);
+        return userServiceClient.getById(jhiUserId).orElse(getDefaultUserDTO(jhiUserId));
+    }
+
+    private UserDTO getDefaultUserDTO(String jhiUserId) {
+        UserDTO userDTO = new UserDTO();
+        userDTO.setId(jhiUserId);
+        return userDTO;
     }
 
     public AdminUserDTO findUserByLogin(String login) {

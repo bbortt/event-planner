@@ -25,10 +25,7 @@ public class SectionMapper {
         if (section == null) {
             return null;
         } else {
-            UserDTO user = Optional
-                .ofNullable(section.getJhiUserId())
-                .map(jhiUserId -> userService.getById(jhiUserId).orElseThrow(IllegalAccessError::new))
-                .orElse(null);
+            UserDTO user = Optional.ofNullable(section.getJhiUserId()).map(userService::getById).orElse(null);
 
             SectionDTO sectionDTO = new SectionDTO();
             sectionDTO.setId(section.getId());

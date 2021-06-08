@@ -22,8 +22,8 @@ public class InvitationMapper {
         } else {
             UserDTO user = Optional
                 .ofNullable(invitation.getJhiUserId())
-                .map(jhiUserId -> userService.getById(jhiUserId).orElseThrow(IllegalAccessError::new))
-                .orElse(null);
+                .map(userService::getById)
+                .orElseThrow(IllegalArgumentException::new);
 
             InvitationDTO invitationDTO = new InvitationDTO();
             invitationDTO.setId(invitation.getId());
