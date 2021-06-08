@@ -21,10 +21,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 )
 public interface UserServiceFeignClient {
     @GetMapping("/{jhiUserId}")
-    Optional<UserDTO> getById(@PathVariable("jhiUserId") String jhiUserId) throws FeignException;
+    Optional<UserDTO> getById(@PathVariable("jhiUserId") String jhiUserId);
 
     @GetMapping("/findByLogin/{login}")
-    Optional<AdminUserDTO> findUserByLogin(@PathVariable("login") String login) throws FeignException;
+    Optional<AdminUserDTO> findUserByLogin(@PathVariable("login") String login);
 
     @GetMapping("/")
     Set<UserDTO> findAllById(@RequestParam("ids") List<String> jhiUserIds);
