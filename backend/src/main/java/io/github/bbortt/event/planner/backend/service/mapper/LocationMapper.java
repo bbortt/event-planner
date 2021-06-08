@@ -23,10 +23,7 @@ public class LocationMapper {
         if (location == null) {
             return null;
         } else {
-            UserDTO user = Optional
-                .ofNullable(location.getJhiUserId())
-                .map(jhiUserId -> userService.getById(jhiUserId).orElseThrow(IllegalAccessError::new))
-                .orElse(null);
+            UserDTO user = Optional.ofNullable(location.getJhiUserId()).map(userService::getById).orElse(null);
 
             LocationDTO locationDTO = new LocationDTO();
             locationDTO.setId(location.getId());

@@ -22,10 +22,7 @@ public class EventMapper {
         if (event == null) {
             return null;
         } else {
-            UserDTO user = Optional
-                .ofNullable(event.getJhiUserId())
-                .map(jhiUserId -> userService.getById(jhiUserId).orElseThrow(IllegalAccessError::new))
-                .orElse(null);
+            UserDTO user = Optional.ofNullable(event.getJhiUserId()).map(userService::getById).orElse(null);
 
             EventDTO eventDTO = new EventDTO();
             eventDTO.setId(event.getId());
