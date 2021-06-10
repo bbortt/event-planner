@@ -31,18 +31,11 @@ public class EventService {
 
     private final ProjectService projectService;
 
-    private final SectionRepository sectionRepository;
     private final EventRepository eventRepository;
 
-    public EventService(
-        ApplicationEventPublisher publisher,
-        ProjectService projectService,
-        SectionRepository sectionRepository,
-        EventRepository eventRepository
-    ) {
+    public EventService(ApplicationEventPublisher publisher, ProjectService projectService, EventRepository eventRepository) {
         this.publisher = publisher;
         this.projectService = projectService;
-        this.sectionRepository = sectionRepository;
         this.eventRepository = eventRepository;
     }
 

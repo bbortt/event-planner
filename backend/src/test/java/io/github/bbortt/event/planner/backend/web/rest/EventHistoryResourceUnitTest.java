@@ -1,11 +1,9 @@
 package io.github.bbortt.event.planner.backend.web.rest;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 
 import io.github.bbortt.event.planner.backend.service.EventHistoryService;
-import io.github.bbortt.event.planner.backend.service.ProjectService;
 import java.time.ZonedDateTime;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
@@ -27,9 +25,6 @@ class EventHistoryResourceUnitTest {
     @Mock
     EventHistoryService eventHistoryServiceMock;
 
-    @Mock
-    ProjectService projectServiceMock;
-
     EventHistoryResource fixture;
 
     @BeforeEach
@@ -38,7 +33,7 @@ class EventHistoryResourceUnitTest {
         ServletRequestAttributes servletRequestAttributes = new ServletRequestAttributes(mockRequest);
         RequestContextHolder.setRequestAttributes(servletRequestAttributes);
 
-        fixture = new EventHistoryResource(eventHistoryServiceMock, projectServiceMock);
+        fixture = new EventHistoryResource(eventHistoryServiceMock);
     }
 
     @AfterEach

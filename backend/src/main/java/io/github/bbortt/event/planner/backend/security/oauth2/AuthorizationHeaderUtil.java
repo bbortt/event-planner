@@ -5,6 +5,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -86,7 +87,7 @@ public class AuthorizationHeaderUtil {
 
     private String refreshToken(OAuth2AuthorizedClient client, OAuth2AuthenticationToken oauthToken) {
         OAuth2AccessTokenResponse atr = refreshTokenClient(client);
-        if (atr == null || atr.getAccessToken() == null) {
+        if (atr.getAccessToken() == null) {
             log.info("Failed to refresh token for user");
             return null;
         }
@@ -106,9 +107,9 @@ public class AuthorizationHeaderUtil {
     private OAuth2AccessTokenResponse refreshTokenClient(OAuth2AuthorizedClient currentClient) {
         MultiValueMap<String, String> formParameters = new LinkedMultiValueMap<>();
         formParameters.add(OAuth2ParameterNames.GRANT_TYPE, AuthorizationGrantType.REFRESH_TOKEN.getValue());
-        formParameters.add(OAuth2ParameterNames.REFRESH_TOKEN, currentClient.getRefreshToken().getTokenValue());
+        formParameters.add(OAuth2ParameterNames.REFRESH_TOKEN, Objects.requireNonNull(currentClient.getRefreshToken()).getTokenValue());
         formParameters.add(OAuth2ParameterNames.CLIENT_ID, currentClient.getClientRegistration().getClientId());
-        RequestEntity requestEntity = RequestEntity
+        RequestEntity<MultiValueMap<String, String>> requestEntity = RequestEntity
             .post(URI.create(currentClient.getClientRegistration().getProviderDetails().getTokenUri()))
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
             .body(formParameters);
@@ -118,7 +119,7 @@ public class AuthorizationHeaderUtil {
                 currentClient.getClientRegistration().getClientSecret()
             );
             ResponseEntity<OAuthIdpTokenResponseDTO> responseEntity = r.exchange(requestEntity, OAuthIdpTokenResponseDTO.class);
-            return toOAuth2AccessTokenResponse(responseEntity.getBody());
+            return toOAuth2AccessTokenResponse(Objects.requireNonNull(responseEntity.getBody()));
         } catch (OAuth2AuthorizationException e) {
             log.error("Unable to refresh token", e);
             throw new OAuth2AuthenticationException(e.getError(), e);
@@ -151,7 +152,7 @@ public class AuthorizationHeaderUtil {
 
     private boolean isExpired(OAuth2AccessToken accessToken) {
         Instant now = Instant.now();
-        Instant expiresAt = accessToken.getExpiresAt();
+        Instant expiresAt = Objects.requireNonNull(accessToken.getExpiresAt());
         return now.isAfter(expiresAt.minus(Duration.ofMinutes(1L)));
     }
 }

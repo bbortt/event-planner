@@ -9,14 +9,14 @@ import io.github.bbortt.event.planner.service.user.security.SecurityUtils;
 import io.github.bbortt.event.planner.service.user.service.dto.AdminUserDTO;
 import io.github.bbortt.event.planner.service.user.service.dto.UserDTO;
 import java.time.Instant;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Order;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
@@ -42,15 +42,15 @@ public class UserService {
         this.authorityRepository = authorityRepository;
     }
 
-@Transactional(readOnly = true)
+    @Transactional(readOnly = true)
     public Optional<AdminUserDTO> findOne(String jhiUserId) {
         return userRepository.findById(jhiUserId)
             .map(AdminUserDTO::new);
     }
 
     @Transactional
-    public User syncUser(User user){
-        return syncUserWithIdP(new HashMap<>(),user);
+    public void syncUser(User user) {
+        syncUserWithIdP(new HashMap<>(), user);
     }
 
     private User syncUserWithIdP(Map<String, Object> details, User user) {
@@ -111,13 +111,12 @@ public class UserService {
     }
 
     /**
-     * Returns the user from an OAuth 2.0 login or resource server with JWT.
-     * Synchronizes the user in the local repository.
+     * Returns the user from an OAuth 2.0 login or resource server with JWT. Synchronizes the user in the local repository.
      *
      * @param authToken the authentication token.
      * @return the user from the authentication.
      */
-     AdminUserDTO getUserFromAuthentication(AbstractAuthenticationToken authToken) {
+    AdminUserDTO getUserFromAuthentication(AbstractAuthenticationToken authToken) {
         Map<String, Object> attributes;
         if (authToken instanceof OAuth2AuthenticationToken) {
             attributes = ((OAuth2AuthenticationToken) authToken).getPrincipal().getAttributes();
@@ -144,7 +143,7 @@ public class UserService {
         return new AdminUserDTO(syncUserWithIdP(attributes, user));
     }
 
-    private  User getUser(Map<String, Object> details) {
+    private User getUser(Map<String, Object> details) {
         User user = new User();
         Boolean activated = Boolean.TRUE;
         // handle resource server JWT, where sub claim is email and uid is ID
@@ -212,15 +211,15 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-  public Optional<AdminUserDTO> findOneByLogin(String login) {
+    public Optional<AdminUserDTO> findOneByLogin(String login) {
         return userRepository.findOneByLogin(login)
             .map(AdminUserDTO::new);
-  }
+    }
 
     @Transactional(readOnly = true)
     public List<AdminUserDTO> findAllById(List<String> jhiUserIds) {
         return userRepository.findAllById(jhiUserIds)
-    .stream().map(AdminUserDTO::new)
-    .collect(Collectors.toList());
+            .stream().map(AdminUserDTO::new)
+            .collect(Collectors.toList());
     }
 }

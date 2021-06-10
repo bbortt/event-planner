@@ -6,6 +6,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
@@ -16,7 +17,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
  */
 public class AudienceValidatorTest {
 
-    private final AudienceValidator validator = new AudienceValidator(Arrays.asList("api://default"));
+    private final AudienceValidator validator = new AudienceValidator(Collections.singletonList("api://default"));
 
     @Test
     @SuppressWarnings("unchecked")

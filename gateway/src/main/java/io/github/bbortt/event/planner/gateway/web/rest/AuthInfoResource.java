@@ -23,7 +23,7 @@ public class AuthInfoResource {
         return new AuthInfoVM(issuer, clientId);
     }
 
-    class AuthInfoVM {
+    static class AuthInfoVM {
 
         private String issuer;
         private String clientId;

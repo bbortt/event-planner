@@ -86,7 +86,6 @@ public class ResponsibilityResource {
      *
      * @param responsibility the responsibility to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated responsibility, or with status {@code 400 (Bad Request)} if the responsibility is not valid, or with status {@code 500 (Internal Server Error)} if the responsibility couldn't be updated.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/responsibilities")
     @PreAuthorize(
@@ -96,8 +95,7 @@ public class ResponsibilityResource {
         RolesConstants.SECRETARY +
         "\")"
     )
-    public ResponseEntity<Responsibility> updateResponsibility(@Valid @RequestBody Responsibility responsibility)
-        throws URISyntaxException {
+    public ResponseEntity<Responsibility> updateResponsibility(@Valid @RequestBody Responsibility responsibility) {
         log.debug("REST request to update Responsibility : {}", responsibility);
         if (responsibility.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");

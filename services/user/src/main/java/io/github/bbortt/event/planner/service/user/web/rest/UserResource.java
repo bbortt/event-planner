@@ -23,9 +23,7 @@ import tech.jhipster.web.util.ResponseUtil;
  * <p>
  * This class accesses the {@link io.github.bbortt.event.planner.service.user.domain.User} entity, and needs to fetch its collection of authorities.
  * <p>
- * For a normal use-case, it would be better to have an eager relationship between User and Authority,
- * and send everything to the client side: there would be no View Model and DTO, a lot less code, and an outer-join
- * which would be good for performance.
+ * For a normal use-case, it would be better to have an eager relationship between User and Authority, and send everything to the client side: there would be no View Model and DTO, a lot less code, and an outer-join which would be good for performance.
  * <p>
  * We use a View Model and a DTO for 3 reasons:
  * <ul>
@@ -47,11 +45,9 @@ import tech.jhipster.web.util.ResponseUtil;
 public class UserResource {
 
     private final Logger log = LoggerFactory.getLogger(UserResource.class);
-
+    private final UserService userService;
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
-
-    private final UserService userService;
 
     public UserResource(UserService userService) {
         this.userService = userService;
@@ -59,25 +55,25 @@ public class UserResource {
 
     @GetMapping("/users")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<AdminUserDTO>> getUsers( @RequestParam("ids") List<String> jhiUserIds) {
-        log.debug("REST request to get Usesr by id: {}",jhiUserIds);
-        List<AdminUserDTO>users  = userService.findAllById(jhiUserIds);
+    public ResponseEntity<List<AdminUserDTO>> getUsers(@RequestParam("ids") List<String> jhiUserIds) {
+        log.debug("REST request to get Usesr by id: {}", jhiUserIds);
+        List<AdminUserDTO> users = userService.findAllById(jhiUserIds);
         return ResponseEntity.ok(users);
     }
 
     @GetMapping("/users/{jhiUserId}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<AdminUserDTO> getUser( @PathVariable  String jhiUserId) {
-        log.debug("REST request to get User by login: {}",jhiUserId);
-        Optional<AdminUserDTO>user  = userService.findOne(jhiUserId);
+    public ResponseEntity<AdminUserDTO> getUser(@PathVariable String jhiUserId) {
+        log.debug("REST request to get User by login: {}", jhiUserId);
+        Optional<AdminUserDTO> user = userService.findOne(jhiUserId);
         return ResponseUtil.wrapOrNotFound(user);
     }
 
     @GetMapping("/users/findByLogin/{login}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<AdminUserDTO> findByLogin( @PathVariable  String login) {
-        log.debug("REST request to get User by login: {}",login);
-        Optional<AdminUserDTO>user  = userService.findOneByLogin(login);
+    public ResponseEntity<AdminUserDTO> findByLogin(@PathVariable String login) {
+        log.debug("REST request to get User by login: {}", login);
+        Optional<AdminUserDTO> user = userService.findOneByLogin(login);
         return ResponseUtil.wrapOrNotFound(user);
     }
 

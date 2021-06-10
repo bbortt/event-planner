@@ -48,9 +48,9 @@ public class RoleResource {
     }
 
     /**
-     * {@code GET  /roles/:id} : get the "id" role.
+     * {@code GET  /roles/:name} : get the "named" role.
      *
-     * @param id the id of the role to retrieve.
+     * @param name the name of the role to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the role, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/roles/{name}")

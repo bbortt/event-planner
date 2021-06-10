@@ -99,7 +99,6 @@ public class EventResource {
      *
      * @param event the event to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated event, or with status {@code 400 (Bad Request)} if the event is not valid, or with status {@code 500 (Internal Server Error)} if the event couldn't be updated.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/events")
     @PreAuthorize(
@@ -111,7 +110,7 @@ public class EventResource {
         RolesConstants.CONTRIBUTOR +
         "\")"
     )
-    public ResponseEntity<EventDTO> updateEvent(@Valid @RequestBody EventDTO event) throws URISyntaxException {
+    public ResponseEntity<EventDTO> updateEvent(@Valid @RequestBody EventDTO event) {
         log.debug("REST request to update Event : {}", event);
         if (event.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");

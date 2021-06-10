@@ -2,13 +2,9 @@ package io.github.bbortt.event.planner.backend.web.rest;
 
 import io.github.bbortt.event.planner.backend.domain.Event;
 import io.github.bbortt.event.planner.backend.domain.EventHistory;
-import io.github.bbortt.event.planner.backend.security.AuthoritiesConstants;
 import io.github.bbortt.event.planner.backend.security.RolesConstants;
 import io.github.bbortt.event.planner.backend.service.EventHistoryService;
-import io.github.bbortt.event.planner.backend.service.ProjectService;
-import io.github.bbortt.event.planner.backend.service.dto.EventDTO;
 import java.time.ZonedDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -43,11 +39,9 @@ public class EventHistoryResource {
     private String applicationName;
 
     private final EventHistoryService eventHistoryService;
-    private final ProjectService projectService;
 
-    public EventHistoryResource(EventHistoryService eventHistoryService, ProjectService projectService) {
+    public EventHistoryResource(EventHistoryService eventHistoryService) {
         this.eventHistoryService = eventHistoryService;
-        this.projectService = projectService;
     }
 
     /**

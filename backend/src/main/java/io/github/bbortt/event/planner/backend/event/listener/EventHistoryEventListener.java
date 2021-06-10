@@ -16,7 +16,7 @@ public class EventHistoryEventListener {
 
     private static final Logger log = LoggerFactory.getLogger(EventHistoryEventListener.class);
 
-    private EventHistoryService eventHistoryService;
+    private final EventHistoryService eventHistoryService;
 
     public EventHistoryEventListener(EventHistoryService eventHistoryService) {
         this.eventHistoryService = eventHistoryService;

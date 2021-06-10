@@ -83,11 +83,10 @@ public class ProjectResource {
      *
      * @param project the project to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated project, or with status {@code 400 (Bad Request)} if the project is not valid, or with status {@code 500 (Internal Server Error)} if the project couldn't be updated.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/projects")
     @PreAuthorize("@projectService.hasAccessToProject(#project, \"" + RolesConstants.ADMIN + "\")")
-    public ResponseEntity<Project> updateProject(@Valid @RequestBody Project project) throws URISyntaxException {
+    public ResponseEntity<Project> updateProject(@Valid @RequestBody Project project) {
         log.debug("REST request to update Project : {}", project);
         if (project.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");

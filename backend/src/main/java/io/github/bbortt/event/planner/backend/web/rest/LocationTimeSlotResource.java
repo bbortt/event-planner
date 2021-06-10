@@ -78,11 +78,9 @@ public class LocationTimeSlotResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated locationTimeSlot,
      * or with status {@code 400 (Bad Request)} if the locationTimeSlot is not valid,
      * or with status {@code 500 (Internal Server Error)} if the locationTimeSlot couldn't be updated.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/location-time-slots")
-    public ResponseEntity<LocationTimeSlot> updateLocationTimeSlot(@Valid @RequestBody LocationTimeSlot locationTimeSlot)
-        throws URISyntaxException {
+    public ResponseEntity<LocationTimeSlot> updateLocationTimeSlot(@Valid @RequestBody LocationTimeSlot locationTimeSlot) {
         log.debug("REST request to update LocationTimeSlot : {}", locationTimeSlot);
         if (locationTimeSlot.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");

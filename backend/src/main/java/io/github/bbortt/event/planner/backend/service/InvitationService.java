@@ -112,7 +112,7 @@ public class InvitationService {
     @Transactional
     @PreAuthorize("isAuthenticated()")
     public void assignCurrentUserToInvitation(String token) {
-        log.debug("Request to accept invitation for current user by token : {}", token);
+        log.debug("Request to accept invitation for current user");
         String login = SecurityUtils.getCurrentUser().orElseThrow(IllegalArgumentException::new).getLogin();
         invitationRepository.assignUserToInvitation(userService.findUserByLogin(login).getId(), token);
     }
@@ -125,7 +125,7 @@ public class InvitationService {
      */
     @Transactional(readOnly = true)
     public boolean isTokenValid(String token) {
-        log.debug("Request to check token validity : {}", token);
+        log.debug("Request to check token validity");
         return invitationRepository.findByToken(token).isPresent();
     }
 
@@ -138,7 +138,7 @@ public class InvitationService {
      */
     @Transactional(readOnly = true)
     public Boolean isEmailExistingInProject(Long projectId, String email) {
-        log.debug("Request to check uniqueness of email '{}' by projectId : {}", email, projectId);
+        log.debug("Request to check uniqueness of email by projectId : {}", projectId);
         return invitationRepository.findOneByEmailAndProjectId(email, projectId).isPresent();
     }
 
