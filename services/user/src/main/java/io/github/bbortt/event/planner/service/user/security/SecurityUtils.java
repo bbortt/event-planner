@@ -1,6 +1,10 @@
 package io.github.bbortt.event.planner.service.user.security;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.springframework.security.core.Authentication;
@@ -17,7 +21,8 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
  */
 public final class SecurityUtils {
 
-    private SecurityUtils() {}
+    private SecurityUtils() {
+    }
 
     /**
      * Get the login of the current user.

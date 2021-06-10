@@ -29,16 +29,13 @@ class EventServiceUnitTest {
     ProjectService projectServiceMock;
 
     @Mock
-    SectionRepository sectionRepositoryMock;
-
-    @Mock
     EventRepository eventRepositoryMock;
 
     EventService fixture;
 
     @BeforeEach
     void beforeTestSetup() {
-        fixture = new EventService(publisherMock, projectServiceMock, sectionRepositoryMock, eventRepositoryMock);
+        fixture = new EventService(publisherMock, projectServiceMock, eventRepositoryMock);
     }
 
     @Test

@@ -33,19 +33,10 @@ public class SchedulerResource {
 
     private final InvitationService invitationService;
     private final SectionService sectionService;
-    private final ProjectService projectService;
-    private final ResponsibilityService responsibilityService;
 
-    public SchedulerResource(
-        InvitationService invitationService,
-        SectionService sectionService,
-        ProjectService projectService,
-        ResponsibilityService responsibilityService
-    ) {
+    public SchedulerResource(InvitationService invitationService, SectionService sectionService) {
         this.invitationService = invitationService;
         this.sectionService = sectionService;
-        this.projectService = projectService;
-        this.responsibilityService = responsibilityService;
     }
 
     @GetMapping("/scheduler/project/{projectId}/location/{locationId}")

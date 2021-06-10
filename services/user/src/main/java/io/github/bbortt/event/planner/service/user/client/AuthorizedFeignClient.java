@@ -1,6 +1,10 @@
 package io.github.bbortt.event.planner.service.user.client;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.FeignClientsConfiguration;
 import org.springframework.core.annotation.AliasFor;
@@ -10,15 +14,14 @@ import org.springframework.core.annotation.AliasFor;
 @Documented
 @FeignClient
 public @interface AuthorizedFeignClient {
+
     @AliasFor(annotation = FeignClient.class, attribute = "name")
     String name() default "";
 
     /**
      * A custom {@code @Configuration} for the feign client.
      *
-     * Can contain override {@code @Bean} definition for the pieces that
-     * make up the client, for instance {@link feign.codec.Decoder},
-     * {@link feign.codec.Encoder}, {@link feign.Contract}.
+     * Can contain override {@code @Bean} definition for the pieces that make up the client, for instance {@link feign.codec.Decoder}, {@link feign.codec.Encoder}, {@link feign.Contract}.
      *
      * @return the custom {@code @Configuration} for the feign client.
      * @see FeignClientsConfiguration for the defaults.
@@ -28,25 +31,28 @@ public @interface AuthorizedFeignClient {
 
     /**
      * An absolute URL or resolvable hostname (the protocol is optional).
+     *
      * @return the URL.
      */
     String url() default "";
 
     /**
      * Whether 404s should be decoded instead of throwing FeignExceptions.
+     *
      * @return true if 404s will be decoded; false otherwise.
      */
     boolean decode404() default false;
 
     /**
-     * Fallback class for the specified Feign client interface. The fallback class must
-     * implement the interface annotated by this annotation and be a valid Spring bean.
+     * Fallback class for the specified Feign client interface. The fallback class must implement the interface annotated by this annotation and be a valid Spring bean.
+     *
      * @return the fallback class for the specified Feign client interface.
      */
     Class<?> fallback() default void.class;
 
     /**
      * Path prefix to be used by all method-level mappings.
+     *
      * @return the path prefix to be used by all method-level mappings.
      */
     String path() default "";

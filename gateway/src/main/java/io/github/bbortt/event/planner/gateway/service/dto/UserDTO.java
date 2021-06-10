@@ -2,7 +2,10 @@ package io.github.bbortt.event.planner.gateway.service.dto;
 
 import io.github.bbortt.event.planner.gateway.config.Constants;
 import java.util.Set;
-import javax.validation.constraints.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 /**
  * A DTO representing a user, with his authorities.

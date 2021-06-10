@@ -1,6 +1,5 @@
 package io.github.bbortt.event.planner.backend.service;
 
-import io.github.bbortt.event.planner.backend.domain.Event;
 import io.github.bbortt.event.planner.backend.domain.EventHistory;
 import io.github.bbortt.event.planner.backend.domain.Project;
 import io.github.bbortt.event.planner.backend.repository.EventHistoryRepository;

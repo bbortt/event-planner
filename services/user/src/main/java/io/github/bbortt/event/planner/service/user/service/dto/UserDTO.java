@@ -1,8 +1,6 @@
 package io.github.bbortt.event.planner.service.user.service.dto;
 
 import io.github.bbortt.event.planner.service.user.domain.User;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.Size;
 
 /**
  * A DTO representing a user, with only the public attributes.

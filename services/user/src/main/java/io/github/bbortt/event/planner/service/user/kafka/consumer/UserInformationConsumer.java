@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserInformationConsumer {
 
-    private final Logger log = LoggerFactory.getLogger(UserInformationConsumer.class);
+    private static  final Logger log = LoggerFactory.getLogger(UserInformationConsumer.class);
 
     private static final String TOPIC = "audit";
 

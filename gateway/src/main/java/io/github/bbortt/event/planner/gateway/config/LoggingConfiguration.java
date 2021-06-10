@@ -1,6 +1,8 @@
 package io.github.bbortt.event.planner.gateway.config;
 
-import static tech.jhipster.config.logging.LoggingUtils.*;
+import static tech.jhipster.config.logging.LoggingUtils.addContextListener;
+import static tech.jhipster.config.logging.LoggingUtils.addJsonConsoleAppender;
+import static tech.jhipster.config.logging.LoggingUtils.addLogstashTcpSocketAppender;
 
 import ch.qos.logback.classic.LoggerContext;
 import com.fasterxml.jackson.core.JsonProcessingException;

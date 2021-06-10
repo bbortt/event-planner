@@ -9,4 +9,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableJpaRepositories("io.github.bbortt.event.planner.service.user.repository")
 @EnableJpaAuditing(auditorAwareRef = "springSecurityAuditorAware")
 @EnableTransactionManagement
-public class DatabaseConfiguration {}
+public class DatabaseConfiguration {
+
+}

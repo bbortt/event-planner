@@ -108,13 +108,12 @@ public class InvitationResource {
      *
      * @param invitation the invitation to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated invitation, or with status {@code 400 (Bad Request)} if the invitation is not valid, or with status {@code 500 (Internal Server Error)} if the invitation couldn't be updated.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/invitations")
     @PreAuthorize(
         "@projectService.hasAccessToProject(#invitation.project, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")"
     )
-    public ResponseEntity<InvitationDTO> updateInvitation(@Valid @RequestBody InvitationDTO invitation) throws URISyntaxException {
+    public ResponseEntity<InvitationDTO> updateInvitation(@Valid @RequestBody InvitationDTO invitation) {
         log.debug("REST request to update Invitation : {}", invitation);
         if (invitation.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
@@ -190,13 +189,13 @@ public class InvitationResource {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/invitations/accept")
     public void assignCurrentUserToInvitation(@NotEmpty @RequestBody String token) {
-        log.debug("REST request to accept invitation for current user by token : {}", token);
+        log.debug("REST request to accept invitation for current user by token");
         invitationService.assignCurrentUserToInvitation(token);
     }
 
     @PostMapping("/invitations/token-validity")
     public boolean checkTokenValidity(@NotEmpty @RequestBody String token) {
-        log.debug("REST request to check token validity : {}", token);
+        log.debug("REST request to check token validity");
         return invitationService.isTokenValid(token);
     }
 

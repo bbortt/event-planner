@@ -95,11 +95,10 @@ public class SectionResource {
      *
      * @param section the section to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated section, or with status {@code 400 (Bad Request)} if the section is not valid, or with status {@code 500 (Internal Server Error)} if the section couldn't be updated.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/sections")
     @PreAuthorize("@sectionService.hasAccessToSection(#section, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")")
-    public ResponseEntity<SectionDTO> updateSection(@Valid @RequestBody SectionDTO section) throws URISyntaxException {
+    public ResponseEntity<SectionDTO> updateSection(@Valid @RequestBody SectionDTO section) {
         log.debug("REST request to update Section : {}", section);
         if (section.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");

@@ -1,13 +1,11 @@
 package io.github.bbortt.event.planner.backend.web.rest;
 
 import io.github.bbortt.event.planner.backend.domain.Location;
-import io.github.bbortt.event.planner.backend.domain.Section;
 import io.github.bbortt.event.planner.backend.security.AuthoritiesConstants;
 import io.github.bbortt.event.planner.backend.security.RolesConstants;
 import io.github.bbortt.event.planner.backend.service.LocationService;
 import io.github.bbortt.event.planner.backend.service.dto.LocationDTO;
 import io.github.bbortt.event.planner.backend.service.dto.SectionDTO;
-import io.github.bbortt.event.planner.backend.service.dto.scheduler.SchedulerSectionDTO;
 import io.github.bbortt.event.planner.backend.service.exception.EntityNotFoundException;
 import io.github.bbortt.event.planner.backend.service.mapper.EventMapper;
 import io.github.bbortt.event.planner.backend.service.mapper.LocationMapper;
@@ -101,11 +99,10 @@ public class LocationResource {
      *
      * @param location the location to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated location, or with status {@code 400 (Bad Request)} if the location is not valid, or with status {@code 500 (Internal Server Error)} if the location couldn't be updated.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/locations")
     @PreAuthorize("@locationService.hasAccessToLocation(#location, \"" + RolesConstants.ADMIN + "\", \"" + RolesConstants.SECRETARY + "\")")
-    public ResponseEntity<LocationDTO> updateLocation(@Valid @RequestBody LocationDTO location) throws URISyntaxException {
+    public ResponseEntity<LocationDTO> updateLocation(@Valid @RequestBody LocationDTO location) {
         log.debug("REST request to update Location : {}", location);
         if (location.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
