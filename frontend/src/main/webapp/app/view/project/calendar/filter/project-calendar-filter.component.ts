@@ -1,9 +1,13 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { filter, map, take, tap } from 'rxjs/operators';
-import { SchedulerSection } from 'app/entities/dto/scheduler-section.model';
-import { IDropdownSettings, ListItem } from 'ng-multiselect-dropdown/multiselect.model';
+
 import { TranslateService } from '@ngx-translate/core';
+
+import { filter, map, take, tap } from 'rxjs/operators';
+
+import { IDropdownSettings, ListItem } from 'ng-multiselect-dropdown/multiselect.model';
+
+import { SchedulerSection } from 'app/entities/dto/scheduler-section.model';
 
 export const ROUTE_ACTIVE_SECTIONS_PARAMETER_NAME = 'activeSections';
 
