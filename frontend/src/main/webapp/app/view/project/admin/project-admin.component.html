@@ -19,15 +19,6 @@
         <fa-icon [icon]="faCalendar"></fa-icon>
         <span jhiTranslate="eventPlannerApp.project.home.calendarLabel">Calendar</span>
       </button>
-
-      <button
-        id="screenplay-{{ project.id }}"
-        [routerLink]="['/project', project.id, 'screenplay']"
-        class="btn btn-negative btn-gray btn-md"
-      >
-        <fa-icon [icon]="faBook"></fa-icon>
-        <span jhiTranslate="eventPlannerApp.project.home.screenplayLabel">Screenplay</span>
-      </button>
     </div>
   </h2>
 
