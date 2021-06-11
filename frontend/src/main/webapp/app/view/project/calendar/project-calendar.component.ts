@@ -54,6 +54,8 @@ export class ProjectCalendarComponent implements OnInit, OnDestroy {
   sections: SchedulerSection[] = [];
   colors: SchedulerColorGroup[] = [];
 
+  activeSections: SchedulerSection[] = [];
+
   private eventSubscriber?: Subscription;
 
   constructor(
@@ -98,6 +100,10 @@ export class ProjectCalendarComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.eventSubscriber?.unsubscribe();
+  }
+
+  setActiveSections($event: number[]): void {
+    this.activeSections = this.sections.filter((schedulerSection: SchedulerSection) => $event.includes(schedulerSection.id));
   }
 
   currentDateChange($event: any): void {
