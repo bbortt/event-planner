@@ -7,6 +7,8 @@
           "notFound": "Für diese Lokalität wurden keine Abschnitte gefunden"
         },
         "filter": {
+          "selectAll": "Alle auswählen",
+          "deselectAll": "Alle abwählen",
           "addEvent": "Neuer Event"
         }
       }

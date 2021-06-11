@@ -3,6 +3,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { filter, map, take, tap } from 'rxjs/operators';
 import { SchedulerSection } from 'app/entities/dto/scheduler-section.model';
 import { IDropdownSettings, ListItem } from 'ng-multiselect-dropdown/multiselect.model';
+import { TranslateService } from '@ngx-translate/core';
 
 export const ROUTE_ACTIVE_SECTIONS_PARAMETER_NAME = 'activeSections';
 
@@ -23,14 +24,15 @@ export class ProjectCalendarFilterComponent implements OnInit {
     idField: 'id',
     textField: 'text',
     selectAllText: 'Select All',
-    unSelectAllText: 'UnSelect All',
+    unSelectAllText: 'Deselect All',
+    searchPlaceholderText: 'Search',
     itemsShowLimit: 3,
     allowSearchFilter: true,
   };
 
   private activeSections: SchedulerSection[] = [];
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute) {}
+  constructor(private router: Router, private activatedRoute: ActivatedRoute, private translateService: TranslateService) {}
 
   ngOnInit(): void {
     this.items = this.toListItems(this.schedulerSections);
@@ -51,6 +53,16 @@ export class ProjectCalendarFilterComponent implements OnInit {
         this.selectedItems = listItems;
         this.afterFilterChange();
       });
+
+    this.translateService
+      .get('eventPlannerApp.project.calendar.filter.selectAll', 'Select All')
+      .subscribe((translation: string) => (this.dropdownSettings.selectAllText = translation));
+    this.translateService
+      .get('eventPlannerApp.project.calendar.filter.deselectAll', 'Deselect All')
+      .subscribe((translation: string) => (this.dropdownSettings.unSelectAllText = translation));
+    this.translateService
+      .get('global.form.search', 'Search')
+      .subscribe((translation: string) => (this.dropdownSettings.searchPlaceholderText = translation));
   }
 
   onSelect(listItem: ListItem): void {
