@@ -14,8 +14,4 @@ export const PROJECT_ROUTES: Routes = [
     path: ':projectId/calendar',
     loadChildren: () => import('./calendar/project-calendar.module').then(m => m.EventPlannerProjectCalendarModule),
   },
-  {
-    path: ':projectId/screenplay',
-    loadChildren: () => import('./screenplay/project-screenplay.module').then(m => m.EventPlannerProjectScreenplayModule),
-  },
 ];
