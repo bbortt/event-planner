@@ -61,10 +61,10 @@ public class EventService {
             throw new BadRequestException();
         }
 
+        EventHistoryAction action = event.getId() == null ? EventHistoryAction.CREATE : EventHistoryAction.UPDATE;
+
         eventRepository.save(event);
-        publisher.publishEvent(
-            new EventHistoryEvent(this, event, event.getId() == null ? EventHistoryAction.CREATE : EventHistoryAction.UPDATE)
-        );
+        publisher.publishEvent(new EventHistoryEvent(this, event, action));
 
         return event;
     }

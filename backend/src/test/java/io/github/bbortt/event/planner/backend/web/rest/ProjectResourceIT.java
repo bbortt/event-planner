@@ -50,11 +50,11 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
     private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
     private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
 
-    private static final ZonedDateTime DEFAULT_START_TIME = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
-    private static final ZonedDateTime UPDATED_START_TIME = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
+    private static final ZonedDateTime DEFAULT_START_TIME = ZonedDateTime.of(2020, 6, 24, 20, 0, 0, 0, ZoneId.systemDefault());
+    private static final ZonedDateTime UPDATED_START_TIME = ZonedDateTime.of(2021, 6, 24, 20, 0, 0, 0, ZoneId.systemDefault());
 
-    private static final ZonedDateTime DEFAULT_END_TIME = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
-    private static final ZonedDateTime UPDATED_END_TIME = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
+    private static final ZonedDateTime DEFAULT_END_TIME = ZonedDateTime.of(2020, 6, 25, 20, 0, 0, 0, ZoneId.systemDefault());
+    private static final ZonedDateTime UPDATED_END_TIME = ZonedDateTime.of(2021, 6, 25, 20, 0, 0, 0, ZoneId.systemDefault());
 
     @Autowired
     private RoleRepository roleRepository;
@@ -352,7 +352,48 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
         int databaseSizeBeforeUpdate = projectRepository.findAll().size();
 
         // Update the project
-        Project updatedProject = projectRepository.findById(project.getId()).get();
+        Project updatedProject = projectRepository.findById(project.getId()).orElseThrow(IllegalArgumentException::new);
+        // Disconnect from session so that the updates on updatedProject are not directly saved in db
+        em.detach(updatedProject);
+        updatedProject.name(UPDATED_NAME).description(UPDATED_DESCRIPTION);
+
+        restProjectMockMvc
+            .perform(
+                put("/api/projects").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(updatedProject))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the Project in the database
+        List<Project> projectList = projectRepository.findAll();
+        assertThat(projectList).hasSize(databaseSizeBeforeUpdate);
+        Project testProject = projectList
+            .stream()
+            .filter(project -> updatedProject.getId().equals(project.getId()))
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("Cannot find updated project!"));
+        assertThat(testProject.getName()).isEqualTo(UPDATED_NAME);
+        assertThat(testProject.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
+        assertThat(testProject.getStartTime()).isEqualTo(DEFAULT_START_TIME);
+        assertThat(testProject.getEndTime()).isEqualTo(DEFAULT_END_TIME);
+    }
+
+    @Test
+    @Transactional
+    void cannotUpdateProjectTimes() throws Exception {
+        // Initialize the database
+        projectService.save(project);
+        Invitation invitation = InvitationResourceIT
+            .createEntity(em)
+            .accepted(Boolean.TRUE)
+            .project(project)
+            .jhiUserId(TEST_USER_LOGIN)
+            .role(roleRepository.roleAdmin());
+        em.persist(invitation);
+
+        int databaseSizeBeforeUpdate = projectRepository.findAll().size();
+
+        // Update the project
+        Project updatedProject = projectRepository.findById(project.getId()).orElseThrow(IllegalArgumentException::new);
         // Disconnect from session so that the updates on updatedProject are not directly saved in db
         em.detach(updatedProject);
         updatedProject.name(UPDATED_NAME).description(UPDATED_DESCRIPTION).startTime(UPDATED_START_TIME).endTime(UPDATED_END_TIME);
@@ -373,8 +414,8 @@ public class ProjectResourceIT extends AbstractApplicationContextAwareIT {
             .orElseThrow(() -> new IllegalArgumentException("Cannot find updated project!"));
         assertThat(testProject.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testProject.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
-        assertThat(testProject.getStartTime()).isEqualTo(UPDATED_START_TIME);
-        assertThat(testProject.getEndTime()).isEqualTo(UPDATED_END_TIME);
+        assertThat(testProject.getStartTime()).isEqualTo(DEFAULT_START_TIME);
+        assertThat(testProject.getEndTime()).isEqualTo(DEFAULT_END_TIME);
     }
 
     @Test

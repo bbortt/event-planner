@@ -62,11 +62,11 @@ class EventResourceIT extends AbstractApplicationContextAwareIT {
     private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
     private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
 
-    private static final ZonedDateTime DEFAULT_START_TIME = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
-    private static final ZonedDateTime UPDATED_START_TIME = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
+    private static final ZonedDateTime DEFAULT_START_TIME = ZonedDateTime.of(2020, 6, 24, 20, 1, 0, 0, ZoneId.systemDefault());
+    private static final ZonedDateTime UPDATED_START_TIME = ZonedDateTime.of(2020, 6, 24, 20, 2, 0, 0, ZoneId.systemDefault());
 
-    private static final ZonedDateTime DEFAULT_END_TIME = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
-    private static final ZonedDateTime UPDATED_END_TIME = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
+    private static final ZonedDateTime DEFAULT_END_TIME = ZonedDateTime.of(2020, 6, 25, 19, 59, 0, 0, ZoneId.systemDefault());
+    private static final ZonedDateTime UPDATED_END_TIME = ZonedDateTime.of(2020, 6, 25, 19, 58, 0, 0, ZoneId.systemDefault());
 
     @Autowired
     private EventRepository eventRepository;
@@ -168,6 +168,7 @@ class EventResourceIT extends AbstractApplicationContextAwareIT {
         eventHistoryRepository.deleteAll();
 
         // Create the Event
+        event.id(null);
         restEventMockMvc
             .perform(post("/api/events").contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(event)))
             .andExpect(status().isCreated());

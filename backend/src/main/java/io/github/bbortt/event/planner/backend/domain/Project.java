@@ -44,11 +44,11 @@ public class Project implements Serializable {
     private String description;
 
     @NotNull
-    @Column(name = "start_time", nullable = false)
+    @Column(name = "start_time", nullable = false, updatable = false)
     private ZonedDateTime startTime;
 
     @NotNull
-    @Column(name = "end_time", nullable = false)
+    @Column(name = "end_time", nullable = false, updatable = false)
     private ZonedDateTime endTime;
 
     @NotNull

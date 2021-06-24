@@ -15,6 +15,7 @@ import io.github.bbortt.event.planner.backend.service.exception.EntityNotFoundEx
 import io.github.bbortt.event.planner.backend.service.exception.ForbiddenRequestException;
 import io.github.bbortt.event.planner.backend.service.exception.IdMustBePresentException;
 import io.github.bbortt.event.planner.backend.service.mapper.ProjectMapper;
+import java.nio.file.Files;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -112,7 +113,18 @@ public class ProjectService {
     @Transactional
     public Project save(Project project) {
         log.debug("Request to save Project : {}", project);
-        return projectRepository.save(project);
+
+        Project updated = Optional
+            .ofNullable(project.getId())
+            .map(
+                projectId -> {
+                    Project original = findOne(projectId).orElseThrow(IllegalArgumentException::new);
+                    return project.startTime(original.getStartTime()).endTime(original.getEndTime());
+                }
+            )
+            .orElse(project);
+
+        return projectRepository.save(updated);
     }
 
     /**
