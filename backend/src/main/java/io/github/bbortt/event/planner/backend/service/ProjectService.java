@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import javax.swing.text.html.parser.Entity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -118,7 +119,7 @@ public class ProjectService {
             .ofNullable(project.getId())
             .map(
                 projectId -> {
-                    Project original = findOne(projectId).orElseThrow(IllegalArgumentException::new);
+                    Project original = findOne(projectId).orElseThrow(EntityNotFoundException::new);
                     return project.startTime(original.getStartTime()).endTime(original.getEndTime());
                 }
             )
