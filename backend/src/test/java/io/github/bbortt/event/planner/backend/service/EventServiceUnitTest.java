@@ -68,14 +68,14 @@ class EventServiceUnitTest {
     }
 
     @Test
-    public void saveDoesNotAcceptStartTimeOutOfBounds() {
+    void saveDoesNotAcceptStartTimeOutOfBounds() {
         event.startTime(project.getStartTime().minus(1, ChronoUnit.MINUTES));
 
         Assertions.assertThatThrownBy(() -> fixture.save(event)).isInstanceOf(BadRequestException.class);
     }
 
     @Test
-    public void saveDoesNotAcceptEndTimeOutOfBounds() {
+    void saveDoesNotAcceptEndTimeOutOfBounds() {
         event.endTime(project.getEndTime().plus(1, ChronoUnit.MINUTES));
 
         Assertions.assertThatThrownBy(() -> fixture.save(event)).isInstanceOf(BadRequestException.class);

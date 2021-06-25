@@ -49,7 +49,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
         // @formatter:off
         if (environment.acceptsProfiles(Profiles.of("test"))){
-http.csrf().disable();
+            http.csrf().disable();
         }
 
         http
