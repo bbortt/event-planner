@@ -177,7 +177,7 @@
             id="field_section"
             formControlName="sectionAutocomplete"
             [placeholder]="'global.form.search' | translate"
-            [dataSource]="locations"
+            [dataSource]="sections"
             valueExpr="name"
             (onSelectionChanged)="sectionSelected($event)"
             [showClearButton]="true"
