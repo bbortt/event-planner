@@ -5,6 +5,7 @@ import { ActivatedRoute, Data, Router } from '@angular/router';
 import { combineLatest, Observable, of, Subscription } from 'rxjs';
 import { catchError, map, switchMap, take, tap } from 'rxjs/operators';
 
+import { AlertService } from 'app/core/util/alert.service';
 import { EventManager } from 'app/core/util/event-manager.service';
 
 import { AppointmentEvent } from 'app/entities/scheduler/appointment-event';
@@ -31,7 +32,9 @@ import { Section } from 'app/entities/section/section.model';
 import { faCog } from '@fortawesome/free-solid-svg-icons';
 
 import * as dayjs from 'dayjs';
-import { AlertService } from 'app/core/util/alert.service';
+
+const ROUTE_CURRENT_VIEW_PARAMETER_NAME = 'currentView';
+const ROUTE_CURRENT_DATE_PARAMETER_NAME = 'currentDate';
 
 @Component({
   selector: 'app-calendar',
@@ -46,7 +49,8 @@ export class ProjectCalendarComponent implements OnInit, OnDestroy {
   isViewer = true;
   schedulerInformation: SchedulerInformation = { allowDeleting: !this.isViewer };
 
-  currentDate: Date = new Date();
+  currentView = 'month';
+  currentDate = new Date();
 
   project?: Project;
   locations?: Location[];
@@ -72,15 +76,16 @@ export class ProjectCalendarComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.activatedRoute.data
+    combineLatest([this.activatedRoute.queryParams, this.activatedRoute.data])
       .pipe(
-        tap((data: Data) => {
+        tap(([queryParams, data]) => {
           this.project = data.project as Project;
-          this.currentDate = this.project.startTime.toDate();
+          this.currentView = queryParams[ROUTE_CURRENT_VIEW_PARAMETER_NAME] || this.currentView;
+          this.currentDate = queryParams[ROUTE_CURRENT_DATE_PARAMETER_NAME] || this.project.startTime.toDate();
           this.isViewer =
             !this.accountService.hasAnyAuthority(Authority.ADMIN) && this.accountService.hasAnyRole(this.project.id!, Role.VIEWER.name);
         }),
-        switchMap((data: Data) => this.locationService.findAllByProject(data.project, { sort: ['name,asc'] })),
+        switchMap(([_, data]) => this.locationService.findAllByProject(data.project, { sort: ['name,asc'] })),
         map((res: HttpResponse<Location[]>) => res.body ?? []),
         tap((locations: Location[]) => (this.locations = locations)),
         tap(
@@ -108,8 +113,14 @@ export class ProjectCalendarComponent implements OnInit, OnDestroy {
     this.activeSections = this.sections.filter((schedulerSection: SchedulerSection) => $event.includes(schedulerSection.id));
   }
 
+  currentViewchange($event: any): void {
+    this.currentView = $event;
+    this.afterCalendarChange();
+  }
+
   currentDateChange($event: any): void {
     this.currentDate = $event;
+    this.afterCalendarChange();
   }
 
   configureAppointmentForm(appointmentEvent: AppointmentEvent): void {
@@ -247,5 +258,16 @@ export class ProjectCalendarComponent implements OnInit, OnDestroy {
         this.colors = newColors;
       }
     );
+  }
+
+  private afterCalendarChange(): void {
+    this.router.navigate(['.'], {
+      relativeTo: this.activatedRoute,
+      queryParams: {
+        [ROUTE_CURRENT_VIEW_PARAMETER_NAME]: this.currentView,
+        [ROUTE_CURRENT_DATE_PARAMETER_NAME]: dayjs(this.currentDate).toJSON(),
+      },
+      queryParamsHandling: 'merge',
+    });
   }
 }

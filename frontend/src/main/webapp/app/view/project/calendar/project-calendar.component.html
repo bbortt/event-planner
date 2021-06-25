@@ -44,6 +44,8 @@
     <dx-scheduler
       [dataSource]="events"
       [views]="['day', 'week', 'month']"
+      [currentView]="currentView"
+      (currentViewChange)="currentViewchange($event)"
       [currentDate]="currentDate"
       (currentDateChange)="currentDateChange($event)"
       [min]="project!.startTime.toDate()"

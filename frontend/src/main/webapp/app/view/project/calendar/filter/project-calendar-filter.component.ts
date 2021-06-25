@@ -5,7 +5,7 @@ import { SchedulerSection } from 'app/entities/dto/scheduler-section.model';
 import { IDropdownSettings, ListItem } from 'ng-multiselect-dropdown/multiselect.model';
 import { TranslateService } from '@ngx-translate/core';
 
-export const ROUTE_ACTIVE_SECTIONS_PARAMETER_NAME = 'activeSections';
+const ROUTE_ACTIVE_SECTIONS_PARAMETER_NAME = 'activeSections';
 
 @Component({
   selector: 'app-project-calendar-filter',
