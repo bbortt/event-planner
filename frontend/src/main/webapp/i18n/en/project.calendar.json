@@ -10,6 +10,9 @@
           "selectAll": "Select All",
           "deselectAll": "Deselect All",
           "addEvent": "New Event"
+        },
+        "alert": {
+          "eventOutOfBounds": "Event out of Project bounds!"
         }
       }
     }

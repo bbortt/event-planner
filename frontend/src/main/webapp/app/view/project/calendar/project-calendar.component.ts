@@ -31,6 +31,7 @@ import { Section } from 'app/entities/section/section.model';
 import { faCog } from '@fortawesome/free-solid-svg-icons';
 
 import * as dayjs from 'dayjs';
+import { AlertService } from 'app/core/util/alert.service';
 
 @Component({
   selector: 'app-calendar',
@@ -65,6 +66,7 @@ export class ProjectCalendarComponent implements OnInit, OnDestroy {
     private locationService: LocationService,
     private schedulerService: SchedulerService,
     private eventManager: EventManager,
+    private alertService: AlertService,
     private router: Router,
     private activatedRoute: ActivatedRoute
   ) {}
@@ -115,8 +117,18 @@ export class ProjectCalendarComponent implements OnInit, OnDestroy {
     appointmentEvent.cancel = true;
 
     const event = appointmentEvent.appointmentData;
-    const startTime = dayjs(event.startDate).toJSON();
-    const endTime = dayjs(event.endDate).toJSON();
+    const startTime = dayjs(event.startDate);
+    const endTime = dayjs(event.endDate);
+
+    if (startTime.isBefore(this.project!.startTime) || endTime.isAfter(this.project!.endTime)) {
+      this.alertService.addAlert({
+        type: 'warning',
+        message: 'Event out of Project bounds!',
+        translationKey: 'eventPlannerApp.project.calendar.alert.eventOutOfBounds',
+        toast: true,
+      });
+      return;
+    }
 
     const locationId = this.sections.find(section => section.id === event.sectionId)?.originalSection!.location.id;
 
@@ -134,7 +146,7 @@ export class ProjectCalendarComponent implements OnInit, OnDestroy {
     }
 
     this.router.navigate([{ outlets: { modal: route } }], {
-      queryParams: { startTime, endTime },
+      queryParams: { startTime: startTime.toJSON(), endTime: endTime.toJSON() },
     });
   }
 

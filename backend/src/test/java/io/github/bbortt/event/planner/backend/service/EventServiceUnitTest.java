@@ -7,10 +7,15 @@ import static org.mockito.Mockito.verify;
 import io.github.bbortt.event.planner.backend.config.Constants;
 import io.github.bbortt.event.planner.backend.domain.Event;
 import io.github.bbortt.event.planner.backend.domain.EventHistoryAction;
+import io.github.bbortt.event.planner.backend.domain.Location;
+import io.github.bbortt.event.planner.backend.domain.Project;
 import io.github.bbortt.event.planner.backend.domain.Responsibility;
+import io.github.bbortt.event.planner.backend.domain.Section;
 import io.github.bbortt.event.planner.backend.repository.EventRepository;
-import io.github.bbortt.event.planner.backend.repository.SectionRepository;
 import io.github.bbortt.event.planner.backend.service.exception.BadRequestException;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,30 +36,53 @@ class EventServiceUnitTest {
     @Mock
     EventRepository eventRepositoryMock;
 
+    Project project;
+    Event event;
+
     EventService fixture;
 
     @BeforeEach
     void beforeTestSetup() {
+        project =
+            new Project()
+                .startTime(ZonedDateTime.of(2021, 6, 23, 8, 0, 0, 0, ZoneId.systemDefault()))
+                .endTime(ZonedDateTime.of(2021, 6, 24, 8, 0, 0, 0, ZoneId.systemDefault()));
+        Location location = new Location().project(project);
+        Section section = new Section().location(location);
+        event = new Event().startTime(project.getStartTime()).endTime(project.getEndTime()).section(section);
+
         fixture = new EventService(publisherMock, projectServiceMock, eventRepositoryMock);
     }
 
     @Test
     void saveDoesAcceptEitherResponsibilityOrUser() {
-        Event eventWithUser = new Event().jhiUserId("test-jhi-user-id");
-        fixture.save(eventWithUser);
+        event.jhiUserId("test-jhi-user-id");
+        fixture.save(event);
 
-        Event eventWithResponsibility = new Event().responsibility(new Responsibility());
-        fixture.save(eventWithResponsibility);
+        event.jhiUserId(null).responsibility(new Responsibility());
+        fixture.save(event);
 
-        Event invalidEvent = new Event().jhiUserId("test-jhi-user-id").responsibility(new Responsibility());
+        event.jhiUserId("test-jhi-user-id").responsibility(new Responsibility());
 
-        Assertions.assertThatThrownBy(() -> fixture.save(invalidEvent)).isInstanceOf(BadRequestException.class);
+        Assertions.assertThatThrownBy(() -> fixture.save(event)).isInstanceOf(BadRequestException.class);
+    }
+
+    @Test
+    public void saveDoesNotAcceptStartTimeOutOfBounds() {
+        event.startTime(project.getStartTime().minus(1, ChronoUnit.MINUTES));
+
+        Assertions.assertThatThrownBy(() -> fixture.save(event)).isInstanceOf(BadRequestException.class);
+    }
+
+    @Test
+    public void saveDoesNotAcceptEndTimeOutOfBounds() {
+        event.endTime(project.getEndTime().plus(1, ChronoUnit.MINUTES));
+
+        Assertions.assertThatThrownBy(() -> fixture.save(event)).isInstanceOf(BadRequestException.class);
     }
 
     @Test
     void saveDoesBroadcastApplicationEvent() {
-        Event event = new Event();
-
         doReturn(event).when(eventRepositoryMock).save(event);
 
         fixture.save(event);
@@ -76,7 +104,7 @@ class EventServiceUnitTest {
 
     @Test
     void updateDoesBroadcastApplicationEvent() {
-        Event event = new Event().id(1234L);
+        event.id(1234L);
 
         doReturn(event).when(eventRepositoryMock).save(event);
 
@@ -99,7 +127,7 @@ class EventServiceUnitTest {
 
     @Test
     void deleteDoesBroadcastApplicationEvent() {
-        Event event = new Event().id(1234L);
+        event.id(1234L);
 
         fixture.delete(event);
 

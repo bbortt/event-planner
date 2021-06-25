@@ -151,7 +151,7 @@
           </div>
         </div>
 
-        <div class="col mb-3" *ngIf="fromScratch || isReadonly">
+        <div class="col mb-3" *ngIf="fromScratch || !isNew">
           <label class="form-label" jhiTranslate="eventPlannerApp.section.location" for="field_location">Location</label>
           <dx-autocomplete
             class="dx-form-control"
@@ -169,7 +169,7 @@
           </dx-autocomplete>
         </div>
 
-        <div class="col mb-3" *ngIf="(fromScratch && location?.id) || isReadonly">
+        <div class="col mb-3" *ngIf="(fromScratch && location?.id) || !isNew">
           <label class="form-label" jhiTranslate="eventPlannerApp.event.section" for="field_section">Section</label>
           <dx-autocomplete
             class="dx-form-control"
@@ -177,7 +177,7 @@
             id="field_section"
             formControlName="sectionAutocomplete"
             [placeholder]="'global.form.search' | translate"
-            [dataSource]="locations"
+            [dataSource]="sections"
             valueExpr="name"
             (onSelectionChanged)="sectionSelected($event)"
             [showClearButton]="true"

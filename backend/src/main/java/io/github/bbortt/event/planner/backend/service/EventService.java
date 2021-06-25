@@ -4,7 +4,6 @@ import io.github.bbortt.event.planner.backend.domain.Event;
 import io.github.bbortt.event.planner.backend.domain.EventHistoryAction;
 import io.github.bbortt.event.planner.backend.event.EventHistoryEvent;
 import io.github.bbortt.event.planner.backend.repository.EventRepository;
-import io.github.bbortt.event.planner.backend.repository.SectionRepository;
 import io.github.bbortt.event.planner.backend.service.dto.EventDTO;
 import io.github.bbortt.event.planner.backend.service.exception.BadRequestException;
 import io.github.bbortt.event.planner.backend.service.exception.EntityNotFoundException;
@@ -54,14 +53,18 @@ public class EventService {
             throw new BadRequestException();
         }
 
-        boolean isNew = event.getId() == null;
-        eventRepository.save(event);
-
-        if (isNew) {
-            publisher.publishEvent(new EventHistoryEvent(this, event, EventHistoryAction.CREATE));
-        } else {
-            publisher.publishEvent(new EventHistoryEvent(this, event, EventHistoryAction.UPDATE));
+        if (
+            event.getStartTime().isBefore(event.getSection().getLocation().getProject().getStartTime()) ||
+            event.getEndTime().isAfter(event.getSection().getLocation().getProject().getEndTime())
+        ) {
+            log.error("Event is out of project bounds!");
+            throw new BadRequestException();
         }
+
+        EventHistoryAction action = event.getId() == null ? EventHistoryAction.CREATE : EventHistoryAction.UPDATE;
+
+        eventRepository.save(event);
+        publisher.publishEvent(new EventHistoryEvent(this, event, action));
 
         return event;
     }

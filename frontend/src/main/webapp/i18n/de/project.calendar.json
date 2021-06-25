@@ -10,6 +10,9 @@
           "selectAll": "Alle auswählen",
           "deselectAll": "Alle abwählen",
           "addEvent": "Neuer Event"
+        },
+        "alert": {
+          "eventOutOfBounds": "Event ausserhalb der Projektgrenzen!"
         }
       }
     }
