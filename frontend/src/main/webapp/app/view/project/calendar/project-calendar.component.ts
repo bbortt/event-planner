@@ -1,6 +1,6 @@
 import { HttpResponse } from '@angular/common/http';
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { ActivatedRoute, Data, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { combineLatest, Observable, of, Subscription } from 'rxjs';
 import { catchError, map, switchMap, take, tap } from 'rxjs/operators';
@@ -85,7 +85,7 @@ export class ProjectCalendarComponent implements OnInit, OnDestroy {
           this.isViewer =
             !this.accountService.hasAnyAuthority(Authority.ADMIN) && this.accountService.hasAnyRole(this.project.id!, Role.VIEWER.name);
         }),
-        switchMap(([_, data]) => this.locationService.findAllByProject(data.project, { sort: ['name,asc'] })),
+        switchMap(([, data]) => this.locationService.findAllByProject(data.project, { sort: ['name,asc'] })),
         map((res: HttpResponse<Location[]>) => res.body ?? []),
         tap((locations: Location[]) => (this.locations = locations)),
         tap(

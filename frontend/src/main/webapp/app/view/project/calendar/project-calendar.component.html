@@ -60,9 +60,6 @@
       (onAppointmentFormOpening)="configureAppointmentForm($event)"
       (onAppointmentUpdated)="onAppointmentDragged($event)"
     >
-      <!-- TODO: Can filter this later! -->
-      <!-- [crossScrollingEnabled]="false"-->
-
       <dxi-resource fieldExpr="sectionId" [dataSource]="activeSections"></dxi-resource>
       <dxi-resource fieldExpr="colorGroupId" [dataSource]="colors" [useColorAsDefault]="true"></dxi-resource>
     </dx-scheduler>
