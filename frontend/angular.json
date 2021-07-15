@@ -4,9 +4,10 @@
   "newProjectRoot": "projects",
   "projects": {
     "frontend": {
+      "prefix": "jhi",
+      "projectType": "application",
       "root": "",
       "sourceRoot": "src/main/webapp",
-      "projectType": "application",
       "architect": {
         "build": {
           "builder": "@angular-builders/custom-webpack:browser",
@@ -14,7 +15,7 @@
             "customWebpackConfig": {
               "path": "./webpack/webpack.custom.js"
             },
-            "outputPath": "build/",
+            "outputPath": "target/classes/static/",
             "index": "src/main/webapp/index.html",
             "main": "src/main/webapp/main.ts",
             "polyfills": "src/main/webapp/polyfills.ts",
@@ -60,14 +61,24 @@
                   "maximumError": "10kb"
                 }
               ]
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
             }
-          }
+          },
+          "defaultConfiguration": "production"
         },
         "serve": {
           "builder": "@angular-builders/custom-webpack:dev-server",
           "options": {
             "browserTarget": "frontend:build",
-            "proxyConfig": "./webpack/proxy.conf.js"
+            "proxyConfig": "./webpack/proxy.conf.js",
+            "port": 4200
           },
           "configurations": {
             "production": {
@@ -78,7 +89,8 @@
         "test": {
           "builder": "@angular-builders/jest:run",
           "options": {
-            "configPath": "jest.conf.js"
+            "configPath": "jest.conf.js",
+            "tsConfig": "tsconfig.spec.json"
           }
         }
       },
@@ -89,8 +101,7 @@
         "@schematics/angular:application": {
           "strict": true
         }
-      },
-      "prefix": "jhi"
+      }
     }
   },
   "defaultProject": "frontend",

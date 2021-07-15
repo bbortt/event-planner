@@ -2,13 +2,13 @@
 version: '3.3'
 services:
   zookeeper:
-    image: confluentinc/cp-zookeeper:5.5.3
+    image: confluentinc/cp-zookeeper:6.2.0
     container_name: event-planner_zookeeper
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
   kafka:
-    image: confluentinc/cp-kafka:5.5.3
+    image: confluentinc/cp-kafka:6.2.0
     container_name: event-planner_kafka
     ports:
       - 9092:9092

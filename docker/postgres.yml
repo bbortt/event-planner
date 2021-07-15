@@ -2,7 +2,7 @@
 version: '3.3'
 services:
   postgres:
-    image: postgres:13-alpine
+    image: postgres:13.3-alpine
     container_name: event-planner_postgres
     volumes:
       - pgdata:/var/lib/postgresql/data

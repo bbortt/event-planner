@@ -18,4 +18,4 @@ COPY src/main/docker/entrypoint.sh entrypoint.sh
 COPY src/main/docker/nginx-files.conf nginx-files.conf
 COPY src/main/docker/nginx-logstash.conf nginx-logstash.conf
 COPY src/main/docker/site.conf /etc/nginx/conf.d/default.conf
-COPY build /usr/share/nginx/html
+COPY target/classes/static /usr/share/nginx/html
