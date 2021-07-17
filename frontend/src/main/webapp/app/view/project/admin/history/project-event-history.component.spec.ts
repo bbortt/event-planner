@@ -12,6 +12,7 @@ import { EventHistoryService } from 'app/entities/event-history/event-history.se
 import { ProjectEventHistoryComponent } from 'app/view/project/admin/history/project-event-history.component';
 
 import * as dayjs from 'dayjs';
+import { EventHistory } from '../../../../entities/event-history/event-history.model';
 
 jest.mock('@angular/router');
 
@@ -64,10 +65,10 @@ describe('Component Tests', () => {
       it('Should call load all on init', fakeAsync(() => {
         // GIVEN
         const headers = new HttpHeaders().append('link', 'link;link');
-        spyOn(service, 'query').and.returnValue(
+        jest.spyOn(service, 'query').mockReturnValueOnce(
           of(
             new HttpResponse({
-              body: [{ id: 123 }],
+              body: [{ id: 123 }] as EventHistory[],
               headers,
             })
           )
@@ -79,7 +80,7 @@ describe('Component Tests', () => {
 
         // THEN
         expect(service.query).toHaveBeenCalled();
-        expect(comp.eventHistory[0]).toEqual(jasmine.objectContaining({ id: 123 }));
+        expect(comp.eventHistory[0]).toEqual(expect.objectContaining({ id: 123 }));
       }));
 
       it('Should save ActivatedRoute data', fakeAsync(() => {
@@ -90,7 +91,7 @@ describe('Component Tests', () => {
         // @ts-ignore
         comp.activatedRoute = { data, queryParamMap };
 
-        spyOn(comp.showSinceFormControl, 'setValue');
+        jest.spyOn(comp.showSinceFormControl, 'setValue');
 
         // WHEN
         comp.ngOnInit();
@@ -106,7 +107,7 @@ describe('Component Tests', () => {
       it('Should trigger a reload on value change', fakeAsync(() => {
         // GIVEN
         const date = new Date();
-        spyOn(router, 'navigate');
+        jest.spyOn(router, 'navigate');
 
         // WHEN
         comp.ngOnInit();

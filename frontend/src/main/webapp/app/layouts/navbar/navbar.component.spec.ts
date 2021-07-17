@@ -1,3 +1,5 @@
+import { Account } from '../../core/auth/account.model';
+
 jest.mock('@angular/router');
 jest.mock('ngx-webstorage');
 jest.mock('@ngx-translate/core');
@@ -42,7 +44,7 @@ describe('Component Tests', () => {
 
     it('Should call accountService.identity on init', () => {
       // GIVEN
-      spyOn(mockAccountService, 'identity').and.returnValue(of({}));
+      jest.spyOn(mockAccountService, 'identity').mockReturnValueOnce(of({} as Account));
 
       // WHEN
       comp.ngOnInit();

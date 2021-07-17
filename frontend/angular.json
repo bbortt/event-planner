@@ -30,17 +30,37 @@
                 "glob": "*.{js,css,html,png}",
                 "input": "./node_modules/swagger-ui-dist",
                 "output": "swagger-ui",
-                "ignore": ["**/index.html"]
+                "ignore": [
+                  "**/index.html"
+                ]
               },
-              { "glob": "axios.min.js", "input": "./node_modules/axios/dist", "output": "swagger-ui" },
-              { "glob": "**/*", "input": "src/main/webapp/swagger-ui/", "output": "swagger-ui" }
+              {
+                "glob": "axios.min.js",
+                "input": "./node_modules/axios/dist",
+                "output": "swagger-ui"
+              },
+              {
+                "glob": "**/*",
+                "input": "src/main/webapp/swagger-ui/",
+                "output": "swagger-ui"
+              }
             ],
-            "styles": ["src/main/webapp/content/scss/vendor.scss", "src/main/webapp/content/scss/global.scss"],
+            "styles": [
+              "src/main/webapp/content/scss/vendor.scss",
+              "src/main/webapp/content/scss/global.scss"
+            ],
             "scripts": []
           },
           "configurations": {
             "production": {
-              "optimization": true,
+              "optimization": {
+                "scripts": true,
+                "fonts": true,
+                "styles": {
+                  "inlineCritical": false,
+                  "minify": true
+                }
+              },
               "outputHashing": "all",
               "sourceMap": false,
               "namedChunks": false,
@@ -89,8 +109,7 @@
         "test": {
           "builder": "@angular-builders/jest:run",
           "options": {
-            "configPath": "jest.conf.js",
-            "tsConfig": "tsconfig.spec.json"
+            "configPath": "jest.conf.js"
           }
         }
       },

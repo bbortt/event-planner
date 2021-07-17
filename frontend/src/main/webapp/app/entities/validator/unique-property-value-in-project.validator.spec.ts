@@ -9,7 +9,6 @@ import { Project } from 'app/entities/project/project.model';
 import { uniquePropertyValueInProjectValidator } from 'app/entities/validator/unique-property-value-in-project.validator';
 
 import DoneCallback = jest.DoneCallback;
-import createSpy = jasmine.createSpy;
 
 describe('uniquePropertyValueInProjectValidator', () => {
   let project: Project;
@@ -19,7 +18,7 @@ describe('uniquePropertyValueInProjectValidator', () => {
   });
 
   it('returns no ValidationErrors if API returns `false`', (done: DoneCallback) => {
-    const serviceMethod = createSpy().and.returnValue(of(false));
+    const serviceMethod = jest.fn().mockReturnValueOnce(of(false));
     const asyncValidatorFn = uniquePropertyValueInProjectValidator(project, serviceMethod);
 
     const formValue = 'form-value';
@@ -34,7 +33,7 @@ describe('uniquePropertyValueInProjectValidator', () => {
   });
 
   it('returns ValidationErrors if API returns `true`', (done: DoneCallback) => {
-    const serviceMethod = createSpy().and.returnValue(of(true));
+    const serviceMethod = jest.fn().mockReturnValueOnce(of(true));
     const asyncValidatorFn = uniquePropertyValueInProjectValidator(project, serviceMethod);
 
     const formValue = 'form-value';

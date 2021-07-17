@@ -1,3 +1,5 @@
+import { HttpResponse } from '@angular/common/http';
+
 jest.mock('@ng-bootstrap/ng-bootstrap');
 jest.mock('app/core/util/event-manager.service');
 
@@ -47,8 +49,8 @@ describe('Component Tests', () => {
       it('Should call delete service on confirm', () => {
         // GIVEN
         const projectId = 1;
-        spyOn(projectService, 'delete').and.returnValue(of({}));
-        spyOn(projectService, 'archive').and.returnValue(of({}));
+        jest.spyOn(projectService, 'delete').mockReturnValueOnce(of(new HttpResponse()));
+        jest.spyOn(projectService, 'archive').mockReturnValueOnce(of(new HttpResponse()));
 
         // WHEN
         comp.delete = true;
@@ -64,8 +66,8 @@ describe('Component Tests', () => {
       it('Should call archive service on confirm', () => {
         // GIVEN
         const projectId = 1;
-        spyOn(projectService, 'delete').and.returnValue(of({}));
-        spyOn(projectService, 'archive').and.returnValue(of({}));
+        jest.spyOn(projectService, 'delete').mockReturnValueOnce(of(new HttpResponse()));
+        jest.spyOn(projectService, 'archive').mockReturnValueOnce(of(new HttpResponse()));
 
         // WHEN
         comp.archive = true;
