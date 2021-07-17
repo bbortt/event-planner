@@ -1,20 +1,23 @@
-import { Account } from '../../core/auth/account.model';
-
 jest.mock('@angular/router');
 jest.mock('ngx-webstorage');
 jest.mock('@ngx-translate/core');
 jest.mock('app/core/auth/account.service');
 jest.mock('app/login/login.service');
 
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { of } from 'rxjs';
-import { SessionStorageService } from 'ngx-webstorage';
+
 import { TranslateService } from '@ngx-translate/core';
+
+import { of } from 'rxjs';
+
+import { SessionStorageService } from 'ngx-webstorage';
 
 import { AccountService } from 'app/core/auth/account.service';
 import { LoginService } from 'app/login/login.service';
+
+import { Account } from '../../core/auth/account.model';
 
 import { NavbarComponent } from './navbar.component';
 

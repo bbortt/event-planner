@@ -41,11 +41,6 @@ task webpackTest(type: NpmTask, dependsOn: "npmInstall") {
 }
 check.dependsOn webpackTest
 
-task npmLint(type: NpmTask, dependsOn: "npmInstall") {
-    args = ["run", "lint"]
-}
-check.dependsOn npmLint
-
 // Building
 task webpack(type: NpmTask, dependsOn: "npmInstall") {
     args = ["run", "webapp:prod"]

@@ -4,10 +4,18 @@
   "newProjectRoot": "projects",
   "projects": {
     "frontend": {
-      "prefix": "jhi",
       "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        },
+        "@schematics/angular:application": {
+          "strict": true
+        }
+      },
       "root": "",
       "sourceRoot": "src/main/webapp",
+      "prefix": "jhi",
       "architect": {
         "build": {
           "builder": "@angular-builders/custom-webpack:browser",
@@ -20,7 +28,7 @@
             "main": "src/main/webapp/main.ts",
             "polyfills": "src/main/webapp/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
-            "aot": true,
+            "inlineStyleLanguage": "scss",
             "assets": [
               "src/main/webapp/content",
               "src/main/webapp/favicon.ico",
@@ -30,32 +38,19 @@
                 "glob": "*.{js,css,html,png}",
                 "input": "./node_modules/swagger-ui-dist",
                 "output": "swagger-ui",
-                "ignore": [
-                  "**/index.html"
-                ]
+                "ignore": ["**/index.html"]
               },
-              {
-                "glob": "axios.min.js",
-                "input": "./node_modules/axios/dist",
-                "output": "swagger-ui"
-              },
-              {
-                "glob": "**/*",
-                "input": "src/main/webapp/swagger-ui/",
-                "output": "swagger-ui"
-              }
+              { "glob": "axios.min.js", "input": "./node_modules/axios/dist", "output": "swagger-ui" },
+              { "glob": "**/*", "input": "src/main/webapp/swagger-ui/", "output": "swagger-ui" }
             ],
-            "styles": [
-              "src/main/webapp/content/scss/vendor.scss",
-              "src/main/webapp/content/scss/global.scss"
-            ],
+            "styles": ["src/main/webapp/content/scss/vendor.scss", "src/main/webapp/content/scss/global.scss"],
             "scripts": []
           },
           "configurations": {
             "production": {
               "optimization": {
-                "scripts": true,
                 "fonts": true,
+                "scripts": true,
                 "styles": {
                   "inlineCritical": false,
                   "minify": true
@@ -96,29 +91,25 @@
         "serve": {
           "builder": "@angular-builders/custom-webpack:dev-server",
           "options": {
-            "browserTarget": "frontend:build",
+            "browserTarget": "frontend:build:development",
             "proxyConfig": "./webpack/proxy.conf.js",
             "port": 4200
           },
           "configurations": {
             "production": {
               "browserTarget": "frontend:build:production"
+            },
+            "development": {
+              "browserTarget": "frontend:build:development"
             }
-          }
+          },
+          "defaultConfiguration": "development"
         },
         "test": {
           "builder": "@angular-builders/jest:run",
           "options": {
             "configPath": "jest.conf.js"
           }
-        }
-      },
-      "schematics": {
-        "@schematics/angular:component": {
-          "style": "scss"
-        },
-        "@schematics/angular:application": {
-          "strict": true
         }
       }
     }

@@ -1,4 +1,5 @@
 function setupProxy() {
+  const tls = process.env.TLS;
   const conf = [
     {
       context: [
@@ -13,9 +14,9 @@ function setupProxy() {
         '/auth',
         '/health',
       ],
-      target: `http://localhost:8080`,
+      target: `http${tls ? 's' : ''}://localhost:8080`,
       secure: false,
-      changeOrigin: false,
+      changeOrigin: tls,
     },
   ];
   return conf;

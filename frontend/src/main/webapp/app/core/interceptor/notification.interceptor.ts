@@ -17,7 +17,7 @@ export class NotificationInterceptor implements HttpInterceptor {
           let alertParams: string | null = null;
 
           for (const headerKey of event.headers.keys()) {
-            if (headerKey.toLowerCase().endsWith('app-alert')) {
+            if (headerKey.toLowerCase().endsWith('jhi-alert')) {
               alert = event.headers.get(headerKey);
             } else if (headerKey.toLowerCase().endsWith('app-params')) {
               alertParams = decodeURIComponent(event.headers.get(headerKey)!.replace(/\+/g, ' '));

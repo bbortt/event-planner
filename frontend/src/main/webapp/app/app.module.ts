@@ -10,13 +10,13 @@ import { locale as dxLocale } from 'devextreme/localization';
 
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 
-import { NgxWebstorageModule } from 'ngx-webstorage';
+import { NgxWebstorageModule, SessionStorageService } from 'ngx-webstorage';
 
 import { NgbDateAdapter, NgbDatepickerConfig } from '@ng-bootstrap/ng-bootstrap';
 
 import { AppRoutingModule } from './app-routing.module';
+import { HomeModule } from './home/home.module';
 import { SharedModule } from 'app/shared/shared.module';
-import { ViewModule } from 'app/view/view.module';
 
 import { ErrorComponent } from './layouts/error/error.component';
 import { FooterComponent } from './layouts/footer/footer.component';
@@ -44,12 +44,12 @@ import './vendor';
   imports: [
     BrowserModule,
     SharedModule,
-    ViewModule,
+    HomeModule,
     AppRoutingModule,
     // Set this to true to enable service worker (PWA)
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: false }),
     HttpClientModule,
-    NgxWebstorageModule.forRoot({ prefix: 'jhi', separator: '-' }),
+    NgxWebstorageModule.forRoot({ prefix: 'jhi', separator: '-', caseSensitive: true }),
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -76,19 +76,22 @@ export class AppModule {
     applicationConfigService: ApplicationConfigService,
     iconLibrary: FaIconLibrary,
     dpConfig: NgbDatepickerConfig,
-    translateService: TranslateService
+    translateService: TranslateService,
+    sessionStorageService: SessionStorageService
   ) {
     applicationConfigService.setEndpointPrefix(SERVER_API_URL);
+    registerLocaleData(locale);
     iconLibrary.addIcons(...fontAwesomeIcons);
     dpConfig.minDate = { year: dayjs().subtract(100, 'year').year(), month: 1, day: 1 };
 
-    registerLocaleData(locale);
-    translateService.setDefaultLang('de');
-    translateService.use('de');
     dxLocale('de');
-
+    translateService.setDefaultLang('de');
     translateService.onLangChange.subscribe((event: LangChangeEvent) => {
       dxLocale(event.lang);
     });
+
+    // if user have changed language and navigates away from the application and back to the application then use previously choosed language
+    const langKey = sessionStorageService.retrieve('locale') ?? 'de';
+    translateService.use(langKey);
   }
 }

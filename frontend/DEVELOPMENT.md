@@ -1,9 +1,6 @@
-# frontend
+# Event Planner - Frontend
 
-This application was generated using JHipster 7.0.0, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v7.0.0](https://www.jhipster.tech/documentation-archive/v7.0.0).
-
-This is a "gateway" application intended to be part of a microservice architecture, please refer to the [Doing microservices with JHipster][] page of the documentation for more information.
-This application is configured for Service Discovery and Configuration with . On launch, it will refuse to start if it is not able to connect to .
+This application was generated using JHipster 7.1.0, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v7.1.0](https://www.jhipster.tech/documentation-archive/v7.1.0).
 
 ## Development
 
@@ -28,12 +25,6 @@ auto-refreshes when files change on your hard drive.
 npm start
 ```
 
-If you want to use [HMR](https://webpack.js.org/guides/hot-module-replacement) for instant page updates and data + scroll position preservation on file changes then instead of `npm start` run
-
-```
-npm run start-hmr
-```
-
 Npm is also used to manage CSS and JavaScript dependencies used in this application. You can upgrade dependencies by
 specifying a newer version in [package.json](package.json). You can also run `npm update` and `npm install` to manage dependencies.
 Add the `help` flag on any command to see how you can use it. For example, `npm help update`.
@@ -49,6 +40,7 @@ To log in to your app, you'll need to have [Keycloak](https://keycloak.org) up a
 ```
 docker-compose -f docker/keycloak.yml up
 ```
+
 
 ### PWA Support
 
@@ -111,27 +103,21 @@ update src/main/webapp/app/app.module.ts
 
 ## Building for production
 
-### Packaging as jar
+### Packaging
 
-To build the final jar and optimize the web application application for production, run:
+To build and optimize the frontend application for production, run:
 
-```
+ ```
 ./gradlew :frontend:build -Pprod
 ```
-
-This will concatenate and minify the client CSS and JavaScript files. It will also modify `index.html` so it references these new files.
-
-Refer to [Using JHipster in production][] for more details.
 
 ## Testing
 
 To launch your application's tests, run:
 
 ```
-npm test
+./gradlew :frontend:check
 ```
-
-For more information, refer to the [Running tests page][].
 
 ### Code quality
 
@@ -144,28 +130,3 @@ Then, run a Sonar analysis:
 ```
 ./gradlew -Pprod clean check jacocoTestReport sonarqube
 ```
-
-For more information, refer to the [Code quality page][].
-
-## Continuous Integration (optional)
-
-To configure CI for your project, run the ci-cd sub-generator (`jhipster ci-cd`), this will let you generate configuration files for a number of Continuous Integration systems. Consult the [Setting up Continuous Integration][] page for more information.
-
-[jhipster homepage and latest documentation]: https://www.jhipster.tech
-[jhipster 7.0.0 archive]: https://www.jhipster.tech/documentation-archive/v7.0.0
-[doing microservices with jhipster]: https://www.jhipster.tech/documentation-archive/v7.0.0/microservices-architecture/
-[using jhipster in development]: https://www.jhipster.tech/documentation-archive/v7.0.0/development/
-[using docker and docker-compose]: https://www.jhipster.tech/documentation-archive/v7.0.0/docker-compose
-[using jhipster in production]: https://www.jhipster.tech/documentation-archive/v7.0.0/production/
-[running tests page]: https://www.jhipster.tech/documentation-archive/v7.0.0/running-tests/
-[code quality page]: https://www.jhipster.tech/documentation-archive/v7.0.0/code-quality/
-[setting up continuous integration]: https://www.jhipster.tech/documentation-archive/v7.0.0/setting-up-ci/
-[node.js]: https://nodejs.org/
-[webpack]: https://webpack.github.io/
-[angular cli]: https://cli.angular.io/
-[browsersync]: https://www.browsersync.io/
-[jest]: https://facebook.github.io/jest/
-[jasmine]: https://jasmine.github.io/2.0/introduction.html
-[protractor]: https://angular.github.io/protractor/
-[leaflet]: https://leafletjs.com/
-[definitelytyped]: https://definitelytyped.org/
