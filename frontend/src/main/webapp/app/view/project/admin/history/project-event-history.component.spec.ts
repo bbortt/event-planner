@@ -7,12 +7,13 @@ import { of } from 'rxjs';
 
 import { TranslateModule } from '@ngx-translate/core';
 
+import { EventHistory } from '../../../../entities/event-history/event-history.model';
+
 import { EventHistoryService } from 'app/entities/event-history/event-history.service';
 
 import { ProjectEventHistoryComponent } from 'app/view/project/admin/history/project-event-history.component';
 
 import * as dayjs from 'dayjs';
-import { EventHistory } from '../../../../entities/event-history/event-history.model';
 
 jest.mock('@angular/router');
 

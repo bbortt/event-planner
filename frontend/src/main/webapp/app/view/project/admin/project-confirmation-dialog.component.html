@@ -4,8 +4,6 @@
       <div class="modal-header">
         <h4 *ngIf="archive" class="modal-title" jhiTranslate="eventPlannerApp.project.archive.title">Confirm archive operation</h4>
         <h4 *ngIf="delete" class="modal-title" jhiTranslate="entity.delete.title">Confirm delete operation</h4>
-
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" (click)="cancel()">&times;</button>
       </div>
 
       <div class="modal-body">
@@ -31,13 +29,13 @@
       </div>
 
       <div class="modal-footer">
-        <button type="button" class="btn btn-negative btn-grey" data-dismiss="modal" (click)="cancel()">
+        <button type="button" class="btn btn-negative btn-gray" data-dismiss="modal" (click)="cancel()">
           <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
         </button>
 
         <button id="jhi-confirm-delete-project" type="submit" class="btn btn-negative btn-red">
           <fa-icon icon="times"></fa-icon>
-          &nbsp;
+
           <span *ngIf="archive" jhiTranslate="eventPlannerApp.project.action.archive">Archive</span>
           <span *ngIf="delete" jhiTranslate="entity.action.delete">Delete</span>
         </button>

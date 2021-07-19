@@ -3,13 +3,16 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { TranslateService } from '@ngx-translate/core';
-import { SessionStorageService } from 'ngx-webstorage';
 
-import { Observable, of, ReplaySubject } from 'rxjs';
-import { catchError, shareReplay, tap } from 'rxjs/operators';
+import { forkJoin, Observable, of, ReplaySubject } from 'rxjs';
+import { catchError, map, shareReplay, tap } from 'rxjs/operators';
 
+import { AlertService } from '../util/alert.service';
 import { ApplicationConfigService } from '../config/application-config.service';
+import { SessionStorageService } from 'ngx-webstorage';
 import { StateStorageService } from 'app/core/auth/state-storage.service';
+
+import { ProjectService } from '../../entities/project/project.service';
 
 import { Account } from 'app/core/auth/account.model';
 
@@ -22,17 +25,15 @@ export class AccountService {
   private accountCache$?: Observable<Account | null>;
 
   constructor(
-    private translateService: TranslateService,
-    private sessionStorageService: SessionStorageService,
     private http: HttpClient,
-    private stateStorageService: StateStorageService,
     private router: Router,
-    private applicationConfigService: ApplicationConfigService
+    private alertService: AlertService,
+    private applicationConfigService: ApplicationConfigService,
+    private projectService: ProjectService,
+    private sessionStorageService: SessionStorageService,
+    private stateStorageService: StateStorageService,
+    private translateService: TranslateService
   ) {}
-
-  save(account: Account): Observable<{}> {
-    return this.http.post(this.applicationConfigService.getEndpointFor('api/account'), account);
-  }
 
   authenticate(identity: Account | null): void {
     this.userIdentity = identity;
@@ -95,7 +96,24 @@ export class AccountService {
   }
 
   private fetch(): Observable<Account> {
-    return this.http.get<Account>(this.applicationConfigService.getEndpointFor('api/account'));
+    return forkJoin({
+      account: this.http.get<Account>(this.applicationConfigService.getEndpointFor('api/account')),
+      rolePerProject: this.projectService.getRolePerProject().pipe(
+        catchError(() => {
+          this.alertService.addAlert({
+            type: 'danger',
+            message: 'The project permissions could not be loaded. Please try again later!',
+            translationKey: 'global.messages.error.fetchRolesFailed',
+          });
+          return of(new Map());
+        })
+      ),
+    }).pipe(
+      map(({ account, rolePerProject }: { account: Account; rolePerProject: Map<number, string> }) => {
+        account.rolePerProject = new Map(Object.entries(rolePerProject));
+        return account;
+      })
+    );
   }
 
   private navigateToStoredUrl(): void {
