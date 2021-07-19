@@ -32,7 +32,7 @@ jobs:
         run: PGPASSWORD=event_planner_password psql -h localhost -U event_planner -f .github/workflows/postgres/init.sql
       - name: Build using Gradle
         run: |
-          ./gradlew -Pprod -PnodeInstall --no-daemon -i \
+          ./gradlew -Pprod --no-daemon -i \
           -Dsonar.host.url=https://sonarcloud.io \
           -Dsonar.organization=bbortt-github \
           -Dsonar.login=$SONAR_TOKEN \
