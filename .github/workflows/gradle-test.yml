@@ -19,7 +19,7 @@ jobs:
           java-version: 11
       - name: Build using Gradle
         run: |
-          ./gradlew -Pprod --no-daemon -i test
+          ./gradlew -Pprod -PnodeInstall --no-daemon -i test
       - name: Build cache
         uses: actions/cache@v2
         with:

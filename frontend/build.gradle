@@ -15,7 +15,7 @@ sonarqube {
 
 node {
     version = "14.17.3"
-    npmVersion = "7.19.1"
+    npmVersion = "7.20.0"
     npmInstallCommand = "ci"
 }
 
