@@ -30,16 +30,8 @@ a:not([href]):not([tabindex]):hover.dropdown-item {
 }
 
 /* override .dropdown-item.active background-color on hover */
-.dropdown-item {
-  :hover {
-    color: $dropdown-link-hover-color;
-  }
-
-  .active {
-    :hover {
-      background-color: mix($dropdown-link-hover-bg, $dropdown-link-active-bg, 50%);
-    }
-  }
+.dropdown-item.active:hover {
+  background-color: mix($dropdown-link-hover-bg, $dropdown-link-active-bg, 50%);
 }
 
 a:hover {
@@ -47,9 +39,9 @@ a:hover {
   cursor: pointer;
 }
 
-//.dropdown-item:hover {
-//  color: $dropdown-link-hover-color;
-//}
+.dropdown-item:hover {
+  color: $dropdown-link-hover-color;
+}
 
 /* ==========================================================================
 Browser Upgrade Prompt

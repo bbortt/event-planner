@@ -31,7 +31,7 @@ jobs:
         run: |
           PGPASSWORD=event_planner_password psql -h localhost -U event_planner -f .github/workflows/postgres/init.sql
       - name: Build using Gradle
-        run: ./gradlew -Pprod --no-daemon -i build
+        run: ./gradlew -Pprod -PnodeInstall --no-daemon -i build
       - name: Build cache
         uses: actions/cache@v2
         with:

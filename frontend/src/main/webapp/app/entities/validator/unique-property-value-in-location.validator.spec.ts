@@ -9,7 +9,6 @@ import { Location } from 'app/entities/location/location.model';
 import { uniquePropertyValueInLocationValidator } from 'app/entities/validator/unique-property-value-in-location.validator';
 
 import DoneCallback = jest.DoneCallback;
-import createSpy = jasmine.createSpy;
 
 describe('uniquePropertyValueInLocationValidator', () => {
   let location: Location;
@@ -19,7 +18,7 @@ describe('uniquePropertyValueInLocationValidator', () => {
   });
 
   it('returns no ValidationErrors if API returns `false`', (done: DoneCallback) => {
-    const serviceMethod = createSpy().and.returnValue(of(false));
+    const serviceMethod = jest.fn().mockReturnValueOnce(of(false));
     const asyncValidatorFn = uniquePropertyValueInLocationValidator(location, serviceMethod);
 
     const formValue = 'form-value';
@@ -34,7 +33,7 @@ describe('uniquePropertyValueInLocationValidator', () => {
   });
 
   it('returns ValidationErrors if API returns `true`', (done: DoneCallback) => {
-    const serviceMethod = createSpy().and.returnValue(of(true));
+    const serviceMethod = jest.fn().mockReturnValueOnce(of(true));
     const asyncValidatorFn = uniquePropertyValueInLocationValidator(location, serviceMethod);
 
     const formValue = 'form-value';

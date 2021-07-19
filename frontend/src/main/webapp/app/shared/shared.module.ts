@@ -17,14 +17,14 @@ import { DurationPipe } from './date/duration.pipe';
 import { FindLanguageFromKeyPipe } from './language/find-language-from-key.pipe';
 import { FormatMediumDatetimePipe } from './date/format-medium-datetime.pipe';
 import { FormatMediumDatePipe } from './date/format-medium-date.pipe';
-import { I18nRolePipe } from 'app/shared/util/i18n-role.pipe';
+import { I18nRolePipe } from './util/i18n-role.pipe';
 
 @NgModule({
   imports: [SharedLibsModule, ComponentsModule],
   declarations: [
     FindLanguageFromKeyPipe,
-    I18nRolePipe,
     TranslateDirective,
+    I18nRolePipe,
     AlertComponent,
     AlertErrorComponent,
     HasAnyAuthorityDirective,
@@ -39,8 +39,8 @@ import { I18nRolePipe } from 'app/shared/util/i18n-role.pipe';
   exports: [
     SharedLibsModule,
     FindLanguageFromKeyPipe,
-    I18nRolePipe,
     TranslateDirective,
+    I18nRolePipe,
     AlertComponent,
     AlertErrorComponent,
     HasAnyAuthorityDirective,

@@ -23,6 +23,5 @@ import { PROJECT_CALENDAR_ROUTES } from './project-calendar.routes';
     RouterModule.forChild(PROJECT_CALENDAR_ROUTES),
   ],
   declarations: [ProjectCalendarComponent, ProjectCalendarFilterComponent],
-  entryComponents: [ProjectCalendarComponent],
 })
 export class EventPlannerProjectCalendarModule {}

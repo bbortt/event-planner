@@ -3,17 +3,18 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { TranslateService } from '@ngx-translate/core';
-import { SessionStorageService } from 'ngx-webstorage';
 
 import { forkJoin, Observable, of, ReplaySubject } from 'rxjs';
 import { catchError, map, shareReplay, tap } from 'rxjs/operators';
 
+import { AlertService } from '../util/alert.service';
 import { ApplicationConfigService } from '../config/application-config.service';
-import { ProjectService } from 'app/entities/project/project.service';
+import { SessionStorageService } from 'ngx-webstorage';
 import { StateStorageService } from 'app/core/auth/state-storage.service';
 
+import { ProjectService } from '../../entities/project/project.service';
+
 import { Account } from 'app/core/auth/account.model';
-import { AlertService } from 'app/core/util/alert.service';
 
 import { Authority } from 'app/config/authority.constants';
 
@@ -21,18 +22,17 @@ import { Authority } from 'app/config/authority.constants';
 export class AccountService {
   private userIdentity: Account | null = null;
   private authenticationState = new ReplaySubject<Account | null>(1);
-  private accountCache?: Observable<Account | null>;
-  private isFetching = false;
+  private accountCache$?: Observable<Account | null>;
 
   constructor(
-    private translateService: TranslateService,
-    private sessionStorage: SessionStorageService,
     private http: HttpClient,
-    private stateStorageService: StateStorageService,
     private router: Router,
-    private applicationConfigService: ApplicationConfigService,
     private alertService: AlertService,
-    private projectService: ProjectService
+    private applicationConfigService: ApplicationConfigService,
+    private projectService: ProjectService,
+    private sessionStorageService: SessionStorageService,
+    private stateStorageService: StateStorageService,
+    private translateService: TranslateService
   ) {}
 
   authenticate(identity: Account | null): void {
@@ -66,17 +66,17 @@ export class AccountService {
   }
 
   identity(force?: boolean): Observable<Account | null> {
-    if ((!this.accountCache && !this.isFetching) || force || !this.isAuthenticated()) {
-      this.accountCache = this.fetch().pipe(
+    if (!this.accountCache$ || force || !this.isAuthenticated()) {
+      this.accountCache$ = this.fetch().pipe(
         catchError(() => of(null)),
         tap((account: Account | null) => {
           this.authenticate(account);
 
           // After retrieve the account info, the language will be changed to
           // the user's preferred language configured in the account setting
-          if (account?.langKey) {
-            const langKey = this.sessionStorage.retrieve('locale') ?? account.langKey;
-            this.translateService.use(langKey);
+          // unless user have choosed other language in the current session
+          if (!this.sessionStorageService.retrieve('locale') && account) {
+            this.translateService.use(account.langKey);
           }
 
           if (account) {
@@ -86,8 +86,7 @@ export class AccountService {
         shareReplay()
       );
     }
-
-    return this.accountCache as Observable<Account>;
+    return this.accountCache$;
   }
 
   isAuthenticated(): boolean {
@@ -98,13 +97,7 @@ export class AccountService {
     return this.authenticationState.asObservable();
   }
 
-  getImageUrl(): string {
-    return this.userIdentity?.imageUrl ?? '';
-  }
-
   private fetch(): Observable<Account> {
-    this.isFetching = true;
-
     return forkJoin({
       account: this.http.get<Account>(this.applicationConfigService.getEndpointFor('api/account')),
       rolePerProject: this.projectService.getRolePerProject().pipe(
@@ -121,8 +114,7 @@ export class AccountService {
       map(({ account, rolePerProject }: { account: Account; rolePerProject: Map<number, string> }) => {
         account.rolePerProject = new Map(Object.entries(rolePerProject));
         return account;
-      }),
-      tap(() => (this.isFetching = false))
+      })
     );
   }
 

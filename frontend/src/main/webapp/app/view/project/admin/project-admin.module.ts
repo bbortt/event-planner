@@ -55,6 +55,5 @@ import { PROJECT_ADMIN_ROUTES } from './project-admin.routes';
     ProjectResponsibilityDeleteDialogComponent,
     ProjectConfirmationDialogComponent,
   ],
-  entryComponents: [ProjectAdminComponent],
 })
 export class EventPlannerProjectAdminModule {}

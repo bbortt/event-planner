@@ -1,31 +1,27 @@
 {
   "compilerOptions": {
-    "target": "es2015",
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": "src/main/webapp/",
+    "declaration": false,
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "importHelpers": true,
+    "lib": ["es2018", "dom"],
     "module": "es2020",
     "moduleResolution": "node",
-    "sourceMap": true,
-    "experimentalDecorators": true,
-    "strict": true,
-    "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "outDir": "build/app",
-    "lib": ["es2018", "dom"],
-    "baseUrl": "./",
-    "paths": {
-      "app/*": ["src/main/webapp/app/*"]
-    },
-    "importHelpers": true,
-    "downlevelIteration": true,
-    "declaration": false,
-    "forceConsistentCasingInFileNames": true,
+    "noImplicitReturns": true,
+    "outDir": "./target/classes/static/",
+    "sourceMap": true,
     "resolveJsonModule": true,
-    "allowSyntheticDefaultImports": true
+    "strict": true,
+    "target": "es2017"
   },
   "angularCompilerOptions": {
+    "preserveWhitespaces": true,
     "strictInjectionParameters": true,
-    "strictTemplates": true,
     "strictInputAccessModifiers": true,
-    "preserveWhitespaces": true
-  },
-  "exclude": ["src/test/javascript/cypress"]
+    "strictTemplates": true
+  }
 }

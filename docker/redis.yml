@@ -2,7 +2,7 @@
 version: '3.3'
 services:
   redis:
-    image: redis:6.2.1-alpine
+    image: redis:6.2.4-alpine
     container_name: event-planner_redis
     volumes:
       - redisdata:/var/lib/redis

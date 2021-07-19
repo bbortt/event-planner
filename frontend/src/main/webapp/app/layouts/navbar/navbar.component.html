@@ -1,6 +1,7 @@
 <nav data-cy="navbar" class="navbar navbar-dark navbar-expand-md bg-dark">
   <a class="navbar-brand logo" routerLink="/" (click)="collapseNavbar()">
-    <span jhiTranslate="global.title" class="navbar-title">EventPlanner</span>
+    <span class="logo-img"></span>
+    <span jhiTranslate="global.title" class="navbar-title">Frontend</span>
     <span class="navbar-version">{{ version }}</span>
   </a>
   <a
@@ -57,13 +58,12 @@
         [routerLinkActiveOptions]="{ exact: true }"
       >
         <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="account-menu" data-cy="accountMenu">
-          <span *ngIf="!getImageUrl()">
+          <span *ngIf="!account?.imageUrl">
             <fa-icon icon="user"></fa-icon>
-            <span *ngIf="!isAuthenticated()" jhiTranslate="global.menu.account.main">Account</span>
-            <span id="home-logged-message" *ngIf="account">{{ account.login }}</span>
+            <span jhiTranslate="global.menu.account.main">Account</span>
           </span>
-          <span *ngIf="getImageUrl()">
-            <img [src]="getImageUrl()" class="profile-image rounded-circle" alt="Avatar" />
+          <span *ngIf="account?.imageUrl">
+            <img [src]="account!.imageUrl" class="profile-image rounded-circle" alt="Avatar" />
           </span>
         </a>
         <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="account-menu">

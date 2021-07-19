@@ -4,19 +4,18 @@ jest.mock('app/core/auth/state-storage.service');
 
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-
 import { Router } from '@angular/router';
 
 import { TranslateService } from '@ngx-translate/core';
-import { NgxWebstorageModule } from 'ngx-webstorage';
-
-import { AccountService } from './account.service';
-import { ProjectService } from 'app/entities/project/project.service';
-import { StateStorageService } from 'app/core/auth/state-storage.service';
+import { NgxWebstorageModule, SessionStorageService } from 'ngx-webstorage';
 
 import { Account } from 'app/core/auth/account.model';
-
 import { Authority } from 'app/config/authority.constants';
+
+import { AccountService } from './account.service';
+import { ApplicationConfigService } from 'app/core/config/application-config.service';
+import { StateStorageService } from 'app/core/auth/state-storage.service';
+import { ProjectService } from '../../entities/project/project.service';
 
 function accountWithAuthorities(authorities: string[]): Account {
   return {
@@ -35,9 +34,12 @@ function accountWithAuthorities(authorities: string[]): Account {
 describe('Service Tests', () => {
   describe('Account Service', () => {
     let service: AccountService;
+    let applicationConfigService: ApplicationConfigService;
     let httpMock: HttpTestingController;
     let mockStorageService: StateStorageService;
     let mockRouter: Router;
+    let mockTranslateService: TranslateService;
+    let sessionStorageService: SessionStorageService;
 
     beforeEach(() => {
       TestBed.configureTestingModule({
@@ -46,9 +48,12 @@ describe('Service Tests', () => {
       });
 
       service = TestBed.inject(AccountService);
+      applicationConfigService = TestBed.inject(ApplicationConfigService);
       httpMock = TestBed.inject(HttpTestingController);
       mockStorageService = TestBed.inject(StateStorageService);
       mockRouter = TestBed.inject(Router);
+      mockTranslateService = TestBed.inject(TranslateService);
+      sessionStorageService = TestBed.inject(SessionStorageService);
     });
 
     afterEach(() => {
@@ -86,7 +91,7 @@ describe('Service Tests', () => {
 
     describe('identity', () => {
       it('should call /account only once if not logged out after first authentication and should call /account again if user has logged out', () => {
-        // Given the user is isAuthenticated
+        // Given the user is authenticated
         service.identity().subscribe();
         httpMock.expectOne({ method: 'GET', url: 'api/account' }).flush({});
         httpMock.expectOne({ method: 'GET', url: 'api/projects/rolePerProject' }).flush({});
@@ -103,8 +108,36 @@ describe('Service Tests', () => {
         service.identity().subscribe();
 
         // Then there is a new request
-        httpMock.expectOne({ method: 'GET', url: 'api/account' });
-        httpMock.expectOne({ method: 'GET', url: 'api/projects/rolePerProject' });
+        httpMock.expectOne({ method: 'GET', url: 'api/account' }).flush({});
+        httpMock.expectOne({ method: 'GET', url: 'api/projects/rolePerProject' }).flush({});
+      });
+
+      describe('should change the language on authentication if necessary', () => {
+        it('should change language if user has not changed language manually', () => {
+          // GIVEN
+          sessionStorageService.retrieve = jest.fn(key => (key === 'locale' ? undefined : 'otherSessionStorageValue'));
+
+          // WHEN
+          service.identity().subscribe();
+          httpMock.expectOne({ method: 'GET', url: 'api/account' }).flush({ ...accountWithAuthorities([]), langKey: 'accountLang' });
+          httpMock.expectOne({ method: 'GET', url: 'api/projects/rolePerProject' }).flush({});
+
+          // THEN
+          expect(mockTranslateService.use).toHaveBeenCalledWith('accountLang');
+        });
+
+        it('should not change language if user has changed language manually', () => {
+          // GIVEN
+          sessionStorageService.retrieve = jest.fn(key => (key === 'locale' ? 'sessionLang' : undefined));
+
+          // WHEN
+          service.identity().subscribe();
+          httpMock.expectOne({ method: 'GET', url: 'api/account' }).flush({});
+          httpMock.expectOne({ method: 'GET', url: 'api/projects/rolePerProject' }).flush({});
+
+          // THEN
+          expect(mockTranslateService.use).not.toHaveBeenCalled();
+        });
       });
 
       describe('navigateToStoredUrl', () => {
@@ -127,24 +160,15 @@ describe('Service Tests', () => {
           // WHEN
           service.identity().subscribe();
           httpMock.expectOne({ method: 'GET', url: 'api/account' }).error(new ErrorEvent(''));
-          httpMock.expectOne({ method: 'GET', url: 'api/projects/rolePerProject' });
+          const rolePerProjectRequest = httpMock.expectOne({ method: 'GET', url: 'api/projects/rolePerProject' });
 
           // THEN
           expect(mockStorageService.getUrl).not.toHaveBeenCalled();
           expect(mockStorageService.clearUrl).not.toHaveBeenCalled();
           expect(mockRouter.navigateByUrl).not.toHaveBeenCalled();
-        });
 
-        it('should navigate to the previous stored url even when getting roles failes', () => {
-          // WHEN
-          service.identity().subscribe();
-          httpMock.expectOne({ method: 'GET', url: 'api/account' }).flush({});
-          httpMock.expectOne({ method: 'GET', url: 'api/projects/rolePerProject' }).error(new ErrorEvent(''));
-
-          // THEN
-          expect(mockStorageService.getUrl).toHaveBeenCalled();
-          expect(mockStorageService.clearUrl).not.toHaveBeenCalled();
-          expect(mockRouter.navigateByUrl).not.toHaveBeenCalled();
+          // AND
+          expect(rolePerProjectRequest.cancelled).toBeTruthy();
         });
 
         it('should not navigate to the previous stored url when no such url exists post successful authentication', () => {
@@ -158,6 +182,18 @@ describe('Service Tests', () => {
 
           // THEN
           expect(mockStorageService.getUrl).toHaveBeenCalledTimes(1);
+          expect(mockStorageService.clearUrl).not.toHaveBeenCalled();
+          expect(mockRouter.navigateByUrl).not.toHaveBeenCalled();
+        });
+
+        it('should navigate to the previous stored url even when getting roles failes', () => {
+          // WHEN
+          service.identity().subscribe();
+          httpMock.expectOne({ method: 'GET', url: 'api/account' }).flush({});
+          httpMock.expectOne({ method: 'GET', url: 'api/projects/rolePerProject' }).error(new ErrorEvent(''));
+
+          // THEN
+          expect(mockStorageService.getUrl).toHaveBeenCalled();
           expect(mockStorageService.clearUrl).not.toHaveBeenCalled();
           expect(mockRouter.navigateByUrl).not.toHaveBeenCalled();
         });

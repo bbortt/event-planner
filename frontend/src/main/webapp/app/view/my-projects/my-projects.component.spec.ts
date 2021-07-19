@@ -17,8 +17,6 @@ import { Project } from 'app/entities/project/project.model';
 
 import { MyProjectsComponent } from 'app/view/my-projects/my-projects.component';
 
-import objectContaining = jasmine.objectContaining;
-
 describe('Component Tests', () => {
   describe('My Projects Component', () => {
     let comp: MyProjectsComponent;
@@ -64,7 +62,7 @@ describe('Component Tests', () => {
 
         // THEN
         expect(projectService.query).toHaveBeenCalledWith(
-          objectContaining({
+          expect.objectContaining({
             loadArchived: true,
             loadAll: false,
           })
@@ -84,7 +82,7 @@ describe('Component Tests', () => {
 
         // THEN
         expect(projectService.query).toHaveBeenCalledWith(
-          objectContaining({
+          expect.objectContaining({
             loadArchived: false,
             loadAll: true,
           })
@@ -104,7 +102,7 @@ describe('Component Tests', () => {
 
         // THEN
         expect(projectService.query).toHaveBeenCalledWith(
-          objectContaining({
+          expect.objectContaining({
             loadArchived: false,
             loadAll: false,
           })
