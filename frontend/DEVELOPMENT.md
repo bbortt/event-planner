@@ -41,7 +41,6 @@ To log in to your app, you'll need to have [Keycloak](https://keycloak.org) up a
 docker-compose -f docker/keycloak.yml up
 ```
 
-
 ### PWA Support
 
 JHipster ships with PWA (Progressive Web App) support, and it's turned off by default. One of the main components of a PWA is a service worker.
@@ -107,7 +106,7 @@ update src/main/webapp/app/app.module.ts
 
 To build and optimize the frontend application for production, run:
 
- ```
+```
 ./gradlew :frontend:build -Pprod
 ```
 

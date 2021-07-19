@@ -86,9 +86,7 @@ module.exports = (config, options, targetOptions) => {
     );
   }
 
-  const patterns = [
-    // jhipster-needle-add-assets-to-webpack - JHipster will add/remove third-party resources in this array
-  ];
+  const patterns = [];
 
   if (patterns.length > 0) {
     config.plugins.push(new CopyWebpackPlugin({ patterns }));
@@ -111,16 +109,12 @@ module.exports = (config, options, targetOptions) => {
         groupBy: [
           { pattern: './src/main/webapp/i18n/de/*.json', fileName: './i18n/de.json' },
           { pattern: './src/main/webapp/i18n/en/*.json', fileName: './i18n/en.json' },
-          // jhipster-needle-i18n-language-webpack - JHipster will add/remove languages in this array
         ],
       },
     })
   );
 
-  config = merge(
-    config
-    // jhipster-needle-add-webpack-config - JHipster will add custom config
-  );
+  config = merge(config);
 
   return config;
 };

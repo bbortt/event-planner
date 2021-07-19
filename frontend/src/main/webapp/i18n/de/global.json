@@ -4,7 +4,6 @@
     "browsehappy": "Sie benutzen einen <strong>veralteten</strong> Browser. Bitte <a href=\"http://browsehappy.com/?locale=de/\">aktualisieren Sie Ihren Browser</a>, um die Benutzerfreundlichkeit zu erhöhen.",
     "menu": {
       "home": "Startseite",
-      "jhipster-needle-menu-add-element": "JHipster will add additional menu entries here (do not translate!)",
       "account": {
         "main": "Zugang",
         "settings": "Einstellungen",
@@ -17,8 +16,7 @@
       "admin": {
         "main": "Administration",
         "userManagement": "Benutzerverwaltung",
-        "audits": "Audits",
-        "jhipster-needle-menu-add-admin-element": "JHipster will add additional menu entries here (do not translate!)"
+        "audits": "Audits"
       },
       "language": "Sprache"
     },
