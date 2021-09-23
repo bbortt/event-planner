@@ -5,41 +5,30 @@ jobs:
   build:
     working_directory: ~/project
     docker:
-      - image: cimg/openjdk:11.0-browsers
-      - image: circleci/postgres:13.1
-        environment:
-          POSTGRES_DB: event_planner
-          POSTGRES_USER: event_planner
-          POSTGRES_PASSWORD: event_planner_password
-    environment:
-      PIPELINE_NUMBER: << pipeline.number >>
+      - image: cimg/node:14.16.0-browsers
     steps:
       - checkout
       - restore_cache:
-          key: gradledeps-{{ checksum "build.gradle" }}
-      - restore_cache:
-          key: nodemodules-{{ checksum "frontend/package-lock.json" }}
-      - run: |
-          sudo apt update && \
-          sudo apt install -y postgresql-client && \
-          PGPASSWORD=event_planner_password psql -h localhost -U event_planner -f .github/workflows/postgres/init.sql
-      - run: ./gradlew -Pversion=$PIPELINE_NUMBER -Pprod -PnodeInstall --no-daemon -i build
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-
+      - run: npm ci
+      - run:
+          name: List
+          command: npm run lint
+      - run:
+          name: Test
+          command: npm test
+      - run:
+          name: Build
+          command: npm run fullbuild
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
       - persist_to_workspace:
-          root: ./
-          paths:
-            - backend/build/libs
-            - frontend/build
-            - gateway/build/libs
-            - services/user/build/libs
-      - save_cache:
-          key: gradledeps-{{ checksum "build.gradle" }}
-          paths:
-            - ~/.gradle/caches
-            - ~/.gradle/wrapper
-      - save_cache:
-          key: nodemodules-{{ checksum "frontend/package-lock.json" }}
-          paths:
-            - frontend/node_modules
+          root: ~/project
+          paths: .
   publish:
     working_directory: ~/project
     docker:
@@ -48,27 +37,25 @@ jobs:
       DOCKERHUB_PASSWORD: secrethub://bbortt/event-planner/circle/canary/dockerhub/password
       DOCKERHUB_USERNAME: secrethub://bbortt/event-planner/circle/canary/dockerhub/username
       PIPELINE_NUMBER: << pipeline.number >>
-    shell: secrethub run -- /bin/bash
     steps:
-      - checkout
       - attach_workspace:
-          at: ./
+          at: ~/project
       - secrethub/install
       - setup_remote_docker
-      - run: .circleci/docker_build.sh $PIPELINE_NUMBER
+      - run: docker build . -t bbortt/event-planner:$PIPELINE_NUMBER
       - run: echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_USERNAME --password-stdin
-      - run: .circleci/docker_push.sh $PIPELINE_NUMBER
+      - run: docker push bbortt/event-planner:$PIPELINE_NUMBER
       - run: .circleci/git_tag_and_push.sh $PIPELINE_NUMBER
 workflows:
-  release:
+  fullbuild:
     jobs:
       - build:
           filters:
             branches:
-              only: canary
-      - publish:
+              only: /^(release|canary)$/
+      - deploy:
+          requires:
+            - test-build
           filters:
             branches:
-              only: canary
-          requires:
-            - build
+              only: /^(release|canary)$/

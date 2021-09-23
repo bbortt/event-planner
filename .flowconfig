@@ -1,0 +1,13 @@
+[ignore]
+
+[include]
+.*/lib/
+.*/pages/
+
+[libs]
+
+[options]
+module.file_ext=.js
+module.file_ext=.scss
+module.system=haste
+module.use_strict=true

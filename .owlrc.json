@@ -1,10 +1,6 @@
 {
   "hooks": {
-    "pre-commit": [
-      "npm run lint:staged:backend",
-      "npm run lint:staged:frontend",
-      "npm run lint:staged:gateway",
-      "npm run lint:staged:services:user"
-    ]
+    "pre-commit": ["npx pretty-quick"],
+    "commit-msg": ["npx commitlint -e ./.git/COMMIT_EDITMSG"]
   }
 }

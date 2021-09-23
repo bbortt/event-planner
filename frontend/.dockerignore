@@ -1,7 +1,0 @@
-# Ignore everything
-**
-
-# Include build information
-!build
-!Dockerfile
-!src/main/docker
