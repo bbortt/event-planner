@@ -2,12 +2,8 @@ name: NPM Build
 on:
   push:
     branches:
-      - 'bugfix/*'
-      - 'feature/*'
-      - 'hotfix/*'
     tags-ignore:
       - '*'
-  pull_request:
 jobs:
   build:
     name: Build Application
