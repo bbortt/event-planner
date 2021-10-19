@@ -28,7 +28,7 @@
     "start": "next start"
   },
   "dependencies": {
-    "@apollo/client": "^3.4.13",
+    "@apollo/client": "^3.4.16",
     "@auth0/auth0-react": "^1.8.0",
     "deepmerge": "^4.2.2",
     "foundation-sites": "^6.7.3",
