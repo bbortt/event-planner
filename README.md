@@ -1,28 +1,58 @@
-# Event Planner
+# Next.js / Hasura (GraphQL) / Auth0 Sample
 
-> Event Planning Tool.
+> Currently, a sample repository connecting three of the most exciting tools out there!
 
-| Deployment | Access                                           | Status                                                                                                                                                                                 |
-| :--------- | :----------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `canary`   | [planner.otf2021.ch](https://planner.otf2021.ch) | [![CircleCI](https://img.shields.io/circleci/build/github/bbortt/event-planner/canary?label=deployment)](https://app.circleci.com/pipelines/github/bbortt/event-planner?branch=canary) |
+- [Prerequisites](#prerequisites)
+- [Development](#development)
+- [License](#license)
 
-[![GitHub Fullbuild](https://img.shields.io/github/workflow/status/bbortt/event-planner/Fullbuild/canary?label=build)](https://github.com/bbortt/event-planner/actions?query=workflow%3AFullbuild+branch%3Acanary)
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fbbortt%2Fevent-planner.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fbbortt%2Fevent-planner?ref=badge_shield)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=bbortt_event-planner&metric=alert_status)](https://sonarcloud.io/dashboard?id=bbortt_event-planner)
-[![codecov](https://codecov.io/gh/bbortt/event-planner/branch/canary/graph/badge.svg?token=NF44ZR04HH)](https://codecov.io/gh/bbortt/event-planner)
-[![License: Apache 2](https://img.shields.io/badge/License-Apache2-blue.svg?label=license)](https://github.com/bbortt/event-planner/blob/master/LICENSE)
+## Prerequisites
 
-## Documentation
+You'll need the following to get started:
 
-To answer the most frequently asked questions, we have created
-the [Wiki](https://github.com/bbortt/event-planner/wiki).
+1. [Node.js and npm](https://nodejs.org/en/download/)
+   1. at least LTS Version: 14.17.6 (includes npm 6.14.15)
+2. A running [Hasura](https://hasura.io/) server or cloud instance
+3. A database instance: [PostgreSQL](https://www.postgresql.org/)
+
+The repository makes it very easy to spin up a deployment using [docker-compose](https://docs.docker.com/compose/). All
+required files are located in `/docker/compose`.
 
 ## Development
 
-For any questions regarding the local development consider reading
-the [`DEVELOPMENT.md`](https://github.com/bbortt/event-planner/blob/canary/DEVELOPMENT.md)
-or explore the project yourself. Please create an issue tagged with `help-wanted` if you have any
-questions!
+Start by installing all required dependencies: `npm install`.
+
+### Local secrets
+
+Start by copying the `.env` file to `.env.local`. Next, adapt the environment variables as needed.
+
+### Starting docker-compose
+
+In case you'll use the `/docker/compose`-setup, get it started by running the following command:
+
+```shell
+docker-compose -f docker/compose/docker-compose.yml --env-file .env.local up -d
+```
+
+### Migrate to the latest schema
+
+Update the schema right afterwards (using `.env.local`, of course):
+
+```shell
+cd hasura && \
+npx hasura migrate apply --envfile ../.env.local && \
+npx hasura metadata apply --envfile ../.env.local
+```
+
+### Start Next.js
+
+At this point you're already good to go, as long as you don't introduce changes to the schema. You can now
+`npm run dev` and access the webapp on [http://localhost:3000](http://localhost:3000).
+
+### Further instructions
+
+Further instructions, also about setting up Auth0, are given
+in [`DEVELOPMENT.md`](https://github.com/bbortt/event-planner/blob/canary/DEVELOPMENT.md).
 
 ## License
 

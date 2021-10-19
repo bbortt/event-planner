@@ -1,3 +1,0 @@
-ALTER TABLE location
-    ALTER COLUMN date_from SET NOT NULL,
-    ALTER COLUMN date_to SET NOT NULL;

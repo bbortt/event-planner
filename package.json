@@ -1,7 +1,7 @@
 {
   "name": "event-planner",
-  "version": "1.0.0-SNAPSHOT",
-  "description": "Event Planning Tool.",
+  "description": " Event Planning Tool.",
+  "version": "0.0.0",
   "private": true,
   "license": "Apache-2.0",
   "licenses": [
@@ -10,20 +10,57 @@
       "url": "http://www.apache.org/licenses/LICENSE-2.0"
     }
   ],
+  "scripts": {
+    "build": "next build",
+    "dev": "npm run next",
+    "export": "next export",
+    "flow": "flow",
+    "flow:check": "flow check",
+    "fullbuild": "npm run build && npm run export",
+    "gen": "graphql-codegen --config codegen.yml",
+    "lint": "next lint",
+    "next": "next",
+    "prepare": "owl install",
+    "prettier": "prettier \"{,{lib,pages}/**/}*.{md,json,yml,html,js,ts,tsx,css,scss}\"",
+    "prettier:check": "npm run prettier -- --check",
+    "prettier:fix": "npm run prettier -- --write",
+    "release": "standard-version",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@apollo/client": "^3.4.13",
+    "@auth0/auth0-react": "^1.8.0",
+    "deepmerge": "^4.2.2",
+    "foundation-sites": "^6.7.3",
+    "graphql": "^15.6.0",
+    "jquery": "^3.6.0",
+    "next": "^11.1.2",
+    "next-redux-wrapper": "^7.0.5",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-redux": "^7.2.5",
+    "redux": "^4.1.1",
+    "redux-saga": "^1.1.3",
+    "uuid": "^8.3.2"
+  },
   "devDependencies": {
-    "@bbortt/owl": "^1.0.0",
-    "lint-staged": "11.0.0",
-    "prettier": "2.3.2",
-    "prettier-plugin-java": "1.3.0"
+    "@bbortt/owl": "^1.0.4",
+    "@commitlint/cli": "^13.2.1",
+    "@commitlint/config-conventional": "^13.2.0",
+    "@graphql-codegen/cli": "^2.2.0",
+    "@graphql-codegen/flow": "^2.1.4",
+    "@graphql-codegen/introspection": "^2.1.0",
+    "babel-plugin-transform-flow-strip-types": "^6.22.0",
+    "eslint": "^7.32.0",
+    "eslint-config-next": "^11.1.2",
+    "flow-bin": "^0.160.1",
+    "flow-typed": "^2.2.3",
+    "hasura-cli": "^2.0.9",
+    "prettier": "^2.4.1",
+    "pretty-quick": "^3.1.1",
+    "standard-version": "^9.3.2"
   },
   "engines": {
-    "node": ">=12.16.1"
-  },
-  "scripts": {
-    "prepare": "owl install",
-    "lint:staged:backend": "lint-staged -c backend/.lintstagedrc.js",
-    "lint:staged:frontend": "lint-staged -c frontend/.lintstagedrc.js",
-    "lint:staged:gateway": "lint-staged -c gateway/.lintstagedrc.js",
-    "lint:staged:services:user": "lint-staged -c services/user/.lintstagedrc.js"
+    "node": ">=14.17.6"
   }
 }

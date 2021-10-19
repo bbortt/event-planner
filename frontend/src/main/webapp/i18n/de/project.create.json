@@ -1,9 +1,0 @@
-{
-  "eventPlannerApp": {
-    "name": "Name",
-    "description": "Beschreibung",
-    "startTime": "Start Zeit",
-    "endTime": "End Zeit",
-    "userInformationDTO": "User Informationen"
-  }
-}

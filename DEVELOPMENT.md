@@ -1,33 +1,65 @@
-# Event Planner - Developer Instructions
+# Developer Instructions
 
-Event Planner consists of a set of Microservices. Each component has its own `README.md` with
-prerequisites and instructions on getting started. This document covers the overall building and
-testing commands.
+## Auth0
 
-> For an architectural overview take a look at [the wiki](https://github.com/bbortt/event-planner/wiki/Architecture).
+### Configure Hasura
 
-## Testing
+In order to make Hasura work with Auth0,
+follow [this tutorial](https://hasura.io/docs/latest/graphql/core/guides/integrations/auth0-jwt.html). You'll have to
+use the `auth0-spa-js` rule, so the JWT token will have the custom claims attached. In your Auth0 dashboard, edit the
+rule as following to have the actual roles assigned:
 
-Unit tests are bound to the `test` phase. Integration tests should be executed when `check` has been
-invoked. The `check` phase does depend on a PostgreSQL installation running on `localhost:5432`. You
-could kickstart an environment via docker-compose: `docker-compose -f docker/postgres.yml up -d`.
-The init scripts are also located there.
-
-For example
-the [fullbuild](https://github.com/bbortt/event-planner/actions/workflows/gradle-fullbuild.yml)
-executes the following command:
-
-```shell
-./gradlew -Pprod --no-daemon -i check jacocoTestReport sonarqube
+```js
+function(user, context, callback) {
+  const namespace = "https://hasura.io/jwt/claims";
+  context.accessToken[namespace] =
+    {
+      'x-hasura-default-role': 'user',
+      // do some custom logic to decide allowed roles
+      'x-hasura-allowed-roles': ['user'],
+      'x-hasura-user-id': user.user_id
+    };
+  callback(null, user, context);
+}
 ```
 
-## Building
+### Synchronizing users
 
-We build the application into Docker images. When running `./gradlew -Pprod build` all executable
-files will be created, and the frontend will be packed.
-The [`docker_build.sh`](https://github.com/bbortt/event-planner/blob/canary/.circleci/docker_build.sh)
-should give you an idea of how to build docker images.
+We assume you provide each property for the table `auth0_user`:
 
-### I do not have any Node.js / npm installation
+```js
+function(user, context, callback) {
+  const userId = user.user_id;
+  const nickname = user.nickname;
 
-No problem! Just add `-PnodeInstall` and we'll take care of that.
+  const admin_secret = "xxxx";
+  const url = "https://ready-panda-91.hasura.app/v1/graphql";
+  const query = `mutation($userId: String!, $nickname: String) {
+    insert_users(objects: [{
+      id: $userId, name: $nickname, last_seen: "now()"
+    }], on_conflict: {constraint: users_pkey, update_columns: [last_seen, name]}
+    ) {
+      affected_rows
+    }
+  }`;
+
+  const variables = { "userId": userId, "nickname": nickname };
+
+  request.post({
+      url: url,
+      headers: {'content-type' : 'application/json', 'x-hasura-admin-secret': admin_secret},
+      body: JSON.stringify({
+        query: query,
+        variables: variables
+      })
+  }, function(error, response, body){
+       console.log(body);
+       callback(null, user, context);
+  });
+}
+```
+
+### Default roles for new users
+
+Follow [this comment](https://community.auth0.com/t/hook-at-post-registration-to-assign-a-role/57985/3) to assign
+default roles to new users.
