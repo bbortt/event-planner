@@ -2,7 +2,7 @@ name: NPM Lint
 on:
   pull_request:
 jobs:
-  build:
+  lint:
     name: Lint Application
     runs-on: ubuntu-20.04
     steps:

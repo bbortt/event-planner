@@ -1,11 +1,11 @@
-name: NPM Build
+name: NPM Release
 on:
   push:
     branches:
       - 'release'
 jobs:
   build:
-    name: Build Application
+    name: Release Application
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
@@ -16,17 +16,9 @@ jobs:
         with:
           node-version: '14'
       - run: npm ci
-      - run: npm run release
-      - run: npm run fullbuild
+      - run: npx standard-version
       - uses: ad-m/github-push-action@v0.6.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ github.ref }}
           tags: true
-      - uses: actions/cache@v2
-        with:
-          path: |
-            ./node_modules
-          key: ${{ runner.os }}-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-

@@ -1,0 +1,30 @@
+name: Docker Build
+on:
+  push:
+    branches:
+      - 'canary'
+      - 'release'
+jobs:
+  build:
+    name: Build Docker Image
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: bbortt/event-planner
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+      - uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - uses: docker/build-push-action@v2
+        with:
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}

@@ -2,7 +2,7 @@ name: NPM Flow
 on:
   pull_request:
 jobs:
-  build:
+  flow:
     name: Type-Check Application
     runs-on: ubuntu-20.04
     steps:
