@@ -2,8 +2,12 @@ name: NPM Test
 on:
   push:
     branches:
+      - 'bugfix/*'
+      - 'feature/*'
+      - 'hotfix/*'
     tags-ignore:
       - '*'
+  pull_request:
 jobs:
   test:
     name: Test Application
