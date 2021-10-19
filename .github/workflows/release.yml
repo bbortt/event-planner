@@ -19,6 +19,6 @@ jobs:
       - run: npx standard-version
       - uses: ad-m/github-push-action@v0.6.0
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.ACTION_TOKEN }}
           branch: ${{ github.ref }}
           tags: true
