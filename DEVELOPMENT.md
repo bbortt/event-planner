@@ -63,3 +63,5 @@ function(user, context, callback) {
 
 Follow [this comment](https://community.auth0.com/t/hook-at-post-registration-to-assign-a-role/57985/3) to assign
 default roles to new users.
+
+At the time being this would be: `[]`.
