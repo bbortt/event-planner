@@ -8,7 +8,7 @@
 
 ## Prerequisites
 
-You'll need the following to get started:
+You'll need the following to get started.
 
 1. [Node.js and npm](https://nodejs.org/en/download/)
    1. at least LTS Version: 14.17.6 (includes npm 6.14.15)
@@ -24,7 +24,7 @@ Start by installing all required dependencies: `npm install`.
 
 ### Local secrets
 
-Start by copying the `.env` file to `.env.local`. Next, adapt the environment variables as needed.
+Next, copy the `.env` file to `.env.local` and adapt the environment variables as needed.
 
 ### Starting docker-compose
 
@@ -34,9 +34,11 @@ In case you'll use the `/docker/compose`-setup, get it started by running the fo
 docker-compose -f docker/compose/docker-compose.yml --env-file .env.local up -d
 ```
 
+This will take care of schema and metadata management as well.
+
 ### Migrate to the latest schema
 
-Update the schema right afterwards (using `.env.local`, of course):
+Use the following commands if you have to manage hasura manually.
 
 ```shell
 cd hasura && \
