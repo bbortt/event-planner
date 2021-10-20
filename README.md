@@ -52,9 +52,9 @@ At this point you're already good to go, as long as you don't introduce changes 
 ### Further instructions
 
 Further instructions, also about setting up Auth0, are given
-in [`DEVELOPMENT.md`](https://github.com/bbortt/event-planner/blob/canary/DEVELOPMENT.md).
+in [`DEVELOPMENT.md`](https://github.com/bbortt/event-planner/blob/release/DEVELOPMENT.md).
 
 ## License
 
 This project is licensed under the terms of
-the [Apache 2.0 License](https://github.com/bbortt/event-planner/blob/canary/LICENSE).
+the [Apache 2.0 License](https://github.com/bbortt/event-planner/blob/release/LICENSE).

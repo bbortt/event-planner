@@ -5,6 +5,9 @@ on:
       - 'release'
     tags-ignore:
       - '*'
+    paths-ignore:
+      - '.github/version.json'
+      - 'CHANGELOG.md'
 jobs:
   build:
     name: Release Application
@@ -21,6 +24,4 @@ jobs:
         with:
           node-version: '14'
       - run: npx standard-version
-      - run: |
-          git push
-          git push --tags
+      - run: git push --follow-tags origin ${{ github.ref }}
