@@ -1,0 +1,46 @@
+table:
+  name: invitation
+  schema: public
+object_relationships:
+- name: accepted_by
+  using:
+    foreign_key_constraint_on: auth0_user_id
+- name: invited_to
+  using:
+    foreign_key_constraint_on: project_id
+insert_permissions:
+- permission:
+    backend_only: false
+    check: {}
+    columns:
+    - nickname
+    - project_id
+    - token
+    set:
+      accepted: "false"
+      created_at: now()
+      created_by: x-hasura-user-id
+  role: user
+select_permissions:
+- permission:
+    columns:
+    - id
+    - project_id
+    - accepted
+    - token
+    - created_by
+    - nickname
+    - accepted_at
+    - created_at
+    filter: {}
+  role: user
+update_permissions:
+- permission:
+    check: null
+    columns:
+    - accepted
+    - auth0_user_id
+    filter: {}
+    set:
+      accepted_at: now()
+  role: user

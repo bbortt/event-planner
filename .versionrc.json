@@ -1,0 +1,14 @@
+{
+  "bumpFiles": [
+    {
+      "filename": ".github/version.json",
+      "type": "json"
+    }
+  ],
+  "packageFiles": [
+    {
+      "filename": ".github/version.json",
+      "type": "json"
+    }
+  ]
+}
