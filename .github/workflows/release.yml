@@ -7,6 +7,7 @@ jobs:
   build:
     name: Release Application
     runs-on: ubuntu-20.04
+    environment: release
     steps:
       - uses: actions/checkout@v2
         with:

@@ -9,6 +9,7 @@ jobs:
   build:
     name: Build Docker Image
     runs-on: ubuntu-20.04
+    environment: docker
     steps:
       - uses: actions/checkout@v2
       - id: meta
