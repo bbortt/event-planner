@@ -3,6 +3,8 @@ on:
   push:
     branches:
       - 'canary'
+    tags-ignore:
+      - '*'
 jobs:
   build:
     name: Pre-Release Application

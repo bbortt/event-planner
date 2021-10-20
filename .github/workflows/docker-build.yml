@@ -4,7 +4,8 @@ on:
     branches:
       - 'canary'
       - 'release'
-  tags:
+    tags:
+      - '*'
 jobs:
   build:
     name: Build Docker Image
