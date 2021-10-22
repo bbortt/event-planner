@@ -46,18 +46,21 @@ function(user, context, callback) {
   const variables = { "userId": userId, "nickname": nickname };
 
   request.post({
-      url: url,
-      headers: {'content-type' : 'application/json', 'x-hasura-admin-secret': admin_secret},
-      body: JSON.stringify({
-        query: query,
-        variables: variables
-      })
-  }, function(error, response, body){
-       console.log(body);
-       callback(null, user, context);
+    url: url,
+    headers: { 'content-type': 'application/json', 'x-hasura-admin-secret': admin_secret },
+    body: JSON.stringify({
+      query: query,
+      variables: variables
+    })
+  }, function(error, response, body) {
+    console.log(body);
+    callback(null, user, context);
   });
 }
 ```
+
+**Attention:** If you cannot synchronize your users (e.g. when working on _localhost_) you must insert them
+into `auth0_user` table manually.
 
 ### Default roles for new users
 
