@@ -5,6 +5,9 @@ on:
       - 'release'
     tags:
       - '*'
+    paths:
+      - '.github/version.json'
+      - 'CHANGELOG.md'
 jobs:
   build:
     name: Build Docker Image

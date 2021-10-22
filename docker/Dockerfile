@@ -17,4 +17,4 @@ RUN npm run fullbuild
 FROM nginx:1.20.0-alpine
 MAINTAINER Timon Borter <timon.borter@gmx.ch>
 
-COPY --from=builder out /usr/share/nginx/html
+COPY --from=builder /app/out /usr/share/nginx/html
