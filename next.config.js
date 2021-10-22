@@ -3,6 +3,7 @@ const webpack = require('webpack');
 module.exports = {
   images: {
     domains: ['s.gravatar.com'],
+    loader: 'custom',
   },
   webpack: (config, _) => {
     config.experiments = {
