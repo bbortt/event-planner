@@ -2,7 +2,7 @@
 import * as React from 'react';
 
 import { title } from 'next';
-import Router from 'next/router';
+import { useRouter } from 'next/router';
 
 import { useAuth0 } from '@auth0/auth0-react';
 
@@ -11,6 +11,7 @@ import ErrorCallout from '../lib/layout/message/error.callout';
 import LoadingCallout from '../lib/layout/message/loading.callout';
 
 const Index = (): React.Element<typeof LoadingCallout | typeof ErrorCallout | 'div'> => {
+  const router = useRouter();
   const { error, isAuthenticated, isLoading } = useAuth0();
 
   if (isLoading) {
@@ -22,7 +23,7 @@ const Index = (): React.Element<typeof LoadingCallout | typeof ErrorCallout | 'd
   }
 
   if (isAuthenticated) {
-    Router.push('/projects');
+    router.push('/projects');
   }
 
   return (

@@ -24,6 +24,14 @@ html {
       .site-header {
         margin-bottom: 3vh;
       }
+
+      .top-bar-bordered {
+        background-color: $white;
+
+        ul {
+          background-color: $white;
+        }
+      }
     }
   }
 }
