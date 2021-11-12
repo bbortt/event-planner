@@ -1,0 +1,18 @@
+table:
+  name: locality
+  schema: public
+object_relationships:
+  - name: parent
+    using:
+      foreign_key_constraint_on: locality_id
+  - name: project
+    using:
+      foreign_key_constraint_on: project_id
+array_relationships:
+  - name: children
+    using:
+      foreign_key_constraint_on:
+        column: locality_id
+        table:
+          name: locality
+          schema: public

@@ -1,0 +1,110 @@
+table:
+  name: member
+  schema: public
+object_relationships:
+  - name: accepting
+    using:
+      foreign_key_constraint_on: accepted_by
+  - name: project
+    using:
+      foreign_key_constraint_on: project_id
+  - name: user
+    using:
+      foreign_key_constraint_on: auth0_user_id
+array_relationships:
+  - name: permissions
+    using:
+      manual_configuration:
+        column_mapping:
+          id: user_id
+        insertion_order: null
+        remote_table:
+          name: member_permissions_view
+          schema: public
+insert_permissions:
+  - permission:
+      backend_only: false
+      check:
+        auth0_user_id:
+          _eq: X-Hasura-User-Id
+      columns:
+        - created_by
+        - nickname
+        - project_id
+      set:
+        auth0_user_id: x-hasura-User-Id
+        created_by: x-hasura-User-Id
+    role: user
+select_permissions:
+  - permission:
+      columns:
+        - id
+        - project_id
+        - auth0_user_id
+        - nickname
+        - created_by
+        - created_at
+        - accepted
+        - accepted_by
+        - accepted_at
+      filter:
+        _exists:
+          _table:
+            name: member
+            schema: public
+          _where:
+            _and:
+              - auth0_user_id:
+                  _eq: X-Hasura-User-Id
+              - permissions:
+                  permission:
+                    _like: members:list
+              - project_id:
+                  _ceq:
+                    - $
+                    - project_id
+    role: user
+update_permissions:
+  - permission:
+      check: null
+      columns:
+        - accepted
+      filter:
+        _exists:
+          _table:
+            name: member
+            schema: public
+          _where:
+            _and:
+              - auth0_user_id:
+                  _eq: X-Hasura-User-Id
+              - permissions:
+                  permission:
+                    _like: members:accept
+              - project_id:
+                  _ceq:
+                    - $
+                    - project_id
+      set:
+        accepted_at: now()
+        accepted_by: x-hasura-User-Id
+    role: user
+delete_permissions:
+  - permission:
+      filter:
+        _exists:
+          _table:
+            name: member
+            schema: public
+          _where:
+            _and:
+              - auth0_user_id:
+                  _eq: X-Hasura-User-Id
+              - permissions:
+                  permission:
+                    _like: members:revoke
+              - project_id:
+                  _ceq:
+                    - $
+                    - project_id
+    role: user

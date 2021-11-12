@@ -1,3 +1,6 @@
-- "!include public_auth0_user.yaml"
-- "!include public_invitation.yaml"
-- "!include public_project.yaml"
+- '!include public_auth0_user.yaml'
+- '!include public_locality.yaml'
+- '!include public_member.yaml'
+- '!include public_member_permissions_view.yaml'
+- '!include public_permission.yaml'
+- '!include public_project.yaml'

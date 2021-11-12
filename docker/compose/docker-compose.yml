@@ -6,8 +6,9 @@ services:
     image: postgres:13.4-alpine
     container_name: event-planner_postgres
     environment:
-      - FLYWAY_PASSWORD=event_planner_flyway_password
-      - POSTGRES_PASSWORD=postgrespassword
+      - POSTGRES_DB=event_planner
+      - POSTGRES_USER=event_planner_hasura
+      - POSTGRES_PASSWORD=event_planner_hasura_password
     volumes:
       - pgdata:/var/lib/postgres/data
       - ./postgres:/docker-entrypoint-initdb.d
@@ -27,7 +28,7 @@ services:
       - HASURA_GRAPHQL_ENABLE_CONSOLE=true
       - HASURA_GRAPHQL_JWT_SECRET=$HASURA_GRAPHQL_JWT_SECRET
     ports:
-      - "8080:8080"
+      - '8080:8080'
     networks:
       - internal
     depends_on:

@@ -2,21 +2,34 @@ table:
   name: auth0_user
   schema: public
 array_relationships:
-- name: invitations
-  using:
-    foreign_key_constraint_on:
-      column: auth0_user_id
-      table:
-        name: invitation
-        schema: public
+  - name: memberships
+    using:
+      foreign_key_constraint_on:
+        column: auth0_user_id
+        table:
+          name: member
+          schema: public
 select_permissions:
-- permission:
-    columns:
-    - user_id
-    - nickname
-    - email
-    - picture
-    - family_name
-    - given_name
-    filter: {}
-  role: user
+  - permission:
+      columns:
+        - user_id
+        - nickname
+        - email
+        - picture
+        - family_name
+        - given_name
+      filter: {}
+    role: user
+update_permissions:
+  - permission:
+      check: null
+      columns:
+        - email
+        - family_name
+        - given_name
+        - nickname
+        - picture
+      filter:
+        user_id:
+          _eq: X-Hasura-User-Id
+    role: user

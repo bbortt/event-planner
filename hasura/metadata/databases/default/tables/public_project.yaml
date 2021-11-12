@@ -2,63 +2,80 @@ table:
   name: project
   schema: public
 array_relationships:
-- name: invitations
-  using:
-    foreign_key_constraint_on:
-      column: project_id
-      table:
-        name: invitation
-        schema: public
+  - name: localities
+    using:
+      foreign_key_constraint_on:
+        column: project_id
+        table:
+          name: locality
+          schema: public
+  - name: members
+    using:
+      foreign_key_constraint_on:
+        column: project_id
+        table:
+          name: member
+          schema: public
 insert_permissions:
-- permission:
-    backend_only: false
-    check: {}
-    columns:
-    - archived
-    - description
-    - end_time
-    - name
-    - start_time
-    set:
-      created_at: now()
-      created_by: x-hasura-user-id
-      last_updated_at: now()
-      last_updated_by: x-hasura-user-id
-  role: user
+  - permission:
+      backend_only: false
+      check: {}
+      columns:
+        - description
+        - end_time
+        - name
+        - start_time
+      set:
+        created_by: x-hasura-User-Id
+    role: user
 select_permissions:
-- permission:
-    columns:
-    - id
-    - name
-    - description
-    - start_time
-    - end_time
-    - archived
-    - created_by
-    - created_at
-    - last_updated_by
-    - last_updated_at
-    filter:
-      invitations:
-        _and:
-        - project_id:
-            _ceq:
-            - $
-            - id
-        - auth0_user_id:
-            _eq: x-hasura-user-id
-  role: user
+  - permission:
+      columns:
+        - id
+        - token
+        - name
+        - description
+        - start_time
+        - end_time
+        - archived
+        - created_by
+        - created_at
+        - last_updated_by
+        - last_updated_at
+      filter:
+        members:
+          _and:
+            - auth0_user_id:
+                _eq: X-Hasura-User-Id
+            - project_id:
+                _ceq:
+                  - id
+    role: user
 update_permissions:
-- permission:
-    check: null
-    columns: []
-    filter:
-      invitations:
-        _and:
-        - project_id:
-            _ceq:
-            - $
-            - id
-        - auth0_user_id:
-            _eq: x-hasura-user-id
-  role: user
+  - permission:
+      check: null
+      columns:
+        - archived
+        - description
+        - name
+      filter:
+        members:
+          _and:
+            - auth0_user_id:
+                _eq: X-Hasura-User-Id
+            - project_id:
+                _ceq:
+                  - id
+            - permissions:
+                permission:
+                  _like: project:update
+      set:
+        last_updated_at: now()
+        last_updated_by: x-hasura-User-Id
+    role: user
+delete_permissions:
+  - permission:
+      filter:
+        created_by:
+          _eq: X-Hasura-User-Id
+    role: user

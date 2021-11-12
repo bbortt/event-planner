@@ -40,6 +40,8 @@ This will take care of schema and metadata management as well.
 
 Use the following commands if you have to manage hasura manually.
 
+**Careful:** PostgreSQL must have the extension `uuid-ossp` enabled.
+
 ```shell
 cd hasura && \
 npx hasura migrate apply --envfile ../.env.local && \
