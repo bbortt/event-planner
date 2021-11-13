@@ -1,5 +1,3 @@
-DROP FUNCTION accept_member;
-
 DROP TABLE member_permission;
 DROP TABLE permission;
 DROP TABLE member;

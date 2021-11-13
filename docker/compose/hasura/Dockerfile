@@ -1,4 +1,4 @@
-FROM hasura/graphql-engine:v2.0.9
+FROM hasura/graphql-engine:v2.0.10
 
 RUN \
     apt-get update && \

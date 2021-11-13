@@ -1,4 +1,4 @@
-FROM node:16.11.1-bullseye-slim
+FROM node:17.1.0-bullseye-slim
 
 RUN \
     apt-get update && \

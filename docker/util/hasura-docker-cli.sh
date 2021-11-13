@@ -12,5 +12,6 @@ docker build -q -t $image_full_tag $dir/../compose/migration
 docker run \
     --rm \
     -e HASURA_COMMAND=$command \
+    -v $dir/../../:/workspace
     -v $dir/hasura-docker-cli-entrypoint.sh:/entrypoint.sh \
     $image_full_tag

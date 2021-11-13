@@ -2,8 +2,6 @@
 #
 # Apply Hasura migrations and metadata.
 
-set -e
-
-cd hasura
+cd hasura || exit
 npx hasura migrate apply --database-name=default --envfile=../.env.local --skip-update-check
 npx hasura metadata apply --envfile=../.env.local --skip-update-check

@@ -15,6 +15,7 @@ CREATE TABLE locality
 
 INSERT INTO permission (name)
 VALUES ('locality:create'),
+       ('locality:list'),
        ('locality:edit'),
        ('locality:move'),
        ('locality:delete');

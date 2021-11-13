@@ -16,3 +16,105 @@ array_relationships:
         table:
           name: locality
           schema: public
+insert_permissions:
+  - permission:
+      backend_only: false
+      check:
+        _exists:
+          _table:
+            name: member
+            schema: public
+          _where:
+            _and:
+              - auth0_user_id:
+                  _eq: X-Hasura-User-Id
+              - permissions:
+                  permission:
+                    _like: locality:create
+              - project_id:
+                  _ceq:
+                    - $
+                    - project_id
+      columns:
+        - description
+        - locality_id
+        - name
+        - project_id
+      set:
+        created_by: x-hasura-User-Id
+    role: user
+select_permissions:
+  - permission:
+      columns:
+        - id
+        - locality_id
+        - project_id
+        - created_by
+        - description
+        - last_updated_by
+        - name
+        - created_at
+        - last_updated_at
+      filter:
+        _exists:
+          _table:
+            name: member
+            schema: public
+          _where:
+            _and:
+              - auth0_user_id:
+                  _eq: X-Hasura-User-Id
+              - permissions:
+                  permission:
+                    _like: locality:list
+              - project_id:
+                  _ceq:
+                    - $
+                    - project_id
+    role: user
+update_permissions:
+  - permission:
+      check: null
+      columns:
+        - description
+        - locality_id
+        - name
+      filter:
+        _exists:
+          _table:
+            name: member
+            schema: public
+          _where:
+            _and:
+              - auth0_user_id:
+                  _eq: X-Hasura-User-Id
+              - permissions:
+                  permission:
+                    _like: locality:edit
+              - project_id:
+                  _ceq:
+                    - $
+                    - project_id
+      set:
+        last_updated_at: now()
+        last_updated_by: x-hasura-User-Id
+    role: user
+delete_permissions:
+  - permission:
+      filter:
+        _exists:
+          _table:
+            name: member
+            schema: public
+          _where:
+            _and:
+              - auth0_user_id:
+                  _eq: X-Hasura-User-Id
+              - permissions:
+                  permission:
+                    _like: locality:delete
+              - project_id:
+                  _ceq:
+                    - $
+                    - project_id
+    role: user

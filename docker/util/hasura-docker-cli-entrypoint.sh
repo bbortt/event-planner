@@ -2,7 +2,5 @@
 #
 # User Hasura metadata API (entrypoint). Requires $HASURA_COMMAND env var.
 
-set -e
-
-cd hasura
+cd workspace/hasura || exit
 npx hasura metadata $HASURA_COMMAND --envfile=../.env.local --skip-update-check

@@ -3,7 +3,7 @@ version: '3.3'
 services:
   # Database
   postgres:
-    image: postgres:13.4-alpine
+    image: postgres:14.1-alpine
     container_name: event-planner_postgres
     environment:
       - POSTGRES_DB=event_planner
@@ -16,7 +16,7 @@ services:
       - internal
   # Hasura (GraphQL API)
   hasura:
-    # image: hasura/graphql-engine:v2.0.9
+    # image: hasura/graphql-engine:v2.0.10
     build: hasura
     command: sh -c './wait-for postgres:5432 -- graphql-engine serve'
     container_name: event-planner_hasura
@@ -35,7 +35,7 @@ services:
       - postgres
   # Automatic Hasura migration
   hasura_migration:
-    # image: node:16.11.1-bullseye-slim
+    # image: node:17.1.0-bullseye-slim
     build: migration
     container_name: event-planner_hasura_migration
     environment:
