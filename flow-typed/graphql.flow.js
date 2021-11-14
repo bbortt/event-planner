@@ -733,9 +733,9 @@ export type Member = {|
   created_by: $ElementType<Scalars, 'String'>,
   id: $ElementType<Scalars, 'bigint'>,
   /** An array relationship */
-  permissions: Array<Member_Permissions_View>,
+  permissions: Array<Member_Permission>,
   /** An aggregate relationship */
-  permissions_aggregate: Member_Permissions_View_Aggregate,
+  permissions_aggregate: Member_Permission_Aggregate,
   /** An object relationship */
   project: Project,
   project_id: $ElementType<Scalars, 'bigint'>,
@@ -746,20 +746,20 @@ export type Member = {|
 
 /** columns and relationships of "member" */
 export type MemberPermissionsArgs = {|
-  distinct_on?: ?Array<Member_Permissions_View_Select_Column>,
+  distinct_on?: ?Array<Member_Permission_Select_Column>,
   limit?: ?$ElementType<Scalars, 'Int'>,
   offset?: ?$ElementType<Scalars, 'Int'>,
-  order_by?: ?Array<Member_Permissions_View_Order_By>,
-  where?: ?Member_Permissions_View_Bool_Exp,
+  order_by?: ?Array<Member_Permission_Order_By>,
+  where?: ?Member_Permission_Bool_Exp,
 |};
 
 /** columns and relationships of "member" */
 export type MemberPermissions_AggregateArgs = {|
-  distinct_on?: ?Array<Member_Permissions_View_Select_Column>,
+  distinct_on?: ?Array<Member_Permission_Select_Column>,
   limit?: ?$ElementType<Scalars, 'Int'>,
   offset?: ?$ElementType<Scalars, 'Int'>,
-  order_by?: ?Array<Member_Permissions_View_Order_By>,
-  where?: ?Member_Permissions_View_Bool_Exp,
+  order_by?: ?Array<Member_Permission_Order_By>,
+  where?: ?Member_Permission_Bool_Exp,
 |};
 
 /** aggregated selection of "member" */
@@ -839,7 +839,7 @@ export type Member_Bool_Exp = {|
   created_at?: ?Timestamptz_Comparison_Exp,
   created_by?: ?String_Comparison_Exp,
   id?: ?Bigint_Comparison_Exp,
-  permissions?: ?Member_Permissions_View_Bool_Exp,
+  permissions?: ?Member_Permission_Bool_Exp,
   project?: ?Project_Bool_Exp,
   project_id?: ?Bigint_Comparison_Exp,
   project_token?: ?Bpchar_Comparison_Exp,
@@ -872,7 +872,7 @@ export type Member_Insert_Input = {|
   created_at?: ?$ElementType<Scalars, 'timestamptz'>,
   created_by?: ?$ElementType<Scalars, 'String'>,
   id?: ?$ElementType<Scalars, 'bigint'>,
-  permissions?: ?Member_Permissions_View_Arr_Rel_Insert_Input,
+  permissions?: ?Member_Permission_Arr_Rel_Insert_Input,
   project?: ?Project_Obj_Rel_Insert_Input,
   project_id?: ?$ElementType<Scalars, 'bigint'>,
   project_token?: ?$ElementType<Scalars, 'bpchar'>,
@@ -938,6 +938,13 @@ export type Member_Mutation_Response = {|
   returning: Array<Member>,
 |};
 
+/** input type for inserting object relation for remote table "member" */
+export type Member_Obj_Rel_Insert_Input = {|
+  data: Member_Insert_Input,
+  /** on conflict condition */
+  on_conflict?: ?Member_On_Conflict,
+|};
+
 /** on conflict condition type for table "member" */
 export type Member_On_Conflict = {|
   constraint: Member_Constraint,
@@ -955,212 +962,314 @@ export type Member_Order_By = {|
   created_at?: ?Order_By,
   created_by?: ?Order_By,
   id?: ?Order_By,
-  permissions_aggregate?: ?Member_Permissions_View_Aggregate_Order_By,
+  permissions_aggregate?: ?Member_Permission_Aggregate_Order_By,
   project?: ?Project_Order_By,
   project_id?: ?Order_By,
   project_token?: ?Order_By,
   user?: ?Auth0_User_Order_By,
 |};
 
-/** columns and relationships of "member_permissions_view" */
-export type Member_Permissions_View = {|
-  __typename?: 'member_permissions_view',
-  permission?: ?$ElementType<Scalars, 'String'>,
-  user_id?: ?$ElementType<Scalars, 'bigint'>,
+/** columns and relationships of "member_permission" */
+export type Member_Permission = {|
+  __typename?: 'member_permission',
+  created_at: $ElementType<Scalars, 'timestamptz'>,
+  created_by: $ElementType<Scalars, 'String'>,
+  last_updated_at?: ?$ElementType<Scalars, 'timestamptz'>,
+  last_updated_by: $ElementType<Scalars, 'String'>,
+  /** An object relationship */
+  member: Member,
+  member_id: $ElementType<Scalars, 'bigint'>,
+  /** An object relationship */
+  permission: Permission,
+  permission_id: $ElementType<Scalars, 'String'>,
+  project_id: $ElementType<Scalars, 'bigint'>,
 |};
 
-/** aggregated selection of "member_permissions_view" */
-export type Member_Permissions_View_Aggregate = {|
-  __typename?: 'member_permissions_view_aggregate',
-  aggregate?: ?Member_Permissions_View_Aggregate_Fields,
-  nodes: Array<Member_Permissions_View>,
+/** aggregated selection of "member_permission" */
+export type Member_Permission_Aggregate = {|
+  __typename?: 'member_permission_aggregate',
+  aggregate?: ?Member_Permission_Aggregate_Fields,
+  nodes: Array<Member_Permission>,
 |};
 
-/** aggregate fields of "member_permissions_view" */
-export type Member_Permissions_View_Aggregate_Fields = {|
-  __typename?: 'member_permissions_view_aggregate_fields',
-  avg?: ?Member_Permissions_View_Avg_Fields,
+/** aggregate fields of "member_permission" */
+export type Member_Permission_Aggregate_Fields = {|
+  __typename?: 'member_permission_aggregate_fields',
+  avg?: ?Member_Permission_Avg_Fields,
   count: $ElementType<Scalars, 'Int'>,
-  max?: ?Member_Permissions_View_Max_Fields,
-  min?: ?Member_Permissions_View_Min_Fields,
-  stddev?: ?Member_Permissions_View_Stddev_Fields,
-  stddev_pop?: ?Member_Permissions_View_Stddev_Pop_Fields,
-  stddev_samp?: ?Member_Permissions_View_Stddev_Samp_Fields,
-  sum?: ?Member_Permissions_View_Sum_Fields,
-  var_pop?: ?Member_Permissions_View_Var_Pop_Fields,
-  var_samp?: ?Member_Permissions_View_Var_Samp_Fields,
-  variance?: ?Member_Permissions_View_Variance_Fields,
+  max?: ?Member_Permission_Max_Fields,
+  min?: ?Member_Permission_Min_Fields,
+  stddev?: ?Member_Permission_Stddev_Fields,
+  stddev_pop?: ?Member_Permission_Stddev_Pop_Fields,
+  stddev_samp?: ?Member_Permission_Stddev_Samp_Fields,
+  sum?: ?Member_Permission_Sum_Fields,
+  var_pop?: ?Member_Permission_Var_Pop_Fields,
+  var_samp?: ?Member_Permission_Var_Samp_Fields,
+  variance?: ?Member_Permission_Variance_Fields,
 |};
 
-/** aggregate fields of "member_permissions_view" */
-export type Member_Permissions_View_Aggregate_FieldsCountArgs = {|
-  columns?: ?Array<Member_Permissions_View_Select_Column>,
+/** aggregate fields of "member_permission" */
+export type Member_Permission_Aggregate_FieldsCountArgs = {|
+  columns?: ?Array<Member_Permission_Select_Column>,
   distinct?: ?$ElementType<Scalars, 'Boolean'>,
 |};
 
-/** order by aggregate values of table "member_permissions_view" */
-export type Member_Permissions_View_Aggregate_Order_By = {|
-  avg?: ?Member_Permissions_View_Avg_Order_By,
+/** order by aggregate values of table "member_permission" */
+export type Member_Permission_Aggregate_Order_By = {|
+  avg?: ?Member_Permission_Avg_Order_By,
   count?: ?Order_By,
-  max?: ?Member_Permissions_View_Max_Order_By,
-  min?: ?Member_Permissions_View_Min_Order_By,
-  stddev?: ?Member_Permissions_View_Stddev_Order_By,
-  stddev_pop?: ?Member_Permissions_View_Stddev_Pop_Order_By,
-  stddev_samp?: ?Member_Permissions_View_Stddev_Samp_Order_By,
-  sum?: ?Member_Permissions_View_Sum_Order_By,
-  var_pop?: ?Member_Permissions_View_Var_Pop_Order_By,
-  var_samp?: ?Member_Permissions_View_Var_Samp_Order_By,
-  variance?: ?Member_Permissions_View_Variance_Order_By,
+  max?: ?Member_Permission_Max_Order_By,
+  min?: ?Member_Permission_Min_Order_By,
+  stddev?: ?Member_Permission_Stddev_Order_By,
+  stddev_pop?: ?Member_Permission_Stddev_Pop_Order_By,
+  stddev_samp?: ?Member_Permission_Stddev_Samp_Order_By,
+  sum?: ?Member_Permission_Sum_Order_By,
+  var_pop?: ?Member_Permission_Var_Pop_Order_By,
+  var_samp?: ?Member_Permission_Var_Samp_Order_By,
+  variance?: ?Member_Permission_Variance_Order_By,
 |};
 
-/** input type for inserting array relation for remote table "member_permissions_view" */
-export type Member_Permissions_View_Arr_Rel_Insert_Input = {|
-  data: Array<Member_Permissions_View_Insert_Input>,
+/** input type for inserting array relation for remote table "member_permission" */
+export type Member_Permission_Arr_Rel_Insert_Input = {|
+  data: Array<Member_Permission_Insert_Input>,
 |};
 
 /** aggregate avg on columns */
-export type Member_Permissions_View_Avg_Fields = {|
-  __typename?: 'member_permissions_view_avg_fields',
-  user_id?: ?$ElementType<Scalars, 'Float'>,
+export type Member_Permission_Avg_Fields = {|
+  __typename?: 'member_permission_avg_fields',
+  member_id?: ?$ElementType<Scalars, 'Float'>,
+  project_id?: ?$ElementType<Scalars, 'Float'>,
 |};
 
-/** order by avg() on columns of table "member_permissions_view" */
-export type Member_Permissions_View_Avg_Order_By = {|
-  user_id?: ?Order_By,
+/** order by avg() on columns of table "member_permission" */
+export type Member_Permission_Avg_Order_By = {|
+  member_id?: ?Order_By,
+  project_id?: ?Order_By,
 |};
 
-/** Boolean expression to filter rows from the table "member_permissions_view". All fields are combined with a logical 'AND'. */
-export type Member_Permissions_View_Bool_Exp = {|
-  _and?: ?Array<Member_Permissions_View_Bool_Exp>,
-  _not?: ?Member_Permissions_View_Bool_Exp,
-  _or?: ?Array<Member_Permissions_View_Bool_Exp>,
-  permission?: ?String_Comparison_Exp,
-  user_id?: ?Bigint_Comparison_Exp,
+/** Boolean expression to filter rows from the table "member_permission". All fields are combined with a logical 'AND'. */
+export type Member_Permission_Bool_Exp = {|
+  _and?: ?Array<Member_Permission_Bool_Exp>,
+  _not?: ?Member_Permission_Bool_Exp,
+  _or?: ?Array<Member_Permission_Bool_Exp>,
+  created_at?: ?Timestamptz_Comparison_Exp,
+  created_by?: ?String_Comparison_Exp,
+  last_updated_at?: ?Timestamptz_Comparison_Exp,
+  last_updated_by?: ?String_Comparison_Exp,
+  member?: ?Member_Bool_Exp,
+  member_id?: ?Bigint_Comparison_Exp,
+  permission?: ?Permission_Bool_Exp,
+  permission_id?: ?String_Comparison_Exp,
+  project_id?: ?Bigint_Comparison_Exp,
 |};
 
-/** input type for inserting data into table "member_permissions_view" */
-export type Member_Permissions_View_Insert_Input = {|
-  permission?: ?$ElementType<Scalars, 'String'>,
-  user_id?: ?$ElementType<Scalars, 'bigint'>,
+/** input type for incrementing numeric columns in table "member_permission" */
+export type Member_Permission_Inc_Input = {|
+  member_id?: ?$ElementType<Scalars, 'bigint'>,
+  project_id?: ?$ElementType<Scalars, 'bigint'>,
+|};
+
+/** input type for inserting data into table "member_permission" */
+export type Member_Permission_Insert_Input = {|
+  created_at?: ?$ElementType<Scalars, 'timestamptz'>,
+  created_by?: ?$ElementType<Scalars, 'String'>,
+  last_updated_at?: ?$ElementType<Scalars, 'timestamptz'>,
+  last_updated_by?: ?$ElementType<Scalars, 'String'>,
+  member?: ?Member_Obj_Rel_Insert_Input,
+  member_id?: ?$ElementType<Scalars, 'bigint'>,
+  permission?: ?Permission_Obj_Rel_Insert_Input,
+  permission_id?: ?$ElementType<Scalars, 'String'>,
+  project_id?: ?$ElementType<Scalars, 'bigint'>,
 |};
 
 /** aggregate max on columns */
-export type Member_Permissions_View_Max_Fields = {|
-  __typename?: 'member_permissions_view_max_fields',
-  permission?: ?$ElementType<Scalars, 'String'>,
-  user_id?: ?$ElementType<Scalars, 'bigint'>,
+export type Member_Permission_Max_Fields = {|
+  __typename?: 'member_permission_max_fields',
+  created_at?: ?$ElementType<Scalars, 'timestamptz'>,
+  created_by?: ?$ElementType<Scalars, 'String'>,
+  last_updated_at?: ?$ElementType<Scalars, 'timestamptz'>,
+  last_updated_by?: ?$ElementType<Scalars, 'String'>,
+  member_id?: ?$ElementType<Scalars, 'bigint'>,
+  permission_id?: ?$ElementType<Scalars, 'String'>,
+  project_id?: ?$ElementType<Scalars, 'bigint'>,
 |};
 
-/** order by max() on columns of table "member_permissions_view" */
-export type Member_Permissions_View_Max_Order_By = {|
-  permission?: ?Order_By,
-  user_id?: ?Order_By,
+/** order by max() on columns of table "member_permission" */
+export type Member_Permission_Max_Order_By = {|
+  created_at?: ?Order_By,
+  created_by?: ?Order_By,
+  last_updated_at?: ?Order_By,
+  last_updated_by?: ?Order_By,
+  member_id?: ?Order_By,
+  permission_id?: ?Order_By,
+  project_id?: ?Order_By,
 |};
 
 /** aggregate min on columns */
-export type Member_Permissions_View_Min_Fields = {|
-  __typename?: 'member_permissions_view_min_fields',
-  permission?: ?$ElementType<Scalars, 'String'>,
-  user_id?: ?$ElementType<Scalars, 'bigint'>,
+export type Member_Permission_Min_Fields = {|
+  __typename?: 'member_permission_min_fields',
+  created_at?: ?$ElementType<Scalars, 'timestamptz'>,
+  created_by?: ?$ElementType<Scalars, 'String'>,
+  last_updated_at?: ?$ElementType<Scalars, 'timestamptz'>,
+  last_updated_by?: ?$ElementType<Scalars, 'String'>,
+  member_id?: ?$ElementType<Scalars, 'bigint'>,
+  permission_id?: ?$ElementType<Scalars, 'String'>,
+  project_id?: ?$ElementType<Scalars, 'bigint'>,
 |};
 
-/** order by min() on columns of table "member_permissions_view" */
-export type Member_Permissions_View_Min_Order_By = {|
-  permission?: ?Order_By,
-  user_id?: ?Order_By,
+/** order by min() on columns of table "member_permission" */
+export type Member_Permission_Min_Order_By = {|
+  created_at?: ?Order_By,
+  created_by?: ?Order_By,
+  last_updated_at?: ?Order_By,
+  last_updated_by?: ?Order_By,
+  member_id?: ?Order_By,
+  permission_id?: ?Order_By,
+  project_id?: ?Order_By,
 |};
 
-/** Ordering options when selecting data from "member_permissions_view". */
-export type Member_Permissions_View_Order_By = {|
-  permission?: ?Order_By,
-  user_id?: ?Order_By,
+/** response of any mutation on the table "member_permission" */
+export type Member_Permission_Mutation_Response = {|
+  __typename?: 'member_permission_mutation_response',
+  /** number of rows affected by the mutation */
+  affected_rows: $ElementType<Scalars, 'Int'>,
+  /** data from the rows affected by the mutation */
+  returning: Array<Member_Permission>,
 |};
 
-export const Member_Permissions_View_Select_ColumnValues = Object.freeze({
+/** Ordering options when selecting data from "member_permission". */
+export type Member_Permission_Order_By = {|
+  created_at?: ?Order_By,
+  created_by?: ?Order_By,
+  last_updated_at?: ?Order_By,
+  last_updated_by?: ?Order_By,
+  member?: ?Member_Order_By,
+  member_id?: ?Order_By,
+  permission?: ?Permission_Order_By,
+  permission_id?: ?Order_By,
+  project_id?: ?Order_By,
+|};
+
+export const Member_Permission_Select_ColumnValues = Object.freeze({
   /** column name */
-  Permission: 'permission',
+  CreatedAt: 'created_at',
   /** column name */
-  UserId: 'user_id',
+  CreatedBy: 'created_by',
+  /** column name */
+  LastUpdatedAt: 'last_updated_at',
+  /** column name */
+  LastUpdatedBy: 'last_updated_by',
+  /** column name */
+  MemberId: 'member_id',
+  /** column name */
+  PermissionId: 'permission_id',
+  /** column name */
+  ProjectId: 'project_id',
 });
 
-/** select columns of table "member_permissions_view" */
-export type Member_Permissions_View_Select_Column = $Values<typeof Member_Permissions_View_Select_ColumnValues>;
+/** select columns of table "member_permission" */
+export type Member_Permission_Select_Column = $Values<typeof Member_Permission_Select_ColumnValues>;
 
-/** aggregate stddev on columns */
-export type Member_Permissions_View_Stddev_Fields = {|
-  __typename?: 'member_permissions_view_stddev_fields',
-  user_id?: ?$ElementType<Scalars, 'Float'>,
+/** input type for updating data in table "member_permission" */
+export type Member_Permission_Set_Input = {|
+  created_at?: ?$ElementType<Scalars, 'timestamptz'>,
+  created_by?: ?$ElementType<Scalars, 'String'>,
+  last_updated_at?: ?$ElementType<Scalars, 'timestamptz'>,
+  last_updated_by?: ?$ElementType<Scalars, 'String'>,
+  member_id?: ?$ElementType<Scalars, 'bigint'>,
+  permission_id?: ?$ElementType<Scalars, 'String'>,
+  project_id?: ?$ElementType<Scalars, 'bigint'>,
 |};
 
-/** order by stddev() on columns of table "member_permissions_view" */
-export type Member_Permissions_View_Stddev_Order_By = {|
-  user_id?: ?Order_By,
+/** aggregate stddev on columns */
+export type Member_Permission_Stddev_Fields = {|
+  __typename?: 'member_permission_stddev_fields',
+  member_id?: ?$ElementType<Scalars, 'Float'>,
+  project_id?: ?$ElementType<Scalars, 'Float'>,
+|};
+
+/** order by stddev() on columns of table "member_permission" */
+export type Member_Permission_Stddev_Order_By = {|
+  member_id?: ?Order_By,
+  project_id?: ?Order_By,
 |};
 
 /** aggregate stddev_pop on columns */
-export type Member_Permissions_View_Stddev_Pop_Fields = {|
-  __typename?: 'member_permissions_view_stddev_pop_fields',
-  user_id?: ?$ElementType<Scalars, 'Float'>,
+export type Member_Permission_Stddev_Pop_Fields = {|
+  __typename?: 'member_permission_stddev_pop_fields',
+  member_id?: ?$ElementType<Scalars, 'Float'>,
+  project_id?: ?$ElementType<Scalars, 'Float'>,
 |};
 
-/** order by stddev_pop() on columns of table "member_permissions_view" */
-export type Member_Permissions_View_Stddev_Pop_Order_By = {|
-  user_id?: ?Order_By,
+/** order by stddev_pop() on columns of table "member_permission" */
+export type Member_Permission_Stddev_Pop_Order_By = {|
+  member_id?: ?Order_By,
+  project_id?: ?Order_By,
 |};
 
 /** aggregate stddev_samp on columns */
-export type Member_Permissions_View_Stddev_Samp_Fields = {|
-  __typename?: 'member_permissions_view_stddev_samp_fields',
-  user_id?: ?$ElementType<Scalars, 'Float'>,
+export type Member_Permission_Stddev_Samp_Fields = {|
+  __typename?: 'member_permission_stddev_samp_fields',
+  member_id?: ?$ElementType<Scalars, 'Float'>,
+  project_id?: ?$ElementType<Scalars, 'Float'>,
 |};
 
-/** order by stddev_samp() on columns of table "member_permissions_view" */
-export type Member_Permissions_View_Stddev_Samp_Order_By = {|
-  user_id?: ?Order_By,
+/** order by stddev_samp() on columns of table "member_permission" */
+export type Member_Permission_Stddev_Samp_Order_By = {|
+  member_id?: ?Order_By,
+  project_id?: ?Order_By,
 |};
 
 /** aggregate sum on columns */
-export type Member_Permissions_View_Sum_Fields = {|
-  __typename?: 'member_permissions_view_sum_fields',
-  user_id?: ?$ElementType<Scalars, 'bigint'>,
+export type Member_Permission_Sum_Fields = {|
+  __typename?: 'member_permission_sum_fields',
+  member_id?: ?$ElementType<Scalars, 'bigint'>,
+  project_id?: ?$ElementType<Scalars, 'bigint'>,
 |};
 
-/** order by sum() on columns of table "member_permissions_view" */
-export type Member_Permissions_View_Sum_Order_By = {|
-  user_id?: ?Order_By,
+/** order by sum() on columns of table "member_permission" */
+export type Member_Permission_Sum_Order_By = {|
+  member_id?: ?Order_By,
+  project_id?: ?Order_By,
 |};
 
 /** aggregate var_pop on columns */
-export type Member_Permissions_View_Var_Pop_Fields = {|
-  __typename?: 'member_permissions_view_var_pop_fields',
-  user_id?: ?$ElementType<Scalars, 'Float'>,
+export type Member_Permission_Var_Pop_Fields = {|
+  __typename?: 'member_permission_var_pop_fields',
+  member_id?: ?$ElementType<Scalars, 'Float'>,
+  project_id?: ?$ElementType<Scalars, 'Float'>,
 |};
 
-/** order by var_pop() on columns of table "member_permissions_view" */
-export type Member_Permissions_View_Var_Pop_Order_By = {|
-  user_id?: ?Order_By,
+/** order by var_pop() on columns of table "member_permission" */
+export type Member_Permission_Var_Pop_Order_By = {|
+  member_id?: ?Order_By,
+  project_id?: ?Order_By,
 |};
 
 /** aggregate var_samp on columns */
-export type Member_Permissions_View_Var_Samp_Fields = {|
-  __typename?: 'member_permissions_view_var_samp_fields',
-  user_id?: ?$ElementType<Scalars, 'Float'>,
+export type Member_Permission_Var_Samp_Fields = {|
+  __typename?: 'member_permission_var_samp_fields',
+  member_id?: ?$ElementType<Scalars, 'Float'>,
+  project_id?: ?$ElementType<Scalars, 'Float'>,
 |};
 
-/** order by var_samp() on columns of table "member_permissions_view" */
-export type Member_Permissions_View_Var_Samp_Order_By = {|
-  user_id?: ?Order_By,
+/** order by var_samp() on columns of table "member_permission" */
+export type Member_Permission_Var_Samp_Order_By = {|
+  member_id?: ?Order_By,
+  project_id?: ?Order_By,
 |};
 
 /** aggregate variance on columns */
-export type Member_Permissions_View_Variance_Fields = {|
-  __typename?: 'member_permissions_view_variance_fields',
-  user_id?: ?$ElementType<Scalars, 'Float'>,
+export type Member_Permission_Variance_Fields = {|
+  __typename?: 'member_permission_variance_fields',
+  member_id?: ?$ElementType<Scalars, 'Float'>,
+  project_id?: ?$ElementType<Scalars, 'Float'>,
 |};
 
-/** order by variance() on columns of table "member_permissions_view" */
-export type Member_Permissions_View_Variance_Order_By = {|
-  user_id?: ?Order_By,
+/** order by variance() on columns of table "member_permission" */
+export type Member_Permission_Variance_Order_By = {|
+  member_id?: ?Order_By,
+  project_id?: ?Order_By,
 |};
 
 /** primary key columns input for table: member */
@@ -1335,6 +1444,8 @@ export type Mutation_Root = {|
   delete_member?: ?Member_Mutation_Response,
   /** delete single row from the table: "member" */
   delete_member_by_pk?: ?Member,
+  /** delete data from the table: "member_permission" */
+  delete_member_permission?: ?Member_Permission_Mutation_Response,
   /** delete data from the table: "permission" */
   delete_permission?: ?Permission_Mutation_Response,
   /** delete single row from the table: "permission" */
@@ -1355,6 +1466,10 @@ export type Mutation_Root = {|
   insert_member?: ?Member_Mutation_Response,
   /** insert a single row into the table: "member" */
   insert_member_one?: ?Member,
+  /** insert data into the table: "member_permission" */
+  insert_member_permission?: ?Member_Permission_Mutation_Response,
+  /** insert a single row into the table: "member_permission" */
+  insert_member_permission_one?: ?Member_Permission,
   /** insert data into the table: "permission" */
   insert_permission?: ?Permission_Mutation_Response,
   /** insert a single row into the table: "permission" */
@@ -1375,6 +1490,8 @@ export type Mutation_Root = {|
   update_member?: ?Member_Mutation_Response,
   /** update single row of the table: "member" */
   update_member_by_pk?: ?Member,
+  /** update data of the table: "member_permission" */
+  update_member_permission?: ?Member_Permission_Mutation_Response,
   /** update data of the table: "permission" */
   update_permission?: ?Permission_Mutation_Response,
   /** update single row of the table: "permission" */
@@ -1416,13 +1533,18 @@ export type Mutation_RootDelete_Member_By_PkArgs = {|
 |};
 
 /** mutation root */
+export type Mutation_RootDelete_Member_PermissionArgs = {|
+  where: Member_Permission_Bool_Exp,
+|};
+
+/** mutation root */
 export type Mutation_RootDelete_PermissionArgs = {|
   where: Permission_Bool_Exp,
 |};
 
 /** mutation root */
 export type Mutation_RootDelete_Permission_By_PkArgs = {|
-  id: $ElementType<Scalars, 'bigint'>,
+  id: $ElementType<Scalars, 'String'>,
 |};
 
 /** mutation root */
@@ -1469,6 +1591,16 @@ export type Mutation_RootInsert_MemberArgs = {|
 export type Mutation_RootInsert_Member_OneArgs = {|
   object: Member_Insert_Input,
   on_conflict?: ?Member_On_Conflict,
+|};
+
+/** mutation root */
+export type Mutation_RootInsert_Member_PermissionArgs = {|
+  objects: Array<Member_Permission_Insert_Input>,
+|};
+
+/** mutation root */
+export type Mutation_RootInsert_Member_Permission_OneArgs = {|
+  object: Member_Permission_Insert_Input,
 |};
 
 /** mutation root */
@@ -1536,15 +1668,20 @@ export type Mutation_RootUpdate_Member_By_PkArgs = {|
 |};
 
 /** mutation root */
+export type Mutation_RootUpdate_Member_PermissionArgs = {|
+  _inc?: ?Member_Permission_Inc_Input,
+  _set?: ?Member_Permission_Set_Input,
+  where: Member_Permission_Bool_Exp,
+|};
+
+/** mutation root */
 export type Mutation_RootUpdate_PermissionArgs = {|
-  _inc?: ?Permission_Inc_Input,
   _set?: ?Permission_Set_Input,
   where: Permission_Bool_Exp,
 |};
 
 /** mutation root */
 export type Mutation_RootUpdate_Permission_By_PkArgs = {|
-  _inc?: ?Permission_Inc_Input,
   _set?: ?Permission_Set_Input,
   pk_columns: Permission_Pk_Columns_Input,
 |};
@@ -1584,8 +1721,29 @@ export type Order_By = $Values<typeof Order_ByValues>;
 /** columns and relationships of "permission" */
 export type Permission = {|
   __typename?: 'permission',
-  id: $ElementType<Scalars, 'bigint'>,
-  name: $ElementType<Scalars, 'String'>,
+  id: $ElementType<Scalars, 'String'>,
+  /** An array relationship */
+  members: Array<Member_Permission>,
+  /** An aggregate relationship */
+  members_aggregate: Member_Permission_Aggregate,
+|};
+
+/** columns and relationships of "permission" */
+export type PermissionMembersArgs = {|
+  distinct_on?: ?Array<Member_Permission_Select_Column>,
+  limit?: ?$ElementType<Scalars, 'Int'>,
+  offset?: ?$ElementType<Scalars, 'Int'>,
+  order_by?: ?Array<Member_Permission_Order_By>,
+  where?: ?Member_Permission_Bool_Exp,
+|};
+
+/** columns and relationships of "permission" */
+export type PermissionMembers_AggregateArgs = {|
+  distinct_on?: ?Array<Member_Permission_Select_Column>,
+  limit?: ?$ElementType<Scalars, 'Int'>,
+  offset?: ?$ElementType<Scalars, 'Int'>,
+  order_by?: ?Array<Member_Permission_Order_By>,
+  where?: ?Member_Permission_Bool_Exp,
 |};
 
 /** aggregated selection of "permission" */
@@ -1598,17 +1756,9 @@ export type Permission_Aggregate = {|
 /** aggregate fields of "permission" */
 export type Permission_Aggregate_Fields = {|
   __typename?: 'permission_aggregate_fields',
-  avg?: ?Permission_Avg_Fields,
   count: $ElementType<Scalars, 'Int'>,
   max?: ?Permission_Max_Fields,
   min?: ?Permission_Min_Fields,
-  stddev?: ?Permission_Stddev_Fields,
-  stddev_pop?: ?Permission_Stddev_Pop_Fields,
-  stddev_samp?: ?Permission_Stddev_Samp_Fields,
-  sum?: ?Permission_Sum_Fields,
-  var_pop?: ?Permission_Var_Pop_Fields,
-  var_samp?: ?Permission_Var_Samp_Fields,
-  variance?: ?Permission_Variance_Fields,
 |};
 
 /** aggregate fields of "permission" */
@@ -1617,19 +1767,13 @@ export type Permission_Aggregate_FieldsCountArgs = {|
   distinct?: ?$ElementType<Scalars, 'Boolean'>,
 |};
 
-/** aggregate avg on columns */
-export type Permission_Avg_Fields = {|
-  __typename?: 'permission_avg_fields',
-  id?: ?$ElementType<Scalars, 'Float'>,
-|};
-
 /** Boolean expression to filter rows from the table "permission". All fields are combined with a logical 'AND'. */
 export type Permission_Bool_Exp = {|
   _and?: ?Array<Permission_Bool_Exp>,
   _not?: ?Permission_Bool_Exp,
   _or?: ?Array<Permission_Bool_Exp>,
-  id?: ?Bigint_Comparison_Exp,
-  name?: ?String_Comparison_Exp,
+  id?: ?String_Comparison_Exp,
+  members?: ?Member_Permission_Bool_Exp,
 |};
 
 export const Permission_ConstraintValues = Object.freeze({
@@ -1640,29 +1784,22 @@ export const Permission_ConstraintValues = Object.freeze({
 /** unique or primary key constraints on table "permission" */
 export type Permission_Constraint = $Values<typeof Permission_ConstraintValues>;
 
-/** input type for incrementing numeric columns in table "permission" */
-export type Permission_Inc_Input = {|
-  id?: ?$ElementType<Scalars, 'bigint'>,
-|};
-
 /** input type for inserting data into table "permission" */
 export type Permission_Insert_Input = {|
-  id?: ?$ElementType<Scalars, 'bigint'>,
-  name?: ?$ElementType<Scalars, 'String'>,
+  id?: ?$ElementType<Scalars, 'String'>,
+  members?: ?Member_Permission_Arr_Rel_Insert_Input,
 |};
 
 /** aggregate max on columns */
 export type Permission_Max_Fields = {|
   __typename?: 'permission_max_fields',
-  id?: ?$ElementType<Scalars, 'bigint'>,
-  name?: ?$ElementType<Scalars, 'String'>,
+  id?: ?$ElementType<Scalars, 'String'>,
 |};
 
 /** aggregate min on columns */
 export type Permission_Min_Fields = {|
   __typename?: 'permission_min_fields',
-  id?: ?$ElementType<Scalars, 'bigint'>,
-  name?: ?$ElementType<Scalars, 'String'>,
+  id?: ?$ElementType<Scalars, 'String'>,
 |};
 
 /** response of any mutation on the table "permission" */
@@ -1672,6 +1809,13 @@ export type Permission_Mutation_Response = {|
   affected_rows: $ElementType<Scalars, 'Int'>,
   /** data from the rows affected by the mutation */
   returning: Array<Permission>,
+|};
+
+/** input type for inserting object relation for remote table "permission" */
+export type Permission_Obj_Rel_Insert_Input = {|
+  data: Permission_Insert_Input,
+  /** on conflict condition */
+  on_conflict?: ?Permission_On_Conflict,
 |};
 
 /** on conflict condition type for table "permission" */
@@ -1684,19 +1828,17 @@ export type Permission_On_Conflict = {|
 /** Ordering options when selecting data from "permission". */
 export type Permission_Order_By = {|
   id?: ?Order_By,
-  name?: ?Order_By,
+  members_aggregate?: ?Member_Permission_Aggregate_Order_By,
 |};
 
 /** primary key columns input for table: permission */
 export type Permission_Pk_Columns_Input = {|
-  id: $ElementType<Scalars, 'bigint'>,
+  id: $ElementType<Scalars, 'String'>,
 |};
 
 export const Permission_Select_ColumnValues = Object.freeze({
   /** column name */
   Id: 'id',
-  /** column name */
-  Name: 'name',
 });
 
 /** select columns of table "permission" */
@@ -1704,61 +1846,16 @@ export type Permission_Select_Column = $Values<typeof Permission_Select_ColumnVa
 
 /** input type for updating data in table "permission" */
 export type Permission_Set_Input = {|
-  id?: ?$ElementType<Scalars, 'bigint'>,
-  name?: ?$ElementType<Scalars, 'String'>,
-|};
-
-/** aggregate stddev on columns */
-export type Permission_Stddev_Fields = {|
-  __typename?: 'permission_stddev_fields',
-  id?: ?$ElementType<Scalars, 'Float'>,
-|};
-
-/** aggregate stddev_pop on columns */
-export type Permission_Stddev_Pop_Fields = {|
-  __typename?: 'permission_stddev_pop_fields',
-  id?: ?$ElementType<Scalars, 'Float'>,
-|};
-
-/** aggregate stddev_samp on columns */
-export type Permission_Stddev_Samp_Fields = {|
-  __typename?: 'permission_stddev_samp_fields',
-  id?: ?$ElementType<Scalars, 'Float'>,
-|};
-
-/** aggregate sum on columns */
-export type Permission_Sum_Fields = {|
-  __typename?: 'permission_sum_fields',
-  id?: ?$ElementType<Scalars, 'bigint'>,
+  id?: ?$ElementType<Scalars, 'String'>,
 |};
 
 export const Permission_Update_ColumnValues = Object.freeze({
   /** column name */
   Id: 'id',
-  /** column name */
-  Name: 'name',
 });
 
 /** update columns of table "permission" */
 export type Permission_Update_Column = $Values<typeof Permission_Update_ColumnValues>;
-
-/** aggregate var_pop on columns */
-export type Permission_Var_Pop_Fields = {|
-  __typename?: 'permission_var_pop_fields',
-  id?: ?$ElementType<Scalars, 'Float'>,
-|};
-
-/** aggregate var_samp on columns */
-export type Permission_Var_Samp_Fields = {|
-  __typename?: 'permission_var_samp_fields',
-  id?: ?$ElementType<Scalars, 'Float'>,
-|};
-
-/** aggregate variance on columns */
-export type Permission_Variance_Fields = {|
-  __typename?: 'permission_variance_fields',
-  id?: ?$ElementType<Scalars, 'Float'>,
-|};
 
 /** columns and relationships of "project" */
 export type Project = {|
@@ -2115,10 +2212,10 @@ export type Query_Root = {|
   member_aggregate: Member_Aggregate,
   /** fetch data from the table: "member" using primary key columns */
   member_by_pk?: ?Member,
-  /** fetch data from the table: "member_permissions_view" */
-  member_permissions_view: Array<Member_Permissions_View>,
-  /** fetch aggregated fields from the table: "member_permissions_view" */
-  member_permissions_view_aggregate: Member_Permissions_View_Aggregate,
+  /** fetch data from the table: "member_permission" */
+  member_permission: Array<Member_Permission>,
+  /** fetch aggregated fields from the table: "member_permission" */
+  member_permission_aggregate: Member_Permission_Aggregate,
   /** fetch data from the table: "permission" */
   permission: Array<Permission>,
   /** fetch aggregated fields from the table: "permission" */
@@ -2193,20 +2290,20 @@ export type Query_RootMember_By_PkArgs = {|
   id: $ElementType<Scalars, 'bigint'>,
 |};
 
-export type Query_RootMember_Permissions_ViewArgs = {|
-  distinct_on?: ?Array<Member_Permissions_View_Select_Column>,
+export type Query_RootMember_PermissionArgs = {|
+  distinct_on?: ?Array<Member_Permission_Select_Column>,
   limit?: ?$ElementType<Scalars, 'Int'>,
   offset?: ?$ElementType<Scalars, 'Int'>,
-  order_by?: ?Array<Member_Permissions_View_Order_By>,
-  where?: ?Member_Permissions_View_Bool_Exp,
+  order_by?: ?Array<Member_Permission_Order_By>,
+  where?: ?Member_Permission_Bool_Exp,
 |};
 
-export type Query_RootMember_Permissions_View_AggregateArgs = {|
-  distinct_on?: ?Array<Member_Permissions_View_Select_Column>,
+export type Query_RootMember_Permission_AggregateArgs = {|
+  distinct_on?: ?Array<Member_Permission_Select_Column>,
   limit?: ?$ElementType<Scalars, 'Int'>,
   offset?: ?$ElementType<Scalars, 'Int'>,
-  order_by?: ?Array<Member_Permissions_View_Order_By>,
-  where?: ?Member_Permissions_View_Bool_Exp,
+  order_by?: ?Array<Member_Permission_Order_By>,
+  where?: ?Member_Permission_Bool_Exp,
 |};
 
 export type Query_RootPermissionArgs = {|
@@ -2226,7 +2323,7 @@ export type Query_RootPermission_AggregateArgs = {|
 |};
 
 export type Query_RootPermission_By_PkArgs = {|
-  id: $ElementType<Scalars, 'bigint'>,
+  id: $ElementType<Scalars, 'String'>,
 |};
 
 export type Query_RootProjectArgs = {|
@@ -2269,10 +2366,10 @@ export type Subscription_Root = {|
   member_aggregate: Member_Aggregate,
   /** fetch data from the table: "member" using primary key columns */
   member_by_pk?: ?Member,
-  /** fetch data from the table: "member_permissions_view" */
-  member_permissions_view: Array<Member_Permissions_View>,
-  /** fetch aggregated fields from the table: "member_permissions_view" */
-  member_permissions_view_aggregate: Member_Permissions_View_Aggregate,
+  /** fetch data from the table: "member_permission" */
+  member_permission: Array<Member_Permission>,
+  /** fetch aggregated fields from the table: "member_permission" */
+  member_permission_aggregate: Member_Permission_Aggregate,
   /** fetch data from the table: "permission" */
   permission: Array<Permission>,
   /** fetch aggregated fields from the table: "permission" */
@@ -2347,20 +2444,20 @@ export type Subscription_RootMember_By_PkArgs = {|
   id: $ElementType<Scalars, 'bigint'>,
 |};
 
-export type Subscription_RootMember_Permissions_ViewArgs = {|
-  distinct_on?: ?Array<Member_Permissions_View_Select_Column>,
+export type Subscription_RootMember_PermissionArgs = {|
+  distinct_on?: ?Array<Member_Permission_Select_Column>,
   limit?: ?$ElementType<Scalars, 'Int'>,
   offset?: ?$ElementType<Scalars, 'Int'>,
-  order_by?: ?Array<Member_Permissions_View_Order_By>,
-  where?: ?Member_Permissions_View_Bool_Exp,
+  order_by?: ?Array<Member_Permission_Order_By>,
+  where?: ?Member_Permission_Bool_Exp,
 |};
 
-export type Subscription_RootMember_Permissions_View_AggregateArgs = {|
-  distinct_on?: ?Array<Member_Permissions_View_Select_Column>,
+export type Subscription_RootMember_Permission_AggregateArgs = {|
+  distinct_on?: ?Array<Member_Permission_Select_Column>,
   limit?: ?$ElementType<Scalars, 'Int'>,
   offset?: ?$ElementType<Scalars, 'Int'>,
-  order_by?: ?Array<Member_Permissions_View_Order_By>,
-  where?: ?Member_Permissions_View_Bool_Exp,
+  order_by?: ?Array<Member_Permission_Order_By>,
+  where?: ?Member_Permission_Bool_Exp,
 |};
 
 export type Subscription_RootPermissionArgs = {|
@@ -2380,7 +2477,7 @@ export type Subscription_RootPermission_AggregateArgs = {|
 |};
 
 export type Subscription_RootPermission_By_PkArgs = {|
-  id: $ElementType<Scalars, 'bigint'>,
+  id: $ElementType<Scalars, 'String'>,
 |};
 
 export type Subscription_RootProjectArgs = {|

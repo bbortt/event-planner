@@ -70,7 +70,8 @@ update_permissions:
                   - token
             - permissions:
                 permission:
-                  _like: project:update
+                  id:
+                    _like: project:update
       set:
         last_updated_at: now()
         last_updated_by: x-hasura-User-Id

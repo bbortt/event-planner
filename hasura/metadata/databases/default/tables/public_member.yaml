@@ -14,12 +14,10 @@ object_relationships:
 array_relationships:
   - name: permissions
     using:
-      manual_configuration:
-        column_mapping:
-          id: user_id
-        insertion_order: null
-        remote_table:
-          name: member_permissions_view
+      foreign_key_constraint_on:
+        column: member_id
+        table:
+          name: member_permission
           schema: public
 insert_permissions:
   - permission:
@@ -56,7 +54,8 @@ select_permissions:
                   _eq: X-Hasura-User-Id
               - permissions:
                   permission:
-                    _like: members:list
+                    id:
+                      _like: member:list
               - project_token:
                   _ceq:
                     - $
@@ -79,7 +78,8 @@ update_permissions:
                   _eq: X-Hasura-User-Id
               - permissions:
                   permission:
-                    _like: members:accept
+                    id:
+                      _like: member:accept
               - project_token:
                   _ceq:
                     - $
@@ -101,7 +101,8 @@ delete_permissions:
                   _eq: X-Hasura-User-Id
               - permissions:
                   permission:
-                    _like: members:revoke
+                    id:
+                      _like: member:remove
               - project_token:
                   _ceq:
                     - $

@@ -13,7 +13,7 @@ CREATE TABLE locality
     CONSTRAINT belongs_to FOREIGN KEY (project_id) REFERENCES project (id)
 );
 
-INSERT INTO permission (name)
+INSERT INTO permission (id)
 VALUES ('locality:create'),
        ('locality:list'),
        ('locality:edit'),

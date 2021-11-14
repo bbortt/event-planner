@@ -45,35 +45,28 @@ CREATE TABLE member
 
 CREATE TABLE permission
 (
-    id   BIGSERIAL PRIMARY KEY NOT NULL,
-    name VARCHAR(20)           NOT NULL
+    id VARCHAR(20) PRIMARY KEY NOT NULL
 );
 
-INSERT INTO permission (name)
+INSERT INTO permission (id)
 VALUES ('project:update'),
-       ('members:list'),
-       ('members:accept'),
-       ('members:remove'),
-       ('permissions:list'),
-       ('permissions:assign'),
-       ('permissions:revoke');
+       ('member:list'),
+       ('member:accept'),
+       ('member:remove'),
+       ('permission:list'),
+       ('permission:assign'),
+       ('permission:revoke');
 
 CREATE TABLE member_permission
 (
     member_id       BIGINT                   NOT NULL,
+    permission_id   VARCHAR(20)              NOT NULL,
     project_id      BIGINT                   NOT NULL,
-    permission_id   BIGINT                   NOT NULL,
     created_by      VARCHAR(64)              NOT NULL,
     created_at      TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
     last_updated_by VARCHAR(64)              NOT NULL,
     last_updated_at TIMESTAMP WITH TIME ZONE          DEFAULT now(),
     CONSTRAINT member FOREIGN KEY (member_id) REFERENCES member (id),
-    CONSTRAINT in_project FOREIGN KEY (project_id) REFERENCES project (id),
-    CONSTRAINT permission FOREIGN KEY (permission_id) REFERENCES permission (id)
+    CONSTRAINT permission FOREIGN KEY (permission_id) REFERENCES permission (id),
+    CONSTRAINT project FOREIGN KEY (project_id) REFERENCES project (id)
 );
-
-CREATE VIEW member_permissions_view AS
-SELECT m.id as user_id, name as permission
-FROM member m
-         LEFT JOIN member_permission mp on m.id = mp.member_id
-         LEFT JOIN permission p on p.id = mp.permission_id;

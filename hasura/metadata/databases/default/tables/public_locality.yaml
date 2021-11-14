@@ -30,7 +30,8 @@ insert_permissions:
                   _eq: X-Hasura-User-Id
               - permissions:
                   permission:
-                    _like: locality:create
+                    id:
+                      _like: locality:create
               - project_id:
                   _ceq:
                     - $
@@ -66,7 +67,8 @@ select_permissions:
                   _eq: X-Hasura-User-Id
               - permissions:
                   permission:
-                    _like: locality:list
+                    id:
+                      _like: locality:list
               - project_id:
                   _ceq:
                     - $
@@ -90,7 +92,11 @@ update_permissions:
                   _eq: X-Hasura-User-Id
               - permissions:
                   permission:
-                    _like: locality:edit
+                    _or:
+                      - id:
+                          _like: locality:edit
+                      - id:
+                          _like: locality:move
               - project_id:
                   _ceq:
                     - $
@@ -112,7 +118,8 @@ delete_permissions:
                   _eq: X-Hasura-User-Id
               - permissions:
                   permission:
-                    _like: locality:delete
+                    id:
+                      _like: locality:delete
               - project_id:
                   _ceq:
                     - $

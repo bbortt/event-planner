@@ -1,0 +1,96 @@
+table:
+  name: member_permission
+  schema: public
+object_relationships:
+  - name: member
+    using:
+      foreign_key_constraint_on: member_id
+  - name: permission
+    using:
+      foreign_key_constraint_on: permission_id
+insert_permissions:
+  - permission:
+      backend_only: false
+      check:
+        _or:
+          - _not:
+              _exists:
+                _table:
+                  name: member
+                  schema: public
+                _where:
+                  project_id:
+                    _ceq:
+                      - $
+                      - project_id
+          - _exists:
+              _table:
+                name: member
+                schema: public
+              _where:
+                _and:
+                  - auth0_user_id:
+                      _eq: X-Hasura-User-Id
+                  - permissions:
+                      permission:
+                        id:
+                          _like: permission:assign
+                  - project_id:
+                      _ceq:
+                        - $
+                        - project_id
+      columns:
+        - member_id
+        - permission_id
+        - project_id
+      set:
+        created_by: x-hasura-X-Hasura-User-Id
+    role: user
+select_permissions:
+  - permission:
+      columns:
+        - member_id
+        - project_id
+        - created_by
+        - last_updated_by
+        - permission_id
+        - created_at
+        - last_updated_at
+      filter:
+        _exists:
+          _table:
+            name: member
+            schema: public
+          _where:
+            _and:
+              - auth0_user_id:
+                  _eq: X-Hasura-User-Id
+              - permissions:
+                  permission:
+                    id:
+                      _like: permission:list
+              - project_id:
+                  _ceq:
+                    - $
+                    - project_id
+    role: user
+delete_permissions:
+  - permission:
+      filter:
+        _exists:
+          _table:
+            name: member
+            schema: public
+          _where:
+            _and:
+              - auth0_user_id:
+                  _eq: X-Hasura-User-Id
+              - permissions:
+                  permission:
+                    id:
+                      _like: permission:revoke
+              - project_id:
+                  _ceq:
+                    - $
+                    - project_id
+    role: user
