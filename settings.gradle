@@ -1,0 +1,11 @@
+pluginManagement {
+    plugins {
+        id "com.github.node-gradle.node" version "${nodeGradleVersion}"
+        id "org.flywaydb.flyway" version "${flywayVersion}"
+        id "org.openapi.generator" version "${openapiGeneratorVersion}"
+        id "org.springframework.boot" version "${springBootVersion}"
+        id "io.spring.dependency-management" version "${springDependencyManagementVersion}"
+    }
+}
+
+rootProject.name = "event-planner"

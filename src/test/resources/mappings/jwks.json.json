@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/.well-known/jwks.json"
+  },
+  "response": {
+    "bodyFileName": "jwks.json",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "status": 200
+  }
+}

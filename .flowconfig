@@ -1,8 +1,8 @@
 [ignore]
 
 [include]
-.*/lib/
-.*/pages/
+.*/src/main/webapp/lib/
+.*/src/pages/
 
 [libs]
 

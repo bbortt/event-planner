@@ -12,6 +12,7 @@ export type Scalars = {|
   timestamptz: any,
 |};
 
+
 /** Boolean expression to compare columns of type "Boolean". All fields are combined with logical 'AND'. */
 export type Boolean_Comparison_Exp = {|
   _eq?: ?$ElementType<Scalars, 'Boolean'>,
@@ -73,6 +74,7 @@ export type Auth0_User = {|
   user_id: $ElementType<Scalars, 'String'>,
 |};
 
+
 /** columns and relationships of "auth0_user" */
 export type Auth0_UserMembershipsArgs = {|
   distinct_on?: ?Array<Member_Select_Column>,
@@ -81,6 +83,7 @@ export type Auth0_UserMembershipsArgs = {|
   order_by?: ?Array<Member_Order_By>,
   where?: ?Member_Bool_Exp,
 |};
+
 
 /** columns and relationships of "auth0_user" */
 export type Auth0_UserMemberships_AggregateArgs = {|
@@ -106,6 +109,7 @@ export type Auth0_User_Aggregate_Fields = {|
   min?: ?Auth0_User_Min_Fields,
 |};
 
+
 /** aggregate fields of "auth0_user" */
 export type Auth0_User_Aggregate_FieldsCountArgs = {|
   columns?: ?Array<Auth0_User_Select_Column>,
@@ -130,8 +134,9 @@ export const Auth0_User_ConstraintValues = Object.freeze({
   /** unique or primary key constraint */
   Auth0UserPkey: 'auth0_user_pkey',
   /** unique or primary key constraint */
-  UniqueEmail: 'unique_email',
+  UniqueEmail: 'unique_email'
 });
+
 
 /** unique or primary key constraints on table "auth0_user" */
 export type Auth0_User_Constraint = $Values<typeof Auth0_User_ConstraintValues>;
@@ -220,8 +225,9 @@ export const Auth0_User_Select_ColumnValues = Object.freeze({
   /** column name */
   Picture: 'picture',
   /** column name */
-  UserId: 'user_id',
+  UserId: 'user_id'
 });
+
 
 /** select columns of table "auth0_user" */
 export type Auth0_User_Select_Column = $Values<typeof Auth0_User_Select_ColumnValues>;
@@ -248,11 +254,13 @@ export const Auth0_User_Update_ColumnValues = Object.freeze({
   /** column name */
   Picture: 'picture',
   /** column name */
-  UserId: 'user_id',
+  UserId: 'user_id'
 });
+
 
 /** update columns of table "auth0_user" */
 export type Auth0_User_Update_Column = $Values<typeof Auth0_User_Update_ColumnValues>;
+
 
 /** Boolean expression to compare columns of type "bigint". All fields are combined with logical 'AND'. */
 export type Bigint_Comparison_Exp = {|
@@ -266,6 +274,7 @@ export type Bigint_Comparison_Exp = {|
   _neq?: ?$ElementType<Scalars, 'bigint'>,
   _nin?: ?Array<$ElementType<Scalars, 'bigint'>>,
 |};
+
 
 /** Boolean expression to compare columns of type "bpchar". All fields are combined with logical 'AND'. */
 export type Bpchar_Comparison_Exp = {|
@@ -322,6 +331,7 @@ export type Locality = {|
   project_id: $ElementType<Scalars, 'bigint'>,
 |};
 
+
 /** columns and relationships of "locality" */
 export type LocalityChildrenArgs = {|
   distinct_on?: ?Array<Locality_Select_Column>,
@@ -330,6 +340,7 @@ export type LocalityChildrenArgs = {|
   order_by?: ?Array<Locality_Order_By>,
   where?: ?Locality_Bool_Exp,
 |};
+
 
 /** columns and relationships of "locality" */
 export type LocalityChildren_AggregateArgs = {|
@@ -362,6 +373,7 @@ export type Locality_Aggregate_Fields = {|
   var_samp?: ?Locality_Var_Samp_Fields,
   variance?: ?Locality_Variance_Fields,
 |};
+
 
 /** aggregate fields of "locality" */
 export type Locality_Aggregate_FieldsCountArgs = {|
@@ -427,8 +439,9 @@ export type Locality_Bool_Exp = {|
 
 export const Locality_ConstraintValues = Object.freeze({
   /** unique or primary key constraint */
-  LocalityPkey: 'locality_pkey',
+  LocalityPkey: 'locality_pkey'
 });
+
 
 /** unique or primary key constraints on table "locality" */
 export type Locality_Constraint = $Values<typeof Locality_ConstraintValues>;
@@ -572,8 +585,9 @@ export const Locality_Select_ColumnValues = Object.freeze({
   /** column name */
   Name: 'name',
   /** column name */
-  ProjectId: 'project_id',
+  ProjectId: 'project_id'
 });
+
 
 /** select columns of table "locality" */
 export type Locality_Select_Column = $Values<typeof Locality_Select_ColumnValues>;
@@ -669,8 +683,9 @@ export const Locality_Update_ColumnValues = Object.freeze({
   /** column name */
   Name: 'name',
   /** column name */
-  ProjectId: 'project_id',
+  ProjectId: 'project_id'
 });
+
 
 /** update columns of table "locality" */
 export type Locality_Update_Column = $Values<typeof Locality_Update_ColumnValues>;
@@ -744,6 +759,7 @@ export type Member = {|
   user?: ?Auth0_User,
 |};
 
+
 /** columns and relationships of "member" */
 export type MemberPermissionsArgs = {|
   distinct_on?: ?Array<Member_Permission_Select_Column>,
@@ -752,6 +768,7 @@ export type MemberPermissionsArgs = {|
   order_by?: ?Array<Member_Permission_Order_By>,
   where?: ?Member_Permission_Bool_Exp,
 |};
+
 
 /** columns and relationships of "member" */
 export type MemberPermissions_AggregateArgs = {|
@@ -784,6 +801,7 @@ export type Member_Aggregate_Fields = {|
   var_samp?: ?Member_Var_Samp_Fields,
   variance?: ?Member_Variance_Fields,
 |};
+
 
 /** aggregate fields of "member" */
 export type Member_Aggregate_FieldsCountArgs = {|
@@ -850,8 +868,9 @@ export const Member_ConstraintValues = Object.freeze({
   /** unique or primary key constraint */
   MemberPkey: 'member_pkey',
   /** unique or primary key constraint */
-  UniqueInvitation: 'unique_invitation',
+  UniqueInvitation: 'unique_invitation'
 });
+
 
 /** unique or primary key constraints on table "member" */
 export type Member_Constraint = $Values<typeof Member_ConstraintValues>;
@@ -1007,6 +1026,7 @@ export type Member_Permission_Aggregate_Fields = {|
   var_samp?: ?Member_Permission_Var_Samp_Fields,
   variance?: ?Member_Permission_Variance_Fields,
 |};
+
 
 /** aggregate fields of "member_permission" */
 export type Member_Permission_Aggregate_FieldsCountArgs = {|
@@ -1164,8 +1184,9 @@ export const Member_Permission_Select_ColumnValues = Object.freeze({
   /** column name */
   PermissionId: 'permission_id',
   /** column name */
-  ProjectId: 'project_id',
+  ProjectId: 'project_id'
 });
+
 
 /** select columns of table "member_permission" */
 export type Member_Permission_Select_Column = $Values<typeof Member_Permission_Select_ColumnValues>;
@@ -1295,8 +1316,9 @@ export const Member_Select_ColumnValues = Object.freeze({
   /** column name */
   ProjectId: 'project_id',
   /** column name */
-  ProjectToken: 'project_token',
+  ProjectToken: 'project_token'
 });
+
 
 /** select columns of table "member" */
 export type Member_Select_Column = $Values<typeof Member_Select_ColumnValues>;
@@ -1384,8 +1406,9 @@ export const Member_Update_ColumnValues = Object.freeze({
   /** column name */
   ProjectId: 'project_id',
   /** column name */
-  ProjectToken: 'project_token',
+  ProjectToken: 'project_token'
 });
+
 
 /** update columns of table "member" */
 export type Member_Update_Column = $Values<typeof Member_Update_ColumnValues>;
@@ -1502,60 +1525,72 @@ export type Mutation_Root = {|
   update_project_by_pk?: ?Project,
 |};
 
+
 /** mutation root */
 export type Mutation_RootDelete_Auth0_UserArgs = {|
   where: Auth0_User_Bool_Exp,
 |};
+
 
 /** mutation root */
 export type Mutation_RootDelete_Auth0_User_By_PkArgs = {|
   user_id: $ElementType<Scalars, 'String'>,
 |};
 
+
 /** mutation root */
 export type Mutation_RootDelete_LocalityArgs = {|
   where: Locality_Bool_Exp,
 |};
+
 
 /** mutation root */
 export type Mutation_RootDelete_Locality_By_PkArgs = {|
   id: $ElementType<Scalars, 'bigint'>,
 |};
 
+
 /** mutation root */
 export type Mutation_RootDelete_MemberArgs = {|
   where: Member_Bool_Exp,
 |};
+
 
 /** mutation root */
 export type Mutation_RootDelete_Member_By_PkArgs = {|
   id: $ElementType<Scalars, 'bigint'>,
 |};
 
+
 /** mutation root */
 export type Mutation_RootDelete_Member_PermissionArgs = {|
   where: Member_Permission_Bool_Exp,
 |};
+
 
 /** mutation root */
 export type Mutation_RootDelete_PermissionArgs = {|
   where: Permission_Bool_Exp,
 |};
 
+
 /** mutation root */
 export type Mutation_RootDelete_Permission_By_PkArgs = {|
   id: $ElementType<Scalars, 'String'>,
 |};
+
 
 /** mutation root */
 export type Mutation_RootDelete_ProjectArgs = {|
   where: Project_Bool_Exp,
 |};
 
+
 /** mutation root */
 export type Mutation_RootDelete_Project_By_PkArgs = {|
   id: $ElementType<Scalars, 'bigint'>,
 |};
+
 
 /** mutation root */
 export type Mutation_RootInsert_Auth0_UserArgs = {|
@@ -1563,11 +1598,13 @@ export type Mutation_RootInsert_Auth0_UserArgs = {|
   on_conflict?: ?Auth0_User_On_Conflict,
 |};
 
+
 /** mutation root */
 export type Mutation_RootInsert_Auth0_User_OneArgs = {|
   object: Auth0_User_Insert_Input,
   on_conflict?: ?Auth0_User_On_Conflict,
 |};
+
 
 /** mutation root */
 export type Mutation_RootInsert_LocalityArgs = {|
@@ -1575,11 +1612,13 @@ export type Mutation_RootInsert_LocalityArgs = {|
   on_conflict?: ?Locality_On_Conflict,
 |};
 
+
 /** mutation root */
 export type Mutation_RootInsert_Locality_OneArgs = {|
   object: Locality_Insert_Input,
   on_conflict?: ?Locality_On_Conflict,
 |};
+
 
 /** mutation root */
 export type Mutation_RootInsert_MemberArgs = {|
@@ -1587,21 +1626,25 @@ export type Mutation_RootInsert_MemberArgs = {|
   on_conflict?: ?Member_On_Conflict,
 |};
 
+
 /** mutation root */
 export type Mutation_RootInsert_Member_OneArgs = {|
   object: Member_Insert_Input,
   on_conflict?: ?Member_On_Conflict,
 |};
 
+
 /** mutation root */
 export type Mutation_RootInsert_Member_PermissionArgs = {|
   objects: Array<Member_Permission_Insert_Input>,
 |};
 
+
 /** mutation root */
 export type Mutation_RootInsert_Member_Permission_OneArgs = {|
   object: Member_Permission_Insert_Input,
 |};
+
 
 /** mutation root */
 export type Mutation_RootInsert_PermissionArgs = {|
@@ -1609,11 +1652,13 @@ export type Mutation_RootInsert_PermissionArgs = {|
   on_conflict?: ?Permission_On_Conflict,
 |};
 
+
 /** mutation root */
 export type Mutation_RootInsert_Permission_OneArgs = {|
   object: Permission_Insert_Input,
   on_conflict?: ?Permission_On_Conflict,
 |};
+
 
 /** mutation root */
 export type Mutation_RootInsert_ProjectArgs = {|
@@ -1621,11 +1666,13 @@ export type Mutation_RootInsert_ProjectArgs = {|
   on_conflict?: ?Project_On_Conflict,
 |};
 
+
 /** mutation root */
 export type Mutation_RootInsert_Project_OneArgs = {|
   object: Project_Insert_Input,
   on_conflict?: ?Project_On_Conflict,
 |};
+
 
 /** mutation root */
 export type Mutation_RootUpdate_Auth0_UserArgs = {|
@@ -1633,11 +1680,13 @@ export type Mutation_RootUpdate_Auth0_UserArgs = {|
   where: Auth0_User_Bool_Exp,
 |};
 
+
 /** mutation root */
 export type Mutation_RootUpdate_Auth0_User_By_PkArgs = {|
   _set?: ?Auth0_User_Set_Input,
   pk_columns: Auth0_User_Pk_Columns_Input,
 |};
+
 
 /** mutation root */
 export type Mutation_RootUpdate_LocalityArgs = {|
@@ -1646,12 +1695,14 @@ export type Mutation_RootUpdate_LocalityArgs = {|
   where: Locality_Bool_Exp,
 |};
 
+
 /** mutation root */
 export type Mutation_RootUpdate_Locality_By_PkArgs = {|
   _inc?: ?Locality_Inc_Input,
   _set?: ?Locality_Set_Input,
   pk_columns: Locality_Pk_Columns_Input,
 |};
+
 
 /** mutation root */
 export type Mutation_RootUpdate_MemberArgs = {|
@@ -1660,12 +1711,14 @@ export type Mutation_RootUpdate_MemberArgs = {|
   where: Member_Bool_Exp,
 |};
 
+
 /** mutation root */
 export type Mutation_RootUpdate_Member_By_PkArgs = {|
   _inc?: ?Member_Inc_Input,
   _set?: ?Member_Set_Input,
   pk_columns: Member_Pk_Columns_Input,
 |};
+
 
 /** mutation root */
 export type Mutation_RootUpdate_Member_PermissionArgs = {|
@@ -1674,11 +1727,13 @@ export type Mutation_RootUpdate_Member_PermissionArgs = {|
   where: Member_Permission_Bool_Exp,
 |};
 
+
 /** mutation root */
 export type Mutation_RootUpdate_PermissionArgs = {|
   _set?: ?Permission_Set_Input,
   where: Permission_Bool_Exp,
 |};
+
 
 /** mutation root */
 export type Mutation_RootUpdate_Permission_By_PkArgs = {|
@@ -1686,12 +1741,14 @@ export type Mutation_RootUpdate_Permission_By_PkArgs = {|
   pk_columns: Permission_Pk_Columns_Input,
 |};
 
+
 /** mutation root */
 export type Mutation_RootUpdate_ProjectArgs = {|
   _inc?: ?Project_Inc_Input,
   _set?: ?Project_Set_Input,
   where: Project_Bool_Exp,
 |};
+
 
 /** mutation root */
 export type Mutation_RootUpdate_Project_By_PkArgs = {|
@@ -1712,8 +1769,9 @@ export const Order_ByValues = Object.freeze({
   /** in descending order, nulls first */
   DescNullsFirst: 'desc_nulls_first',
   /** in descending order, nulls last */
-  DescNullsLast: 'desc_nulls_last',
+  DescNullsLast: 'desc_nulls_last'
 });
+
 
 /** column ordering options */
 export type Order_By = $Values<typeof Order_ByValues>;
@@ -1728,6 +1786,7 @@ export type Permission = {|
   members_aggregate: Member_Permission_Aggregate,
 |};
 
+
 /** columns and relationships of "permission" */
 export type PermissionMembersArgs = {|
   distinct_on?: ?Array<Member_Permission_Select_Column>,
@@ -1736,6 +1795,7 @@ export type PermissionMembersArgs = {|
   order_by?: ?Array<Member_Permission_Order_By>,
   where?: ?Member_Permission_Bool_Exp,
 |};
+
 
 /** columns and relationships of "permission" */
 export type PermissionMembers_AggregateArgs = {|
@@ -1761,6 +1821,7 @@ export type Permission_Aggregate_Fields = {|
   min?: ?Permission_Min_Fields,
 |};
 
+
 /** aggregate fields of "permission" */
 export type Permission_Aggregate_FieldsCountArgs = {|
   columns?: ?Array<Permission_Select_Column>,
@@ -1778,8 +1839,9 @@ export type Permission_Bool_Exp = {|
 
 export const Permission_ConstraintValues = Object.freeze({
   /** unique or primary key constraint */
-  PermissionPkey: 'permission_pkey',
+  PermissionPkey: 'permission_pkey'
 });
+
 
 /** unique or primary key constraints on table "permission" */
 export type Permission_Constraint = $Values<typeof Permission_ConstraintValues>;
@@ -1838,8 +1900,9 @@ export type Permission_Pk_Columns_Input = {|
 
 export const Permission_Select_ColumnValues = Object.freeze({
   /** column name */
-  Id: 'id',
+  Id: 'id'
 });
+
 
 /** select columns of table "permission" */
 export type Permission_Select_Column = $Values<typeof Permission_Select_ColumnValues>;
@@ -1851,8 +1914,9 @@ export type Permission_Set_Input = {|
 
 export const Permission_Update_ColumnValues = Object.freeze({
   /** column name */
-  Id: 'id',
+  Id: 'id'
 });
+
 
 /** update columns of table "permission" */
 export type Permission_Update_Column = $Values<typeof Permission_Update_ColumnValues>;
@@ -1881,6 +1945,7 @@ export type Project = {|
   token: $ElementType<Scalars, 'bpchar'>,
 |};
 
+
 /** columns and relationships of "project" */
 export type ProjectLocalitiesArgs = {|
   distinct_on?: ?Array<Locality_Select_Column>,
@@ -1889,6 +1954,7 @@ export type ProjectLocalitiesArgs = {|
   order_by?: ?Array<Locality_Order_By>,
   where?: ?Locality_Bool_Exp,
 |};
+
 
 /** columns and relationships of "project" */
 export type ProjectLocalities_AggregateArgs = {|
@@ -1899,6 +1965,7 @@ export type ProjectLocalities_AggregateArgs = {|
   where?: ?Locality_Bool_Exp,
 |};
 
+
 /** columns and relationships of "project" */
 export type ProjectMembersArgs = {|
   distinct_on?: ?Array<Member_Select_Column>,
@@ -1907,6 +1974,7 @@ export type ProjectMembersArgs = {|
   order_by?: ?Array<Member_Order_By>,
   where?: ?Member_Bool_Exp,
 |};
+
 
 /** columns and relationships of "project" */
 export type ProjectMembers_AggregateArgs = {|
@@ -1939,6 +2007,7 @@ export type Project_Aggregate_Fields = {|
   var_samp?: ?Project_Var_Samp_Fields,
   variance?: ?Project_Variance_Fields,
 |};
+
 
 /** aggregate fields of "project" */
 export type Project_Aggregate_FieldsCountArgs = {|
@@ -1976,8 +2045,9 @@ export const Project_ConstraintValues = Object.freeze({
   /** unique or primary key constraint */
   ProjectPkey: 'project_pkey',
   /** unique or primary key constraint */
-  UniqueToken: 'unique_token',
+  UniqueToken: 'unique_token'
 });
+
 
 /** unique or primary key constraints on table "project" */
 export type Project_Constraint = $Values<typeof Project_ConstraintValues>;
@@ -2101,8 +2171,9 @@ export const Project_Select_ColumnValues = Object.freeze({
   /** column name */
   StartTime: 'start_time',
   /** column name */
-  Token: 'token',
+  Token: 'token'
 });
+
 
 /** select columns of table "project" */
 export type Project_Select_Column = $Values<typeof Project_Select_ColumnValues>;
@@ -2168,8 +2239,9 @@ export const Project_Update_ColumnValues = Object.freeze({
   /** column name */
   StartTime: 'start_time',
   /** column name */
-  Token: 'token',
+  Token: 'token'
 });
+
 
 /** update columns of table "project" */
 export type Project_Update_Column = $Values<typeof Project_Update_ColumnValues>;
@@ -2230,6 +2302,7 @@ export type Query_Root = {|
   project_by_pk?: ?Project,
 |};
 
+
 export type Query_RootAuth0_UserArgs = {|
   distinct_on?: ?Array<Auth0_User_Select_Column>,
   limit?: ?$ElementType<Scalars, 'Int'>,
@@ -2237,6 +2310,7 @@ export type Query_RootAuth0_UserArgs = {|
   order_by?: ?Array<Auth0_User_Order_By>,
   where?: ?Auth0_User_Bool_Exp,
 |};
+
 
 export type Query_RootAuth0_User_AggregateArgs = {|
   distinct_on?: ?Array<Auth0_User_Select_Column>,
@@ -2246,9 +2320,11 @@ export type Query_RootAuth0_User_AggregateArgs = {|
   where?: ?Auth0_User_Bool_Exp,
 |};
 
+
 export type Query_RootAuth0_User_By_PkArgs = {|
   user_id: $ElementType<Scalars, 'String'>,
 |};
+
 
 export type Query_RootLocalityArgs = {|
   distinct_on?: ?Array<Locality_Select_Column>,
@@ -2258,6 +2334,7 @@ export type Query_RootLocalityArgs = {|
   where?: ?Locality_Bool_Exp,
 |};
 
+
 export type Query_RootLocality_AggregateArgs = {|
   distinct_on?: ?Array<Locality_Select_Column>,
   limit?: ?$ElementType<Scalars, 'Int'>,
@@ -2266,9 +2343,11 @@ export type Query_RootLocality_AggregateArgs = {|
   where?: ?Locality_Bool_Exp,
 |};
 
+
 export type Query_RootLocality_By_PkArgs = {|
   id: $ElementType<Scalars, 'bigint'>,
 |};
+
 
 export type Query_RootMemberArgs = {|
   distinct_on?: ?Array<Member_Select_Column>,
@@ -2278,6 +2357,7 @@ export type Query_RootMemberArgs = {|
   where?: ?Member_Bool_Exp,
 |};
 
+
 export type Query_RootMember_AggregateArgs = {|
   distinct_on?: ?Array<Member_Select_Column>,
   limit?: ?$ElementType<Scalars, 'Int'>,
@@ -2286,9 +2366,11 @@ export type Query_RootMember_AggregateArgs = {|
   where?: ?Member_Bool_Exp,
 |};
 
+
 export type Query_RootMember_By_PkArgs = {|
   id: $ElementType<Scalars, 'bigint'>,
 |};
+
 
 export type Query_RootMember_PermissionArgs = {|
   distinct_on?: ?Array<Member_Permission_Select_Column>,
@@ -2298,6 +2380,7 @@ export type Query_RootMember_PermissionArgs = {|
   where?: ?Member_Permission_Bool_Exp,
 |};
 
+
 export type Query_RootMember_Permission_AggregateArgs = {|
   distinct_on?: ?Array<Member_Permission_Select_Column>,
   limit?: ?$ElementType<Scalars, 'Int'>,
@@ -2305,6 +2388,7 @@ export type Query_RootMember_Permission_AggregateArgs = {|
   order_by?: ?Array<Member_Permission_Order_By>,
   where?: ?Member_Permission_Bool_Exp,
 |};
+
 
 export type Query_RootPermissionArgs = {|
   distinct_on?: ?Array<Permission_Select_Column>,
@@ -2314,6 +2398,7 @@ export type Query_RootPermissionArgs = {|
   where?: ?Permission_Bool_Exp,
 |};
 
+
 export type Query_RootPermission_AggregateArgs = {|
   distinct_on?: ?Array<Permission_Select_Column>,
   limit?: ?$ElementType<Scalars, 'Int'>,
@@ -2322,9 +2407,11 @@ export type Query_RootPermission_AggregateArgs = {|
   where?: ?Permission_Bool_Exp,
 |};
 
+
 export type Query_RootPermission_By_PkArgs = {|
   id: $ElementType<Scalars, 'String'>,
 |};
+
 
 export type Query_RootProjectArgs = {|
   distinct_on?: ?Array<Project_Select_Column>,
@@ -2334,6 +2421,7 @@ export type Query_RootProjectArgs = {|
   where?: ?Project_Bool_Exp,
 |};
 
+
 export type Query_RootProject_AggregateArgs = {|
   distinct_on?: ?Array<Project_Select_Column>,
   limit?: ?$ElementType<Scalars, 'Int'>,
@@ -2341,6 +2429,7 @@ export type Query_RootProject_AggregateArgs = {|
   order_by?: ?Array<Project_Order_By>,
   where?: ?Project_Bool_Exp,
 |};
+
 
 export type Query_RootProject_By_PkArgs = {|
   id: $ElementType<Scalars, 'bigint'>,
@@ -2384,6 +2473,7 @@ export type Subscription_Root = {|
   project_by_pk?: ?Project,
 |};
 
+
 export type Subscription_RootAuth0_UserArgs = {|
   distinct_on?: ?Array<Auth0_User_Select_Column>,
   limit?: ?$ElementType<Scalars, 'Int'>,
@@ -2391,6 +2481,7 @@ export type Subscription_RootAuth0_UserArgs = {|
   order_by?: ?Array<Auth0_User_Order_By>,
   where?: ?Auth0_User_Bool_Exp,
 |};
+
 
 export type Subscription_RootAuth0_User_AggregateArgs = {|
   distinct_on?: ?Array<Auth0_User_Select_Column>,
@@ -2400,9 +2491,11 @@ export type Subscription_RootAuth0_User_AggregateArgs = {|
   where?: ?Auth0_User_Bool_Exp,
 |};
 
+
 export type Subscription_RootAuth0_User_By_PkArgs = {|
   user_id: $ElementType<Scalars, 'String'>,
 |};
+
 
 export type Subscription_RootLocalityArgs = {|
   distinct_on?: ?Array<Locality_Select_Column>,
@@ -2412,6 +2505,7 @@ export type Subscription_RootLocalityArgs = {|
   where?: ?Locality_Bool_Exp,
 |};
 
+
 export type Subscription_RootLocality_AggregateArgs = {|
   distinct_on?: ?Array<Locality_Select_Column>,
   limit?: ?$ElementType<Scalars, 'Int'>,
@@ -2420,9 +2514,11 @@ export type Subscription_RootLocality_AggregateArgs = {|
   where?: ?Locality_Bool_Exp,
 |};
 
+
 export type Subscription_RootLocality_By_PkArgs = {|
   id: $ElementType<Scalars, 'bigint'>,
 |};
+
 
 export type Subscription_RootMemberArgs = {|
   distinct_on?: ?Array<Member_Select_Column>,
@@ -2432,6 +2528,7 @@ export type Subscription_RootMemberArgs = {|
   where?: ?Member_Bool_Exp,
 |};
 
+
 export type Subscription_RootMember_AggregateArgs = {|
   distinct_on?: ?Array<Member_Select_Column>,
   limit?: ?$ElementType<Scalars, 'Int'>,
@@ -2440,9 +2537,11 @@ export type Subscription_RootMember_AggregateArgs = {|
   where?: ?Member_Bool_Exp,
 |};
 
+
 export type Subscription_RootMember_By_PkArgs = {|
   id: $ElementType<Scalars, 'bigint'>,
 |};
+
 
 export type Subscription_RootMember_PermissionArgs = {|
   distinct_on?: ?Array<Member_Permission_Select_Column>,
@@ -2452,6 +2551,7 @@ export type Subscription_RootMember_PermissionArgs = {|
   where?: ?Member_Permission_Bool_Exp,
 |};
 
+
 export type Subscription_RootMember_Permission_AggregateArgs = {|
   distinct_on?: ?Array<Member_Permission_Select_Column>,
   limit?: ?$ElementType<Scalars, 'Int'>,
@@ -2459,6 +2559,7 @@ export type Subscription_RootMember_Permission_AggregateArgs = {|
   order_by?: ?Array<Member_Permission_Order_By>,
   where?: ?Member_Permission_Bool_Exp,
 |};
+
 
 export type Subscription_RootPermissionArgs = {|
   distinct_on?: ?Array<Permission_Select_Column>,
@@ -2468,6 +2569,7 @@ export type Subscription_RootPermissionArgs = {|
   where?: ?Permission_Bool_Exp,
 |};
 
+
 export type Subscription_RootPermission_AggregateArgs = {|
   distinct_on?: ?Array<Permission_Select_Column>,
   limit?: ?$ElementType<Scalars, 'Int'>,
@@ -2476,9 +2578,11 @@ export type Subscription_RootPermission_AggregateArgs = {|
   where?: ?Permission_Bool_Exp,
 |};
 
+
 export type Subscription_RootPermission_By_PkArgs = {|
   id: $ElementType<Scalars, 'String'>,
 |};
+
 
 export type Subscription_RootProjectArgs = {|
   distinct_on?: ?Array<Project_Select_Column>,
@@ -2488,6 +2592,7 @@ export type Subscription_RootProjectArgs = {|
   where?: ?Project_Bool_Exp,
 |};
 
+
 export type Subscription_RootProject_AggregateArgs = {|
   distinct_on?: ?Array<Project_Select_Column>,
   limit?: ?$ElementType<Scalars, 'Int'>,
@@ -2496,9 +2601,11 @@ export type Subscription_RootProject_AggregateArgs = {|
   where?: ?Project_Bool_Exp,
 |};
 
+
 export type Subscription_RootProject_By_PkArgs = {|
   id: $ElementType<Scalars, 'bigint'>,
 |};
+
 
 /** Boolean expression to compare columns of type "timestamptz". All fields are combined with logical 'AND'. */
 export type Timestamptz_Comparison_Exp = {|

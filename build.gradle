@@ -1,0 +1,135 @@
+plugins {
+    id "com.github.node-gradle.node"
+    id "io.spring.dependency-management"
+    id "org.flywaydb.flyway"
+    id "org.openapi.generator"
+    id "org.springframework.boot"
+    id "java"
+}
+
+group = "io.github.bbortt"
+version = "${version}"
+
+sourceCompatibility = "17"
+assert System.properties["java.specification.version"] == "11" || "12" || "13" || "14" || "15" || "16" || "17"
+
+defaultTasks "check"
+
+repositories {
+    mavenCentral()
+}
+
+clean.doFirst {
+    delete "$rootDir/node_modules"
+    delete "$buildDir/generated"
+}
+
+dependencies {
+    implementation "com.graphql-java:graphql-java-tools:5.2.4"
+    implementation("com.graphql-java:graphql-spring-boot-starter:5.0.2") {
+        exclude module: "spring-boot-starter-tomcat"
+    }
+    implementation 'io.swagger:swagger-annotations:1.6.3'
+    implementation "jakarta.validation:jakarta.validation-api:2.0.2"
+    implementation 'org.modelmapper:modelmapper:2.4.4'
+    implementation "org.openapitools:jackson-databind-nullable:0.1.0"
+    implementation "org.springframework.boot:spring-boot-starter-actuator"
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+    implementation "org.springframework.boot:spring-boot-starter-oauth2-resource-server"
+    implementation "org.springframework.boot:spring-boot-starter-security"
+    implementation "org.springframework.boot:spring-boot-starter-undertow"
+    implementation("org.springframework.boot:spring-boot-starter-web") {
+        exclude module: "spring-boot-starter-tomcat"
+    }
+    developmentOnly "org.springframework.boot:spring-boot-devtools"
+    runtimeOnly "org.postgresql:postgresql"
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation "org.springframework.cloud:spring-cloud-contract-wiremock:3.0.4"
+    testImplementation "org.springframework.security:spring-security-test"
+}
+
+// --- General Configuration ---
+node {
+    version = "14.17.6"
+    npmVersion = "8.1.3"
+    npmInstallCommand = "ci"
+}
+
+if (project.hasProperty("nodeInstall")) {
+    node {
+        download = true
+    }
+}
+
+bootJar {
+    processResources {
+        from("build/static") {
+            into "static"
+        }
+    }
+}
+
+flyway {
+    locations = ["filesystem:src/main/resources/db/migration"]
+}
+
+// --- OpenAPI Generation ---
+openApiGenerate {
+    generatorName = "spring"
+    inputSpec = "$rootDir/src/main/resources/specs/event-planner-v1.yaml".toString()
+    outputDir = "$buildDir/generated".toString()
+    apiPackage = "io.github.bbortt.event.planner.api.v1"
+    invokerPackage = "io.github.bbortt.event.planner.v1.invoker"
+    modelNameSuffix = "Dto"
+    modelPackage = "io.github.bbortt.event.planner.api.v1.dto"
+    configOptions = [
+            dateLibrary    : "java8",
+            delegatePattern: "true",
+            interfaceOnly  : "true",
+            useOptional    : "true"
+    ]
+}
+compileJava.dependsOn tasks.openApiGenerate
+sourceSets.main.java.srcDirs += "$buildDir/generated/src/main/java"
+
+// --- Unit- and Integration-Testing ---
+test {
+    useJUnitPlatform()
+    exclude "**/*IntegrationTest*"
+}
+
+//task integrationTest(type: Test, dependsOn: test) {
+//    useJUnitPlatform()
+//    include "**/*IntegrationTest*"
+//}
+//bootJar.dependsOn integrationTest
+
+// --- Frontend Build ---
+task lint(type: NpmTask, dependsOn: "npmInstall") {
+    args = ["run", "lint"]
+}
+test.dependsOn lint
+
+task webpack(type: NpmTask, dependsOn: "npmInstall") {
+    args = ["run", "fullbuild"]
+}
+processResources.dependsOn webpack
+
+// --- Flyway Configuration ---
+task flywayMigrateDev(type: org.flywaydb.gradle.task.FlywayMigrateTask) {
+    url = "jdbc:postgresql://localhost:5432/event_planner"
+    user = "event_planner"
+    password = "event_planner_password"
+}
+
+task flywayMigrateTest(type: org.flywaydb.gradle.task.FlywayMigrateTask) {
+    url = "jdbc:postgresql://localhost:5432/event_planner_test"
+    user = "event_planner"
+    password = "event_planner_password"
+}
+
+task flywayCleanTest(type: org.flywaydb.gradle.task.FlywayCleanTask) {
+    url = "jdbc:postgresql://localhost:5432/event_planner_test"
+    user = "event_planner"
+    password = "event_planner_password"
+}

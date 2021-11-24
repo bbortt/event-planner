@@ -1,0 +1,78 @@
+openapi: 3.0.1
+info:
+  title: Event-Planner
+  description: The Event-Planner REST API definition
+  contact:
+    email: timon.borter@gmx.ch
+  license:
+    name: Apache 2.0
+    url: https://github.com/bbortt/event-planner/blob/release/LICENSE
+  version: 1.0.0
+servers:
+  - description: Localhost
+    url: http://localhost:8080/api/rest/v1
+tags:
+  - name: user
+    description: User resource.
+paths:
+  /user/{userId}:
+    put:
+      tags:
+        - user
+      security:
+        - user_auth: []
+      summary: Synchronize user information from within Auth0.
+      description: |
+        This can only be done by the Auth0 Application having the
+        `user:synchronize` Permission.
+      operationId: synchronizeUser
+      parameters:
+        - name: userId
+          in: path
+          description: User sub that needs to be updated
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Updated user object
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        200:
+          description: User synchronized
+          content: {}
+        400:
+          description: Invalid user supplied
+          content: {}
+        404:
+          description: User not found
+          content: {}
+components:
+  schemas:
+    User:
+      type: object
+      required:
+        - nickname
+        - email
+      properties:
+        nickname:
+          type: string
+        email:
+          type: string
+        picture:
+          type: string
+        family_name:
+          type: string
+        given_name:
+          type: string
+  securitySchemes:
+    user_auth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: https://event-planner-dev.eu.auth0.com
+          scopes:
+            user:synchronize: Synchronize User details.

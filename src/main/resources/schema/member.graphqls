@@ -1,0 +1,16 @@
+type MemberDTO {
+    id: ID!
+    project: ProjectDTO!
+    accepted: Boolean!
+    auth0User: Auth0UserDTO!
+    permissions: [PermissionDTO]
+}
+
+extend type Query {
+    listMembers(projectId: ID!): [MemberDTO]!
+    getMember(memberId: ID!): MemberDTO
+}
+
+extend type Mutation {
+    joinProject(token: String): MemberDTO!
+}

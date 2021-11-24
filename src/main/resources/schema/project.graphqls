@@ -1,0 +1,34 @@
+input  CreateProjectInput {
+    name: String!
+    description: String
+    startTime: DateTime!
+    endTime: DateTime!
+}
+
+input  ProjectUpdateInput {
+    id: ID!
+    name: String
+    description: String
+    archived: Boolean
+}
+
+type ProjectDTO {
+    id: ID!
+    token: String!
+    name: String!
+    description: String
+    startTime: DateTime!
+    endTime: DateTime!
+    archived: Boolean!
+    members: [MemberDTO]
+    localities: [LocalityDTO]
+}
+
+extend type Query {
+    listProjects(count: Int, offset: Int): [ProjectDTO]!
+}
+
+extend type Mutation {
+    createProject(project: CreateProjectInput!): ProjectDTO!
+    updateProject(project: ProjectUpdateInput!): ProjectDTO!
+}

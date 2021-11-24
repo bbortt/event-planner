@@ -1,70 +1,60 @@
 # Developer Instructions
 
+> Detailed developer instructions for Event-Planner
+
+- [Getting Started](#getting-started)
+- [Database Migrations](#database-migrations)
+- [Auth0](#auth0)
+
+## Getting Started
+
+It's the following - pretty simple! 😉
+
+```shell
+$ docker-compose -f docker/docker-compose.yml up -d
+...
+$ ./gradlew flywayMigrateDev
+...
+$ SPRING_PROFILES_ACTIVE=dev,local ./gradlew bootRun
+...
+```
+
+## Database Migrations
+
+Migrations are done using [Flyway](https://flywaydb.org/). There are multiple Gradle commands for
+developing and testing available.
+
+| Command             | Usage                                            |
+| ------------------- | ------------------------------------------------ |
+| `flywayMigrateDev`  | Migrate development schema to latest.            |
+| `flywayCleanTest`   | Clean the test schema. Useful for local testing. |
+| `flywayMigrateTest` | Migrate test schema to latest.                   |
+
 ## Auth0
 
-### Configure Hasura
+### Roles & Permissions
 
-In order to make Hasura work with Auth0,
-follow [this tutorial](https://hasura.io/docs/latest/graphql/core/guides/integrations/auth0-jwt.html). You'll have to
-use the `auth0-spa-js` rule, so the JWT token will have the custom claims attached. In your Auth0 dashboard, edit the
-rule as following to have the actual roles assigned:
+The `User` Role has the following Permissions:
 
-```js
-function(user, context, callback) {
-  const namespace = "https://hasura.io/jwt/claims";
-  context.accessToken[namespace] =
-    {
-      'x-hasura-default-role': 'user',
-      // do some custom logic to decide allowed roles
-      'x-hasura-allowed-roles': ['user'],
-      'x-hasura-user-id': user.user_id
-    };
-  callback(null, user, context);
-}
-```
+`graphql:access`.
 
-### Synchronizing users
+### Actions
 
-We assume you provide each property for the table `auth0_user`:
+**Note:** Samples for all actions are available in
+the [`doc/auth0`](https://github.com/bbortt/event-planner/blob/release/doc/auth0) folder. You can
+run them using `npm run [SCRIPT_NAME]`.
 
-```js
-function(user, context, callback) {
-  const userId = user.user_id;
-  const nickname = user.nickname;
+#### Assigning default Role
 
-  const admin_secret = "xxxx";
-  const url = "https://ready-panda-91.hasura.app/v1/graphql";
-  const query = `mutation($userId: String!, $nickname: String) {
-    insert_users(objects: [{
-      id: $userId, name: $nickname, last_seen: "now()"
-    }], on_conflict: {constraint: users_pkey, update_columns: [last_seen, name]}
-    ) {
-      affected_rows
-    }
-  }`;
+The
+Action [`assign-default-role.js`](https://github.com/bbortt/event-planner/blob/release/doc/auth0/assign-default-role.js)
+must be installed in your Auth0 tenant. It's a post user registration Action which will assign the
+default Role and therefore Permissions (OAuth2 scopes) to new registered users.
 
-  const variables = { "userId": userId, "nickname": nickname };
+#### Synchronize user information
 
-  request.post({
-    url: url,
-    headers: { 'content-type': 'application/json', 'x-hasura-admin-secret': admin_secret },
-    body: JSON.stringify({
-      query: query,
-      variables: variables
-    })
-  }, function(error, response, body) {
-    console.log(body);
-    callback(null, user, context);
-  });
-}
-```
+Next, the
+Action [`synchronize-users.js`](https://github.com/bbortt/event-planner/blob/release/doc/auth0/synchronize-users.js)
+must be added post login. It will synchronize users to the application local database.
 
-**Attention:** If you cannot synchronize your users (e.g. when working on _localhost_) you must insert them
-into `auth0_user` table manually.
-
-### Default roles for new users
-
-Follow [this comment](https://community.auth0.com/t/hook-at-post-registration-to-assign-a-role/57985/3) to assign
-default roles to new users.
-
-At the time being this would be: `[]`.
+The callee machine-to-machine application must have the following Permission: `user:synchronize`.
