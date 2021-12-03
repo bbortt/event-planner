@@ -1,4 +1,4 @@
-name: NPM Release
+name: Release Version
 on:
   push:
     branches:
@@ -10,7 +10,7 @@ on:
       - 'CHANGELOG.md'
 jobs:
   build:
-    name: Release Application
+    name: Bump Standard-Version
     runs-on: ubuntu-20.04
     environment: release
     steps:

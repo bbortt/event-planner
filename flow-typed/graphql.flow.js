@@ -66,9 +66,9 @@ export type Auth0_User = {|
   family_name?: ?$ElementType<Scalars, 'String'>,
   given_name?: ?$ElementType<Scalars, 'String'>,
   /** An array relationship */
-  invitations: Array<Invitation>,
+  memberships: Array<Member>,
   /** An aggregate relationship */
-  invitations_aggregate: Invitation_Aggregate,
+  memberships_aggregate: Member_Aggregate,
   nickname: $ElementType<Scalars, 'String'>,
   picture?: ?$ElementType<Scalars, 'String'>,
   user_id: $ElementType<Scalars, 'String'>,
@@ -76,22 +76,22 @@ export type Auth0_User = {|
 
 
 /** columns and relationships of "auth0_user" */
-export type Auth0_UserInvitationsArgs = {|
-  distinct_on?: ?Array<Invitation_Select_Column>,
+export type Auth0_UserMembershipsArgs = {|
+  distinct_on?: ?Array<Member_Select_Column>,
   limit?: ?$ElementType<Scalars, 'Int'>,
   offset?: ?$ElementType<Scalars, 'Int'>,
-  order_by?: ?Array<Invitation_Order_By>,
-  where?: ?Invitation_Bool_Exp,
+  order_by?: ?Array<Member_Order_By>,
+  where?: ?Member_Bool_Exp,
 |};
 
 
 /** columns and relationships of "auth0_user" */
-export type Auth0_UserInvitations_AggregateArgs = {|
-  distinct_on?: ?Array<Invitation_Select_Column>,
+export type Auth0_UserMemberships_AggregateArgs = {|
+  distinct_on?: ?Array<Member_Select_Column>,
   limit?: ?$ElementType<Scalars, 'Int'>,
   offset?: ?$ElementType<Scalars, 'Int'>,
-  order_by?: ?Array<Invitation_Order_By>,
-  where?: ?Invitation_Bool_Exp,
+  order_by?: ?Array<Member_Order_By>,
+  where?: ?Member_Bool_Exp,
 |};
 
 /** aggregated selection of "auth0_user" */
@@ -124,7 +124,7 @@ export type Auth0_User_Bool_Exp = {|
   email?: ?String_Comparison_Exp,
   family_name?: ?String_Comparison_Exp,
   given_name?: ?String_Comparison_Exp,
-  invitations?: ?Invitation_Bool_Exp,
+  memberships?: ?Member_Bool_Exp,
   nickname?: ?String_Comparison_Exp,
   picture?: ?String_Comparison_Exp,
   user_id?: ?String_Comparison_Exp,
@@ -146,7 +146,7 @@ export type Auth0_User_Insert_Input = {|
   email?: ?$ElementType<Scalars, 'String'>,
   family_name?: ?$ElementType<Scalars, 'String'>,
   given_name?: ?$ElementType<Scalars, 'String'>,
-  invitations?: ?Invitation_Arr_Rel_Insert_Input,
+  memberships?: ?Member_Arr_Rel_Insert_Input,
   nickname?: ?$ElementType<Scalars, 'String'>,
   picture?: ?$ElementType<Scalars, 'String'>,
   user_id?: ?$ElementType<Scalars, 'String'>,
@@ -202,7 +202,7 @@ export type Auth0_User_Order_By = {|
   email?: ?Order_By,
   family_name?: ?Order_By,
   given_name?: ?Order_By,
-  invitations_aggregate?: ?Invitation_Aggregate_Order_By,
+  memberships_aggregate?: ?Member_Aggregate_Order_By,
   nickname?: ?Order_By,
   picture?: ?Order_By,
   user_id?: ?Order_By,
@@ -309,232 +309,1002 @@ export type Bpchar_Comparison_Exp = {|
   _similar?: ?$ElementType<Scalars, 'bpchar'>,
 |};
 
-/** columns and relationships of "invitation" */
-export type Invitation = {|
-  __typename?: 'invitation',
+/** columns and relationships of "locality" */
+export type Locality = {|
+  __typename?: 'locality',
+  /** An array relationship */
+  children: Array<Locality>,
+  /** An aggregate relationship */
+  children_aggregate: Locality_Aggregate,
+  created_at: $ElementType<Scalars, 'timestamptz'>,
+  created_by: $ElementType<Scalars, 'String'>,
+  description?: ?$ElementType<Scalars, 'String'>,
+  id: $ElementType<Scalars, 'bigint'>,
+  last_updated_at?: ?$ElementType<Scalars, 'timestamptz'>,
+  last_updated_by: $ElementType<Scalars, 'String'>,
+  locality_id?: ?$ElementType<Scalars, 'bigint'>,
+  name: $ElementType<Scalars, 'String'>,
+  /** An object relationship */
+  parent?: ?Locality,
+  /** An object relationship */
+  project: Project,
+  project_id: $ElementType<Scalars, 'bigint'>,
+|};
+
+
+/** columns and relationships of "locality" */
+export type LocalityChildrenArgs = {|
+  distinct_on?: ?Array<Locality_Select_Column>,
+  limit?: ?$ElementType<Scalars, 'Int'>,
+  offset?: ?$ElementType<Scalars, 'Int'>,
+  order_by?: ?Array<Locality_Order_By>,
+  where?: ?Locality_Bool_Exp,
+|};
+
+
+/** columns and relationships of "locality" */
+export type LocalityChildren_AggregateArgs = {|
+  distinct_on?: ?Array<Locality_Select_Column>,
+  limit?: ?$ElementType<Scalars, 'Int'>,
+  offset?: ?$ElementType<Scalars, 'Int'>,
+  order_by?: ?Array<Locality_Order_By>,
+  where?: ?Locality_Bool_Exp,
+|};
+
+/** aggregated selection of "locality" */
+export type Locality_Aggregate = {|
+  __typename?: 'locality_aggregate',
+  aggregate?: ?Locality_Aggregate_Fields,
+  nodes: Array<Locality>,
+|};
+
+/** aggregate fields of "locality" */
+export type Locality_Aggregate_Fields = {|
+  __typename?: 'locality_aggregate_fields',
+  avg?: ?Locality_Avg_Fields,
+  count: $ElementType<Scalars, 'Int'>,
+  max?: ?Locality_Max_Fields,
+  min?: ?Locality_Min_Fields,
+  stddev?: ?Locality_Stddev_Fields,
+  stddev_pop?: ?Locality_Stddev_Pop_Fields,
+  stddev_samp?: ?Locality_Stddev_Samp_Fields,
+  sum?: ?Locality_Sum_Fields,
+  var_pop?: ?Locality_Var_Pop_Fields,
+  var_samp?: ?Locality_Var_Samp_Fields,
+  variance?: ?Locality_Variance_Fields,
+|};
+
+
+/** aggregate fields of "locality" */
+export type Locality_Aggregate_FieldsCountArgs = {|
+  columns?: ?Array<Locality_Select_Column>,
+  distinct?: ?$ElementType<Scalars, 'Boolean'>,
+|};
+
+/** order by aggregate values of table "locality" */
+export type Locality_Aggregate_Order_By = {|
+  avg?: ?Locality_Avg_Order_By,
+  count?: ?Order_By,
+  max?: ?Locality_Max_Order_By,
+  min?: ?Locality_Min_Order_By,
+  stddev?: ?Locality_Stddev_Order_By,
+  stddev_pop?: ?Locality_Stddev_Pop_Order_By,
+  stddev_samp?: ?Locality_Stddev_Samp_Order_By,
+  sum?: ?Locality_Sum_Order_By,
+  var_pop?: ?Locality_Var_Pop_Order_By,
+  var_samp?: ?Locality_Var_Samp_Order_By,
+  variance?: ?Locality_Variance_Order_By,
+|};
+
+/** input type for inserting array relation for remote table "locality" */
+export type Locality_Arr_Rel_Insert_Input = {|
+  data: Array<Locality_Insert_Input>,
+  /** on conflict condition */
+  on_conflict?: ?Locality_On_Conflict,
+|};
+
+/** aggregate avg on columns */
+export type Locality_Avg_Fields = {|
+  __typename?: 'locality_avg_fields',
+  id?: ?$ElementType<Scalars, 'Float'>,
+  locality_id?: ?$ElementType<Scalars, 'Float'>,
+  project_id?: ?$ElementType<Scalars, 'Float'>,
+|};
+
+/** order by avg() on columns of table "locality" */
+export type Locality_Avg_Order_By = {|
+  id?: ?Order_By,
+  locality_id?: ?Order_By,
+  project_id?: ?Order_By,
+|};
+
+/** Boolean expression to filter rows from the table "locality". All fields are combined with a logical 'AND'. */
+export type Locality_Bool_Exp = {|
+  _and?: ?Array<Locality_Bool_Exp>,
+  _not?: ?Locality_Bool_Exp,
+  _or?: ?Array<Locality_Bool_Exp>,
+  children?: ?Locality_Bool_Exp,
+  created_at?: ?Timestamptz_Comparison_Exp,
+  created_by?: ?String_Comparison_Exp,
+  description?: ?String_Comparison_Exp,
+  id?: ?Bigint_Comparison_Exp,
+  last_updated_at?: ?Timestamptz_Comparison_Exp,
+  last_updated_by?: ?String_Comparison_Exp,
+  locality_id?: ?Bigint_Comparison_Exp,
+  name?: ?String_Comparison_Exp,
+  parent?: ?Locality_Bool_Exp,
+  project?: ?Project_Bool_Exp,
+  project_id?: ?Bigint_Comparison_Exp,
+|};
+
+export const Locality_ConstraintValues = Object.freeze({
+  /** unique or primary key constraint */
+  LocalityPkey: 'locality_pkey'
+});
+
+
+/** unique or primary key constraints on table "locality" */
+export type Locality_Constraint = $Values<typeof Locality_ConstraintValues>;
+
+/** input type for incrementing numeric columns in table "locality" */
+export type Locality_Inc_Input = {|
+  id?: ?$ElementType<Scalars, 'bigint'>,
+  locality_id?: ?$ElementType<Scalars, 'bigint'>,
+  project_id?: ?$ElementType<Scalars, 'bigint'>,
+|};
+
+/** input type for inserting data into table "locality" */
+export type Locality_Insert_Input = {|
+  children?: ?Locality_Arr_Rel_Insert_Input,
+  created_at?: ?$ElementType<Scalars, 'timestamptz'>,
+  created_by?: ?$ElementType<Scalars, 'String'>,
+  description?: ?$ElementType<Scalars, 'String'>,
+  id?: ?$ElementType<Scalars, 'bigint'>,
+  last_updated_at?: ?$ElementType<Scalars, 'timestamptz'>,
+  last_updated_by?: ?$ElementType<Scalars, 'String'>,
+  locality_id?: ?$ElementType<Scalars, 'bigint'>,
+  name?: ?$ElementType<Scalars, 'String'>,
+  parent?: ?Locality_Obj_Rel_Insert_Input,
+  project?: ?Project_Obj_Rel_Insert_Input,
+  project_id?: ?$ElementType<Scalars, 'bigint'>,
+|};
+
+/** aggregate max on columns */
+export type Locality_Max_Fields = {|
+  __typename?: 'locality_max_fields',
+  created_at?: ?$ElementType<Scalars, 'timestamptz'>,
+  created_by?: ?$ElementType<Scalars, 'String'>,
+  description?: ?$ElementType<Scalars, 'String'>,
+  id?: ?$ElementType<Scalars, 'bigint'>,
+  last_updated_at?: ?$ElementType<Scalars, 'timestamptz'>,
+  last_updated_by?: ?$ElementType<Scalars, 'String'>,
+  locality_id?: ?$ElementType<Scalars, 'bigint'>,
+  name?: ?$ElementType<Scalars, 'String'>,
+  project_id?: ?$ElementType<Scalars, 'bigint'>,
+|};
+
+/** order by max() on columns of table "locality" */
+export type Locality_Max_Order_By = {|
+  created_at?: ?Order_By,
+  created_by?: ?Order_By,
+  description?: ?Order_By,
+  id?: ?Order_By,
+  last_updated_at?: ?Order_By,
+  last_updated_by?: ?Order_By,
+  locality_id?: ?Order_By,
+  name?: ?Order_By,
+  project_id?: ?Order_By,
+|};
+
+/** aggregate min on columns */
+export type Locality_Min_Fields = {|
+  __typename?: 'locality_min_fields',
+  created_at?: ?$ElementType<Scalars, 'timestamptz'>,
+  created_by?: ?$ElementType<Scalars, 'String'>,
+  description?: ?$ElementType<Scalars, 'String'>,
+  id?: ?$ElementType<Scalars, 'bigint'>,
+  last_updated_at?: ?$ElementType<Scalars, 'timestamptz'>,
+  last_updated_by?: ?$ElementType<Scalars, 'String'>,
+  locality_id?: ?$ElementType<Scalars, 'bigint'>,
+  name?: ?$ElementType<Scalars, 'String'>,
+  project_id?: ?$ElementType<Scalars, 'bigint'>,
+|};
+
+/** order by min() on columns of table "locality" */
+export type Locality_Min_Order_By = {|
+  created_at?: ?Order_By,
+  created_by?: ?Order_By,
+  description?: ?Order_By,
+  id?: ?Order_By,
+  last_updated_at?: ?Order_By,
+  last_updated_by?: ?Order_By,
+  locality_id?: ?Order_By,
+  name?: ?Order_By,
+  project_id?: ?Order_By,
+|};
+
+/** response of any mutation on the table "locality" */
+export type Locality_Mutation_Response = {|
+  __typename?: 'locality_mutation_response',
+  /** number of rows affected by the mutation */
+  affected_rows: $ElementType<Scalars, 'Int'>,
+  /** data from the rows affected by the mutation */
+  returning: Array<Locality>,
+|};
+
+/** input type for inserting object relation for remote table "locality" */
+export type Locality_Obj_Rel_Insert_Input = {|
+  data: Locality_Insert_Input,
+  /** on conflict condition */
+  on_conflict?: ?Locality_On_Conflict,
+|};
+
+/** on conflict condition type for table "locality" */
+export type Locality_On_Conflict = {|
+  constraint: Locality_Constraint,
+  update_columns: Array<Locality_Update_Column>,
+  where?: ?Locality_Bool_Exp,
+|};
+
+/** Ordering options when selecting data from "locality". */
+export type Locality_Order_By = {|
+  children_aggregate?: ?Locality_Aggregate_Order_By,
+  created_at?: ?Order_By,
+  created_by?: ?Order_By,
+  description?: ?Order_By,
+  id?: ?Order_By,
+  last_updated_at?: ?Order_By,
+  last_updated_by?: ?Order_By,
+  locality_id?: ?Order_By,
+  name?: ?Order_By,
+  parent?: ?Locality_Order_By,
+  project?: ?Project_Order_By,
+  project_id?: ?Order_By,
+|};
+
+/** primary key columns input for table: locality */
+export type Locality_Pk_Columns_Input = {|
+  id: $ElementType<Scalars, 'bigint'>,
+|};
+
+export const Locality_Select_ColumnValues = Object.freeze({
+  /** column name */
+  CreatedAt: 'created_at',
+  /** column name */
+  CreatedBy: 'created_by',
+  /** column name */
+  Description: 'description',
+  /** column name */
+  Id: 'id',
+  /** column name */
+  LastUpdatedAt: 'last_updated_at',
+  /** column name */
+  LastUpdatedBy: 'last_updated_by',
+  /** column name */
+  LocalityId: 'locality_id',
+  /** column name */
+  Name: 'name',
+  /** column name */
+  ProjectId: 'project_id'
+});
+
+
+/** select columns of table "locality" */
+export type Locality_Select_Column = $Values<typeof Locality_Select_ColumnValues>;
+
+/** input type for updating data in table "locality" */
+export type Locality_Set_Input = {|
+  created_at?: ?$ElementType<Scalars, 'timestamptz'>,
+  created_by?: ?$ElementType<Scalars, 'String'>,
+  description?: ?$ElementType<Scalars, 'String'>,
+  id?: ?$ElementType<Scalars, 'bigint'>,
+  last_updated_at?: ?$ElementType<Scalars, 'timestamptz'>,
+  last_updated_by?: ?$ElementType<Scalars, 'String'>,
+  locality_id?: ?$ElementType<Scalars, 'bigint'>,
+  name?: ?$ElementType<Scalars, 'String'>,
+  project_id?: ?$ElementType<Scalars, 'bigint'>,
+|};
+
+/** aggregate stddev on columns */
+export type Locality_Stddev_Fields = {|
+  __typename?: 'locality_stddev_fields',
+  id?: ?$ElementType<Scalars, 'Float'>,
+  locality_id?: ?$ElementType<Scalars, 'Float'>,
+  project_id?: ?$ElementType<Scalars, 'Float'>,
+|};
+
+/** order by stddev() on columns of table "locality" */
+export type Locality_Stddev_Order_By = {|
+  id?: ?Order_By,
+  locality_id?: ?Order_By,
+  project_id?: ?Order_By,
+|};
+
+/** aggregate stddev_pop on columns */
+export type Locality_Stddev_Pop_Fields = {|
+  __typename?: 'locality_stddev_pop_fields',
+  id?: ?$ElementType<Scalars, 'Float'>,
+  locality_id?: ?$ElementType<Scalars, 'Float'>,
+  project_id?: ?$ElementType<Scalars, 'Float'>,
+|};
+
+/** order by stddev_pop() on columns of table "locality" */
+export type Locality_Stddev_Pop_Order_By = {|
+  id?: ?Order_By,
+  locality_id?: ?Order_By,
+  project_id?: ?Order_By,
+|};
+
+/** aggregate stddev_samp on columns */
+export type Locality_Stddev_Samp_Fields = {|
+  __typename?: 'locality_stddev_samp_fields',
+  id?: ?$ElementType<Scalars, 'Float'>,
+  locality_id?: ?$ElementType<Scalars, 'Float'>,
+  project_id?: ?$ElementType<Scalars, 'Float'>,
+|};
+
+/** order by stddev_samp() on columns of table "locality" */
+export type Locality_Stddev_Samp_Order_By = {|
+  id?: ?Order_By,
+  locality_id?: ?Order_By,
+  project_id?: ?Order_By,
+|};
+
+/** aggregate sum on columns */
+export type Locality_Sum_Fields = {|
+  __typename?: 'locality_sum_fields',
+  id?: ?$ElementType<Scalars, 'bigint'>,
+  locality_id?: ?$ElementType<Scalars, 'bigint'>,
+  project_id?: ?$ElementType<Scalars, 'bigint'>,
+|};
+
+/** order by sum() on columns of table "locality" */
+export type Locality_Sum_Order_By = {|
+  id?: ?Order_By,
+  locality_id?: ?Order_By,
+  project_id?: ?Order_By,
+|};
+
+export const Locality_Update_ColumnValues = Object.freeze({
+  /** column name */
+  CreatedAt: 'created_at',
+  /** column name */
+  CreatedBy: 'created_by',
+  /** column name */
+  Description: 'description',
+  /** column name */
+  Id: 'id',
+  /** column name */
+  LastUpdatedAt: 'last_updated_at',
+  /** column name */
+  LastUpdatedBy: 'last_updated_by',
+  /** column name */
+  LocalityId: 'locality_id',
+  /** column name */
+  Name: 'name',
+  /** column name */
+  ProjectId: 'project_id'
+});
+
+
+/** update columns of table "locality" */
+export type Locality_Update_Column = $Values<typeof Locality_Update_ColumnValues>;
+
+/** aggregate var_pop on columns */
+export type Locality_Var_Pop_Fields = {|
+  __typename?: 'locality_var_pop_fields',
+  id?: ?$ElementType<Scalars, 'Float'>,
+  locality_id?: ?$ElementType<Scalars, 'Float'>,
+  project_id?: ?$ElementType<Scalars, 'Float'>,
+|};
+
+/** order by var_pop() on columns of table "locality" */
+export type Locality_Var_Pop_Order_By = {|
+  id?: ?Order_By,
+  locality_id?: ?Order_By,
+  project_id?: ?Order_By,
+|};
+
+/** aggregate var_samp on columns */
+export type Locality_Var_Samp_Fields = {|
+  __typename?: 'locality_var_samp_fields',
+  id?: ?$ElementType<Scalars, 'Float'>,
+  locality_id?: ?$ElementType<Scalars, 'Float'>,
+  project_id?: ?$ElementType<Scalars, 'Float'>,
+|};
+
+/** order by var_samp() on columns of table "locality" */
+export type Locality_Var_Samp_Order_By = {|
+  id?: ?Order_By,
+  locality_id?: ?Order_By,
+  project_id?: ?Order_By,
+|};
+
+/** aggregate variance on columns */
+export type Locality_Variance_Fields = {|
+  __typename?: 'locality_variance_fields',
+  id?: ?$ElementType<Scalars, 'Float'>,
+  locality_id?: ?$ElementType<Scalars, 'Float'>,
+  project_id?: ?$ElementType<Scalars, 'Float'>,
+|};
+
+/** order by variance() on columns of table "locality" */
+export type Locality_Variance_Order_By = {|
+  id?: ?Order_By,
+  locality_id?: ?Order_By,
+  project_id?: ?Order_By,
+|};
+
+/** columns and relationships of "member" */
+export type Member = {|
+  __typename?: 'member',
   accepted: $ElementType<Scalars, 'Boolean'>,
   accepted_at?: ?$ElementType<Scalars, 'timestamptz'>,
+  accepted_by: $ElementType<Scalars, 'String'>,
   /** An object relationship */
-  accepted_by?: ?Auth0_User,
+  accepting: Auth0_User,
   auth0_user_id?: ?$ElementType<Scalars, 'String'>,
   created_at: $ElementType<Scalars, 'timestamptz'>,
   created_by: $ElementType<Scalars, 'String'>,
   id: $ElementType<Scalars, 'bigint'>,
+  /** An array relationship */
+  permissions: Array<Member_Permission>,
+  /** An aggregate relationship */
+  permissions_aggregate: Member_Permission_Aggregate,
   /** An object relationship */
-  invited_to: Project,
-  nickname: $ElementType<Scalars, 'String'>,
+  project: Project,
   project_id: $ElementType<Scalars, 'bigint'>,
-  token: $ElementType<Scalars, 'bpchar'>,
+  project_token: $ElementType<Scalars, 'bpchar'>,
+  /** An object relationship */
+  user?: ?Auth0_User,
 |};
 
-/** aggregated selection of "invitation" */
-export type Invitation_Aggregate = {|
-  __typename?: 'invitation_aggregate',
-  aggregate?: ?Invitation_Aggregate_Fields,
-  nodes: Array<Invitation>,
+
+/** columns and relationships of "member" */
+export type MemberPermissionsArgs = {|
+  distinct_on?: ?Array<Member_Permission_Select_Column>,
+  limit?: ?$ElementType<Scalars, 'Int'>,
+  offset?: ?$ElementType<Scalars, 'Int'>,
+  order_by?: ?Array<Member_Permission_Order_By>,
+  where?: ?Member_Permission_Bool_Exp,
 |};
 
-/** aggregate fields of "invitation" */
-export type Invitation_Aggregate_Fields = {|
-  __typename?: 'invitation_aggregate_fields',
-  avg?: ?Invitation_Avg_Fields,
+
+/** columns and relationships of "member" */
+export type MemberPermissions_AggregateArgs = {|
+  distinct_on?: ?Array<Member_Permission_Select_Column>,
+  limit?: ?$ElementType<Scalars, 'Int'>,
+  offset?: ?$ElementType<Scalars, 'Int'>,
+  order_by?: ?Array<Member_Permission_Order_By>,
+  where?: ?Member_Permission_Bool_Exp,
+|};
+
+/** aggregated selection of "member" */
+export type Member_Aggregate = {|
+  __typename?: 'member_aggregate',
+  aggregate?: ?Member_Aggregate_Fields,
+  nodes: Array<Member>,
+|};
+
+/** aggregate fields of "member" */
+export type Member_Aggregate_Fields = {|
+  __typename?: 'member_aggregate_fields',
+  avg?: ?Member_Avg_Fields,
   count: $ElementType<Scalars, 'Int'>,
-  max?: ?Invitation_Max_Fields,
-  min?: ?Invitation_Min_Fields,
-  stddev?: ?Invitation_Stddev_Fields,
-  stddev_pop?: ?Invitation_Stddev_Pop_Fields,
-  stddev_samp?: ?Invitation_Stddev_Samp_Fields,
-  sum?: ?Invitation_Sum_Fields,
-  var_pop?: ?Invitation_Var_Pop_Fields,
-  var_samp?: ?Invitation_Var_Samp_Fields,
-  variance?: ?Invitation_Variance_Fields,
+  max?: ?Member_Max_Fields,
+  min?: ?Member_Min_Fields,
+  stddev?: ?Member_Stddev_Fields,
+  stddev_pop?: ?Member_Stddev_Pop_Fields,
+  stddev_samp?: ?Member_Stddev_Samp_Fields,
+  sum?: ?Member_Sum_Fields,
+  var_pop?: ?Member_Var_Pop_Fields,
+  var_samp?: ?Member_Var_Samp_Fields,
+  variance?: ?Member_Variance_Fields,
 |};
 
 
-/** aggregate fields of "invitation" */
-export type Invitation_Aggregate_FieldsCountArgs = {|
-  columns?: ?Array<Invitation_Select_Column>,
+/** aggregate fields of "member" */
+export type Member_Aggregate_FieldsCountArgs = {|
+  columns?: ?Array<Member_Select_Column>,
   distinct?: ?$ElementType<Scalars, 'Boolean'>,
 |};
 
-/** order by aggregate values of table "invitation" */
-export type Invitation_Aggregate_Order_By = {|
-  avg?: ?Invitation_Avg_Order_By,
+/** order by aggregate values of table "member" */
+export type Member_Aggregate_Order_By = {|
+  avg?: ?Member_Avg_Order_By,
   count?: ?Order_By,
-  max?: ?Invitation_Max_Order_By,
-  min?: ?Invitation_Min_Order_By,
-  stddev?: ?Invitation_Stddev_Order_By,
-  stddev_pop?: ?Invitation_Stddev_Pop_Order_By,
-  stddev_samp?: ?Invitation_Stddev_Samp_Order_By,
-  sum?: ?Invitation_Sum_Order_By,
-  var_pop?: ?Invitation_Var_Pop_Order_By,
-  var_samp?: ?Invitation_Var_Samp_Order_By,
-  variance?: ?Invitation_Variance_Order_By,
+  max?: ?Member_Max_Order_By,
+  min?: ?Member_Min_Order_By,
+  stddev?: ?Member_Stddev_Order_By,
+  stddev_pop?: ?Member_Stddev_Pop_Order_By,
+  stddev_samp?: ?Member_Stddev_Samp_Order_By,
+  sum?: ?Member_Sum_Order_By,
+  var_pop?: ?Member_Var_Pop_Order_By,
+  var_samp?: ?Member_Var_Samp_Order_By,
+  variance?: ?Member_Variance_Order_By,
 |};
 
-/** input type for inserting array relation for remote table "invitation" */
-export type Invitation_Arr_Rel_Insert_Input = {|
-  data: Array<Invitation_Insert_Input>,
+/** input type for inserting array relation for remote table "member" */
+export type Member_Arr_Rel_Insert_Input = {|
+  data: Array<Member_Insert_Input>,
   /** on conflict condition */
-  on_conflict?: ?Invitation_On_Conflict,
+  on_conflict?: ?Member_On_Conflict,
 |};
 
 /** aggregate avg on columns */
-export type Invitation_Avg_Fields = {|
-  __typename?: 'invitation_avg_fields',
+export type Member_Avg_Fields = {|
+  __typename?: 'member_avg_fields',
   id?: ?$ElementType<Scalars, 'Float'>,
   project_id?: ?$ElementType<Scalars, 'Float'>,
 |};
 
-/** order by avg() on columns of table "invitation" */
-export type Invitation_Avg_Order_By = {|
+/** order by avg() on columns of table "member" */
+export type Member_Avg_Order_By = {|
   id?: ?Order_By,
   project_id?: ?Order_By,
 |};
 
-/** Boolean expression to filter rows from the table "invitation". All fields are combined with a logical 'AND'. */
-export type Invitation_Bool_Exp = {|
-  _and?: ?Array<Invitation_Bool_Exp>,
-  _not?: ?Invitation_Bool_Exp,
-  _or?: ?Array<Invitation_Bool_Exp>,
+/** Boolean expression to filter rows from the table "member". All fields are combined with a logical 'AND'. */
+export type Member_Bool_Exp = {|
+  _and?: ?Array<Member_Bool_Exp>,
+  _not?: ?Member_Bool_Exp,
+  _or?: ?Array<Member_Bool_Exp>,
   accepted?: ?Boolean_Comparison_Exp,
   accepted_at?: ?Timestamptz_Comparison_Exp,
-  accepted_by?: ?Auth0_User_Bool_Exp,
+  accepted_by?: ?String_Comparison_Exp,
+  accepting?: ?Auth0_User_Bool_Exp,
   auth0_user_id?: ?String_Comparison_Exp,
   created_at?: ?Timestamptz_Comparison_Exp,
   created_by?: ?String_Comparison_Exp,
   id?: ?Bigint_Comparison_Exp,
-  invited_to?: ?Project_Bool_Exp,
-  nickname?: ?String_Comparison_Exp,
+  permissions?: ?Member_Permission_Bool_Exp,
+  project?: ?Project_Bool_Exp,
   project_id?: ?Bigint_Comparison_Exp,
-  token?: ?Bpchar_Comparison_Exp,
+  project_token?: ?Bpchar_Comparison_Exp,
+  user?: ?Auth0_User_Bool_Exp,
 |};
 
-export const Invitation_ConstraintValues = Object.freeze({
+export const Member_ConstraintValues = Object.freeze({
   /** unique or primary key constraint */
-  InvitationPkey: 'invitation_pkey',
+  MemberPkey: 'member_pkey',
   /** unique or primary key constraint */
-  UniqueInvitation: 'unique_invitation',
-  /** unique or primary key constraint */
-  UniqueToken: 'unique_token'
+  UniqueInvitation: 'unique_invitation'
 });
 
 
-/** unique or primary key constraints on table "invitation" */
-export type Invitation_Constraint = $Values<typeof Invitation_ConstraintValues>;
+/** unique or primary key constraints on table "member" */
+export type Member_Constraint = $Values<typeof Member_ConstraintValues>;
 
-/** input type for incrementing numeric columns in table "invitation" */
-export type Invitation_Inc_Input = {|
+/** input type for incrementing numeric columns in table "member" */
+export type Member_Inc_Input = {|
   id?: ?$ElementType<Scalars, 'bigint'>,
   project_id?: ?$ElementType<Scalars, 'bigint'>,
 |};
 
-/** input type for inserting data into table "invitation" */
-export type Invitation_Insert_Input = {|
+/** input type for inserting data into table "member" */
+export type Member_Insert_Input = {|
   accepted?: ?$ElementType<Scalars, 'Boolean'>,
   accepted_at?: ?$ElementType<Scalars, 'timestamptz'>,
-  accepted_by?: ?Auth0_User_Obj_Rel_Insert_Input,
+  accepted_by?: ?$ElementType<Scalars, 'String'>,
+  accepting?: ?Auth0_User_Obj_Rel_Insert_Input,
   auth0_user_id?: ?$ElementType<Scalars, 'String'>,
   created_at?: ?$ElementType<Scalars, 'timestamptz'>,
   created_by?: ?$ElementType<Scalars, 'String'>,
   id?: ?$ElementType<Scalars, 'bigint'>,
-  invited_to?: ?Project_Obj_Rel_Insert_Input,
-  nickname?: ?$ElementType<Scalars, 'String'>,
+  permissions?: ?Member_Permission_Arr_Rel_Insert_Input,
+  project?: ?Project_Obj_Rel_Insert_Input,
   project_id?: ?$ElementType<Scalars, 'bigint'>,
-  token?: ?$ElementType<Scalars, 'bpchar'>,
+  project_token?: ?$ElementType<Scalars, 'bpchar'>,
+  user?: ?Auth0_User_Obj_Rel_Insert_Input,
 |};
 
 /** aggregate max on columns */
-export type Invitation_Max_Fields = {|
-  __typename?: 'invitation_max_fields',
+export type Member_Max_Fields = {|
+  __typename?: 'member_max_fields',
   accepted_at?: ?$ElementType<Scalars, 'timestamptz'>,
+  accepted_by?: ?$ElementType<Scalars, 'String'>,
   auth0_user_id?: ?$ElementType<Scalars, 'String'>,
   created_at?: ?$ElementType<Scalars, 'timestamptz'>,
   created_by?: ?$ElementType<Scalars, 'String'>,
   id?: ?$ElementType<Scalars, 'bigint'>,
-  nickname?: ?$ElementType<Scalars, 'String'>,
   project_id?: ?$ElementType<Scalars, 'bigint'>,
-  token?: ?$ElementType<Scalars, 'bpchar'>,
+  project_token?: ?$ElementType<Scalars, 'bpchar'>,
 |};
 
-/** order by max() on columns of table "invitation" */
-export type Invitation_Max_Order_By = {|
+/** order by max() on columns of table "member" */
+export type Member_Max_Order_By = {|
   accepted_at?: ?Order_By,
+  accepted_by?: ?Order_By,
   auth0_user_id?: ?Order_By,
   created_at?: ?Order_By,
   created_by?: ?Order_By,
   id?: ?Order_By,
-  nickname?: ?Order_By,
   project_id?: ?Order_By,
-  token?: ?Order_By,
+  project_token?: ?Order_By,
 |};
 
 /** aggregate min on columns */
-export type Invitation_Min_Fields = {|
-  __typename?: 'invitation_min_fields',
+export type Member_Min_Fields = {|
+  __typename?: 'member_min_fields',
   accepted_at?: ?$ElementType<Scalars, 'timestamptz'>,
+  accepted_by?: ?$ElementType<Scalars, 'String'>,
   auth0_user_id?: ?$ElementType<Scalars, 'String'>,
   created_at?: ?$ElementType<Scalars, 'timestamptz'>,
   created_by?: ?$ElementType<Scalars, 'String'>,
   id?: ?$ElementType<Scalars, 'bigint'>,
-  nickname?: ?$ElementType<Scalars, 'String'>,
   project_id?: ?$ElementType<Scalars, 'bigint'>,
-  token?: ?$ElementType<Scalars, 'bpchar'>,
+  project_token?: ?$ElementType<Scalars, 'bpchar'>,
 |};
 
-/** order by min() on columns of table "invitation" */
-export type Invitation_Min_Order_By = {|
+/** order by min() on columns of table "member" */
+export type Member_Min_Order_By = {|
   accepted_at?: ?Order_By,
+  accepted_by?: ?Order_By,
   auth0_user_id?: ?Order_By,
   created_at?: ?Order_By,
   created_by?: ?Order_By,
   id?: ?Order_By,
-  nickname?: ?Order_By,
   project_id?: ?Order_By,
-  token?: ?Order_By,
+  project_token?: ?Order_By,
 |};
 
-/** response of any mutation on the table "invitation" */
-export type Invitation_Mutation_Response = {|
-  __typename?: 'invitation_mutation_response',
+/** response of any mutation on the table "member" */
+export type Member_Mutation_Response = {|
+  __typename?: 'member_mutation_response',
   /** number of rows affected by the mutation */
   affected_rows: $ElementType<Scalars, 'Int'>,
   /** data from the rows affected by the mutation */
-  returning: Array<Invitation>,
+  returning: Array<Member>,
 |};
 
-/** on conflict condition type for table "invitation" */
-export type Invitation_On_Conflict = {|
-  constraint: Invitation_Constraint,
-  update_columns: Array<Invitation_Update_Column>,
-  where?: ?Invitation_Bool_Exp,
+/** input type for inserting object relation for remote table "member" */
+export type Member_Obj_Rel_Insert_Input = {|
+  data: Member_Insert_Input,
+  /** on conflict condition */
+  on_conflict?: ?Member_On_Conflict,
 |};
 
-/** Ordering options when selecting data from "invitation". */
-export type Invitation_Order_By = {|
+/** on conflict condition type for table "member" */
+export type Member_On_Conflict = {|
+  constraint: Member_Constraint,
+  update_columns: Array<Member_Update_Column>,
+  where?: ?Member_Bool_Exp,
+|};
+
+/** Ordering options when selecting data from "member". */
+export type Member_Order_By = {|
   accepted?: ?Order_By,
   accepted_at?: ?Order_By,
-  accepted_by?: ?Auth0_User_Order_By,
+  accepted_by?: ?Order_By,
+  accepting?: ?Auth0_User_Order_By,
   auth0_user_id?: ?Order_By,
   created_at?: ?Order_By,
   created_by?: ?Order_By,
   id?: ?Order_By,
-  invited_to?: ?Project_Order_By,
-  nickname?: ?Order_By,
+  permissions_aggregate?: ?Member_Permission_Aggregate_Order_By,
+  project?: ?Project_Order_By,
   project_id?: ?Order_By,
-  token?: ?Order_By,
+  project_token?: ?Order_By,
+  user?: ?Auth0_User_Order_By,
 |};
 
-/** primary key columns input for table: invitation */
-export type Invitation_Pk_Columns_Input = {|
+/** columns and relationships of "member_permission" */
+export type Member_Permission = {|
+  __typename?: 'member_permission',
+  created_at: $ElementType<Scalars, 'timestamptz'>,
+  created_by: $ElementType<Scalars, 'String'>,
+  last_updated_at?: ?$ElementType<Scalars, 'timestamptz'>,
+  last_updated_by: $ElementType<Scalars, 'String'>,
+  /** An object relationship */
+  member: Member,
+  member_id: $ElementType<Scalars, 'bigint'>,
+  /** An object relationship */
+  permission: Permission,
+  permission_id: $ElementType<Scalars, 'String'>,
+  project_id: $ElementType<Scalars, 'bigint'>,
+|};
+
+/** aggregated selection of "member_permission" */
+export type Member_Permission_Aggregate = {|
+  __typename?: 'member_permission_aggregate',
+  aggregate?: ?Member_Permission_Aggregate_Fields,
+  nodes: Array<Member_Permission>,
+|};
+
+/** aggregate fields of "member_permission" */
+export type Member_Permission_Aggregate_Fields = {|
+  __typename?: 'member_permission_aggregate_fields',
+  avg?: ?Member_Permission_Avg_Fields,
+  count: $ElementType<Scalars, 'Int'>,
+  max?: ?Member_Permission_Max_Fields,
+  min?: ?Member_Permission_Min_Fields,
+  stddev?: ?Member_Permission_Stddev_Fields,
+  stddev_pop?: ?Member_Permission_Stddev_Pop_Fields,
+  stddev_samp?: ?Member_Permission_Stddev_Samp_Fields,
+  sum?: ?Member_Permission_Sum_Fields,
+  var_pop?: ?Member_Permission_Var_Pop_Fields,
+  var_samp?: ?Member_Permission_Var_Samp_Fields,
+  variance?: ?Member_Permission_Variance_Fields,
+|};
+
+
+/** aggregate fields of "member_permission" */
+export type Member_Permission_Aggregate_FieldsCountArgs = {|
+  columns?: ?Array<Member_Permission_Select_Column>,
+  distinct?: ?$ElementType<Scalars, 'Boolean'>,
+|};
+
+/** order by aggregate values of table "member_permission" */
+export type Member_Permission_Aggregate_Order_By = {|
+  avg?: ?Member_Permission_Avg_Order_By,
+  count?: ?Order_By,
+  max?: ?Member_Permission_Max_Order_By,
+  min?: ?Member_Permission_Min_Order_By,
+  stddev?: ?Member_Permission_Stddev_Order_By,
+  stddev_pop?: ?Member_Permission_Stddev_Pop_Order_By,
+  stddev_samp?: ?Member_Permission_Stddev_Samp_Order_By,
+  sum?: ?Member_Permission_Sum_Order_By,
+  var_pop?: ?Member_Permission_Var_Pop_Order_By,
+  var_samp?: ?Member_Permission_Var_Samp_Order_By,
+  variance?: ?Member_Permission_Variance_Order_By,
+|};
+
+/** input type for inserting array relation for remote table "member_permission" */
+export type Member_Permission_Arr_Rel_Insert_Input = {|
+  data: Array<Member_Permission_Insert_Input>,
+|};
+
+/** aggregate avg on columns */
+export type Member_Permission_Avg_Fields = {|
+  __typename?: 'member_permission_avg_fields',
+  member_id?: ?$ElementType<Scalars, 'Float'>,
+  project_id?: ?$ElementType<Scalars, 'Float'>,
+|};
+
+/** order by avg() on columns of table "member_permission" */
+export type Member_Permission_Avg_Order_By = {|
+  member_id?: ?Order_By,
+  project_id?: ?Order_By,
+|};
+
+/** Boolean expression to filter rows from the table "member_permission". All fields are combined with a logical 'AND'. */
+export type Member_Permission_Bool_Exp = {|
+  _and?: ?Array<Member_Permission_Bool_Exp>,
+  _not?: ?Member_Permission_Bool_Exp,
+  _or?: ?Array<Member_Permission_Bool_Exp>,
+  created_at?: ?Timestamptz_Comparison_Exp,
+  created_by?: ?String_Comparison_Exp,
+  last_updated_at?: ?Timestamptz_Comparison_Exp,
+  last_updated_by?: ?String_Comparison_Exp,
+  member?: ?Member_Bool_Exp,
+  member_id?: ?Bigint_Comparison_Exp,
+  permission?: ?Permission_Bool_Exp,
+  permission_id?: ?String_Comparison_Exp,
+  project_id?: ?Bigint_Comparison_Exp,
+|};
+
+/** input type for incrementing numeric columns in table "member_permission" */
+export type Member_Permission_Inc_Input = {|
+  member_id?: ?$ElementType<Scalars, 'bigint'>,
+  project_id?: ?$ElementType<Scalars, 'bigint'>,
+|};
+
+/** input type for inserting data into table "member_permission" */
+export type Member_Permission_Insert_Input = {|
+  created_at?: ?$ElementType<Scalars, 'timestamptz'>,
+  created_by?: ?$ElementType<Scalars, 'String'>,
+  last_updated_at?: ?$ElementType<Scalars, 'timestamptz'>,
+  last_updated_by?: ?$ElementType<Scalars, 'String'>,
+  member?: ?Member_Obj_Rel_Insert_Input,
+  member_id?: ?$ElementType<Scalars, 'bigint'>,
+  permission?: ?Permission_Obj_Rel_Insert_Input,
+  permission_id?: ?$ElementType<Scalars, 'String'>,
+  project_id?: ?$ElementType<Scalars, 'bigint'>,
+|};
+
+/** aggregate max on columns */
+export type Member_Permission_Max_Fields = {|
+  __typename?: 'member_permission_max_fields',
+  created_at?: ?$ElementType<Scalars, 'timestamptz'>,
+  created_by?: ?$ElementType<Scalars, 'String'>,
+  last_updated_at?: ?$ElementType<Scalars, 'timestamptz'>,
+  last_updated_by?: ?$ElementType<Scalars, 'String'>,
+  member_id?: ?$ElementType<Scalars, 'bigint'>,
+  permission_id?: ?$ElementType<Scalars, 'String'>,
+  project_id?: ?$ElementType<Scalars, 'bigint'>,
+|};
+
+/** order by max() on columns of table "member_permission" */
+export type Member_Permission_Max_Order_By = {|
+  created_at?: ?Order_By,
+  created_by?: ?Order_By,
+  last_updated_at?: ?Order_By,
+  last_updated_by?: ?Order_By,
+  member_id?: ?Order_By,
+  permission_id?: ?Order_By,
+  project_id?: ?Order_By,
+|};
+
+/** aggregate min on columns */
+export type Member_Permission_Min_Fields = {|
+  __typename?: 'member_permission_min_fields',
+  created_at?: ?$ElementType<Scalars, 'timestamptz'>,
+  created_by?: ?$ElementType<Scalars, 'String'>,
+  last_updated_at?: ?$ElementType<Scalars, 'timestamptz'>,
+  last_updated_by?: ?$ElementType<Scalars, 'String'>,
+  member_id?: ?$ElementType<Scalars, 'bigint'>,
+  permission_id?: ?$ElementType<Scalars, 'String'>,
+  project_id?: ?$ElementType<Scalars, 'bigint'>,
+|};
+
+/** order by min() on columns of table "member_permission" */
+export type Member_Permission_Min_Order_By = {|
+  created_at?: ?Order_By,
+  created_by?: ?Order_By,
+  last_updated_at?: ?Order_By,
+  last_updated_by?: ?Order_By,
+  member_id?: ?Order_By,
+  permission_id?: ?Order_By,
+  project_id?: ?Order_By,
+|};
+
+/** response of any mutation on the table "member_permission" */
+export type Member_Permission_Mutation_Response = {|
+  __typename?: 'member_permission_mutation_response',
+  /** number of rows affected by the mutation */
+  affected_rows: $ElementType<Scalars, 'Int'>,
+  /** data from the rows affected by the mutation */
+  returning: Array<Member_Permission>,
+|};
+
+/** Ordering options when selecting data from "member_permission". */
+export type Member_Permission_Order_By = {|
+  created_at?: ?Order_By,
+  created_by?: ?Order_By,
+  last_updated_at?: ?Order_By,
+  last_updated_by?: ?Order_By,
+  member?: ?Member_Order_By,
+  member_id?: ?Order_By,
+  permission?: ?Permission_Order_By,
+  permission_id?: ?Order_By,
+  project_id?: ?Order_By,
+|};
+
+export const Member_Permission_Select_ColumnValues = Object.freeze({
+  /** column name */
+  CreatedAt: 'created_at',
+  /** column name */
+  CreatedBy: 'created_by',
+  /** column name */
+  LastUpdatedAt: 'last_updated_at',
+  /** column name */
+  LastUpdatedBy: 'last_updated_by',
+  /** column name */
+  MemberId: 'member_id',
+  /** column name */
+  PermissionId: 'permission_id',
+  /** column name */
+  ProjectId: 'project_id'
+});
+
+
+/** select columns of table "member_permission" */
+export type Member_Permission_Select_Column = $Values<typeof Member_Permission_Select_ColumnValues>;
+
+/** input type for updating data in table "member_permission" */
+export type Member_Permission_Set_Input = {|
+  created_at?: ?$ElementType<Scalars, 'timestamptz'>,
+  created_by?: ?$ElementType<Scalars, 'String'>,
+  last_updated_at?: ?$ElementType<Scalars, 'timestamptz'>,
+  last_updated_by?: ?$ElementType<Scalars, 'String'>,
+  member_id?: ?$ElementType<Scalars, 'bigint'>,
+  permission_id?: ?$ElementType<Scalars, 'String'>,
+  project_id?: ?$ElementType<Scalars, 'bigint'>,
+|};
+
+/** aggregate stddev on columns */
+export type Member_Permission_Stddev_Fields = {|
+  __typename?: 'member_permission_stddev_fields',
+  member_id?: ?$ElementType<Scalars, 'Float'>,
+  project_id?: ?$ElementType<Scalars, 'Float'>,
+|};
+
+/** order by stddev() on columns of table "member_permission" */
+export type Member_Permission_Stddev_Order_By = {|
+  member_id?: ?Order_By,
+  project_id?: ?Order_By,
+|};
+
+/** aggregate stddev_pop on columns */
+export type Member_Permission_Stddev_Pop_Fields = {|
+  __typename?: 'member_permission_stddev_pop_fields',
+  member_id?: ?$ElementType<Scalars, 'Float'>,
+  project_id?: ?$ElementType<Scalars, 'Float'>,
+|};
+
+/** order by stddev_pop() on columns of table "member_permission" */
+export type Member_Permission_Stddev_Pop_Order_By = {|
+  member_id?: ?Order_By,
+  project_id?: ?Order_By,
+|};
+
+/** aggregate stddev_samp on columns */
+export type Member_Permission_Stddev_Samp_Fields = {|
+  __typename?: 'member_permission_stddev_samp_fields',
+  member_id?: ?$ElementType<Scalars, 'Float'>,
+  project_id?: ?$ElementType<Scalars, 'Float'>,
+|};
+
+/** order by stddev_samp() on columns of table "member_permission" */
+export type Member_Permission_Stddev_Samp_Order_By = {|
+  member_id?: ?Order_By,
+  project_id?: ?Order_By,
+|};
+
+/** aggregate sum on columns */
+export type Member_Permission_Sum_Fields = {|
+  __typename?: 'member_permission_sum_fields',
+  member_id?: ?$ElementType<Scalars, 'bigint'>,
+  project_id?: ?$ElementType<Scalars, 'bigint'>,
+|};
+
+/** order by sum() on columns of table "member_permission" */
+export type Member_Permission_Sum_Order_By = {|
+  member_id?: ?Order_By,
+  project_id?: ?Order_By,
+|};
+
+/** aggregate var_pop on columns */
+export type Member_Permission_Var_Pop_Fields = {|
+  __typename?: 'member_permission_var_pop_fields',
+  member_id?: ?$ElementType<Scalars, 'Float'>,
+  project_id?: ?$ElementType<Scalars, 'Float'>,
+|};
+
+/** order by var_pop() on columns of table "member_permission" */
+export type Member_Permission_Var_Pop_Order_By = {|
+  member_id?: ?Order_By,
+  project_id?: ?Order_By,
+|};
+
+/** aggregate var_samp on columns */
+export type Member_Permission_Var_Samp_Fields = {|
+  __typename?: 'member_permission_var_samp_fields',
+  member_id?: ?$ElementType<Scalars, 'Float'>,
+  project_id?: ?$ElementType<Scalars, 'Float'>,
+|};
+
+/** order by var_samp() on columns of table "member_permission" */
+export type Member_Permission_Var_Samp_Order_By = {|
+  member_id?: ?Order_By,
+  project_id?: ?Order_By,
+|};
+
+/** aggregate variance on columns */
+export type Member_Permission_Variance_Fields = {|
+  __typename?: 'member_permission_variance_fields',
+  member_id?: ?$ElementType<Scalars, 'Float'>,
+  project_id?: ?$ElementType<Scalars, 'Float'>,
+|};
+
+/** order by variance() on columns of table "member_permission" */
+export type Member_Permission_Variance_Order_By = {|
+  member_id?: ?Order_By,
+  project_id?: ?Order_By,
+|};
+
+/** primary key columns input for table: member */
+export type Member_Pk_Columns_Input = {|
   id: $ElementType<Scalars, 'bigint'>,
 |};
 
-export const Invitation_Select_ColumnValues = Object.freeze({
+export const Member_Select_ColumnValues = Object.freeze({
   /** column name */
   Accepted: 'accepted',
   /** column name */
   AcceptedAt: 'accepted_at',
+  /** column name */
+  AcceptedBy: 'accepted_by',
   /** column name */
   Auth0UserId: 'auth0_user_id',
   /** column name */
@@ -544,87 +1314,87 @@ export const Invitation_Select_ColumnValues = Object.freeze({
   /** column name */
   Id: 'id',
   /** column name */
-  Nickname: 'nickname',
-  /** column name */
   ProjectId: 'project_id',
   /** column name */
-  Token: 'token'
+  ProjectToken: 'project_token'
 });
 
 
-/** select columns of table "invitation" */
-export type Invitation_Select_Column = $Values<typeof Invitation_Select_ColumnValues>;
+/** select columns of table "member" */
+export type Member_Select_Column = $Values<typeof Member_Select_ColumnValues>;
 
-/** input type for updating data in table "invitation" */
-export type Invitation_Set_Input = {|
+/** input type for updating data in table "member" */
+export type Member_Set_Input = {|
   accepted?: ?$ElementType<Scalars, 'Boolean'>,
   accepted_at?: ?$ElementType<Scalars, 'timestamptz'>,
+  accepted_by?: ?$ElementType<Scalars, 'String'>,
   auth0_user_id?: ?$ElementType<Scalars, 'String'>,
   created_at?: ?$ElementType<Scalars, 'timestamptz'>,
   created_by?: ?$ElementType<Scalars, 'String'>,
   id?: ?$ElementType<Scalars, 'bigint'>,
-  nickname?: ?$ElementType<Scalars, 'String'>,
   project_id?: ?$ElementType<Scalars, 'bigint'>,
-  token?: ?$ElementType<Scalars, 'bpchar'>,
+  project_token?: ?$ElementType<Scalars, 'bpchar'>,
 |};
 
 /** aggregate stddev on columns */
-export type Invitation_Stddev_Fields = {|
-  __typename?: 'invitation_stddev_fields',
+export type Member_Stddev_Fields = {|
+  __typename?: 'member_stddev_fields',
   id?: ?$ElementType<Scalars, 'Float'>,
   project_id?: ?$ElementType<Scalars, 'Float'>,
 |};
 
-/** order by stddev() on columns of table "invitation" */
-export type Invitation_Stddev_Order_By = {|
+/** order by stddev() on columns of table "member" */
+export type Member_Stddev_Order_By = {|
   id?: ?Order_By,
   project_id?: ?Order_By,
 |};
 
 /** aggregate stddev_pop on columns */
-export type Invitation_Stddev_Pop_Fields = {|
-  __typename?: 'invitation_stddev_pop_fields',
+export type Member_Stddev_Pop_Fields = {|
+  __typename?: 'member_stddev_pop_fields',
   id?: ?$ElementType<Scalars, 'Float'>,
   project_id?: ?$ElementType<Scalars, 'Float'>,
 |};
 
-/** order by stddev_pop() on columns of table "invitation" */
-export type Invitation_Stddev_Pop_Order_By = {|
+/** order by stddev_pop() on columns of table "member" */
+export type Member_Stddev_Pop_Order_By = {|
   id?: ?Order_By,
   project_id?: ?Order_By,
 |};
 
 /** aggregate stddev_samp on columns */
-export type Invitation_Stddev_Samp_Fields = {|
-  __typename?: 'invitation_stddev_samp_fields',
+export type Member_Stddev_Samp_Fields = {|
+  __typename?: 'member_stddev_samp_fields',
   id?: ?$ElementType<Scalars, 'Float'>,
   project_id?: ?$ElementType<Scalars, 'Float'>,
 |};
 
-/** order by stddev_samp() on columns of table "invitation" */
-export type Invitation_Stddev_Samp_Order_By = {|
+/** order by stddev_samp() on columns of table "member" */
+export type Member_Stddev_Samp_Order_By = {|
   id?: ?Order_By,
   project_id?: ?Order_By,
 |};
 
 /** aggregate sum on columns */
-export type Invitation_Sum_Fields = {|
-  __typename?: 'invitation_sum_fields',
+export type Member_Sum_Fields = {|
+  __typename?: 'member_sum_fields',
   id?: ?$ElementType<Scalars, 'bigint'>,
   project_id?: ?$ElementType<Scalars, 'bigint'>,
 |};
 
-/** order by sum() on columns of table "invitation" */
-export type Invitation_Sum_Order_By = {|
+/** order by sum() on columns of table "member" */
+export type Member_Sum_Order_By = {|
   id?: ?Order_By,
   project_id?: ?Order_By,
 |};
 
-export const Invitation_Update_ColumnValues = Object.freeze({
+export const Member_Update_ColumnValues = Object.freeze({
   /** column name */
   Accepted: 'accepted',
   /** column name */
   AcceptedAt: 'accepted_at',
+  /** column name */
+  AcceptedBy: 'accepted_by',
   /** column name */
   Auth0UserId: 'auth0_user_id',
   /** column name */
@@ -634,52 +1404,50 @@ export const Invitation_Update_ColumnValues = Object.freeze({
   /** column name */
   Id: 'id',
   /** column name */
-  Nickname: 'nickname',
-  /** column name */
   ProjectId: 'project_id',
   /** column name */
-  Token: 'token'
+  ProjectToken: 'project_token'
 });
 
 
-/** update columns of table "invitation" */
-export type Invitation_Update_Column = $Values<typeof Invitation_Update_ColumnValues>;
+/** update columns of table "member" */
+export type Member_Update_Column = $Values<typeof Member_Update_ColumnValues>;
 
 /** aggregate var_pop on columns */
-export type Invitation_Var_Pop_Fields = {|
-  __typename?: 'invitation_var_pop_fields',
+export type Member_Var_Pop_Fields = {|
+  __typename?: 'member_var_pop_fields',
   id?: ?$ElementType<Scalars, 'Float'>,
   project_id?: ?$ElementType<Scalars, 'Float'>,
 |};
 
-/** order by var_pop() on columns of table "invitation" */
-export type Invitation_Var_Pop_Order_By = {|
+/** order by var_pop() on columns of table "member" */
+export type Member_Var_Pop_Order_By = {|
   id?: ?Order_By,
   project_id?: ?Order_By,
 |};
 
 /** aggregate var_samp on columns */
-export type Invitation_Var_Samp_Fields = {|
-  __typename?: 'invitation_var_samp_fields',
+export type Member_Var_Samp_Fields = {|
+  __typename?: 'member_var_samp_fields',
   id?: ?$ElementType<Scalars, 'Float'>,
   project_id?: ?$ElementType<Scalars, 'Float'>,
 |};
 
-/** order by var_samp() on columns of table "invitation" */
-export type Invitation_Var_Samp_Order_By = {|
+/** order by var_samp() on columns of table "member" */
+export type Member_Var_Samp_Order_By = {|
   id?: ?Order_By,
   project_id?: ?Order_By,
 |};
 
 /** aggregate variance on columns */
-export type Invitation_Variance_Fields = {|
-  __typename?: 'invitation_variance_fields',
+export type Member_Variance_Fields = {|
+  __typename?: 'member_variance_fields',
   id?: ?$ElementType<Scalars, 'Float'>,
   project_id?: ?$ElementType<Scalars, 'Float'>,
 |};
 
-/** order by variance() on columns of table "invitation" */
-export type Invitation_Variance_Order_By = {|
+/** order by variance() on columns of table "member" */
+export type Member_Variance_Order_By = {|
   id?: ?Order_By,
   project_id?: ?Order_By,
 |};
@@ -691,10 +1459,20 @@ export type Mutation_Root = {|
   delete_auth0_user?: ?Auth0_User_Mutation_Response,
   /** delete single row from the table: "auth0_user" */
   delete_auth0_user_by_pk?: ?Auth0_User,
-  /** delete data from the table: "invitation" */
-  delete_invitation?: ?Invitation_Mutation_Response,
-  /** delete single row from the table: "invitation" */
-  delete_invitation_by_pk?: ?Invitation,
+  /** delete data from the table: "locality" */
+  delete_locality?: ?Locality_Mutation_Response,
+  /** delete single row from the table: "locality" */
+  delete_locality_by_pk?: ?Locality,
+  /** delete data from the table: "member" */
+  delete_member?: ?Member_Mutation_Response,
+  /** delete single row from the table: "member" */
+  delete_member_by_pk?: ?Member,
+  /** delete data from the table: "member_permission" */
+  delete_member_permission?: ?Member_Permission_Mutation_Response,
+  /** delete data from the table: "permission" */
+  delete_permission?: ?Permission_Mutation_Response,
+  /** delete single row from the table: "permission" */
+  delete_permission_by_pk?: ?Permission,
   /** delete data from the table: "project" */
   delete_project?: ?Project_Mutation_Response,
   /** delete single row from the table: "project" */
@@ -703,10 +1481,22 @@ export type Mutation_Root = {|
   insert_auth0_user?: ?Auth0_User_Mutation_Response,
   /** insert a single row into the table: "auth0_user" */
   insert_auth0_user_one?: ?Auth0_User,
-  /** insert data into the table: "invitation" */
-  insert_invitation?: ?Invitation_Mutation_Response,
-  /** insert a single row into the table: "invitation" */
-  insert_invitation_one?: ?Invitation,
+  /** insert data into the table: "locality" */
+  insert_locality?: ?Locality_Mutation_Response,
+  /** insert a single row into the table: "locality" */
+  insert_locality_one?: ?Locality,
+  /** insert data into the table: "member" */
+  insert_member?: ?Member_Mutation_Response,
+  /** insert a single row into the table: "member" */
+  insert_member_one?: ?Member,
+  /** insert data into the table: "member_permission" */
+  insert_member_permission?: ?Member_Permission_Mutation_Response,
+  /** insert a single row into the table: "member_permission" */
+  insert_member_permission_one?: ?Member_Permission,
+  /** insert data into the table: "permission" */
+  insert_permission?: ?Permission_Mutation_Response,
+  /** insert a single row into the table: "permission" */
+  insert_permission_one?: ?Permission,
   /** insert data into the table: "project" */
   insert_project?: ?Project_Mutation_Response,
   /** insert a single row into the table: "project" */
@@ -715,10 +1505,20 @@ export type Mutation_Root = {|
   update_auth0_user?: ?Auth0_User_Mutation_Response,
   /** update single row of the table: "auth0_user" */
   update_auth0_user_by_pk?: ?Auth0_User,
-  /** update data of the table: "invitation" */
-  update_invitation?: ?Invitation_Mutation_Response,
-  /** update single row of the table: "invitation" */
-  update_invitation_by_pk?: ?Invitation,
+  /** update data of the table: "locality" */
+  update_locality?: ?Locality_Mutation_Response,
+  /** update single row of the table: "locality" */
+  update_locality_by_pk?: ?Locality,
+  /** update data of the table: "member" */
+  update_member?: ?Member_Mutation_Response,
+  /** update single row of the table: "member" */
+  update_member_by_pk?: ?Member,
+  /** update data of the table: "member_permission" */
+  update_member_permission?: ?Member_Permission_Mutation_Response,
+  /** update data of the table: "permission" */
+  update_permission?: ?Permission_Mutation_Response,
+  /** update single row of the table: "permission" */
+  update_permission_by_pk?: ?Permission,
   /** update data of the table: "project" */
   update_project?: ?Project_Mutation_Response,
   /** update single row of the table: "project" */
@@ -739,14 +1539,44 @@ export type Mutation_RootDelete_Auth0_User_By_PkArgs = {|
 
 
 /** mutation root */
-export type Mutation_RootDelete_InvitationArgs = {|
-  where: Invitation_Bool_Exp,
+export type Mutation_RootDelete_LocalityArgs = {|
+  where: Locality_Bool_Exp,
 |};
 
 
 /** mutation root */
-export type Mutation_RootDelete_Invitation_By_PkArgs = {|
+export type Mutation_RootDelete_Locality_By_PkArgs = {|
   id: $ElementType<Scalars, 'bigint'>,
+|};
+
+
+/** mutation root */
+export type Mutation_RootDelete_MemberArgs = {|
+  where: Member_Bool_Exp,
+|};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Member_By_PkArgs = {|
+  id: $ElementType<Scalars, 'bigint'>,
+|};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Member_PermissionArgs = {|
+  where: Member_Permission_Bool_Exp,
+|};
+
+
+/** mutation root */
+export type Mutation_RootDelete_PermissionArgs = {|
+  where: Permission_Bool_Exp,
+|};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Permission_By_PkArgs = {|
+  id: $ElementType<Scalars, 'String'>,
 |};
 
 
@@ -777,16 +1607,56 @@ export type Mutation_RootInsert_Auth0_User_OneArgs = {|
 
 
 /** mutation root */
-export type Mutation_RootInsert_InvitationArgs = {|
-  objects: Array<Invitation_Insert_Input>,
-  on_conflict?: ?Invitation_On_Conflict,
+export type Mutation_RootInsert_LocalityArgs = {|
+  objects: Array<Locality_Insert_Input>,
+  on_conflict?: ?Locality_On_Conflict,
 |};
 
 
 /** mutation root */
-export type Mutation_RootInsert_Invitation_OneArgs = {|
-  object: Invitation_Insert_Input,
-  on_conflict?: ?Invitation_On_Conflict,
+export type Mutation_RootInsert_Locality_OneArgs = {|
+  object: Locality_Insert_Input,
+  on_conflict?: ?Locality_On_Conflict,
+|};
+
+
+/** mutation root */
+export type Mutation_RootInsert_MemberArgs = {|
+  objects: Array<Member_Insert_Input>,
+  on_conflict?: ?Member_On_Conflict,
+|};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Member_OneArgs = {|
+  object: Member_Insert_Input,
+  on_conflict?: ?Member_On_Conflict,
+|};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Member_PermissionArgs = {|
+  objects: Array<Member_Permission_Insert_Input>,
+|};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Member_Permission_OneArgs = {|
+  object: Member_Permission_Insert_Input,
+|};
+
+
+/** mutation root */
+export type Mutation_RootInsert_PermissionArgs = {|
+  objects: Array<Permission_Insert_Input>,
+  on_conflict?: ?Permission_On_Conflict,
+|};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Permission_OneArgs = {|
+  object: Permission_Insert_Input,
+  on_conflict?: ?Permission_On_Conflict,
 |};
 
 
@@ -819,18 +1689,56 @@ export type Mutation_RootUpdate_Auth0_User_By_PkArgs = {|
 
 
 /** mutation root */
-export type Mutation_RootUpdate_InvitationArgs = {|
-  _inc?: ?Invitation_Inc_Input,
-  _set?: ?Invitation_Set_Input,
-  where: Invitation_Bool_Exp,
+export type Mutation_RootUpdate_LocalityArgs = {|
+  _inc?: ?Locality_Inc_Input,
+  _set?: ?Locality_Set_Input,
+  where: Locality_Bool_Exp,
 |};
 
 
 /** mutation root */
-export type Mutation_RootUpdate_Invitation_By_PkArgs = {|
-  _inc?: ?Invitation_Inc_Input,
-  _set?: ?Invitation_Set_Input,
-  pk_columns: Invitation_Pk_Columns_Input,
+export type Mutation_RootUpdate_Locality_By_PkArgs = {|
+  _inc?: ?Locality_Inc_Input,
+  _set?: ?Locality_Set_Input,
+  pk_columns: Locality_Pk_Columns_Input,
+|};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_MemberArgs = {|
+  _inc?: ?Member_Inc_Input,
+  _set?: ?Member_Set_Input,
+  where: Member_Bool_Exp,
+|};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Member_By_PkArgs = {|
+  _inc?: ?Member_Inc_Input,
+  _set?: ?Member_Set_Input,
+  pk_columns: Member_Pk_Columns_Input,
+|};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Member_PermissionArgs = {|
+  _inc?: ?Member_Permission_Inc_Input,
+  _set?: ?Member_Permission_Set_Input,
+  where: Member_Permission_Bool_Exp,
+|};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_PermissionArgs = {|
+  _set?: ?Permission_Set_Input,
+  where: Permission_Bool_Exp,
+|};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Permission_By_PkArgs = {|
+  _set?: ?Permission_Set_Input,
+  pk_columns: Permission_Pk_Columns_Input,
 |};
 
 
@@ -868,6 +1776,151 @@ export const Order_ByValues = Object.freeze({
 /** column ordering options */
 export type Order_By = $Values<typeof Order_ByValues>;
 
+/** columns and relationships of "permission" */
+export type Permission = {|
+  __typename?: 'permission',
+  id: $ElementType<Scalars, 'String'>,
+  /** An array relationship */
+  members: Array<Member_Permission>,
+  /** An aggregate relationship */
+  members_aggregate: Member_Permission_Aggregate,
+|};
+
+
+/** columns and relationships of "permission" */
+export type PermissionMembersArgs = {|
+  distinct_on?: ?Array<Member_Permission_Select_Column>,
+  limit?: ?$ElementType<Scalars, 'Int'>,
+  offset?: ?$ElementType<Scalars, 'Int'>,
+  order_by?: ?Array<Member_Permission_Order_By>,
+  where?: ?Member_Permission_Bool_Exp,
+|};
+
+
+/** columns and relationships of "permission" */
+export type PermissionMembers_AggregateArgs = {|
+  distinct_on?: ?Array<Member_Permission_Select_Column>,
+  limit?: ?$ElementType<Scalars, 'Int'>,
+  offset?: ?$ElementType<Scalars, 'Int'>,
+  order_by?: ?Array<Member_Permission_Order_By>,
+  where?: ?Member_Permission_Bool_Exp,
+|};
+
+/** aggregated selection of "permission" */
+export type Permission_Aggregate = {|
+  __typename?: 'permission_aggregate',
+  aggregate?: ?Permission_Aggregate_Fields,
+  nodes: Array<Permission>,
+|};
+
+/** aggregate fields of "permission" */
+export type Permission_Aggregate_Fields = {|
+  __typename?: 'permission_aggregate_fields',
+  count: $ElementType<Scalars, 'Int'>,
+  max?: ?Permission_Max_Fields,
+  min?: ?Permission_Min_Fields,
+|};
+
+
+/** aggregate fields of "permission" */
+export type Permission_Aggregate_FieldsCountArgs = {|
+  columns?: ?Array<Permission_Select_Column>,
+  distinct?: ?$ElementType<Scalars, 'Boolean'>,
+|};
+
+/** Boolean expression to filter rows from the table "permission". All fields are combined with a logical 'AND'. */
+export type Permission_Bool_Exp = {|
+  _and?: ?Array<Permission_Bool_Exp>,
+  _not?: ?Permission_Bool_Exp,
+  _or?: ?Array<Permission_Bool_Exp>,
+  id?: ?String_Comparison_Exp,
+  members?: ?Member_Permission_Bool_Exp,
+|};
+
+export const Permission_ConstraintValues = Object.freeze({
+  /** unique or primary key constraint */
+  PermissionPkey: 'permission_pkey'
+});
+
+
+/** unique or primary key constraints on table "permission" */
+export type Permission_Constraint = $Values<typeof Permission_ConstraintValues>;
+
+/** input type for inserting data into table "permission" */
+export type Permission_Insert_Input = {|
+  id?: ?$ElementType<Scalars, 'String'>,
+  members?: ?Member_Permission_Arr_Rel_Insert_Input,
+|};
+
+/** aggregate max on columns */
+export type Permission_Max_Fields = {|
+  __typename?: 'permission_max_fields',
+  id?: ?$ElementType<Scalars, 'String'>,
+|};
+
+/** aggregate min on columns */
+export type Permission_Min_Fields = {|
+  __typename?: 'permission_min_fields',
+  id?: ?$ElementType<Scalars, 'String'>,
+|};
+
+/** response of any mutation on the table "permission" */
+export type Permission_Mutation_Response = {|
+  __typename?: 'permission_mutation_response',
+  /** number of rows affected by the mutation */
+  affected_rows: $ElementType<Scalars, 'Int'>,
+  /** data from the rows affected by the mutation */
+  returning: Array<Permission>,
+|};
+
+/** input type for inserting object relation for remote table "permission" */
+export type Permission_Obj_Rel_Insert_Input = {|
+  data: Permission_Insert_Input,
+  /** on conflict condition */
+  on_conflict?: ?Permission_On_Conflict,
+|};
+
+/** on conflict condition type for table "permission" */
+export type Permission_On_Conflict = {|
+  constraint: Permission_Constraint,
+  update_columns: Array<Permission_Update_Column>,
+  where?: ?Permission_Bool_Exp,
+|};
+
+/** Ordering options when selecting data from "permission". */
+export type Permission_Order_By = {|
+  id?: ?Order_By,
+  members_aggregate?: ?Member_Permission_Aggregate_Order_By,
+|};
+
+/** primary key columns input for table: permission */
+export type Permission_Pk_Columns_Input = {|
+  id: $ElementType<Scalars, 'String'>,
+|};
+
+export const Permission_Select_ColumnValues = Object.freeze({
+  /** column name */
+  Id: 'id'
+});
+
+
+/** select columns of table "permission" */
+export type Permission_Select_Column = $Values<typeof Permission_Select_ColumnValues>;
+
+/** input type for updating data in table "permission" */
+export type Permission_Set_Input = {|
+  id?: ?$ElementType<Scalars, 'String'>,
+|};
+
+export const Permission_Update_ColumnValues = Object.freeze({
+  /** column name */
+  Id: 'id'
+});
+
+
+/** update columns of table "permission" */
+export type Permission_Update_Column = $Values<typeof Permission_Update_ColumnValues>;
+
 /** columns and relationships of "project" */
 export type Project = {|
   __typename?: 'project',
@@ -877,34 +1930,59 @@ export type Project = {|
   description?: ?$ElementType<Scalars, 'String'>,
   end_time?: ?$ElementType<Scalars, 'timestamptz'>,
   id: $ElementType<Scalars, 'bigint'>,
-  /** An array relationship */
-  invitations: Array<Invitation>,
-  /** An aggregate relationship */
-  invitations_aggregate: Invitation_Aggregate,
   last_updated_at?: ?$ElementType<Scalars, 'timestamptz'>,
   last_updated_by: $ElementType<Scalars, 'String'>,
+  /** An array relationship */
+  localities: Array<Locality>,
+  /** An aggregate relationship */
+  localities_aggregate: Locality_Aggregate,
+  /** An array relationship */
+  members: Array<Member>,
+  /** An aggregate relationship */
+  members_aggregate: Member_Aggregate,
   name: $ElementType<Scalars, 'String'>,
   start_time?: ?$ElementType<Scalars, 'timestamptz'>,
+  token: $ElementType<Scalars, 'bpchar'>,
 |};
 
 
 /** columns and relationships of "project" */
-export type ProjectInvitationsArgs = {|
-  distinct_on?: ?Array<Invitation_Select_Column>,
+export type ProjectLocalitiesArgs = {|
+  distinct_on?: ?Array<Locality_Select_Column>,
   limit?: ?$ElementType<Scalars, 'Int'>,
   offset?: ?$ElementType<Scalars, 'Int'>,
-  order_by?: ?Array<Invitation_Order_By>,
-  where?: ?Invitation_Bool_Exp,
+  order_by?: ?Array<Locality_Order_By>,
+  where?: ?Locality_Bool_Exp,
 |};
 
 
 /** columns and relationships of "project" */
-export type ProjectInvitations_AggregateArgs = {|
-  distinct_on?: ?Array<Invitation_Select_Column>,
+export type ProjectLocalities_AggregateArgs = {|
+  distinct_on?: ?Array<Locality_Select_Column>,
   limit?: ?$ElementType<Scalars, 'Int'>,
   offset?: ?$ElementType<Scalars, 'Int'>,
-  order_by?: ?Array<Invitation_Order_By>,
-  where?: ?Invitation_Bool_Exp,
+  order_by?: ?Array<Locality_Order_By>,
+  where?: ?Locality_Bool_Exp,
+|};
+
+
+/** columns and relationships of "project" */
+export type ProjectMembersArgs = {|
+  distinct_on?: ?Array<Member_Select_Column>,
+  limit?: ?$ElementType<Scalars, 'Int'>,
+  offset?: ?$ElementType<Scalars, 'Int'>,
+  order_by?: ?Array<Member_Order_By>,
+  where?: ?Member_Bool_Exp,
+|};
+
+
+/** columns and relationships of "project" */
+export type ProjectMembers_AggregateArgs = {|
+  distinct_on?: ?Array<Member_Select_Column>,
+  limit?: ?$ElementType<Scalars, 'Int'>,
+  offset?: ?$ElementType<Scalars, 'Int'>,
+  order_by?: ?Array<Member_Order_By>,
+  where?: ?Member_Bool_Exp,
 |};
 
 /** aggregated selection of "project" */
@@ -954,16 +2032,20 @@ export type Project_Bool_Exp = {|
   description?: ?String_Comparison_Exp,
   end_time?: ?Timestamptz_Comparison_Exp,
   id?: ?Bigint_Comparison_Exp,
-  invitations?: ?Invitation_Bool_Exp,
   last_updated_at?: ?Timestamptz_Comparison_Exp,
   last_updated_by?: ?String_Comparison_Exp,
+  localities?: ?Locality_Bool_Exp,
+  members?: ?Member_Bool_Exp,
   name?: ?String_Comparison_Exp,
   start_time?: ?Timestamptz_Comparison_Exp,
+  token?: ?Bpchar_Comparison_Exp,
 |};
 
 export const Project_ConstraintValues = Object.freeze({
   /** unique or primary key constraint */
-  ProjectPkey: 'project_pkey'
+  ProjectPkey: 'project_pkey',
+  /** unique or primary key constraint */
+  UniqueToken: 'unique_token'
 });
 
 
@@ -983,11 +2065,13 @@ export type Project_Insert_Input = {|
   description?: ?$ElementType<Scalars, 'String'>,
   end_time?: ?$ElementType<Scalars, 'timestamptz'>,
   id?: ?$ElementType<Scalars, 'bigint'>,
-  invitations?: ?Invitation_Arr_Rel_Insert_Input,
   last_updated_at?: ?$ElementType<Scalars, 'timestamptz'>,
   last_updated_by?: ?$ElementType<Scalars, 'String'>,
+  localities?: ?Locality_Arr_Rel_Insert_Input,
+  members?: ?Member_Arr_Rel_Insert_Input,
   name?: ?$ElementType<Scalars, 'String'>,
   start_time?: ?$ElementType<Scalars, 'timestamptz'>,
+  token?: ?$ElementType<Scalars, 'bpchar'>,
 |};
 
 /** aggregate max on columns */
@@ -1002,6 +2086,7 @@ export type Project_Max_Fields = {|
   last_updated_by?: ?$ElementType<Scalars, 'String'>,
   name?: ?$ElementType<Scalars, 'String'>,
   start_time?: ?$ElementType<Scalars, 'timestamptz'>,
+  token?: ?$ElementType<Scalars, 'bpchar'>,
 |};
 
 /** aggregate min on columns */
@@ -1016,6 +2101,7 @@ export type Project_Min_Fields = {|
   last_updated_by?: ?$ElementType<Scalars, 'String'>,
   name?: ?$ElementType<Scalars, 'String'>,
   start_time?: ?$ElementType<Scalars, 'timestamptz'>,
+  token?: ?$ElementType<Scalars, 'bpchar'>,
 |};
 
 /** response of any mutation on the table "project" */
@@ -1049,11 +2135,13 @@ export type Project_Order_By = {|
   description?: ?Order_By,
   end_time?: ?Order_By,
   id?: ?Order_By,
-  invitations_aggregate?: ?Invitation_Aggregate_Order_By,
   last_updated_at?: ?Order_By,
   last_updated_by?: ?Order_By,
+  localities_aggregate?: ?Locality_Aggregate_Order_By,
+  members_aggregate?: ?Member_Aggregate_Order_By,
   name?: ?Order_By,
   start_time?: ?Order_By,
+  token?: ?Order_By,
 |};
 
 /** primary key columns input for table: project */
@@ -1081,7 +2169,9 @@ export const Project_Select_ColumnValues = Object.freeze({
   /** column name */
   Name: 'name',
   /** column name */
-  StartTime: 'start_time'
+  StartTime: 'start_time',
+  /** column name */
+  Token: 'token'
 });
 
 
@@ -1100,6 +2190,7 @@ export type Project_Set_Input = {|
   last_updated_by?: ?$ElementType<Scalars, 'String'>,
   name?: ?$ElementType<Scalars, 'String'>,
   start_time?: ?$ElementType<Scalars, 'timestamptz'>,
+  token?: ?$ElementType<Scalars, 'bpchar'>,
 |};
 
 /** aggregate stddev on columns */
@@ -1146,7 +2237,9 @@ export const Project_Update_ColumnValues = Object.freeze({
   /** column name */
   Name: 'name',
   /** column name */
-  StartTime: 'start_time'
+  StartTime: 'start_time',
+  /** column name */
+  Token: 'token'
 });
 
 
@@ -1179,12 +2272,28 @@ export type Query_Root = {|
   auth0_user_aggregate: Auth0_User_Aggregate,
   /** fetch data from the table: "auth0_user" using primary key columns */
   auth0_user_by_pk?: ?Auth0_User,
-  /** fetch data from the table: "invitation" */
-  invitation: Array<Invitation>,
-  /** fetch aggregated fields from the table: "invitation" */
-  invitation_aggregate: Invitation_Aggregate,
-  /** fetch data from the table: "invitation" using primary key columns */
-  invitation_by_pk?: ?Invitation,
+  /** fetch data from the table: "locality" */
+  locality: Array<Locality>,
+  /** fetch aggregated fields from the table: "locality" */
+  locality_aggregate: Locality_Aggregate,
+  /** fetch data from the table: "locality" using primary key columns */
+  locality_by_pk?: ?Locality,
+  /** fetch data from the table: "member" */
+  member: Array<Member>,
+  /** fetch aggregated fields from the table: "member" */
+  member_aggregate: Member_Aggregate,
+  /** fetch data from the table: "member" using primary key columns */
+  member_by_pk?: ?Member,
+  /** fetch data from the table: "member_permission" */
+  member_permission: Array<Member_Permission>,
+  /** fetch aggregated fields from the table: "member_permission" */
+  member_permission_aggregate: Member_Permission_Aggregate,
+  /** fetch data from the table: "permission" */
+  permission: Array<Permission>,
+  /** fetch aggregated fields from the table: "permission" */
+  permission_aggregate: Permission_Aggregate,
+  /** fetch data from the table: "permission" using primary key columns */
+  permission_by_pk?: ?Permission,
   /** fetch data from the table: "project" */
   project: Array<Project>,
   /** fetch aggregated fields from the table: "project" */
@@ -1217,26 +2326,90 @@ export type Query_RootAuth0_User_By_PkArgs = {|
 |};
 
 
-export type Query_RootInvitationArgs = {|
-  distinct_on?: ?Array<Invitation_Select_Column>,
+export type Query_RootLocalityArgs = {|
+  distinct_on?: ?Array<Locality_Select_Column>,
   limit?: ?$ElementType<Scalars, 'Int'>,
   offset?: ?$ElementType<Scalars, 'Int'>,
-  order_by?: ?Array<Invitation_Order_By>,
-  where?: ?Invitation_Bool_Exp,
+  order_by?: ?Array<Locality_Order_By>,
+  where?: ?Locality_Bool_Exp,
 |};
 
 
-export type Query_RootInvitation_AggregateArgs = {|
-  distinct_on?: ?Array<Invitation_Select_Column>,
+export type Query_RootLocality_AggregateArgs = {|
+  distinct_on?: ?Array<Locality_Select_Column>,
   limit?: ?$ElementType<Scalars, 'Int'>,
   offset?: ?$ElementType<Scalars, 'Int'>,
-  order_by?: ?Array<Invitation_Order_By>,
-  where?: ?Invitation_Bool_Exp,
+  order_by?: ?Array<Locality_Order_By>,
+  where?: ?Locality_Bool_Exp,
 |};
 
 
-export type Query_RootInvitation_By_PkArgs = {|
+export type Query_RootLocality_By_PkArgs = {|
   id: $ElementType<Scalars, 'bigint'>,
+|};
+
+
+export type Query_RootMemberArgs = {|
+  distinct_on?: ?Array<Member_Select_Column>,
+  limit?: ?$ElementType<Scalars, 'Int'>,
+  offset?: ?$ElementType<Scalars, 'Int'>,
+  order_by?: ?Array<Member_Order_By>,
+  where?: ?Member_Bool_Exp,
+|};
+
+
+export type Query_RootMember_AggregateArgs = {|
+  distinct_on?: ?Array<Member_Select_Column>,
+  limit?: ?$ElementType<Scalars, 'Int'>,
+  offset?: ?$ElementType<Scalars, 'Int'>,
+  order_by?: ?Array<Member_Order_By>,
+  where?: ?Member_Bool_Exp,
+|};
+
+
+export type Query_RootMember_By_PkArgs = {|
+  id: $ElementType<Scalars, 'bigint'>,
+|};
+
+
+export type Query_RootMember_PermissionArgs = {|
+  distinct_on?: ?Array<Member_Permission_Select_Column>,
+  limit?: ?$ElementType<Scalars, 'Int'>,
+  offset?: ?$ElementType<Scalars, 'Int'>,
+  order_by?: ?Array<Member_Permission_Order_By>,
+  where?: ?Member_Permission_Bool_Exp,
+|};
+
+
+export type Query_RootMember_Permission_AggregateArgs = {|
+  distinct_on?: ?Array<Member_Permission_Select_Column>,
+  limit?: ?$ElementType<Scalars, 'Int'>,
+  offset?: ?$ElementType<Scalars, 'Int'>,
+  order_by?: ?Array<Member_Permission_Order_By>,
+  where?: ?Member_Permission_Bool_Exp,
+|};
+
+
+export type Query_RootPermissionArgs = {|
+  distinct_on?: ?Array<Permission_Select_Column>,
+  limit?: ?$ElementType<Scalars, 'Int'>,
+  offset?: ?$ElementType<Scalars, 'Int'>,
+  order_by?: ?Array<Permission_Order_By>,
+  where?: ?Permission_Bool_Exp,
+|};
+
+
+export type Query_RootPermission_AggregateArgs = {|
+  distinct_on?: ?Array<Permission_Select_Column>,
+  limit?: ?$ElementType<Scalars, 'Int'>,
+  offset?: ?$ElementType<Scalars, 'Int'>,
+  order_by?: ?Array<Permission_Order_By>,
+  where?: ?Permission_Bool_Exp,
+|};
+
+
+export type Query_RootPermission_By_PkArgs = {|
+  id: $ElementType<Scalars, 'String'>,
 |};
 
 
@@ -1270,12 +2443,28 @@ export type Subscription_Root = {|
   auth0_user_aggregate: Auth0_User_Aggregate,
   /** fetch data from the table: "auth0_user" using primary key columns */
   auth0_user_by_pk?: ?Auth0_User,
-  /** fetch data from the table: "invitation" */
-  invitation: Array<Invitation>,
-  /** fetch aggregated fields from the table: "invitation" */
-  invitation_aggregate: Invitation_Aggregate,
-  /** fetch data from the table: "invitation" using primary key columns */
-  invitation_by_pk?: ?Invitation,
+  /** fetch data from the table: "locality" */
+  locality: Array<Locality>,
+  /** fetch aggregated fields from the table: "locality" */
+  locality_aggregate: Locality_Aggregate,
+  /** fetch data from the table: "locality" using primary key columns */
+  locality_by_pk?: ?Locality,
+  /** fetch data from the table: "member" */
+  member: Array<Member>,
+  /** fetch aggregated fields from the table: "member" */
+  member_aggregate: Member_Aggregate,
+  /** fetch data from the table: "member" using primary key columns */
+  member_by_pk?: ?Member,
+  /** fetch data from the table: "member_permission" */
+  member_permission: Array<Member_Permission>,
+  /** fetch aggregated fields from the table: "member_permission" */
+  member_permission_aggregate: Member_Permission_Aggregate,
+  /** fetch data from the table: "permission" */
+  permission: Array<Permission>,
+  /** fetch aggregated fields from the table: "permission" */
+  permission_aggregate: Permission_Aggregate,
+  /** fetch data from the table: "permission" using primary key columns */
+  permission_by_pk?: ?Permission,
   /** fetch data from the table: "project" */
   project: Array<Project>,
   /** fetch aggregated fields from the table: "project" */
@@ -1308,26 +2497,90 @@ export type Subscription_RootAuth0_User_By_PkArgs = {|
 |};
 
 
-export type Subscription_RootInvitationArgs = {|
-  distinct_on?: ?Array<Invitation_Select_Column>,
+export type Subscription_RootLocalityArgs = {|
+  distinct_on?: ?Array<Locality_Select_Column>,
   limit?: ?$ElementType<Scalars, 'Int'>,
   offset?: ?$ElementType<Scalars, 'Int'>,
-  order_by?: ?Array<Invitation_Order_By>,
-  where?: ?Invitation_Bool_Exp,
+  order_by?: ?Array<Locality_Order_By>,
+  where?: ?Locality_Bool_Exp,
 |};
 
 
-export type Subscription_RootInvitation_AggregateArgs = {|
-  distinct_on?: ?Array<Invitation_Select_Column>,
+export type Subscription_RootLocality_AggregateArgs = {|
+  distinct_on?: ?Array<Locality_Select_Column>,
   limit?: ?$ElementType<Scalars, 'Int'>,
   offset?: ?$ElementType<Scalars, 'Int'>,
-  order_by?: ?Array<Invitation_Order_By>,
-  where?: ?Invitation_Bool_Exp,
+  order_by?: ?Array<Locality_Order_By>,
+  where?: ?Locality_Bool_Exp,
 |};
 
 
-export type Subscription_RootInvitation_By_PkArgs = {|
+export type Subscription_RootLocality_By_PkArgs = {|
   id: $ElementType<Scalars, 'bigint'>,
+|};
+
+
+export type Subscription_RootMemberArgs = {|
+  distinct_on?: ?Array<Member_Select_Column>,
+  limit?: ?$ElementType<Scalars, 'Int'>,
+  offset?: ?$ElementType<Scalars, 'Int'>,
+  order_by?: ?Array<Member_Order_By>,
+  where?: ?Member_Bool_Exp,
+|};
+
+
+export type Subscription_RootMember_AggregateArgs = {|
+  distinct_on?: ?Array<Member_Select_Column>,
+  limit?: ?$ElementType<Scalars, 'Int'>,
+  offset?: ?$ElementType<Scalars, 'Int'>,
+  order_by?: ?Array<Member_Order_By>,
+  where?: ?Member_Bool_Exp,
+|};
+
+
+export type Subscription_RootMember_By_PkArgs = {|
+  id: $ElementType<Scalars, 'bigint'>,
+|};
+
+
+export type Subscription_RootMember_PermissionArgs = {|
+  distinct_on?: ?Array<Member_Permission_Select_Column>,
+  limit?: ?$ElementType<Scalars, 'Int'>,
+  offset?: ?$ElementType<Scalars, 'Int'>,
+  order_by?: ?Array<Member_Permission_Order_By>,
+  where?: ?Member_Permission_Bool_Exp,
+|};
+
+
+export type Subscription_RootMember_Permission_AggregateArgs = {|
+  distinct_on?: ?Array<Member_Permission_Select_Column>,
+  limit?: ?$ElementType<Scalars, 'Int'>,
+  offset?: ?$ElementType<Scalars, 'Int'>,
+  order_by?: ?Array<Member_Permission_Order_By>,
+  where?: ?Member_Permission_Bool_Exp,
+|};
+
+
+export type Subscription_RootPermissionArgs = {|
+  distinct_on?: ?Array<Permission_Select_Column>,
+  limit?: ?$ElementType<Scalars, 'Int'>,
+  offset?: ?$ElementType<Scalars, 'Int'>,
+  order_by?: ?Array<Permission_Order_By>,
+  where?: ?Permission_Bool_Exp,
+|};
+
+
+export type Subscription_RootPermission_AggregateArgs = {|
+  distinct_on?: ?Array<Permission_Select_Column>,
+  limit?: ?$ElementType<Scalars, 'Int'>,
+  offset?: ?$ElementType<Scalars, 'Int'>,
+  order_by?: ?Array<Permission_Order_By>,
+  where?: ?Permission_Bool_Exp,
+|};
+
+
+export type Subscription_RootPermission_By_PkArgs = {|
+  id: $ElementType<Scalars, 'String'>,
 |};
 
 

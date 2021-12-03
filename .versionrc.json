@@ -13,6 +13,22 @@
   ],
   "types": [
     {
+      "type": "build",
+      "section": "CI / CD"
+    },
+    {
+      "type": "ci",
+      "section": "CI / CD"
+    },
+    {
+      "type": "chore",
+      "section": "Other"
+    },
+    {
+      "type": "docs",
+      "section": "Other"
+    },
+    {
       "type": "feat",
       "section": "Features"
     },
@@ -21,28 +37,24 @@
       "section": "Bug Fixes"
     },
     {
-      "type": "chore",
-      "hidden": true
-    },
-    {
-      "type": "docs",
-      "hidden": true
-    },
-    {
-      "type": "style",
-      "hidden": true
+      "type": "perf",
+      "section": "Other"
     },
     {
       "type": "refactor",
       "section": "Refactor"
     },
     {
-      "type": "perf",
-      "section": "Performance"
+      "type": "revert",
+      "section": "Other"
+    },
+    {
+      "type": "style",
+      "section": "Other"
     },
     {
       "type": "test",
-      "hidden": true
+      "section": "CI / CD"
     }
   ]
 }

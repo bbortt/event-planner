@@ -1,0 +1,47 @@
+name: Fullbuild
+on:
+  push:
+    branches:
+      - 'bugfix/*'
+      - 'feature/*'
+      - 'hotfix/*'
+    tags-ignore:
+      - '*'
+  pull_request:
+jobs:
+  build:
+    name: Build & Test Application
+    runs-on: ubuntu-20.04
+    services:
+      postgres:
+        image: postgres:14.1-alpine
+        env:
+          POSTGRES_DB: event_planner_test
+          POSTGRES_USER: event_planner
+          POSTGRES_PASSWORD: event_planner_password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v2
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      - run: PGPASSWORD=event_planner_password psql -h localhost -U event_planner -f docker/postgres/init-event_planner.sql event_planner_test
+      - run: |
+          ./gradlew flywayMigrateTest --no-daemon
+          ./gradlew build --no-daemon
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+            ./node_modules
+          key: ${{ runner.os }}-gradle-${{ hashFiles('build.gradle', 'package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-

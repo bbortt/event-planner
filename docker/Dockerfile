@@ -1,20 +1,16 @@
-# Install dependencies only when needed
-FROM node:16.11.1-alpine3.14 AS deps
-WORKDIR /app
-RUN apk add --no-cache libc6-compat
-COPY package.json ./
-COPY package-lock.json ./
-RUN npm ci
+FROM openjdk:17-slim-bullseye
+MAINTAINER Timon Borter <bbortt.github.io>
 
-# Rebuild the source code only when needed
-FROM node:16.11.1-alpine3.14 AS builder
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
-COPY .. .
-RUN npm run fullbuild
+ENTRYPOINT ["java", "-jar", "event-planner.jar"]
 
-# Production image, copy all the files and run next
-FROM nginx:1.20.0-alpine
-MAINTAINER Timon Borter <timon.borter@gmx.ch>
+EXPOSE 8080
+EXPOSE 8090
 
-COPY --from=builder /app/out /usr/share/nginx/html
+RUN useradd -ms /bin/sh eventplanner && \
+    apt update && \
+    apt full-upgrade -y
+
+USER eventplanner
+WORKDIR /home/eventplanner
+
+COPY build/libs/event-planner-*.jar event-planner.jar

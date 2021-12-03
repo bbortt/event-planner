@@ -1,0 +1,21 @@
+jwt:
+  audience: ${APPL_AUTH0_AUDIENCE}
+graphql:
+  servlet:
+    mapping: /api/graphql/v1
+management:
+  server:
+    port: 8090
+spring:
+  datasource:
+    url: ${APPL_JDBC_URL}
+    username: ${APPL_JDBC_USERNAME}
+    password: ${APPL_JDBC_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${APPL_JWT_ISSUER_URI}

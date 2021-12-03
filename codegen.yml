@@ -1,13 +1,5 @@
-# This configuration is intended for development purpose, it's **your** responsibility to harden it for production
-overwrite: true
-schema:
-  - 'http://localhost:8080/v1/graphql':
-      headers:
-        x-hasura-admin-secret: 'adminsecretkey'
+schema: src/main/resources/schema/*.graphqls
 generates:
-  graphql.schema.json:
-    plugins:
-      - 'introspection'
   flow-typed/graphql.flow.js:
     plugins:
       - 'flow'
