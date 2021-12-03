@@ -11,7 +11,7 @@ services:
       - POSTGRES_PASSWORD=event_planner_password
     volumes:
       - pgdata:/var/lib/postgres/data
-      - ./postgres:/docker-entrypoint-initdb.d
+      - ./../src/main/resources/db/scripts:/docker-entrypoint-initdb.d
     ports:
       - '5432:5432'
 volumes:
