@@ -98,11 +98,11 @@ test {
     exclude "**/*IntegrationTest*"
 }
 
-//task integrationTest(type: Test, dependsOn: test) {
-//    useJUnitPlatform()
-//    include "**/*IntegrationTest*"
-//}
-//bootJar.dependsOn integrationTest
+task integrationTest(type: Test, dependsOn: test) {
+    useJUnitPlatform()
+    include "**/*IntegrationTest*"
+}
+bootJar.dependsOn integrationTest
 
 // --- Frontend Build ---
 task lint(type: NpmTask, dependsOn: "npmInstall") {
