@@ -30,7 +30,8 @@ jobs:
           --health-retries 5
     steps:
       - uses: actions/checkout@v2
-      - uses: docker/metadata-action@v3
+      - id: meta
+        uses: docker/metadata-action@v3
         with:
           images: bbortt/event-planner
           tags: |
