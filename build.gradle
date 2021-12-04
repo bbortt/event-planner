@@ -1,8 +1,10 @@
 plugins {
     id "com.github.node-gradle.node"
     id "io.spring.dependency-management"
+    id "jacoco"
     id "org.flywaydb.flyway"
     id "org.openapi.generator"
+    id "org.sonarqube"
     id "org.springframework.boot"
     id "java"
 }
@@ -29,9 +31,9 @@ dependencies {
     implementation("com.graphql-java:graphql-spring-boot-starter:5.0.2") {
         exclude module: "spring-boot-starter-tomcat"
     }
-    implementation 'io.swagger:swagger-annotations:1.6.3'
+    implementation "io.swagger:swagger-annotations:1.6.3"
     implementation "jakarta.validation:jakarta.validation-api:2.0.2"
-    implementation 'org.modelmapper:modelmapper:2.4.4'
+    implementation "org.modelmapper:modelmapper:2.4.4"
     implementation "org.openapitools:jackson-databind-nullable:0.1.0"
     implementation "org.springframework.boot:spring-boot-starter-actuator"
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
@@ -73,6 +75,14 @@ flyway {
     locations = ["filesystem:src/main/resources/db/migration"]
 }
 
+sonarqube {
+    properties {
+        property "sonar.projectKey", "bbortt_event-planner"
+        property "sonar.projectName", "Event Planning Tool."
+        property "sonar.projectVersion", "${version}"
+    }
+}
+
 // --- OpenAPI Generation ---
 openApiGenerate {
     generatorName = "spring"
@@ -103,6 +113,14 @@ task integrationTest(type: Test, dependsOn: test) {
     include "**/*IntegrationTest*"
 }
 bootJar.dependsOn integrationTest
+
+jacocoTestReport {
+    reports {
+        html.enabled true
+        xml.enabled true
+        xml.destination file("${buildDir}/reports/jacoco.xml")
+    }
+}
 
 // --- Frontend Build ---
 task lint(type: NpmTask, dependsOn: "npmInstall") {
