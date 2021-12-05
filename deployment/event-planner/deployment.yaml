@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: app
+  name: backend
 spec:
   replicas: 2
   strategy:
@@ -25,15 +25,18 @@ spec:
               containerPort: 8090
           env:
             - name: APPL_AUTH0_AUDIENCE
-              value: $APPL_AUTH0_AUDIENCE
+              value: $AUTH0_AUDIENCE
             - name: APPL_JDBC_URL
-              value: jdbc:postgresql://pgpool-svc.$K8S_NAMESPACE.svc.cluster.local:5432/event_planner
+              value: jdbc:postgresql://postgresql.${K8S_NAMESPACE}.svc.cluster.local:5432/event_planner
             - name: APPL_JDBC_USERNAME
               value: event_planner
             - name: APPL_JDBC_PASSWORD
-              value: event_planner_password
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql-secrets
+                  key: postgres-password
             - name: APPL_JWT_ISSUER_URI
-              value: $APPL_JWT_ISSUER_URI
+              value: $JWT_ISSUER_URI
             - name: K8S_NAMESPACE
               valueFrom:
                 fieldRef:
@@ -58,13 +61,3 @@ spec:
             periodSeconds: 5
             successThreshold: 1
             failureThreshold: 20
-#      affinity:
-#        podAntiAffinity:
-#          requiredDuringSchedulingIgnoredDuringExecution:
-#            - labelSelector:
-#                matchExpressions:
-#                  - key: app
-#                    operator: In
-#                    values:
-#                      - postgresql
-#              topologyKey: "kubernetes.io/hostname"
