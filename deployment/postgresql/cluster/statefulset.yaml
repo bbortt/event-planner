@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: postgresql
+  name: pg-node
 spec:
-  serviceName: headless-svc
+  serviceName: pg-cluster
   replicas: 3
   selector:
     matchLabels:
@@ -48,15 +48,15 @@ spec:
                 fieldRef:
                   fieldPath: metadata.namespace
             - name: REPMGR_PRIMARY_HOST
-              value: 'postgresql-postgresql-0.postgresql-headless-svc.$(REPMGR_NAMESPACE).svc.cluster.local'
+              value: 'pg-node-0.pg-cluster.$(REPMGR_NAMESPACE).svc.cluster.local'
             - name: REPMGR_PARTNER_NODES
-              value: postgresql-postgresql-0.postgresql-headless-svc.$(REPMGR_NAMESPACE).svc.cluster.local,postgresql-postgresql-1.postgresql-headless-svc.$(REPMGR_NAMESPACE).svc.cluster.local,postgresql-postgresql-2.postgresql-headless-svc.$(REPMGR_NAMESPACE).svc.cluster.local
+              value: pg-node-0.pg-cluster.$(REPMGR_NAMESPACE).svc.cluster.local,pg-node-1.pg-cluster.$(REPMGR_NAMESPACE).svc.cluster.local,pg-node-2.pg-cluster.$(REPMGR_NAMESPACE).svc.cluster.local
             - name: REPMGR_NODE_NAME
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
             - name: REPMGR_NODE_NETWORK_NAME
-              value: '$(REPMGR_NODE_NAME).postgresql-headless-svc.$(REPMGR_NAMESPACE).svc.cluster.local'
+              value: '$(REPMGR_NODE_NAME).pg-cluster.$(REPMGR_NAMESPACE).svc.cluster.local'
           ports:
             - name: postgresql
               containerPort: 5432
@@ -86,20 +86,13 @@ spec:
           volumeMounts:
             - name: pgdata
               mountPath: /bitnami/postgresql
-            - name: init-scripts
-              mountPath: /docker-entrypoint-initdb.d/init.sql
-              subPath: init.sql
             - name: hooks-scripts
               mountPath: /pre-stop.sh
               subPath: pre-stop.sh
       volumes:
-        - name: init-scripts
-          configMap:
-            name: init
-            defaultMode: 0755
         - name: hooks-scripts
           configMap:
-            name: hooks
+            name: postgresql-hooks
             defaultMode: 0755
   #      affinity:
   #        podAntiAffinity:
@@ -116,7 +109,7 @@ spec:
         name: pgdata
       spec:
         accessModes:
-          - 'ReadWriteOnce'
+          - ReadWriteOnce
         resources:
           requests:
-            storage: '10Gi'
+            storage: 5Gi

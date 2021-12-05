@@ -1,14 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: headless-svc
+  name: postgresql-nodeport
 spec:
-  type: ClusterIP
-  clusterIP: None
+  type: NodePort
   ports:
     - name: postgresql
       port: 5432
       targetPort: postgresql
       protocol: TCP
   selector:
-    app: postgresql
+    app: pgpool

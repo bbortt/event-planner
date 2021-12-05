@@ -3,5 +3,6 @@ kind: Kustomization
 namePrefix: event-planner-
 commonLabels:
   app: event-planner
+  component: event-planner
 resources:
   - deployment.yaml
