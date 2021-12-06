@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.0.27 (2021-12-06)
+
+
+### CI / CD
+
+* **deps-dev:** bump prettier from 2.5.0 to 2.5.1 ([88f578d](https://github.com/bbortt/event-planner/commit/88f578df1f3c8b13c502d5ab43b91db61742adac))
+
 ### 0.0.26 (2021-12-06)
 
 
