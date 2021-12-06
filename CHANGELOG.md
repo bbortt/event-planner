@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.0.24 (2021-12-06)
+
+
+### Other
+
+* elk stack deployment on kubernetes ([7ebb6fb](https://github.com/bbortt/event-planner/commit/7ebb6fb8ca4a0d023afd34dc442f9570994855bd))
+
 ### 0.0.23 (2021-12-04)
 
 
