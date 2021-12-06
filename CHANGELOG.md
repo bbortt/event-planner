@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.0.28 (2021-12-06)
+
+
+### CI / CD
+
+* **deps:** bump next from 12.0.4 to 12.0.7 ([fb2357b](https://github.com/bbortt/event-planner/commit/fb2357b8c953ba1c33a4b0870a3bd9e649f31ba8))
+
 ### 0.0.27 (2021-12-06)
 
 
