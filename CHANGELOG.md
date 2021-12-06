@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.0.26 (2021-12-06)
+
+
+### CI / CD
+
+* **deps-dev:** bump eslint-config-next from 12.0.4 to 12.0.7 ([18e363b](https://github.com/bbortt/event-planner/commit/18e363ba656ec82991f4f72122bec1b41755bc70))
+
 ### 0.0.25 (2021-12-06)
 
 
