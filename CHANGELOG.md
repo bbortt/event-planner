@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.0.25 (2021-12-06)
+
+
+### CI / CD
+
+* **deps:** bump modelmapper from 2.4.4 to 2.4.5 ([f45c045](https://github.com/bbortt/event-planner/commit/f45c045106bf4f3744879d9f8b817423b08447b1))
+
 ### 0.0.24 (2021-12-06)
 
 
