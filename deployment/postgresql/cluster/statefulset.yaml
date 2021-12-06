@@ -1,0 +1,115 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: pg-node
+spec:
+  serviceName: pg-cluster
+  replicas: 3
+  selector:
+    matchLabels:
+      app: postgresql
+  template:
+    spec:
+      securityContext:
+        fsGroup: 1001
+      containers:
+        - name: postgresql
+          lifecycle:
+            preStop:
+              exec:
+                command:
+                  - /pre-stop.sh
+          image: bitnami/postgresql-repmgr:11-debian-10
+          imagePullPolicy: Always
+          securityContext:
+            runAsUser: 1001
+          env:
+            - name: POSTGRESQL_POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql-secrets
+                  key: admin-password
+            - name: POSTGRESQL_USERNAME
+              value: event_planner
+            - name: POSTGRESQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql-secrets
+                  key: postgres-password
+            - name: POSTGRESQL_DATABASE
+              value: event_planner
+            - name: REPMGR_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql-secrets
+                  key: repmgr-password
+            - name: REPMGR_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: REPMGR_PRIMARY_HOST
+              value: 'pg-node-0.pg-cluster.$(REPMGR_NAMESPACE).svc.cluster.local'
+            - name: REPMGR_PARTNER_NODES
+              value: pg-node-0.pg-cluster.$(REPMGR_NAMESPACE).svc.cluster.local,pg-node-1.pg-cluster.$(REPMGR_NAMESPACE).svc.cluster.local,pg-node-2.pg-cluster.$(REPMGR_NAMESPACE).svc.cluster.local
+            - name: REPMGR_NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: REPMGR_NODE_NETWORK_NAME
+              value: '$(REPMGR_NODE_NAME).pg-cluster.$(REPMGR_NAMESPACE).svc.cluster.local'
+          ports:
+            - name: postgresql
+              containerPort: 5432
+              protocol: TCP
+          livenessProbe:
+            exec:
+              command:
+                - bash
+                - -ec
+                - 'PGPASSWORD=$POSTGRESQL_PASSWORD psql -w -U $POSTGRESQL_USERNAME -d $POSTGRESQL_DATABASE -h 127.0.0.1 -c "SELECT 1"'
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 6
+          readinessProbe:
+            exec:
+              command:
+                - bash
+                - -ec
+                - 'PGPASSWORD=$POSTGRESQL_PASSWORD psql -w -U $POSTGRESQL_USERNAME -d $POSTGRESQL_DATABASE -h 127.0.0.1 -c "SELECT 1"'
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 6
+          volumeMounts:
+            - name: pgdata
+              mountPath: /bitnami/postgresql
+            - name: hooks-scripts
+              mountPath: /pre-stop.sh
+              subPath: pre-stop.sh
+      volumes:
+        - name: hooks-scripts
+          configMap:
+            name: postgresql-hooks
+            defaultMode: 0755
+  #      affinity:
+  #        podAntiAffinity:
+  #          requiredDuringSchedulingIgnoredDuringExecution:
+  #            - labelSelector:
+  #                matchExpressions:
+  #                  - key: app
+  #                    operator: In
+  #                    values:
+  #                      - postgresql
+  #              topologyKey: "kubernetes.io/hostname"
+  volumeClaimTemplates:
+    - metadata:
+        name: pgdata
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 5Gi

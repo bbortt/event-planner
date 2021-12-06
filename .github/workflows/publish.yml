@@ -47,7 +47,7 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-      - run: PGPASSWORD=event_planner_password psql -h localhost -U event_planner -f docker/postgres/init-event_planner.sql event_planner_test
+      - run: PGPASSWORD=event_planner_password psql -h localhost -U event_planner -f src/main/resources/db/scripts/init-event_planner.sql event_planner_test
       - run: |
           ./gradlew flywayMigrateTest --no-daemon
           ./gradlew bootJar --no-daemon

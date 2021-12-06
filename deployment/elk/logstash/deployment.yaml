@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logstash
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: logstash
+  template:
+    spec:
+      containers:
+        - name: logstash
+          image: logstash:7.14.2
+          imagePullPolicy: Always
+          ports:
+            - name: logstash
+              containerPort: 5044
+          volumeMounts:
+            - name: config
+              mountPath: /usr/share/logstash/pipeline/logstash.conf
+              subPath: logstash.conf
+      volumes:
+        - name: config
+          configMap:
+            name: configmap
+            defaultMode: 0755
