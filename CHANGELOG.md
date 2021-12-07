@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.0.31 (2021-12-07)
+
+
+### CI / CD
+
+* **deps:** bump spring-cloud-contract-wiremock from 3.0.4 to 3.1.0 ([c4805cc](https://github.com/bbortt/event-planner/commit/c4805cc2bc6855e699b4cd4242edbbe0310b75bb))
+
 ### 0.0.30 (2021-12-07)
 
 
