@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.0.30 (2021-12-07)
+
+
+### CI / CD
+
+* **deps:** bump jackson-databind-nullable from 0.1.0 to 0.2.2 ([10cfe90](https://github.com/bbortt/event-planner/commit/10cfe90174c0547206d0c221c105af1afc615851))
+
 ### 0.0.29 (2021-12-07)
 
 
