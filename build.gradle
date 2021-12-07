@@ -34,7 +34,7 @@ dependencies {
     implementation "io.swagger:swagger-annotations:1.6.3"
     implementation "jakarta.validation:jakarta.validation-api:2.0.2"
     implementation "org.modelmapper:modelmapper:2.4.5"
-    implementation "org.openapitools:jackson-databind-nullable:0.1.0"
+    implementation "org.openapitools:jackson-databind-nullable:0.2.2"
     implementation "org.springframework.boot:spring-boot-starter-actuator"
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
     implementation "org.springframework.boot:spring-boot-starter-oauth2-resource-server"
