@@ -12,6 +12,7 @@ jobs:
   build:
     name: Build & Test Application
     runs-on: ubuntu-20.04
+    environment: build
     services:
       postgres:
         image: postgres:14.1-alpine

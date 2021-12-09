@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.0.32 (2021-12-09)
+
+
+### CI / CD
+
+* **test:** expose sonar token in build environment ([d42aac6](https://github.com/bbortt/event-planner/commit/d42aac673ece549028e2d10aa26a1aa273336e34))
+
 ### 0.0.31 (2021-12-07)
 
 
