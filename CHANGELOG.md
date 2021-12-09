@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.0.34 (2021-12-09)
+
+
+### CI / CD
+
+* **deps:** bump graphql from 16.0.1 to 16.1.0 ([fadf6d1](https://github.com/bbortt/event-planner/commit/fadf6d1d684f691cc50e9854fae94430cec8f296))
+
 ### 0.0.33 (2021-12-09)
 
 
