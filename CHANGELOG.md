@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.0.33 (2021-12-09)
+
+
+### CI / CD
+
+* **deps:** bump @apollo/client from 3.5.5 to 3.5.6 ([36f290a](https://github.com/bbortt/event-planner/commit/36f290a961bd82c438d22b78c14052e9c3ba08f5))
+
 ### 0.0.32 (2021-12-09)
 
 
