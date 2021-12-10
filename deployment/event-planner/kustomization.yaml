@@ -6,3 +6,4 @@ commonLabels:
   component: event-planner
 resources:
   - deployment.yaml
+  - service.yaml

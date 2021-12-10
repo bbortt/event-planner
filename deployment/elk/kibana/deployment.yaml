@@ -13,11 +13,17 @@ spec:
         - name: kibana
           image: kibana:7.14.2
           imagePullPolicy: Always
+          ports:
+            - name: ui
+              containerPort: 5601
+              protocol: TCP
           resources:
-            requests:
-              memory: 128Mi
             limits:
-              memory: 1Gi
+              cpu: 1
+              memory: 512Mi
+            requests:
+              cpu: 1
+              memory: 128Mi
           env:
             - name: ELASTICSEARCH_HOSTS
               value: '["http://es-node-0.elasticsearch:9200","http://es-node-1.elasticsearch:9200","http://es-node-2.elasticsearch:9200"]'
@@ -25,7 +31,3 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.namespace
-          ports:
-            - name: ui
-              containerPort: 5601
-              protocol: TCP

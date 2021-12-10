@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: backend
 spec:
-  replicas: 2
+  replicas: 3
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -11,7 +11,7 @@ spec:
       maxUnavailable: 0
   selector:
     matchLabels:
-      app: app
+      app: event-planner
   template:
     spec:
       containers:
@@ -23,6 +23,13 @@ spec:
               containerPort: 8080
             - name: actuator
               containerPort: 8090
+          resources:
+            limits:
+              cpu: 1
+              memory: 1Gi
+            requests:
+              cpu: 1
+              memory: 512Mi
           env:
             - name: APPL_AUTH0_AUDIENCE
               value: $AUTH0_AUDIENCE
@@ -37,6 +44,8 @@ spec:
                   key: postgres-password
             - name: APPL_JWT_ISSUER_URI
               value: $JWT_ISSUER_URI
+            - name: JAVA_OPTS
+              value: '-XX:MaxRAMPercentage=80'
             - name: K8S_NAMESPACE
               valueFrom:
                 fieldRef:
