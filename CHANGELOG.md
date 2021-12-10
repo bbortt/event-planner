@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.0.35 (2021-12-10)
+
+
+### CI / CD
+
+* fix k8s deployment postgresql statefulset ([a899e88](https://github.com/bbortt/event-planner/commit/a899e88065e06315070506d0f343ef9526a2d437))
+
 ### 0.0.34 (2021-12-09)
 
 
