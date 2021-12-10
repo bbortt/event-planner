@@ -22,6 +22,17 @@ spec:
           imagePullPolicy: Always
           securityContext:
             runAsUser: 1001
+          ports:
+            - name: postgresql
+              containerPort: 5432
+              protocol: TCP
+          resources:
+            limits:
+              cpu: 2
+              memory: 2Gi
+            requests:
+              cpu: 1
+              memory: 1Gi
           env:
             - name: K8S_NAMESPACE
               valueFrom:
@@ -59,10 +70,6 @@ spec:
                 secretKeyRef:
                   name: postgresql-secrets
                   key: postgres-password
-          ports:
-            - name: postgresql
-              containerPort: 5432
-              protocol: TCP
           livenessProbe:
             exec:
               command:

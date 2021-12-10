@@ -9,7 +9,7 @@ on:
       - '*'
   pull_request:
 jobs:
-  build:
+  test:
     name: Build & Test Application
     runs-on: ubuntu-20.04
     environment: build
