@@ -23,6 +23,17 @@ spec:
           imagePullPolicy: Always
           securityContext:
             runAsUser: 1001
+          ports:
+            - name: postgresql
+              containerPort: 5432
+              protocol: TCP
+          resources:
+            limits:
+              cpu: 1
+              memory: 1Gi
+            requests:
+              cpu: 1
+              memory: 512Mi
           env:
             - name: POSTGRESQL_POSTGRES_PASSWORD
               valueFrom:
@@ -57,16 +68,12 @@ spec:
                   fieldPath: metadata.name
             - name: REPMGR_NODE_NETWORK_NAME
               value: '$(REPMGR_NODE_NAME).pg-cluster.$(REPMGR_NAMESPACE).svc.cluster.local'
-          ports:
-            - name: postgresql
-              containerPort: 5432
-              protocol: TCP
           livenessProbe:
             exec:
               command:
                 - bash
                 - -ec
-                - 'PGPASSWORD=$POSTGRESQL_PASSWORD psql -w -U $POSTGRESQL_USERNAME -d $POSTGRESQL_DATABASE -h 127.0.0.1 -c "SELECT 1"'
+                - 'PGPASSWORD=$POSTGRESQL_PASSWORD psql -w -U "$POSTGRESQL_USERNAME" -d "$POSTGRESQL_DATABASE" -h 127.0.0.1 -c "SELECT 1"'
             initialDelaySeconds: 30
             periodSeconds: 10
             timeoutSeconds: 5
@@ -77,7 +84,7 @@ spec:
               command:
                 - bash
                 - -ec
-                - 'PGPASSWORD=$POSTGRESQL_PASSWORD psql -w -U $POSTGRESQL_USERNAME -d $POSTGRESQL_DATABASE -h 127.0.0.1 -c "SELECT 1"'
+                - 'PGPASSWORD=$POSTGRESQL_PASSWORD psql -w -U "$POSTGRESQL_USERNAME" -d "$POSTGRESQL_DATABASE" -h 127.0.0.1 -c "SELECT 1"'
             initialDelaySeconds: 5
             periodSeconds: 10
             timeoutSeconds: 5

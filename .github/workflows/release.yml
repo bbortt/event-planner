@@ -9,7 +9,7 @@ on:
       - '.github/version.json'
       - 'CHANGELOG.md'
 jobs:
-  build:
+  release:
     name: Bump Standard-Version
     runs-on: ubuntu-20.04
     environment: release

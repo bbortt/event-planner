@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 #
 # This scripts executes init.sql which makes sure the uuid-ossp extension is enabled.
 
