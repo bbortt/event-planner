@@ -1,7 +1,5 @@
 package io.github.bbortt.event.planner.config;
 
-import org.springframework.context.event.EventListener;
-import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
