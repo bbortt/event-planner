@@ -14,9 +14,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 @MappedSuperclass
 @EntityListeners(AuditListener.class)
-public abstract class AbstractAuditingEntity implements Serializable {
-
-  private static final long serialVersionUID = 1L;
+public abstract class AbstractAuditingEntity {
 
   @JsonIgnore
   @CreatedBy

@@ -1,7 +1,6 @@
 package io.github.bbortt.event.planner.repository;
 
 import io.github.bbortt.event.planner.domain.Project;
-import java.util.Set;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
