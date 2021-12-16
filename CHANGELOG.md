@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.0.37 (2021-12-16)
+
+
+### CI / CD
+
+* add unit tests for the current code ([1893864](https://github.com/bbortt/event-planner/commit/1893864e3c54d2e1735dcaf3af19a599f4b408f4))
+
 ### 0.0.36 (2021-12-10)
 
 
