@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -78,12 +79,17 @@ public class Member {
   @OneToMany(mappedBy = "member")
   private Set<MemberPermission> permissions = new HashSet<>();
 
-  public Long getId() {
-    return id;
+  public Member() {
+    // Empty member
   }
 
-  public void setId(Long id) {
-    this.id = id;
+  public Member(Project project, Auth0User auth0User) {
+    this.project = project;
+    this.auth0User = auth0User;
+  }
+
+  public Long getId() {
+    return id;
   }
 
   public Project getProject() {
@@ -114,24 +120,18 @@ public class Member {
     return accepted;
   }
 
-  public void setAccepted(Boolean accepted) {
-    this.accepted = accepted;
+  public void setAccepted(String acceptedBy) {
+    this.accepted = Boolean.TRUE;
+    this.acceptedBy = acceptedBy;
+    this.acceptedDate = Instant.now();
   }
 
   public String getAcceptedBy() {
     return acceptedBy;
   }
 
-  public void setAcceptedBy(String acceptedBy) {
-    this.acceptedBy = acceptedBy;
-  }
-
   public Instant getAcceptedDate() {
     return acceptedDate;
-  }
-
-  public void setAcceptedDate(Instant acceptedDate) {
-    this.acceptedDate = acceptedDate;
   }
 
   public Auth0User getAuth0User() {
@@ -142,11 +142,11 @@ public class Member {
     this.auth0User = auth0User;
   }
 
-  public Set<MemberPermission> getPermissions() {
-    return permissions;
+  public Set<Permission> getPermissions() {
+    return permissions.stream().map(MemberPermission::getPermission).collect(Collectors.toSet());
   }
 
-  public void setPermissions(Set<MemberPermission> permissions) {
-    this.permissions = permissions;
+  public void setPermissions(Set<Permission> permissions) {
+    this.permissions = permissions.stream().map(permission -> new MemberPermission(this, permission)).collect(Collectors.toSet());
   }
 }

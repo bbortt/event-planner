@@ -27,4 +27,29 @@ public class MemberPermission extends AbstractAuditingEntity {
   @JoinColumn(name = "permission_id", nullable = false, updatable = false)
   @JsonIgnoreProperties(value = "members", allowSetters = true)
   private Permission permission;
+
+  public MemberPermission() {
+    // Empty member permission
+  }
+
+  public MemberPermission(Member member, Permission permission) {
+    this.member = member;
+    this.permission = permission;
+  }
+
+  public Member getMember() {
+    return member;
+  }
+
+  public void setMember(Member member) {
+    this.member = member;
+  }
+
+  public Permission getPermission() {
+    return permission;
+  }
+
+  public void setPermission(Permission permission) {
+    this.permission = permission;
+  }
 }

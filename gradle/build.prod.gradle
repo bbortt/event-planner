@@ -1,0 +1,27 @@
+clean.doFirst {
+    delete "$rootDir/node_modules"
+}
+
+// --- General Configuration ---
+node {
+    version = "14.17.6"
+    npmVersion = "8.1.3"
+    npmInstallCommand = "ci"
+}
+
+if (project.hasProperty("nodeInstall")) {
+    node {
+        download = true
+    }
+}
+
+// --- Frontend Build ---
+task lint(type: NpmTask, dependsOn: "npmInstall") {
+    args = ["run", "lint"]
+}
+test.dependsOn lint
+
+task webpack(type: NpmTask, dependsOn: "npmInstall") {
+    args = ["run", "fullbuild"]
+}
+processResources.dependsOn webpack

@@ -6,7 +6,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import io.github.bbortt.event.planner.domain.Project;
-import io.github.bbortt.event.planner.graphql.dto.ProjectDTO;
 import io.github.bbortt.event.planner.service.ProjectService;
 import java.util.List;
 import java.util.Optional;
@@ -14,10 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,22 +22,17 @@ import org.springframework.data.domain.Pageable;
 class ProjectQueryResolverUnitTest {
 
   @Mock
-  private ModelMapper modelMapperMock;
-
-  @Mock
   private ProjectService projectServiceMock;
 
   private ProjectQueryResolver fixture;
 
   @BeforeEach
-  public void beforeEachSetup() {
+  void beforeEachSetup() {
     Project project = new Project();
 
     doReturn(new PageImpl(List.of(project))).when(projectServiceMock).getProjects(any(Pageable.class));
 
-    doReturn(new ProjectDTO()).when(modelMapperMock).map(project, ProjectDTO.class);
-
-    fixture = new ProjectQueryResolver(modelMapperMock, projectServiceMock);
+    fixture = new ProjectQueryResolver(projectServiceMock);
   }
 
   @Test

@@ -1,31 +1,30 @@
-input  CreateLocalityInput {
-    name: String!
-    description: String
-    parentLocalityId: ID
+input CreateLocalityInput {
+  name: String!
+  description: String
+  parentLocalityId: ID
 }
 
 input UpdateLocalityInput {
-    name: String
-    description: String
+  name: String
+  description: String
 }
 
-type LocalityDTO {
-    id: ID!
-    name: String!
-    description: String
-    project: ProjectDTO!
-    parent: LocalityDTO
-    children: [LocalityDTO]
+type Locality {
+  id: ID!
+  name: String!
+  description: String
+  project: Project!
+  parent: Locality
+  children: [Locality]
 }
-
 
 extend type Query {
-    listRootLocalities(projectId: ID!): [LocalityDTO]!
-    listChildren(localityId: ID!): [LocalityDTO]!
+  listRootLocalities(projectId: ID!): [Locality]!
+  listChildren(localityId: ID!): [Locality]!
 }
 
 extend type Mutation {
-    createLocality(projectId: ID!, locality: CreateLocalityInput!): LocalityDTO!
-    updateLocality(locality: UpdateLocalityInput!): LocalityDTO!
-    moveLocality(fromLocalityId: ID, toLocalityId: ID): LocalityDTO!
+  createLocality(projectId: ID!, locality: CreateLocalityInput!): Locality!
+  updateLocality(locality: UpdateLocalityInput!): Locality!
+  moveLocality(fromLocalityId: ID, toLocalityId: ID): Locality!
 }

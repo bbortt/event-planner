@@ -15,11 +15,16 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 @Configuration
 public class JwtDecoderConfig {
 
-  @Value("${jwt.audience}")
-  private String audience;
+  private final String issuer;
+  private final String audience;
 
-  @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
-  private String issuer;
+  public JwtDecoderConfig(
+    @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}") String issuer,
+    @Value("${jwt.audience}") String audience
+  ) {
+    this.issuer = issuer;
+    this.audience = audience;
+  }
 
   @Bean
   public JwtDecoder jwtDecoder() {
