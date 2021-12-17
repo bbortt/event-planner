@@ -1,17 +1,13 @@
 jwt:
   audience: http://localhost:8080
-graphql:
-  servlet:
-    mapping: /api/graphql/v1
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/event_planner_test
     username: event_planner
     password: event_planner_password
-  jpa:
-    hibernate:
-      ddl-auto: validate
   security:
+    csrf:
+      enabled: false
     oauth2:
       resourceserver:
         jwt:

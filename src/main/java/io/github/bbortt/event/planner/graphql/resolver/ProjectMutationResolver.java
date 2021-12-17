@@ -1,8 +1,8 @@
 package io.github.bbortt.event.planner.graphql.resolver;
 
-import com.coxautodev.graphql.tools.GraphQLMutationResolver;
+import graphql.kickstart.tools.GraphQLMutationResolver;
+import io.github.bbortt.event.planner.domain.Project;
 import io.github.bbortt.event.planner.graphql.dto.CreateProjectInput;
-import io.github.bbortt.event.planner.graphql.dto.ProjectDTO;
 import io.github.bbortt.event.planner.graphql.dto.ProjectUpdateInput;
 import javax.validation.Valid;
 import org.springframework.stereotype.Component;
@@ -10,11 +10,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class ProjectMutationResolver implements GraphQLMutationResolver {
 
-  public ProjectDTO createProject(@Valid CreateProjectInput project) {
+  public Project createProject(@Valid CreateProjectInput project) {
     return null;
   }
 
-  public ProjectDTO updateProject(@Valid ProjectUpdateInput project) {
+  public Project updateProject(@Valid ProjectUpdateInput project) {
     return null;
   }
 }

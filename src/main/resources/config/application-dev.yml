@@ -1,3 +1,11 @@
+graphiql:
+  mapping: /graphiql
+  endpoint:
+    graphql: /api/graphql/v1
+  basePath: /
+  enabled: true
+  headers:
+    Authorization: 'Bearer ${appl.graphiql.jwt.token}'
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/event_planner

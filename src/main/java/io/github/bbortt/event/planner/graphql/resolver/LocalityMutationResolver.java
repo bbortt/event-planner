@@ -1,8 +1,8 @@
 package io.github.bbortt.event.planner.graphql.resolver;
 
-import com.coxautodev.graphql.tools.GraphQLMutationResolver;
+import graphql.kickstart.tools.GraphQLMutationResolver;
+import io.github.bbortt.event.planner.domain.Locality;
 import io.github.bbortt.event.planner.graphql.dto.CreateLocalityInput;
-import io.github.bbortt.event.planner.graphql.dto.LocalityDTO;
 import io.github.bbortt.event.planner.graphql.dto.UpdateLocalityInput;
 import java.util.Optional;
 import javax.validation.Valid;
@@ -12,15 +12,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class LocalityMutationResolver implements GraphQLMutationResolver {
 
-  public LocalityDTO createLocality(@NotNull Long projectId, @Valid CreateLocalityInput project) {
+  public Locality createLocality(@NotNull Long projectId, @Valid CreateLocalityInput project) {
     return null;
   }
 
-  public LocalityDTO updateLocality(@Valid UpdateLocalityInput project) {
+  public Locality updateLocality(@Valid UpdateLocalityInput project) {
     return null;
   }
 
-  public LocalityDTO moveLocality(Optional<Long> fromLocalityId, Optional<Long> toLocalityId) {
+  public Locality moveLocality(Optional<Long> fromLocalityId, Optional<Long> toLocalityId) {
     return null;
   }
 }

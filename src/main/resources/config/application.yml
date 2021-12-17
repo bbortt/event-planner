@@ -3,6 +3,8 @@ jwt:
 graphql:
   servlet:
     mapping: /api/graphql/v1
+    websocket:
+      enabled: false
 management:
   server:
     port: 8090
@@ -14,6 +16,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
+    open-in-view: false
   security:
     oauth2:
       resourceserver:
