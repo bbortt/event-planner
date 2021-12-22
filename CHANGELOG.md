@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.0.40 (2021-12-22)
+
+
+### CI / CD
+
+* **deps-dev:** bump pretty-quick from 3.1.2 to 3.1.3 ([90d0670](https://github.com/bbortt/event-planner/commit/90d0670bb9c80650edc03eb324cd350732c11466))
+
 ### 0.0.39 (2021-12-22)
 
 
