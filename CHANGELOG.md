@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.0.42 (2021-12-22)
+
+
+### CI / CD
+
+* **deps-dev:** bump eslint from 8.4.1 to 8.5.0 ([12b5056](https://github.com/bbortt/event-planner/commit/12b50561542799acbe0f0b9bf336ea6b4102c095))
+
 ### 0.0.41 (2021-12-22)
 
 
