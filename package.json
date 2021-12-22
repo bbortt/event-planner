@@ -33,7 +33,7 @@
     "@auth0/auth0-react": "^1.8.0",
     "deepmerge": "^4.2.2",
     "foundation-sites": "^6.7.4",
-    "graphql": "^16.1.0",
+    "graphql": "^16.2.0",
     "jquery": "^3.6.0",
     "lib": "file:src/main/webapp/lib",
     "next": "^12.0.7",
