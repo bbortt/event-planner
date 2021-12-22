@@ -2,6 +2,7 @@ package io.github.bbortt.event.planner.domain;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -25,15 +26,11 @@ public class Permission {
     return id;
   }
 
-  public void setId(String id) {
-    this.id = id;
+  public Set<Member> getMembers() {
+    return members.stream().map(MemberPermission::getMember).collect(Collectors.toSet());
   }
 
-  public Set<MemberPermission> getMembers() {
-    return members;
-  }
-
-  public void setMembers(Set<MemberPermission> members) {
-    this.members = members;
+  public void setMembers(Set<Member> members) {
+    this.members = members.stream().map(member -> new MemberPermission(member, this)).collect(Collectors.toSet());
   }
 }

@@ -1,4 +1,4 @@
-schema: src/main/resources/schema/*.graphqls
+schema: 'src/main/resources/schema/*.graphqls'
 generates:
   flow-typed/graphql.flow.js:
     plugins:

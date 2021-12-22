@@ -11,9 +11,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, Long> {
   @Query(
-    value = "select p, m from member m" + " left join project p" + "   on m.project_id = p.id" + " where m.auth0_user_id = :auth0UserId",
-    countQuery = "select count(id) from member" + " where auth0_user_id = :auth0UserId",
-    nativeQuery = true
+    value = "select p from Project p inner join p.members m on p.id = m.project.id where m.auth0User.userId = :auth0UserId",
+    countQuery = "select count(m.id) from Member m where m.auth0User.userId = :auth0UserId"
   )
   Page<Project> findByAuth0UserIdPaged(@Param("auth0UserId") String auth0UserId, Pageable pageable);
 }

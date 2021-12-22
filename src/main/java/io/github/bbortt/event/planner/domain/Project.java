@@ -31,7 +31,6 @@ public class Project extends AbstractAuditingEntity {
   private Long id;
 
   @NotNull
-  @Size(min = 36, max = 36)
   @Column(columnDefinition = "bpchar(36)", nullable = false, updatable = false)
   private UUID token = UUID.randomUUID();
 
@@ -62,12 +61,18 @@ public class Project extends AbstractAuditingEntity {
   @OneToMany(mappedBy = "project")
   private Set<Locality> localities = new HashSet<>();
 
-  public Long getId() {
-    return id;
+  public Project() {
+    // Empty project
   }
 
-  public void setId(Long id) {
-    this.id = id;
+  public Project(String name, ZonedDateTime startTime, ZonedDateTime endTime) {
+    this.name = name;
+    this.startTime = startTime;
+    this.endTime = endTime;
+  }
+
+  public Long getId() {
+    return id;
   }
 
   public UUID getToken() {

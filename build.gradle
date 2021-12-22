@@ -12,7 +12,7 @@ plugins {
 group = "io.github.bbortt"
 version = "${version}"
 
-sourceCompatibility = "${javaVersion}"
+sourceCompatibility = "${sourceCompatibility}"
 assert System.properties["java.specification.version"] == "11" || "12" || "13" || "14" || "15" || "16" || "17"
 
 defaultTasks "check"
@@ -22,47 +22,38 @@ repositories {
 }
 
 clean.doFirst {
-    delete "$rootDir/node_modules"
     delete "$buildDir/generated"
 }
 
+if (project.hasProperty("prod")) {
+    apply from: "gradle/build.prod.gradle"
+}
+
 dependencies {
-    implementation "com.graphql-java:graphql-java-tools:5.2.4"
-    implementation("com.graphql-java:graphql-spring-boot-starter:5.0.2") {
-        exclude module: "spring-boot-starter-tomcat"
-    }
+    implementation platform ("org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}")
+    implementation "com.graphql-java-kickstart:graphql-java-tools:12.0.1"
+    implementation "com.graphql-java-kickstart:graphql-spring-boot-starter:12.0.0"
     implementation "io.swagger:swagger-annotations:1.6.3"
     implementation "jakarta.validation:jakarta.validation-api:2.0.2"
-    implementation "org.modelmapper:modelmapper:2.4.5"
     implementation "org.openapitools:jackson-databind-nullable:0.2.2"
     implementation "org.springframework.boot:spring-boot-starter-actuator"
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
     implementation "org.springframework.boot:spring-boot-starter-oauth2-resource-server"
     implementation "org.springframework.boot:spring-boot-starter-security"
     implementation "org.springframework.boot:spring-boot-starter-undertow"
-    implementation("org.springframework.boot:spring-boot-starter-web") {
+    implementation("org.springframework.boot:spring-boot-starter-web"){
         exclude module: "spring-boot-starter-tomcat"
     }
     developmentOnly "org.springframework.boot:spring-boot-devtools"
     runtimeOnly "org.postgresql:postgresql"
+    testImplementation "com.graphql-java-kickstart:graphql-spring-boot-starter-test:12.0.0"
+    testImplementation "org.bitbucket.b_c:jose4j:0.7.2"
     testImplementation "org.springframework.boot:spring-boot-starter-test"
-    testImplementation "org.springframework.cloud:spring-cloud-contract-wiremock:3.1.0"
+    testImplementation "org.springframework.cloud:spring-cloud-contract-wiremock"
     testImplementation "org.springframework.security:spring-security-test"
 }
 
 // --- General Configuration ---
-node {
-    version = "14.17.6"
-    npmVersion = "8.1.3"
-    npmInstallCommand = "ci"
-}
-
-if (project.hasProperty("nodeInstall")) {
-    node {
-        download = true
-    }
-}
-
 bootJar {
     processResources {
         from("build/static") {
@@ -121,17 +112,6 @@ jacocoTestReport {
         xml.destination file("${buildDir}/reports/jacoco.xml")
     }
 }
-
-// --- Frontend Build ---
-task lint(type: NpmTask, dependsOn: "npmInstall") {
-    args = ["run", "lint"]
-}
-test.dependsOn lint
-
-task webpack(type: NpmTask, dependsOn: "npmInstall") {
-    args = ["run", "fullbuild"]
-}
-processResources.dependsOn webpack
 
 // --- Flyway Configuration ---
 task flywayMigrateDev(type: org.flywaydb.gradle.task.FlywayMigrateTask) {

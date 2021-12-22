@@ -18,6 +18,7 @@
     "flow:check": "flow check",
     "fullbuild": "npm run build && npm run export",
     "gen": "graphql-codegen --config codegen.yml",
+    "gen:watch": "graphql-codegen --config codegen.yml --watch",
     "lint": "next lint",
     "next": "next",
     "prepare": "owl install",
