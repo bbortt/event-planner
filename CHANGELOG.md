@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.0.41 (2021-12-22)
+
+
+### CI / CD
+
+* **deps:** bump sass from 1.45.0 to 1.45.1 ([cadd91b](https://github.com/bbortt/event-planner/commit/cadd91bc156cb3c60d5228fe070497a3f4def56d))
+
 ### 0.0.40 (2021-12-22)
 
 
