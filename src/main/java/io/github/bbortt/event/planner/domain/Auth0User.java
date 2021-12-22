@@ -44,6 +44,16 @@ public class Auth0User implements Auth0UserUpdateSafe {
   @OneToMany(mappedBy = "auth0User")
   private Set<Member> memberships = new HashSet<>();
 
+  public Auth0User() {
+    // Empty Auth0 user
+  }
+
+  public Auth0User(String userId, String nickname, String email) {
+    this.userId = userId;
+    this.nickname = nickname;
+    this.email = email;
+  }
+
   public String getUserId() {
     return userId;
   }
