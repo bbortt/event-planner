@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.0.39 (2021-12-22)
+
+
+### Bug Fixes
+
+* junit jupiter extension is not a singleton over whole test cycle ([4bd4a67](https://github.com/bbortt/event-planner/commit/4bd4a670c7b107b8ef7867e249a8f6690b4786b0))
+
 ### 0.0.38 (2021-12-22)
 
 
