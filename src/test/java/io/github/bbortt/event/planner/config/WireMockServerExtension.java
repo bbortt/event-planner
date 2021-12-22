@@ -16,21 +16,33 @@ import org.jose4j.lang.JoseException;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 
 public class WireMockServerExtension implements AfterAllCallback, BeforeAllCallback {
 
+  private static final Logger logger = LoggerFactory.getLogger(TestJWSBuilderConfiguration.class);
+
   private static final TestJWSBuilder JWS_BUILDER = TestJWSBuilder.getInstance();
 
-  private WireMockServer wireMockServer;
+  private static WireMockServer wireMockServer;
 
   @Override
   public void beforeAll(ExtensionContext context) throws Exception {
-    wireMockServer = new WireMockServer(options().extensions(new ResponseTemplateTransformer(true)).port(0));
+    if (wireMockServer == null) {
+      logger.info("Initial WireMock start - init keys!");
+      wireMockServer = new WireMockServer(options().extensions(new ResponseTemplateTransformer(true)).port(0));
+      initJWSBuilder();
+    }
+
+    logger.info("Starting WireMock");
+
     wireMockServer.start();
 
-    initJWSBuilder();
     registerJWTIssuerStub();
+
+    logger.debug("Startup succeed");
 
     System.setProperty("wiremock.server.port", String.valueOf(wireMockServer.port()));
   }
@@ -59,6 +71,8 @@ public class WireMockServerExtension implements AfterAllCallback, BeforeAllCallb
 
   @Override
   public void afterAll(ExtensionContext context) {
+    logger.info("Stopping WireMock");
+
     wireMockServer.stop();
   }
 }

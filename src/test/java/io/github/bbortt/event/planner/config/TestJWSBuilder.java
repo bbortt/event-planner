@@ -4,8 +4,12 @@ import java.util.UUID;
 import org.jose4j.jwk.RsaJsonWebKey;
 import org.jose4j.jws.JsonWebSignature;
 import org.jose4j.jwt.JwtClaims;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TestJWSBuilder {
+
+  private static final Logger logger = LoggerFactory.getLogger(TestJWSBuilder.class);
 
   private String claimsIssuer;
   private String claimsSubject;
@@ -49,6 +53,8 @@ public class TestJWSBuilder {
   }
 
   public JsonWebSignature build(String scope) {
+    logger.info("Building JWS with scope(s): {}", scope);
+
     String paddedScope = scope.startsWith(" ") ? scope : " " + scope;
 
     JwtClaims claims = new JwtClaims();
@@ -75,7 +81,7 @@ public class TestJWSBuilder {
 
     static final TestJWSBuilder INSTANCE = getInstance();
 
-    static TestJWSBuilder getInstance() {
+    private static TestJWSBuilder getInstance() {
       return new TestJWSBuilder();
     }
   }

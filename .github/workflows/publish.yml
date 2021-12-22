@@ -49,8 +49,10 @@ jobs:
           java-version: '17'
       - run: PGPASSWORD=event_planner_password psql -h localhost -U event_planner -f src/main/resources/db/scripts/init-event_planner.sql event_planner_test
       - run: |
-          ./gradlew flywayMigrateTest --no-daemon
-          ./gradlew bootJar -Pprod --no-daemon
+          ./gradlew --no-daemon \
+              flywayMigrateTest
+          ./gradlew -Pprod --no-daemon \
+              bootJar
       - uses: docker/build-push-action@v2
         with:
           context: .
