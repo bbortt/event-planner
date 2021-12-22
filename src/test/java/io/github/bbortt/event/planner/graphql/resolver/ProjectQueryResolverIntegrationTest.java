@@ -23,7 +23,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.test.context.support.WithMockUser;
 
 class ProjectQueryResolverIntegrationTest extends AbstractApplicationContextAwareIntegrationTest {
 
@@ -82,7 +81,6 @@ class ProjectQueryResolverIntegrationTest extends AbstractApplicationContextAwar
   }
 
   @Test
-  @WithMockUser
   void getProjectAtOffsetOne() throws IOException, JoseException {
     String token = testJwsBuilder.build("graphql:access").getCompactSerialization();
     graphQLTestTemplate.withBearerAuth(token);
@@ -100,7 +98,6 @@ class ProjectQueryResolverIntegrationTest extends AbstractApplicationContextAwar
   }
 
   @Test
-  @WithMockUser
   void getAllProjectsUnpaged() throws IOException, JoseException {
     String token = testJwsBuilder.build("graphql:access").getCompactSerialization();
     graphQLTestTemplate.withBearerAuth(token);
