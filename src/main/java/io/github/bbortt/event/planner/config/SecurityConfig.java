@@ -26,7 +26,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     http
         .authorizeRequests()
         .antMatchers("/api/graphql/v1").hasAuthority("SCOPE_graphql:access")
-        .antMatchers("/api/rest/v1/user").hasAuthority("SCOPE_user:synchronize")
+        .antMatchers("/api/rest/v1/user/*").hasAuthority("SCOPE_user:synchronize")
         .and()
         .cors()
         .and()

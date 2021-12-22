@@ -103,7 +103,8 @@ task integrationTest(type: Test, dependsOn: test) {
     useJUnitPlatform()
     include "**/*IntegrationTest*"
 }
-bootJar.dependsOn integrationTest
+check.dependsOn integrationTest
+bootJar.dependsOn check
 
 jacocoTestReport {
     reports {
