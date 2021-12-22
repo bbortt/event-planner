@@ -1,6 +1,6 @@
 package io.github.bbortt.event.planner.config;
 
-import com.google.common.collect.ImmutableList;
+import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -15,10 +15,10 @@ public class DevCorsConfig {
   @Bean
   public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
-    configuration.setAllowedOrigins(ImmutableList.of("http://localhost:3000"));
-    configuration.setAllowedMethods(ImmutableList.of("POST"));
+    configuration.setAllowedOrigins(List.of("http://localhost:3000"));
+    configuration.setAllowedMethods(List.of("POST"));
     configuration.setAllowCredentials(true);
-    configuration.setAllowedHeaders(ImmutableList.of("Authorization", "Cache-Control", "Content-Type"));
+    configuration.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/api/graphql/v1", configuration);
     return source;

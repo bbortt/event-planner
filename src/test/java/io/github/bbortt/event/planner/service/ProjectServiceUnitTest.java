@@ -1,16 +1,22 @@
 package io.github.bbortt.event.planner.service;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import io.github.bbortt.event.planner.AbstractApplicationContextAwareIntegrationTest;
 import io.github.bbortt.event.planner.repository.ProjectRepository;
-import org.junit.jupiter.api.Assertions;
+import java.security.Principal;
+import org.apache.http.auth.BasicUserPrincipal;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.test.context.TestSecurityContextHolder;
 
-class ProjectServiceUnitTest extends AbstractApplicationContextAwareIntegrationTest {
+@ExtendWith(MockitoExtension.class)
+class ProjectServiceUnitTest {
 
   @Mock
   private ProjectRepository projectRepository;
@@ -18,15 +24,19 @@ class ProjectServiceUnitTest extends AbstractApplicationContextAwareIntegrationT
   private ProjectService fixture;
 
   @BeforeEach
-  public void beforeEachSetup() {
+  void beforeEachSetup() {
     fixture = new ProjectService(projectRepository);
   }
 
+  @Test
   void getProjectsReadsAuthenticationContext() {
+    String sub = "auth0|ljasd7fgh278hsdfk2h34k2l";
+    TestSecurityContextHolder.setAuthentication(new TestingAuthenticationToken(new BasicUserPrincipal(sub), null));
+
     Pageable pageable = Pageable.unpaged();
 
     fixture.getProjects(pageable);
 
-    Mockito.verify(projectRepository).findByAuth0UserIdPaged(null, pageable);
+    Mockito.verify(projectRepository).findByAuth0UserIdPaged(sub, pageable);
   }
 }

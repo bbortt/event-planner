@@ -1,6 +1,5 @@
 package io.github.bbortt.event.planner.service;
 
-import io.github.bbortt.event.planner.api.v1.dto.UserDto;
 import io.github.bbortt.event.planner.domain.Auth0User;
 import io.github.bbortt.event.planner.repository.Auth0UserRepository;
 import org.springframework.beans.BeanUtils;
@@ -15,12 +14,12 @@ public class Auth0UserService {
     this.userRepository = userRepository;
   }
 
-  public void synchronizeUserById(String id, UserDto userDto) {
-    Auth0User auth0User = userRepository.findById(id).orElseGet(() -> newAuth0UserWithId(id));
+  public Auth0User synchronizeUserById(String id, Auth0User updatedUser) {
+    Auth0User persistedUser = userRepository.findById(id).orElseGet(() -> newAuth0UserWithId(id));
 
-    BeanUtils.copyProperties(userDto, auth0User, Auth0UserUpdateSafe.class);
+    BeanUtils.copyProperties(updatedUser, persistedUser, Auth0UserUpdateSafe.class);
 
-    userRepository.save(auth0User);
+    return userRepository.save(persistedUser);
   }
 
   private Auth0User newAuth0UserWithId(String id) {
