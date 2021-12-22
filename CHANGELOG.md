@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.0.38 (2021-12-22)
+
+
+### CI / CD
+
+* **jwt:** customize wiremock with a local jwt issuer implementation ([2870c09](https://github.com/bbortt/event-planner/commit/2870c096cfb5ebe409a138da67f0dd6e09d155b0))
+
 ### 0.0.37 (2021-12-16)
 
 ### CI / CD
