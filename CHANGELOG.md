@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.0.44 (2021-12-23)
+
+
+### CI / CD
+
+* **deps-dev:** bump flow-bin from 0.167.1 to 0.168.0 ([09e1fa4](https://github.com/bbortt/event-planner/commit/09e1fa419fdf0d3308788d28f2e12f7ca89bb21f))
+
 ### 0.0.43 (2021-12-23)
 
 
