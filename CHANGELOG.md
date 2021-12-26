@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.0.1 (2021-12-26)
+
+
+### Other
+
+* remove duplicate version bump file ([d2d820a](https://github.com/bbortt/event-planner/commit/d2d820a40d83a7bbfc8d53d7d0c7339271e6ccc4))
+
 ### 0.0.44 (2021-12-23)
 
 
