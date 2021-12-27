@@ -48,7 +48,7 @@
   },
   "devDependencies": {
     "@bbortt/owl": "^1.0.4",
-    "@commitlint/cli": "^15.0.0",
+    "@commitlint/cli": "^16.0.0",
     "@commitlint/config-conventional": "^15.0.0",
     "@graphql-codegen/cli": "^2.3.0",
     "@graphql-codegen/flow": "^2.2.1",
