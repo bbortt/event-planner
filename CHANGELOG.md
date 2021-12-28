@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.46](https://github.com/bbortt/event-planner/compare/v0.0.44...v0.0.46) (2021-12-28)
+
+
+### Bug Fixes
+
+* tracking version 0.0.45 ([77e19dd](https://github.com/bbortt/event-planner/commit/77e19dd9d9f48e1aeb98a7b2a0158a493d32efe1))
+
+
+### Other
+
+* create and update project - backend ([dcff7a4](https://github.com/bbortt/event-planner/commit/dcff7a430991ee554e3b2aabbfe36c3d155ad876))
+* **release:** 0.0.1 ([3a6fdd0](https://github.com/bbortt/event-planner/commit/3a6fdd0cbfffdabad70c929acb20e7a8e2eccb2e))
+* remove duplicate version bump file ([d2d820a](https://github.com/bbortt/event-planner/commit/d2d820a40d83a7bbfc8d53d7d0c7339271e6ccc4))
+
+
+### CI / CD
+
+* **deps:** bump swagger-annotations from 1.6.3 to 1.6.4 ([96494fa](https://github.com/bbortt/event-planner/commit/96494fa793ac6d1e6f46eb1d26f9c45da23f54fb))
+* fork tests ([14f6597](https://github.com/bbortt/event-planner/commit/14f659788040c146100a7f8b91421c89e7e175bb))
+* hotfix version tracking files ([97602a7](https://github.com/bbortt/event-planner/commit/97602a72db520d2bf85b9b8da24b252b7ee8c490))
+
 ### 0.0.1 (2021-12-26)
 
 
