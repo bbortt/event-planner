@@ -1,4 +1,4 @@
 type Mutation {
-  createProject(project: CreateProjectInput!): Project!
+  createProject(project: ProjectCreateInput!): Project!
   updateProject(project: ProjectUpdateInput!): Project!
 }

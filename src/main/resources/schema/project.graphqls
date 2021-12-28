@@ -1,4 +1,4 @@
-input CreateProjectInput {
+input ProjectCreateInput {
   name: String!
   description: String
   startTime: DateTime!
