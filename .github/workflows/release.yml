@@ -12,11 +12,12 @@ jobs:
   release:
     name: Bump Standard-Version
     runs-on: ubuntu-20.04
+    environment: release
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: '0'
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.ACTION_TOKEN }}
       - run: |
           git config user.name "GitHub Actions Bot"
           git config user.email "<>"
