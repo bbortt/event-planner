@@ -47,7 +47,7 @@ dependencies {
     developmentOnly "org.springframework.boot:spring-boot-devtools"
     runtimeOnly "org.postgresql:postgresql"
     testImplementation "com.graphql-java-kickstart:graphql-spring-boot-starter-test:12.0.0"
-    testImplementation "org.bitbucket.b_c:jose4j:0.7.2"
+    testImplementation "org.bitbucket.b_c:jose4j:0.7.9"
     testImplementation "org.springframework.boot:spring-boot-starter-test"
     testImplementation "org.springframework.cloud:spring-cloud-contract-wiremock"
     testImplementation "org.springframework.security:spring-security-test"
