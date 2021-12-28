@@ -5,6 +5,12 @@
       "type": "json"
     }
   ],
+  "packageFiles": [
+    {
+      "filename": ".github/version.json",
+      "type": "json"
+    }
+  ],
   "types": [
     {
       "type": "build",
