@@ -10,21 +10,21 @@ import { memberApproveType } from '../action/member.action';
 import { messageAdd } from '../action/message.action';
 
 function* memberApprove(action: memberApproveAction) {
-  const { id } = action.payload;
-
-  const payload: Member_Set_Input = {
-    accepted: true,
-  };
-
-  try {
-    const result = yield getApolloClient().mutate<{ update_member: Member }>(MemberApproveMutation, { id, changes: payload });
-    const member = result.data.update_member;
-    const projectName = member.project.name;
-    const nickname = member.user.nickname;
-    yield put(messageAdd('success', `${nickname} isch etz Teil vom Projekt ${projectName}!`, 'Member akzeptiert!'));
-  } catch (error) {
-    yield put(messageAdd('alert', error.message, 'Iladig akzeptierä isch fählgschlage!'));
-  }
+  // const { id } = action.payload;
+  //
+  // const payload: Member = {
+  //   accepted: true,
+  // };
+  //
+  // try {
+  //   const result = yield getApolloClient().mutate<{ update_member: Member }>(MemberApproveMutation, { id, changes: payload });
+  //   const member = result.data.update_member;
+  //   const projectName = member.project.name;
+  //   const nickname = member.user.nickname;
+  //   yield put(messageAdd('success', `${nickname} isch etz Teil vom Projekt ${projectName}!`, 'Member akzeptiert!'));
+  // } catch (error) {
+  //   yield put(messageAdd('alert', error.message, 'Iladig akzeptierä isch fählgschlage!'));
+  // }
 }
 
 function* memberApproveSaga(): typeof SagaIterator {

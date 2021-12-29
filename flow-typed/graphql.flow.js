@@ -10,12 +10,12 @@ export type Scalars = {|
   DateTime: any,
 |};
 
-export type Auth0UserDto = {|
-  __typename?: 'Auth0UserDTO',
+export type Auth0User = {|
+  __typename?: 'Auth0User',
   email: $ElementType<Scalars, 'String'>,
   familyName?: ?$ElementType<Scalars, 'String'>,
   givenName?: ?$ElementType<Scalars, 'String'>,
-  memberships?: ?Array<?MemberDto>,
+  memberships?: ?Array<?Member>,
   nickname: $ElementType<Scalars, 'String'>,
   picture?: ?$ElementType<Scalars, 'String'>,
   userId: $ElementType<Scalars, 'String'>,
@@ -27,40 +27,33 @@ export type CreateLocalityInput = {|
   parentLocalityId?: ?$ElementType<Scalars, 'ID'>,
 |};
 
-export type CreateProjectInput = {|
-  description?: ?$ElementType<Scalars, 'String'>,
-  endTime: $ElementType<Scalars, 'DateTime'>,
-  name: $ElementType<Scalars, 'String'>,
-  startTime: $ElementType<Scalars, 'DateTime'>,
-|};
-
-export type LocalityDto = {|
-  __typename?: 'LocalityDTO',
-  children?: ?Array<?LocalityDto>,
+export type Locality = {|
+  __typename?: 'Locality',
+  children?: ?Array<?Locality>,
   description?: ?$ElementType<Scalars, 'String'>,
   id: $ElementType<Scalars, 'ID'>,
   name: $ElementType<Scalars, 'String'>,
-  parent?: ?LocalityDto,
-  project: ProjectDto,
+  parent?: ?Locality,
+  project: Project,
 |};
 
-export type MemberDto = {|
-  __typename?: 'MemberDTO',
+export type Member = {|
+  __typename?: 'Member',
   accepted: $ElementType<Scalars, 'Boolean'>,
-  auth0User: Auth0UserDto,
+  auth0User: Auth0User,
   id: $ElementType<Scalars, 'ID'>,
-  permissions?: ?Array<?PermissionDto>,
-  project: ProjectDto,
+  permissions?: ?Array<?Permission>,
+  project: Project,
 |};
 
 export type Mutation = {|
   __typename?: 'Mutation',
-  createLocality: LocalityDto,
-  createProject: ProjectDto,
-  joinProject: MemberDto,
-  moveLocality: LocalityDto,
-  updateLocality: LocalityDto,
-  updateProject: ProjectDto,
+  createLocality: Locality,
+  createProject: Project,
+  joinProject: Member,
+  moveLocality: Locality,
+  updateLocality: Locality,
+  updateProject: Project,
 |};
 
 export type MutationCreateLocalityArgs = {|
@@ -69,7 +62,7 @@ export type MutationCreateLocalityArgs = {|
 |};
 
 export type MutationCreateProjectArgs = {|
-  project: CreateProjectInput,
+  project: ProjectCreateInput,
 |};
 
 export type MutationJoinProjectArgs = {|
@@ -89,22 +82,29 @@ export type MutationUpdateProjectArgs = {|
   project: ProjectUpdateInput,
 |};
 
-export type PermissionDto = {|
-  __typename?: 'PermissionDTO',
-  id: $ElementType<Scalars, 'String'>,
+export type Permission = {|
+  __typename?: 'Permission',
+  members?: ?Array<?Member>,
 |};
 
-export type ProjectDto = {|
-  __typename?: 'ProjectDTO',
+export type Project = {|
+  __typename?: 'Project',
   archived: $ElementType<Scalars, 'Boolean'>,
   description?: ?$ElementType<Scalars, 'String'>,
   endTime: $ElementType<Scalars, 'DateTime'>,
   id: $ElementType<Scalars, 'ID'>,
-  localities?: ?Array<?LocalityDto>,
-  members?: ?Array<?MemberDto>,
+  localities?: ?Array<?Locality>,
+  members?: ?Array<?Member>,
   name: $ElementType<Scalars, 'String'>,
   startTime: $ElementType<Scalars, 'DateTime'>,
   token: $ElementType<Scalars, 'String'>,
+|};
+
+export type ProjectCreateInput = {|
+  description?: ?$ElementType<Scalars, 'String'>,
+  endTime: $ElementType<Scalars, 'DateTime'>,
+  name: $ElementType<Scalars, 'String'>,
+  startTime: $ElementType<Scalars, 'DateTime'>,
 |};
 
 export type ProjectUpdateInput = {|
@@ -116,11 +116,11 @@ export type ProjectUpdateInput = {|
 
 export type Query = {|
   __typename?: 'Query',
-  getMember?: ?MemberDto,
-  listChildren: Array<?LocalityDto>,
-  listMembers: Array<?MemberDto>,
-  listProjects: Array<?ProjectDto>,
-  listRootLocalities: Array<?LocalityDto>,
+  getMember?: ?Member,
+  listChildren: Array<?Locality>,
+  listMembers: Array<?Member>,
+  listProjects: Array<?Project>,
+  listRootLocalities: Array<?Locality>,
 |};
 
 export type QueryGetMemberArgs = {|

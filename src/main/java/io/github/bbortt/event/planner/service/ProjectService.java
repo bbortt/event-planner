@@ -4,7 +4,6 @@ import io.github.bbortt.event.planner.domain.Project;
 import io.github.bbortt.event.planner.repository.ProjectRepository;
 import io.github.bbortt.event.planner.security.SecurityUtils;
 import java.util.Objects;
-import net.bytebuddy.pool.TypePool.Resolution.Illegal;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +11,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,6 +49,7 @@ public class ProjectService {
       throw new IllegalArgumentException("Project cannot end before it starts!");
     }
 
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     return projectRepository.save(project);
   }
 

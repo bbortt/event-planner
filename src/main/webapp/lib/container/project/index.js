@@ -5,16 +5,16 @@ import { useRouter } from 'next/router';
 
 import { useSelector } from 'react-redux';
 
-import Location from '../../component/project/location';
+import Locality from '../../component/project/locality';
 
 import { projectByIdSelector } from '../../redux/selector/project.selector';
 
 type tabType = 'locations';
 
-function showCurrentTabOrLocations(tab: tabType) {
+function showCurrentTabOrLocalities(tab: tabType) {
   switch (tab) {
-    case 'locations':
-      return <Location />;
+    default:
+      return <Locality />;
   }
 }
 
@@ -47,7 +47,7 @@ export const Project = ({ id }: projectPropTypes): React.Element<'div'> => {
         </div>
       </div>
 
-      <div>{showCurrentTabOrLocations(router.query.tab || 'locations')}</div>
+      <div>{showCurrentTabOrLocalities(router.query.tab || 'localities')}</div>
     </div>
   );
 };

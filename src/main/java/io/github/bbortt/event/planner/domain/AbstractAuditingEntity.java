@@ -10,14 +10,15 @@ import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @MappedSuperclass
-@EntityListeners(AuditListener.class)
+@EntityListeners({ AuditingEntityListener.class })
 public abstract class AbstractAuditingEntity {
 
   @JsonIgnore
   @CreatedBy
-  @Column(nullable = false, length = 50, updatable = false)
+  @Column(length = 50, nullable = false, updatable = false)
   private String createdBy;
 
   @JsonIgnore

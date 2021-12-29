@@ -48,7 +48,7 @@ public class Member {
 
   @JsonIgnore
   @CreatedBy
-  @Column(nullable = false, length = 50, updatable = false)
+  @Column(length = 50, nullable = false, updatable = false)
   private String createdBy;
 
   @JsonIgnore

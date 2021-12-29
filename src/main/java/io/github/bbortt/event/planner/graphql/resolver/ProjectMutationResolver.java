@@ -6,7 +6,6 @@ import io.github.bbortt.event.planner.graphql.dto.ProjectCreateInput;
 import io.github.bbortt.event.planner.graphql.dto.ProjectUpdateInput;
 import io.github.bbortt.event.planner.service.ProjectService;
 import javax.validation.Valid;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -26,7 +25,6 @@ public class ProjectMutationResolver implements GraphQLMutationResolver {
     );
     project.setDescription(projectCreateInput.getDescription());
 
-    BeanUtils.copyProperties(projectCreateInput, project);
     return projectService.createProject(project);
   }
 

@@ -7,7 +7,7 @@ import ErrorCallout from '../../layout/message/error.callout';
 
 export type projectCreateFormPropTypes = {
   children: React.ChildrenArray<React.Element<'button'>>,
-  submit: (project: Project_Insert_Input) => void,
+  submit: (project: ProjectCreateInput) => void,
 };
 
 export const ProjectCreateForm = ({
@@ -24,9 +24,9 @@ export const ProjectCreateForm = ({
 
     submit({
       name,
-      description,
-      start_time: new Date(startTime),
-      end_time: new Date(endTime),
+      description: description || null,
+      startTime: new Date(startTime),
+      endTime: new Date(endTime),
     });
   };
 

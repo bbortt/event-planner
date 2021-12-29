@@ -2,6 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 
 module.exports = {
+  basePath: '',
   distDir: 'build/next',
   images: {
     domains: ['s.gravatar.com'],
