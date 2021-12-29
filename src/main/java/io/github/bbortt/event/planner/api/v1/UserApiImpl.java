@@ -12,17 +12,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/rest/v1")
 public class UserApiImpl implements UserApi {
 
-  private final Auth0UserService auth0UserService;
+  private final Auth0UserService userService;
   private final ConversionService conversionService;
 
   public UserApiImpl(Auth0UserService userService, ConversionService conversionService) {
-    this.auth0UserService = userService;
+    this.userService = userService;
     this.conversionService = conversionService;
   }
 
   public ResponseEntity<Void> synchronizeUser(String userId, UserDto userDto) {
     Auth0User auth0User = conversionService.convert(userDto, Auth0User.class);
-    auth0UserService.synchronizeUserById(userId, auth0User);
+    userService.synchronizeUserById(userId, auth0User);
 
     return ResponseEntity.ok().build();
   }

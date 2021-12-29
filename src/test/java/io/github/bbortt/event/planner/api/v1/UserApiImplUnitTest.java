@@ -20,7 +20,7 @@ import org.springframework.http.ResponseEntity;
 class UserApiImplUnitTest {
 
   @Mock
-  private Auth0UserService auth0UserServiceMock;
+  private Auth0UserService userServiceMock;
 
   @Mock
   private ConversionService conversionServiceMock;
@@ -29,7 +29,7 @@ class UserApiImplUnitTest {
 
   @BeforeEach
   void beforeEachSetup() {
-    fixture = new UserApiImpl(auth0UserServiceMock, conversionServiceMock);
+    fixture = new UserApiImpl(userServiceMock, conversionServiceMock);
   }
 
   @Test
@@ -44,6 +44,6 @@ class UserApiImplUnitTest {
 
     assertEquals(HttpStatus.OK, response.getStatusCode());
 
-    verify(auth0UserServiceMock).synchronizeUserById(sub, auth0User);
+    verify(userServiceMock).synchronizeUserById(sub, auth0User);
   }
 }

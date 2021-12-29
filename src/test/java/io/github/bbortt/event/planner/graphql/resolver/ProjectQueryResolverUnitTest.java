@@ -30,7 +30,7 @@ class ProjectQueryResolverUnitTest {
   void beforeEachSetup() {
     Project project = new Project();
 
-    doReturn(new PageImpl(List.of(project))).when(projectServiceMock).getProjects(any(Pageable.class));
+    doReturn(new PageImpl<>(List.of(project))).when(projectServiceMock).getProjects(any(Pageable.class));
 
     fixture = new ProjectQueryResolver(projectServiceMock);
   }

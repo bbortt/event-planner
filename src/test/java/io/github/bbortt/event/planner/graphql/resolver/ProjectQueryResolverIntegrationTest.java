@@ -36,7 +36,7 @@ class ProjectQueryResolverIntegrationTest extends AbstractApplicationContextAwar
   private GraphQLTestTemplate graphQLTestTemplate;
 
   @Autowired
-  private Auth0UserRepository auth0UserRepository;
+  private Auth0UserRepository userRepository;
 
   @Autowired
   private ProjectRepository projectRepository;
@@ -56,7 +56,7 @@ class ProjectQueryResolverIntegrationTest extends AbstractApplicationContextAwar
         "ProjectQueryResolverIntegrationTest",
         "ProjectQueryResolverIntegrationTest@localhost"
       );
-    auth0UserRepository.save(auth0User);
+    userRepository.save(auth0User);
 
     Project project1 = new Project("project 1", ZonedDateTime.now(), ZonedDateTime.now());
     project1.setCreatedBy(auth0User.getUserId());
@@ -112,7 +112,7 @@ class ProjectQueryResolverIntegrationTest extends AbstractApplicationContextAwar
   void afterEachTeardown() {
     members.forEach(memberRepository::delete);
     projects.forEach(projectRepository::delete);
-    auth0UserRepository.delete(auth0User);
+    userRepository.delete(auth0User);
 
     members.clear();
     projects.clear();

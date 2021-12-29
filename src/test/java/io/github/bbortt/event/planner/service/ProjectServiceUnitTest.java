@@ -6,15 +6,18 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 
+import io.github.bbortt.event.planner.domain.Auth0User;
 import io.github.bbortt.event.planner.domain.Project;
 import io.github.bbortt.event.planner.repository.ProjectRepository;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.Optional;
 import org.apache.http.auth.BasicUserPrincipal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -27,13 +30,19 @@ import org.springframework.test.util.ReflectionTestUtils;
 class ProjectServiceUnitTest {
 
   @Mock
+  private Auth0UserService userServiceMock;
+
+  @Mock
+  private PermissionService permissionServiceMock;
+
+  @Mock
   private ProjectRepository projectRepositoryMock;
 
   private ProjectService fixture;
 
   @BeforeEach
   void beforeEachSetup() {
-    fixture = new ProjectService(projectRepositoryMock);
+    fixture = new ProjectService(userServiceMock, permissionServiceMock, projectRepositoryMock);
   }
 
   @Test
@@ -50,23 +59,30 @@ class ProjectServiceUnitTest {
 
   @Test
   void createProjectCallsRepository() {
+    doReturn(Optional.of(new Auth0User())).when(userServiceMock).currentUser();
+
     Project newProject = new Project();
     newProject.setStartTime(ZonedDateTime.of(2021, 12, 28, 9, 0, 0, 0, ZoneId.systemDefault()));
     newProject.setEndTime(ZonedDateTime.of(2021, 12, 29, 9, 0, 0, 0, ZoneId.systemDefault()));
 
     fixture.createProject(newProject);
 
-    verify(projectRepositoryMock).save(newProject);
+    verify(permissionServiceMock).findAll();
+
+    ArgumentCaptor<Project> argumentCaptor = ArgumentCaptor.forClass(Project.class);
+    verify(projectRepositoryMock).save(argumentCaptor.capture());
+    Project persistedProject = argumentCaptor.getValue();
+    assertEquals(true, new ArrayList<>(persistedProject.getMembers()).get(0).getAccepted());
   }
 
   @Test
-  void createProjectRequiresEmptyID() {
+  void createProjectRequiresEmptyId() {
     Project newProject = new Project();
     ReflectionTestUtils.setField(newProject, "id", 1234L);
 
     IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> fixture.createProject(newProject));
 
-    assertEquals("New project cannot have an ID!", exception.getMessage());
+    assertEquals("New project cannot have an Id!", exception.getMessage());
   }
 
   @Test
@@ -94,30 +110,54 @@ class ProjectServiceUnitTest {
   }
 
   @Test
-  void updateProjectRequiresID() {
+  void updateProjectRequiresId() {
     Long id = 1234L;
 
     doReturn(Optional.empty()).when(projectRepositoryMock).findById(id);
 
     IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> fixture.updateProject(id, null, null, null));
 
-    assertEquals("Project must have an existing ID!", exception.getMessage());
+    assertEquals("Project must have an existing Id!", exception.getMessage());
   }
 
   @Test
-  void updateProjectWithAllProperties() {
+  void updateProjectName() {
     Long id = 1234L;
     String name = "name";
+
+    Project projectMock = Mockito.mock(Project.class);
+    doReturn(Optional.of(projectMock)).when(projectRepositoryMock).findById(id);
+
+    fixture.updateProject(id, name, null, null);
+
+    verify(projectMock).setName(name);
+    verify(projectRepositoryMock).save(projectMock);
+  }
+
+  @Test
+  void updateProjectDescription() {
+    Long id = 1234L;
     String description = "description";
+
+    Project projectMock = Mockito.mock(Project.class);
+    doReturn(Optional.of(projectMock)).when(projectRepositoryMock).findById(id);
+
+    fixture.updateProject(id, null, description, null);
+
+    verify(projectMock).setDescription(description);
+    verify(projectRepositoryMock).save(projectMock);
+  }
+
+  @Test
+  void archiveProject() {
+    Long id = 1234L;
     Boolean archived = Boolean.TRUE;
 
     Project projectMock = Mockito.mock(Project.class);
     doReturn(Optional.of(projectMock)).when(projectRepositoryMock).findById(id);
 
-    fixture.updateProject(id, name, description, archived);
+    fixture.updateProject(id, null, null, archived);
 
-    verify(projectMock).setName(name);
-    verify(projectMock).setDescription(description);
     verify(projectMock).setArchived(archived);
     verify(projectRepositoryMock).save(projectMock);
   }

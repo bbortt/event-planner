@@ -1,8 +1,6 @@
 package io.github.bbortt.event.planner.graphql.resolver;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 
 import io.github.bbortt.event.planner.domain.Project;
