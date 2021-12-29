@@ -4,13 +4,7 @@ import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import org.hibernate.annotations.GenericGenerator;
@@ -44,18 +38,18 @@ public class Project extends AbstractAuditingEntity {
   private String description;
 
   @NotNull
-  @Column(nullable = false, updatable = false)
+  @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE", nullable = false, updatable = false)
   private ZonedDateTime startTime;
 
   @NotNull
-  @Column(nullable = false, updatable = false)
+  @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE", nullable = false, updatable = false)
   private ZonedDateTime endTime;
 
   @NotNull
   @Column(nullable = false)
   private Boolean archived = Boolean.FALSE;
 
-  @OneToMany(mappedBy = "project")
+  @OneToMany(mappedBy = "project", cascade = { CascadeType.REMOVE, CascadeType.PERSIST })
   private Set<Member> members = new HashSet<>();
 
   @OneToMany(mappedBy = "project")

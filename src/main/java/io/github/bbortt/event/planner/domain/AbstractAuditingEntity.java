@@ -5,7 +5,6 @@ import java.time.Instant;
 import javax.persistence.Column;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
-import org.springframework.boot.actuate.audit.listener.AuditListener;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -23,7 +22,7 @@ public abstract class AbstractAuditingEntity {
 
   @JsonIgnore
   @CreatedDate
-  @Column(updatable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE")
+  @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE", updatable = false)
   private Instant createdDate = Instant.now();
 
   @JsonIgnore

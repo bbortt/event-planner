@@ -1,6 +1,5 @@
 package io.github.bbortt.event.planner.graphql.resolver;
 
-import static io.github.bbortt.event.planner.utils.TestTimeUtils.systemDefaultZoneOffset;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -17,6 +16,10 @@ import io.github.bbortt.event.planner.repository.ProjectRepository;
 import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.ArrayList;
+import java.util.TimeZone;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.jose4j.lang.JoseException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,7 +37,10 @@ class ProjectMutationResolverIntegrationTest extends AbstractApplicationContextA
   private GraphQLTestTemplate graphQLTestTemplate;
 
   @Autowired
-  private Auth0UserRepository auth0UserRepository;
+  private SessionFactory sessionFactory;
+
+  @Autowired
+  private Auth0UserRepository userRepository;
 
   @Autowired
   private ProjectRepository projectRepository;
@@ -43,13 +49,12 @@ class ProjectMutationResolverIntegrationTest extends AbstractApplicationContextA
 
   @BeforeEach
   void beforeEachSetup() {
-    auth0User =
-      new Auth0User(
-        testJwsBuilder.getClaimsSubject(),
-        "ProjectQueryResolverIntegrationTest",
-        "ProjectQueryResolverIntegrationTest@localhost"
-      );
-    auth0UserRepository.save(auth0User);
+    Auth0User user = new Auth0User(
+      testJwsBuilder.getClaimsSubject(),
+      "ProjectMutationResolverIntegrationTest",
+      "ProjectMutationResolverIntegrationTest@localhost"
+    );
+    auth0User = userRepository.save(user);
   }
 
   @Test
@@ -76,26 +81,28 @@ class ProjectMutationResolverIntegrationTest extends AbstractApplicationContextA
     assertTrue(response.isOk());
 
     Long projectId = response.get("$.data.createProject.id", Long.class);
-    Project project = projectRepository
-      .findById(projectId)
-      .orElseThrow(() -> new IllegalArgumentException("Did not find persisted Project!"));
+
+    Session session = sessionFactory.openSession();
+    session.beginTransaction();
+
+    Project project = session.find(Project.class, projectId);
 
     assertEquals(name, project.getName());
     assertEquals(testJwsBuilder.getClaimsSubject(), project.getCreatedBy());
-    assertEquals(
-      OffsetDateTime.of(2021, 12, 29, 8, 0, 0, 0, systemDefaultZoneOffset()).toZonedDateTime().withFixedOffsetZone(),
-      project.getStartTime().withFixedOffsetZone()
-    );
-    assertEquals(
-      OffsetDateTime.of(2021, 12, 30, 8, 0, 0, 0, systemDefaultZoneOffset()).toZonedDateTime().withFixedOffsetZone(),
-      project.getEndTime().withFixedOffsetZone()
-    );
+    assertTrue(OffsetDateTime.of(2021, 12, 29, 7, 0, 0, 0, ZoneOffset.UTC).toZonedDateTime().isEqual(project.getStartTime()));
+    assertTrue(OffsetDateTime.of(2021, 12, 30, 7, 0, 0, 0, ZoneOffset.UTC).toZonedDateTime().isEqual(project.getEndTime()));
+
+    assertEquals(1, project.getMembers().size());
+    assertEquals(0, new ArrayList<>(project.getMembers()).get(0).getPermissions().size());
 
     projectRepository.deleteById(project.getId());
+
+    session.getTransaction().commit();
+    session.close();
   }
 
   @AfterEach
   void afterEachTeardown() {
-    auth0UserRepository.delete(auth0User);
+    userRepository.delete(auth0User);
   }
 }

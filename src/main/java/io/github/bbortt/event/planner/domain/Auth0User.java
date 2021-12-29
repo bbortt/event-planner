@@ -3,11 +3,7 @@ package io.github.bbortt.event.planner.domain;
 import io.github.bbortt.event.planner.service.Auth0UserService.Auth0UserUpdateSafe;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
