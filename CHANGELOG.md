@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.47](https://github.com/bbortt/event-planner/compare/v0.0.46...v0.0.47) (2021-12-29)
+
+
+### Features
+
+* create projects ([11fb536](https://github.com/bbortt/event-planner/commit/11fb536aa973032b8feffafaf2c95d563ed98c95))
+
 ### [0.0.46](https://github.com/bbortt/event-planner/compare/v0.0.44...v0.0.46) (2021-12-28)
 
 
