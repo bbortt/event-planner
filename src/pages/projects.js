@@ -16,7 +16,7 @@ export const Projects = (): React.Element<'div'> => {
   if (projectId) {
     return (
       <div>
-        <Project id={Number(projectId)} />
+        <Project id={projectId} />
       </div>
     );
   }

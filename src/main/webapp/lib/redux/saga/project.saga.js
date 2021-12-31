@@ -31,8 +31,8 @@ function* projectCreateSaga(): typeof SagaIterator {
 
 function* projectsLoad(action: projectsLoadAction) {
   try {
-    const { data } = yield getApolloClient().query<{ project: Project[] }>({ query: ListProjectsQuery });
-    yield put(projectsSet(data.project || []));
+    const { data } = yield getApolloClient().query<{ listProjects: Project[] }>({ query: ListProjectsQuery });
+    yield put(projectsSet(data.listProjects || []));
   } catch (error) {
     yield put(messageAdd('alert', error.message, 'Projekt ladä isch fählgschlage - due doch d Sitä mal neu Ladä!'));
   }

@@ -3,18 +3,23 @@ import * as React from 'react';
 
 import { useRouter } from 'next/router';
 
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
-import Locality from '../../component/project/locality';
+import Localities from '../../component/project/locality';
+import Members from '../../component/project/member';
 
 import { projectByIdSelector } from '../../redux/selector/project.selector';
+import { useEffect } from 'react';
+import { projectsLoad } from '../../redux/action/project.action';
 
-type tabType = 'locations';
+type tabType = 'locations' | 'members';
 
 function showCurrentTabOrLocalities(tab: tabType) {
   switch (tab) {
+    case 'members':
+      return <Members />;
     default:
-      return <Locality />;
+      return <Localities />;
   }
 }
 
@@ -23,12 +28,14 @@ export type projectPropTypes = {
 };
 
 export const Project = ({ id }: projectPropTypes): React.Element<'div'> => {
-  let project = useSelector(projectByIdSelector(id));
+  let project = useSelector(projectByIdSelector(id)) || {};
   let router = useRouter();
 
   const loadTab = (tab: tabType) => () => {
     router.push({ query: { ...router.query, tab } });
   };
+
+  const tab: tabType = router.query.tab || 'localities';
 
   return (
     <div className="project">
@@ -36,8 +43,11 @@ export const Project = ({ id }: projectPropTypes): React.Element<'div'> => {
         <div className="top-bar-left">
           <ul className="menu">
             <li className="menu-text">{project.name}</li>
-            <li>
+            <li className={tab === 'locations' ? 'is-active' : ''}>
               <a onClick={loadTab('locations')}>Lokalitäte</a>
+            </li>
+            <li className={tab === 'members' ? 'is-active' : ''}>
+              <a onClick={loadTab('members')}>Mitglider</a>
             </li>
           </ul>
         </div>
@@ -47,7 +57,7 @@ export const Project = ({ id }: projectPropTypes): React.Element<'div'> => {
         </div>
       </div>
 
-      <div>{showCurrentTabOrLocalities(router.query.tab || 'localities')}</div>
+      <div>{showCurrentTabOrLocalities(tab)}</div>
     </div>
   );
 };

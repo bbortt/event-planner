@@ -3,11 +3,11 @@ import * as React from 'react';
 
 import NewLocalityReveal from './new-locality.reveal';
 
-export const Locality = (): React.Element<'div'> => {
+export const Localities = (): React.Element<'div'> => {
   const newLocationRevealId = 'new-location-reveal';
 
   return (
-    <div className="project-locality">
+    <div className="project-localities">
       <div className="top-bar top-bar-bordered site-header">
         <div className="top-bar-left">
           <ul className="menu">
@@ -24,11 +24,11 @@ export const Locality = (): React.Element<'div'> => {
                 neui Lokalität
               </button>
             </li>
-          </ul>{' '}
+          </ul>
         </div>
       </div>
     </div>
   );
 };
 
-export default Locality;
+export default Localities;
