@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class Auth0UserService {
 
-  private static final Logger logger = LoggerFactory.getLogger(ProjectService.class);
+  private static final Logger logger = LoggerFactory.getLogger(Auth0UserService.class);
 
   private final Auth0UserRepository userRepository;
 
@@ -25,9 +25,6 @@ public class Auth0UserService {
   @PreAuthorize("isAuthenticated()")
   Optional<Auth0User> currentUser() {
     logger.info("Find current user");
-
-    Optional<String> sub = SecurityUtils.getAuth0UserSub();
-    Optional<Auth0User> asdf = userRepository.findById(sub.get());
 
     Optional<Auth0User> user = SecurityUtils.getAuth0UserSub().flatMap(userRepository::findById);
     logger.debug("Current user is: {}", user);

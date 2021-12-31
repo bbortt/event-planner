@@ -20,6 +20,7 @@ public class UserApiImpl implements UserApi {
     this.conversionService = conversionService;
   }
 
+  @Override
   public ResponseEntity<Void> synchronizeUser(String userId, UserDto userDto) {
     Auth0User auth0User = conversionService.convert(userDto, Auth0User.class);
     userService.synchronizeUserById(userId, auth0User);

@@ -9,7 +9,7 @@ import org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter;
 public class EntityManagerFilterConfig {
 
   @Bean
-  public Filter OpenFilter() {
+  public Filter graphqlOpenFilterFilter() {
     return new OpenEntityManagerInViewFilter();
   }
 }
