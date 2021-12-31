@@ -50,7 +50,7 @@
     "@bbortt/owl": "^1.0.4",
     "@commitlint/cli": "^16.0.1",
     "@commitlint/config-conventional": "^16.0.0",
-    "@graphql-codegen/cli": "^2.3.0",
+    "@graphql-codegen/cli": "^2.3.1",
     "@graphql-codegen/flow": "^2.2.1",
     "babel-plugin-transform-flow-strip-types": "^6.22.0",
     "eslint": "^8.5.0",
