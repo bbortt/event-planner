@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.49](https://github.com/bbortt/event-planner/compare/v0.0.48...v0.0.49) (2021-12-31)
+
+
+### CI / CD
+
+* sonar analysis on release branch ([5950eb1](https://github.com/bbortt/event-planner/commit/5950eb110851dc93646c2b4000b47bc5ea2faaf4))
+
 ### [0.0.48](https://github.com/bbortt/event-planner/compare/v0.0.47...v0.0.48) (2021-12-30)
 
 
