@@ -2,9 +2,7 @@ name: Fullbuild
 on:
   push:
     branches:
-      - 'bugfix/*'
-      - 'feature/*'
-      - 'hotfix/*'
+      - '*'
     tags-ignore:
       - '*'
   pull_request:
