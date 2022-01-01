@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.53](https://github.com/bbortt/event-planner/compare/v0.0.52...v0.0.53) (2022-01-01)
+
+
+### CI / CD
+
+* **deps:** bump jose4j from 0.7.2 to 0.7.9 ([aba063a](https://github.com/bbortt/event-planner/commit/aba063a2b4b363345df5cc63fa3b795d50c09322))
+
 ### [0.0.52](https://github.com/bbortt/event-planner/compare/v0.0.51...v0.0.52) (2022-01-01)
 
 
