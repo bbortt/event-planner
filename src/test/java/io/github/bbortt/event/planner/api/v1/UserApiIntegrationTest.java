@@ -9,11 +9,9 @@ import io.github.bbortt.event.planner.config.TestJWSBuilder;
 import io.github.bbortt.event.planner.repository.Auth0UserRepository;
 import java.nio.file.Files;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 

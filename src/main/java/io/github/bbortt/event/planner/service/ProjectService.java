@@ -51,7 +51,7 @@ public class ProjectService {
       throw new IllegalArgumentException("New project cannot have an Id!");
     }
 
-    if (project.getStartTime().isAfter(project.getEndTime())) {
+    if (project.getStartDate().isAfter(project.getEndDate())) {
       throw new IllegalArgumentException("Project cannot end before it starts!");
     }
 

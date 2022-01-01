@@ -39,7 +39,7 @@ export const LocalityCreateForm = ({
           <textarea aria-describedby="Beschreibung" placeholder="Beschribig" value={description} onChange={changeHandler(setDescription)} />
         </label>
 
-        <div className="button-group float-right clearfix">
+        <div className="button-group align-right">
           {children && children}
           <input type="submit" className="button success" aria-label="Erstellen" value="Erstellä" />
         </div>

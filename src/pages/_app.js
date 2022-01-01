@@ -7,11 +7,16 @@ import ApolloProviderWrapper from 'lib/wrapper/apollo-provider.wrapper';
 import ReduxWrapper from 'lib/wrapper/redux.wrapper';
 import SafeHydrate from 'lib/wrapper/safe-hydrate';
 
+import { setDefaultLocale } from 'react-datepicker';
+import de from 'date-fns/locale/de';
+
 import Navbar from 'lib/layout/navbar';
 
 import registerRevealOverlayObserver from 'lib/foundation/register-reveal-overlay-observer';
 
 import './_app.scss';
+
+setDefaultLocale(de);
 
 export type appPropTypes = {
   Component: React.ComponentType<any>,

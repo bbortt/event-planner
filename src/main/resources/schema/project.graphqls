@@ -1,8 +1,8 @@
 input ProjectCreateInput {
   name: String!
   description: String
-  startTime: DateTime!
-  endTime: DateTime!
+  startDate: Date!
+  endDate: Date!
 }
 
 input ProjectUpdateInput {
@@ -17,8 +17,8 @@ type Project {
   token: String!
   name: String!
   description: String
-  startTime: DateTime!
-  endTime: DateTime!
+  startDate: Date!
+  endDate: Date!
   archived: Boolean!
   members: [Member]
   localities: [Locality]

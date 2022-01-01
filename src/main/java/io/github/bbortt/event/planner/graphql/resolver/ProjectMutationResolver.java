@@ -18,11 +18,7 @@ public class ProjectMutationResolver implements GraphQLMutationResolver {
   }
 
   public Project createProject(@Valid ProjectCreateInput projectCreateInput) {
-    Project project = new Project(
-      projectCreateInput.getName(),
-      projectCreateInput.getStartTime().toZonedDateTime(),
-      projectCreateInput.getEndTime().toZonedDateTime()
-    );
+    Project project = new Project(projectCreateInput.getName(), projectCreateInput.getStartDate(), projectCreateInput.getEndDate());
     project.setDescription(projectCreateInput.getDescription());
 
     return projectService.createProject(project);

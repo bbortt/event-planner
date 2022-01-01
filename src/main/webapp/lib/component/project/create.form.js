@@ -5,6 +5,8 @@ import { useState } from 'react';
 import Callout from '../../foundation/callout';
 import ErrorCallout from '../../layout/message/error.callout';
 
+import DatePicker, { registerLocale, setDefaultLocale } from 'react-datepicker';
+
 export type projectCreateFormPropTypes = {
   children: React.ChildrenArray<React.Element<'button'>>,
   submit: (project: ProjectCreateInput) => void,
@@ -16,8 +18,8 @@ export const ProjectCreateForm = ({
 }: projectCreateFormPropTypes): React.Element<typeof Callout | typeof ErrorCallout | 'div'> => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [startTime, setStartTime] = useState(new Date());
-  const [endTime, setEndTime] = useState(new Date());
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
 
   const handleSubmit = event => {
     event.preventDefault();
@@ -25,12 +27,17 @@ export const ProjectCreateForm = ({
     submit({
       name,
       description: description || null,
-      startTime: new Date(startTime),
-      endTime: new Date(endTime),
+      startDate: new Date(startDate),
+      endDate: new Date(endDate),
     });
   };
 
   const changeHandler = setter => event => setter(event.target.value);
+  const dateChangeHandler = dates => {
+    const [start, end] = dates;
+    setStartDate(start);
+    setEndDate(end);
+  };
 
   return (
     <div className="project-create-form">
@@ -44,29 +51,19 @@ export const ProjectCreateForm = ({
           <textarea aria-describedby="Beschreibung" placeholder="Beschribig" value={description} onChange={changeHandler(setDescription)} />
         </label>
         <label>
-          {<span>Start</span>}
-          <input
-            type="datetime-local"
-            aria-describedby="Start Zeit"
-            placeholder="Start"
-            value={startTime}
-            onChange={changeHandler(setStartTime)}
-            required
-          />
-        </label>
-        <label>
-          {<span>Ändi</span>}
-          <input
-            type="datetime-local"
-            aria-describedby="End Zeit"
-            placeholder="Ändi"
-            value={endTime}
-            onChange={changeHandler(setEndTime)}
-            required
+          <span>Datum (Vo/Bis)</span>
+          <DatePicker
+            selected={startDate}
+            onChange={dateChangeHandler}
+            selectsRange
+            startDate={startDate}
+            endDate={endDate}
+            showWeekNumbers
+            dateFormat="dd.MM.yyyy"
           />
         </label>
 
-        <div className="button-group float-right clearfix">
+        <div className="button-group align-right">
           {children && children}
           <input type="submit" className="button success" aria-label="Erstellen" value="Erstellä" />
         </div>

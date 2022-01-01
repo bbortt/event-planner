@@ -7,7 +7,7 @@ export type Scalars = {|
   Boolean: boolean,
   Int: number,
   Float: number,
-  DateTime: any,
+  Date: any,
 |};
 
 export type Auth0User = {|
@@ -91,20 +91,20 @@ export type Project = {|
   __typename?: 'Project',
   archived: $ElementType<Scalars, 'Boolean'>,
   description?: ?$ElementType<Scalars, 'String'>,
-  endTime: $ElementType<Scalars, 'DateTime'>,
+  endTime: $ElementType<Scalars, 'Date'>,
   id: $ElementType<Scalars, 'ID'>,
   localities?: ?Array<?Locality>,
   members?: ?Array<?Member>,
   name: $ElementType<Scalars, 'String'>,
-  startTime: $ElementType<Scalars, 'DateTime'>,
+  startTime: $ElementType<Scalars, 'Date'>,
   token: $ElementType<Scalars, 'String'>,
 |};
 
 export type ProjectCreateInput = {|
   description?: ?$ElementType<Scalars, 'String'>,
-  endTime: $ElementType<Scalars, 'DateTime'>,
+  endDate: $ElementType<Scalars, 'Date'>,
   name: $ElementType<Scalars, 'String'>,
-  startTime: $ElementType<Scalars, 'DateTime'>,
+  startDate: $ElementType<Scalars, 'Date'>,
 |};
 
 export type ProjectUpdateInput = {|

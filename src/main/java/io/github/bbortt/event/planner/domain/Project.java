@@ -1,10 +1,17 @@
 package io.github.bbortt.event.planner.domain;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import org.hibernate.annotations.GenericGenerator;
@@ -38,12 +45,12 @@ public class Project extends AbstractAuditingEntity {
   private String description;
 
   @NotNull
-  @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE", nullable = false, updatable = false)
-  private ZonedDateTime startTime;
+  @Column(nullable = false, updatable = false)
+  private LocalDate startDate;
 
   @NotNull
-  @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE", nullable = false, updatable = false)
-  private ZonedDateTime endTime;
+  @Column(nullable = false, updatable = false)
+  private LocalDate endDate;
 
   @NotNull
   @Column(nullable = false)
@@ -59,10 +66,10 @@ public class Project extends AbstractAuditingEntity {
     // Empty project
   }
 
-  public Project(String name, ZonedDateTime startTime, ZonedDateTime endTime) {
+  public Project(String name, LocalDate startDate, LocalDate endDate) {
     this.name = name;
-    this.startTime = startTime;
-    this.endTime = endTime;
+    this.startDate = startDate;
+    this.endDate = endDate;
   }
 
   public Long getId() {
@@ -93,20 +100,20 @@ public class Project extends AbstractAuditingEntity {
     this.description = description;
   }
 
-  public ZonedDateTime getStartTime() {
-    return startTime;
+  public LocalDate getStartDate() {
+    return startDate;
   }
 
-  public void setStartTime(ZonedDateTime startTime) {
-    this.startTime = startTime;
+  public void setStartDate(LocalDate startDate) {
+    this.startDate = startDate;
   }
 
-  public ZonedDateTime getEndTime() {
-    return endTime;
+  public LocalDate getEndDate() {
+    return endDate;
   }
 
-  public void setEndTime(ZonedDateTime endTime) {
-    this.endTime = endTime;
+  public void setEndDate(LocalDate endDate) {
+    this.endDate = endDate;
   }
 
   public Boolean getArchived() {
