@@ -20,6 +20,7 @@ function* projectCreate(action: projectCreateAction) {
     });
     const createProject: Project = data.createProject;
     yield put(projectAdd(createProject));
+    yield put(messageAdd('success', `Projekt "${createProject.name}" erstellt.`));
   } catch (error) {
     yield put(messageAdd('alert', error.message, 'Projekt erstellä isch fählgschlage!'));
   }

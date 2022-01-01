@@ -7,15 +7,22 @@ import { useAuth0 } from '@auth0/auth0-react';
 import renderFoundationNode from '../../foundation/render-foundation-node';
 
 import AccountDropdown from './account-dropdown';
+import { useRouter } from 'next/router';
 
 export const Navbar = (): React.Element<'div'> => {
   const { error, isAuthenticated, isLoading } = useAuth0();
+  const router = useRouter();
+
   const [navbarVisible, setNavbarVisible] = useState(false);
 
   const initializeNavbar = (node: React.ElementRef<React.ElementType>) => {
     if (!navbarVisible) {
       renderFoundationNode(node, () => setNavbarVisible(true));
     }
+  };
+
+  const navigate = (href: string) => {
+    router.push(href);
   };
 
   if (isLoading || error) {
@@ -35,7 +42,7 @@ export const Navbar = (): React.Element<'div'> => {
             <li className="menu-text">EVENT PLANER</li>
             {isAuthenticated && (
               <li>
-                <a href="/projects">Miner Projekt</a>
+                <a onClick={() => navigate('projects')}>Miner Projekt</a>
               </li>
             )}
           </ul>
