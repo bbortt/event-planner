@@ -1,4 +1,4 @@
-name: Docker Build
+name: Publish
 on:
   push:
     branches:
@@ -68,12 +68,3 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('build.gradle', 'package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-
-  deploy:
-    name: Deploy event-planner to DigitalOcean
-    runs-on: ubuntu-20.04
-    environment: docker
-    needs: publish
-    steps:
-      - uses: actions/checkout@v2
-      - run: |
-          echo "Hi there! I am deploying event-planner.."

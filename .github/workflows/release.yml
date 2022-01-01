@@ -1,4 +1,4 @@
-name: Release Version
+name: Release
 on:
   push:
     branches:
@@ -10,7 +10,7 @@ on:
       - 'CHANGELOG.md'
 jobs:
   release:
-    name: Bump Standard-Version
+    name: Bump Release Version
     runs-on: ubuntu-20.04
     environment: release
     steps:
