@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.52](https://github.com/bbortt/event-planner/compare/v0.0.51...v0.0.52) (2022-01-01)
+
+
+### CI / CD
+
+* report to sonar only if token available ([f7d17bb](https://github.com/bbortt/event-planner/commit/f7d17bb2a2c48293f0e7e9dbb97ac52712e9effe))
+
+
+### Other
+
+* hide navigation for unauthenticated users ([84be76d](https://github.com/bbortt/event-planner/commit/84be76dfd5127890ed772680d8bd8474c1d0c7aa))
+* move project navbar into its own component ([7cce1a9](https://github.com/bbortt/event-planner/commit/7cce1a9438017ababc9c3b6ed8412464f23246bb))
+* prepare locality input ([1dada14](https://github.com/bbortt/event-planner/commit/1dada149d3c638b4f478f84f4f1e153d50f9d651))
+* update node deps ([eb4ad1b](https://github.com/bbortt/event-planner/commit/eb4ad1b95396313746b16617aad1e7f0c0cd3542))
+
 ### [0.0.51](https://github.com/bbortt/event-planner/compare/v0.0.50...v0.0.51) (2021-12-31)
 
 
