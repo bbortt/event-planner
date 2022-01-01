@@ -7,14 +7,14 @@ export const projectsLoadType = 'project:load-list';
 export const projectsSetType = 'project:set';
 
 export type projectAddAction = { type: 'project:add', payload: { project: Project } };
-export type projectCreateAction = { type: 'project:create', payload: { project: Project_Insert_Input, user: Auth0_User } };
+export type projectCreateAction = { type: 'project:create', payload: { project: ProjectCreateInput } };
 export type projectsLoadAction = { type: 'project:load-list', payload: { count?: number, offset?: number } };
 export type projectsSetAction = { type: 'project:set', payload: { projects: Project[] } };
 
 export const projectAdd = (project: Project): projectAddAction => ({ type: 'project:add', payload: { project } });
-export const projectCreate = (project: Project_Insert_Input, user: Auth0_User): projectCreateAction => ({
+export const projectCreate = (project: ProjectCreateInput): projectCreateAction => ({
   type: 'project:create',
-  payload: { project, user },
+  payload: { project },
 });
 export const projectsLoad = (count?: number, offset?: number): projectsLoadAction => ({
   type: 'project:load-list',

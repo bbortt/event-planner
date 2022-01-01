@@ -4,8 +4,6 @@ import { useEffect, useState } from 'react';
 
 import { useDispatch } from 'react-redux';
 
-import { useAuth0 } from '@auth0/auth0-react';
-
 import { projectCreate } from '../../redux/action/project.action';
 
 import ProjectCreateForm from './create.form';
@@ -20,11 +18,10 @@ export const NewProjectReveal = ({ revealId }: newProjectRevealPropTypes): React
   // $FlowFixMe
   useEffect(() => $(document).on('open.zf.reveal', () => setKey(k => k + 1)), []);
 
-  const { user } = useAuth0();
   const dispatch = useDispatch();
 
-  const submit = (project: Project_Insert_Input) => {
-    dispatch(projectCreate(project, user));
+  const submit = (project: ProjectCreateInput) => {
+    dispatch(projectCreate(project));
     // $FlowFixMe
     jQuery(`#${revealId}`).foundation('close');
   };

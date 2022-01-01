@@ -1,10 +1,11 @@
 package io.github.bbortt.event.planner.service;
 
+import io.github.bbortt.event.planner.domain.Member;
 import io.github.bbortt.event.planner.domain.Project;
 import io.github.bbortt.event.planner.repository.ProjectRepository;
 import io.github.bbortt.event.planner.security.SecurityUtils;
+import java.util.HashSet;
 import java.util.Objects;
-import net.bytebuddy.pool.TypePool.Resolution.Illegal;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,9 +21,15 @@ public class ProjectService {
 
   private static final Logger logger = LoggerFactory.getLogger(ProjectService.class);
 
+  private final Auth0UserService userService;
+  private final PermissionService permissionService;
+
   private final ProjectRepository projectRepository;
 
-  public ProjectService(ProjectRepository projectRepository) {
+  public ProjectService(Auth0UserService userService, PermissionService permissionService, ProjectRepository projectRepository) {
+    this.userService = userService;
+    this.permissionService = permissionService;
+
     this.projectRepository = projectRepository;
   }
 
@@ -31,7 +38,7 @@ public class ProjectService {
   public Page<Project> getProjects(Pageable pageable) {
     String sub = SecurityUtils.getAuth0UserSub().orElseThrow(IllegalAccessError::new);
 
-    logger.debug("Requesting projects for user '{}'", sub);
+    logger.info("List projects for user '{}'", sub);
 
     return projectRepository.findByAuth0UserIdPaged(sub, pageable);
   }
@@ -41,21 +48,33 @@ public class ProjectService {
   @PreAuthorize("isAuthenticated()")
   public Project createProject(Project project) {
     if (!Objects.isNull(project.getId())) {
-      throw new IllegalArgumentException("New project cannot have an ID!");
+      throw new IllegalArgumentException("New project cannot have an Id!");
     }
 
     if (project.getStartTime().isAfter(project.getEndTime())) {
       throw new IllegalArgumentException("Project cannot end before it starts!");
     }
 
-    return projectRepository.save(project);
+    logger.info("Create new project: {}", project);
+
+    Member rootMember = new Member(project, userService.currentUser().orElseThrow(IllegalAccessError::new));
+    rootMember.setPermissions(new HashSet<>(permissionService.findAll()));
+    rootMember.setAccepted(SecurityUtils.getAuth0UserSub().orElseThrow(IllegalAccessError::new));
+
+    project.getMembers().add(rootMember);
+
+    Project newProject = projectRepository.save(project);
+    logger.debug("New project persisted: {}", newProject);
+    return newProject;
   }
 
   @Modifying
   @Transactional
   @PreAuthorize("isAuthenticated()")
   public Project updateProject(Long id, String name, String description, Boolean archived) {
-    Project project = projectRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Project must have an existing ID!"));
+    Project project = projectRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Project must have an existing Id!"));
+
+    logger.info("Update project by id '{}'", id);
 
     if (StringUtils.isNotEmpty(name)) {
       project.setName(name);
@@ -67,6 +86,8 @@ public class ProjectService {
       project.setArchived(archived);
     }
 
-    return projectRepository.save(project);
+    Project updatedProject = projectRepository.save(project);
+    logger.debug("Project updated: {}", updatedProject);
+    return updatedProject;
   }
 }

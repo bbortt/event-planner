@@ -5,16 +5,19 @@ import { useRouter } from 'next/router';
 
 import { useSelector } from 'react-redux';
 
-import Location from '../../component/project/location';
+import Localities from '../../component/project/locality';
+import Members from '../../component/project/member';
+import { ProjectNavbar } from '../../component/project/navbar';
+import type { tabType } from '../../component/project/navbar';
 
 import { projectByIdSelector } from '../../redux/selector/project.selector';
 
-type tabType = 'locations';
-
-function showCurrentTabOrLocations(tab: tabType) {
+function showCurrentTabOrLocalities(tab: tabType) {
   switch (tab) {
-    case 'locations':
-      return <Location />;
+    case 'members':
+      return <Members />;
+    default:
+      return <Localities />;
   }
 }
 
@@ -23,31 +26,16 @@ export type projectPropTypes = {
 };
 
 export const Project = ({ id }: projectPropTypes): React.Element<'div'> => {
-  let project = useSelector(projectByIdSelector(id));
-  let router = useRouter();
+  const project = useSelector(projectByIdSelector(id)) || {};
+  const router = useRouter();
 
-  const loadTab = (tab: tabType) => () => {
-    router.push({ query: { ...router.query, tab } });
-  };
+  const tab: tabType = router.query.tab || 'localities';
 
   return (
     <div className="project">
-      <div className="top-bar site-header">
-        <div className="top-bar-left">
-          <ul className="menu">
-            <li className="menu-text">{project.name}</li>
-            <li>
-              <a onClick={loadTab('locations')}>Lokalitäte</a>
-            </li>
-          </ul>
-        </div>
+      <ProjectNavbar project={project} tab={tab} />
 
-        <div className="top-bar-right">
-          <ul className="dropdown menu" data-dropdown-menu></ul>
-        </div>
-      </div>
-
-      <div>{showCurrentTabOrLocations(router.query.tab || 'locations')}</div>
+      <div>{showCurrentTabOrLocalities(tab)}</div>
     </div>
   );
 };

@@ -2,6 +2,77 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.52](https://github.com/bbortt/event-planner/compare/v0.0.51...v0.0.52) (2022-01-01)
+
+
+### CI / CD
+
+* report to sonar only if token available ([f7d17bb](https://github.com/bbortt/event-planner/commit/f7d17bb2a2c48293f0e7e9dbb97ac52712e9effe))
+
+
+### Other
+
+* hide navigation for unauthenticated users ([84be76d](https://github.com/bbortt/event-planner/commit/84be76dfd5127890ed772680d8bd8474c1d0c7aa))
+* move project navbar into its own component ([7cce1a9](https://github.com/bbortt/event-planner/commit/7cce1a9438017ababc9c3b6ed8412464f23246bb))
+* prepare locality input ([1dada14](https://github.com/bbortt/event-planner/commit/1dada149d3c638b4f478f84f4f1e153d50f9d651))
+* update node deps ([eb4ad1b](https://github.com/bbortt/event-planner/commit/eb4ad1b95396313746b16617aad1e7f0c0cd3542))
+
+### [0.0.51](https://github.com/bbortt/event-planner/compare/v0.0.50...v0.0.51) (2021-12-31)
+
+
+### Other
+
+* in-project navigation ([82b76e7](https://github.com/bbortt/event-planner/commit/82b76e78855895e12c34a810c07ec0054d10063e))
+
+### [0.0.50](https://github.com/bbortt/event-planner/compare/v0.0.49...v0.0.50) (2021-12-31)
+
+
+### Other
+
+* simple sonar fixes ([cb882fb](https://github.com/bbortt/event-planner/commit/cb882fbf0b72705f0c40a1a577de9e9c7fe195a8))
+
+### [0.0.49](https://github.com/bbortt/event-planner/compare/v0.0.48...v0.0.49) (2021-12-31)
+
+
+### CI / CD
+
+* sonar analysis on release branch ([5950eb1](https://github.com/bbortt/event-planner/commit/5950eb110851dc93646c2b4000b47bc5ea2faaf4))
+
+### [0.0.48](https://github.com/bbortt/event-planner/compare/v0.0.47...v0.0.48) (2021-12-30)
+
+
+### Features
+
+* finish backend implementation of project creation ([f6fe0d9](https://github.com/bbortt/event-planner/commit/f6fe0d9b0222e688cca4afd6aaf461a50c9326e3))
+
+### [0.0.47](https://github.com/bbortt/event-planner/compare/v0.0.46...v0.0.47) (2021-12-29)
+
+
+### Features
+
+* create projects ([11fb536](https://github.com/bbortt/event-planner/commit/11fb536aa973032b8feffafaf2c95d563ed98c95))
+
+### [0.0.46](https://github.com/bbortt/event-planner/compare/v0.0.44...v0.0.46) (2021-12-28)
+
+
+### Bug Fixes
+
+* tracking version 0.0.45 ([77e19dd](https://github.com/bbortt/event-planner/commit/77e19dd9d9f48e1aeb98a7b2a0158a493d32efe1))
+
+
+### Other
+
+* create and update project - backend ([dcff7a4](https://github.com/bbortt/event-planner/commit/dcff7a430991ee554e3b2aabbfe36c3d155ad876))
+* **release:** 0.0.1 ([3a6fdd0](https://github.com/bbortt/event-planner/commit/3a6fdd0cbfffdabad70c929acb20e7a8e2eccb2e))
+* remove duplicate version bump file ([d2d820a](https://github.com/bbortt/event-planner/commit/d2d820a40d83a7bbfc8d53d7d0c7339271e6ccc4))
+
+
+### CI / CD
+
+* **deps:** bump swagger-annotations from 1.6.3 to 1.6.4 ([96494fa](https://github.com/bbortt/event-planner/commit/96494fa793ac6d1e6f46eb1d26f9c45da23f54fb))
+* fork tests ([14f6597](https://github.com/bbortt/event-planner/commit/14f659788040c146100a7f8b91421c89e7e175bb))
+* hotfix version tracking files ([97602a7](https://github.com/bbortt/event-planner/commit/97602a72db520d2bf85b9b8da24b252b7ee8c490))
+
 ### 0.0.1 (2021-12-26)
 
 

@@ -1,10 +1,6 @@
 package io.github.bbortt.event.planner.config;
 
-import graphql.schema.Coercing;
-import graphql.schema.CoercingParseLiteralException;
-import graphql.schema.CoercingParseValueException;
-import graphql.schema.CoercingSerializeException;
-import graphql.schema.GraphQLScalarType;
+import graphql.schema.*;
 import java.time.OffsetDateTime;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

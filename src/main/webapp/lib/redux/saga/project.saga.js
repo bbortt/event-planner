@@ -3,45 +3,24 @@ import { SagaIterator } from '@redux-saga/core';
 import { all, put, takeLatest } from 'redux-saga/effects';
 
 import { getApolloClient } from '../../apollo/client';
-import { ProjectInsertMutation } from '../../apollo/mutation/project.mutation';
+import { CreateProjectMutation } from '../../apollo/mutation/project.mutation';
 import { ListProjectsQuery } from '../../apollo/query/project.query';
 
-import { allProjectPermissions } from '../../model/project-permission';
-
-import { memberApprove } from '../action/member.action';
 import type { projectCreateAction, projectsLoadAction } from '../action/project.action';
 import { projectAdd, projectCreateType, projectsLoadType, projectsSet } from '../action/project.action';
 import { messageAdd } from '../action/message.action';
 
 function* projectCreate(action: projectCreateAction) {
-  const { project, user } = action.payload;
-
-  const projectInsertInput = ((project: any): Project_Insert_Input);
-
-  // Immediately add membership and default permissions
-  const permissionData = allProjectPermissions.map(permission => ({ permission_id: permission }));
-
-  console.log('permissionData: ', permissionData);
-
-  projectInsertInput.members = {
-    data: [
-      {
-        permissions: {
-          data: permissionData,
-        },
-      },
-    ],
-  };
+  const { project } = action.payload;
 
   try {
-    const { data } = yield getApolloClient().mutate<{ insert_project_one: Project }>(ProjectInsertMutation, {
-      project: projectInsertInput,
+    const { data } = yield getApolloClient().mutate<{ createProject: Project }>({
+      mutation: CreateProjectMutation,
+      variables: { project },
     });
-    const createdProject: Project = data.insert_project_one;
-    for (let member of createdProject.members) {
-      yield put(memberApprove(member.id));
-    }
-    yield put(projectAdd(createdProject));
+    const createProject: Project = data.createProject;
+    yield put(projectAdd(createProject));
+    yield put(messageAdd('success', `Projekt "${createProject.name}" erstellt.`));
   } catch (error) {
     yield put(messageAdd('alert', error.message, 'Projekt erstellä isch fählgschlage!'));
   }
@@ -53,8 +32,8 @@ function* projectCreateSaga(): typeof SagaIterator {
 
 function* projectsLoad(action: projectsLoadAction) {
   try {
-    const { data } = yield getApolloClient().query<{ project: Project[] }>({ query: ListProjectsQuery });
-    yield put(projectsSet(data.project || []));
+    const { data } = yield getApolloClient().query<{ listProjects: Project[] }>({ query: ListProjectsQuery });
+    yield put(projectsSet(data.listProjects || []));
   } catch (error) {
     yield put(messageAdd('alert', error.message, 'Projekt ladä isch fählgschlage - due doch d Sitä mal neu Ladä!'));
   }

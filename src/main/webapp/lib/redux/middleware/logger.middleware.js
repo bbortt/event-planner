@@ -4,7 +4,7 @@ import type { applicationAction, applicationDispatch, applicationState } from '.
 
 const loggerMiddleware: Middleware<applicationState, applicationAction, applicationDispatch> = middleware => next => action => {
   console.log('dispatching', action);
-  let result = next(action);
+  const result = next(action);
   console.log(`next state: ${JSON.stringify(middleware.getState())}`);
   return result;
 };

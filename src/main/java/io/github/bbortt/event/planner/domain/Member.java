@@ -19,15 +19,15 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
-import org.springframework.boot.actuate.audit.listener.AuditListener;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Table
 @Entity
-@EntityListeners(AuditListener.class)
+@EntityListeners({ AuditingEntityListener.class })
 public class Member {
 
   @Id
@@ -48,7 +48,7 @@ public class Member {
 
   @JsonIgnore
   @CreatedBy
-  @Column(nullable = false, length = 50, updatable = false)
+  @Column(length = 50, nullable = false, updatable = false)
   private String createdBy;
 
   @JsonIgnore

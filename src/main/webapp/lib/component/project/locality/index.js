@@ -1,13 +1,13 @@
 // @flow
 import * as React from 'react';
 
-import NewLocationReveal from './new-location.reveal';
+import NewLocalityReveal from './new-locality.reveal';
 
-export const Location = (): React.Element<'div'> => {
+export const Localities = (): React.Element<'div'> => {
   const newLocationRevealId = 'new-location-reveal';
 
   return (
-    <div className="project-location">
+    <div className="project-localities">
       <div className="top-bar top-bar-bordered site-header">
         <div className="top-bar-left">
           <ul className="menu">
@@ -18,17 +18,17 @@ export const Location = (): React.Element<'div'> => {
         <div className="top-bar-right">
           <ul className="menu button-group">
             <li>
-              <NewLocationReveal revealId={newLocationRevealId} />
+              <NewLocalityReveal revealId={newLocationRevealId} />
 
               <button type="button" className="button success" data-open={newLocationRevealId} aria-label="Neuer Standort erfassen">
                 neui Lokalität
               </button>
             </li>
-          </ul>{' '}
+          </ul>
         </div>
       </div>
     </div>
   );
 };
 
-export default Location;
+export default Localities;
