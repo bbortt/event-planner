@@ -9,7 +9,7 @@ import renderFoundationNode from '../../foundation/render-foundation-node';
 import AccountDropdown from './account-dropdown';
 
 export const Navbar = (): React.Element<'div'> => {
-  const { error, isLoading } = useAuth0();
+  const { error, isAuthenticated, isLoading } = useAuth0();
   const [navbarVisible, setNavbarVisible] = useState(false);
 
   const initializeNavbar = (node: React.ElementRef<React.ElementType>) => {
@@ -33,9 +33,11 @@ export const Navbar = (): React.Element<'div'> => {
         <div className="top-bar-left">
           <ul className="dropdown menu" data-dropdown-menu>
             <li className="menu-text">EVENT PLANER</li>
-            <li>
-              <a href="/projects">Miner Projekt</a>
-            </li>
+            {isAuthenticated && (
+              <li>
+                <a href="/projects">Miner Projekt</a>
+              </li>
+            )}
           </ul>
         </div>
 
