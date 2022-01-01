@@ -9,7 +9,7 @@ import { messagesSelector } from '../redux/selector/message.selector';
 import Callout from '../foundation/callout';
 
 export const MessageList = (): React.Element<'div'> => {
-  let messages = useSelector(messagesSelector);
+  const messages = useSelector(messagesSelector);
   const dispatch = useDispatch();
 
   const closeMessage = (id: number) => dispatch(messageDelete(id));

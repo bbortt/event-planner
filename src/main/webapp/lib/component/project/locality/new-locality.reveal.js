@@ -2,12 +2,15 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 
-import { useDispatch } from 'react-redux';
+import { useRouter } from 'next/router';
 
-import { projectCreate } from '../../../redux/action/project.action';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { localityCreate } from '../../../model/project-permission';
 
 import LocalityCreateForm from './create.form';
 import renderFoundationNode from '../../../foundation/render-foundation-node';
+import { projectByIdSelector } from '../../../redux/selector/project.selector';
 
 export type newLocationRevealPropTypes = {
   revealId: string,
@@ -18,11 +21,13 @@ export const NewLocalityReveal = ({ revealId }: newLocationRevealPropTypes): Rea
   // $FlowFixMe
   useEffect(() => $(document).on('open.zf.reveal', () => setKey(k => k + 1)), []);
 
+  const router = useRouter();
+  const project = useSelector(projectByIdSelector(router.query.projectId)) || {};
+
   const dispatch = useDispatch();
 
   const submit = (locality: CreateLocalityInput) => {
-    // TODO: use Location_Insert_Input
-    // dispatch(projectCreate(project));
+    dispatch(localityCreate(project, locality));
     // $FlowFixMe
     jQuery(`#${revealId}`).foundation('close');
   };

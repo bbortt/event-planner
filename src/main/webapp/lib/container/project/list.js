@@ -13,7 +13,7 @@ import NewProjectReveal from '../../component/project/new-project.reveal';
 import ProjectCard from '../../component/project/card';
 
 export const ProjectList = (): React.Element<'div'> => {
-  let projects = useSelector(projectsSelector());
+  const projects = useSelector(projectsSelector());
   const dispatch = useDispatch();
 
   useEffect(() => dispatch(projectsLoad()), [dispatch]);

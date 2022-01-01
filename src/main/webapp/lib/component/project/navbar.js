@@ -11,13 +11,11 @@ export type projectNavbarPropTypes = {
 };
 
 export const ProjectNavbar = ({ project, tab }: projectNavbarPropTypes): React.Element<'div'> => {
-  let router = useRouter();
+  const router = useRouter();
 
   const loadTab = (tab: tabType) => () => {
     router.push({ query: { ...router.query, tab } });
   };
-
-  console.log('tab: ', tab);
 
   return (
     <div className="project-navbar top-bar site-header">

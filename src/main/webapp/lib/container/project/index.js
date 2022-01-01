@@ -26,8 +26,8 @@ export type projectPropTypes = {
 };
 
 export const Project = ({ id }: projectPropTypes): React.Element<'div'> => {
-  let project = useSelector(projectByIdSelector(id)) || {};
-  let router = useRouter();
+  const project = useSelector(projectByIdSelector(id)) || {};
+  const router = useRouter();
 
   const tab: tabType = router.query.tab || 'localities';
 
