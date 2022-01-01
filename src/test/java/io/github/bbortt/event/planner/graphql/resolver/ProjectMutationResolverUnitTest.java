@@ -7,8 +7,7 @@ import io.github.bbortt.event.planner.domain.Project;
 import io.github.bbortt.event.planner.graphql.dto.ProjectCreateInput;
 import io.github.bbortt.event.planner.graphql.dto.ProjectUpdateInput;
 import io.github.bbortt.event.planner.service.ProjectService;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
+import java.time.LocalDate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,8 +33,8 @@ class ProjectMutationResolverUnitTest {
     ProjectCreateInput projectCreateInput = new ProjectCreateInput();
     projectCreateInput.setName("name");
     projectCreateInput.setDescription("description");
-    projectCreateInput.setStartTime(OffsetDateTime.of(2021, 12, 28, 9, 0, 0, 0, ZoneOffset.UTC));
-    projectCreateInput.setEndTime(OffsetDateTime.of(2021, 12, 29, 9, 0, 0, 0, ZoneOffset.UTC));
+    projectCreateInput.setStartDate(LocalDate.of(2021, 12, 28));
+    projectCreateInput.setEndDate(LocalDate.of(2021, 12, 29));
 
     fixture.createProject(projectCreateInput);
 
@@ -44,8 +43,8 @@ class ProjectMutationResolverUnitTest {
     Project project = argumentCaptor.getValue();
     assertEquals(projectCreateInput.getName(), project.getName());
     assertEquals(projectCreateInput.getDescription(), project.getDescription());
-    assertEquals(projectCreateInput.getStartTime().toZonedDateTime(), project.getStartTime());
-    assertEquals(projectCreateInput.getEndTime().toZonedDateTime(), project.getEndTime());
+    assertEquals(projectCreateInput.getStartDate(), project.getStartDate());
+    assertEquals(projectCreateInput.getEndDate(), project.getEndDate());
   }
 
   @Test

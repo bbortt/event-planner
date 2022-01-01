@@ -9,8 +9,7 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import io.github.bbortt.event.planner.domain.Auth0User;
 import io.github.bbortt.event.planner.domain.Project;
 import io.github.bbortt.event.planner.repository.ProjectRepository;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
 import org.apache.http.auth.BasicUserPrincipal;
@@ -62,8 +61,8 @@ class ProjectServiceUnitTest {
     doReturn(Optional.of(new Auth0User())).when(userServiceMock).currentUser();
 
     Project newProject = new Project();
-    newProject.setStartTime(ZonedDateTime.of(2021, 12, 28, 9, 0, 0, 0, ZoneId.systemDefault()));
-    newProject.setEndTime(ZonedDateTime.of(2021, 12, 29, 9, 0, 0, 0, ZoneId.systemDefault()));
+    newProject.setStartDate(LocalDate.of(2021, 12, 28));
+    newProject.setEndDate(LocalDate.of(2021, 12, 28));
 
     fixture.createProject(newProject);
 
@@ -88,8 +87,8 @@ class ProjectServiceUnitTest {
   @Test
   void createProjectCannotEndBeforeItStarts() {
     Project newProject = new Project();
-    newProject.setStartTime(ZonedDateTime.of(2021, 12, 28, 9, 0, 0, 0, ZoneId.systemDefault()));
-    newProject.setEndTime(ZonedDateTime.of(2021, 12, 27, 9, 0, 0, 0, ZoneId.systemDefault()));
+    newProject.setStartDate(LocalDate.of(2021, 12, 28));
+    newProject.setEndDate(LocalDate.of(2021, 12, 27));
 
     IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> fixture.createProject(newProject));
 

@@ -1,5 +1,6 @@
 @import 'settings';
 @import '~foundation-sites/scss/foundation';
+@import '~react-datepicker/dist/react-datepicker.css';
 
 @include foundation-everything;
 
@@ -22,6 +23,13 @@ html {
           background-color: $white;
         }
       }
+    }
+
+    /**
+     * `react-datepicker` / `foundation-sites` compatibility
+     */
+    .reveal {
+      overflow-y: visible;
     }
   }
 }

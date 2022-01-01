@@ -1,6 +1,6 @@
 package io.github.bbortt.event.planner.graphql.dto;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDate;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -14,10 +14,10 @@ public class ProjectCreateInput {
   private String description;
 
   @NotNull
-  private OffsetDateTime startTime;
+  private LocalDate startDate;
 
   @NotNull
-  private OffsetDateTime endTime;
+  private LocalDate endDate;
 
   public String getName() {
     return name;
@@ -35,19 +35,19 @@ public class ProjectCreateInput {
     this.description = description;
   }
 
-  public OffsetDateTime getStartTime() {
-    return startTime;
+  public LocalDate getStartDate() {
+    return startDate;
   }
 
-  public void setStartTime(OffsetDateTime startTime) {
-    this.startTime = startTime;
+  public void setStartDate(LocalDate startDate) {
+    this.startDate = startDate;
   }
 
-  public OffsetDateTime getEndTime() {
-    return endTime;
+  public LocalDate getEndDate() {
+    return endDate;
   }
 
-  public void setEndTime(OffsetDateTime endTime) {
-    this.endTime = endTime;
+  public void setEndDate(LocalDate endDate) {
+    this.endDate = endDate;
   }
 }

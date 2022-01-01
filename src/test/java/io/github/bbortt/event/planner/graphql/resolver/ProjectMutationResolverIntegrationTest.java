@@ -14,10 +14,8 @@ import io.github.bbortt.event.planner.domain.Project;
 import io.github.bbortt.event.planner.repository.Auth0UserRepository;
 import io.github.bbortt.event.planner.repository.ProjectRepository;
 import java.io.IOException;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.TimeZone;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.jose4j.lang.JoseException;
@@ -74,8 +72,8 @@ class ProjectMutationResolverIntegrationTest extends AbstractApplicationContextA
           objectMapper
             .createObjectNode()
             .put("name", name)
-            .put("startTime", "2021-12-29T07:00:00.000Z")
-            .put("endTime", "2021-12-30T07:00:00.000Z")
+            .put("startDate", "2021-12-29T07:00:00.000Z")
+            .put("endDate", "2021-12-30T07:00:00.000Z")
         )
     );
     assertTrue(response.isOk());
@@ -89,8 +87,8 @@ class ProjectMutationResolverIntegrationTest extends AbstractApplicationContextA
 
     assertEquals(name, project.getName());
     assertEquals(testJwsBuilder.getClaimsSubject(), project.getCreatedBy());
-    assertTrue(OffsetDateTime.of(2021, 12, 29, 7, 0, 0, 0, ZoneOffset.UTC).toZonedDateTime().isEqual(project.getStartTime()));
-    assertTrue(OffsetDateTime.of(2021, 12, 30, 7, 0, 0, 0, ZoneOffset.UTC).toZonedDateTime().isEqual(project.getEndTime()));
+    assertTrue(LocalDate.of(2021, 12, 29).isEqual(project.getStartDate()));
+    assertTrue(LocalDate.of(2021, 12, 30).isEqual(project.getEndDate()));
 
     assertEquals(1, project.getMembers().size());
     assertEquals(0, new ArrayList<>(project.getMembers()).get(0).getPermissions().size());

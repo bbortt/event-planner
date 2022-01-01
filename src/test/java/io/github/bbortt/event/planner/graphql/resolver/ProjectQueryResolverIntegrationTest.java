@@ -15,7 +15,7 @@ import io.github.bbortt.event.planner.repository.Auth0UserRepository;
 import io.github.bbortt.event.planner.repository.MemberRepository;
 import io.github.bbortt.event.planner.repository.ProjectRepository;
 import java.io.IOException;
-import java.time.ZonedDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import org.jose4j.lang.JoseException;
@@ -28,6 +28,8 @@ class ProjectQueryResolverIntegrationTest extends AbstractApplicationContextAwar
 
   private static final String PROJECT_2_NAME = "project 2";
   private final ObjectMapper objectMapper = new ObjectMapper();
+  private final List<Member> members = new ArrayList<>();
+  private final List<Project> projects = new ArrayList<>();
 
   @Autowired
   private TestJWSBuilder testJwsBuilder;
@@ -45,8 +47,6 @@ class ProjectQueryResolverIntegrationTest extends AbstractApplicationContextAwar
   private MemberRepository memberRepository;
 
   private Auth0User auth0User;
-  private final List<Member> members = new ArrayList<>();
-  private final List<Project> projects = new ArrayList<>();
 
   @BeforeEach
   void beforeEachSetup() {
@@ -58,11 +58,11 @@ class ProjectQueryResolverIntegrationTest extends AbstractApplicationContextAwar
       );
     userRepository.save(auth0User);
 
-    Project project1 = new Project("project 1", ZonedDateTime.now(), ZonedDateTime.now());
+    Project project1 = new Project("project 1", LocalDate.now(), LocalDate.now());
     project1.setCreatedBy(auth0User.getUserId());
-    Project project2 = new Project(PROJECT_2_NAME, ZonedDateTime.now(), ZonedDateTime.now());
+    Project project2 = new Project(PROJECT_2_NAME, LocalDate.now(), LocalDate.now());
     project2.setCreatedBy(auth0User.getUserId());
-    Project project3 = new Project("project 3", ZonedDateTime.now(), ZonedDateTime.now());
+    Project project3 = new Project("project 3", LocalDate.now(), LocalDate.now());
     project3.setCreatedBy(auth0User.getUserId());
 
     projects.addAll(projectRepository.saveAll(List.of(project1, project2, project3)));
