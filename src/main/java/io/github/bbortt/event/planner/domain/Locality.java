@@ -55,6 +55,14 @@ public class Locality extends AbstractAuditingEntity {
   @OneToMany(mappedBy = "parent")
   private Set<Locality> children = new HashSet<>();
 
+  public Locality() {
+    // Empty Locality
+  }
+
+  public Locality(String name) {
+    this.name = name;
+  }
+
   public Long getId() {
     return id;
   }

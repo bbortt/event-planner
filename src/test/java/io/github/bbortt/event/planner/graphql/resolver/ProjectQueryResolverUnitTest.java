@@ -30,7 +30,7 @@ class ProjectQueryResolverUnitTest {
   void beforeEachSetup() {
     Project project = new Project();
 
-    doReturn(new PageImpl<>(List.of(project))).when(projectServiceMock).getProjects(any(Pageable.class));
+    doReturn(new PageImpl<>(List.of(project))).when(projectServiceMock).findAll(any(Pageable.class));
 
     fixture = new ProjectQueryResolver(projectServiceMock);
   }
@@ -42,7 +42,7 @@ class ProjectQueryResolverUnitTest {
 
     fixture.listProjects(Optional.of(count), Optional.of(offset));
 
-    verify(projectServiceMock).getProjects(PageRequest.of(offset, count));
+    verify(projectServiceMock).findAll(PageRequest.of(offset, count));
   }
 
   @Test
@@ -54,6 +54,6 @@ class ProjectQueryResolverUnitTest {
     fixture.listProjects(Optional.empty(), Optional.of(offset));
     fixture.listProjects(Optional.empty(), Optional.empty());
 
-    verify(projectServiceMock, times(3)).getProjects(Pageable.unpaged());
+    verify(projectServiceMock, times(3)).findAll(Pageable.unpaged());
   }
 }

@@ -51,7 +51,7 @@ class ProjectServiceUnitTest {
 
     Pageable pageable = Pageable.unpaged();
 
-    fixture.getProjects(pageable);
+    fixture.findAll(pageable);
 
     verify(projectRepositoryMock).findByAuth0UserIdPaged(sub, pageable);
   }

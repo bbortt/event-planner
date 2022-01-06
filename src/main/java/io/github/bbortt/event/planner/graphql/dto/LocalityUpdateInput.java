@@ -2,7 +2,7 @@ package io.github.bbortt.event.planner.graphql.dto;
 
 import javax.validation.constraints.Size;
 
-public class UpdateLocalityInput {
+public class LocalityUpdateInput {
 
   @Size(min = 1, max = 50)
   private String name;
