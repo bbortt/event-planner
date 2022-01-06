@@ -1,10 +1,10 @@
-input CreateLocalityInput {
+input LocalityCreateInput {
   name: String!
   description: String
   parentLocalityId: ID
 }
 
-input UpdateLocalityInput {
+input LocalityUpdateInput {
   name: String
   description: String
 }
@@ -24,7 +24,7 @@ extend type Query {
 }
 
 extend type Mutation {
-  createLocality(projectId: ID!, locality: CreateLocalityInput!): Locality!
-  updateLocality(locality: UpdateLocalityInput!): Locality!
+  createLocality(projectId: ID!, locality: LocalityCreateInput!): Locality!
+  updateLocality(locality: LocalityUpdateInput!): Locality!
   moveLocality(fromLocalityId: ID, toLocalityId: ID): Locality!
 }

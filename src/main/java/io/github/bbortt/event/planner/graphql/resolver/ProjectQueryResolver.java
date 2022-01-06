@@ -27,6 +27,6 @@ public class ProjectQueryResolver implements GraphQLQueryResolver {
       pageable = Pageable.unpaged();
     }
 
-    return projectService.getProjects(pageable).toSet();
+    return projectService.findAll(pageable).toSet();
   }
 }

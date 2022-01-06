@@ -6,6 +6,7 @@ import io.github.bbortt.event.planner.repository.ProjectRepository;
 import io.github.bbortt.event.planner.security.SecurityUtils;
 import java.util.HashSet;
 import java.util.Objects;
+import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +36,13 @@ public class ProjectService {
 
   @Transactional(readOnly = true)
   @PreAuthorize("isAuthenticated()")
-  public Page<Project> getProjects(Pageable pageable) {
+  public Optional<Project> findById(Long projectId) {
+    return projectRepository.findById(projectId);
+  }
+
+  @Transactional(readOnly = true)
+  @PreAuthorize("isAuthenticated()")
+  public Page<Project> findAll(Pageable pageable) {
     String sub = SecurityUtils.getAuth0UserSub().orElseThrow(IllegalAccessError::new);
 
     logger.info("List projects for user '{}'", sub);
