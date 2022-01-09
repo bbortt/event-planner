@@ -23,7 +23,11 @@ public class LocalityMutationResolver implements GraphQLMutationResolver {
     Locality locality = new Locality(localityCreateInput.getName());
     locality.setDescription(localityCreateInput.getDescription());
 
-    return localityService.createLocality(projectId, locality, localityCreateInput.getParentLocalityId());
+    if (localityCreateInput.getParentLocalityId() != null) {
+      return localityService.createLocality(projectId, locality, localityCreateInput.getParentLocalityId());
+    }
+
+    return localityService.createLocality(projectId, locality);
   }
 
   public Locality updateLocality(@Valid LocalityUpdateInput localityUpdateInput) {

@@ -45,7 +45,7 @@ class ProjectServiceUnitTest {
   }
 
   @Test
-  void getProjectsReadsAuthenticationContext() {
+  void findAllReadsAuthenticationContext() {
     String sub = "auth0|ljasd7fgh278hsdfk2h34k2l";
     TestSecurityContextHolder.setAuthentication(new TestingAuthenticationToken(new BasicUserPrincipal(sub), null));
 
