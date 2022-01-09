@@ -6,6 +6,7 @@ import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -76,7 +77,7 @@ public class Member {
   @JsonIgnoreProperties(value = "memberships", allowSetters = true)
   private Auth0User auth0User;
 
-  @OneToMany(mappedBy = "member")
+  @OneToMany(mappedBy = "member", cascade = { CascadeType.ALL })
   private Set<MemberPermission> permissions = new HashSet<>();
 
   public Member() {

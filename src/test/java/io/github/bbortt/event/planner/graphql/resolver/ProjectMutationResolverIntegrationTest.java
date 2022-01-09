@@ -12,7 +12,6 @@ import io.github.bbortt.event.planner.config.TestJWSBuilder;
 import io.github.bbortt.event.planner.domain.Auth0User;
 import io.github.bbortt.event.planner.domain.Project;
 import io.github.bbortt.event.planner.repository.Auth0UserRepository;
-import io.github.bbortt.event.planner.repository.ProjectRepository;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -40,19 +39,17 @@ class ProjectMutationResolverIntegrationTest extends AbstractApplicationContextA
   @Autowired
   private Auth0UserRepository userRepository;
 
-  @Autowired
-  private ProjectRepository projectRepository;
-
   private Auth0User auth0User;
 
   @BeforeEach
   void beforeEachSetup() {
-    Auth0User user = new Auth0User(
-      testJwsBuilder.getClaimsSubject(),
-      "ProjectMutationResolverIntegrationTest",
-      "ProjectMutationResolverIntegrationTest@localhost"
-    );
-    auth0User = userRepository.save(user);
+    auth0User =
+      new Auth0User(
+        testJwsBuilder.getClaimsSubject(),
+        "ProjectMutationResolverIntegrationTest",
+        "ProjectMutationResolverIntegrationTest@localhost"
+      );
+    userRepository.save(auth0User);
   }
 
   @Test
@@ -93,7 +90,7 @@ class ProjectMutationResolverIntegrationTest extends AbstractApplicationContextA
     assertEquals(1, project.getMembers().size());
     assertEquals(0, new ArrayList<>(project.getMembers()).get(0).getPermissions().size());
 
-    projectRepository.deleteById(project.getId());
+    session.delete(project);
 
     session.getTransaction().commit();
     session.close();

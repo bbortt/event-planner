@@ -56,7 +56,7 @@ public class Project extends AbstractAuditingEntity {
   @Column(nullable = false)
   private Boolean archived = Boolean.FALSE;
 
-  @OneToMany(mappedBy = "project", cascade = { CascadeType.REMOVE, CascadeType.PERSIST })
+  @OneToMany(mappedBy = "project", cascade = { CascadeType.ALL })
   private Set<Member> members = new HashSet<>();
 
   @OneToMany(mappedBy = "project")

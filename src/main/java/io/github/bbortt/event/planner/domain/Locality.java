@@ -46,7 +46,6 @@ public class Locality extends AbstractAuditingEntity {
   @JsonIgnoreProperties(value = "members", allowSetters = true)
   private Project project;
 
-  @NotNull
   @ManyToOne(optional = false)
   @JoinColumn(name = "locality_id", updatable = false)
   @JsonIgnoreProperties(value = "children", allowSetters = true)

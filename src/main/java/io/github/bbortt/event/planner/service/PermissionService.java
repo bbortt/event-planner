@@ -1,9 +1,9 @@
 package io.github.bbortt.event.planner.service;
 
 import io.github.bbortt.event.planner.domain.Permission;
-import io.github.bbortt.event.planner.domain.Project;
 import io.github.bbortt.event.planner.repository.PermissionRepository;
 import io.github.bbortt.event.planner.security.SecurityUtils;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -15,11 +15,9 @@ public class PermissionService {
 
   private static final Logger logger = LoggerFactory.getLogger(PermissionService.class);
 
-  private final ProjectService projectService;
   private final PermissionRepository permissionRepository;
 
-  public PermissionService(ProjectService projectService, PermissionRepository permissionRepository) {
-    this.projectService = projectService;
+  public PermissionService(PermissionRepository permissionRepository) {
     this.permissionRepository = permissionRepository;
   }
 
@@ -28,17 +26,12 @@ public class PermissionService {
     return permissionRepository.findAll();
   }
 
-  Boolean hasProjectPermissions(Long projectId, String... permissions) {
+  public Boolean hasProjectPermissions(Long projectId, String... permissions) {
     Optional<String> auth0UserSub = SecurityUtils.getAuth0UserSub();
     if (auth0UserSub.isEmpty()) {
       return Boolean.FALSE;
     }
 
-    Optional<Project> project = projectService.findById(projectId);
-    if (project.isEmpty()) {
-      return Boolean.FALSE;
-    }
-
-    return Boolean.TRUE;
+    return permissionRepository.auth0UserHasProjectPermission(auth0UserSub.get(), projectId, Arrays.asList(permissions));
   }
 }
