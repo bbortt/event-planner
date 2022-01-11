@@ -3,10 +3,12 @@ package io.github.bbortt.event.planner.service;
 import io.github.bbortt.event.planner.domain.Locality;
 import io.github.bbortt.event.planner.repository.LocalityRepository;
 import javax.persistence.EntityNotFoundException;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,6 +49,32 @@ public class LocalityService {
 
     Locality newLocality = localityRepository.save(locality);
     logger.info("New locality persisted: {}", newLocality);
+    return newLocality;
+  }
+
+  @Modifying
+  @Transactional
+  @PreAuthorize("isAuthenticated()")
+  public Locality updateLocality(Long id, String name, String description) {
+    Locality locality = localityRepository
+      .findById(id)
+      .orElseThrow(() -> new IllegalArgumentException("Locality must have an existing Id!"));
+
+    if (!permissionService.hasProjectPermissions(locality.getProject().getId(), "locality:edit")) {
+      throw new AccessDeniedException("Access is denied");
+    }
+
+    logger.info("Update locality by id '{}'", id);
+
+    if (StringUtils.isNotEmpty(name)) {
+      locality.setName(name);
+    }
+    if (StringUtils.isNotEmpty(description)) {
+      locality.setDescription(description);
+    }
+
+    Locality newLocality = localityRepository.save(locality);
+    logger.info("Locality updated: {}", newLocality);
     return newLocality;
   }
 }
