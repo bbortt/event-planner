@@ -10,21 +10,27 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.annotations.NaturalId;
 
 @Entity
 @Table(name = "auth0_user")
 public class Auth0User implements Auth0UserUpdateSafe {
 
   @Id
+  @NaturalId
   @Column(nullable = false, updatable = false)
   private String userId;
 
   @NotNull
+  @NaturalId
   @Size(min = 1, max = 64)
   @Column(nullable = false, updatable = false)
   private String nickname;
 
   @NotNull
+  @NaturalId
   @Size(min = 1, max = 64)
   @Column(nullable = false, updatable = false)
   private String email;
@@ -113,5 +119,29 @@ public class Auth0User implements Auth0UserUpdateSafe {
 
   public void setMemberships(Set<Member> memberships) {
     this.memberships = memberships;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    Auth0User auth0User = (Auth0User) o;
+
+    return new EqualsBuilder()
+      .append(getUserId(), auth0User.getUserId())
+      .append(getNickname(), auth0User.getNickname())
+      .append(getEmail(), auth0User.getEmail())
+      .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37).append(getUserId()).append(getNickname()).append(getEmail()).toHashCode();
   }
 }

@@ -48,13 +48,13 @@ class LocalityMutationResolverIntegrationTest extends AbstractApplicationContext
   private Auth0UserRepository userRepository;
 
   @Autowired
+  private PermissionRepository permissionRepository;
+
+  @Autowired
   private ProjectRepository projectRepository;
 
   @Autowired
   private MemberRepository memberRepository;
-
-  @Autowired
-  private PermissionRepository permissionRepository;
 
   private Auth0User auth0User;
   private Project project;
@@ -107,7 +107,8 @@ class LocalityMutationResolverIntegrationTest extends AbstractApplicationContext
     Session session = sessionFactory.openSession();
     session.beginTransaction();
 
-    Locality locality = session.find(Locality.class, localityId);
+    Locality locality = session.createQuery("FROM Locality WHERE id = " + localityId, Locality.class).getSingleResult();
+
     assertEquals(name, locality.getName());
     assertEquals(testJwsBuilder.getClaimsSubject(), locality.getCreatedBy());
     assertEquals(project, locality.getProject());

@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 @Table
 @Entity
@@ -32,5 +34,26 @@ public class Permission {
 
   public void setMembers(Set<Member> members) {
     this.members = members.stream().map(member -> new MemberPermission(member, this)).collect(Collectors.toSet());
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    Permission that = (Permission) o;
+
+    // Noted: It's ok to use the @Id here, because this entity will *always* be persisted!
+    return new EqualsBuilder().append(getId(), that.getId()).isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37).append(getId()).toHashCode();
   }
 }

@@ -18,6 +18,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.springframework.data.annotation.CreatedBy;
@@ -149,5 +151,25 @@ public class Member {
 
   public void setPermissions(Set<Permission> permissions) {
     this.permissions = permissions.stream().map(permission -> new MemberPermission(this, permission)).collect(Collectors.toSet());
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    Member member = (Member) o;
+
+    return new EqualsBuilder().append(getProject(), member.getProject()).append(getAuth0User(), member.getAuth0User()).isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37).append(getProject()).append(getAuth0User()).toHashCode();
   }
 }
