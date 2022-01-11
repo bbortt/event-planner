@@ -5,6 +5,7 @@ input LocalityCreateInput {
 }
 
 input LocalityUpdateInput {
+  id: ID!
   name: String
   description: String
 }
