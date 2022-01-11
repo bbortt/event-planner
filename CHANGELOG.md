@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.55](https://github.com/bbortt/event-planner/compare/v0.0.54...v0.0.55) (2022-01-11)
+
+
+### Features
+
+* finish locality graphql backend implementation ([4aad583](https://github.com/bbortt/event-planner/commit/4aad583ca42bdac9bbdcdde28d09230d1720d70b))
+
+
+### Other
+
+* location graphql methods skeleton ([bc06464](https://github.com/bbortt/event-planner/commit/bc0646497aa1ff9db05c1187101f287a4a74289c))
+* push locality creation until the very last integration test ([79eb4d1](https://github.com/bbortt/event-planner/commit/79eb4d1c730b078c7965bea5151fad7e67638c88))
+
 ### [0.0.54](https://github.com/bbortt/event-planner/compare/v0.0.53...v0.0.54) (2022-01-01)
 
 
