@@ -78,7 +78,10 @@ class LocalityMutationResolverIntegrationTest extends AbstractApplicationContext
     member.setCreatedBy(auth0User.getUserId());
     member.setAccepted(auth0User.getUserId());
     memberRepository.save(member);
+  }
 
+  @Test
+  void createLocalityWithPermissionSucceeds() throws IOException, JoseException {
     MemberPermission memberPermission = new MemberPermission(
       member,
       permissionRepository.findById("locality:create").orElseThrow(EntityNotFoundException::new)
@@ -86,10 +89,7 @@ class LocalityMutationResolverIntegrationTest extends AbstractApplicationContext
     memberPermission.setCreatedBy(auth0User.getUserId());
     ReflectionTestUtils.setField(member, "permissions", new HashSet<>(List.of(memberPermission)));
     memberRepository.save(member);
-  }
 
-  @Test
-  void createLocality() throws IOException, JoseException {
     String token = testJwsBuilder.build("graphql:access").getCompactSerialization();
     graphQLTestTemplate.withBearerAuth(token);
 
@@ -117,6 +117,24 @@ class LocalityMutationResolverIntegrationTest extends AbstractApplicationContext
 
     session.getTransaction().commit();
     session.close();
+  }
+
+  @Test
+  void createLocalityWithoutPermissionFails() throws IOException, JoseException {
+    String token = testJwsBuilder.build("graphql:access").getCompactSerialization();
+    graphQLTestTemplate.withBearerAuth(token);
+
+    String name = "name";
+
+    GraphQLResponse response = graphQLTestTemplate.perform(
+      "graphql/create-locality.graphql",
+      "CreateLocalityMutation",
+      objectMapper.createObjectNode().put("projectId", project.getId()).set("locality", objectMapper.createObjectNode().put("name", name))
+    );
+    assertTrue(response.isOk());
+
+    String errorMessage = response.get("$.errors[0].message", String.class);
+    assertEquals("Exception while fetching data (/createLocality) : Access is denied", errorMessage);
   }
 
   @AfterEach

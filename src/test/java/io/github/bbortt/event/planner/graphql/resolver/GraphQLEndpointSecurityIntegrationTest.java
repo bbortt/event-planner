@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.web.servlet.MockMvc;
 
-class GraphqlEndpointSecurityIntegrationTest extends AbstractApplicationContextAwareIntegrationTest {
+class GraphQLEndpointSecurityIntegrationTest extends AbstractApplicationContextAwareIntegrationTest {
 
   @Autowired
   private TestJWSBuilder testJwsBuilder;
