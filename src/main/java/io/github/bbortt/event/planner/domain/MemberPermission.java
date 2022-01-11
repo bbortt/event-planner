@@ -8,6 +8,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 @Table
 @Entity
@@ -51,5 +53,25 @@ public class MemberPermission extends AbstractAuditingEntity {
 
   public void setPermission(Permission permission) {
     this.permission = permission;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    MemberPermission that = (MemberPermission) o;
+
+    return new EqualsBuilder().append(getMember(), that.getMember()).append(getPermission(), that.getPermission()).isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37).append(getMember()).append(getPermission()).toHashCode();
   }
 }

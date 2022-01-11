@@ -30,17 +30,18 @@ public class MemberPermissionId implements Serializable {
     if (this == o) {
       return true;
     }
+
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
 
-    MemberPermissionId other = (MemberPermissionId) o;
+    MemberPermissionId that = (MemberPermissionId) o;
 
-    return new EqualsBuilder().append(getMember(), other.getMember()).append(getPermission(), other.getPermission()).build();
+    return new EqualsBuilder().append(getMember(), that.getMember()).append(getPermission(), that.getPermission()).isEquals();
   }
 
   @Override
   public int hashCode() {
-    return new HashCodeBuilder().append(member).append(permission).build();
+    return new HashCodeBuilder(17, 37).append(getMember()).append(getPermission()).toHashCode();
   }
 }

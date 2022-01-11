@@ -14,7 +14,10 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.Parameter;
 
 @Table
@@ -32,6 +35,7 @@ public class Project extends AbstractAuditingEntity {
   private Long id;
 
   @NotNull
+  @NaturalId
   @Column(columnDefinition = "bpchar(36)", nullable = false, updatable = false)
   private UUID token = UUID.randomUUID();
 
@@ -138,5 +142,25 @@ public class Project extends AbstractAuditingEntity {
 
   public void setLocalities(Set<Locality> localities) {
     this.localities = localities;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    Project project = (Project) o;
+
+    return new EqualsBuilder().append(getToken(), project.getToken()).isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37).append(getToken()).toHashCode();
   }
 }

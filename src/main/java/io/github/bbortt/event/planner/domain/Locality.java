@@ -14,6 +14,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
@@ -104,5 +106,37 @@ public class Locality extends AbstractAuditingEntity {
 
   public void setChildren(Set<Locality> children) {
     this.children = children;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+
+    Locality locality = (Locality) o;
+
+    return new EqualsBuilder()
+      .append(getName(), locality.getName())
+      .append(getDescription(), locality.getDescription())
+      .append(getProject(), locality.getProject())
+      .append(getParent(), locality.getParent())
+      .append(getChildren(), locality.getChildren())
+      .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+      .append(getName())
+      .append(getDescription())
+      .append(getProject())
+      .append(getParent())
+      .append(getChildren())
+      .toHashCode();
   }
 }

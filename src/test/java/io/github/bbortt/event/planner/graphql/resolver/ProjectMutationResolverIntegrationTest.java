@@ -12,6 +12,7 @@ import io.github.bbortt.event.planner.config.TestJWSBuilder;
 import io.github.bbortt.event.planner.domain.Auth0User;
 import io.github.bbortt.event.planner.domain.Project;
 import io.github.bbortt.event.planner.repository.Auth0UserRepository;
+import io.github.bbortt.event.planner.repository.PermissionRepository;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -38,6 +39,9 @@ class ProjectMutationResolverIntegrationTest extends AbstractApplicationContextA
 
   @Autowired
   private Auth0UserRepository userRepository;
+
+  @Autowired
+  private PermissionRepository permissionRepository;
 
   private Auth0User auth0User;
 
@@ -80,7 +84,7 @@ class ProjectMutationResolverIntegrationTest extends AbstractApplicationContextA
     Session session = sessionFactory.openSession();
     session.beginTransaction();
 
-    Project project = session.find(Project.class, projectId);
+    Project project = session.createQuery("FROM Project WHERE id = " + projectId, Project.class).getSingleResult();
 
     assertEquals(name, project.getName());
     assertEquals(testJwsBuilder.getClaimsSubject(), project.getCreatedBy());
@@ -88,7 +92,7 @@ class ProjectMutationResolverIntegrationTest extends AbstractApplicationContextA
     assertTrue(LocalDate.of(2021, 12, 30).isEqual(project.getEndDate()));
 
     assertEquals(1, project.getMembers().size());
-    assertEquals(0, new ArrayList<>(project.getMembers()).get(0).getPermissions().size());
+    assertEquals(permissionRepository.count(), new ArrayList<>(project.getMembers()).get(0).getPermissions().size());
 
     session.delete(project);
 

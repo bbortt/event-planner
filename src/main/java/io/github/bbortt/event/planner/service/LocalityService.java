@@ -2,13 +2,10 @@ package io.github.bbortt.event.planner.service;
 
 import io.github.bbortt.event.planner.domain.Locality;
 import io.github.bbortt.event.planner.repository.LocalityRepository;
-import java.util.Objects;
-import java.util.Optional;
 import javax.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.lang.Nullable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
