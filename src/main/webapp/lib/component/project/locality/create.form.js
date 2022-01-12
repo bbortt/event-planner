@@ -6,7 +6,7 @@ import { useState } from 'react';
 
 export type locationCreateFormPropTypes = {
   children: React.ChildrenArray<React.Element<'button'>>,
-  submit: (locality: CreateLocalityInput) => void,
+  submit: (locality: LocalityCreateInput) => void,
 };
 
 export const LocalityCreateForm = ({

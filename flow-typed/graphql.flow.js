@@ -21,12 +21,6 @@ export type Auth0User = {|
   userId: $ElementType<Scalars, 'String'>,
 |};
 
-export type CreateLocalityInput = {|
-  description?: ?$ElementType<Scalars, 'String'>,
-  name: $ElementType<Scalars, 'String'>,
-  parentLocalityId?: ?$ElementType<Scalars, 'ID'>,
-|};
-
 export type Locality = {|
   __typename?: 'Locality',
   children?: ?Array<?Locality>,
@@ -35,6 +29,17 @@ export type Locality = {|
   name: $ElementType<Scalars, 'String'>,
   parent?: ?Locality,
   project: Project,
+|};
+
+export type LocalityCreateInput = {|
+  description?: ?$ElementType<Scalars, 'String'>,
+  name: $ElementType<Scalars, 'String'>,
+  parentLocalityId?: ?$ElementType<Scalars, 'ID'>,
+|};
+
+export type LocalityUpdateInput = {|
+  description?: ?$ElementType<Scalars, 'String'>,
+  name?: ?$ElementType<Scalars, 'String'>,
 |};
 
 export type Member = {|
@@ -57,7 +62,7 @@ export type Mutation = {|
 |};
 
 export type MutationCreateLocalityArgs = {|
-  locality: CreateLocalityInput,
+  locality: LocalityCreateInput,
   projectId: $ElementType<Scalars, 'ID'>,
 |};
 
@@ -75,7 +80,7 @@ export type MutationMoveLocalityArgs = {|
 |};
 
 export type MutationUpdateLocalityArgs = {|
-  locality: UpdateLocalityInput,
+  locality: LocalityUpdateInput,
 |};
 
 export type MutationUpdateProjectArgs = {|
@@ -91,12 +96,12 @@ export type Project = {|
   __typename?: 'Project',
   archived: $ElementType<Scalars, 'Boolean'>,
   description?: ?$ElementType<Scalars, 'String'>,
-  endTime: $ElementType<Scalars, 'Date'>,
+  endDate: $ElementType<Scalars, 'Date'>,
   id: $ElementType<Scalars, 'ID'>,
   localities?: ?Array<?Locality>,
   members?: ?Array<?Member>,
   name: $ElementType<Scalars, 'String'>,
-  startTime: $ElementType<Scalars, 'Date'>,
+  startDate: $ElementType<Scalars, 'Date'>,
   token: $ElementType<Scalars, 'String'>,
 |};
 
@@ -142,9 +147,4 @@ export type QueryListProjectsArgs = {|
 
 export type QueryListRootLocalitiesArgs = {|
   projectId: $ElementType<Scalars, 'ID'>,
-|};
-
-export type UpdateLocalityInput = {|
-  description?: ?$ElementType<Scalars, 'String'>,
-  name?: ?$ElementType<Scalars, 'String'>,
 |};

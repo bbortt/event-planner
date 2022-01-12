@@ -24,5 +24,7 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '14'
-      - run: npx standard-version
+          cache: 'npm'
+      - run: npm ci
+      - run: npx --no-install standard-version
       - run: git push --follow-tags origin ${{ github.ref }}

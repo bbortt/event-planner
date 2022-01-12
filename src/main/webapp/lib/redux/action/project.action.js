@@ -4,12 +4,12 @@ export type projectAction = projectAddAction | projectCreateAction | projectsLoa
 export const projectAddType = 'project:add';
 export const projectCreateType = 'project:create';
 export const projectsLoadType = 'project:load-list';
-export const projectsSetType = 'project:set';
+export const projectsSetType = 'project:set-list';
 
 export type projectAddAction = { type: 'project:add', payload: { project: Project } };
 export type projectCreateAction = { type: 'project:create', payload: { project: ProjectCreateInput } };
 export type projectsLoadAction = { type: 'project:load-list', payload: { count?: number, offset?: number } };
-export type projectsSetAction = { type: 'project:set', payload: { projects: Project[] } };
+export type projectsSetAction = { type: 'project:set-list', payload: { projects: Project[] } };
 
 export const projectAdd = (project: Project): projectAddAction => ({ type: 'project:add', payload: { project } });
 export const projectCreate = (project: ProjectCreateInput): projectCreateAction => ({
@@ -21,6 +21,6 @@ export const projectsLoad = (count?: number, offset?: number): projectsLoadActio
   payload: { count, offset },
 });
 export const projectsSet = (projects: Project[]): projectsSetAction => ({
-  type: 'project:set',
+  type: 'project:set-list',
   payload: { projects },
 });

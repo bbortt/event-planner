@@ -19,8 +19,7 @@ type Locality {
 }
 
 extend type Query {
-  listRootLocalities(projectId: ID!): [Locality]!
-  listChildren(localityId: ID!): [Locality]!
+  listLocalities(projectId: ID, parentLocalityId: ID): [Locality]!
 }
 
 extend type Mutation {

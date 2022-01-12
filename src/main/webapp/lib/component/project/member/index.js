@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import * as React from 'react';
 
 export const Members = (): React.Element<'div'> => {
   return (
