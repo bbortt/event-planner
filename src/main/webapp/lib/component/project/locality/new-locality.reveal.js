@@ -26,7 +26,7 @@ export const NewLocalityReveal = ({ revealId }: newLocationRevealPropTypes): Rea
 
   const dispatch = useDispatch();
 
-  const submit = (locality: CreateLocalityInput) => {
+  const submit = (locality: LocalityCreateInput) => {
     dispatch(localityCreate(project, locality));
     // $FlowFixMe
     jQuery(`#${revealId}`).foundation('close');

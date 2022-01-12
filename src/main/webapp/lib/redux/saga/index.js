@@ -17,7 +17,7 @@ function* spawnFailsafeSagas(sagas: typeof SagaIterator[]): typeof SagaIterator 
             yield call(saga);
             break;
           } catch (e) {
-            // TODO: Propper error handling
+            // TODO: Proper error handling
             console.log(e);
           }
         }

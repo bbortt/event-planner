@@ -3,6 +3,7 @@ package io.github.bbortt.event.planner.service;
 import io.github.bbortt.event.planner.domain.Locality;
 import io.github.bbortt.event.planner.repository.LocalityRepository;
 import javax.persistence.EntityNotFoundException;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.repository.Modifying;
@@ -42,7 +43,7 @@ public class LocalityService {
   public Locality createLocality(Long projectId, Locality locality) {
     locality.setProject(projectService.findById(projectId).orElseThrow(IllegalArgumentException::new));
 
-    logger.info("Create new locality: {}", locality);
+    logger.info("Create new locality: {}", ReflectionToStringBuilder.toString(locality));
 
     Locality newLocality = localityRepository.save(locality);
     logger.info("New locality persisted: {}", newLocality);

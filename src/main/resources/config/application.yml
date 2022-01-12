@@ -2,6 +2,8 @@ jwt:
   audience: ${APPL_AUTH0_AUDIENCE}
 graphql:
   servlet:
+    async:
+      timeout: 5s
     mapping: /api/graphql/v1
     websocket:
       enabled: false

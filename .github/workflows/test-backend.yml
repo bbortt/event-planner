@@ -1,16 +1,14 @@
-name: Fullbuild
+name: Test Backend
 on:
   push:
     branches:
-      - '*'
+      - '*/*'
     tags-ignore:
       - '*'
-  pull_request:
 jobs:
   fullbuild:
     name: Build & Test Application
     runs-on: ubuntu-20.04
-    environment: build
     services:
       postgres:
         image: postgres:14.1-alpine
@@ -36,14 +34,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          if [ -n "$SONAR_TOKEN" ]; then export SONARQUBE_CMD="jacocoTestReport sonarqube"; fi
           ./gradlew --no-daemon \
               flywayMigrateTest
-          ./gradlew -Pprod --no-daemon \
-             -Dsonar.host.url=https://sonarcloud.io \
-             -Dsonar.organization=bbortt-github \
-             -Dsonar.login=$SONAR_TOKEN \
-              check $SONARQUBE_CMD
+          ./gradlew --no-daemon \
+              check
       - uses: actions/cache@v2
         with:
           path: |

@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -62,7 +63,7 @@ public class ProjectService {
       throw new IllegalArgumentException("Project cannot end before it starts!");
     }
 
-    logger.info("Create new project: {}", project);
+    logger.info("Create new project: {}", ReflectionToStringBuilder.toString(project));
 
     Member rootMember = new Member(project, userService.currentUser().orElseThrow(IllegalAccessError::new));
     rootMember.setPermissions(new HashSet<>(permissionService.findAll()));
