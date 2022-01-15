@@ -2,8 +2,6 @@ package io.github.bbortt.event.planner.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -14,6 +12,7 @@ import io.github.bbortt.event.planner.domain.Project;
 import io.github.bbortt.event.planner.repository.LocalityRepository;
 import java.util.Optional;
 import javax.persistence.EntityNotFoundException;
+import javax.swing.text.html.Option;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,11 +24,10 @@ import org.springframework.security.access.AccessDeniedException;
 @ExtendWith(MockitoExtension.class)
 class LocalityServiceUnitTest {
 
-  @Mock
-  private PermissionService permissionServiceMock;
+  private static final Long PROJECT_ID = 2345L;
 
   @Mock
-  private ProjectService projectServiceMock;
+  private PermissionService permissionServiceMock;
 
   @Mock
   private LocalityRepository localityRepositoryMock;
@@ -38,48 +36,78 @@ class LocalityServiceUnitTest {
 
   @BeforeEach
   void beforeEachSetup() {
-    fixture = new LocalityService(permissionServiceMock, projectServiceMock, localityRepositoryMock);
+    fixture = new LocalityService(permissionServiceMock, localityRepositoryMock);
   }
 
   @Test
-  void createLocalityAssignsProject() {
-    Long projectId = 1234L;
-    Locality newLocality = Mockito.mock(Locality.class);
+  void findAllInProjectByParentLocalityQueriesRepository() {
+    Long parentLocalityId = 2345L;
+    Locality localityMock = smartLocalityMock();
+    doReturn(Optional.of(localityMock)).when(localityRepositoryMock).findById(parentLocalityId);
 
-    Project project = new Project();
-    doReturn(Optional.of(project)).when(projectServiceMock).findById(projectId);
+    Long projectId = localityMock.getProject().getId();
+    doReturn(true).when(permissionServiceMock).hasProjectPermissions(projectId, "locality:edit");
 
-    fixture.createLocality(projectId, newLocality);
+    fixture.findAllInProjectByParentLocality(Optional.of(projectId), Optional.of(parentLocalityId));
 
-    verify(projectServiceMock).findById(projectId);
-    verify(newLocality).setProject(project);
-
-    verify(localityRepositoryMock).save(newLocality);
+    verify(localityRepositoryMock).findAllByProjectIdEqualsAndParentEquals(projectId, localityMock);
   }
 
   @Test
-  void createLocalityThrowsExceptionWhenProjectDoesNotExist() {
+  void findAllInProjectByParentLocalityAcceptsEmptyParentLocalityId() {
     Long projectId = 1234L;
-    Locality newLocality = Mockito.mock(Locality.class);
+    doReturn(true).when(permissionServiceMock).hasProjectPermissions(projectId, "locality:edit");
 
-    doReturn(Optional.empty()).when(projectServiceMock).findById(projectId);
+    fixture.findAllInProjectByParentLocality(Optional.of(projectId), Optional.empty());
 
-    assertThrows(IllegalArgumentException.class, () -> fixture.createLocality(projectId, newLocality));
+    verify(localityRepositoryMock).findAllByProjectIdEqualsAndParentEquals(projectId, null);
+  }
+
+  @Test
+  void findAllInProjectByParentLocalityAcceptsEmptyProjectId() {
+    Long parentLocalityId = 2345L;
+    Locality localityMock = smartLocalityMock();
+    doReturn(Optional.of(localityMock)).when(localityRepositoryMock).findById(parentLocalityId);
+
+    Long projectId = localityMock.getProject().getId();
+    doReturn(true).when(permissionServiceMock).hasProjectPermissions(projectId, "locality:edit");
+
+    fixture.findAllInProjectByParentLocality(Optional.empty(), Optional.of(parentLocalityId));
+
+    verify(localityRepositoryMock).findAllByProjectIdEqualsAndParentEquals(projectId, localityMock);
+  }
+
+  @Test
+  void findAllInProjectByParentLocalityRequiresAtLeastOneArgument() {
+    IllegalArgumentException exception = assertThrows(
+      IllegalArgumentException.class,
+      () -> fixture.findAllInProjectByParentLocality(Optional.empty(), Optional.empty())
+    );
+    assertEquals("Provide either projectId or parentLocalityId!", exception.getMessage());
+  }
+
+  @Test
+  void findAllInProjectByParentLocalityThrowsExceptionOnProjectMismatch() {
+    Long parentLocalityId = 2345L;
+    Locality localityMock = smartLocalityMock();
+    doReturn(Optional.of(localityMock)).when(localityRepositoryMock).findById(parentLocalityId);
+
+    IllegalArgumentException exception = assertThrows(
+      IllegalArgumentException.class,
+      () -> fixture.findAllInProjectByParentLocality(Optional.of(3456L), Optional.of(parentLocalityId))
+    );
+    assertEquals("Something went horribly wrong!", exception.getMessage());
   }
 
   @Test
   void createLocalityAssignsParent() {
-    Long projectId = 1234L;
     Locality newLocality = Mockito.mock(Locality.class);
     Long parentLocalityId = 2345L;
 
     Locality parentLocality = new Locality();
     doReturn(Optional.of(parentLocality)).when(localityRepositoryMock).findById(parentLocalityId);
 
-    Project project = new Project();
-    doReturn(Optional.of(project)).when(projectServiceMock).findById(projectId);
-
-    fixture.createLocality(projectId, newLocality, parentLocalityId);
+    fixture.createLocality(newLocality, parentLocalityId);
 
     verify(localityRepositoryMock).findById(parentLocalityId);
     verify(newLocality).setParent(parentLocality);
@@ -87,13 +115,12 @@ class LocalityServiceUnitTest {
 
   @Test
   void createLocalityThrowsExceptionWithNonExistingParent() {
-    Long projectId = 1234L;
     Locality newLocality = Mockito.mock(Locality.class);
     Long parentLocalityId = 2345L;
 
     doReturn(Optional.empty()).when(localityRepositoryMock).findById(parentLocalityId);
 
-    assertThrows(EntityNotFoundException.class, () -> fixture.createLocality(projectId, newLocality, parentLocalityId));
+    assertThrows(EntityNotFoundException.class, () -> fixture.createLocality(newLocality, parentLocalityId));
   }
 
   @Test
@@ -102,7 +129,7 @@ class LocalityServiceUnitTest {
 
     Locality localityMock = smartLocalityMock();
     doReturn(Optional.of(localityMock)).when(localityRepositoryMock).findById(id);
-    doReturn(true).when(permissionServiceMock).hasProjectPermissions(anyLong(), eq("locality:edit"));
+    doReturn(Boolean.TRUE).when(permissionServiceMock).hasProjectPermissions(PROJECT_ID, "locality:edit");
 
     fixture.updateLocality(id, null, null);
 
@@ -118,8 +145,8 @@ class LocalityServiceUnitTest {
     doReturn(Optional.empty()).when(localityRepositoryMock).findById(id);
 
     IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> fixture.updateLocality(id, null, null));
-
     assertEquals("Locality must have an existing Id!", exception.getMessage());
+
     verifyNoInteractions(permissionServiceMock);
   }
 
@@ -131,8 +158,8 @@ class LocalityServiceUnitTest {
     doReturn(Optional.of(localityMock)).when(localityRepositoryMock).findById(id);
 
     AccessDeniedException exception = assertThrows(AccessDeniedException.class, () -> fixture.updateLocality(id, null, null));
-
     assertEquals("Access is denied", exception.getMessage());
+
     verify(localityRepositoryMock).findById(id);
     verifyNoMoreInteractions(localityRepositoryMock);
   }
@@ -144,7 +171,7 @@ class LocalityServiceUnitTest {
 
     Locality localityMock = smartLocalityMock();
     doReturn(Optional.of(localityMock)).when(localityRepositoryMock).findById(id);
-    doReturn(true).when(permissionServiceMock).hasProjectPermissions(anyLong(), eq("locality:edit"));
+    doReturn(Boolean.TRUE).when(permissionServiceMock).hasProjectPermissions(PROJECT_ID, "locality:edit");
 
     fixture.updateLocality(id, name, null);
 
@@ -159,7 +186,7 @@ class LocalityServiceUnitTest {
 
     Locality localityMock = smartLocalityMock();
     doReturn(Optional.of(localityMock)).when(localityRepositoryMock).findById(id);
-    doReturn(true).when(permissionServiceMock).hasProjectPermissions(anyLong(), eq("locality:edit"));
+    doReturn(Boolean.TRUE).when(permissionServiceMock).hasProjectPermissions(PROJECT_ID, "locality:edit");
 
     fixture.updateLocality(id, null, description);
 
@@ -170,7 +197,7 @@ class LocalityServiceUnitTest {
   private Locality smartLocalityMock() {
     Locality localityMock = Mockito.mock(Locality.class);
     Project projectMock = Mockito.mock(Project.class);
-    doReturn(2345L).when(projectMock).getId();
+    doReturn(PROJECT_ID).when(projectMock).getId();
     doReturn(projectMock).when(localityMock).getProject();
     return localityMock;
   }

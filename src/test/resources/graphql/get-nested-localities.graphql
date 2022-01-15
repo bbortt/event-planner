@@ -1,0 +1,7 @@
+query ListLocalitiesQuery($parentLocalityId: ID) {
+  listLocalities(parentLocalityId: $parentLocalityId) {
+    id
+    name
+    __typename
+  }
+}
