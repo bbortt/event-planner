@@ -3,6 +3,7 @@ package io.github.bbortt.event.planner.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -48,20 +49,21 @@ public class Locality extends AbstractAuditingEntity {
   @JsonIgnoreProperties(value = "members", allowSetters = true)
   private Project project;
 
-  @ManyToOne(optional = false)
+  @ManyToOne
   @JoinColumn(name = "locality_id", updatable = false)
   @JsonIgnoreProperties(value = "children", allowSetters = true)
   private Locality parent;
 
-  @OneToMany(mappedBy = "parent")
+  @OneToMany(mappedBy = "parent", cascade = { CascadeType.REMOVE })
   private Set<Locality> children = new HashSet<>();
 
   public Locality() {
     // Empty Locality
   }
 
-  public Locality(String name) {
+  public Locality(String name, Project project) {
     this.name = name;
+    this.project = project;
   }
 
   public Long getId() {
@@ -120,23 +122,11 @@ public class Locality extends AbstractAuditingEntity {
 
     Locality locality = (Locality) o;
 
-    return new EqualsBuilder()
-      .append(getName(), locality.getName())
-      .append(getDescription(), locality.getDescription())
-      .append(getProject(), locality.getProject())
-      .append(getParent(), locality.getParent())
-      .append(getChildren(), locality.getChildren())
-      .isEquals();
+    return new EqualsBuilder().append(getName(), locality.getName()).append(getProject(), locality.getProject()).isEquals();
   }
 
   @Override
   public int hashCode() {
-    return new HashCodeBuilder(17, 37)
-      .append(getName())
-      .append(getDescription())
-      .append(getProject())
-      .append(getParent())
-      .append(getChildren())
-      .toHashCode();
+    return new HashCodeBuilder(17, 37).append(getName()).append(getProject()).toHashCode();
   }
 }

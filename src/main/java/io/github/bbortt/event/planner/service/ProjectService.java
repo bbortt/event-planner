@@ -7,6 +7,7 @@ import io.github.bbortt.event.planner.security.SecurityUtils;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
+import javax.persistence.EntityNotFoundException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.slf4j.Logger;
@@ -37,8 +38,10 @@ public class ProjectService {
 
   @Transactional(readOnly = true)
   @PreAuthorize("isAuthenticated()")
-  public Optional<Project> findById(Long projectId) {
-    return projectRepository.findById(projectId);
+  public Project findById(Long projectId) {
+    return projectRepository
+      .findById(projectId)
+      .orElseThrow(() -> new EntityNotFoundException(String.format("Cannot find Project by id '%s'", projectId)));
   }
 
   @Transactional(readOnly = true)

@@ -2,6 +2,8 @@ package io.github.bbortt.event.planner.service;
 
 import io.github.bbortt.event.planner.domain.Locality;
 import io.github.bbortt.event.planner.repository.LocalityRepository;
+import java.util.Optional;
+import java.util.Set;
 import javax.persistence.EntityNotFoundException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -19,32 +21,56 @@ public class LocalityService {
   private static final Logger logger = LoggerFactory.getLogger(LocalityService.class);
 
   private final PermissionService permissionService;
-  private final ProjectService projectService;
   private final LocalityRepository localityRepository;
 
-  public LocalityService(PermissionService permissionService, ProjectService projectService, LocalityRepository localityRepository) {
+  public LocalityService(PermissionService permissionService, LocalityRepository localityRepository) {
     this.permissionService = permissionService;
-    this.projectService = projectService;
     this.localityRepository = localityRepository;
   }
 
-  @Modifying
-  @Transactional
-  @PreAuthorize("isAuthenticated() && @permissionService.hasProjectPermissions(#projectId, 'locality:create')")
-  public Locality createLocality(Long projectId, Locality locality, Long parentLocalityId) {
-    Locality parentLocality = localityRepository.findById(parentLocalityId).orElseThrow(EntityNotFoundException::new);
+  @Transactional(readOnly = true)
+  @PreAuthorize("isAuthenticated()")
+  public Set<Locality> findAllInProjectByParentLocality(Optional<Long> optionalProjectId, Optional<Long> parentLocalityId) {
+    Long projectId = null;
+    Locality parentLocality = null;
 
-    locality.setParent(parentLocality);
+    if (optionalProjectId.isPresent()) {
+      projectId = optionalProjectId.get();
+    }
 
-    return createLocality(projectId, locality);
+    if (parentLocalityId.isPresent()) {
+      parentLocality = findById(parentLocalityId.get());
+
+      if (projectId != null && !projectId.equals(parentLocality.getProject().getId())) {
+        throw new IllegalArgumentException("Something went horribly wrong!");
+      }
+
+      projectId = parentLocality.getProject().getId();
+    }
+
+    if (projectId == null) {
+      throw new IllegalArgumentException("Provide either projectId or parentLocalityId!");
+    }
+
+    if (!permissionService.hasProjectPermissions(projectId, "locality:edit")) {
+      throw new AccessDeniedException("Access is denied");
+    }
+
+    return localityRepository.findAllByProjectIdEqualsAndParentEquals(projectId, parentLocality);
   }
 
   @Modifying
   @Transactional
-  @PreAuthorize("isAuthenticated() && @permissionService.hasProjectPermissions(#projectId, 'locality:create')")
-  public Locality createLocality(Long projectId, Locality locality) {
-    locality.setProject(projectService.findById(projectId).orElseThrow(IllegalArgumentException::new));
+  @PreAuthorize("isAuthenticated() && @permissionService.hasProjectPermissions(#locality.project.id, 'locality:create')")
+  public Locality createLocality(Locality locality, Long parentLocalityId) {
+    locality.setParent(findById(parentLocalityId));
+    return createLocality(locality);
+  }
 
+  @Modifying
+  @Transactional
+  @PreAuthorize("isAuthenticated() && @permissionService.hasProjectPermissions(#locality.project.id, 'locality:create')")
+  public Locality createLocality(Locality locality) {
     logger.info("Create new locality: {}", ReflectionToStringBuilder.toString(locality));
 
     Locality newLocality = localityRepository.save(locality);
@@ -76,5 +102,11 @@ public class LocalityService {
     Locality newLocality = localityRepository.save(locality);
     logger.info("Locality updated: {}", newLocality);
     return newLocality;
+  }
+
+  private Locality findById(Long id) {
+    return localityRepository
+      .findById(id)
+      .orElseThrow(() -> new EntityNotFoundException(String.format("Cannot find Locality by id '%s'", id)));
   }
 }
