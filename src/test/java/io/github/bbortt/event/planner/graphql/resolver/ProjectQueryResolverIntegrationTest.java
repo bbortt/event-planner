@@ -27,9 +27,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 class ProjectQueryResolverIntegrationTest extends AbstractApplicationContextAwareIntegrationTest {
 
   private static final String PROJECT_2_NAME = "project 2";
+
   private final ObjectMapper objectMapper = new ObjectMapper();
-  private final List<Member> members = new ArrayList<>();
-  private final List<Project> projects = new ArrayList<>();
 
   @Autowired
   private TestJWSBuilder testJwsBuilder;
@@ -47,6 +46,8 @@ class ProjectQueryResolverIntegrationTest extends AbstractApplicationContextAwar
   private MemberRepository memberRepository;
 
   private Auth0User auth0User;
+  private List<Member> members = new ArrayList<>();
+  private List<Project> projects = new ArrayList<>();
 
   @BeforeEach
   void beforeEachSetup() {

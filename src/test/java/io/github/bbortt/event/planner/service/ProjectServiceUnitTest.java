@@ -12,6 +12,7 @@ import io.github.bbortt.event.planner.repository.ProjectRepository;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
+import javax.persistence.EntityNotFoundException;
 import org.apache.http.auth.BasicUserPrincipal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,6 +43,25 @@ class ProjectServiceUnitTest {
   @BeforeEach
   void beforeEachSetup() {
     fixture = new ProjectService(userServiceMock, permissionServiceMock, projectRepositoryMock);
+  }
+
+  @Test
+  void findByIdCallsRepository() {
+    Long projectId = 1234L;
+
+    doReturn(Optional.of(new Project())).when(projectRepositoryMock).findById(projectId);
+
+    fixture.findById(projectId);
+  }
+
+  @Test
+  void findByIdThrowsExceptionIfProjectDoesNotExist() {
+    Long projectId = 1234L;
+
+    doReturn(Optional.empty()).when(projectRepositoryMock).findById(projectId);
+
+    EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> fixture.findById(projectId));
+    assertEquals(String.format("Cannot find Project by id '%s'", projectId), exception.getMessage());
   }
 
   @Test
@@ -80,7 +100,6 @@ class ProjectServiceUnitTest {
     ReflectionTestUtils.setField(newProject, "id", 1234L);
 
     IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> fixture.createProject(newProject));
-
     assertEquals("New project cannot have an Id!", exception.getMessage());
   }
 
@@ -91,7 +110,6 @@ class ProjectServiceUnitTest {
     newProject.setEndDate(LocalDate.of(2021, 12, 27));
 
     IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> fixture.createProject(newProject));
-
     assertEquals("Project cannot end before it starts!", exception.getMessage());
   }
 
@@ -115,7 +133,6 @@ class ProjectServiceUnitTest {
     doReturn(Optional.empty()).when(projectRepositoryMock).findById(id);
 
     IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> fixture.updateProject(id, null, null, null));
-
     assertEquals("Project must have an existing Id!", exception.getMessage());
   }
 
