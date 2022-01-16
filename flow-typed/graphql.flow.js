@@ -39,6 +39,7 @@ export type LocalityCreateInput = {|
 
 export type LocalityUpdateInput = {|
   description?: ?$ElementType<Scalars, 'String'>,
+  id: $ElementType<Scalars, 'ID'>,
   name?: ?$ElementType<Scalars, 'String'>,
 |};
 
@@ -122,18 +123,18 @@ export type ProjectUpdateInput = {|
 export type Query = {|
   __typename?: 'Query',
   getMember?: ?Member,
-  listChildren: Array<?Locality>,
+  listLocalities: Array<?Locality>,
   listMembers: Array<?Member>,
   listProjects: Array<?Project>,
-  listRootLocalities: Array<?Locality>,
 |};
 
 export type QueryGetMemberArgs = {|
   memberId: $ElementType<Scalars, 'ID'>,
 |};
 
-export type QueryListChildrenArgs = {|
-  localityId: $ElementType<Scalars, 'ID'>,
+export type QueryListLocalitiesArgs = {|
+  parentLocalityId?: ?$ElementType<Scalars, 'ID'>,
+  projectId?: ?$ElementType<Scalars, 'ID'>,
 |};
 
 export type QueryListMembersArgs = {|
@@ -143,8 +144,4 @@ export type QueryListMembersArgs = {|
 export type QueryListProjectsArgs = {|
   count?: ?$ElementType<Scalars, 'Int'>,
   offset?: ?$ElementType<Scalars, 'Int'>,
-|};
-
-export type QueryListRootLocalitiesArgs = {|
-  projectId: $ElementType<Scalars, 'ID'>,
 |};
