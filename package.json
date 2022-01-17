@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.5.7",
-    "@auth0/auth0-react": "^1.8.0",
+    "@auth0/auth0-react": "^1.9.0",
     "date-fns": "^2.28.0",
     "deepmerge": "^4.2.2",
     "foundation-sites": "^6.7.4",
