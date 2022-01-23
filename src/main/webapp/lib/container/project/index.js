@@ -12,12 +12,12 @@ import type { tabType } from '../../component/project/navbar';
 
 import { projectByIdSelector } from '../../redux/selector/project.selector';
 
-function showCurrentTabOrLocalities(tab: tabType) {
+function showCurrentTabOrLocalities(tab: tabType, project: Project) {
   switch (tab) {
     case 'members':
-      return <Members />;
+      return <Members project={project} />;
     default:
-      return <Localities />;
+      return <Localities project={project} />;
   }
 }
 
@@ -35,7 +35,7 @@ export const Project = ({ id }: projectPropTypes): React.Element<'div'> => {
     <div className="project">
       <ProjectNavbar project={project} tab={tab} />
 
-      <div>{showCurrentTabOrLocalities(tab)}</div>
+      <div>{showCurrentTabOrLocalities(tab, project)}</div>
     </div>
   );
 };

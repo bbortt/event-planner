@@ -1,0 +1,11 @@
+@import '~pages/settings';
+
+.localityDrop {
+  height: 100%;
+  background-color: $light-gray;
+}
+
+.localityDropActive {
+  height: 100%;
+  background-color: $dark-gray;
+}

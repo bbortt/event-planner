@@ -22,6 +22,7 @@ export const NewProjectReveal = ({ revealId }: newProjectRevealPropTypes): React
 
   const submit = (project: ProjectCreateInput) => {
     dispatch(projectCreate(project));
+
     // $FlowFixMe
     jQuery(`#${revealId}`).foundation('close');
   };
