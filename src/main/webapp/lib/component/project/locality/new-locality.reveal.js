@@ -6,17 +6,19 @@ import { useRouter } from 'next/router';
 
 import { useDispatch, useSelector } from 'react-redux';
 
-import { localityCreate } from '../../../model/project-permission';
-
-import LocalityCreateForm from './create.form';
-import renderFoundationNode from '../../../foundation/render-foundation-node';
+import { localityCreate } from '../../../redux/action/locality.action';
 import { projectByIdSelector } from '../../../redux/selector/project.selector';
 
+import LocalityCreateForm from './create.form';
+
+import renderFoundationNode from '../../../foundation/render-foundation-node';
+
 export type newLocationRevealPropTypes = {
+  parentLocality: Locality,
   revealId: string,
 };
 
-export const NewLocalityReveal = ({ revealId }: newLocationRevealPropTypes): React.Element<'div'> => {
+export const NewLocalityReveal = ({ parentLocality, revealId }: newLocationRevealPropTypes): React.Element<'div'> => {
   const [key, setKey] = useState(0);
   // $FlowFixMe
   useEffect(() => $(document).on('open.zf.reveal', () => setKey(k => k + 1)), []);
@@ -27,7 +29,9 @@ export const NewLocalityReveal = ({ revealId }: newLocationRevealPropTypes): Rea
   const dispatch = useDispatch();
 
   const submit = (locality: LocalityCreateInput) => {
+    locality.parentLocalityId = parentLocality?.id;
     dispatch(localityCreate(project, locality));
+
     // $FlowFixMe
     jQuery(`#${revealId}`).foundation('close');
   };
