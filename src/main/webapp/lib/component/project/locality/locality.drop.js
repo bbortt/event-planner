@@ -36,7 +36,12 @@ export const LocalityDrop = ({ parentLocality }: localityDropPropTypes): React.E
     <div className="locality-drop">
       <NewLocalityReveal revealId={newLocationRevealId} />
 
-      <div ref={drop} role={'Dustbin'} className={isOver ? styles.localityDropActive : styles.localityDrop} onClick={addLocality}>
+      <div
+        ref={drop}
+        role={'Dustbin'}
+        className={`hoverable ${isOver ? styles.localityDropActive : styles.localityDrop}`}
+        onClick={addLocality}
+      >
         {(!parentLocality || !parentLocality.localities || parentLocality.localities.length === 0) && (
           <Callout type="warning">
             <h5>Uf derä Stufä gits no kenner Lokalitäte.</h5>

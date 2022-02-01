@@ -5,7 +5,7 @@ export const renderFoundationNode = (
   node: React.ElementRef<React.ElementType> | null,
   callback?: () => void
 ): React.ElementRef<React.ElementType> | null => {
-  if (typeof window === 'undefined' || typeof jQuery === 'undefined') {
+  if (typeof window === 'undefined' || typeof jQuery === 'undefined' || !node) {
     return;
   }
 

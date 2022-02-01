@@ -8,6 +8,7 @@ import { localitiesLoad } from '../../../redux/action/locality.action';
 import { localitiesSelector } from '../../../redux/selector/locality.selector';
 
 import BackendAwareDndProvider from '../../../wrapper/dnd-provider';
+import MessageList from '../../../container/message-list';
 import LocalityDrop from './locality.drop';
 import LocalityDrag from './locality.drag';
 
@@ -34,6 +35,8 @@ export const Localities = ({ project }: localitiesPropTypes): React.Element<'div
           </ul>
         </div>
       </div>
+
+      <MessageList />
 
       <div className="grid-x grid-padding-x">
         <BackendAwareDndProvider>
