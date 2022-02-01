@@ -6,20 +6,33 @@ import { useRouter } from 'next/router';
 
 import { useDispatch, useSelector } from 'react-redux';
 
-import { localityCreate } from '../../../model/project-permission';
-
-import LocalityCreateForm from './create.form';
-import renderFoundationNode from '../../../foundation/render-foundation-node';
+import { localityCreate } from '../../../redux/action/locality.action';
 import { projectByIdSelector } from '../../../redux/selector/project.selector';
 
+import LocalityCreateForm from './create.form';
+
+import renderFoundationNode from '../../../foundation/render-foundation-node';
+
 export type newLocationRevealPropTypes = {
+  parentLocality: Locality,
   revealId: string,
 };
 
-export const NewLocalityReveal = ({ revealId }: newLocationRevealPropTypes): React.Element<'div'> => {
+export const NewLocalityReveal = ({ parentLocality, revealId }: newLocationRevealPropTypes): React.Element<'div'> => {
   const [key, setKey] = useState(0);
+  const [ref, setRef] = useState();
+
   // $FlowFixMe
-  useEffect(() => $(document).on('open.zf.reveal', () => setKey(k => k + 1)), []);
+  useEffect(() => {
+    let isMounted = true;
+    $(document).on('open.zf.reveal', () => {
+      if (isMounted) setKey(k => k + 1);
+    });
+    return () => (isMounted = false);
+  }, []);
+  useEffect(() => {
+    if (ref) renderFoundationNode(ref);
+  }, [key, ref]);
 
   const router = useRouter();
   const project = useSelector(projectByIdSelector(router.query.projectId)) || {};
@@ -27,13 +40,15 @@ export const NewLocalityReveal = ({ revealId }: newLocationRevealPropTypes): Rea
   const dispatch = useDispatch();
 
   const submit = (locality: LocalityCreateInput) => {
+    locality.parentLocalityId = parentLocality?.id;
     dispatch(localityCreate(project, locality));
+
     // $FlowFixMe
     jQuery(`#${revealId}`).foundation('close');
   };
 
   return (
-    <div ref={renderFoundationNode} className="new-project-locality-reveal reveal" id={revealId} data-reveal="true">
+    <div ref={setRef} className="new-project-locality-reveal reveal" id={revealId} data-reveal="true">
       <h3>Neui Lokalität</h3>
 
       <LocalityCreateForm submit={submit} key={key}>

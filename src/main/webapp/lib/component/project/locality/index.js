@@ -1,10 +1,30 @@
 // @flow
 import * as React from 'react';
+import { useEffect } from 'react';
 
-import NewLocalityReveal from './new-locality.reveal';
+import { useDispatch, useSelector } from 'react-redux';
 
-export const Localities = (): React.Element<'div'> => {
-  const newLocationRevealId = 'new-location-reveal';
+import { localitiesLoad } from '../../../redux/action/locality.action';
+import { localitiesSelector } from '../../../redux/selector/locality.selector';
+
+import BackendAwareDndProvider from '../../../wrapper/dnd-provider';
+import MessageList from '../../../container/message-list';
+import LocalityDrop from './locality.drop';
+import LocalityDrag from './locality.drag';
+
+import styles from './locality.module.scss';
+
+export type localitiesPropTypes = {
+  project: Project,
+};
+
+export const Localities = ({ project }: localitiesPropTypes): React.Element<'div'> => {
+  const rootLocalities = useSelector(localitiesSelector(project, null));
+  const dispatch = useDispatch();
+
+  useEffect(() => dispatch(localitiesLoad(project)), [dispatch]);
+
+  let selectedLocalities = [];
 
   return (
     <div className="project-localities">
@@ -14,18 +34,20 @@ export const Localities = (): React.Element<'div'> => {
             <li className="menu-text">Lokalitäte</li>
           </ul>
         </div>
+      </div>
 
-        <div className="top-bar-right">
-          <ul className="menu button-group">
-            <li>
-              <NewLocalityReveal revealId={newLocationRevealId} />
+      <MessageList />
 
-              <button type="button" className="button success" data-open={newLocationRevealId} aria-label="Neuer Standort erfassen">
-                neui Lokalität
-              </button>
-            </li>
-          </ul>
-        </div>
+      <div className="grid-x grid-padding-x">
+        <BackendAwareDndProvider>
+          <div className={`cell medium-4 ${styles.localityDrop}`}>
+            <LocalityDrop parentLocality={null}>
+              {rootLocalities.map((locality: Locality, index: number) => (
+                <LocalityDrag locality={locality} />
+              ))}
+            </LocalityDrop>
+          </div>
+        </BackendAwareDndProvider>
       </div>
     </div>
   );

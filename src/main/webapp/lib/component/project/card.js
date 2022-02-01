@@ -18,7 +18,7 @@ export const ProjectCard = ({ project }: projectCardPropTypes): React.Element<'d
   };
 
   return (
-    <div className={`project-card ${styles.hoverable}`} onClick={loadProject}>
+    <div className="project-card hoverable" onClick={loadProject}>
       <Callout type="" fit={false}>
         <h5>{project.name}</h5>
         <p className={styles.description}>

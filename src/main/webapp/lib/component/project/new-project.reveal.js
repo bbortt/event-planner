@@ -7,6 +7,7 @@ import { useDispatch } from 'react-redux';
 import { projectCreate } from '../../redux/action/project.action';
 
 import ProjectCreateForm from './create.form';
+
 import renderFoundationNode from '../../foundation/render-foundation-node';
 
 export type newProjectRevealPropTypes = {
@@ -15,19 +16,31 @@ export type newProjectRevealPropTypes = {
 
 export const NewProjectReveal = ({ revealId }: newProjectRevealPropTypes): React.Element<'div'> => {
   const [key, setKey] = useState(0);
+  const [ref, setRef] = useState();
+
   // $FlowFixMe
-  useEffect(() => $(document).on('open.zf.reveal', () => setKey(k => k + 1)), []);
+  useEffect(() => {
+    let isMounted = true;
+    $(document).on('open.zf.reveal', () => {
+      if (isMounted) setKey(k => k + 1);
+    });
+    return () => (isMounted = false);
+  }, []);
+  useEffect(() => {
+    if (ref) renderFoundationNode(ref);
+  }, [key, ref]);
 
   const dispatch = useDispatch();
 
   const submit = (project: ProjectCreateInput) => {
     dispatch(projectCreate(project));
+
     // $FlowFixMe
     jQuery(`#${revealId}`).foundation('close');
   };
 
   return (
-    <div ref={renderFoundationNode} className="new-project-reveal reveal" id={revealId} data-reveal="true">
+    <div ref={setRef} className="new-project-reveal reveal" id={revealId} data-reveal="true">
       <h3>Neus Projekt</h3>
 
       <ProjectCreateForm submit={submit} key={key}>
