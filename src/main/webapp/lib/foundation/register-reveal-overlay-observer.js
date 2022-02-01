@@ -11,7 +11,6 @@ export const registerRevealOverlayObserver = () => {
           body.removeChild(target);
           next.appendChild(target);
         }
-        observer.disconnect();
       }
     }
   };
