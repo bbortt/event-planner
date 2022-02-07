@@ -1,5 +1,7 @@
 // @flow
-export type projectAction = projectAddAction | projectCreateAction | projectsLoadAction | projectsSetAction;
+import type { localityAction } from './locality.action';
+
+export type projectAction = projectAddAction | projectCreateAction | projectsLoadAction | projectsSetAction | localityAction;
 
 export const projectAddType = 'project:add';
 export const projectCreateType = 'project:create';

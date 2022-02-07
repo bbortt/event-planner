@@ -18,14 +18,6 @@ export const NewProjectReveal = ({ revealId }: newProjectRevealPropTypes): React
   const [key, setKey] = useState(0);
   const [ref, setRef] = useState();
 
-  // $FlowFixMe
-  useEffect(() => {
-    let isMounted = true;
-    $(document).on('open.zf.reveal', () => {
-      if (isMounted) setKey(k => k + 1);
-    });
-    return () => (isMounted = false);
-  }, []);
   useEffect(() => {
     if (ref) renderFoundationNode(ref);
   }, [key, ref]);
@@ -37,6 +29,7 @@ export const NewProjectReveal = ({ revealId }: newProjectRevealPropTypes): React
 
     // $FlowFixMe
     jQuery(`#${revealId}`).foundation('close');
+    setKey(k => k + 1);
   };
 
   return (
