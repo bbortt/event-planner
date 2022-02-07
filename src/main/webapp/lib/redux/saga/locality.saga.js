@@ -7,14 +7,19 @@ import { CreateLocalityMutation } from '../../apollo/mutation/locality.mutation'
 import { ListLocalitiesQuery } from '../../apollo/query/locality.query';
 
 import type { localitiesLoadAction, localityCreateAction } from '../action/locality.action';
-import { localitiesLoadType, localityAdd, localityCreateType } from '../action/locality.action';
+import {
+  localitiesLoad as localitiesLoadReduxAction,
+  localitiesLoadType,
+  localityAdd,
+  localityCreateType,
+} from '../action/locality.action';
 import { messageAdd } from '../action/message.action';
 
 function* localityCreate(action: localityCreateAction) {
   const { project, locality } = action.payload;
 
   try {
-    const { data } = yield getApolloClient().mutate<{ createLocality: Locality }>({
+    const { data } = yield getApolloClient().mutate<{ createLocality: Locality }, { projectId: number, locality: LocalityCreateInput }>({
       mutation: CreateLocalityMutation,
       variables: { projectId: project.id, locality },
     });
@@ -31,19 +36,25 @@ function* localityCreateSaga(): typeof SagaIterator {
 }
 
 function* localitiesLoad(action: localitiesLoadAction) {
-  const { project, parent } = action;
-
-  console.log('localitiesLoadAction: ', action);
+  const { locality } = action.payload;
 
   try {
-    const { data } = yield getApolloClient().query<{ listLocalities: Locality[] }>({
+    const { data } = yield getApolloClient().query<{ listLocalities: Locality[] }, { projectId: number, parentLocalityId: number }>({
       query: ListLocalitiesQuery,
       variables: {
-        projectId: project?.id,
-        parentLocalityId: parent?.id,
+        projectId: locality.project?.id,
+        parentLocalityId: locality.parent?.id,
       },
     });
-    (data.listLocalities || []).forEach(locality => put(localityAdd(locality)));
+    yield all(
+      (data.listLocalities || []).map(locality => {
+        const putYield = put(localityAdd(locality));
+        if (locality.parent) {
+          return all([put(localitiesLoadReduxAction(null, locality.parent)), putYield]);
+        }
+        return putYield;
+      })
+    );
   } catch (error) {
     yield put(messageAdd('alert', error.message, 'Lokalitäte ladä isch fählgschlage - due doch d Sitä mal neu Ladä!'));
   }

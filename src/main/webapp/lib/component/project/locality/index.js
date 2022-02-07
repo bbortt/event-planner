@@ -43,7 +43,7 @@ export const Localities = ({ project }: localitiesPropTypes): React.Element<'div
           <div className={`cell medium-4 ${styles.localityDrop}`}>
             <LocalityDrop parentLocality={null}>
               {rootLocalities.map((locality: Locality, index: number) => (
-                <LocalityDrag locality={locality} />
+                <LocalityDrag locality={locality} key={index} />
               ))}
             </LocalityDrop>
           </div>

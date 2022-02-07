@@ -5,6 +5,12 @@ export const ListLocalitiesQuery = gql`
     listLocalities(projectId: $projectId, parentLocalityId: $parentLocalityId) {
       id
       name
+      parent {
+        id
+      }
+      project {
+        id
+      }
     }
   }
 `;

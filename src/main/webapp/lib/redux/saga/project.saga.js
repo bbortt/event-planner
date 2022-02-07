@@ -14,7 +14,7 @@ function* projectCreate(action: projectCreateAction) {
   const { project } = action.payload;
 
   try {
-    const { data } = yield getApolloClient().mutate<{ createProject: Project }>({
+    const { data } = yield getApolloClient().mutate<{ createProject: Project }, { project: Project }>({
       mutation: CreateProjectMutation,
       variables: { project },
     });
@@ -34,13 +34,15 @@ function* projectsLoad(action: projectsLoadAction) {
   const { count, offset } = action;
 
   try {
-    const { data } = yield getApolloClient().query<{ listProjects: Project[] }>({
+    const { data } = yield getApolloClient().query<{ listProjects: Project[] }, { count: number, offset: number }>({
       query: ListProjectsQuery,
       variables: {
         count,
         offset,
+        sort: 'name.asc',
       },
     });
+    // TODO: Apollo should update cache here!
     yield put(projectsSet(data.listProjects || []));
   } catch (error) {
     yield put(messageAdd('alert', error.message, 'Projekt ladä isch fählgschlage - due doch d Sitä mal neu Ladä!'));

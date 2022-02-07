@@ -5,11 +5,13 @@ export const localityAddType = 'locality:add';
 export const localityCreateType = 'locality:create';
 export const localitiesLoadType = 'locality:load-list';
 
+export const localityActionType = localityAddType | localityCreateType | localitiesLoadType;
+
 export type localityAddAction = { type: 'locality:add', payload: { locality: Locality } };
 export type localityCreateAction = { type: 'locality:create', payload: { project: Project, locality: LocalityCreateInput } };
 export type localitiesLoadAction = {
   type: 'locality:load-list',
-  payload: { project?: Project, parent?: Locality },
+  payload: { locality: Locality },
 };
 
 export const localityAdd = (locality: Locality): localityAddAction => ({
@@ -22,5 +24,5 @@ export const localityCreate = (project: Project, locality: LocalityCreateInput):
 });
 export const localitiesLoad = (project?: Project, parent?: Locality): localitiesLoadAction => ({
   type: 'locality:load-list',
-  payload: { project, parent },
+  payload: { locality: { project, parent } },
 });
