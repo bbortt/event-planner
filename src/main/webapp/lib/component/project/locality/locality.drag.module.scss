@@ -1,2 +1,22 @@
+@import '~pages/settings';
+
 .localityDrag {
+  background-color: $body-background;
+  border: 1px solid $black;
+  padding: 1vh 1vw;
+
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.localityDragActive {
+  background-color: $primary-color !important;
+}
+
+.localityDragTarget {
+  background-color: $light-gray;
 }
