@@ -14,7 +14,7 @@ import LocalityCreateForm from './create.form';
 import renderFoundationNode from '../../../foundation/render-foundation-node';
 
 export type newLocationRevealPropTypes = {
-  parentLocality: Locality,
+  parentLocality?: Locality,
   revealId: string,
 };
 
@@ -44,7 +44,7 @@ export const NewLocalityReveal = ({ parentLocality, revealId }: newLocationRevea
     <div ref={setRef} className="new-project-locality-reveal reveal" id={revealId} data-reveal="true">
       <h3>Neui Lokalität</h3>
 
-      <LocalityCreateForm submit={submit} key={key}>
+      <LocalityCreateForm parent={parentLocality} submit={submit} key={key}>
         <button type="button" className="button warning" data-close={revealId} aria-label="Aktion abbrechen">
           Abbräche
         </button>

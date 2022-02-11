@@ -7,12 +7,7 @@ import { CreateLocalityMutation } from '../../apollo/mutation/locality.mutation'
 import { ListLocalitiesQuery } from '../../apollo/query/locality.query';
 
 import type { localitiesLoadAction, localityCreateAction } from '../action/locality.action';
-import {
-  localitiesLoad as localitiesLoadReduxAction,
-  localitiesLoadType,
-  localityAdd,
-  localityCreateType,
-} from '../action/locality.action';
+import { localitiesLoadType, localityAdd, localityCreateType } from '../action/locality.action';
 import { messageAdd } from '../action/message.action';
 
 function* localityCreate(action: localityCreateAction) {
@@ -46,15 +41,9 @@ function* localitiesLoad(action: localitiesLoadAction) {
         parentLocalityId: locality.parent?.id,
       },
     });
-    yield all(
-      (data.listLocalities || []).map(locality => {
-        const putYield = put(localityAdd(locality));
-        if (locality.parent) {
-          return all([put(localitiesLoadReduxAction(null, locality.parent)), putYield]);
-        }
-        return putYield;
-      })
-    );
+
+    // TODO: Do I have to make sure all parents are available?
+    yield all((data.listLocalities || []).map(locality => put(localityAdd(locality))));
   } catch (error) {
     yield put(messageAdd('alert', error.message, 'Lokalitäte ladä isch fählgschlage - due doch d Sitä mal neu Ladä!'));
   }

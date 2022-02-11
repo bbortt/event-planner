@@ -4,7 +4,7 @@ import { projectAddType, projectsSetType } from '../action/project.action';
 
 import type { localityAction } from '../action/locality.action';
 import { localityAddType } from '../action/locality.action';
-import { reduceProjectById } from './locality.reducer';
+import { reduceProjectById } from './localities.reducer';
 
 export type projectsState = Array<Project>;
 

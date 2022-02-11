@@ -6,11 +6,13 @@ import { useState } from 'react';
 
 export type locationCreateFormPropTypes = {
   children: React.ChildrenArray<React.Element<'button'>>,
+  parent?: Locality,
   submit: (locality: LocalityCreateInput) => void,
 };
 
 export const LocalityCreateForm = ({
   children,
+  parent,
   submit,
 }: locationCreateFormPropTypes): React.Element<typeof Callout | typeof ErrorCallout | 'div'> => {
   const [name, setName] = useState('');
@@ -37,6 +39,10 @@ export const LocalityCreateForm = ({
         <label>
           <span>Beschribig</span>
           <textarea aria-describedby="Beschreibung" placeholder="Beschribig" value={description} onChange={changeHandler(setDescription)} />
+        </label>
+        <label>
+          <span>Mami</span>
+          <textarea aria-describedby="Eltern-Lokalität" placeholder="Mami" value={parent ? parent.name : 'Kes Mami'} readOnly />
         </label>
 
         <div className="button-group align-right">
