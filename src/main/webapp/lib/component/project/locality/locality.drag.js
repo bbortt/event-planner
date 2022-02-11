@@ -9,10 +9,10 @@ export const LOCALITY_DROP_TYPE = 'locality-drop';
 
 export type localityDragPropTypes = {
   locality: Locality,
-  onClick: (locality: Locality) => void,
+  onLocalitySelect: (locality: Locality) => void,
 };
 
-export const LocalityDrag = ({ locality, onClick }: localityDragPropTypes): React.Element<'div'> => {
+export const LocalityDrag = ({ locality, onLocalitySelect }: localityDragPropTypes): React.Element<'div'> => {
   const [{ isDragging }, drag, dragPreview] = useDrag(() => ({
     type: LOCALITY_DROP_TYPE,
     collect: monitor => ({
@@ -40,14 +40,24 @@ export const LocalityDrag = ({ locality, onClick }: localityDragPropTypes): Reac
       className={`locality-drag hoverable ${styles.localityDrag} ${!isDragging && canDrop ? styles.localityDragTarget : ''} ${
         !isDragging && isOver ? styles.localityDragActive : ''
       }`}
-      onClick={() => onClick(locality)}
       ref={drop}
       role={'Dustbin'}
     >
       <div ref={dragPreview} style={{ opacity: isDragging ? 0.7 : 1 }}>
         <div className="grid-x" ref={drag} role="Handle">
-          <div className="cell small-6">Lokalität "{locality.name}"</div>
-          <div className="cell small-6 text-right">&#187;</div>
+          <div className="cell small-6 grid-y align-center">
+            <span>Lokalität "{locality.name}"</span>
+          </div>
+          <div className="cell small-6 text-right">
+            <button
+              type="button"
+              className="button margin-bottom-0 primary"
+              onClick={() => onLocalitySelect(locality)}
+              aria-label={`Lokalität "${locality.name}" auswählen`}
+            >
+              &#187;
+            </button>
+          </div>
         </div>
       </div>
     </div>

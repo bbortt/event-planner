@@ -10,12 +10,18 @@ import LocalityDrag, { LOCALITY_DROP_TYPE } from './locality.drag';
 import styles from './locality.drop.module.scss';
 
 export type localityDropPropTypes = {
-  addLocality: () => void,
   locality: Locality,
   childrenLocalities: Locality[],
+  addLocality: (parent: Locality) => void,
+  onLocalitySelect: (locality: Locality) => Locality,
 };
 
-export const LocalityDrop = ({ addLocality, locality, childrenLocalities }: localityDropPropTypes): React.Element<'div'> => {
+export const LocalityDrop = ({
+  addLocality,
+  locality,
+  childrenLocalities,
+  onLocalitySelect,
+}: localityDropPropTypes): React.Element<'div'> => {
   const [{ canDrop, isOverCurrent }, drop] = useDrop(() => ({
     accept: LOCALITY_DROP_TYPE,
     collect: monitor => ({
@@ -24,10 +30,6 @@ export const LocalityDrop = ({ addLocality, locality, childrenLocalities }: loca
     }),
     drop: () => locality,
   }));
-
-  const localitySelected = (locality: Locality) => {
-    console.log('selectedLocality: ', locality);
-  };
 
   return (
     <div className="locality-drop">
@@ -39,25 +41,23 @@ export const LocalityDrop = ({ addLocality, locality, childrenLocalities }: loca
         <p className={styles.localityName}>{locality.name}</p>
 
         {childrenLocalities.length === 0 && (
-          <Callout
-            type="warning"
-            className={childrenLocalities.length === 0 ? 'hoverable' : ''}
-            onClick={childrenLocalities.length === 0 ? addLocality : () => {}}
-          >
-            <h5>Uf derä Stufä gits no kenner Lokalitäte.</h5>
-            <p>Klick hie zum die ersti Lokalität hinzuezfüegä!</p>
-          </Callout>
+          <div className="hoverable" onClick={() => addLocality(locality)}>
+            <Callout type="warning">
+              <h5>Uf derä Stufä gits no kenner Lokalitäte.</h5>
+              <p>Klick hie zum die ersti Lokalität hinzuezfüegä!</p>
+            </Callout>
+          </div>
         )}
 
         <div>
           {childrenLocalities.map((locality: Locality, index: number) => (
-            <LocalityDrag key={index} locality={locality} onClick={localitySelected} />
+            <LocalityDrag key={index} locality={locality} onLocalitySelect={onLocalitySelect} />
           ))}
         </div>
 
         <br />
 
-        <button type="button" className="button success" onClick={addLocality} aria-label="Weitere Lokalität hinzufügen">
+        <button type="button" className="button success" onClick={() => addLocality(locality)} aria-label="Weitere Lokalität hinzufügen">
           Lokalität derzuefüege
         </button>
       </div>

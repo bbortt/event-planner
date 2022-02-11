@@ -15,30 +15,40 @@ import LocalityDrag from './locality.drag';
 import styles from './locality.module.scss';
 import NewLocalityReveal from './new-locality.reveal';
 
+const ROOT_LOCALITY_NAME = 'Mami';
+
 export type localitiesPropTypes = {
   project: Project,
 };
 
 export const Localities = ({ project }: localitiesPropTypes): React.Element<'div'> => {
+  const [parentLocality, setParentLocality] = useState();
+  const [selectedLocality, setSelectedLocality] = useState();
   const [time] = useState(new Date().getTime());
 
-  const rootLocalities = useSelector(localitiesSelector(project, null));
   const dispatch = useDispatch();
 
-  useEffect(() => dispatch(localitiesLoad(project)), [dispatch]);
+  useEffect(() => {
+    try {
+      // $FlowFixMe
+      jQuery(`#${newLocationRevealId}`).foundation('open');
+    } catch (e) {
+      // Silently ignored
+    }
+  }, [parentLocality]);
+  useEffect(() => dispatch(localitiesLoad(project, selectedLocality)), [selectedLocality]);
 
-  let selectedLocalities = [];
+  const rootLocalities = useSelector(localitiesSelector(project, null));
+  const subLocalities = useSelector(localitiesSelector(project, selectedLocality));
 
   const newLocationRevealId = `new-location-reveal-${time}`;
 
-  const addLocality = () => {
-    // $FlowFixMe
-    jQuery(`#${newLocationRevealId}`).foundation('open');
-  };
+  const addLocality = parent => setParentLocality(parent.name === ROOT_LOCALITY_NAME ? null : parent);
+  const localitySelected = (locality: Locality) => setSelectedLocality(locality);
 
   return (
-    <div className="project-localities">
-      <NewLocalityReveal revealId={newLocationRevealId} />
+    <div className="project-localitiesReducer">
+      <NewLocalityReveal parentLocality={parentLocality} revealId={newLocationRevealId} />
 
       <div className="top-bar top-bar-bordered site-header">
         <div className="top-bar-left">
@@ -53,8 +63,24 @@ export const Localities = ({ project }: localitiesPropTypes): React.Element<'div
       <div className="grid-x grid-padding-x">
         <BackendAwareDndProvider>
           <div className={`cell medium-4 ${styles.localityDrop}`}>
-            <LocalityDrop addLocality={addLocality} childrenLocalities={rootLocalities} locality={{ name: 'Mami' }} />
+            <LocalityDrop
+              locality={{ name: ROOT_LOCALITY_NAME }}
+              childrenLocalities={rootLocalities}
+              addLocality={addLocality}
+              onLocalitySelect={localitySelected}
+            />
           </div>
+
+          {selectedLocality && (
+            <div className={`cell medium-4 ${styles.localityDrop}`}>
+              <LocalityDrop
+                locality={selectedLocality}
+                childrenLocalities={subLocalities || []}
+                addLocality={addLocality}
+                onLocalitySelect={localitySelected}
+              />
+            </div>
+          )}
         </BackendAwareDndProvider>
       </div>
     </div>

@@ -5,6 +5,12 @@ export const CreateLocalityMutation = gql`
     createLocality(projectId: $projectId, locality: $locality) {
       id
       name
+      parent {
+        id
+      }
+      project {
+        id
+      }
     }
   }
 `;

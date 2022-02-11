@@ -1,5 +1,9 @@
 @import '~pages/settings';
 
+.alignCenter {
+  margin: auto 0;
+}
+
 .localityDrag {
   background-color: $body-background;
   border: 1px solid $black;
