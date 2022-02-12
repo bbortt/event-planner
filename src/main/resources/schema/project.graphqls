@@ -21,5 +21,5 @@ type Project {
   endDate: Date!
   archived: Boolean!
   members: [Member]
-  localitiesReducer: [Locality]
+  localities: [Locality]
 }

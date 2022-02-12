@@ -1,9 +1,5 @@
 @import '~pages/settings';
 
-.alignCenter {
-  margin: auto 0;
-}
-
 .localityDrag {
   background-color: $body-background;
   border: 1px solid $black;
@@ -23,4 +19,8 @@
 
 .localityDragTarget {
   background-color: $light-gray;
+}
+
+.buttonNoMargin {
+  margin: 0;
 }

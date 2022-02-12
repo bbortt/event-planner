@@ -2,7 +2,7 @@
 import { localityAddType } from '../action/locality.action';
 import type { localityAction, localityAddAction } from '../action/locality.action';
 
-export const reduceProjectById = (projects: Project[], localityAction: localityAction): Project[] => {
+export const reduceProjectById = (projects: Array[Project], localityAction: localityAction): Array<Project> => {
   const projectIndex = projects.findIndex(project => project.id === localityAction.payload.locality.project?.id);
   if (projectIndex === -1) {
     return projects;
@@ -11,9 +11,9 @@ export const reduceProjectById = (projects: Project[], localityAction: localityA
   const project = projects[projectIndex];
 
   const newProjects = [];
-  newProjects.push(projects.slice(0, projectIndex));
+  projects.slice(0, projectIndex).forEach(newProjects.push);
   newProjects.push({ ...project, localities: localitiesReducer(project.localities || [], localityAction) });
-  newProjects.push(projects.slice(projectIndex + 1, projects.length));
+  projects.slice(projectIndex + 1, projects.length).forEach(newProjects.push);
   return newProjects;
 };
 
@@ -29,7 +29,7 @@ const localitiesReducer = (state: localitiesState = [], action: localityAction):
   }
 };
 
-const mergeLocalities = (a: Locality[], b: Locality[]): Locality[] => {
+const mergeLocalities = (a: Array<Locality>, b: Array<Locality>): Array<Locality> => {
   const result = a.slice();
 
   b.forEach(bLocality => {
@@ -42,7 +42,7 @@ const mergeLocalities = (a: Locality[], b: Locality[]): Locality[] => {
 
       if (p !== -1) {
         const parentLocality = result[p];
-        result[p] = { ...parentLocality, localities: mergeLocalities(parentLocality.localities || [], [bLocality]) };
+        result[p] = { ...parentLocality, children: mergeLocalities(parentLocality.children || [], [bLocality]) };
 
         console.log('merged: ', result[p]);
       } else {

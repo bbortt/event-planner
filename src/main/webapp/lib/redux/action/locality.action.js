@@ -5,8 +5,6 @@ export const localityAddType = 'locality:add';
 export const localityCreateType = 'locality:create';
 export const localitiesLoadType = 'locality:load-list';
 
-export const localityActionType = localityAddType | localityCreateType | localitiesLoadType;
-
 export type localityAddAction = { type: 'locality:add', payload: { locality: Locality } };
 export type localityCreateAction = { type: 'locality:create', payload: { project: Project, locality: LocalityCreateInput } };
 export type localitiesLoadAction = {

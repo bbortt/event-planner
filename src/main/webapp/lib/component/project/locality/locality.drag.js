@@ -51,11 +51,11 @@ export const LocalityDrag = ({ locality, onLocalitySelect }: localityDragPropTyp
           <div className="cell small-6 text-right">
             <button
               type="button"
-              className="button margin-bottom-0 primary"
+              className={`button primary ${styles.buttonNoMargin}`}
               onClick={() => onLocalitySelect(locality)}
               aria-label={`Lokalität "${locality.name}" auswählen`}
             >
-              &#187;
+              Meh gseh &#187;
             </button>
           </div>
         </div>

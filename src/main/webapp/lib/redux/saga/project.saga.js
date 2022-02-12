@@ -31,7 +31,7 @@ function* projectCreateSaga(): typeof SagaIterator {
 }
 
 function* projectsLoad(action: projectsLoadAction) {
-  const { count, offset } = action;
+  const { count, offset } = action.payload;
 
   try {
     const { data } = yield getApolloClient().query<{ listProjects: Project[] }, { count: number, offset: number }>({

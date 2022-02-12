@@ -1,7 +1,11 @@
 // @flow
 import * as React from 'react';
 
-export const Members = (): React.Element<'div'> => {
+export type membersPropTypes = {
+  project: Project,
+};
+
+export const Members = ({ project }: membersPropTypes): React.Element<'div'> => {
   return (
     <div className="project-members">
       <div className="top-bar top-bar-bordered site-header">
