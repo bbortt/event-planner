@@ -11,9 +11,9 @@ export const reduceProjectById = (projects: Array[Project], localityAction: loca
   const project = projects[projectIndex];
 
   const newProjects = [];
-  projects.slice(0, projectIndex).forEach(newProjects.push);
+  projects.slice(0, projectIndex).forEach(project => newProjects.push(project));
   newProjects.push({ ...project, localities: localitiesReducer(project.localities || [], localityAction) });
-  projects.slice(projectIndex + 1, projects.length).forEach(newProjects.push);
+  projects.slice(projectIndex + 1, projects.length).forEach(project => newProjects.push(project));
   return newProjects;
 };
 
