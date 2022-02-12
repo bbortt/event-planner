@@ -13,7 +13,7 @@ export type localityDropPropTypes = {
   locality: Locality,
   childrenLocalities: Locality[],
   addLocality: (parent: Locality) => void,
-  onLocalitySelect: (locality: Locality) => Locality,
+  onLocalitySelect: (locality: Locality) => void,
 };
 
 export const LocalityDrop = ({
