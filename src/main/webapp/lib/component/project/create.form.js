@@ -5,7 +5,7 @@ import { useState } from 'react';
 import Callout from '../../foundation/callout';
 import ErrorCallout from '../../layout/message/error.callout';
 
-import DatePicker, { registerLocale, setDefaultLocale } from 'react-datepicker';
+import DatePicker from 'react-datepicker';
 
 export type projectCreateFormPropTypes = {
   children: React.ChildrenArray<React.Element<'button'>>,

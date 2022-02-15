@@ -81,7 +81,7 @@ public class LocalityService {
   @Modifying
   @Transactional
   @PreAuthorize("isAuthenticated()")
-  public Locality updateLocality(Long id, String name, String description) {
+  public Locality updateLocality(Long id, String name, String description, Long newParentLocalityId) {
     Locality locality = localityRepository
       .findById(id)
       .orElseThrow(() -> new IllegalArgumentException("Locality must have an existing Id!"));
@@ -97,6 +97,13 @@ public class LocalityService {
     }
     if (StringUtils.isNotEmpty(description)) {
       locality.setDescription(description);
+    }
+
+    if (Optional.ofNullable(newParentLocalityId).isPresent()) {
+      Locality newParent = localityRepository
+        .findById(newParentLocalityId)
+        .orElseThrow(() -> new IllegalArgumentException("Parent Locality must have an existing Id!"));
+      locality.setParent(newParent);
     }
 
     Locality newLocality = localityRepository.save(locality);

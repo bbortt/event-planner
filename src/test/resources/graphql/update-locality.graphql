@@ -1,0 +1,7 @@
+mutation UpdateLocalityMutation($locality: LocalityUpdateInput!) {
+  updateLocality(locality: $locality) {
+    id
+    name
+    __typename
+  }
+}

@@ -3,11 +3,11 @@ import { SagaIterator } from '@redux-saga/core';
 import { all, put, takeLatest } from 'redux-saga/effects';
 
 import { getApolloClient } from '../../apollo/client';
-import { CreateLocalityMutation } from '../../apollo/mutation/locality.mutation';
+import { CreateLocalityMutation, UpdateLocalityMutation } from '../../apollo/mutation/locality.mutation';
 import { ListLocalitiesQuery } from '../../apollo/query/locality.query';
 
-import type { localitiesLoadAction, localityCreateAction } from '../action/locality.action';
-import { localitiesLoadType, localityAdd, localityCreateType } from '../action/locality.action';
+import type { localitiesLoadAction, localityCreateAction, localityUpdateAction } from '../action/locality.action';
+import { localitiesLoadType, localityAdd, localityCreateType, localityUpdateType } from '../action/locality.action';
 import { messageAdd } from '../action/message.action';
 
 function* localityCreate(action: localityCreateAction) {
@@ -28,6 +28,27 @@ function* localityCreate(action: localityCreateAction) {
 
 function* localityCreateSaga(): typeof SagaIterator {
   yield takeLatest(localityCreateType, localityCreate);
+}
+
+function* localityUpdate(action: localityUpdateAction) {
+  const { locality } = action.payload;
+  const { id, name, description, newParentLocalityId } = locality;
+
+  try {
+    const { data } = yield getApolloClient().mutate<{ updateLocality: Locality }, { locality: LocalityCreateInput }>({
+      mutation: UpdateLocalityMutation,
+      variables: { locality: { id, name, description, newParentLocalityId } },
+    });
+    const updateLocality: Locality = data.updateLocality;
+    yield put(localityAdd(updateLocality));
+    yield put(messageAdd('success', `Lokalität "${locality.name}" verschobä.`));
+  } catch (error) {
+    yield put(messageAdd('alert', error.message, 'Lokalität verschiebä isch fählgschlage!'));
+  }
+}
+
+function* localityUpdateSaga(): typeof SagaIterator {
+  yield takeLatest(localityUpdateType, localityUpdate);
 }
 
 function* localitiesLoad(action: localitiesLoadAction) {
@@ -54,5 +75,5 @@ function* localitiesLoadSaga(): typeof SagaIterator {
 }
 
 export default function* localitySaga(): typeof SagaIterator {
-  yield all([localityCreateSaga(), localitiesLoadSaga()]);
+  yield all([localityCreateSaga(), localityUpdateSaga(), localitiesLoadSaga()]);
 }

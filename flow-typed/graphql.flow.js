@@ -41,6 +41,7 @@ export type LocalityUpdateInput = {|
   description?: ?$ElementType<Scalars, 'String'>,
   id: $ElementType<Scalars, 'ID'>,
   name?: ?$ElementType<Scalars, 'String'>,
+  newParentLocalityId?: ?$ElementType<Scalars, 'ID'>,
 |};
 
 export type Member = {|
@@ -57,7 +58,6 @@ export type Mutation = {|
   createLocality: Locality,
   createProject: Project,
   joinProject: Member,
-  moveLocality: Locality,
   updateLocality: Locality,
   updateProject: Project,
 |};
@@ -73,11 +73,6 @@ export type MutationCreateProjectArgs = {|
 
 export type MutationJoinProjectArgs = {|
   token?: ?$ElementType<Scalars, 'String'>,
-|};
-
-export type MutationMoveLocalityArgs = {|
-  fromLocalityId?: ?$ElementType<Scalars, 'ID'>,
-  toLocalityId?: ?$ElementType<Scalars, 'ID'>,
 |};
 
 export type MutationUpdateLocalityArgs = {|

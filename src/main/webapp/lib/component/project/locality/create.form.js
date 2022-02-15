@@ -1,8 +1,8 @@
 // @flow
 import * as React from 'react';
+import { useState } from 'react';
 import Callout from '../../../foundation/callout';
 import ErrorCallout from '../../../layout/message/error.callout';
-import { useState } from 'react';
 
 export type locationCreateFormPropTypes = {
   children: React.ChildrenArray<React.Element<'button'>>,

@@ -14,6 +14,8 @@ public class LocalityUpdateInput {
   @Size(min = 1, max = 300)
   private String description;
 
+  private Long newParentLocalityId;
+
   public Long getId() {
     return id;
   }
@@ -36,5 +38,13 @@ public class LocalityUpdateInput {
 
   public void setDescription(String description) {
     this.description = description;
+  }
+
+  public Long getNewParentLocalityId() {
+    return newParentLocalityId;
+  }
+
+  public void setNewParentLocalityId(Long newParentLocalityId) {
+    this.newParentLocalityId = newParentLocalityId;
   }
 }
