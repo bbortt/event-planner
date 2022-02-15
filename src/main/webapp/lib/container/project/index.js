@@ -5,10 +5,10 @@ import { useRouter } from 'next/router';
 
 import { useSelector } from 'react-redux';
 
-import Localities from '../../component/project/locality';
+import Localities from './localities';
 import Members from '../../component/project/member';
-import { ProjectNavbar } from '../../component/project/navbar';
 import type { tabType } from '../../component/project/navbar';
+import { ProjectNavbar } from '../../component/project/navbar';
 
 import { projectByIdSelector } from '../../redux/selector/project.selector';
 

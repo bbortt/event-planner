@@ -8,12 +8,14 @@ export type messagesState = Array<Message>;
 
 export const messagesReducer = (state: messagesState = [], action: messageAction): messagesState => {
   switch (action.type) {
-    case messageAddType:
+    case messageAddType: {
       const { message } = ((action: any): messageAddAction).payload;
       return [...state, message];
-    case messageDeleteType:
+    }
+    case messageDeleteType: {
       const { id } = ((action: any): messageDeleteAction).payload;
       return state.filter(message => message.id !== id);
+    }
     default:
       return state;
   }

@@ -1,13 +1,9 @@
 // @flow
 import { SagaIterator } from '@redux-saga/core';
-import { all, put, takeLatest } from 'redux-saga/effects';
-
-import { getApolloClient } from '../../apollo/client';
-import { MemberApproveMutation } from '../../apollo/mutation/member.mutation';
+import { all, takeLatest } from 'redux-saga/effects';
 
 import type { memberApproveAction } from '../action/member.action';
 import { memberApproveType } from '../action/member.action';
-import { messageAdd } from '../action/message.action';
 
 function* memberApprove(action: memberApproveAction) {
   // const { id } = action.payload;

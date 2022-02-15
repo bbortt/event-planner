@@ -50,7 +50,7 @@ public class Locality extends AbstractAuditingEntity {
   private Project project;
 
   @ManyToOne
-  @JoinColumn(name = "parent_id", updatable = false)
+  @JoinColumn(name = "parent_id")
   @JsonIgnoreProperties(value = "children", allowSetters = true)
   private Locality parent;
 

@@ -32,35 +32,35 @@ export const LocalityDrop = ({
   }));
 
   return (
-    <div className="locality-drop">
-      <div
-        className={`${styles.localityDrop} ${canDrop ? styles.localityDropTarget : ''} ${isOverCurrent ? styles.localityDropActive : ''}`}
-        ref={drop}
-        role={'Dustbin'}
-      >
-        <p className={styles.localityName}>{locality.name}</p>
+    <div
+      className={`locality-drop ${styles.localityDrop} ${canDrop ? styles.localityDropTarget : ''} ${
+        isOverCurrent ? styles.localityDropActive : ''
+      }`}
+      ref={drop}
+      role={'Dustbin'}
+    >
+      <p className={styles.localityName}>{locality.name}</p>
 
-        {childrenLocalities.length === 0 && (
-          <div className="hoverable" onClick={() => addLocality(locality)}>
-            <Callout type="warning">
-              <h5>Uf derä Stufä gits no kenner Lokalitäte.</h5>
-              <p>Klick hie zum die ersti Lokalität hinzuezfüegä!</p>
-            </Callout>
-          </div>
-        )}
-
-        <div>
-          {childrenLocalities.map((locality: Locality, index: number) => (
-            <LocalityDrag key={index} locality={locality} onLocalitySelect={onLocalitySelect} />
-          ))}
+      {childrenLocalities.length === 0 && (
+        <div className="hoverable" onClick={() => addLocality(locality)}>
+          <Callout type="warning">
+            <h5>Uf derä Stufä gits no kenner Lokalitäte.</h5>
+            <p>Klick hie zum die ersti Lokalität hinzuezfüegä!</p>
+          </Callout>
         </div>
+      )}
 
-        <br />
-
-        <button type="button" className="button success" onClick={() => addLocality(locality)} aria-label="Weitere Lokalität hinzufügen">
-          Lokalität derzuefüege
-        </button>
+      <div>
+        {childrenLocalities.map((locality: Locality, index: number) => (
+          <LocalityDrag key={index} locality={locality} onLocalitySelect={onLocalitySelect} />
+        ))}
       </div>
+
+      <br />
+
+      <button type="button" className="button success" onClick={() => addLocality(locality)} aria-label="Weitere Lokalität hinzufügen">
+        Lokalität derzuefüege
+      </button>
     </div>
   );
 };

@@ -1,6 +1,6 @@
 // @flow
 import type { Action, Dispatch, Store } from 'redux';
-import { applyMiddleware, combineReducers, createStore } from 'redux';
+import { applyMiddleware, createStore } from 'redux';
 
 import { createWrapper } from 'next-redux-wrapper';
 
@@ -40,10 +40,12 @@ const makeStore = (context): applicationStore => {
 
 const hotReload = (store: applicationStore, sagaMiddleware, sagaTask) => {
   module.hot.accept('./reducer', () => {
+    console.log('hot replacing reducers..');
     const reducer = require('./reducer');
     store.replaceReducer(reducer);
   });
   module.hot.accept('./saga', () => {
+    console.log('hot replacing saga..');
     const rootSaga = require('./saga');
     sagaTask.cancel();
     sagaTask.done.then(() => {

@@ -14,3 +14,18 @@ export const CreateLocalityMutation = gql`
     }
   }
 `;
+
+export const UpdateLocalityMutation = gql`
+  mutation UpdateLocalityMutation($locality: LocalityUpdateInput!) {
+    updateLocality(locality: $locality) {
+      id
+      name
+      parent {
+        id
+      }
+      project {
+        id
+      }
+    }
+  }
+`;

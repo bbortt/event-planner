@@ -10,14 +10,17 @@ export type projectsState = Array<Project>;
 
 export const projectsReducer = (state: projectsState = [], action: projectAction): projectsState => {
   switch (action.type) {
-    case projectAddType:
+    case projectAddType: {
       const { project } = ((action: any): projectAddAction).payload;
       return [...state, { ...project }];
-    case projectsSetType:
+    }
+    case projectsSetType: {
       const { projects } = ((action: any): projectsSetAction).payload;
       return [...projects];
-    case localityAddType:
+    }
+    case localityAddType: {
       return [...reduceProjectById(state, ((action: any): localityAction))];
+    }
     default:
       return state;
   }

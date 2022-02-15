@@ -1,9 +1,12 @@
 // @flow
 import * as React from 'react';
 
+import { useDispatch } from 'react-redux';
+
 import { useDrag, useDrop } from 'react-dnd';
 
 import styles from './locality.drag.module.scss';
+import { localityUpdate } from '../../../redux/action/locality.action';
 
 export const LOCALITY_DROP_TYPE = 'locality-drop';
 
@@ -13,6 +16,8 @@ export type localityDragPropTypes = {
 };
 
 export const LocalityDrag = ({ locality, onLocalitySelect }: localityDragPropTypes): React.Element<'div'> => {
+  const dispatch = useDispatch();
+
   const [{ isDragging }, drag, dragPreview] = useDrag(() => ({
     type: LOCALITY_DROP_TYPE,
     collect: monitor => ({
@@ -22,7 +27,7 @@ export const LocalityDrag = ({ locality, onLocalitySelect }: localityDragPropTyp
     end: (item, monitor) => {
       const dropResult = monitor.getDropResult();
       if (item && dropResult && item.id !== dropResult.id) {
-        console.log(`You dropped ${item} into ${dropResult}!`);
+        dispatch(localityUpdate({ ...item, newParentLocalityId: dropResult.id }));
       }
     },
   }));

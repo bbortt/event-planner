@@ -16,7 +16,12 @@ export const registerRevealOverlayObserver = () => {
   };
 
   const mutationObserver = new MutationObserver(eventListener);
-  const observerConfig = { attributes: false, childList: true, characterData: false, subtree: true };
+  const observerConfig = {
+    attributes: false,
+    childList: true,
+    characterData: false,
+    subtree: true,
+  };
   mutationObserver.observe(document, observerConfig);
 };
 

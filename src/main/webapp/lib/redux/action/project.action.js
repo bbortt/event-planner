@@ -13,7 +13,10 @@ export type projectCreateAction = { type: 'project:create', payload: { project: 
 export type projectsLoadAction = { type: 'project:load-list', payload: { count?: number, offset?: number } };
 export type projectsSetAction = { type: 'project:set-list', payload: { projects: Project[] } };
 
-export const projectAdd = (project: Project): projectAddAction => ({ type: 'project:add', payload: { project } });
+export const projectAdd = (project: Project): projectAddAction => ({
+  type: 'project:add',
+  payload: { project },
+});
 export const projectCreate = (project: ProjectCreateInput): projectCreateAction => ({
   type: 'project:create',
   payload: { project },

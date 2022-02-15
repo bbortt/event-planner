@@ -14,6 +14,7 @@ import io.github.bbortt.event.planner.domain.Member;
 import io.github.bbortt.event.planner.domain.MemberPermission;
 import io.github.bbortt.event.planner.domain.Project;
 import io.github.bbortt.event.planner.repository.Auth0UserRepository;
+import io.github.bbortt.event.planner.repository.LocalityRepository;
 import io.github.bbortt.event.planner.repository.MemberRepository;
 import io.github.bbortt.event.planner.repository.PermissionRepository;
 import io.github.bbortt.event.planner.repository.ProjectRepository;
@@ -55,6 +56,9 @@ class LocalityMutationResolverIntegrationTest extends AbstractApplicationContext
 
   @Autowired
   private PermissionRepository permissionRepository;
+
+  @Autowired
+  private LocalityRepository localityRepository;
 
   private Auth0User auth0User;
   private Project project;
@@ -135,6 +139,42 @@ class LocalityMutationResolverIntegrationTest extends AbstractApplicationContext
 
     String errorMessage = response.get("$.errors[0].message", String.class);
     assertEquals("Exception while fetching data (/createLocality) : Access is denied", errorMessage);
+  }
+
+  @Test
+  void updateLocalityWithoutPermissionFails() throws IOException, JoseException {
+    Locality locality = new Locality("name", project);
+
+    Session session = sessionFactory.openSession();
+    session.beginTransaction();
+
+    session.persist(locality);
+
+    session.getTransaction().commit();
+    session.close();
+
+    String token = testJwsBuilder.build("graphql:access").getCompactSerialization();
+    graphQLTestTemplate.withBearerAuth(token);
+
+    GraphQLResponse response = graphQLTestTemplate.perform(
+      "graphql/update-locality.graphql",
+      "UpdateLocalityMutation",
+      objectMapper
+        .createObjectNode()
+        .set("locality", objectMapper.createObjectNode().put("id", locality.getId()).put("name", locality.getName()))
+    );
+    assertTrue(response.isOk());
+
+    String errorMessage = response.get("$.errors[0].message", String.class);
+    assertEquals("Exception while fetching data (/updateLocality) : Access is denied", errorMessage);
+
+    session = sessionFactory.openSession();
+    session.beginTransaction();
+
+    session.delete(locality);
+
+    session.getTransaction().commit();
+    session.close();
   }
 
   @AfterEach

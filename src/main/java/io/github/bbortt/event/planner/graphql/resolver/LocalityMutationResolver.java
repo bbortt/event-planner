@@ -34,10 +34,11 @@ public class LocalityMutationResolver implements GraphQLMutationResolver {
   }
 
   public Locality updateLocality(@Valid LocalityUpdateInput localityUpdateInput) {
-    return localityService.updateLocality(localityUpdateInput.getId(), localityUpdateInput.getName(), localityUpdateInput.getDescription());
-  }
-
-  public Locality moveLocality(Optional<Long> fromLocalityId, Optional<Long> toLocalityId) {
-    return null;
+    return localityService.updateLocality(
+      localityUpdateInput.getId(),
+      localityUpdateInput.getName(),
+      localityUpdateInput.getDescription(),
+      localityUpdateInput.getNewParentLocalityId()
+    );
   }
 }

@@ -8,6 +8,7 @@ input LocalityUpdateInput {
   id: ID!
   name: String
   description: String
+  newParentLocalityId: ID
 }
 
 type Locality {
@@ -26,5 +27,4 @@ extend type Query {
 extend type Mutation {
   createLocality(projectId: ID!, locality: LocalityCreateInput!): Locality!
   updateLocality(locality: LocalityUpdateInput!): Locality!
-  moveLocality(fromLocalityId: ID, toLocalityId: ID): Locality!
 }
