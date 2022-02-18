@@ -9,7 +9,7 @@ import { useApollo } from '../apollo/client';
 import { useAuth0 } from '@auth0/auth0-react';
 import { User } from '@auth0/auth0-spa-js';
 
-const createAuthContext = async (getAccessTokenSilently, user) => {
+const createAuthContext = async getAccessTokenSilently => {
   const token = await getAccessTokenSilently({
     audience: 'http://localhost:8080',
     scope: 'graphql:access',
@@ -40,7 +40,7 @@ export const ApolloProviderWrapper = ({
   useEffect(() => {
     if (isAuthenticated) {
       const creteAuthLink = async () => {
-        const authLink = await createAuthContext(getAccessTokenSilently, user);
+        const authLink = await createAuthContext(getAccessTokenSilently);
         apolloClient.setLink(authLink.concat(apolloClient.link));
       };
       creteAuthLink().catch(console.error);

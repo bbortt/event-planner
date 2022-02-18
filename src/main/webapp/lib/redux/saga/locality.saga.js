@@ -41,9 +41,9 @@ function* localityUpdate(action: localityUpdateAction) {
     });
     const updateLocality: Locality = data.updateLocality;
     yield put(localityAdd(updateLocality));
-    yield put(messageAdd('success', `Lokalität "${locality.name}" verschobä.`));
+    yield put(messageAdd('success', `Lokalität "${locality.name}" aktualisiert.`));
   } catch (error) {
-    yield put(messageAdd('alert', error.message, 'Lokalität verschiebä isch fählgschlage!'));
+    yield put(messageAdd('alert', error.message, 'Lokalität aktualisierä isch fählgschlage!'));
   }
 }
 
