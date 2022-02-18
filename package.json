@@ -34,7 +34,7 @@
     "date-fns": "^2.28.0",
     "deepmerge": "^4.2.2",
     "foundation-sites": "^6.7.4",
-    "graphql": "^16.2.0",
+    "graphql": "^16.3.0",
     "jquery": "^3.6.0",
     "lib": "file:src/main/webapp/lib",
     "next": "^12.0.9",
