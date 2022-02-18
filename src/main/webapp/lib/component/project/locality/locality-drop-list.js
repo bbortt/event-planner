@@ -1,95 +1,74 @@
 // @flow
 import * as React from 'react';
-import { forwardRef, useImperativeHandle, useState } from 'react';
 
 import { ROOT_LOCALITY_NAME } from '../../../constants';
 
 import BackendAwareDndProvider from '../../../wrapper/dnd-provider';
 
 import LocalityDrop from './locality.drop';
+import Callout from '../../../foundation/callout';
 
 export type localityDropListPropTypes = {
   addLocality: (parent: Locality) => void,
+  localityIdIndices: string[],
   onLocalitySelect: (locality: Locality) => void,
   project: Project,
   projectLocalities: Locality[],
 };
 
-export const LocalityDropList = forwardRef(
-  ({ addLocality, onLocalitySelect, project, projectLocalities }: localityDropListPropTypes, ref): React.Element<'div'> => {
-    const [localityIdIndices, setLocalityIdIndices] = useState([]);
+export const LocalityDropList = ({
+  addLocality,
+  localityIdIndices,
+  onLocalitySelect,
+  project,
+  projectLocalities,
+}: localityDropListPropTypes): React.Element<'div'> => {
+  const existingLocalityIdIndices = [];
 
-    useImperativeHandle(ref, () => ({
-      rebuildLocalityIdIndices,
-    }));
+  return (
+    <div className="locality-drop-list grid-x grid-margin-x grid-margin-y">
+      <BackendAwareDndProvider>
+        <div className="cell medium-4">
+          <LocalityDrop
+            locality={{ id: '', name: ROOT_LOCALITY_NAME, children: [], project }}
+            childrenLocalities={projectLocalities}
+            addLocality={addLocality}
+            onLocalitySelect={onLocalitySelect}
+          />
+        </div>
 
-    const rebuildLocalityIdIndices = (selectedLocality: Locality) => {
-      setLocalityIdIndices(buildLocalityIdIndices(localityIdIndices, selectedLocality));
-    };
+        {localityIdIndices.map((localityIndex, index) => {
+          existingLocalityIdIndices.push(localityIndex);
+          const localityAtIndex = resolveLocalityUsingIdIndices(projectLocalities, existingLocalityIdIndices);
 
-    const renderLocalityDropList = () => {
-      const existingLocalityIdIndices = [];
-      return localityIdIndices.map((localityIndex, index) => {
-        existingLocalityIdIndices.push(localityIndex);
-
-        const localityAtIndex = resolveLocalityUsingIdIndices(projectLocalities, existingLocalityIdIndices);
-
-        if (!localityAtIndex) {
-          return null;
-        }
-
-        return (
-          <div className="cell medium-4" key={index}>
-            <LocalityDrop
-              locality={localityAtIndex}
-              childrenLocalities={localityAtIndex.children || []}
-              addLocality={addLocality}
-              onLocalitySelect={onLocalitySelect}
-            />
-          </div>
-        );
-      });
-    };
-
-    return (
-      <div className="locality-drop-list grid-x grid-margin-x grid-margin-y">
-        <BackendAwareDndProvider>
-          <div className="cell medium-4">
-            <LocalityDrop
-              locality={{ name: ROOT_LOCALITY_NAME, project }}
-              childrenLocalities={projectLocalities}
-              addLocality={addLocality}
-              onLocalitySelect={onLocalitySelect}
-            />
-          </div>
-
-          {renderLocalityDropList()}
-        </BackendAwareDndProvider>
-      </div>
-    );
-  }
-);
-
-const buildLocalityIdIndices = (currentIdIndices: number[], newLocality: Locality): number[] => {
-  if (!newLocality.parent) {
-    return [newLocality.id];
-  }
-
-  let nextIndices;
-  const matchIndex = currentIdIndices.findIndex(id => id === newLocality.parent.id);
-  if (matchIndex !== -1) {
-    nextIndices = currentIdIndices.slice(0, matchIndex + 1);
-  } else {
-    nextIndices = currentIdIndices.slice();
-  }
-
-  nextIndices.push(newLocality.id);
-
-  return nextIndices;
+          return (
+            <div className="cell medium-4" key={index}>
+              {localityAtIndex ? (
+                <LocalityDrop
+                  locality={localityAtIndex}
+                  childrenLocalities={localityAtIndex.children || []}
+                  addLocality={addLocality}
+                  onLocalitySelect={onLocalitySelect}
+                />
+              ) : (
+                <Callout type="warning">
+                  <h5>Da isch öpis falsch glofä.</h5>
+                  <p>Due doch d Sitä mal neu Ladä!</p>
+                </Callout>
+              )}
+            </div>
+          );
+        })}
+      </BackendAwareDndProvider>
+    </div>
+  );
 };
 
-const resolveLocalityUsingIdIndices = (projectLocalities: Locality[], localityIdIndices: number[]): Locality | undefined => {
+const resolveLocalityUsingIdIndices = (projectLocalities: Locality[], localityIdIndices: string[]): ?Locality => {
   const locality = projectLocalities.find(projectLocality => projectLocality.id === localityIdIndices[0]);
+  if (!locality) {
+    return;
+  }
 
   if (localityIdIndices.length === 1) {
     return locality;

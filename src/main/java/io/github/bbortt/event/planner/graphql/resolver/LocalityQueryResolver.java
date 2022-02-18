@@ -5,6 +5,7 @@ import io.github.bbortt.event.planner.domain.Locality;
 import io.github.bbortt.event.planner.service.LocalityService;
 import java.util.Optional;
 import java.util.Set;
+import javax.validation.constraints.NotNull;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -16,7 +17,7 @@ public class LocalityQueryResolver implements GraphQLQueryResolver {
     this.localityService = localityService;
   }
 
-  public Set<Locality> listLocalities(Optional<Long> projectId, Optional<Long> parentLocalityId) {
+  public Set<Locality> listLocalities(@NotNull Long projectId, Optional<Long> parentLocalityId) {
     return localityService.findAllInProjectByParentLocality(projectId, parentLocalityId);
   }
 }

@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 
 import { withAuthenticationRequired } from '@auth0/auth0-react';
 
-import Project from 'lib/container/project';
+import ProjectDetails from 'lib/container/project';
 import ProjectList from 'lib/container/project/list';
 import LoadingCallout from 'lib/layout/message/loading.callout';
 
@@ -16,7 +16,7 @@ export const Projects = (): React.Element<'div'> => {
   if (projectId) {
     return (
       <div>
-        <Project id={projectId} />
+        <ProjectDetails id={projectId} />
       </div>
     );
   }

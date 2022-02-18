@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 
 import { useSelector } from 'react-redux';
 
-import Localities from './localities';
+import ProjectLocalities from './localities';
 import Members from '../../component/project/member';
 import type { tabType } from '../../component/project/navbar';
 import { ProjectNavbar } from '../../component/project/navbar';
@@ -17,7 +17,7 @@ function showCurrentTabOrLocalities(tab: tabType, project: Project) {
     case 'members':
       return <Members project={project} />;
     default:
-      return <Localities project={project} />;
+      return <ProjectLocalities project={project} />;
   }
 }
 
@@ -25,19 +25,23 @@ export type projectPropTypes = {
   id: number,
 };
 
-export const Project = ({ id }: projectPropTypes): React.Element<'div'> => {
-  const project = useSelector(projectByIdSelector(id)) || {};
+export const ProjectDetails = ({ id }: projectPropTypes): React.Element<'div'> => {
+  const project = useSelector(projectByIdSelector(id));
   const router = useRouter();
 
   const tab: tabType = router.query.tab || 'localities';
 
   return (
     <div className="project">
-      <ProjectNavbar project={project} tab={tab} />
+      {project && (
+        <div>
+          <ProjectNavbar project={project} tab={tab} />
 
-      <div>{showCurrentTabOrLocalities(tab, project)}</div>
+          <div>{showCurrentTabOrLocalities(tab, project)}</div>
+        </div>
+      )}
     </div>
   );
 };
 
-export default Project;
+export default ProjectDetails;

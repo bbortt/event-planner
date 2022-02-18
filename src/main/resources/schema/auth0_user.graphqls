@@ -5,5 +5,5 @@ type Auth0User {
   picture: String
   familyName: String
   givenName: String
-  memberships: [Member]
+  memberships: [Member!]!
 }

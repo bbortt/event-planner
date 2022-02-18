@@ -3,12 +3,12 @@ type Member {
   project: Project!
   accepted: Boolean!
   auth0User: Auth0User!
-  permissions: [Permission]
+  permissions: [Permission!]!
 }
 
 extend type Query {
-  listMembers(projectId: ID!): [Member]!
-  getMember(memberId: ID!): Member
+  listMembers(projectId: ID!): [Member!]!
+  getMember(memberId: ID!): Member!
 }
 
 extend type Mutation {

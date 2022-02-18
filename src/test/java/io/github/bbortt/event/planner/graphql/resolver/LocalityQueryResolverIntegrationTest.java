@@ -131,7 +131,7 @@ class LocalityQueryResolverIntegrationTest extends AbstractApplicationContextAwa
     GraphQLResponse response = graphQLTestTemplate.perform(
       "graphql/get-nested-localities.graphql",
       "ListLocalitiesQuery",
-      objectMapper.createObjectNode().put("parentLocalityId", parentLocality.getId())
+      objectMapper.createObjectNode().put("projectId", project.getId()).put("parentLocalityId", parentLocality.getId())
     );
     assertTrue(response.isOk());
 

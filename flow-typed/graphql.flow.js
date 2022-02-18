@@ -15,7 +15,7 @@ export type Auth0User = {|
   email: $ElementType<Scalars, 'String'>,
   familyName?: ?$ElementType<Scalars, 'String'>,
   givenName?: ?$ElementType<Scalars, 'String'>,
-  memberships?: ?Array<?Member>,
+  memberships: Array<Member>,
   nickname: $ElementType<Scalars, 'String'>,
   picture?: ?$ElementType<Scalars, 'String'>,
   userId: $ElementType<Scalars, 'String'>,
@@ -23,7 +23,7 @@ export type Auth0User = {|
 
 export type Locality = {|
   __typename?: 'Locality',
-  children?: ?Array<?Locality>,
+  children: Array<Locality>,
   description?: ?$ElementType<Scalars, 'String'>,
   id: $ElementType<Scalars, 'ID'>,
   name: $ElementType<Scalars, 'String'>,
@@ -49,7 +49,7 @@ export type Member = {|
   accepted: $ElementType<Scalars, 'Boolean'>,
   auth0User: Auth0User,
   id: $ElementType<Scalars, 'ID'>,
-  permissions?: ?Array<?Permission>,
+  permissions: Array<Permission>,
   project: Project,
 |};
 
@@ -85,7 +85,7 @@ export type MutationUpdateProjectArgs = {|
 
 export type Permission = {|
   __typename?: 'Permission',
-  members?: ?Array<?Member>,
+  members: Array<Member>,
 |};
 
 export type Project = {|
@@ -94,8 +94,8 @@ export type Project = {|
   description?: ?$ElementType<Scalars, 'String'>,
   endDate: $ElementType<Scalars, 'Date'>,
   id: $ElementType<Scalars, 'ID'>,
-  localities?: ?Array<?Locality>,
-  members?: ?Array<?Member>,
+  localities: Array<Locality>,
+  members: Array<Member>,
   name: $ElementType<Scalars, 'String'>,
   startDate: $ElementType<Scalars, 'Date'>,
   token: $ElementType<Scalars, 'String'>,
@@ -117,10 +117,10 @@ export type ProjectUpdateInput = {|
 
 export type Query = {|
   __typename?: 'Query',
-  getMember?: ?Member,
-  listLocalities: Array<?Locality>,
-  listMembers: Array<?Member>,
-  listProjects: Array<?Project>,
+  getMember: Member,
+  listLocalities: Array<Locality>,
+  listMembers: Array<Member>,
+  listProjects: Array<Project>,
 |};
 
 export type QueryGetMemberArgs = {|
@@ -129,7 +129,7 @@ export type QueryGetMemberArgs = {|
 
 export type QueryListLocalitiesArgs = {|
   parentLocalityId?: ?$ElementType<Scalars, 'ID'>,
-  projectId?: ?$ElementType<Scalars, 'ID'>,
+  projectId: $ElementType<Scalars, 'ID'>,
 |};
 
 export type QueryListMembersArgs = {|

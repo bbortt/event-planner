@@ -25,7 +25,7 @@ class LocalityQueryResolverUnitTest {
 
   @Test
   void listLocalities() {
-    Optional<Long> a = Optional.of(1234L);
+    Long a = 1234L;
     Optional<Long> b = Optional.of(2345L);
 
     fixture.listLocalities(a, b);

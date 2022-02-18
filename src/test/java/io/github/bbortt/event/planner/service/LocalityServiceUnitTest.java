@@ -47,7 +47,7 @@ class LocalityServiceUnitTest {
     Long projectId = localityMock.getProject().getId();
     doReturn(true).when(permissionServiceMock).hasProjectPermissions(projectId, "locality:edit");
 
-    fixture.findAllInProjectByParentLocality(Optional.of(projectId), Optional.of(parentLocalityId));
+    fixture.findAllInProjectByParentLocality(projectId, Optional.of(parentLocalityId));
 
     verify(localityRepositoryMock).findAllByProjectIdEqualsAndParentEquals(projectId, localityMock);
   }
@@ -57,32 +57,9 @@ class LocalityServiceUnitTest {
     Long projectId = 1234L;
     doReturn(true).when(permissionServiceMock).hasProjectPermissions(projectId, "locality:edit");
 
-    fixture.findAllInProjectByParentLocality(Optional.of(projectId), Optional.empty());
+    fixture.findAllInProjectByParentLocality(projectId, Optional.empty());
 
     verify(localityRepositoryMock).findAllByProjectIdEqualsAndParentEquals(projectId, null);
-  }
-
-  @Test
-  void findAllInProjectByParentLocalityAcceptsEmptyProjectId() {
-    Long parentLocalityId = 2345L;
-    Locality localityMock = smartLocalityMock();
-    doReturn(Optional.of(localityMock)).when(localityRepositoryMock).findById(parentLocalityId);
-
-    Long projectId = localityMock.getProject().getId();
-    doReturn(true).when(permissionServiceMock).hasProjectPermissions(projectId, "locality:edit");
-
-    fixture.findAllInProjectByParentLocality(Optional.empty(), Optional.of(parentLocalityId));
-
-    verify(localityRepositoryMock).findAllByProjectIdEqualsAndParentEquals(projectId, localityMock);
-  }
-
-  @Test
-  void findAllInProjectByParentLocalityRequiresAtLeastOneArgument() {
-    IllegalArgumentException exception = assertThrows(
-      IllegalArgumentException.class,
-      () -> fixture.findAllInProjectByParentLocality(Optional.empty(), Optional.empty())
-    );
-    assertEquals("Provide either projectId or parentLocalityId!", exception.getMessage());
   }
 
   @Test
@@ -93,7 +70,7 @@ class LocalityServiceUnitTest {
 
     IllegalArgumentException exception = assertThrows(
       IllegalArgumentException.class,
-      () -> fixture.findAllInProjectByParentLocality(Optional.of(3456L), Optional.of(parentLocalityId))
+      () -> fixture.findAllInProjectByParentLocality(3456L, Optional.of(parentLocalityId))
     );
     assertEquals("Something went horribly wrong!", exception.getMessage());
   }

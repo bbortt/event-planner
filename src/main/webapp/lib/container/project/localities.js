@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -14,18 +14,18 @@ import MessageList from '../message-list';
 import LocalityDropList from '../../component/project/locality/locality-drop-list';
 import NewLocalityReveal from '../../component/project/locality/new-locality.reveal';
 
-export type localitiesPropTypes = {
+export type projectLocalitiesPropTypes = {
   project: Project,
 };
 
-export const Localities = ({ project }: localitiesPropTypes): React.Element<'div'> => {
+export const ProjectLocalities = ({ project }: projectLocalitiesPropTypes): React.Element<'div'> => {
   const [newLocalityParent, setNewLocalityParent] = useState();
   const [time] = useState(new Date().getTime());
 
   const dispatch = useDispatch();
   const projectLocalities = useSelector(localitiesSelector(project));
 
-  const localityDropListRef = useRef(null);
+  const [localityIdIndices, setLocalityIdIndices] = useState([]);
 
   useEffect(() => {
     try {
@@ -36,14 +36,16 @@ export const Localities = ({ project }: localitiesPropTypes): React.Element<'div
     }
   }, [newLocalityParent]);
 
-  useEffect(() => dispatch(localitiesLoad(project)), [dispatch]);
+  useEffect(() => {
+    dispatch(localitiesLoad(project));
+  }, [dispatch]);
 
   const newLocalityRevealId = `new-locality-reveal-${time}`;
 
-  const addLocality = parent => setNewLocalityParent(parent.name === ROOT_LOCALITY_NAME ? null : parent);
+  const addLocality = parent => setNewLocalityParent(parent.name === ROOT_LOCALITY_NAME ? undefined : parent);
   const localitySelected = (selectedLocality: Locality) => {
     dispatch(localitiesLoad(project, selectedLocality));
-    localityDropListRef.current.rebuildLocalityIdIndices(selectedLocality);
+    setLocalityIdIndices(buildLocalityIdIndices(localityIdIndices, selectedLocality));
   };
 
   return (
@@ -61,13 +63,32 @@ export const Localities = ({ project }: localitiesPropTypes): React.Element<'div
       <MessageList />
 
       <LocalityDropList
-        ref={localityDropListRef}
         addLocality={addLocality}
+        localityIdIndices={localityIdIndices}
         onLocalitySelect={localitySelected}
+        project={project}
         projectLocalities={projectLocalities}
       />
     </div>
   );
 };
 
-export default Localities;
+const buildLocalityIdIndices = (currentIdIndices: string[], newLocality: Locality): string[] => {
+  if (!newLocality.parent) {
+    return [newLocality.id];
+  }
+
+  let nextIndices;
+  const matchIndex = currentIdIndices.findIndex(id => newLocality.parent && id === newLocality.parent.id);
+  if (matchIndex !== -1) {
+    nextIndices = currentIdIndices.slice(0, matchIndex + 1);
+  } else {
+    nextIndices = currentIdIndices.slice();
+  }
+
+  nextIndices.push(newLocality.id);
+
+  return nextIndices;
+};
+
+export default ProjectLocalities;

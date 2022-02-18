@@ -17,11 +17,11 @@ type Locality {
   description: String
   project: Project!
   parent: Locality
-  children: [Locality]
+  children: [Locality!]!
 }
 
 extend type Query {
-  listLocalities(projectId: ID, parentLocalityId: ID): [Locality]!
+  listLocalities(projectId: ID!, parentLocalityId: ID): [Locality!]!
 }
 
 extend type Mutation {

@@ -12,6 +12,7 @@ import { projectByIdSelector } from '../../../redux/selector/project.selector';
 import LocalityCreateForm from './create.form';
 
 import renderFoundationNode from '../../../foundation/render-foundation-node';
+import Callout from '../../../foundation/callout';
 
 export type newLocationRevealPropTypes = {
   parentLocality?: Locality,
@@ -27,13 +28,14 @@ export const NewLocalityReveal = ({ parentLocality, revealId }: newLocationRevea
   }, [key, ref]);
 
   const router = useRouter();
-  const project = useSelector(projectByIdSelector(router.query.projectId)) || {};
+  const project = useSelector(projectByIdSelector(router.query.projectId));
 
   const dispatch = useDispatch();
 
   const submit = (locality: LocalityCreateInput) => {
-    locality.parentLocalityId = parentLocality?.id;
-    dispatch(localityCreate(project, locality));
+    if (project) {
+      dispatch(localityCreate(project, { ...locality, parentLocalityId: parentLocality?.id }));
+    }
 
     // $FlowFixMe
     jQuery(`#${revealId}`).foundation('close');
@@ -42,13 +44,22 @@ export const NewLocalityReveal = ({ parentLocality, revealId }: newLocationRevea
 
   return (
     <div ref={setRef} className="new-project-locality-reveal reveal" id={revealId} data-reveal="true">
-      <h3>Neui Lokalität</h3>
+      {project ? (
+        <div>
+          <h3>Neui Lokalität</h3>
 
-      <LocalityCreateForm parent={parentLocality} submit={submit} key={key}>
-        <button type="button" className="button warning" data-close={revealId} aria-label="Aktion abbrechen">
-          Abbräche
-        </button>
-      </LocalityCreateForm>
+          <LocalityCreateForm parent={parentLocality} submit={submit} key={key}>
+            <button type="button" className="button warning" data-close={revealId} aria-label="Aktion abbrechen">
+              Abbräche
+            </button>
+          </LocalityCreateForm>
+        </div>
+      ) : (
+        <Callout type="warning">
+          <h5>Öpis stimmt da ned.</h5>
+          <p>Es isch kes Projekt für die Lokalität definiert!</p>
+        </Callout>
+      )}
     </div>
   );
 };

@@ -11,7 +11,7 @@ import { localitiesLoadType, localityAdd, localityCreateType, localityUpdateType
 import { messageAdd } from '../action/message.action';
 
 function* localityCreate(action: localityCreateAction) {
-  const { project, locality } = action.payload;
+  const { locality, project } = action.payload;
 
   try {
     const { data } = yield getApolloClient().mutate<{ createLocality: Locality }, { projectId: number, locality: LocalityCreateInput }>({
@@ -41,7 +41,7 @@ function* localityUpdate(action: localityUpdateAction) {
     });
     const updateLocality: Locality = data.updateLocality;
     yield put(localityAdd(updateLocality));
-    yield put(messageAdd('success', `Lokalität "${locality.name}" aktualisiert.`));
+    yield put(messageAdd('success', `Lokalität "${updateLocality.name}" aktualisiert.`));
   } catch (error) {
     yield put(messageAdd('alert', error.message, 'Lokalität aktualisierä isch fählgschlage!'));
   }
@@ -52,14 +52,14 @@ function* localityUpdateSaga(): typeof SagaIterator {
 }
 
 function* localitiesLoad(action: localitiesLoadAction) {
-  const { locality } = action.payload;
+  const { project, parent } = action.payload;
 
   try {
     const { data } = yield getApolloClient().query<{ listLocalities: Locality[] }, { projectId: number, parentLocalityId: number }>({
       query: ListLocalitiesQuery,
       variables: {
-        projectId: locality.project?.id,
-        parentLocalityId: locality.parent?.id,
+        projectId: project.id,
+        parentLocalityId: parent?.id,
       },
     });
 

@@ -14,7 +14,7 @@ public class MemberQueryResolver implements GraphQLQueryResolver {
     return null;
   }
 
-  public Optional<Member> getMember(@NotNull Long memberId) {
+  public Member getMember(@NotNull Long memberId) {
     return null;
   }
 }

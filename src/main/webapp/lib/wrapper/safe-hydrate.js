@@ -6,7 +6,7 @@ export type safeHydratePropTypes = {
 };
 
 export const SafeHydrate = ({ children }: safeHydratePropTypes): React.Element<'div'> => {
-  return <div suppressHydrationWarning>{typeof window === 'undefined' ? null : children}</div>;
+  return <div suppressHydrationWarning>{typeof window !== 'undefined' && children}</div>;
 };
 
 export default SafeHydrate;

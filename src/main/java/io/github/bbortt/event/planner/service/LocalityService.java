@@ -30,26 +30,17 @@ public class LocalityService {
 
   @Transactional(readOnly = true)
   @PreAuthorize("isAuthenticated()")
-  public Set<Locality> findAllInProjectByParentLocality(Optional<Long> optionalProjectId, Optional<Long> parentLocalityId) {
-    Long projectId = null;
+  public Set<Locality> findAllInProjectByParentLocality(Long projectId, Optional<Long> parentLocalityId) {
     Locality parentLocality = null;
-
-    if (optionalProjectId.isPresent()) {
-      projectId = optionalProjectId.get();
-    }
 
     if (parentLocalityId.isPresent()) {
       parentLocality = findById(parentLocalityId.get());
 
-      if (projectId != null && !projectId.equals(parentLocality.getProject().getId())) {
+      if (!projectId.equals(parentLocality.getProject().getId())) {
         throw new IllegalArgumentException("Something went horribly wrong!");
       }
 
       projectId = parentLocality.getProject().getId();
-    }
-
-    if (projectId == null) {
-      throw new IllegalArgumentException("Provide either projectId or parentLocalityId!");
     }
 
     if (!permissionService.hasProjectPermissions(projectId, "locality:edit")) {
