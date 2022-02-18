@@ -1,3 +1,3 @@
 type Query {
-  listProjects(count: Int, offset: Int): [Project]!
+  listProjects(count: Int, offset: Int): [Project!]!
 }

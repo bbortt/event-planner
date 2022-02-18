@@ -1,4 +1,4 @@
-query ListLocalitiesQuery($projectId: ID) {
+query ListLocalitiesQuery($projectId: ID!) {
   listLocalities(projectId: $projectId) {
     id
     name

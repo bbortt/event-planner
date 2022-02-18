@@ -1,5 +1,5 @@
 // @flow
-export type localityAction = localityAddAction | localityCreateAction | localitiesLoadAction;
+export type localityAction = localityAddAction | localityCreateAction | localityUpdateAction | localitiesLoadAction;
 
 export const localityAddType = 'locality:add';
 export const localityCreateType = 'locality:create';
@@ -11,7 +11,7 @@ export type localityCreateAction = { type: 'locality:create', payload: { project
 export type localityUpdateAction = { type: 'locality:update', payload: { locality: LocalityUpdateInput } };
 export type localitiesLoadAction = {
   type: 'locality:load-list',
-  payload: { locality: Locality },
+  payload: { project: Project, parent?: Locality },
 };
 
 export const localityAdd = (locality: Locality): localityAddAction => ({
@@ -26,7 +26,7 @@ export const localityUpdate = (locality: LocalityUpdateInput): localityUpdateAct
   type: 'locality:update',
   payload: { locality },
 });
-export const localitiesLoad = (project?: Project, parent?: Locality): localitiesLoadAction => ({
+export const localitiesLoad = (project: Project, parent?: Locality): localitiesLoadAction => ({
   type: 'locality:load-list',
-  payload: { locality: { project, parent } },
+  payload: { project, parent },
 });

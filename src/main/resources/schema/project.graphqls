@@ -20,6 +20,6 @@ type Project {
   startDate: Date!
   endDate: Date!
   archived: Boolean!
-  members: [Member]
-  localities: [Locality]
+  members: [Member!]!
+  localities: [Locality!]!
 }

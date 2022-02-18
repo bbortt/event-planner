@@ -2,10 +2,17 @@
 import type { localityAction, localityAddAction } from '../action/locality.action';
 import { localityAddType } from '../action/locality.action';
 
-import { cutIndexFromArray } from '../../constants';
+const REDUCABLE_TYPES = [localityAddType];
+type reducableLocalityType = localityAddAction;
 
-export const reduceProjectById = (projects: Array[Project], localityAction: localityAction): Array<Project> => {
-  const projectIndex = projects.findIndex(project => project.id === localityAction.payload.locality.project?.id);
+export const reduceProjectById = (projects: Array<Project>, localityAction: localityAction): Array<Project> => {
+  if (!REDUCABLE_TYPES.includes(localityAction.type)) {
+    return projects;
+  }
+
+  const reducableLocalityAction = ((localityAction: any): reducableLocalityType);
+
+  const projectIndex = projects.findIndex(project => project.id === reducableLocalityAction.payload.locality.project.id);
   if (projectIndex === -1) {
     return projects;
   }
@@ -16,7 +23,7 @@ export const reduceProjectById = (projects: Array[Project], localityAction: loca
   projects.slice(0, projectIndex).forEach(project => newProjects.push(project));
   newProjects.push({
     ...project,
-    localities: localitiesReducer(project.localities || [], localityAction),
+    localities: localitiesReducer(project.localities || [], reducableLocalityAction),
   });
   projects.slice(projectIndex + 1, projects.length).forEach(project => newProjects.push(project));
   return newProjects;
@@ -24,18 +31,18 @@ export const reduceProjectById = (projects: Array[Project], localityAction: loca
 
 type localitiesState = Array<Locality>;
 
-const localitiesReducer = (state: localitiesState = [], action: localityAction): localitiesState => {
+const localitiesReducer = (state: localitiesState = [], action: reducableLocalityType): localitiesState => {
   switch (action.type) {
     case localityAddType: {
       const { locality } = ((action: any): localityAddAction).payload;
-      return mergeLocalities({ children: state }, [locality]);
+      return mergeLocalities({ id: '', children: state }, [locality]);
     }
     default:
       return state;
   }
 };
 
-const mergeLocalities = (a: Locality, b: Array<Locality>): Array<Locality> => {
+const mergeLocalities = (a: { id: string, children: Array<Locality> }, b: Array<Locality>): Array<Locality> => {
   const result = (a.children || []).slice();
   const leftovers = b.slice();
 
@@ -49,10 +56,10 @@ const mergeLocalities = (a: Locality, b: Array<Locality>): Array<Locality> => {
     }
 
     const matchIndex = result.findIndex(aLocality => aLocality.id === bLocality.id);
-    const parentIndex = result.findIndex(aLocality => aLocality.id === bLocality.parent.id);
+    const parentIndex = result.findIndex(aLocality => aLocality.id === bLocality.parent?.id);
 
     if (matchIndex !== -1) {
-      if (a.id !== bLocality.parent.id) {
+      if (a.id !== bLocality.parent?.id) {
         result.splice(i, 1);
       } else {
         result[matchIndex] = mergeLocality(result[matchIndex], bLocality);

@@ -22,7 +22,7 @@ export const MessageList = (): React.Element<'div'> => {
             <button type="button" className="close-button" onClick={() => closeMessage(message.id)} aria-label="Nachricht schliessen">
               <span aria-hidden="true">&times;</span>
             </button>
-            {message.title && <h5>{message.title}</h5>}
+            <span>{message.title && <h5>{message.title}</h5>}</span>
             <p>{message.message}</p>
           </Callout>
         ))}

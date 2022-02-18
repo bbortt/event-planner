@@ -16,7 +16,9 @@ export const ProjectList = (): React.Element<'div'> => {
   const projects = useSelector(projectsSelector());
   const dispatch = useDispatch();
 
-  useEffect(() => dispatch(projectsLoad()), [dispatch]);
+  useEffect(() => {
+    dispatch(projectsLoad());
+  }, [dispatch]);
 
   const newProjectRevealId = 'new-project-reveal';
 
@@ -44,14 +46,16 @@ export const ProjectList = (): React.Element<'div'> => {
 
       <MessageList />
 
-      {projects.length === 0 && (
-        <Callout type="warning">
-          <h5>Du hesch momentan no kenner Projekt.</h5>
-          <p>Entweder du hesch e Iladig oder machsch etz es neus!</p>
-        </Callout>
-      )}
-
       <div className="grid-x grid-padding-x">
+        {projects.length === 0 && (
+          <div className="cell">
+            <Callout type="warning">
+              <h5>Du hesch momentan no kenner Projekt.</h5>
+              <p>Entweder du hesch e Iladig oder machsch etz es neus!</p>
+            </Callout>
+          </div>
+        )}
+
         {projects.map((project: Project, index: number) => (
           <div className="cell medium-4" key={index}>
             <ProjectCard project={project} />
