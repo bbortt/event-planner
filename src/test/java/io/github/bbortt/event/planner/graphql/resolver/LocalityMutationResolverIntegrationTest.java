@@ -142,8 +142,69 @@ class LocalityMutationResolverIntegrationTest extends AbstractApplicationContext
   }
 
   @Test
+  void updateLocalityWithPermissionSucceeds() throws IOException, JoseException {
+    MemberPermission memberPermission = new MemberPermission(
+      member,
+      permissionRepository.findById("locality:edit").orElseThrow(EntityNotFoundException::new)
+    );
+    memberPermission.setCreatedBy(auth0User.getUserId());
+    ReflectionTestUtils.setField(member, "permissions", new HashSet<>(List.of(memberPermission)));
+    memberRepository.save(member);
+
+    Locality locality1 = new Locality("locality-1", project);
+    locality1.setCreatedBy(testJwsBuilder.getClaimsSubject());
+    Locality locality2 = new Locality("locality-2", project);
+    locality2.setCreatedBy(testJwsBuilder.getClaimsSubject());
+    Locality localityUnderTest = new Locality("name", project);
+    localityUnderTest.setCreatedBy(testJwsBuilder.getClaimsSubject());
+    localityUnderTest.setParent(locality1);
+
+    localityRepository.saveAll(List.of(locality1, locality2, localityUnderTest));
+
+    String updatedName = "updated-name";
+
+    String token = testJwsBuilder.build("graphql:access").getCompactSerialization();
+    graphQLTestTemplate.withBearerAuth(token);
+
+    GraphQLResponse response = graphQLTestTemplate.perform(
+      "graphql/update-locality.graphql",
+      "UpdateLocalityMutation",
+      objectMapper
+        .createObjectNode()
+        .set(
+          "locality",
+          objectMapper
+            .createObjectNode()
+            .put("id", localityUnderTest.getId())
+            .put("name", updatedName)
+            .put("newParentLocalityId", locality2.getId())
+        )
+    );
+    assertTrue(response.isOk());
+
+    Long localityId = response.get("$.data.updateLocality.id", Long.class);
+
+    Session session = sessionFactory.openSession();
+    session.beginTransaction();
+
+    Locality locality = session.createQuery("FROM Locality WHERE id = " + localityId, Locality.class).getSingleResult();
+
+    assertEquals(updatedName, locality.getName());
+    assertEquals(testJwsBuilder.getClaimsSubject(), locality.getLastModifiedBy());
+    assertEquals(locality2.getId(), locality.getParent().getId());
+
+    session.delete(session.merge(localityUnderTest));
+    session.delete(session.merge(locality2));
+    session.delete(session.merge(locality1));
+
+    session.getTransaction().commit();
+    session.close();
+  }
+
+  @Test
   void updateLocalityWithoutPermissionFails() throws IOException, JoseException {
     Locality locality = new Locality("name", project);
+    locality.setCreatedBy(testJwsBuilder.getClaimsSubject());
 
     Session session = sessionFactory.openSession();
     session.beginTransaction();
@@ -171,7 +232,7 @@ class LocalityMutationResolverIntegrationTest extends AbstractApplicationContext
     session = sessionFactory.openSession();
     session.beginTransaction();
 
-    session.delete(locality);
+    session.delete(session.merge(locality));
 
     session.getTransaction().commit();
     session.close();

@@ -28,19 +28,18 @@ const localitiesReducer = (state: localitiesState = [], action: localityAction):
   switch (action.type) {
     case localityAddType: {
       const { locality } = ((action: any): localityAddAction).payload;
-      return mergeLocalities(state, [locality]);
+      return mergeLocalities({ children: state }, [locality]);
     }
     default:
       return state;
   }
 };
 
-// TODO: This does not currently respect the assigned parent!
-const mergeLocalities = (a: Array<Locality>, b: Array<Locality>): Array<Locality> => {
-  const result = a.slice();
+const mergeLocalities = (a: Locality, b: Array<Locality>): Array<Locality> => {
+  const result = (a.children || []).slice();
   const leftovers = b.slice();
 
-  b.forEach((bLocality, i) => {
+  leftovers.forEach((bLocality, i) => {
     if (!bLocality) {
       return;
     } else if (!bLocality.parent) {
@@ -53,8 +52,12 @@ const mergeLocalities = (a: Array<Locality>, b: Array<Locality>): Array<Locality
     const parentIndex = result.findIndex(aLocality => aLocality.id === bLocality.parent.id);
 
     if (matchIndex !== -1) {
-      result[matchIndex] = mergeLocality(result[matchIndex], bLocality);
-      delete leftovers[i];
+      if (a.id !== bLocality.parent.id) {
+        result.splice(i, 1);
+      } else {
+        result[matchIndex] = mergeLocality(result[matchIndex], bLocality);
+        delete leftovers[i];
+      }
     } else if (parentIndex !== -1) {
       const parentLocality = result[parentIndex];
       let children = parentLocality.children || [];
@@ -63,7 +66,7 @@ const mergeLocalities = (a: Array<Locality>, b: Array<Locality>): Array<Locality
       if (childrenMatchLookahead === -1) {
         children.push(bLocality);
       } else {
-        children = mergeLocalities(children, [bLocality]);
+        children[childrenMatchLookahead] = mergeLocality(children[childrenMatchLookahead], bLocality);
       }
 
       result[parentIndex] = { ...parentLocality, children };
@@ -77,7 +80,7 @@ const mergeLocalities = (a: Array<Locality>, b: Array<Locality>): Array<Locality
       .forEach(
         aLocality =>
           (aLocality.children = mergeLocalities(
-            aLocality.children || [],
+            aLocality,
             leftovers.filter(bLocality => !!bLocality)
           ))
       );
@@ -89,7 +92,7 @@ const mergeLocalities = (a: Array<Locality>, b: Array<Locality>): Array<Locality
 const mergeLocality = (a: Locality, b: Locality): Locality => {
   return {
     __typename: 'Locality',
-    children: mergeLocalities(a.children || [], b.children || []),
+    children: mergeLocalities(a, b.children || []),
     description: b.description ? b.description : a.description,
     id: b.id ? b.id : a.id,
     name: b.name ? b.name : a.name,

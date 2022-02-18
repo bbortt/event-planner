@@ -62,6 +62,7 @@ export const LocalityDropList = forwardRef(
               onLocalitySelect={onLocalitySelect}
             />
           </div>
+
           {renderLocalityDropList()}
         </BackendAwareDndProvider>
       </div>
