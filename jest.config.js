@@ -6,19 +6,18 @@ const createJestConfig = nextJest({
 });
 
 const customJestConfig = {
-  collectCoverageFrom: ['**/*.js', '!**/node_modules/**'],
+  collectCoverageFrom: ['<rootDir>/src/main/webapp/*.js'],
   moduleNameMapper: {
     '^.+\\.module\\.(css|sass|scss)$': 'identity-obj-proxy',
     '^@/pages/(.*)$': '<rootDir>/pages/$1',
   },
   setupFilesAfterEnv: ['<rootDir>/src/test/js/jest.setup.js'],
   testEnvironment: 'jest-environment-jsdom',
-  testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/.next/'],
+  testPathIgnorePatterns: ['<rootDir>/.next/', '<rootDir>/.owl/', '<rootDir>/node_modules/', '<rootDir>/src/test/e2e/'],
   transform: {
     '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', { ...babelConfig }],
   },
   transformIgnorePatterns: ['/node_modules/', '^.+\\.module\\.(css|sass|scss)$'],
-  verbose: !!process.env.JEST_VERBOSE,
 };
 
 module.exports = createJestConfig(customJestConfig);
