@@ -28,7 +28,9 @@
     "release": "standard-version",
     "start": "next start",
     "test": "jest --updateSnapshot --watch",
-    "test:ci": "jest --ci"
+    "test:ci": "jest --ci --coverage --json --outputFile=build/jest-report.json --testLocationInResults --verbose",
+    "pretest:e2e": "playwright install --with-deps",
+    "test:e2e": "playwright test --config=playwright.config.js"
   },
   "dependencies": {
     "@apollo/client": "^3.5.9",
@@ -58,6 +60,7 @@
     "@commitlint/config-conventional": "^16.2.1",
     "@graphql-codegen/cli": "^2.6.2",
     "@graphql-codegen/flow": "^2.2.5",
+    "@playwright/test": "^1.19.1",
     "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/react": "^12.1.3",
     "@testing-library/user-event": "^13.5.0",

@@ -1,8 +1,8 @@
 name: Test
 on:
   push:
-    branches:
-      - '*/*'
+    branches-ignore:
+      - release
     tags-ignore:
       - '*'
 jobs:
@@ -55,11 +55,25 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '16'
-          cache: 'npm'
       - run: npm ci
-      - env:
-          JEST_VERBOSE: true
-        run: npm run test:ci
+      - run: npm run test:ci
+  frontend_e2e:
+    name: Test Frontend E2E
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+      - run: npm ci
+      - run: npm run test:e2e
+      - if: always()
+        uses: actions/upload-artifact@v2
+        env:
+          CI: true
+        with:
+          name: playwright-results
+          path: build/playwright-results
   frontend_build:
     name: Build Frontend
     runs-on: ubuntu-20.04
@@ -68,6 +82,5 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '16'
-          cache: 'npm'
       - run: npm ci
       - run: npm run build

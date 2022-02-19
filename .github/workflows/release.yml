@@ -2,7 +2,7 @@ name: Release
 on:
   push:
     branches:
-      - 'release'
+      - release
     tags-ignore:
       - '*'
     paths-ignore:
@@ -19,12 +19,12 @@ jobs:
           fetch-depth: '0'
           token: ${{ secrets.ACTION_TOKEN }}
       - run: |
+          git config pull.rebase true
           git config user.name "GitHub Actions Bot"
           git config user.email "<>"
       - uses: actions/setup-node@v2
         with:
-          node-version: '14'
-          cache: 'npm'
+          node-version: '16'
       - run: npm ci
       - run: npx --no-install standard-version
       - run: git push --follow-tags origin ${{ github.ref }}
