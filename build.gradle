@@ -15,6 +15,8 @@ version = "${version}"
 sourceCompatibility = "${sourceCompatibility}"
 assert System.properties["java.specification.version"] == "11" || "12" || "13" || "14" || "15" || "16" || "17"
 
+apply from: "gradle/sonar.gradle"
+
 defaultTasks "check"
 
 repositories {
@@ -33,8 +35,8 @@ dependencies {
     implementation platform ("org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}")
     implementation "com.graphql-java-kickstart:graphql-java-tools:12.0.2"
     implementation "com.graphql-java-kickstart:graphql-spring-boot-starter:12.0.0"
-    implementation "io.swagger:swagger-annotations:1.6.5"
-    implementation "jakarta.validation:jakarta.validation-api:2.0.2"
+    implementation "io.swagger.core.v3:swagger-annotations:2.1.12"
+    implementation "jakarta.validation:jakarta.validation-api:3.0.1"
     implementation "org.openapitools:jackson-databind-nullable:0.2.2"
     implementation "org.springframework.boot:spring-boot-starter-actuator"
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
@@ -66,14 +68,6 @@ flyway {
     locations = ["filesystem:src/main/resources/db/migration"]
 }
 
-sonarqube {
-    properties {
-        property "sonar.projectKey", "bbortt_event-planner"
-        property "sonar.projectName", "Event Planning Tool."
-        property "sonar.projectVersion", "${version}"
-    }
-}
-
 // --- OpenAPI Generation ---
 openApiGenerate {
     generatorName = "spring"
@@ -99,19 +93,20 @@ test {
     exclude "**/*IntegrationTest*"
 }
 
+task testReport(type: TestReport) {
+    destinationDir = file("$buildDir/reports/tests")
+    reportOn test
+}
+
 task integrationTest(type: Test, dependsOn: test) {
     useJUnitPlatform()
     include "**/*IntegrationTest*"
 }
 check.dependsOn integrationTest
-bootJar.dependsOn check
 
-jacocoTestReport {
-    reports {
-        html.enabled true
-        xml.enabled true
-        xml.destination file("${buildDir}/reports/jacoco.xml")
-    }
+task integrationTestReport(type: TestReport) {
+    destinationDir = file("$buildDir/reports/tests")
+    reportOn integrationTest
 }
 
 // --- Flyway Configuration ---
