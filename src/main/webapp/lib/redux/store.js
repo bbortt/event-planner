@@ -42,15 +42,15 @@ const makeStore = (context): applicationStore => {
 const hotReload = (store: applicationStore, sagaMiddleware, sagaTask: typeof SagaIterator) => {
   (module: any).hot.accept('./reducer', () => {
     console.log('hot replacing reducers..');
-    const reducer = require('./reducer');
-    store.replaceReducer(reducer);
+    const nextReducer = require('./reducer');
+    store.replaceReducer(nextReducer);
   });
   (module: any).hot.accept('./saga', () => {
     console.log('hot replacing saga..');
-    const rootSaga: typeof SagaIterator = require('./saga');
+    const nextRootSaga: typeof SagaIterator = require('./saga');
     sagaTask.cancel();
     sagaTask.done.then(() => {
-      sagaTask = sagaMiddleware.run(rootSaga);
+      sagaTask = sagaMiddleware.run(nextRootSaga);
     });
   });
 };

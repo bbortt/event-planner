@@ -36,7 +36,7 @@ public class Project extends AbstractAuditingEntity {
 
   @NotNull
   @NaturalId
-  @Column(columnDefinition = "bpchar(36)", nullable = false, updatable = false)
+  @Column(columnDefinition = "VARCHAR(36)", nullable = false, updatable = false)
   private UUID token = UUID.randomUUID();
 
   @NotNull

@@ -1,11 +1,11 @@
 // @flow
-import type { localityAction, localityAddAction } from '../action/locality.action';
+import type { localityAction as localityActionType, localityAddAction } from '../action/locality.action';
 import { localityAddType } from '../action/locality.action';
 
 const REDUCABLE_TYPES = [localityAddType];
 type reducableLocalityType = localityAddAction;
 
-export const reduceProjectById = (projects: Array<Project>, localityAction: localityAction): Array<Project> => {
+export const reduceProjectById = (projects: Array<Project>, localityAction: localityActionType): Array<Project> => {
   if (!REDUCABLE_TYPES.includes(localityAction.type)) {
     return projects;
   }

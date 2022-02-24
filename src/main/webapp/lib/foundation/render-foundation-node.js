@@ -18,7 +18,7 @@ export const renderFoundationNode = (
         callback();
       }
     })
-    .catch(() => {});
+    .catch(error => console.error(error));
 };
 
 export default renderFoundationNode;
