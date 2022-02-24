@@ -9,9 +9,9 @@ import projectSaga from './project.saga';
 
 const sagas = [localitySaga, memberSaga, messageSaga, projectSaga];
 
-function* spawnFailsafeSagas(sagas: typeof SagaIterator[]): typeof SagaIterator {
+function* spawnFailsafeSagas(failsafeSaga: typeof SagaIterator[]): typeof SagaIterator {
   yield all(
-    sagas.map((saga: typeof SagaIterator) =>
+    failsafeSaga.map((saga: typeof SagaIterator) =>
       spawn(function* () {
         while (true) {
           try {

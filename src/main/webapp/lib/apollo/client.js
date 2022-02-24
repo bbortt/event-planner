@@ -9,7 +9,6 @@ import merge from 'deepmerge';
 let apolloClient: typeof ApolloClient;
 
 const createIsomorphLink = (): typeof HttpLink => {
-  const { HttpLink } = require('@apollo/client/link/http');
   return new HttpLink({
     uri: process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT || 'localhost:8080/api/graphql/v1',
   });

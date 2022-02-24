@@ -3,7 +3,7 @@ CREATE TABLE locality
     id                 BIGSERIAL PRIMARY KEY    NOT NULL,
     name               VARCHAR(50)              NOT NULL,
     description        VARCHAR(300),
-    parent_id        BIGINT,
+    parent_id          BIGINT,
     project_id         BIGINT                   NOT NULL,
     created_by         VARCHAR(64)              NOT NULL,
     created_date       TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),

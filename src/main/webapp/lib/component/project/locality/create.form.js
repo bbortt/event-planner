@@ -46,7 +46,7 @@ export const LocalityCreateForm = ({
         </label>
 
         <div className="button-group align-right">
-          {children && children}
+          {children}
           <input type="submit" className="button success" aria-label="Erstellen" value="Erstellä" />
         </div>
       </form>

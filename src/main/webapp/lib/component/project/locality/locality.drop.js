@@ -51,8 +51,8 @@ export const LocalityDrop = ({
       )}
 
       <div>
-        {childrenLocalities.map((locality: Locality, index: number) => (
-          <LocalityDrag key={index} locality={locality} onLocalitySelect={onLocalitySelect} />
+        {childrenLocalities.map((childrenLocality: Locality, index: number) => (
+          <LocalityDrag key={index} locality={childrenLocality} onLocalitySelect={onLocalitySelect} />
         ))}
       </div>
 
