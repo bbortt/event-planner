@@ -2,6 +2,48 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.56](https://github.com/bbortt/event-planner/compare/v0.0.55...v0.0.56) (2022-02-25)
+
+### Features
+
+- locality query implementation ([83201d2](https://github.com/bbortt/event-planner/commit/83201d2f6f35292de50870fce5feca381305d624))
+- locality update implementation ([bb1ffdd](https://github.com/bbortt/event-planner/commit/bb1ffdd4543fc4f1d7b64c37be800696b4bf56d2))
+
+### Bug Fixes
+
+- flow types ([b4914d0](https://github.com/bbortt/event-planner/commit/b4914d0b12ff269a2611334ebb72245b7dd16e16))
+- locality reducer bugs ([2236357](https://github.com/bbortt/event-planner/commit/2236357ae2077c5e5891dd76e41e8eb28b113073))
+- some sonar code smells ([83f9145](https://github.com/bbortt/event-planner/commit/83f91455eba1015a5027a4388a1a3b9354f8535d))
+
+### Other
+
+- add locality redux actions ([3b6d317](https://github.com/bbortt/event-planner/commit/3b6d3172c93d2e4f3abe58a59965f33b8411980c))
+- can now select a sub locality ([beda18f](https://github.com/bbortt/event-planner/commit/beda18ff63c14fb338c8eb684728351f8752661c))
+- deep merge project locality ([30eb252](https://github.com/bbortt/event-planner/commit/30eb2529eb5b28c3565cfd1d57705a6405c2f830))
+- **deps:** npm dependencies to latest ([915efd6](https://github.com/bbortt/event-planner/commit/915efd6825a2047b53956baee7c2f1aa6c77f3a3))
+- getting started with locality drag n' drop ([96e2397](https://github.com/bbortt/event-planner/commit/96e239768c032008a46a214f0c89b54aa39451e3))
+- graphql generate ([c2b1ba1](https://github.com/bbortt/event-planner/commit/c2b1ba1b9fe7e535e6a0a3cd10b121a559ef4e17))
+- infinite localities depth ([7e71bda](https://github.com/bbortt/event-planner/commit/7e71bdaac14130325c142f535a36d298d96dacba))
+- more or less stable drag n' drop ([389e1fe](https://github.com/bbortt/event-planner/commit/389e1fe0faf15423571c52bdd58c0bb583beca69))
+- nice graphql exception format ([d2374ef](https://github.com/bbortt/event-planner/commit/d2374efc6b66ae19f328e6fb1893f12ebf3d23da))
+- reducers and saga webpack hot replacement ([d44f21a](https://github.com/bbortt/event-planner/commit/d44f21a99e71b9749f754f757c90318ba6e5d112))
+- root locality drag 'n drop ([df434f6](https://github.com/bbortt/event-planner/commit/df434f618240a77ccb0ccc572d2bda998cf03e5f))
+- try connecting front- and backend ([333d792](https://github.com/bbortt/event-planner/commit/333d7929ad09a422971f2d27bde8cd69409f0ca0))
+
+### CI / CD
+
+- **deps-dev:** bump eslint-config-next from 12.0.8 to 12.0.10 ([16c1ee4](https://github.com/bbortt/event-planner/commit/16c1ee4e1c9912e37b047047e2201cf9db79ae1e))
+- **deps-dev:** bump flow-bin from 0.169.0 to 0.170.0 ([54d35ef](https://github.com/bbortt/event-planner/commit/54d35ef1440a13db9e0c2c0750d011b59919b560))
+- **deps:** bump @apollo/client from 3.5.7 to 3.5.8 ([69361ac](https://github.com/bbortt/event-planner/commit/69361aca76d080e1453e4ce1a21689f4f5ad2681))
+- **deps:** bump graphql-java-tools from 12.0.1 to 12.0.2 ([2796c40](https://github.com/bbortt/event-planner/commit/2796c406ac7e82aa4d6cdc32dbc383345b4f3a84))
+- **deps:** bump jose4j from 0.7.9 to 0.7.10 ([6f7a79d](https://github.com/bbortt/event-planner/commit/6f7a79ddc09825df970b51612b850d2eb79555bc))
+- **deps:** bump next from 12.0.8 to 12.0.10 ([21121cf](https://github.com/bbortt/event-planner/commit/21121cf1e81b1074f609885d68471d7be4dcc2a2))
+- **deps:** bump sass from 1.48.0 to 1.49.4 ([2fedf98](https://github.com/bbortt/event-planner/commit/2fedf98368cecbc33f4c8b14ce54dc400ae2b770))
+- **deps:** bump swagger-annotations from 1.6.4 to 1.6.5 ([49ddc25](https://github.com/bbortt/event-planner/commit/49ddc250afa329e1c1fdd32228ea9ea1468fd8e9))
+- include jest reports in sonar ([5637025](https://github.com/bbortt/event-planner/commit/5637025409c0b2005a37125ee5c844ba9c550c4e))
+- introduce playwright e2e testing ([393e4fa](https://github.com/bbortt/event-planner/commit/393e4fa60767c167881b3f126a9854725ddd7bd9))
+- run jest tests ([f154a5f](https://github.com/bbortt/event-planner/commit/f154a5f6aec0fdaecf2a35387492fcaa9c4e56dd))
+
 ### [0.0.55](https://github.com/bbortt/event-planner/compare/v0.0.54...v0.0.55) (2022-01-11)
 
 ### Features
