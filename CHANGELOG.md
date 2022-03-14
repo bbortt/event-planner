@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.59](https://github.com/bbortt/event-planner/compare/v0.0.58...v0.0.59) (2022-03-14)
+
+### CI / CD
+
+- **deps:** bump actions/setup-node from 2 to 3 ([71e0bfb](https://github.com/bbortt/event-planner/commit/71e0bfb5229984421683684869b3ca7508fba0aa))
+
 ### [0.0.58](https://github.com/bbortt/event-planner/compare/v0.0.57...v0.0.58) (2022-03-04)
 
 ### CI / CD
