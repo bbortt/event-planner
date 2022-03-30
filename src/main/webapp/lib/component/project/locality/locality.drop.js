@@ -58,7 +58,7 @@ export const LocalityDrop = ({
 
       <br />
 
-      <button type="button" className="button success" onClick={() => addLocality(locality)} aria-label="Weitere Lokalität hinzufügen">
+      <button type="button" className="button primary" onClick={() => addLocality(locality)} aria-label="Weitere Lokalität hinzufügen">
         Lokalität derzuefüege
       </button>
     </div>

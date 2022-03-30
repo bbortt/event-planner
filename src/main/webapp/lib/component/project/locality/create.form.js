@@ -42,12 +42,18 @@ export const LocalityCreateForm = ({
         </label>
         <label>
           <span>Mami</span>
-          <input type="text" aria-describedby="Eltern-Lokalität" placeholder="Mami" value={parent ? parent.name : 'Kes Mami'} readOnly />
+          <input
+            type="text"
+            aria-describedby="Eltern-Lokalität"
+            placeholder="Mami"
+            value={(parent && parent.name) || 'Kes Mami'}
+            readOnly
+          />
         </label>
 
         <div className="button-group align-right">
           {children}
-          <input type="submit" className="button success" aria-label="Erstellen" value="Erstellä" />
+          <input type="submit" className="button primary" aria-label="Erstellen" value="Erstellä" />
         </div>
       </form>
     </div>

@@ -13,8 +13,8 @@ export type projectNavbarPropTypes = {
 export const ProjectNavbar = ({ project, tab }: projectNavbarPropTypes): React.Element<'div'> => {
   const router = useRouter();
 
-  const loadTab = (nextTab: tabType) => () => {
-    router.push({ query: { ...router.query, nextTab } });
+  const loadTab = (tab: tabType) => () => {
+    router.push({ query: { ...router.query, tab } });
   };
 
   return (

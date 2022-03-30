@@ -20,7 +20,7 @@ export const Members = ({ project }: membersPropTypes): React.Element<'div'> => 
             {/*<li>*/}
             {/*    <NewLocalityReveal revealId={newLocationRevealId} />*/}
 
-            {/*    <button type="button" className="button success" data-open={newLocationRevealId} aria-label="Neuer Standort erfassen">*/}
+            {/*    <button type="button" className="button primary" data-open={newLocationRevealId} aria-label="Neuer Standort erfassen">*/}
             {/*        neui Lokalität*/}
             {/*    </button>*/}
             {/*</li>*/}
