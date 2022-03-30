@@ -59,7 +59,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3.0.1
         with:
           path: |
             ~/.gradle/caches
