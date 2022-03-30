@@ -36,7 +36,7 @@ export const ProjectList = (): React.Element<'div'> => {
             <li>
               <NewProjectReveal revealId={newProjectRevealId} />
 
-              <button type="button" className="button success" data-open={newProjectRevealId} aria-label="Neues Projekt erfassen">
+              <button type="button" className="button primary" data-open={newProjectRevealId} aria-label="Neues Projekt erfassen">
                 neus Projekt
               </button>
             </li>

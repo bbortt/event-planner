@@ -40,9 +40,9 @@ export const ProjectLocalities = ({ project }: projectLocalitiesPropTypes): Reac
     dispatch(localitiesLoad(project));
   }, [dispatch]);
 
-  const newLocalityRevealId = `new-locality-reveal-${time}`;
+  const newLocalityRevealId = `new-locality-reveal`;
 
-  const addLocality = parent => setNewLocalityParent(parent.name === ROOT_LOCALITY_NAME ? undefined : parent);
+  const addLocality = parent => setNewLocalityParent(parent.name === ROOT_LOCALITY_NAME ? { id: 0 } : parent);
   const localitySelected = (selectedLocality: Locality) => {
     dispatch(localitiesLoad(project, selectedLocality));
     setLocalityIdIndices(buildLocalityIdIndices(localityIdIndices, selectedLocality));
@@ -50,7 +50,7 @@ export const ProjectLocalities = ({ project }: projectLocalitiesPropTypes): Reac
 
   return (
     <div className="project-localities">
-      <NewLocalityReveal parentLocality={newLocalityParent} revealId={newLocalityRevealId} />
+      <NewLocalityReveal parentLocality={newLocalityParent.id != 0 && newLocalityParent} revealId={newLocalityRevealId} />
 
       <div className="top-bar top-bar-bordered site-header">
         <div className="top-bar-left">

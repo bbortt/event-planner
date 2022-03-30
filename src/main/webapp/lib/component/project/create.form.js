@@ -65,7 +65,7 @@ export const ProjectCreateForm = ({
 
         <div className="button-group align-right">
           {children}
-          <input type="submit" className="button success" aria-label="Erstellen" value="Erstellä" />
+          <input type="submit" className="button primary" aria-label="Erstellen" value="Erstellä" />
         </div>
       </form>
     </div>
