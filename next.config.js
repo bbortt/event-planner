@@ -24,19 +24,8 @@ module.exports = {
       ...config.resolve.alias,
       lib: path.resolve(__dirname, 'src/main/webapp/lib'),
       pages: path.resolve(__dirname, 'src/pages'),
-      // TODO: Track https://github.com/react-dnd/react-dnd/issues/3401
-      'react/jsx-dev-runtime.js': 'react/jsx-dev-runtime',
-      'react/jsx-runtime.js': 'react/jsx-runtime',
     };
 
     return config;
-  },
-  async rewrites() {
-    return [
-      {
-        source: '/:any*',
-        destination: '/',
-      },
-    ];
   },
 };
