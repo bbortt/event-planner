@@ -14,12 +14,14 @@ import MessageList from '../message-list';
 import LocalityDropList from '../../component/project/locality/locality-drop-list';
 import NewLocalityReveal from '../../component/project/locality/new-locality.reveal';
 
+const rootLocality: Locality = (({ id: '', name: ROOT_LOCALITY_NAME }: any): Locality);
+
 export type projectLocalitiesPropTypes = {
   project: Project,
 };
 
 export const ProjectLocalities = ({ project }: projectLocalitiesPropTypes): React.Element<'div'> => {
-  const [newLocalityParent, setNewLocalityParent] = useState({ id: '', name: ROOT_LOCALITY_NAME });
+  const [newLocalityParent, setNewLocalityParent] = useState(rootLocality);
 
   const dispatch = useDispatch();
   const projectLocalities = useSelector(localitiesSelector(project));
@@ -41,7 +43,7 @@ export const ProjectLocalities = ({ project }: projectLocalitiesPropTypes): Reac
 
   const newLocalityRevealId = `new-locality-reveal`;
 
-  const addLocality = parent => setNewLocalityParent(parent.name === ROOT_LOCALITY_NAME ? { id: 0 } : parent);
+  const addLocality = (parent: Locality) => setNewLocalityParent(parent);
   const localitySelected = (selectedLocality: Locality) => {
     dispatch(localitiesLoad(project, selectedLocality));
     setLocalityIdIndices(buildLocalityIdIndices(localityIdIndices, selectedLocality));
@@ -49,7 +51,7 @@ export const ProjectLocalities = ({ project }: projectLocalitiesPropTypes): Reac
 
   return (
     <div className="project-localities">
-      <NewLocalityReveal parentLocality={newLocalityParent.id !== '' && newLocalityParent} revealId={newLocalityRevealId} />
+      <NewLocalityReveal parentLocality={newLocalityParent} revealId={newLocalityRevealId} />
 
       <div className="top-bar top-bar-bordered site-header">
         <div className="top-bar-left">

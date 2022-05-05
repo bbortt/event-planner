@@ -15,7 +15,7 @@ import renderFoundationNode from '../../../foundation/render-foundation-node';
 import Callout from '../../../foundation/callout';
 
 export type newLocationRevealPropTypes = {
-  parentLocality?: Locality,
+  parentLocality: Locality,
   revealId: string,
 };
 
@@ -34,7 +34,11 @@ export const NewLocalityReveal = ({ parentLocality, revealId }: newLocationRevea
 
   const submit = (locality: LocalityCreateInput) => {
     if (project) {
-      dispatch(localityCreate(project, { ...locality, parentLocalityId: parentLocality?.id }));
+      const newLocality = { ...locality };
+      if (parentLocality.id.length > 0) {
+        newLocality.parentLocalityId = parentLocality.id;
+      }
+      dispatch(localityCreate(project, newLocality));
     }
 
     // $FlowFixMe
@@ -48,7 +52,7 @@ export const NewLocalityReveal = ({ parentLocality, revealId }: newLocationRevea
         <div>
           <h3>Neui Lokalität</h3>
 
-          <LocalityCreateForm parent={parentLocality} submit={submit} key={key}>
+          <LocalityCreateForm parentName={parentLocality ? parentLocality.name : 'Kes Mami'} submit={submit} key={key}>
             <button type="button" className="button warning" data-close={revealId} aria-label="Aktion abbrechen">
               Abbräche
             </button>
