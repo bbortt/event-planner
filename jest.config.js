@@ -24,4 +24,6 @@ const customJestConfig = {
   transformIgnorePatterns: ['/node_modules/', '^.+\\.module\\.(css|sass|scss)$'],
 };
 
+console.log(`customJestConfig: ${JSON.stringify(customJestConfig)}`);
+
 module.exports = createJestConfig(customJestConfig);
