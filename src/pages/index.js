@@ -25,6 +25,7 @@ export const Index = (): React.Element<typeof LoadingCallout | typeof ErrorCallo
       } else {
         router.push('/projects');
       }
+      localStorage.removeItem(LOCAL_STORAGE_ROUTER_PATH);
     }
   }, [isAuthenticated, router]);
 
@@ -35,9 +36,6 @@ export const Index = (): React.Element<typeof LoadingCallout | typeof ErrorCallo
   if (error) {
     return <ErrorCallout title="Fähler bim Ilogge:" message={error.message} retryable={true} />;
   }
-
-  // Reset any previously saved state
-  localStorage.removeItem(LOCAL_STORAGE_ROUTER_PATH);
 
   return (
     <div>

@@ -4,8 +4,8 @@ clean.doFirst {
 
 // --- General Configuration ---
 node {
-    version = "16.13.2"
-    npmVersion = "8.1.2"
+    version = "16.15.0"
+    npmVersion = "8.5.5"
     npmInstallCommand = "ci"
 }
 

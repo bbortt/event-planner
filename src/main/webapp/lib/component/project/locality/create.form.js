@@ -6,13 +6,13 @@ import ErrorCallout from '../../../layout/message/error.callout';
 
 export type locationCreateFormPropTypes = {
   children: React.ChildrenArray<React.Element<'button'>>,
-  parent?: Locality,
+  parentName: string,
   submit: (locality: LocalityCreateInput) => void,
 };
 
 export const LocalityCreateForm = ({
   children,
-  parent,
+  parentName,
   submit,
 }: locationCreateFormPropTypes): React.Element<typeof Callout | typeof ErrorCallout | 'div'> => {
   const [name, setName] = useState('');
@@ -42,13 +42,7 @@ export const LocalityCreateForm = ({
         </label>
         <label>
           <span>Mami</span>
-          <input
-            type="text"
-            aria-describedby="Eltern-Lokalität"
-            placeholder="Mami"
-            value={(parent && parent.name) || 'Kes Mami'}
-            readOnly
-          />
+          <input type="text" aria-describedby="Eltern-Lokalität" placeholder="Mami" value={parentName} readOnly />
         </label>
 
         <div className="button-group align-right">
