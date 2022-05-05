@@ -1,4 +1,4 @@
-// flow-typed signature: c625a9d0f156e473439ab13ac54f2e68
+// flow-typed signature: 9bbb9417106d52f3eb40d928509135f3
 // flow-typed version: c2580add5a/deepmerge_v4.x.x/flow_>=v0.83.x
 
 declare module 'deepmerge' {
@@ -8,7 +8,7 @@ declare module 'deepmerge' {
     isMergeableObject?: (value: { ... }) => boolean,
     customMerge?: (key: string, options?: Options) => ((x: any, y: any) => any) | void,
     ...
-  }
+  };
 
   declare module.exports: {
     <A, B>(a: A, b: B, options?: Options): A & B,

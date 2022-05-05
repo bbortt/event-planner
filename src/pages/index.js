@@ -13,7 +13,7 @@ import LandingPage from 'lib/container/landing-page';
 import ErrorCallout from 'lib/layout/message/error.callout';
 import LoadingCallout from 'lib/layout/message/loading.callout';
 
-const Index = (): React.Element<typeof LoadingCallout | typeof ErrorCallout | 'div'> => {
+export const Index = (): React.Element<typeof LoadingCallout | typeof ErrorCallout | 'div'> => {
   const router = useRouter();
   const { error, isAuthenticated, isLoading } = useAuth0();
 
@@ -26,7 +26,7 @@ const Index = (): React.Element<typeof LoadingCallout | typeof ErrorCallout | 'd
         router.push('/projects');
       }
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, router]);
 
   if (isLoading) {
     return <LoadingCallout />;

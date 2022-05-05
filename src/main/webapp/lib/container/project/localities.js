@@ -19,8 +19,7 @@ export type projectLocalitiesPropTypes = {
 };
 
 export const ProjectLocalities = ({ project }: projectLocalitiesPropTypes): React.Element<'div'> => {
-  const [newLocalityParent, setNewLocalityParent] = useState();
-  const [time] = useState(new Date().getTime());
+  const [newLocalityParent, setNewLocalityParent] = useState({ id: '', name: ROOT_LOCALITY_NAME });
 
   const dispatch = useDispatch();
   const projectLocalities = useSelector(localitiesSelector(project));
@@ -50,7 +49,7 @@ export const ProjectLocalities = ({ project }: projectLocalitiesPropTypes): Reac
 
   return (
     <div className="project-localities">
-      <NewLocalityReveal parentLocality={newLocalityParent.id != 0 && newLocalityParent} revealId={newLocalityRevealId} />
+      <NewLocalityReveal parentLocality={newLocalityParent.id !== '' && newLocalityParent} revealId={newLocalityRevealId} />
 
       <div className="top-bar top-bar-bordered site-header">
         <div className="top-bar-left">

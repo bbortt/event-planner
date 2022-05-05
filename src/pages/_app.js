@@ -16,7 +16,7 @@ import registerRevealOverlayObserver from 'lib/foundation/register-reveal-overla
 
 import './_app.scss';
 
-const Auth0ProviderWrapper = dynamic(() => import('lib/wrapper/auth0-provider.wrapper'), { ssr: false });
+const Auth0ProviderWrapper: typeof Auth0ProviderWrapper = dynamic(() => import('lib/wrapper/auth0-provider.wrapper'), { ssr: false });
 
 setDefaultLocale(de);
 
@@ -25,7 +25,7 @@ export type appPropTypes = {
   pageProps: any,
 };
 
-export const App = ({ Component, pageProps }: appPropTypes): React.Element<typeof SafeHydrate> => {
+export const App = ({ Component, pageProps }: appPropTypes): React.Element<typeof Auth0ProviderWrapper> => {
   const { initialApolloState } = pageProps;
 
   useEffect(() => registerRevealOverlayObserver(), []);
