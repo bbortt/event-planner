@@ -55,7 +55,7 @@
     "sass": "^1.51.0"
   },
   "devDependencies": {
-    "@babel/plugin-transform-flow-strip-types": "^7.16.7",
+    "@babel/plugin-transform-flow-strip-types": "^7.17.12",
     "@bbortt/owl": "^1.0.4",
     "@commitlint/cli": "^16.2.4",
     "@commitlint/config-conventional": "^16.2.4",
@@ -64,7 +64,7 @@
     "@playwright/test": "^1.21.1",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.2.0",
-    "@testing-library/user-event": "^14.1.1",
+    "@testing-library/user-event": "^14.2.0",
     "eslint": "^8.14.0",
     "eslint-config-next": "^12.1.6",
     "eslint-plugin-testing-library": "^5.3.1",
