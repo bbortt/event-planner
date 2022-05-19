@@ -65,7 +65,7 @@
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.2.0",
     "@testing-library/user-event": "^14.2.0",
-    "eslint": "^8.14.0",
+    "eslint": "^8.15.0",
     "eslint-config-next": "^12.1.6",
     "eslint-plugin-testing-library": "^5.3.1",
     "flow-bin": "^0.177.0",
