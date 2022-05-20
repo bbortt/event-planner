@@ -1,9 +1,4 @@
-const nextJest = require('next/jest');
 const babelConfig = require('./babel.config');
-
-const createJestConfig = nextJest({
-  dir: './',
-});
 
 const customJestConfig = {
   collectCoverage: true,
@@ -24,4 +19,4 @@ const customJestConfig = {
   transformIgnorePatterns: ['/node_modules/', '^.+\\.module\\.(css|sass|scss)$'],
 };
 
-module.exports = createJestConfig(customJestConfig);
+module.exports = customJestConfig;
