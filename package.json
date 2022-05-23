@@ -68,7 +68,7 @@
     "eslint": "^8.15.0",
     "eslint-config-next": "^12.1.6",
     "eslint-plugin-testing-library": "^5.5.0",
-    "flow-bin": "^0.178.0",
+    "flow-bin": "^0.178.1",
     "flow-typed": "^3.7.0",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^28.1.0",
