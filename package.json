@@ -65,7 +65,7 @@
     "@testing-library/react": "^13.2.0",
     "@testing-library/user-event": "^14.2.0",
     "babel-jest": "^28.1.0",
-    "eslint": "^8.15.0",
+    "eslint": "^8.16.0",
     "eslint-config-next": "^12.1.6",
     "eslint-plugin-testing-library": "^5.5.0",
     "flow-bin": "^0.178.0",
