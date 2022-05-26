@@ -30,7 +30,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - id: meta
-        uses: docker/metadata-action@v3
+        uses: docker/metadata-action@v4
         with:
           images: bbortt/event-planner
           tags: |
