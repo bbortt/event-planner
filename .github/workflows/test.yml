@@ -68,7 +68,7 @@ jobs:
       - run: npm ci
       - run: npm run test:e2e
       - if: always()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         env:
           CI: true
         with:
