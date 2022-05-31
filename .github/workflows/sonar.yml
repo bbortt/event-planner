@@ -47,7 +47,7 @@ jobs:
              -Dsonar.organization=bbortt-github \
              -Dsonar.login=$SONAR_TOKEN \
               check $SONARQUBE_CMD
-      - uses: actions/cache@v3.0.2
+      - uses: actions/cache@v3.0.3
         with:
           path: |
             ~/.gradle/caches
