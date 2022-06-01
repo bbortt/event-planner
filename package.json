@@ -32,7 +32,7 @@
     "test:e2e": "playwright test --config=playwright.config.js"
   },
   "dependencies": {
-    "@apollo/client": "^3.6.5",
+    "@apollo/client": "^3.6.6",
     "@auth0/auth0-react": "^1.10.1",
     "date-fns": "^2.28.0",
     "deepmerge": "^4.2.2",
