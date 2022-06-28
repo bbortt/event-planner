@@ -56,7 +56,7 @@
   "devDependencies": {
     "@babel/plugin-transform-flow-strip-types": "^7.17.12",
     "@bbortt/owl": "^1.0.4",
-    "@commitlint/cli": "^17.0.1",
+    "@commitlint/cli": "^17.0.3",
     "@commitlint/config-conventional": "^17.0.0",
     "@graphql-codegen/cli": "^2.6.2",
     "@graphql-codegen/flow": "^2.2.11",
