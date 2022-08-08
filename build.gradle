@@ -34,7 +34,7 @@ if (project.hasProperty("prod")) {
 dependencies {
     implementation platform ("org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}")
     implementation "com.graphql-java-kickstart:graphql-java-tools:12.1.0"
-    implementation "com.graphql-java-kickstart:graphql-spring-boot-starter:12.0.0"
+    implementation "com.graphql-java-kickstart:graphql-spring-boot-starter:13.0.0"
     implementation "io.swagger.core.v3:swagger-annotations:2.2.0"
     implementation "jakarta.validation:jakarta.validation-api:3.0.1"
     implementation "org.openapitools:jackson-databind-nullable:0.2.2"
