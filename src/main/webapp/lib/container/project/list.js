@@ -2,11 +2,6 @@
 import * as React from 'react';
 import { useEffect } from 'react';
 
-import { useDispatch, useSelector } from 'react-redux';
-
-import { projectsLoad } from '../../redux/action/project.action';
-import { projectsSelector } from '../../redux/selector/project.selector';
-
 import Callout from '../../foundation/callout';
 import MessageList from '../message-list';
 import NewProjectReveal from '../../component/project/new-project.reveal';

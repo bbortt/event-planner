@@ -4,9 +4,6 @@ import { useEffect } from 'react';
 
 import dynamic from 'next/dynamic';
 
-import ApolloProviderWrapper from 'lib/wrapper/apollo-provider.wrapper';
-import ReduxWrapper from 'lib/wrapper/redux.wrapper';
-
 import { setDefaultLocale } from 'react-datepicker';
 import de from 'date-fns/locale/de';
 
@@ -26,21 +23,15 @@ export type appPropTypes = {
 };
 
 export const App = ({ Component, pageProps }: appPropTypes): React.Element<typeof Auth0ProviderWrapper> => {
-  const { initialApolloState } = pageProps;
-
   useEffect(() => registerRevealOverlayObserver(), []);
 
   return (
     <Auth0ProviderWrapper>
-      <ApolloProviderWrapper initialApolloState={initialApolloState}>
-        <ReduxWrapper>
-          <Navbar />
+      <Navbar />
 
-          <div className="container">
-            <Component {...pageProps} />
-          </div>
-        </ReduxWrapper>
-      </ApolloProviderWrapper>
+      <div className="container">
+        <Component {...pageProps} />
+      </div>
     </Auth0ProviderWrapper>
   );
 };

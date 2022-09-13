@@ -12,9 +12,37 @@ servers:
   - description: Localhost
     url: http://localhost:8080/api/rest/v1
 tags:
+  - name: project
+    description: Project resource.
   - name: user
     description: User resource.
 paths:
+  /projects:
+    get:
+      tags:
+        - project
+      security:
+        - user_auth: []
+      summary: Receive all projects to which the user has access to.
+      description: |
+        This will only return projects that are not archived.
+        This can only be done by the users having the `restapi:access`
+        role. All registered users hould receive this role by default.
+      operationId: readProjects
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PagingInformation'
+                  - type: object
+                    properties:
+                      contents:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Project'
   /user/{userId}:
     put:
       tags:
@@ -51,7 +79,74 @@ paths:
           description: User not found
           content: {}
 components:
+  parameters:
+    PageSize:
+      name: pageSize
+      in: query
+      description: Number of records to return.
+      schema:
+        type: number
+    PageNumber:
+      name: pageNo
+      in: query
+      description: Start index for paging.
+      schema:
+        type: number
+    Sort:
+      name: sort
+      in: query
+      description: |
+        Attribute of the resource to sort by. Optionally followed
+        by the sorting direction, comma separated. Default is `id[,asc]`.
+      schema:
+        type: string
+  responses:
+    PaginatedResponse:
+      description: A paginated REST api response.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PagingInformation'
   schemas:
+    PagingInformation:
+      type: object
+      required:
+        - isLast
+      properties:
+        contents:
+          type: array
+          items: {}
+        totalElements:
+          type: number
+        totalPages:
+          type: number
+        number:
+          type: number
+    Project:
+      type: object
+      required:
+        - name
+      properties:
+        id:
+          type: number
+          format: int64
+        token:
+          type: string
+          maxLength: 36
+          minLength: 36
+        name:
+          type: string
+          maxLength: 50
+          minLength: 1
+        description:
+          type: string
+          maxLength: 300
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
     User:
       type: object
       required:
@@ -75,4 +170,5 @@ components:
         implicit:
           authorizationUrl: https://event-planner-dev.eu.auth0.com
           scopes:
+            restapi:access: General access to the REST api.
             user:synchronize: Synchronize User details.
