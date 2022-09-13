@@ -44,7 +44,7 @@ developing and testing available.
 
 The `User` Role has the following Permissions:
 
-`graphql:access`.
+`restapi:access`.
 
 ### Actions
 

@@ -14,7 +14,7 @@ export const Auth0ProviderWrapper = ({ children }: auth0ProviderWrapperPropTypes
       clientId={process.env.NEXT_PUBLIC_AUTH0_CLIENT_ID}
       domain={process.env.NEXT_PUBLIC_AUTH0_DOMAIN}
       redirectUri={window.location.origin}
-      scope="graphql:access"
+      scope="restapi:access"
     >
       {children}
     </Auth0Provider>

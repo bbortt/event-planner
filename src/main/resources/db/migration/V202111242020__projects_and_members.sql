@@ -1,7 +1,7 @@
 CREATE TABLE project
 (
     id                 BIGSERIAL PRIMARY KEY    NOT NULL,
-    token              VARCHAR(36)              NOT NULL DEFAULT uuid_generate_v1(),
+    token              CHAR(36)              NOT NULL DEFAULT uuid_generate_v1(),
     name               VARCHAR(50)              NOT NULL,
     description        VARCHAR(300),
     start_time         TIMESTAMP WITH TIME ZONE,
