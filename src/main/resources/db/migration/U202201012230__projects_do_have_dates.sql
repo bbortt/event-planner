@@ -1,5 +1,0 @@
-ALTER TABLE project
-    ADD COLUMN start_time TIMESTAMP WITH TIME ZONE,
-    ADD COLUMN end_time   TIMESTAMP WITH TIME ZONE,
-    DROP COLUMN start_date,
-    DROP COLUMN end_date;

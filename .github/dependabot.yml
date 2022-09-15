@@ -1,14 +1,18 @@
 version: 2
 updates:
-  - package-ecosystem: 'github-actions'
-    directory: '/'
+  - package-ecosystem: "github-actions"
+    directory: "/"
     schedule:
-      interval: 'daily'
-  - package-ecosystem: 'gradle'
-    directory: '/'
+      interval: "daily"
+  - package-ecosystem: "gradle"
+    directory: "/"
     schedule:
-      interval: 'daily'
-  - package-ecosystem: 'npm'
-    directory: '/'
+      interval: "daily"
+  - package-ecosystem: "npm"
+    directory: "/"
     schedule:
-      interval: 'weekly'
+      interval: "daily"
+  - package-ecosystem: "npm"
+    directory: "/apps/frontend"
+    schedule:
+      interval: "daily"

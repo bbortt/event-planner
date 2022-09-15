@@ -1,7 +1,0 @@
-query ListLocalitiesQuery($projectId: ID!, $parentLocalityId: ID) {
-  listLocalities(projectId: $projectId, parentLocalityId: $parentLocalityId) {
-    id
-    name
-    __typename
-  }
-}

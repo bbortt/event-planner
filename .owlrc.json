@@ -1,6 +1,0 @@
-{
-  "hooks": {
-    "pre-commit": ["npx --no-install pretty-quick --staged"],
-    "commit-msg": ["npx --no-install commitlint -e .git/COMMIT_EDITMSG"]
-  }
-}
