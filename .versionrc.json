@@ -1,13 +1,13 @@
 {
   "bumpFiles": [
     {
-      "filename": ".github/version.json",
+      "filename": ".gitlab/version.json",
       "type": "json"
     }
   ],
   "packageFiles": [
     {
-      "filename": ".github/version.json",
+      "filename": ".gitlab/version.json",
       "type": "json"
     }
   ],

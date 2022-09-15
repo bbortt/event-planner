@@ -1,7 +1,0 @@
-mutation CreateLocalityMutation($projectId: ID!, $locality: LocalityCreateInput!) {
-  createLocality(projectId: $projectId, locality: $locality) {
-    id
-    name
-    __typename
-  }
-}

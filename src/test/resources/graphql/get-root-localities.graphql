@@ -1,7 +1,0 @@
-query ListLocalitiesQuery($projectId: ID!) {
-  listLocalities(projectId: $projectId) {
-    id
-    name
-    __typename
-  }
-}

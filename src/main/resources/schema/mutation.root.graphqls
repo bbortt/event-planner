@@ -1,4 +1,0 @@
-type Mutation {
-  createProject(project: ProjectCreateInput!): Project!
-  updateProject(project: ProjectUpdateInput!): Project!
-}

@@ -1,9 +1,0 @@
-type Auth0User {
-  userId: String!
-  nickname: String!
-  email: String!
-  picture: String
-  familyName: String
-  givenName: String
-  memberships: [Member!]!
-}

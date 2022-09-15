@@ -1,0 +1,124 @@
+openapi: 3.0.1
+info:
+  title: Event-Planner
+  description: The Event-Planner REST API definition
+  contact:
+    email: timon.borter@gmx.ch
+  license:
+    name: Apache 2.0
+    url: https://github.com/bbortt/event-planner/blob/release/LICENSE
+  version: 1.0.0
+servers:
+  - description: Localhost
+    url: http://localhost:8080/api/rest
+tags:
+  - name: project
+    description: Project resource.
+  - name: v1
+    description: First version of the resource.
+paths:
+  /v1/projects:
+    get:
+      tags:
+        - project
+        - v1
+      security:
+        - user_auth: []
+      summary: Receive all projects to which the user has access to.
+      description: |
+        This will only return projects that are not archived.
+        This can only be done by the users having the `restapi:access`
+        role. All registered users hould receive this role by default.
+      operationId: readProjects
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/PagingInformation"
+                  - type: object
+                    properties:
+                      contents:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Project"
+components:
+  parameters:
+    PageSize:
+      name: pageSize
+      in: query
+      description: Number of records to return.
+      schema:
+        type: number
+    PageNumber:
+      name: pageNo
+      in: query
+      description: Start index for paging.
+      schema:
+        type: number
+    Sort:
+      name: sort
+      in: query
+      description: |
+        Attribute of the resource to sort by. Optionally followed
+        by the sorting direction, comma separated. Default is `id[,asc]`.
+      schema:
+        type: string
+  responses:
+    PaginatedResponse:
+      description: A paginated REST api response.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/PagingInformation"
+  schemas:
+    PagingInformation:
+      type: object
+      required:
+        - isLast
+      properties:
+        contents:
+          type: array
+          items: {}
+        totalElements:
+          type: number
+        totalPages:
+          type: number
+        number:
+          type: number
+    Project:
+      type: object
+      required:
+        - name
+      properties:
+        id:
+          type: number
+          format: int64
+        token:
+          type: string
+          maxLength: 36
+          minLength: 36
+        name:
+          type: string
+          maxLength: 50
+          minLength: 1
+        description:
+          type: string
+          maxLength: 300
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
+  securitySchemes:
+    user_auth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: https://event-planner-dev.eu.auth0.com
+          scopes:
+            restapi:access: General access to the REST api.
+            user:synchronize: Synchronize User details.
