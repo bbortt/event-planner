@@ -1,6 +1,7 @@
 pluginManagement {
     plugins {
         id "com.github.node-gradle.node" version "${nodeGradleVersion}"
+        id "org.openapi.generator" version "${openApiGeneratorVersion}"
     }
 }
 

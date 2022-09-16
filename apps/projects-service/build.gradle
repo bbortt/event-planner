@@ -1,6 +1,27 @@
 plugins {
     id 'base'
+    id "org.openapi.generator"
 }
 
 dependencies {
+}
+
+openApiValidate {
+    inputSpec = "${project.projectDir}/oas/spec.yml".toString()
+}
+
+openApiGenerate {
+    generatorName = "rust-server"
+    inputSpec = "${project.projectDir}/oas/spec.yml".toString()
+//    outputDir = "$buildDir/generated".toString()
+//    apiPackage = "io.github.bbortt.event.planner.api.v1"
+//    invokerPackage = "io.github.bbortt.event.planner.v1.invoker"
+//    modelNameSuffix = "Dto"
+//    modelPackage = "io.github.bbortt.event.planner.api.v1.dto"
+//    configOptions = [
+//            dateLibrary    : "java8",
+//            delegatePattern: "true",
+//            interfaceOnly  : "true",
+//            useOptional    : "true"
+//    ]
 }
