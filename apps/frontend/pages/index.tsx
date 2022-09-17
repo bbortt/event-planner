@@ -9,8 +9,8 @@ const Home: NextPage = () => {
   const { user, loading } = useFetchUser();
 
   return (
-    <Layout user={user} loading={loading}>
-      {user ? <ProjectList /> : <Masthead />}
+    <Layout user={user || {}} loading={loading}>
+      {!loading && user ? <ProjectList /> : <Masthead />}
     </Layout>
   );
 };

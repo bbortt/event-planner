@@ -1,18 +1,18 @@
-import { Image, NavDropdown } from 'react-bootstrap';
+import { UserProfile } from '@auth0/nextjs-auth0';
 
-import { User } from 'lib/interfaces';
+import { Image, NavDropdown } from 'react-bootstrap';
 
 import styles from './user-information.module.scss';
 
 type UserInformationProps = {
-  user: User;
+  user: UserProfile;
 };
 
 const UserIcon = ({ user }: UserInformationProps) => {
   return (
     <>
-      <span>{user.nickname}</span>
-      <Image rounded src={user.picture} alt="" className={styles.userIcon} />
+      <span>{user.nickname || 'Profil'}</span>
+      {user.picture && <Image rounded src={user.picture} alt="Profile picture" className={styles.userIcon} />}
     </>
   );
 };

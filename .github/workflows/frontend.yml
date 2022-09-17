@@ -4,10 +4,10 @@ on:
     branches-ignore:
       - release
     paths:
-      - ".github/workflows/frontend"
-      - "apps/frontend/**"
+      - '.github/workflows/frontend.yml'
+      - 'apps/frontend/**'
     tags-ignore:
-      - "*"
+      - '*'
 jobs:
   build:
     runs-on: ubuntu-20.04
@@ -18,4 +18,4 @@ jobs:
           distribution: temurin
           java-version: 17
       - uses: gradle/gradle-build-action@v2
-      - run: ./gradlew :apps:frontend:assemble -PnodeInstall="true"
+      - run: ./gradlew :apps:frontend:build -PnodeInstall="true"

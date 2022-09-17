@@ -1,9 +1,30 @@
 plugins {
-    id "base"
+    id "io.spring.dependency-management" version "1.0.13.RELEASE"
+    id "java"
     id "org.openapi.generator"
+    id "org.springframework.boot" version "2.7.3"
+}
+
+sourceCompatibility = "${sourceCompatibility}"
+assert System.properties["java.specification.version"] == "11" || "12" || "13" || "14" || "15" || "16" || "17"
+
+repositories {
+    mavenCentral()
 }
 
 dependencies {
+    implementation "io.swagger.core.v3:swagger-annotations:2.2.1"
+    implementation "jakarta.validation:jakarta.validation-api:2.0.2"
+    implementation "org.openapitools:jackson-databind-nullable:0.2.2"
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+    implementation "org.springframework.boot:spring-boot-starter-undertow"
+    implementation("org.springframework.boot:spring-boot-starter-web") {
+        exclude module: "spring-boot-starter-tomcat"
+    }
+    developmentOnly "org.springframework.boot:spring-boot-devtools"
+    runtimeOnly "com.h2database:h2"
+    runtimeOnly "org.postgresql:postgresql"
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
 }
 
 openApiValidate {
@@ -11,17 +32,40 @@ openApiValidate {
 }
 
 openApiGenerate {
-    generatorName = "go-gin-server"
+    generatorName = "spring"
     inputSpec = "${project.rootDir}/specs/project-service-v1.yml".toString()
-//    outputDir = "${project.projectDir}/src".toString()
-//    apiPackage = "io.github.bbortt.event.planner.apps.projects.v1"
-//    invokerPackage = "io.github.bbortt.event.planner.apps.projects.v1.invoker"
-//    modelNameSuffix = "Dto"
-//    modelPackage = "io.github.bbortt.event.planner.apps.projects.v1.dto"
-//    configOptions = [
-//            dateLibrary    : "java8",
-//            delegatePattern: "true",
-//            interfaceOnly  : "true",
-//            useOptional    : "true"
-//    ]
+    outputDir = "${project.buildDir}/generated-sources".toString()
+    apiPackage = "io.github.bbortt.event.planner.apps.projects.v1.rest"
+    invokerPackage = "io.github.bbortt.event.planner.apps.projects.v1"
+    modelNameSuffix = "Dto"
+    modelPackage = "io.github.bbortt.event.planner.apps.projects.v1.dto"
+    configOptions = [
+            dateLibrary    : "java8",
+            delegatePattern: "true",
+            interfaceOnly  : "true",
+            useOptional    : "true"
+    ]
+}
+compileJava.dependsOn tasks.openApiGenerate
+sourceSets.main.java.srcDirs += "${project.buildDir}/generated-sources/src/main/java"
+
+test {
+    useJUnitPlatform()
+    exclude "**/*IntegrationTest*"
+}
+
+task testReport(type: TestReport) {
+    destinationDir = file("$buildDir/reports/tests")
+    reportOn test
+}
+
+task integrationTest(type: Test, dependsOn: test) {
+    useJUnitPlatform()
+    include "**/*IntegrationTest*"
+}
+check.dependsOn integrationTest
+
+task integrationTestReport(type: TestReport) {
+    destinationDir = file("$buildDir/reports/tests")
+    reportOn integrationTest
 }

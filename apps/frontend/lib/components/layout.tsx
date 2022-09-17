@@ -1,14 +1,15 @@
 import Head from 'next/head';
 
+import { UserProfile } from '@auth0/nextjs-auth0';
+
 import { Container } from 'react-bootstrap';
 
 import Navbar from 'lib/components/navbar';
-import { User } from 'lib/interfaces';
 
 import styles from './layout.module.scss';
 
 type ContentsProps = {
-  user?: User;
+  user?: UserProfile;
   children: React.ReactNode;
 };
 
@@ -25,7 +26,7 @@ const Contents = ({ user, children }: ContentsProps) => {
 };
 
 type LayoutProps = {
-  user?: User;
+  user?: UserProfile;
   loading: boolean;
   children: React.ReactNode;
 };

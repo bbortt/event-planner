@@ -19,17 +19,9 @@ module.exports = {
       topLevelAwait: true,
     };
 
-    config.plugins.push(
-      new webpack.ProvidePlugin({
-        $: 'jquery',
-        jQuery: 'jquery',
-      })
-    );
-
     config.resolve.alias = {
       ...config.resolve.alias,
       lib: path.resolve(__dirname, 'lib'),
-      pages: path.resolve(__dirname, 'src/pages'),
     };
 
     return config;

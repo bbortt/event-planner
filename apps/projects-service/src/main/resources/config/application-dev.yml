@@ -1,0 +1,11 @@
+server:
+  port: 8081
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/event_planner
+    username: projects_service
+    password: projects_service
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false

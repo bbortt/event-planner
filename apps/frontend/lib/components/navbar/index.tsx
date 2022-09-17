@@ -1,10 +1,11 @@
+import { UserProfile } from '@auth0/nextjs-auth0';
+
 import { Container, Nav, Navbar } from 'react-bootstrap';
 
-import { User } from 'lib/interfaces';
 import UserInformation from 'lib/components/navbar/user-information';
 
 type NavbarProps = {
-  user?: User;
+  user?: UserProfile;
 };
 
 const Navigation = ({ user }: NavbarProps) => {

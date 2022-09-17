@@ -1,0 +1,21 @@
+name: apps/frontend
+on:
+  push:
+    branches-ignore:
+      - release
+    paths:
+      - '.github/workflows/projects-service.yml'
+      - 'apps/projects-service/**'
+    tags-ignore:
+      - '*'
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: gradle/gradle-build-action@v2
+      - run: ./gradlew :apps:projects-service:build
