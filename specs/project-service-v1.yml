@@ -14,14 +14,11 @@ servers:
 tags:
   - name: project
     description: Project resource.
-  - name: v1
-    description: First version of the resource.
 paths:
   /v1/projects:
     get:
       tags:
         - project
-        - v1
       security:
         - user_auth: []
       summary: Receive all projects to which the user has access to.
@@ -44,6 +41,30 @@ paths:
                         type: array
                         items:
                           $ref: "#/components/schemas/Project"
+    post:
+      tags:
+        - project
+      security:
+        - user_auth: []
+      summary: Create a new project.
+      description: |
+        A new project can be created by all users having the `restapi:access`
+        role. All registered users hould receive this role by default.
+      operationId: createProject
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Project"
+      responses:
+        201:
+          description: CREATED
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+        400:
+          description: BAD REQUEST
 components:
   parameters:
     PageSize:
@@ -91,7 +112,10 @@ components:
     Project:
       type: object
       required:
+        - token
         - name
+        - startDate
+        - endDate
       properties:
         id:
           type: number

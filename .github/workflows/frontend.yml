@@ -11,29 +11,11 @@ on:
 jobs:
   build:
     runs-on: ubuntu-20.04
-    strategy:
-      matrix:
-        node-version: [16.x, 17.x, 18.x]
     steps:
       - uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+      - uses: actions/setup-java@v3
         with:
-          node-version: ${{ matrix.node-version }}
-      - run: cd apps/frontend
-      - run: npm ci
-      - run: npm run build --if-present
-  test:
-    runs-on: ubuntu-20.04
-    strategy:
-      matrix:
-        node-version: [16.x, 17.x, 18.x]
-    steps:
-      - uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-      - run: cd apps/frontend
-      - run: npm ci
-      - run: npm test
+          distribution: temurin
+          java-version: 17
+      - uses: gradle/gradle-build-action@v2
+      - run: ./gradlew :apps:frontend:assemble -PnodeInstall="true"
