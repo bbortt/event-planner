@@ -3,6 +3,7 @@ plugins {
     id "com.github.node-gradle.node"
 }
 
+group = 'io.github.bbortt.event-planner'
 version = "${version}"
 
 defaultTasks "check"
@@ -26,3 +27,8 @@ if (project.hasProperty("nodeInstall")) {
     }
 }
 check.dependsOn npmInstall
+
+task prettier(type: NpmTask, dependsOn: "npmInstall") {
+    args = ["run", "prettier:check"]
+}
+check.dependsOn prettier

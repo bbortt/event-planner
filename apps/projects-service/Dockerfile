@@ -1,28 +1,15 @@
-# -*- mode: dockerfile -*-
-#
-# An example Dockerfile showing how to build a Rust executable using this
-# image, and deploy it with a tiny Alpine Linux container.
+FROM openjdk:17-slim-bullseye
+MAINTAINER Timon Borter <bbortt.github.io>
 
-# You can override this `--build-arg BASE_IMAGE=...` to use different
-# version of Rust or OpenSSL.
-ARG BASE_IMAGE=ekidd/rust-musl-builder:latest
+ENTRYPOINT ["java", "-jar", "project-service.jar"]
 
-# Our first FROM statement declares the build environment.
-FROM ${BASE_IMAGE} AS builder
+EXPOSE 8080
 
-# Add our source code.
-ADD --chown=rust:rust . ./
+RUN useradd -ms /bin/sh eventplanner && \
+    apt update && \
+    apt full-upgrade -y
 
-# Build our application.
-RUN cargo build --release
-RUN ls -R /home/rust/src/target/
+USER eventplanner
+WORKDIR /home/eventplanner
 
-# Now, we need to build our _real_ Docker container, copying in `using-diesel`.
-FROM alpine:latest
-RUN apk --no-cache add ca-certificates
-
-
-COPY --from=builder \
-    /home/rust/src/target/x86_64-unknown-linux-musl/release/using-diesel \
-    /usr/local/bin/
-CMD /usr/local/bin/using-diesel
+COPY build/libs/project-service-*.jar project-service.jar

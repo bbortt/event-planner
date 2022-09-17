@@ -1,0 +1,27 @@
+plugins {
+    id "java"
+    id "org.openapi.generator"
+}
+
+dependencies {
+}
+
+openApiValidate {
+    inputSpec = "${project.projectDir}/oas/spec.yml".toString()
+}
+
+openApiGenerate {
+    generatorName = "spring"
+    inputSpec = "${project.rootDir}/specs/project-service-v1.yml".toString()
+    outputDir = "${project.buildDir}/generated-sources".toString()
+    apiPackage = "io.github.bbortt.event.planner.apps.projects.v1"
+    invokerPackage = "io.github.bbortt.event.planner.apps.projects.v1.invoker"
+    modelNameSuffix = "Dto"
+    modelPackage = "io.github.bbortt.event.planner.apps.projects.v1.dto"
+    configOptions = [
+            dateLibrary    : "java8",
+            delegatePattern: "true",
+            interfaceOnly  : "true",
+            useOptional    : "true"
+    ]
+}

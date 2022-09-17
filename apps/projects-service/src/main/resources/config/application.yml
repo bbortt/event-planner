@@ -1,0 +1,11 @@
+server:
+  port: 8080
+spring:
+  datasource:
+    url: ${APPL_JDBC_URL}
+    username: ${APPL_JDBC_USERNAME}
+    password: ${APPL_JDBC_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
