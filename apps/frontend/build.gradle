@@ -1,6 +1,7 @@
 plugins {
-    id 'base'
-    id 'com.github.node-gradle.node'
+    id "base"
+    id "com.github.node-gradle.node"
+    id "org.openapi.generator"
 }
 
 repositories {
@@ -12,26 +13,51 @@ clean {
     delete "node_modules"
 }
 
+openApiGenerate {
+    generatorName = "typescript-fetch"
+    inputSpec = "${project.rootDir}/specs/project-service-v1.yml".toString()
+    outputDir = "${project.buildDir}/generated-resources".toString()
+//    apiPackage = "io.github.bbortt.event.planner.apps.projects.v1"
+//    invokerPackage = "io.github.bbortt.event.planner.apps.projects.v1.invoker"
+//    modelNameSuffix = "Dto"
+//    modelPackage = "io.github.bbortt.event.planner.apps.projects.v1.dto"
+//    configOptions = [
+//            dateLibrary    : "java8",
+//            delegatePattern: "true",
+//            interfaceOnly  : "true",
+//            useOptional    : "true"
+//    ]
+}
+
+task copyGeneratedApis(type: Copy, dependsOn: "openApiGenerate") {
+    from "${project.buildDir}/generated-resources/main/apis"
+    into "${project.projectDir}/lib/apis"
+}
+task copyGeneratedModels(type: Copy, dependsOn: "openApiGenerate") {
+    from "${project.buildDir}/generated-resources/main/models"
+    into "${project.projectDir}/lib/models"
+}
+
 node {
-    version = '16.17.0'
-    npmVersion = '8.15.0'
-    npmInstallCommand = 'ci'
+    version = "16.17.0"
+    npmVersion = "8.15.0"
+    npmInstallCommand = "ci"
     download = false
     workDir = file("${project.rootDir}/.gradle/nodejs")
     npmWorkDir = file("${project.rootDir}/.gradle/npm")
 }
 
-task lint(type: NpmTask, dependsOn: 'npmInstall') {
-    args = ['run', 'lint']
+task lint(type: NpmTask, dependsOn: "npmInstall") {
+    args = ["run", "lint"]
 }
 check.dependsOn lint
 
-task prettier(type: NpmTask, dependsOn: 'npmInstall') {
-    args = ['run', 'prettier:check']
+task prettier(type: NpmTask, dependsOn: "npmInstall") {
+    args = ["run", "prettier:check"]
 }
 check.dependsOn prettier
 
-task npmBuild(type: NpmTask, dependsOn: 'npmInstall') {
-    args = ['run', 'build']
+task npmBuild(type: NpmTask, dependsOn: ["npmInstall", "copyGeneratedApis", "copyGeneratedModels"]) {
+    args = ["run", "build"]
 }
 assemble.dependsOn npmBuild

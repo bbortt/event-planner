@@ -1,26 +1,26 @@
 plugins {
-    id 'base'
-    id 'com.github.node-gradle.node'
+    id "base"
+    id "com.github.node-gradle.node"
 }
 
 version = "${version}"
 
-defaultTasks 'check'
+defaultTasks "check"
 
 repositories {
 }
 
 clean {
-    delete 'node_modules'
+    delete "node_modules"
 }
 
 node {
-    version = '16.17.0'
-    npmVersion = '8.15.0'
-    npmInstallCommand = 'ci'
+    version = "16.17.0"
+    npmVersion = "8.15.0"
+    npmInstallCommand = "ci"
 }
 
-if (project.hasProperty('nodeInstall')) {
+if (project.hasProperty("nodeInstall")) {
     node {
         download = true
     }

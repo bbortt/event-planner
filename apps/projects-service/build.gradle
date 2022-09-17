@@ -1,5 +1,5 @@
 plugins {
-    id 'base'
+    id "base"
     id "org.openapi.generator"
 }
 
@@ -11,13 +11,13 @@ openApiValidate {
 }
 
 openApiGenerate {
-    generatorName = "rust-server"
-    inputSpec = "${project.projectDir}/oas/spec.yml".toString()
-//    outputDir = "$buildDir/generated".toString()
-//    apiPackage = "io.github.bbortt.event.planner.api.v1"
-//    invokerPackage = "io.github.bbortt.event.planner.v1.invoker"
+    generatorName = "go-gin-server"
+    inputSpec = "${project.rootDir}/specs/project-service-v1.yml".toString()
+//    outputDir = "${project.projectDir}/src".toString()
+//    apiPackage = "io.github.bbortt.event.planner.apps.projects.v1"
+//    invokerPackage = "io.github.bbortt.event.planner.apps.projects.v1.invoker"
 //    modelNameSuffix = "Dto"
-//    modelPackage = "io.github.bbortt.event.planner.api.v1.dto"
+//    modelPackage = "io.github.bbortt.event.planner.apps.projects.v1.dto"
 //    configOptions = [
 //            dateLibrary    : "java8",
 //            delegatePattern: "true",
