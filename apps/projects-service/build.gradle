@@ -15,8 +15,11 @@ repositories {
 dependencies {
     implementation "io.swagger.core.v3:swagger-annotations:2.2.1"
     implementation "jakarta.validation:jakarta.validation-api:2.0.2"
+    implementation "org.apache.commons:commons-lang3:3.12.0"
     implementation "org.openapitools:jackson-databind-nullable:0.2.2"
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+    implementation "org.springframework.boot:spring-boot-starter-oauth2-resource-server"
+    implementation "org.springframework.boot:spring-boot-starter-security"
     implementation "org.springframework.boot:spring-boot-starter-undertow"
     implementation("org.springframework.boot:spring-boot-starter-web") {
         exclude module: "spring-boot-starter-tomcat"
@@ -33,7 +36,7 @@ openApiValidate {
 
 openApiGenerate {
     generatorName = "spring"
-    inputSpec = "${project.rootDir}/specs/project-service-v1.yml".toString()
+    inputSpec = "${project.rootDir}/specs/projects-service-v1.yml".toString()
     outputDir = "${project.buildDir}/generated-sources".toString()
     apiPackage = "io.github.bbortt.event.planner.apps.projects.v1.rest"
     invokerPackage = "io.github.bbortt.event.planner.apps.projects.v1"
@@ -43,7 +46,8 @@ openApiGenerate {
             dateLibrary    : "java8",
             delegatePattern: "true",
             interfaceOnly  : "true",
-            useOptional    : "true"
+            useOptional    : "true",
+            useTags        : "true"
     ]
 }
 compileJava.dependsOn tasks.openApiGenerate

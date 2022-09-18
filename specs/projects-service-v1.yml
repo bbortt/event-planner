@@ -34,13 +34,13 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: "#/components/schemas/PagingInformation"
+                  - $ref: '#/components/schemas/PagingInformation'
                   - type: object
                     properties:
                       contents:
                         type: array
                         items:
-                          $ref: "#/components/schemas/Project"
+                          $ref: '#/components/schemas/Project'
     post:
       tags:
         - project
@@ -55,14 +55,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Project"
+              $ref: '#/components/schemas/Project'
       responses:
         201:
           description: CREATED
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Project"
+                $ref: '#/components/schemas/Project'
         400:
           description: BAD REQUEST
 components:
@@ -93,7 +93,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/PagingInformation"
+            $ref: '#/components/schemas/PagingInformation'
   schemas:
     PagingInformation:
       type: object
