@@ -1,3 +1,8 @@
+jwt:
+  audience: http://localhost:8081
+logging:
+  level:
+    web: debug
 server:
   port: 8081
 spring:
