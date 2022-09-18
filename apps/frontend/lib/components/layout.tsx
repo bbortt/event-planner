@@ -27,11 +27,10 @@ const Contents = ({ user, children }: ContentsProps) => {
 
 type LayoutProps = {
   user?: UserProfile;
-  loading: boolean;
   children: React.ReactNode;
 };
 
-const Layout = ({ user, loading, children }: LayoutProps) => {
+const Layout = ({ user, children }: LayoutProps) => {
   return (
     <>
       <Head>
@@ -39,7 +38,7 @@ const Layout = ({ user, loading, children }: LayoutProps) => {
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
       </Head>
 
-      {loading ? <div>A nice loading animation...</div> : <Contents user={user}>{children}</Contents>}
+      <Contents user={user}>{children}</Contents>
     </>
   );
 };
