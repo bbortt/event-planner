@@ -24,7 +24,7 @@ node {
 
 openApiGenerate {
     generatorName = "typescript-fetch"
-    inputSpec = "${project.rootDir}/specs/project-service-v1.yml".toString()
+    inputSpec = "${project.rootDir}/specs/projects-service-v1.yml".toString()
     outputDir = "${project.buildDir}/generated-resources".toString()
 }
 

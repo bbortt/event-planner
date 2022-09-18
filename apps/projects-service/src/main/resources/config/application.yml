@@ -1,3 +1,5 @@
+jwt:
+  audience: ${APPL_AUTH0_AUDIENCE}
 server:
   port: 8080
 spring:
@@ -9,3 +11,8 @@ spring:
     hibernate:
       ddl-auto: validate
     open-in-view: false
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${APPL_JWT_ISSUER_URI}
