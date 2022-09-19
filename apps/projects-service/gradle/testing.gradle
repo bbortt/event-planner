@@ -1,0 +1,20 @@
+test {
+    useJUnitPlatform()
+    exclude "**/*IntegrationTest*"
+}
+
+task testReport(type: TestReport) {
+    destinationDir = file("$buildDir/reports/tests")
+    reportOn test
+}
+
+task integrationTest(type: Test, dependsOn: test) {
+    useJUnitPlatform()
+    include "**/*IntegrationTest*"
+}
+check.dependsOn integrationTest
+
+task integrationTestReport(type: TestReport) {
+    destinationDir = file("$buildDir/reports/tests")
+    reportOn integrationTest
+}

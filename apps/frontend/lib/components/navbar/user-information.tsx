@@ -11,7 +11,7 @@ type UserInformationProps = {
 const UserIcon = ({ user }: UserInformationProps) => {
   return (
     <>
-      <span>{user.nickname || 'Profil'}</span>
+      <span>{user.name || user.nickname || 'Profil'}</span>
       {user.picture && <Image rounded src={user.picture} alt="Profile picture" className={styles.userIcon} />}
     </>
   );

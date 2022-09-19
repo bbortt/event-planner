@@ -13,8 +13,8 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.Parameter;
 
-@Table
 @Entity
+@Table(schema = "projects_service", uniqueConstraints = { @UniqueConstraint(name = "unique_token", columnNames = { "token" }) })
 public class Project extends AbstractAuditingEntity {
 
   @Id

@@ -19,3 +19,13 @@ jobs:
           java-version: 17
       - uses: gradle/gradle-build-action@v2
       - run: ./gradlew :apps:frontend:build -PnodeInstall="true"
+      - uses: actions/cache@v3.0.2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+            ./node_modules
+            ./apps/frontend/node_modules
+          key: ${{ runner.os }}-gradle-${{ hashFiles('package-lock.json', 'apps/frontend/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-

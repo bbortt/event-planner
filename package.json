@@ -1,6 +1,6 @@
 {
-  "name": "bachelor-thesis",
-  "description": "BFH TI Bachelor Thesis of Timon Borter and Mario Schlaeppi.",
+  "name": "event-planner",
+  "description": " Event Planning Tool. ",
   "version": "0.0.0",
   "private": true,
   "license": "Apache-2.0",

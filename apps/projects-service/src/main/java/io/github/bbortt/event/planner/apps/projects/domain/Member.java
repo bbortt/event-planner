@@ -14,9 +14,12 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-@Table
 @Entity
 @EntityListeners({ AuditingEntityListener.class })
+@Table(
+  schema = "projects_service",
+  uniqueConstraints = { @UniqueConstraint(name = "unique_user_per_project", columnNames = { "project_id", "auth0_user_id" }) }
+)
 public class Member {
 
   @Id
@@ -64,7 +67,7 @@ public class Member {
   private Instant acceptedDate = Instant.now();
 
   @NotNull
-  @Column(length = 64, nullable = false, updatable = false)
+  @Column(name = "auth0_user_id", length = 64, nullable = false, updatable = false)
   private String auth0UserId;
 
   public Member() {
