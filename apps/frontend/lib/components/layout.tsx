@@ -34,7 +34,7 @@ const Layout = ({ user, children }: LayoutProps) => {
   return (
     <>
       <Head>
-        <title>Next.js with Auth0</title>
+        <title>Event-Planner</title>
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
       </Head>
 

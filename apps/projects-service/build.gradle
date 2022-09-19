@@ -1,6 +1,8 @@
 plugins {
     id "io.spring.dependency-management" version "1.0.13.RELEASE"
+    id "jacoco"
     id "java"
+    id "org.flywaydb.flyway"
     id "org.openapi.generator"
     id "org.springframework.boot" version "2.7.3"
 }
@@ -13,6 +15,7 @@ repositories {
 }
 
 dependencies {
+    implementation platform("org.springframework.cloud:spring-cloud-dependencies:2021.0.1")
     implementation "io.swagger.core.v3:swagger-annotations:2.2.1"
     implementation "jakarta.validation:jakarta.validation-api:2.0.2"
     implementation "org.apache.commons:commons-lang3:3.12.0"
@@ -27,7 +30,10 @@ dependencies {
     developmentOnly "org.springframework.boot:spring-boot-devtools"
     runtimeOnly "com.h2database:h2"
     runtimeOnly "org.postgresql:postgresql"
+    testImplementation "org.bitbucket.b_c:jose4j:0.7.12"
     testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation "org.springframework.cloud:spring-cloud-contract-wiremock"
+    testImplementation "org.springframework.security:spring-security-test"
 }
 
 openApiValidate {
@@ -53,23 +59,27 @@ openApiGenerate {
 compileJava.dependsOn tasks.openApiGenerate
 sourceSets.main.java.srcDirs += "${project.buildDir}/generated-sources/src/main/java"
 
-test {
-    useJUnitPlatform()
-    exclude "**/*IntegrationTest*"
+flyway {
+    locations = ["filesystem:src/main/resources/db/migration"]
 }
 
-task testReport(type: TestReport) {
-    destinationDir = file("$buildDir/reports/tests")
-    reportOn test
+task flywayMigrateDev(type: org.flywaydb.gradle.task.FlywayMigrateTask) {
+    url = "jdbc:postgresql://localhost:5432/event_planner"
+    user = "event_planner"
+    password = "event_planner_password"
 }
 
-task integrationTest(type: Test, dependsOn: test) {
-    useJUnitPlatform()
-    include "**/*IntegrationTest*"
+task flywayMigrateTest(type: org.flywaydb.gradle.task.FlywayMigrateTask) {
+    url = "jdbc:postgresql://localhost:5432/event_planner_test"
+    user = "event_planner"
+    password = "event_planner_password"
 }
-check.dependsOn integrationTest
 
-task integrationTestReport(type: TestReport) {
-    destinationDir = file("$buildDir/reports/tests")
-    reportOn integrationTest
+task flywayCleanTest(type: org.flywaydb.gradle.task.FlywayCleanTask) {
+    url = "jdbc:postgresql://localhost:5432/event_planner_test"
+    user = "event_planner"
+    password = "event_planner_password"
 }
+
+apply from: "gradle/testing.gradle"
+apply from: "gradle/sonar.gradle"

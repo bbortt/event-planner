@@ -1,16 +1,19 @@
-name: apps/projects-service
+name: sonar
 on:
   push:
-    branches-ignore:
+    branches:
       - release
-    paths:
-      - '.github/workflows/projects-service.yml'
-      - 'apps/projects-service/**'
     tags-ignore:
       - '*'
+    paths-ignore:
+      - '.github/version.json'
+      - 'CHANGELOG.md'
+  pull_request:
 jobs:
-  build:
+  fullbuild:
+    name: Analyze Application
     runs-on: ubuntu-20.04
+    environment: build
     services:
       postgres:
         image: postgres:14.1-alpine
@@ -29,18 +32,26 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-java@v3
         with:
-          distribution: temurin
-          java-version: 17
+          distribution: 'temurin'
+          java-version: '17'
       - run: PGPASSWORD=event_planner_password psql -h localhost -U event_planner -f apps/projects-service/src/test/resources/db/scripts/init-projects_service.sql event_planner_test
-      - uses: gradle/gradle-build-action@v2
-      - run: ./gradlew :apps:projects-service:flywayMigrateTest
-      - run: ./gradlew :apps:projects-service:build
+      - env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          ./gradlew --no-daemon \
+              :apps:projects-service:flywayMigrateTest
+          ./gradlew -Pprod --no-daemon \
+             -Dsonar.host.url=https://sonarcloud.io \
+             -Dsonar.organization=bbortt-github \
+             -Dsonar.login=$SONAR_TOKEN \
+              check sonarqube
       - uses: actions/cache@v3.0.2
         with:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
             ./node_modules
+            ./apps/frontend/node_modules
           key: ${{ runner.os }}-gradle-${{ hashFiles('build.gradle', 'package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-
