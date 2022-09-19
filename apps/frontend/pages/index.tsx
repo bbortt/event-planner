@@ -11,7 +11,7 @@ type HomeProps = {
   user?: UserProfile;
 };
 
-const Home: NextPage = ({ user }: HomeProps) => {
+const Home: NextPage<HomeProps> = ({ user }) => {
   return (
     <Layout user={user}>
       <Masthead />

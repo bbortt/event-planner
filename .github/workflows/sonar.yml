@@ -40,7 +40,7 @@ jobs:
         run: |
           ./gradlew --no-daemon \
               :apps:projects-service:flywayMigrateTest
-          ./gradlew -Pprod --no-daemon \
+          ./gradlew -Pprod --no-daemon --scan \
              -Dsonar.host.url=https://sonarcloud.io \
              -Dsonar.organization=bbortt-github \
              -Dsonar.login=$SONAR_TOKEN \
