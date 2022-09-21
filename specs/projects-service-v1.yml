@@ -27,6 +27,10 @@ paths:
         This can only be done by the users having the `restapi:access`
         role. All registered users hould receive this role by default.
       operationId: readProjects
+      parameters:
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageNumber'
+        - $ref: '#/components/parameters/Sort'
       responses:
         200:
           description: OK
@@ -70,21 +74,26 @@ components:
     PageSize:
       name: pageSize
       in: query
-      description: Number of records to return.
+      description: |
+        Number of records to return. Must be greater than 0, else the
+        default value of 10 will be used.
       schema:
         type: number
+        format: Int32
     PageNumber:
-      name: pageNo
+      name: pageNumber
       in: query
       description: Start index for paging.
       schema:
         type: number
+        format: Int32
     Sort:
       name: sort
       in: query
       description: |
-        Attribute of the resource to sort by. Optionally followed
-        by the sorting direction, comma separated. Default is `id[,asc]`.
+        Attributes of the resource to sort by: A semicolon separated list.
+        Each attribute can optionally be followed by the sorting direction,
+        comma separated. Default is `id[,asc]`.
       schema:
         type: string
   responses:
@@ -119,7 +128,7 @@ components:
       properties:
         id:
           type: number
-          format: int64
+          format: Int64
         token:
           type: string
           maxLength: 36

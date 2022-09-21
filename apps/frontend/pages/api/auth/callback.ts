@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import auth0 from '../../../lib/auth0';
+
+import auth0 from 'lib/auth0';
 
 const callback = async (req: NextApiRequest, res: NextApiResponse) => {
   try {

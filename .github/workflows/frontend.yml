@@ -18,7 +18,7 @@ jobs:
           distribution: temurin
           java-version: 17
       - uses: gradle/gradle-build-action@v2
-      - run: ./gradlew :apps:frontend:build -PnodeInstall --scan
+      - run: ./gradlew :apps:frontend:check -PnodeInstall --scan
       - uses: actions/cache@v3.0.2
         with:
           path: |
