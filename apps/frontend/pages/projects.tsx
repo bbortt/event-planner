@@ -1,14 +1,13 @@
 import type { NextPage } from 'next';
 import { GetServerSideProps } from 'next';
 
-import { PageRoute, UserProfile } from '@auth0/nextjs-auth0';
+import { UserProfile } from '@auth0/nextjs-auth0';
 
 import { ProjectApi } from 'lib/apis';
 import auth0 from 'lib/auth0';
 import Layout from 'lib/components/layout';
 import ProjectList from 'lib/components/projects/list';
 import { Project } from 'lib/models';
-import type { WithPageAuthRequired } from '@auth0/nextjs-auth0/dist/helpers/with-page-auth-required';
 
 type ProjectsProps = {
   user: UserProfile;
@@ -40,8 +39,18 @@ export const getServerSideProps: GetServerSideProps = auth0.withPageAuthRequired
   async getServerSideProps({ req, res }) {
     let projects: Project[] = [];
 
+    let session = auth0.getSession(req, res);
+    console.log('session: ', session);
+
     try {
-      const { accessToken } = await auth0.getAccessToken(req, res, { scopes: ['restapi:access'] });
+      console.log('process.env.NEXT_PUBLIC_AUTH0_SCOPE: ', process.env.NEXT_PUBLIC_AUTH0_SCOPE);
+      const { accessToken } = await auth0.getAccessToken(req, res, {
+        authorizationParams: {
+          audience: 'http://localhost:8081',
+        },
+        scopes: ['restapi:access'],
+      });
+      console.log('accessToken: ', accessToken);
       projects = await getProjects(accessToken!);
     } catch (e) {
       console.log('error: ', e);
