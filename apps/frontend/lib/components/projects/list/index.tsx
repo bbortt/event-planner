@@ -5,15 +5,7 @@ type ProjectListProps = {
 };
 
 const ProjectList = ({ projects }: ProjectListProps) => {
-  console.log('projects: ', projects);
-
-  return (
-    <>
-      <h1>Projekt</h1>
-
-      {projects}
-    </>
-  );
+  return <>{projects}</>;
 };
 
 export default ProjectList;

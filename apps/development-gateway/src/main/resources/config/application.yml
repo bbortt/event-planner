@@ -1,6 +1,6 @@
 logging:
   level:
-    root: debug
+    web: debug
 spring:
   cloud:
     gateway:

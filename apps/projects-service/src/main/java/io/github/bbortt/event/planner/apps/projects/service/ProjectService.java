@@ -2,12 +2,9 @@ package io.github.bbortt.event.planner.apps.projects.service;
 
 import io.github.bbortt.event.planner.apps.projects.domain.Project;
 import io.github.bbortt.event.planner.apps.projects.domain.repository.ProjectJpaRepository;
-import java.math.BigDecimal;
 import java.util.Optional;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Lazy
@@ -20,6 +17,10 @@ public class ProjectService {
 
   public ProjectService(ProjectJpaRepository projectRepository) {
     this.projectRepository = projectRepository;
+  }
+
+  public Project save(Project project) {
+    return projectRepository.saveAndFlush(project);
   }
 
   public Page<Project> readAllProjects(Optional<Integer> pageSize, Optional<Integer> pageNumber, Optional<String> sort) {
