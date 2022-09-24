@@ -1,3 +1,7 @@
+import { NextApiRequest, NextApiResponse } from 'next';
+
+import { IncomingMessage, ServerResponse } from 'http';
+
 import { initAuth0 } from '@auth0/nextjs-auth0';
 import { SignInWithAuth0 } from '@auth0/nextjs-auth0/dist/instance';
 
@@ -24,3 +28,21 @@ const auth0: SignInWithAuth0 = initAuth0({
 });
 
 export default auth0;
+
+export const getAccessToken = async (
+  req: IncomingMessage | NextApiRequest,
+  res: NextApiResponse | ServerResponse,
+  audience: string,
+  scopes: string[]
+): Promise<string> => {
+  const { accessToken } = await auth0.getAccessToken(req, res, {
+    authorizationParams: {
+      audience,
+    },
+    scopes,
+  });
+  if (!accessToken) {
+    throw Error('Unable to fetch access token!');
+  }
+  return accessToken;
+};
