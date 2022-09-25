@@ -4,6 +4,7 @@ plugins {
     id "java"
     id "org.flywaydb.flyway"
     id "org.openapi.generator"
+    id "org.sonarqube"
     id "org.springframework.boot" version "2.7.3"
 }
 

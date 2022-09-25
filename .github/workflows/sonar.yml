@@ -52,6 +52,6 @@ jobs:
             ~/.gradle/wrapper
             ./node_modules
             ./apps/frontend/node_modules
-          key: ${{ runner.os }}-gradle-${{ hashFiles('build.gradle', 'package-lock.json') }}
+          key: ${{ runner.os }}-gradle-${{ hashFiles('build.gradle', 'package-lock.json', 'frontend/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-
