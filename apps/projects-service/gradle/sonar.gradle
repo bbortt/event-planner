@@ -1,9 +1,9 @@
 sonarqube {
     properties {
-        sonar.test.inclusions = "src/test/**/*.java"
-        sonar.coverage.jacoco.xmlReportPaths = "build/reports/jacoco/test/jacocoTestReport.xml"
-        sonar.java.codeCoveragePlugin = "jacoco"
-        sonar.junit.reportPaths = ["build/test-results/test", "build/test-results/integrationTest"]
+        property "sonar.test.inclusions", "src/test/**/*.java"
+        property "sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml"
+        property "sonar.java.codeCoveragePlugin", "jacoco"
+        property "sonar.junit.reportPaths", "build/test-results/test/TEST-.*.xml, build/test-results/integrationTest/TEST-.*.xml"
     }
 }
 
