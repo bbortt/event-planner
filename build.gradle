@@ -16,7 +16,9 @@ repositories {
 }
 
 clean {
-    delete "node_modules"
+    delete "${node.workDir}"
+    delete "${node.npmWorkDir}"
+    delete "${node.nodeProjectDir}"
 }
 
 node {
