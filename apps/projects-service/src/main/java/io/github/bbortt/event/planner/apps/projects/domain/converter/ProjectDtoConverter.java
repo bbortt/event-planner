@@ -26,11 +26,11 @@ public class ProjectDtoConverter implements DtoConverter<Project, ProjectDto> {
 
   @Override
   public List<Project> fromDtos(List<ProjectDto> dtos) {
-    return null;
+    return dtos.stream().map(this::fromDto).toList();
   }
 
   @Override
   public List<ProjectDto> toDtos(List<Project> projects) {
-    return projects.stream().map(this::toDto).collect(Collectors.toList());
+    return projects.stream().map(this::toDto).toList();
   }
 }
