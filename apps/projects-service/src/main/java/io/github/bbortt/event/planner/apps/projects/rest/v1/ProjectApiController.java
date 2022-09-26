@@ -6,14 +6,11 @@ import io.github.bbortt.event.planner.apps.projects.domain.converter.ProjectDtoC
 import io.github.bbortt.event.planner.apps.projects.service.ProjectService;
 import io.github.bbortt.event.planner.apps.projects.v1.dto.ProjectDto;
 import io.github.bbortt.event.planner.apps.projects.v1.dto.ReadProjects200ResponseDto;
-import io.github.bbortt.event.planner.apps.projects.v1.rest.ApiUtil;
 import io.github.bbortt.event.planner.apps.projects.v1.rest.ProjectApi;
 import java.math.BigDecimal;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

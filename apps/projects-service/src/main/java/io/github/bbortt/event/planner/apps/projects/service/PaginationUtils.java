@@ -17,6 +17,10 @@ class PaginationUtils {
   private static final String DEFAULT_SORT_SPLIT = ";";
   private static final String DEFAULT_SORT_DIRECTION_SPLIT = ",";
 
+  private PaginationUtils() {
+    // Static utility class
+  }
+
   static Pageable createPagingInformation(
     Optional<Integer> pageSize,
     Optional<Integer> pageNumber,
@@ -41,7 +45,7 @@ class PaginationUtils {
       .map(PaginationUtils::parseOrder)
       .filter(Optional::isPresent)
       .map(Optional::get)
-      .collect(Collectors.toList());
+      .toList();
 
     return Sort.by(orders);
   }
