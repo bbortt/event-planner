@@ -4,7 +4,6 @@ import io.github.bbortt.event.planner.apps.projects.domain.Project;
 import io.github.bbortt.event.planner.apps.projects.v1.dto.ProjectDto;
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ProjectDtoConverter implements DtoConverter<Project, ProjectDto> {
 

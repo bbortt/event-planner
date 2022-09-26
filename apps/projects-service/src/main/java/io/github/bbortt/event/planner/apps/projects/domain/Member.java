@@ -3,7 +3,21 @@ package io.github.bbortt.event.planner.apps.projects.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.time.Instant;
-import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -70,6 +84,9 @@ public class Member {
   @Column(name = "auth0_user_id", length = 64, nullable = false, updatable = false)
   private String auth0UserId;
 
+  @OneToMany(mappedBy = "member", cascade = { CascadeType.ALL })
+  private Set<MemberPermission> permissions = new HashSet<>();
+
   public Member() {
     // Empty member
   }
@@ -131,6 +148,14 @@ public class Member {
 
   public void setAuth0UserId(String auth0UserSub) {
     this.auth0UserId = auth0UserSub;
+  }
+
+  public Set<Permission> getPermissions() {
+    return permissions.stream().map(MemberPermission::getPermission).collect(Collectors.toSet());
+  }
+
+  public void setPermissions(Set<Permission> permissions) {
+    this.permissions = permissions.stream().map(permission -> new MemberPermission(this, permission)).collect(Collectors.toSet());
   }
 
   @Override
