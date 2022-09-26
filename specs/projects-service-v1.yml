@@ -69,6 +69,40 @@ paths:
                 $ref: '#/components/schemas/Project'
         400:
           description: BAD REQUEST
+          content:
+            text/plain:
+              schema:
+                type: string
+                description: Description of the validation error.
+  /v1/projects/{projectId}:
+    get:
+      tags:
+        - project
+      security:
+        - user_auth: []
+      summary: Receive the project identified by the given `projectId`.
+      description: |
+        This will only return the project identified by `projectId` and only if
+        the user is a member of it.
+        This can only be done by the users having the `restapi:access`
+        role. All registered users hould receive this role by default.
+      operationId: readProjectById
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: number
+            format: Int64
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        204:
+          description: NO CONTENT
 components:
   parameters:
     PageSize:

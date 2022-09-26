@@ -6,11 +6,13 @@ import io.github.bbortt.event.planner.apps.projects.domain.converter.ProjectDtoC
 import io.github.bbortt.event.planner.apps.projects.service.ProjectService;
 import io.github.bbortt.event.planner.apps.projects.v1.dto.ProjectDto;
 import io.github.bbortt.event.planner.apps.projects.v1.dto.ReadProjects200ResponseDto;
+import io.github.bbortt.event.planner.apps.projects.v1.rest.ApiUtil;
 import io.github.bbortt.event.planner.apps.projects.v1.rest.ProjectApi;
 import java.math.BigDecimal;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,8 +32,13 @@ public class ProjectApiController implements ProjectApi {
 
   @Override
   public ResponseEntity<ProjectDto> createProject(ProjectDto projectDto) {
-    Project project = projectService.save(projectDtoConverter.fromDto(projectDto));
+    Project project = projectService.createProject(projectDtoConverter.fromDto(projectDto));
     return ResponseEntity.status(HttpStatus.CREATED).body(projectDtoConverter.toDto(project));
+  }
+
+  @Override
+  public ResponseEntity<ProjectDto> readProjectById(BigDecimal projectId) {
+    return ResponseEntity.ok(projectDtoConverter.toDto(projectService.findById(projectId.longValueExact())));
   }
 
   @Override
@@ -41,7 +48,11 @@ public class ProjectApiController implements ProjectApi {
     Optional<String> sort
   ) {
     ReadProjects200ResponseDto dto = pageTo200ResponseDto(
-      projectService.readAllProjects(pageSize.map(BigDecimal::intValueExact), pageNumber.map(BigDecimal::intValueExact), sort)
+      projectService.findAllNonArchivedProjectsWhichIAmMemberOf(
+        pageSize.map(BigDecimal::intValueExact),
+        pageNumber.map(BigDecimal::intValueExact),
+        sort
+      )
     );
     return ResponseEntity.ok(dto);
   }

@@ -3,7 +3,6 @@ package io.github.bbortt.event.planner.apps.projects.service;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -17,11 +16,7 @@ class PaginationUtils {
   private static final String DEFAULT_SORT_SPLIT = ";";
   private static final String DEFAULT_SORT_DIRECTION_SPLIT = ",";
 
-  private PaginationUtils() {
-    // Static utility class
-  }
-
-  static Pageable createPagingInformation(
+  Pageable createPagingInformation(
     Optional<Integer> pageSize,
     Optional<Integer> pageNumber,
     Optional<String> sort,
