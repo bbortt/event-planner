@@ -35,7 +35,7 @@ jobs:
       - uses: gradle/gradle-build-action@v2
       - run: ./gradlew :apps:projects-service:flywayMigrateTest
       - run: ./gradlew :apps:projects-service:build --scan
-      - uses: actions/cache@v3.0.2
+      - uses: actions/cache@v3.0.8
         with:
           path: |
             ~/.gradle/caches
