@@ -9,8 +9,7 @@ on:
       - 'CHANGELOG.md'
   pull_request:
 jobs:
-  fullbuild:
-    name: Analyze Application
+  analyze:
     runs-on: ubuntu-20.04
     environment: build
     services:
@@ -34,12 +33,11 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
       - run: PGPASSWORD=event_planner_password psql -h localhost -U event_planner -f apps/projects-service/src/test/resources/db/scripts/init-projects_service.sql event_planner_test
+      - run: ./gradlew :apps:projects-service:flywayMigrateTest --no-daemon --scan
       - env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          ./gradlew --no-daemon \
-              :apps:projects-service:flywayMigrateTest
-          ./gradlew -Pprod --no-daemon --scan \
+          ./gradlew --no-daemon --scan \
              -Dsonar.host.url=https://sonarcloud.io \
              -Dsonar.organization=bbortt-github \
              -Dsonar.login=$SONAR_TOKEN \
