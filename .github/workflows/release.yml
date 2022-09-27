@@ -1,0 +1,22 @@
+name: release
+on:
+  push:
+    branches:
+      - release
+jobs:
+  release:
+    runs-on: ubuntu-20.04
+    environment: release
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v3
+        with:
+          cache: 'npm'
+          node-version: 16
+      - run: npm ci
+      - env:
+          GITHUB_TOKEN: ${{ secrets.ACTION_TOKEN }}
+        run: |
+          npx --no-install semantic-release
