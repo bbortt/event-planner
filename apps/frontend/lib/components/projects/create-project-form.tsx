@@ -47,11 +47,11 @@ const CreateProjectForm = ({ initialProject, setIsValid, setProject }: CreatePro
     return errors;
   };
 
-  const shallDisplayError = (show: boolean) => ({ visibility: show ? 'inherit' : 'hidden' });
-
   return (
     <Formik
-      initialValues={initialProject ? initialProject : ({ startDate: new Date(), endDate: new Date() } as Project)}
+      initialValues={
+        initialProject ? initialProject : ({ name: '', description: '', startDate: new Date(), endDate: new Date() } as Project)
+      }
       validate={validateForm}
       onSubmit={() => {
         /* this is handled in super-component! */

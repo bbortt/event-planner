@@ -58,7 +58,7 @@ public class ProjectService {
 
   @Modifying
   @Transactional
-  @PreAuthorize("isAuthenticated()")
+  @PreAuthorize("#permissionService.hasProjectPermissions(#id, 'project:update')")
   public Project updateProject(Long id, String name, String description, Boolean archived) {
     Project project = projectRepository
       .findById(id)

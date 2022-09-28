@@ -3,14 +3,12 @@ import { ProjectApi } from 'lib/apis';
 import { Project, ProjectFromJSON, ProjectToJSON } from 'lib/models';
 
 const createProject = async (project: Project, accessToken: String) =>
-  await new ProjectApi().createProject(
-    { project },
-    {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    }
-  );
+  await new ProjectApi().createProject({ project }, async ({ context }) => ({
+    headers: {
+      ...context.headers,
+      Authorization: `bearer ${accessToken}`,
+    },
+  }));
 
 const projects = auth0.withApiAuthRequired(async (req, res) => {
   if (req.method !== 'POST') {
@@ -19,12 +17,13 @@ const projects = auth0.withApiAuthRequired(async (req, res) => {
 
   try {
     const accessToken = await getAccessToken(req, res, 'http://localhost:8081', ['restapi:access']);
-    const project = await createProject(ProjectFromJSON(JSON.parse(req.body)), accessToken);
-    res.status(201).json(JSON.stringify(ProjectToJSON(project)));
+    // console.log('req.body: ', req.body)
+    let project = ProjectFromJSON(req.body);
+    project = await createProject(project, accessToken);
+    res.status(201).json(project);
   } catch (error) {
-    console.error(error);
     const errorMessage = error instanceof Error ? error.message : 'Internal server error';
-    res.status(500).end(errorMessage);
+    res.status(error.response.status).end(errorMessage);
   }
 });
 

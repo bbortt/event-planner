@@ -5,7 +5,7 @@ type ProjectListProps = {
 };
 
 const ProjectList = ({ projects }: ProjectListProps) => {
-  return <>{projects}</>;
+  return <>{JSON.stringify(projects)}</>;
 };
 
 export default ProjectList;

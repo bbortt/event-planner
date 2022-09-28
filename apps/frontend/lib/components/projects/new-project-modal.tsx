@@ -2,15 +2,18 @@ import { useState } from 'react';
 
 import { Button, Modal } from 'react-bootstrap';
 
+import { ProjectApi } from 'lib/apis';
+import { wrapWithContext } from 'lib/auth0';
 import CreateProjectForm from 'lib/components/projects/create-project-form';
-import { Project, ProjectFromJSON, ProjectToJSON } from 'lib/models';
+import { Project } from 'lib/models';
 
 type NewProjectModalProps = {
-  show: boolean;
   handleVisibilityChange: (project?: Project) => void;
+  setErrorMessage: (errorMessage: string) => void;
+  show: boolean;
 };
 
-const NewProjectModal = ({ show, handleVisibilityChange }: NewProjectModalProps) => {
+const NewProjectModal = ({ handleVisibilityChange, setErrorMessage, show }: NewProjectModalProps) => {
   const [isValid, setIsValid] = useState(false);
   const [project, setProject] = useState({} as Project);
 
@@ -19,12 +22,15 @@ const NewProjectModal = ({ show, handleVisibilityChange }: NewProjectModalProps)
       return;
     }
 
-    const response = await fetch('/api/rest/v1/projects', {
-      method: 'POST',
-      body: JSON.stringify(ProjectToJSON(project)),
-    });
-
-    handleVisibilityChange(ProjectFromJSON(response.json()));
+    wrapWithContext(configuration => new ProjectApi(configuration))
+      .createProject({ project })
+      .then(
+        createdProject => handleVisibilityChange(createdProject),
+        _ => {
+          setErrorMessage('Ha das Projekt leider ned chönne kreirä - irgendwo ischmer e Fähler passiert. Probiers doch no eis!');
+          handleVisibilityChange();
+        }
+      );
   };
 
   return (

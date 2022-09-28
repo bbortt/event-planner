@@ -61,7 +61,12 @@ public class Project extends AbstractAuditingEntity {
   }
 
   public Project(String name, LocalDate startDate, LocalDate endDate) {
+    this(name, null, startDate, endDate);
+  }
+
+  public Project(String name, String description, LocalDate startDate, LocalDate endDate) {
     this.name = name;
+    this.description = description;
     this.startDate = startDate;
     this.endDate = endDate;
   }

@@ -9,11 +9,13 @@ public class ProjectDtoConverter implements DtoConverter<Project, ProjectDto> {
 
   @Override
   public Project fromDto(ProjectDto dto) {
-    return null;
+    assert dto != null;
+    return new Project(dto.getName(), dto.getDescription(), dto.getStartDate(), dto.getEndDate());
   }
 
   @Override
   public ProjectDto toDto(Project project) {
+    assert project != null;
     return new ProjectDto()
       .id(BigDecimal.valueOf(project.getId()))
       .token(project.getToken().toString())

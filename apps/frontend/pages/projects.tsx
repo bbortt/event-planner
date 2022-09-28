@@ -13,7 +13,8 @@ import Layout from 'lib/components/layout';
 import NewProjectModal from 'lib/components/projects/new-project-modal';
 import PageableList from 'lib/components/pageable-list';
 import ProjectList from 'lib/components/projects/list';
-import { Project, ReadProjects200Response } from 'lib/models';
+import { Project, ProjectToJSON, ReadProjects200Response } from 'lib/models';
+import { DEFAULT_PAGE_SIZE } from 'lib/constants';
 
 import styles from './projects.module.scss';
 
@@ -21,7 +22,7 @@ type ProjectsProps = { user: UserProfile; error?: string } & ReadProjects200Resp
 
 const Projects: NextPage<ProjectsProps> = ({ user, contents, number, totalPages, error }) => {
   const [showModal, setShowModal] = useState(false);
-  const [showAlert, setShowAlert] = useState(!!error);
+  const [errorMessage, setErrorMessage] = useState(error);
 
   const handleVisibilityChange = (project?: Project) => {
     setShowModal(!showModal);
@@ -46,8 +47,8 @@ const Projects: NextPage<ProjectsProps> = ({ user, contents, number, totalPages,
         </Row>
       </Container>
 
-      <Alert key="failed-to-fetch-data" variant="danger" show={showAlert} onClose={() => setShowAlert(false)} dismissible>
-        {error}
+      <Alert key="failed-to-fetch-data" variant="danger" show={!!errorMessage} onClose={() => setErrorMessage(undefined)} dismissible>
+        {errorMessage}
       </Alert>
 
       {contents?.length === 0 ? (
@@ -60,16 +61,17 @@ const Projects: NextPage<ProjectsProps> = ({ user, contents, number, totalPages,
         </PageableList>
       )}
 
-      <NewProjectModal show={showModal} handleVisibilityChange={handleVisibilityChange} />
+      <NewProjectModal show={showModal} handleVisibilityChange={handleVisibilityChange} setErrorMessage={setErrorMessage} />
     </Layout>
   );
 };
 
-const getProjects = async (accessToken: String): Promise<ReadProjects200Response> =>
-  new ProjectApi().readProjects({
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
+const getProjects = async (pageSize: number, pageNumber: number, accessToken?: String): Promise<ReadProjects200Response> =>
+  new ProjectApi().readProjects({ pageSize, pageNumber }, async ({ context }) => {
+    if (accessToken) {
+      context.headers['Authorization'] = `Bearer ${accessToken}`;
+    }
+    return context;
   });
 
 export const getServerSideProps: GetServerSideProps = auth0.withPageAuthRequired({
@@ -78,18 +80,16 @@ export const getServerSideProps: GetServerSideProps = auth0.withPageAuthRequired
     let response: ReadProjects200Response = {
       contents: [],
     };
-    let error;
+    let error = '';
 
     try {
       const accessToken = await getAccessToken(req, res, 'http://localhost:8081', ['restapi:access']);
-      response = await getProjects(accessToken!);
+      response = await getProjects(DEFAULT_PAGE_SIZE, 1, accessToken!);
     } catch (e) {
-      // TODO: Error handling
-      console.log('error: ', e);
       error = 'I ha Problem d Projekt ds ladä. Versuechs doch nomal!';
     }
 
-    return { props: { ...response, error } };
+    return { props: { ...response, contents: (response.contents || []).map(project => ProjectToJSON(project)), error } };
   },
 });
 
