@@ -20,6 +20,16 @@ export interface CreateProjectRequest {
   project?: Project;
 }
 
+export interface ReadProjectByIdRequest {
+  projectId: number;
+}
+
+export interface ReadProjectsRequest {
+  pageSize?: number;
+  pageNumber?: number;
+  sort?: string;
+}
+
 /**
  *
  */
@@ -70,11 +80,75 @@ export class ProjectApi extends runtime.BaseAPI {
   }
 
   /**
+   * This will only return the project identified by `projectId` and only if the user is a member of it. This can only be done by the users having the `restapi:access` role. All registered users hould receive this role by default.
+   * Receive the project identified by the given `projectId`.
+   */
+  async readProjectByIdRaw(
+    requestParameters: ReadProjectByIdRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction
+  ): Promise<runtime.ApiResponse<Project>> {
+    if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
+      throw new runtime.RequiredError(
+        'projectId',
+        'Required parameter requestParameters.projectId was null or undefined when calling readProjectById.'
+      );
+    }
+
+    const queryParameters: any = {};
+
+    const headerParameters: runtime.HTTPHeaders = {};
+
+    if (this.configuration && this.configuration.accessToken) {
+      // oauth required
+      headerParameters['Authorization'] = await this.configuration.accessToken('user_auth', []);
+    }
+
+    const response = await this.request(
+      {
+        path: `/v1/projects/{projectId}`.replace(`{${'projectId'}}`, encodeURIComponent(String(requestParameters.projectId))),
+        method: 'GET',
+        headers: headerParameters,
+        query: queryParameters,
+      },
+      initOverrides
+    );
+
+    return new runtime.JSONApiResponse(response, jsonValue => ProjectFromJSON(jsonValue));
+  }
+
+  /**
+   * This will only return the project identified by `projectId` and only if the user is a member of it. This can only be done by the users having the `restapi:access` role. All registered users hould receive this role by default.
+   * Receive the project identified by the given `projectId`.
+   */
+  async readProjectById(
+    requestParameters: ReadProjectByIdRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction
+  ): Promise<Project> {
+    const response = await this.readProjectByIdRaw(requestParameters, initOverrides);
+    return await response.value();
+  }
+
+  /**
    * This will only return projects that are not archived. This can only be done by the users having the `restapi:access` role. All registered users hould receive this role by default.
    * Receive all projects to which the user has access to.
    */
-  async readProjectsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ReadProjects200Response>> {
+  async readProjectsRaw(
+    requestParameters: ReadProjectsRequest,
+    initOverrides?: RequestInit | runtime.InitOverrideFunction
+  ): Promise<runtime.ApiResponse<ReadProjects200Response>> {
     const queryParameters: any = {};
+
+    if (requestParameters.pageSize !== undefined) {
+      queryParameters['pageSize'] = requestParameters.pageSize;
+    }
+
+    if (requestParameters.pageNumber !== undefined) {
+      queryParameters['pageNumber'] = requestParameters.pageNumber;
+    }
+
+    if (requestParameters.sort !== undefined) {
+      queryParameters['sort'] = requestParameters.sort;
+    }
 
     const headerParameters: runtime.HTTPHeaders = {};
 
@@ -100,8 +174,11 @@ export class ProjectApi extends runtime.BaseAPI {
    * This will only return projects that are not archived. This can only be done by the users having the `restapi:access` role. All registered users hould receive this role by default.
    * Receive all projects to which the user has access to.
    */
-  async readProjects(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ReadProjects200Response> {
-    const response = await this.readProjectsRaw(initOverrides);
+  async readProjects(
+    requestParameters: ReadProjectsRequest = {},
+    initOverrides?: RequestInit | runtime.InitOverrideFunction
+  ): Promise<ReadProjects200Response> {
+    const response = await this.readProjectsRaw(requestParameters, initOverrides);
     return await response.value();
   }
 }

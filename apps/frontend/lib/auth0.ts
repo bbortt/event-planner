@@ -5,6 +5,8 @@ import { IncomingMessage, ServerResponse } from 'http';
 import { initAuth0 } from '@auth0/nextjs-auth0';
 import { SignInWithAuth0 } from '@auth0/nextjs-auth0/dist/instance';
 
+import { Configuration } from 'lib/runtime';
+
 const audience = process.env.NODE_ENV == 'production' ? process.env.NEXT_PUBLIC_AUTH0_AUDIENCE : 'http://localhost:8081';
 
 const auth0: SignInWithAuth0 = initAuth0({
@@ -45,4 +47,17 @@ export const getAccessToken = async (
     throw Error('Unable to fetch access token!');
   }
   return accessToken;
+};
+
+const clientSideConfig: () => Configuration = () =>
+  new Configuration({
+    basePath: `${window.location.origin}/api/rest`,
+  });
+
+export const wrapWithContext = <T>(constructor: (configuration?: Configuration) => T): T => {
+  if (typeof window !== 'undefined') {
+    return constructor(clientSideConfig());
+  } else {
+    return constructor();
+  }
 };

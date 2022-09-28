@@ -11,6 +11,8 @@ info:
 servers:
   - description: Localhost
     url: http://localhost:8080/api/rest
+security:
+  - user_auth: ['restapi:access']
 tags:
   - name: project
     description: Project resource.
@@ -69,11 +71,6 @@ paths:
                 $ref: '#/components/schemas/Project'
         400:
           description: BAD REQUEST
-          content:
-            text/plain:
-              schema:
-                type: string
-                description: Description of the validation error.
   /v1/projects/{projectId}:
     get:
       tags:
@@ -188,4 +185,3 @@ components:
           authorizationUrl: https://event-planner-dev.eu.auth0.com
           scopes:
             restapi:access: General access to the REST api.
-            user:synchronize: Synchronize User details.
