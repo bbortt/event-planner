@@ -1,7 +1,6 @@
 package io.github.bbortt.event.planner.apps.projects.domain.repository;
 
 import io.github.bbortt.event.planner.apps.projects.domain.Project;
-import java.util.List;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

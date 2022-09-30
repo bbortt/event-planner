@@ -16,20 +16,6 @@ class PaginationUtils {
   private static final String DEFAULT_SORT_SPLIT = ";";
   private static final String DEFAULT_SORT_DIRECTION_SPLIT = ",";
 
-  Pageable createPagingInformation(
-    Optional<Integer> pageSize,
-    Optional<Integer> pageNumber,
-    Optional<String> sort,
-    String defaultSortingPropertyName
-  ) {
-    PageRequest pageRequest = PageRequest.ofSize(pageSizeOrDefault(pageSize));
-    pageNumber.ifPresent(pageRequest::withPage);
-    sort
-      .filter(StringUtils::isNotBlank)
-      .ifPresentOrElse(s -> pageRequest.withSort(parseSort(s)), () -> Sort.by(defaultSortingPropertyName).descending());
-    return pageRequest;
-  }
-
   private static Integer pageSizeOrDefault(Optional<Integer> pageSize) {
     return pageSize.filter(ps -> ps > 0).orElse(DEFAULT_PAGE_SIZE);
   }
@@ -61,5 +47,19 @@ class PaginationUtils {
       default:
         return Optional.empty();
     }
+  }
+
+  Pageable createPagingInformation(
+    Optional<Integer> pageSize,
+    Optional<Integer> pageNumber,
+    Optional<String> sort,
+    String defaultSortingPropertyName
+  ) {
+    PageRequest pageRequest = PageRequest.ofSize(pageSizeOrDefault(pageSize));
+    pageNumber.ifPresent(pageRequest::withPage);
+    sort
+      .filter(StringUtils::isNotBlank)
+      .ifPresentOrElse(s -> pageRequest.withSort(parseSort(s)), () -> Sort.by(defaultSortingPropertyName).descending());
+    return pageRequest;
   }
 }

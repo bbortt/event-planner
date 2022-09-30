@@ -7,7 +7,6 @@ import io.github.bbortt.event.planner.apps.projects.security.SecurityUtils;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
-import javax.persistence.EntityNotFoundException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
