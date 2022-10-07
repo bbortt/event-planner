@@ -2,6 +2,7 @@ name: sonar
 on:
   push:
     branches:
+      - release
     tags-ignore:
       - '*'
     paths-ignore:
