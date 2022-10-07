@@ -8,9 +8,6 @@ spring:
     url: jdbc:postgresql://localhost:5432/event_planner_test?currentSchema=projects_service
     username: projects_service
     password: projects_service
-  jpa:
-    hibernate:
-      ddl-auto: create-drop
   security:
     csrf:
       enabled: false

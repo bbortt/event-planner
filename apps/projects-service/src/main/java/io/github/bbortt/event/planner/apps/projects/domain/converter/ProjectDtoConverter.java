@@ -4,18 +4,25 @@ import io.github.bbortt.event.planner.apps.projects.domain.Project;
 import io.github.bbortt.event.planner.apps.projects.v1.dto.ProjectDto;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 
 public class ProjectDtoConverter implements DtoConverter<Project, ProjectDto> {
 
   @Override
   public Project fromDto(ProjectDto dto) {
-    assert dto != null;
+    if (Objects.isNull(dto)) {
+      return null;
+    }
+
     return new Project(dto.getName(), dto.getDescription(), dto.getStartDate(), dto.getEndDate());
   }
 
   @Override
   public ProjectDto toDto(Project project) {
-    assert project != null;
+    if (Objects.isNull(project)) {
+      return null;
+    }
+
     return new ProjectDto()
       .id(BigDecimal.valueOf(project.getId()))
       .token(project.getToken().toString())

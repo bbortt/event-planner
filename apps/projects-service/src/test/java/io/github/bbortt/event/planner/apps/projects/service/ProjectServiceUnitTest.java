@@ -2,6 +2,7 @@ package io.github.bbortt.event.planner.apps.projects.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -164,9 +165,14 @@ class ProjectServiceUnitTest {
   void findByIdCallsRepository() {
     Long projectId = 1234L;
 
-    doReturn(Optional.of(new Project())).when(projectRepositoryMock).findById(projectId);
+    Project project = new Project();
+    doReturn(Optional.of(project)).when(projectRepositoryMock).findById(projectId);
 
-    fixture.findById(projectId);
+    Project result = fixture.findById(projectId);
+
+    assertEquals(project, result);
+
+    verify(projectRepositoryMock).findById(projectId);
   }
 
   @Test
@@ -178,6 +184,8 @@ class ProjectServiceUnitTest {
     ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> fixture.findById(projectId));
     assertEquals(HttpStatus.NO_CONTENT, exception.getStatus());
     assertEquals(String.format("Cannot find Project by id '%s'", projectId), exception.getReason());
+
+    verify(projectRepositoryMock).findById(projectId);
   }
 
   @Test

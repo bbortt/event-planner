@@ -25,6 +25,8 @@ node {
     version = "16.17.0"
     npmVersion = "8.15.0"
     npmInstallCommand = "ci"
+    workDir = file("${project.rootDir}/.gradle/nodejs")
+    npmWorkDir = file("${project.rootDir}/.gradle/npm")
 }
 
 if (project.hasProperty("nodeInstall")) {

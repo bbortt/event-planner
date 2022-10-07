@@ -1,5 +1,6 @@
 FROM openjdk:17-slim-bullseye
-MAINTAINER Timon Borter <bbortt.github.io>
+
+LABEL author="Timon Borter <bbortt.github.io>"
 
 ENTRYPOINT ["java", "-jar", "project-service.jar"]
 

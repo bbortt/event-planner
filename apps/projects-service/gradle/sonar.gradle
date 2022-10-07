@@ -1,9 +1,13 @@
-sonarqube {
-    properties {
-        property "sonar.test.inclusions", "src/test/**/*.java"
-        property "sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml"
-        property "sonar.java.codeCoveragePlugin", "jacoco"
-        property "sonar.junit.reportPaths", "build/test-results/test/TEST-.*.xml, build/test-results/integrationTest/TEST-.*.xml"
+file("${project.projectDir}/sonar-project.properties").withReader {
+    Properties sonarProperties = new Properties()
+    sonarProperties.load(it)
+
+    sonarProperties.each { key, value ->
+        sonarqube {
+            properties {
+                property key, value
+            }
+        }
     }
 }
 

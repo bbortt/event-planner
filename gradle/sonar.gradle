@@ -2,7 +2,7 @@ jacoco {
     toolVersion = "0.8.7"
 }
 
-file("sonar-project.properties").withReader {
+file("${project.rootDir}/sonar-project.properties").withReader {
     Properties sonarProperties = new Properties()
     sonarProperties.load(it)
 
