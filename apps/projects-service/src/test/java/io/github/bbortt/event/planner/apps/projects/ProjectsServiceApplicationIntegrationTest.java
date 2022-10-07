@@ -8,7 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 
 @SpringBootTest
-class ProjectsServiceApplicationIntegrationTests extends AbstractApplicationContextAwareIntegrationTest {
+class ProjectsServiceApplicationIntegrationTest extends AbstractApplicationContextAwareIntegrationTest {
 
   @Autowired
   private ApplicationContext applicationContext;
