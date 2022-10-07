@@ -1,0 +1,16 @@
+ci/cd:
+  - '.github/*'
+  - '.husky/*'
+  - '*.gradle'
+  - './{,**/}Dockerfile'
+github_actions:
+  - '.github/*'
+documentation:
+  - '*.md'
+
+java: '*.java'
+javascript: '*.ts{,x}'
+
+development-gateway: 'apps/development-gateway/**'
+frontend: 'apps/frontend/**'
+projects-service: 'apps/projects-service/**'
