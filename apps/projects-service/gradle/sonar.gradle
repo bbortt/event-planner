@@ -1,3 +1,5 @@
+apply from: "${project.projectDir}/gradle/testing.gradle"
+
 file("${project.projectDir}/sonar-project.properties").withReader {
     Properties sonarProperties = new Properties()
     sonarProperties.load(it)

@@ -1,0 +1,8 @@
+tasks.named("bootJar") {
+    mainClass = "io.github.bbortt.event.planner.apps.projects.ProjectsServiceApplication"
+}
+
+bootBuildImage {
+    builder = "paketobuildpacks/builder:tiny"
+    environment = ["BP_NATIVE_IMAGE": "true"]
+}

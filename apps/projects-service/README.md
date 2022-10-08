@@ -1,12 +1,14 @@
 # PostgreSQL
 
+> **Note:** All Microservices use a single database instance (called `event_planner`). They are separated by schemas!
+
 The following lines will get you started (execute them from within the `project.rootDirectory`):
 
 ```shell
 pod_id=$(
   [docker/podman] run \
       -p 5432:5432 -d \
-      --name event_planner.projects_service \
+      --name event_planner \
       -e POSTGRES_DB=event_planner \
       -e POSTGRES_USER=event_planner \
       -e POSTGRES_PASSWORD=event_planner_password \

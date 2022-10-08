@@ -2,9 +2,12 @@ FROM openjdk:17-slim-bullseye
 
 LABEL author="Timon Borter <bbortt.github.io>"
 
+ARG JAR_FILE
+
 ENTRYPOINT ["java", "-jar", "project-service.jar"]
 
 EXPOSE 8080
+EXPOSE 8090
 
 RUN useradd -ms /bin/sh eventplanner && \
     apt update && \
@@ -13,4 +16,4 @@ RUN useradd -ms /bin/sh eventplanner && \
 USER eventplanner
 WORKDIR /home/eventplanner
 
-COPY build/libs/project-service-*.jar project-service.jar
+COPY JAR_FILE project-service.jar
