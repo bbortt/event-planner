@@ -6,13 +6,16 @@ plugins {
     id "org.openapi.generator"
     id "org.sonarqube"
     id "org.springframework.boot" version "2.7.4"
+    id "org.springframework.experimental.aot" version "0.12.1"
 }
 
-sourceCompatibility = "${sourceCompatibility}"
-assert System.properties["java.specification.version"] == "11" || "12" || "13" || "14" || "15" || "16" || "17"
+sourceCompatibility = "17"
+assert System.properties["java.specification.version"] == "17"
 
 repositories {
+    mavenLocal()
     mavenCentral()
+    maven { url 'https://repo.spring.io/release' }
 }
 
 dependencies {
@@ -24,10 +27,7 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
     implementation "org.springframework.boot:spring-boot-starter-oauth2-resource-server"
     implementation "org.springframework.boot:spring-boot-starter-security"
-    implementation "org.springframework.boot:spring-boot-starter-undertow"
-    implementation("org.springframework.boot:spring-boot-starter-web") {
-        exclude module: "spring-boot-starter-tomcat"
-    }
+    implementation "org.springframework.boot:spring-boot-starter-web"
     developmentOnly "org.springframework.boot:spring-boot-devtools"
     runtimeOnly "com.h2database:h2"
     runtimeOnly "org.postgresql:postgresql"
@@ -38,8 +38,9 @@ dependencies {
 }
 
 openApiValidate {
-    inputSpec = "${project.projectDir}/oas/spec.yml".toString()
+    inputSpec = "${project.rootDir}/specs/projects-service-v1.yml".toString()
 }
+compileJava.dependsOn tasks.openApiValidate
 
 openApiGenerate {
     generatorName = "spring"
@@ -82,5 +83,5 @@ task flywayCleanTest(type: org.flywaydb.gradle.task.FlywayCleanTask) {
     password = "event_planner_password"
 }
 
-apply from: "gradle/testing.gradle"
+apply from: "gradle/native.gradle"
 apply from: "gradle/sonar.gradle"

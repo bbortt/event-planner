@@ -5,6 +5,11 @@ pluginManagement {
         id "org.openapi.generator" version "${openApiGeneratorVersion}"
         id "org.sonarqube" version "${sonarqubeVersion}"
     }
+
+    repositories {
+        gradlePluginPortal()
+        maven { url 'https://repo.spring.io/release' }
+    }
 }
 
 rootProject.name = 'event-planner'
