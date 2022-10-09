@@ -10,9 +10,15 @@ module.exports = {
       },
     ],
     [
+      '@semantic-release/exec',
+      {
+        prepareCmd: "sed -i 's/version=${currentRelease.version}/version=${nextRelease.version}/' gradle.properties",
+      },
+    ],
+    [
       '@semantic-release/git',
       {
-        assets: ['CHANGELOG.md'],
+        assets: ['CHANGELOG.md', 'gradle.properties'],
         message: 'chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}',
       },
     ],
