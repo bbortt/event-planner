@@ -2,6 +2,7 @@ package io.github.bbortt.event.planner.apps.projects.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.github.bbortt.event.planner.common.postgresql.PostgreSQLConstants;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;

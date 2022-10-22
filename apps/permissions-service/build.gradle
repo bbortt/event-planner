@@ -1,0 +1,82 @@
+plugins {
+    id "io.quarkus"  version "2.13.1.Final"
+    id "java"
+    id "org.flywaydb.flyway"
+    id "org.openapi.generator"
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+sourceCompatibility = "17"
+assert System.properties["java.specification.version"] == "17"
+
+dependencies {
+    implementation enforcedPlatform("io.quarkus.platform:quarkus-bom:2.13.1.Final")
+    annotationProcessor "io.quarkus:quarkus-panache-common"
+    implementation project(":libs:common-java")
+    implementation "io.quarkus:quarkus-arc"
+    implementation "io.quarkus:quarkus-config-yaml"
+    implementation "io.quarkus:quarkus-flyway"
+    implementation "io.quarkus:quarkus-hibernate-orm-panache"
+    implementation "io.quarkus:quarkus-jdbc-postgresql"
+    implementation "io.quarkus:quarkus-resteasy-jackson"
+    implementation "io.quarkus:quarkus-smallrye-openapi"
+    implementation "io.quarkus:quarkus-undertow"
+    implementation "org.apache.commons:commons-lang3:3.12.0"
+    testImplementation "io.quarkus:quarkus-junit5"
+    testImplementation "io.rest-assured:rest-assured"
+}
+
+openApiValidate {
+    inputSpec = "${project.rootDir}/specs/permissions-service-v1.yml".toString()
+}
+
+openApiGenerate {
+    generatorName = "jaxrs-spec"
+    library = "quarkus"
+    inputSpec = "${project.rootDir}/specs/permissions-service-v1.yml".toString()
+    outputDir = "${project.buildDir}/generated-sources".toString()
+    apiPackage = "io.github.bbortt.event.planner.apps.permissions.v1.rest"
+    invokerPackage = "io.github.bbortt.event.planner.apps.permissions.v1"
+    modelNameSuffix = "Dto"
+    modelPackage = "io.github.bbortt.event.planner.apps.permissions.v1.dto"
+    configOptions = [
+            dateLibrary    : "java8",
+            interfaceOnly  : "true",
+            returnResponse : "true",
+            useOptional    : "true",
+            useTags        : "true",
+            serializableModel: "true"
+    ]
+}
+tasks.withType(org.openapitools.generator.gradle.plugin.tasks.GenerateTask) {
+    dependsOn tasks.openApiValidate
+}
+compileJava.dependsOn tasks.openApiGenerate
+sourceSets.main.java.srcDirs += "${project.buildDir}/generated-sources/src/gen/java"
+
+flyway {
+    locations = ["filesystem:src/main/resources/db/migration"]
+    outOfOrder = true
+}
+
+task flywayMigrateDev(type: org.flywaydb.gradle.task.FlywayMigrateTask) {
+    url = "jdbc:postgresql://localhost:5432/event_planner"
+    user = "event_planner"
+    password = "event_planner_password"
+}
+
+task flywayMigrateTest(type: org.flywaydb.gradle.task.FlywayMigrateTask) {
+    url = "jdbc:postgresql://localhost:5432/event_planner_test"
+    user = "event_planner"
+    password = "event_planner_password"
+}
+
+task flywayCleanTest(type: org.flywaydb.gradle.task.FlywayCleanTask) {
+    url = "jdbc:postgresql://localhost:5432/event_planner_test"
+    user = "event_planner"
+    password = "event_planner_password"
+}

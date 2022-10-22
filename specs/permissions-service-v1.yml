@@ -1,0 +1,167 @@
+openapi: 3.0.1
+info:
+  title: Event-Planner
+  description: The Event-Planner REST API definition
+  contact:
+    email: timon.borter@gmx.ch
+  license:
+    name: Apache 2.0
+    url: https://github.com/bbortt/event-planner/blob/release/LICENSE
+  version: 1.0.0
+servers:
+  - description: Localhost
+    url: http://localhost:8080/api/rest
+security:
+  - user_auth: ['restapi:access']
+tags:
+  - name: permission
+    description: Permission resource.
+paths:
+  /v1/permissions/{auth0UserId}:
+    get:
+      tags:
+        - permission
+      security:
+        - user_auth: []
+      summary: Receive a list of project IDs to which the given user ID has access to.
+      description: |
+        This will only return IDs of projects that the given user has access to.
+        And the resource is only accessible by users having the `restapi:access`
+        role. All registered users should receive this role by default.
+      operationId: readPermissionsByUser
+      parameters:
+        - name: auth0UserId
+          in: path
+          required: true
+          schema:
+            type: string
+            maxLength: 64
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  contents:
+                    type: array
+                    items:
+                      type: number
+                      format: int64
+  /v1/permissions/{auth0UserId}/{projectId}:
+    get:
+      tags:
+        - permission
+      security:
+        - user_auth: []
+      summary: Receive a list of permissions for the given project and user ID.
+      description: |
+        This will only return permissions for projects that the given user
+        has access to. And the resource is only accessible by users having
+        the `restapi:access` role. All registered users should receive this
+        role by default.
+      operationId: readPermissionsByUserAndProject
+      parameters:
+        - name: auth0UserId
+          in: path
+          required: true
+          schema:
+            type: string
+            maxLength: 64
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: number
+            format: Int64
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - type: array
+                    items:
+                      type: string
+  /v1/permissions/{permission}:
+    post:
+      tags:
+        - permission
+      security:
+        - user_auth: []
+      summary: Assign the given permission to the project and user.
+      description: |
+        This will assign the permission to the given user (not the calling user)
+        in a certain project. An HTTP 403 response may be returned if the calling
+        user does not have the right permission (`permission:assign`).
+      operationId: assignPermissionInProject
+      parameters:
+        - name: permission
+          in: path
+          required: true
+          schema:
+            type: string
+            maxLength: 20
+        - name: auth0UserId
+          in: query
+          required: true
+          schema:
+            type: string
+            maxLength: 64
+        - name: projectId
+          in: query
+          required: true
+          schema:
+            type: number
+            format: Int64
+      responses:
+        201:
+          description: CREATED
+        403:
+          description: ACCESS DENIED
+    delete:
+      tags:
+        - permission
+      security:
+        - user_auth: []
+      summary: Revoke the given permission from a user in the project.
+      description: |
+        This will revpke the permission user (not the calling user) in a certain
+        project. An HTTP 403 response may be returned if the calling
+        user does not have the right permission (`permission:revoke`).
+      operationId: revokePermissionInProject
+      parameters:
+        - name: permission
+          in: path
+          required: true
+          schema:
+            type: string
+            maxLength: 20
+        - name: auth0UserId
+          in: query
+          required: true
+          schema:
+            type: string
+            maxLength: 64
+        - name: projectId
+          in: query
+          required: true
+          schema:
+            type: number
+            format: Int64
+      responses:
+        204:
+          description: NO CONTENT
+        403:
+          description: ACCESS DENIED
+components:
+  securitySchemes:
+    user_auth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: https://event-planner-dev.eu.auth0.com
+          scopes:
+            restapi:access: General access to the REST api.

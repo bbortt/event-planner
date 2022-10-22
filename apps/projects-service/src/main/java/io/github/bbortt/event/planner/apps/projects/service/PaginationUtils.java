@@ -16,14 +16,28 @@ class PaginationUtils {
   private static final String DEFAULT_SORT_SPLIT = ";";
   private static final String DEFAULT_SORT_DIRECTION_SPLIT = ",";
 
-  private static Integer pageSizeOrDefault(Optional<Integer> pageSize) {
+  Pageable createPagingInformation(
+    Optional<Integer> pageSize,
+    Optional<Integer> pageNumber,
+    Optional<String> sort,
+    String defaultSortingPropertyName
+  ) {
+    PageRequest pageRequest = PageRequest.ofSize(pageSizeOrDefault(pageSize));
+    pageNumber.ifPresent(pageRequest::withPage);
+    sort
+      .filter(StringUtils::isNotBlank)
+      .ifPresentOrElse(s -> pageRequest.withSort(parseSort(s)), () -> Sort.by(defaultSortingPropertyName).descending());
+    return pageRequest;
+  }
+
+  private Integer pageSizeOrDefault(Optional<Integer> pageSize) {
     return pageSize.filter(ps -> ps > 0).orElse(DEFAULT_PAGE_SIZE);
   }
 
-  private static Sort parseSort(String sort) {
+  private Sort parseSort(String sort) {
     List<Order> orders = Arrays
       .stream(sort.split(DEFAULT_SORT_SPLIT))
-      .map(PaginationUtils::parseOrder)
+      .map(this::parseOrder)
       .filter(Optional::isPresent)
       .map(Optional::get)
       .toList();
@@ -31,7 +45,7 @@ class PaginationUtils {
     return Sort.by(orders);
   }
 
-  private static Optional<Order> parseOrder(String order) {
+  private Optional<Order> parseOrder(String order) {
     String[] attributeAndDirection = order.split(DEFAULT_SORT_DIRECTION_SPLIT);
     switch (attributeAndDirection.length) {
       case 1:
@@ -47,19 +61,5 @@ class PaginationUtils {
       default:
         return Optional.empty();
     }
-  }
-
-  Pageable createPagingInformation(
-    Optional<Integer> pageSize,
-    Optional<Integer> pageNumber,
-    Optional<String> sort,
-    String defaultSortingPropertyName
-  ) {
-    PageRequest pageRequest = PageRequest.ofSize(pageSizeOrDefault(pageSize));
-    pageNumber.ifPresent(pageRequest::withPage);
-    sort
-      .filter(StringUtils::isNotBlank)
-      .ifPresentOrElse(s -> pageRequest.withSort(parseSort(s)), () -> Sort.by(defaultSortingPropertyName).descending());
-    return pageRequest;
   }
 }

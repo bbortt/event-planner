@@ -1,0 +1,8 @@
+test {
+    useJUnitPlatform()
+}
+
+task testReport(type: TestReport) {
+    destinationDir = file("$buildDir/reports/tests")
+    reportOn test
+}

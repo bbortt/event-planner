@@ -2,7 +2,6 @@ package io.github.bbortt.event.planner.apps.projects.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -13,7 +12,6 @@ import io.github.bbortt.event.planner.apps.projects.domain.repository.ProjectJpa
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
-import javax.persistence.EntityNotFoundException;
 import org.apache.http.auth.BasicUserPrincipal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

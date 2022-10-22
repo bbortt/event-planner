@@ -1,12 +1,12 @@
 jwt:
-  audience: ${APPL_AUTH0_AUDIENCE}
+  audience: ${appl.auth0.audience}
 server:
   port: 8080
 spring:
   datasource:
-    url: ${APPL_JDBC_URL}
-    username: ${APPL_JDBC_USERNAME}
-    password: ${APPL_JDBC_PASSWORD}
+    url: ${appl.jdbc.url}
+    username: ${appl.jdbc.username}
+    password: ${appl.jdbc.password}
   jpa:
     hibernate:
       ddl-auto: validate
@@ -15,4 +15,4 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: ${APPL_JWT_ISSUER_URI}
+          issuer-uri: ${appl.jwt.issuer.uri}

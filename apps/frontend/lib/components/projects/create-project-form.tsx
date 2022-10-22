@@ -70,6 +70,7 @@ const CreateProjectForm = ({ initialProject, setIsValid, setProject }: CreatePro
                   {...field}
                   isValid={touched.name && !errors.name}
                   isInvalid={touched.name && !!errors.name}
+                  autoFocus
                 />
                 <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>
               </Form.Group>
