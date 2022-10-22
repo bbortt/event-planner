@@ -1,0 +1,6 @@
+quarkus:
+  datasource:
+    username: permissions_service
+    password: permissions_service
+    jdbc:
+      url: jdbc:postgresql://localhost:5432/event_planner_test?currentSchema=permissions_service

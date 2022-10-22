@@ -1,5 +1,6 @@
 package io.github.bbortt.event.planner.apps.projects.domain;
 
+import io.github.bbortt.event.planner.common.postgresql.PostgreSQLConstants;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;

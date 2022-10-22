@@ -20,6 +20,7 @@ repositories {
 
 dependencies {
     implementation platform("org.springframework.cloud:spring-cloud-dependencies:2021.0.1")
+    implementation project(":libs:common-java")
     implementation "io.swagger.core.v3:swagger-annotations:2.2.5"
     implementation "jakarta.validation:jakarta.validation-api:2.0.2"
     implementation "org.apache.commons:commons-lang3:3.12.0"
@@ -40,7 +41,6 @@ dependencies {
 openApiValidate {
     inputSpec = "${project.rootDir}/specs/projects-service-v1.yml".toString()
 }
-compileJava.dependsOn tasks.openApiValidate
 
 openApiGenerate {
     generatorName = "spring"
@@ -58,11 +58,15 @@ openApiGenerate {
             useTags        : "true"
     ]
 }
+tasks.withType(org.openapitools.generator.gradle.plugin.tasks.GenerateTask) {
+    dependsOn tasks.openApiValidate
+}
 compileJava.dependsOn tasks.openApiGenerate
 sourceSets.main.java.srcDirs += "${project.buildDir}/generated-sources/src/main/java"
 
 flyway {
     locations = ["filesystem:src/main/resources/db/migration"]
+    outOfOrder = true
 }
 
 task flywayMigrateDev(type: org.flywaydb.gradle.task.FlywayMigrateTask) {

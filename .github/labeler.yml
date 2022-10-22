@@ -13,4 +13,5 @@ javascript: '*.ts{,x}'
 
 development-gateway: 'apps/development-gateway/**'
 frontend: 'apps/frontend/**'
+permissions-service: 'apps/permissions-service/**'
 projects-service: 'apps/projects-service/**'

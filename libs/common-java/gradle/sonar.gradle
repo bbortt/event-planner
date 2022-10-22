@@ -1,0 +1,26 @@
+apply from: "${project.projectDir}/gradle/testing.gradle"
+
+file("${project.projectDir}/sonar-project.properties").withReader {
+    Properties sonarProperties = new Properties()
+    sonarProperties.load(it)
+
+    sonarProperties.each { key, value ->
+        sonarqube {
+            properties {
+                property key, value
+            }
+        }
+    }
+}
+
+jacocoTestReport {
+    executionData tasks.withType(Test)
+    classDirectories.from = files(sourceSets.main.output.classesDirs)
+    sourceDirectories.from = files(sourceSets.main.java.srcDirs)
+
+    reports {
+        xml.enabled = true
+    }
+}
+jacocoTestReport.dependsOn test
+check.dependsOn jacocoTestReport

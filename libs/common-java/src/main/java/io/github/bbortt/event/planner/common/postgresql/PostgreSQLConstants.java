@@ -1,4 +1,4 @@
-package io.github.bbortt.event.planner.apps.projects.domain;
+package io.github.bbortt.event.planner.common.postgresql;
 
 public class PostgreSQLConstants {
 

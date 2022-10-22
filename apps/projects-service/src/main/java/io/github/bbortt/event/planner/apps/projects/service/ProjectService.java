@@ -23,10 +23,10 @@ public class ProjectService {
 
   private static final String PROJECT_ID_ATTRIBUTE_NAME = "id";
 
-  private final PaginationUtils paginationUtils = new PaginationUtils();
-
   private final PermissionService permissionService;
   private final ProjectJpaRepository projectRepository;
+
+  private final PaginationUtils paginationUtils = new PaginationUtils();
 
   public ProjectService(PermissionService permissionService, ProjectJpaRepository projectRepository) {
     this.permissionService = permissionService;
