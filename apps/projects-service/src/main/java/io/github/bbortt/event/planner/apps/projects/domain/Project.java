@@ -62,9 +62,6 @@ public class Project extends AbstractAuditingEntity {
   @Column(nullable = false)
   private Boolean archived = Boolean.FALSE;
 
-  @OneToMany(mappedBy = "project", cascade = { CascadeType.ALL })
-  private Set<Member> members = new HashSet<>();
-
   public Project() {
     // Empty project
   }
@@ -130,14 +127,6 @@ public class Project extends AbstractAuditingEntity {
 
   public void setArchived(Boolean archived) {
     this.archived = archived;
-  }
-
-  public Set<Member> getMembers() {
-    return members;
-  }
-
-  public void setMembers(Set<Member> members) {
-    this.members = members;
   }
 
   @Override

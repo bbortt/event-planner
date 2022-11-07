@@ -14,42 +14,41 @@ servers:
 security:
   - user_auth: ['restapi:access']
 tags:
+  - name: member
+    description: Member resource.
   - name: permission
     description: Permission resource.
+  - name: project
+    description: Project resource.
 paths:
-  /v1/permissions/{auth0UserId}:
-    get:
+  /v1/members:
+    post:
       tags:
-        - permission
+        - member
       security:
         - user_auth: []
-      summary: Receive a list of project IDs to which the given user ID has access to.
+      summary: Create the project administrator member.
       description: |
-        This will only return IDs of projects that the given user has access to.
-        And the resource is only accessible by users having the `restapi:access`
-        role. All registered users should receive this role by default.
-      operationId: readPermissionsByUser
+        This will create the project administrator member. The administrator can
+        do everything inside the project, regardles of his assigned permissions.
+      operationId: createAdminMemberInProject
       parameters:
         - name: auth0UserId
-          in: path
+          in: query
           required: true
           schema:
             type: string
             maxLength: 64
+        - name: projectId
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int64
       responses:
-        200:
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  contents:
-                    type: array
-                    items:
-                      type: number
-                      format: int64
-  /v1/permissions/{auth0UserId}/{projectId}:
+        201:
+          description: Administrative member created
+  /v1/permissions:
     get:
       tags:
         - permission
@@ -58,23 +57,21 @@ paths:
       summary: Receive a list of permissions for the given project and user ID.
       description: |
         This will only return permissions for projects that the given user
-        has access to. And the resource is only accessible by users having
-        the `restapi:access` role. All registered users should receive this
-        role by default.
+        has access to.
       operationId: readPermissionsByUserAndProject
       parameters:
         - name: auth0UserId
-          in: path
+          in: query
           required: true
           schema:
             type: string
             maxLength: 64
         - name: projectId
-          in: path
+          in: query
           required: true
           schema:
-            type: number
-            format: Int64
+            type: integer
+            format: int64
       responses:
         200:
           description: OK
@@ -86,7 +83,7 @@ paths:
                     items:
                       type: string
   /v1/permissions/{permission}:
-    post:
+    put:
       tags:
         - permission
       security:
@@ -96,7 +93,7 @@ paths:
         This will assign the permission to the given user (not the calling user)
         in a certain project. An HTTP 403 response may be returned if the calling
         user does not have the right permission (`permission:assign`).
-      operationId: assignPermissionInProject
+      operationId: grantPermissionInProject
       parameters:
         - name: permission
           in: path
@@ -114,13 +111,19 @@ paths:
           in: query
           required: true
           schema:
-            type: number
-            format: Int64
+            type: integer
+            format: int64
+        - name: callingAuth0UserId
+          in: query
+          required: true
+          schema:
+            type: string
+            maxLength: 64
       responses:
         201:
-          description: CREATED
+          description: Permission assigned
         403:
-          description: ACCESS DENIED
+          description: User does not have the necessary permissions
     delete:
       tags:
         - permission
@@ -128,7 +131,7 @@ paths:
         - user_auth: []
       summary: Revoke the given permission from a user in the project.
       description: |
-        This will revpke the permission user (not the calling user) in a certain
+        This will revoke the permission user (not the calling user) in a certain
         project. An HTTP 403 response may be returned if the calling
         user does not have the right permission (`permission:revoke`).
       operationId: revokePermissionInProject
@@ -149,13 +152,85 @@ paths:
           in: query
           required: true
           schema:
-            type: number
-            format: Int64
+            type: integer
+            format: int64
+        - name: callingAuth0UserId
+          in: query
+          required: true
+          schema:
+            type: string
+            maxLength: 64
       responses:
         204:
-          description: NO CONTENT
+          description: Permission revoked
         403:
-          description: ACCESS DENIED
+          description: User does not have the necessary permissions
+  /v1/projects:
+    get:
+      tags:
+        - project
+      security:
+        - user_auth: []
+      summary: Receive a list of project IDs.
+      description: |
+        This will only return IDs of projects that the given user has access to.
+      operationId: readProjectIdsByMembership
+      parameters:
+        - name: auth0UserId
+          in: query
+          schema:
+            type: string
+            maxLength: 64
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  contents:
+                    type: array
+                    items:
+                      type: integer
+                      format: int64
+  /v1/projects/{projectId}/permissions:
+    get:
+      tags:
+        - project
+      security:
+        - user_auth: []
+      summary: Check if the user has this permission in the project.
+      description: |
+        This will indicate if the given user has any of the permissions inside
+        the given project by using HTTP response codes.
+      operationId: hasAnyPermissionInProject
+      parameters:
+        - name: permissions
+          in: query
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+              maxLength: 20
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: auth0UserId
+          in: query
+          required: true
+          schema:
+            type: string
+            maxLength: 64
+      responses:
+        200:
+          description: OK
+        403:
+          description: The user does not have the required role
 components:
   securitySchemes:
     user_auth:

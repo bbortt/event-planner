@@ -34,22 +34,18 @@ public class ProjectApiController implements ProjectApi {
   }
 
   @Override
-  public ResponseEntity<ProjectDto> readProjectById(BigDecimal projectId) {
-    return ResponseEntity.ok(projectDtoConverter.toDto(projectService.findById(projectId.longValueExact())));
+  public ResponseEntity<ProjectDto> readProjectById(Long projectId) {
+    return ResponseEntity.ok(projectDtoConverter.toDto(projectService.findById(projectId)));
   }
 
   @Override
   public ResponseEntity<ReadProjects200ResponseDto> readProjects(
-    Optional<BigDecimal> pageSize,
-    Optional<BigDecimal> pageNumber,
+    Optional<Integer> pageSize,
+    Optional<Integer> pageNumber,
     Optional<String> sort
   ) {
     ReadProjects200ResponseDto dto = pageTo200ResponseDto(
-      projectService.findAllNonArchivedProjectsWhichIAmMemberOf(
-        pageSize.map(BigDecimal::intValueExact),
-        pageNumber.map(BigDecimal::intValueExact),
-        sort
-      )
+      projectService.findAllNonArchivedProjectsWhichIAmMemberOf(pageSize, pageNumber, sort)
     );
     return ResponseEntity.ok(dto);
   }
@@ -57,8 +53,8 @@ public class ProjectApiController implements ProjectApi {
   private ReadProjects200ResponseDto pageTo200ResponseDto(Page<Project> projectPage) {
     return new ReadProjects200ResponseDto()
       .contents(projectDtoConverter.toDtos(projectPage.getContent()))
-      .totalElements(BigDecimal.valueOf(projectPage.getTotalElements()))
-      .totalPages(BigDecimal.valueOf(projectPage.getTotalPages()))
-      .number(BigDecimal.valueOf(projectPage.getNumber()));
+      .totalElements(projectPage.getTotalElements())
+      .totalPages(projectPage.getTotalPages())
+      .number(projectPage.getNumber());
   }
 }

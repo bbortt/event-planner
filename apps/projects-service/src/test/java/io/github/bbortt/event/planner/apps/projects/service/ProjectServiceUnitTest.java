@@ -2,15 +2,18 @@ package io.github.bbortt.event.planner.apps.projects.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 
-import io.github.bbortt.event.planner.apps.projects.domain.Member;
 import io.github.bbortt.event.planner.apps.projects.domain.Project;
 import io.github.bbortt.event.planner.apps.projects.domain.repository.ProjectJpaRepository;
+import io.github.bbortt.event.planner.apps.projects.system.model.rest.v1.ProjectApi;
+import io.github.bbortt.event.planner.apps.projects.system.model.rest.v1.dto.ReadProjectIdsByMembership200ResponseDto;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import org.apache.http.auth.BasicUserPrincipal;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,6 +23,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.TestingAuthenticationToken;
@@ -36,7 +40,10 @@ class ProjectServiceUnitTest {
   private PaginationUtils paginationUtils;
 
   @Mock
-  private PermissionService permissionServiceMock;
+  private MemberService memberServiceMock;
+
+  @Mock
+  private ProjectApi projectApiMock;
 
   @Mock
   private ProjectJpaRepository projectRepositoryMock;
@@ -47,7 +54,7 @@ class ProjectServiceUnitTest {
   void beforeEachSetup() {
     TestSecurityContextHolder.setAuthentication(new TestingAuthenticationToken(new BasicUserPrincipal(AUTH0_USER_ID), null));
 
-    fixture = new ProjectService(permissionServiceMock, projectRepositoryMock);
+    fixture = new ProjectService(memberServiceMock, projectApiMock, projectRepositoryMock);
     ReflectionTestUtils.setField(fixture, "paginationUtils", paginationUtils, PaginationUtils.class);
   }
 
@@ -57,19 +64,18 @@ class ProjectServiceUnitTest {
     newProject.setStartDate(LocalDate.of(2021, 12, 28));
     newProject.setEndDate(LocalDate.of(2021, 12, 28));
 
-    fixture.createProject(newProject);
+    doAnswer(invocation -> {
+        Project projectToPersist = invocation.getArgument(0);
+        ReflectionTestUtils.setField(projectToPersist, "id", 1L);
+        return projectToPersist;
+      })
+      .when(projectRepositoryMock)
+      .saveAndFlush(newProject);
 
-    verify(permissionServiceMock).findAll();
+    Project result = fixture.createProject(newProject);
+    assertEquals(1L, result.getId());
 
-    ArgumentCaptor<Project> argumentCaptor = ArgumentCaptor.forClass(Project.class);
-    verify(projectRepositoryMock).saveAndFlush(argumentCaptor.capture());
-    Project persistedProject = argumentCaptor.getValue();
-    assertEquals(1, persistedProject.getMembers().size());
-
-    Member member = new ArrayList<>(persistedProject.getMembers()).get(0);
-    assertEquals(AUTH0_USER_ID, member.getAuth0UserId());
-    assertEquals(true, member.getAccepted());
-    assertEquals(AUTH0_USER_ID, member.getAcceptedBy());
+    verify(memberServiceMock).createAdminMember(AUTH0_USER_ID, result);
   }
 
   @Test
@@ -188,11 +194,20 @@ class ProjectServiceUnitTest {
 
   @Test
   void findAllNonArchivedProjectsWhichIAmMemberOfReadsAuthenticationContext() {
+    List<Long> projectIds = List.of(1L);
+
     Pageable pageable = Pageable.unpaged();
     doReturn(pageable).when(paginationUtils).createPagingInformation(Optional.empty(), Optional.empty(), Optional.empty(), "id");
 
-    fixture.findAllNonArchivedProjectsWhichIAmMemberOf(Optional.empty(), Optional.empty(), Optional.empty());
+    doReturn(new ReadProjectIdsByMembership200ResponseDto().contents(projectIds))
+      .when(projectApiMock)
+      .readProjectIdsByMembership(AUTH0_USER_ID);
 
-    verify(projectRepositoryMock).findAllByMemberAndArchivedIsFalse(AUTH0_USER_ID, pageable);
+    Page emptyPage = Page.empty();
+    doReturn(emptyPage).when(projectRepositoryMock).findAllByIdAndArchivedIsFalse(projectIds, pageable);
+
+    Page result = fixture.findAllNonArchivedProjectsWhichIAmMemberOf(Optional.empty(), Optional.empty(), Optional.empty());
+
+    assertEquals(emptyPage, result);
   }
 }

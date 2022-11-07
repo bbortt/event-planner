@@ -1,9 +1,9 @@
 package io.github.bbortt.event.planner.apps.projects.service;
 
-import io.github.bbortt.event.planner.apps.projects.domain.Member;
 import io.github.bbortt.event.planner.apps.projects.domain.Project;
 import io.github.bbortt.event.planner.apps.projects.domain.repository.ProjectJpaRepository;
 import io.github.bbortt.event.planner.apps.projects.security.SecurityUtils;
+import io.github.bbortt.event.planner.apps.projects.system.model.rest.v1.ProjectApi;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
@@ -23,13 +23,15 @@ public class ProjectService {
 
   private static final String PROJECT_ID_ATTRIBUTE_NAME = "id";
 
-  private final PermissionService permissionService;
+  private final MemberService memberService;
+  private final ProjectApi projectApi;
   private final ProjectJpaRepository projectRepository;
 
   private final PaginationUtils paginationUtils = new PaginationUtils();
 
-  public ProjectService(PermissionService permissionService, ProjectJpaRepository projectRepository) {
-    this.permissionService = permissionService;
+  public ProjectService(MemberService memberService, ProjectApi projectApi, ProjectJpaRepository projectRepository) {
+    this.memberService = memberService;
+    this.projectApi = projectApi;
     this.projectRepository = projectRepository;
   }
 
@@ -44,20 +46,15 @@ public class ProjectService {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Project cannot end before it starts!");
     }
 
-    String sub = SecurityUtils.getAuth0UserSub().orElseThrow(IllegalAccessError::new);
+    Project persistedProject = projectRepository.saveAndFlush(project);
+    memberService.createAdminMember(SecurityUtils.getAuth0UserSub().orElseThrow(IllegalAccessError::new), persistedProject);
 
-    Member rootMember = new Member(project, sub);
-    rootMember.setPermissions(new HashSet<>(permissionService.findAll()));
-    rootMember.setAccepted(SecurityUtils.getAuth0UserSub().orElseThrow(IllegalAccessError::new));
-
-    project.getMembers().add(rootMember);
-
-    return projectRepository.saveAndFlush(project);
+    return persistedProject;
   }
 
   @Modifying
   @Transactional
-  @PreAuthorize("#permissionService.hasProjectPermissions(#id, 'project:update')")
+  @PreAuthorize("@permissionService.hasProjectPermissions(#id, 'project:update')")
   public Project updateProject(Long id, String name, String description, Boolean archived) {
     Project project = projectRepository
       .findById(id)
@@ -77,7 +74,7 @@ public class ProjectService {
   }
 
   @Transactional(readOnly = true)
-  @PreAuthorize("@projectRepository.isMemberOfProject(#projectId)")
+  @PreAuthorize("@permissionService.isMemberOfProject(#projectId)")
   public Project findById(Long projectId) {
     return projectRepository
       .findById(projectId)
@@ -91,10 +88,8 @@ public class ProjectService {
     Optional<Integer> pageNumber,
     Optional<String> sort
   ) {
-    String sub = SecurityUtils.getAuth0UserSub().orElseThrow(IllegalAccessError::new);
-
-    return projectRepository.findAllByMemberAndArchivedIsFalse(
-      sub,
+    return projectRepository.findAllByIdAndArchivedIsFalse(
+      projectApi.readProjectIdsByMembership(SecurityUtils.getAuth0UserSub().orElseThrow(IllegalAccessError::new)).getContents(),
       paginationUtils.createPagingInformation(pageSize, pageNumber, sort, PROJECT_ID_ATTRIBUTE_NAME)
     );
   }

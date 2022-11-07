@@ -60,23 +60,25 @@ sourceSets.main.java.srcDirs += "${project.buildDir}/generated-sources/src/gen/j
 
 flyway {
     locations = ["filesystem:src/main/resources/db/migration"]
-    outOfOrder = true
 }
 
 task flywayMigrateDev(type: org.flywaydb.gradle.task.FlywayMigrateTask) {
     url = "jdbc:postgresql://localhost:5432/event_planner"
     user = "event_planner"
     password = "event_planner_password"
+    defaultSchema = "permissions_service"
 }
 
 task flywayMigrateTest(type: org.flywaydb.gradle.task.FlywayMigrateTask) {
     url = "jdbc:postgresql://localhost:5432/event_planner_test"
     user = "event_planner"
     password = "event_planner_password"
+    defaultSchema = "permissions_service"
 }
 
 task flywayCleanTest(type: org.flywaydb.gradle.task.FlywayCleanTask) {
     url = "jdbc:postgresql://localhost:5432/event_planner_test"
     user = "event_planner"
     password = "event_planner_password"
+    defaultSchema = "permissions_service"
 }

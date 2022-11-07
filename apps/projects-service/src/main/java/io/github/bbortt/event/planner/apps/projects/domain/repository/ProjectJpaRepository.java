@@ -1,6 +1,7 @@
 package io.github.bbortt.event.planner.apps.projects.domain.repository;
 
 import io.github.bbortt.event.planner.apps.projects.domain.Project;
+import java.util.Collection;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,13 +14,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProjectJpaRepository extends JpaRepository<Project, Long> {
   @Query(
-    "select case when count(m) > 0 then true else false end from Member m where m.auth0UserId = :auth0UserSub and m.project.id = :projectId"
+    value = "select p from Project p where p.id in :projectIds and p.archived = false",
+    countQuery = "select count(p.id) from Project p where p.id in :projectIds and p.archived = false"
   )
-  Boolean isMemberOfProject(@Param("auth0UserSub") String auth0UserSub, @Param("projectId") Long projectId);
-
-  @Query(
-    value = "select p from Project p inner join p.members m on p.id = m.project.id where m.auth0UserId = :auth0UserId",
-    countQuery = "select count(m.id) from Member m where m.auth0UserId = :auth0UserId"
-  )
-  Page<Project> findAllByMemberAndArchivedIsFalse(@Param("auth0UserId") String auth0UserId, Pageable pageable);
+  Page<Project> findAllByIdAndArchivedIsFalse(@Param("projectIds") Collection<Long> projectIds, Pageable pageable);
 }
