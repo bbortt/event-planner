@@ -12,12 +12,16 @@ import javax.transaction.Transactional;
 public class PermissionService {
 
   @Transactional
-  public List<String> allByProjectIdAndAuth0UserId(String auth0UserId, Long projectId) {
+  public List<String> findAllByAuth0UserIdAndProjectId(String auth0UserId, Long projectId) {
     return Permission.findAllByAuth0UserIdAndProjectId(auth0UserId, projectId);
   }
 
+  public boolean hasAnyPermissionInProject(List<String> permissions, Long projectId, String auth0UserId) {
+    return findAllByAuth0UserIdAndProjectId(auth0UserId, projectId).stream().anyMatch(permissions::contains);
+  }
+
   @Transactional
-  public void assignPermissionInProject(String permissionId, String auth0UserId, long projectId) {
+  public void grantPermissionInProject(String permissionId, String auth0UserId, long projectId) {
     Permission permission = (Permission) Permission
       .findByIdOptional(permissionId)
       .orElseThrow(() -> new IllegalArgumentException(String.format("Invalid Permission '%s'!", permissionId)));

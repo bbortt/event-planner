@@ -24,7 +24,7 @@ public class ProjectDtoConverter implements DtoConverter<Project, ProjectDto> {
     }
 
     return new ProjectDto()
-      .id(BigDecimal.valueOf(project.getId()))
+      .id(project.getId())
       .token(project.getToken().toString())
       .name(project.getName())
       .description(project.getDescription())

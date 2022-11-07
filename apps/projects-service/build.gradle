@@ -15,12 +15,23 @@ assert System.properties["java.specification.version"] == "17"
 repositories {
     mavenLocal()
     mavenCentral()
-    maven { url 'https://repo.spring.io/release' }
+    maven { url "https://repo.spring.io/release" }
 }
+
+def openFeignVersion = "11.10"
+def resilience4jVersion = "1.7.1"
 
 dependencies {
     implementation platform("org.springframework.cloud:spring-cloud-dependencies:2021.0.1")
     implementation project(":libs:common-java")
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+    implementation "com.google.code.findbugs:jsr305:3.0.2"
+    implementation "io.github.openfeign:feign-jackson:${openFeignVersion}"
+    implementation "io.github.openfeign:feign-okhttp:${openFeignVersion}"
+    implementation "io.github.resilience4j:resilience4j-spring-boot2:${resilience4jVersion}"
+    implementation "io.github.resilience4j:resilience4j-feign:${resilience4jVersion}"
+    implementation "com.github.scribejava:scribejava-core:8.3.2"
+    implementation "io.swagger:swagger-annotations:1.6.8"
     implementation "io.swagger.core.v3:swagger-annotations:2.2.5"
     implementation "jakarta.validation:jakarta.validation-api:2.0.2"
     implementation "org.apache.commons:commons-lang3:3.12.0"
@@ -29,6 +40,7 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-oauth2-resource-server"
     implementation "org.springframework.boot:spring-boot-starter-security"
     implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation "org.springframework.cloud:spring-cloud-starter-openfeign"
     developmentOnly "org.springframework.boot:spring-boot-devtools"
     runtimeOnly "com.h2database:h2"
     runtimeOnly "org.postgresql:postgresql"
@@ -38,14 +50,10 @@ dependencies {
     testImplementation "org.springframework.security:spring-security-test"
 }
 
-openApiValidate {
-    inputSpec = "${project.rootDir}/specs/projects-service-v1.yml".toString()
-}
-
-openApiGenerate {
+task generateProjectsServiceApi(type: org.openapitools.generator.gradle.plugin.tasks.GenerateTask){
     generatorName = "spring"
     inputSpec = "${project.rootDir}/specs/projects-service-v1.yml".toString()
-    outputDir = "${project.buildDir}/generated-sources".toString()
+    outputDir = "${project.buildDir}/generated-sources/projects-service".toString()
     apiPackage = "io.github.bbortt.event.planner.apps.projects.v1.rest"
     invokerPackage = "io.github.bbortt.event.planner.apps.projects.v1"
     modelNameSuffix = "Dto"
@@ -58,33 +66,51 @@ openApiGenerate {
             useTags        : "true"
     ]
 }
-tasks.withType(org.openapitools.generator.gradle.plugin.tasks.GenerateTask) {
-    dependsOn tasks.openApiValidate
+compileJava.dependsOn tasks.generateProjectsServiceApi
+sourceSets.main.java.srcDirs += "${project.buildDir}/generated-sources/projects-service/src/main/java"
+
+task generatePermissionsServiceClient(type: org.openapitools.generator.gradle.plugin.tasks.GenerateTask){
+    generatorName = "java"
+    library = "feign"
+    inputSpec = "${project.rootDir}/specs/permissions-service-v1.yml".toString()
+    outputDir = "${project.buildDir}/generated-sources/permissions-service".toString()
+    apiPackage = "io.github.bbortt.event.planner.apps.projects.system.model.rest.v1"
+    invokerPackage = "io.github.bbortt.event.planner.apps.projects.system.model.rest"
+    modelNameSuffix = "Dto"
+    modelPackage = "io.github.bbortt.event.planner.apps.projects.system.model.rest.v1.dto"
+    configOptions = [
+            dateLibrary      : "java8",
+            delegatePattern  : "true",
+            interfaceOnly    : "true",
+            useOptional      : "true",
+    ]
 }
-compileJava.dependsOn tasks.openApiGenerate
-sourceSets.main.java.srcDirs += "${project.buildDir}/generated-sources/src/main/java"
+compileJava.dependsOn tasks.generatePermissionsServiceClient
+sourceSets.main.java.srcDirs += "${project.buildDir}/generated-sources/permissions-service/src/main/java"
 
 flyway {
     locations = ["filesystem:src/main/resources/db/migration"]
-    outOfOrder = true
 }
 
 task flywayMigrateDev(type: org.flywaydb.gradle.task.FlywayMigrateTask) {
     url = "jdbc:postgresql://localhost:5432/event_planner"
     user = "event_planner"
     password = "event_planner_password"
+    defaultSchema = "projects_service"
 }
 
 task flywayMigrateTest(type: org.flywaydb.gradle.task.FlywayMigrateTask) {
     url = "jdbc:postgresql://localhost:5432/event_planner_test"
     user = "event_planner"
     password = "event_planner_password"
+    defaultSchema = "projects_service"
 }
 
 task flywayCleanTest(type: org.flywaydb.gradle.task.FlywayCleanTask) {
     url = "jdbc:postgresql://localhost:5432/event_planner_test"
     user = "event_planner"
     password = "event_planner_password"
+    defaultSchema = "projects_service"
 }
 
 apply from: "gradle/native.gradle"

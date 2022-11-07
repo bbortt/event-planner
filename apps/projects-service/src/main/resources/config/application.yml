@@ -1,3 +1,13 @@
+io:
+  github:
+    bbortt:
+      event:
+        planner:
+          apps:
+            projects:
+              services:
+                permission:
+                  url: ${appl.permissions.service.url}
 jwt:
   audience: ${appl.auth0.audience}
 server:
