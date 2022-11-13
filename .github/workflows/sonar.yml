@@ -33,8 +33,9 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
+      - run: PGPASSWORD=event_planner_password psql -h localhost -U event_planner -f apps/permissions-service/src/test/resources/db/scripts/init-permissions_service.sql event_planner_test
       - run: PGPASSWORD=event_planner_password psql -h localhost -U event_planner -f apps/projects-service/src/test/resources/db/scripts/init-projects_service.sql event_planner_test
-      - run: ./gradlew :apps:projects-service:flywayMigrateTest --no-daemon --scan
+      - run: ./gradlew :apps:permissions-service:flywayMigrateTest :apps:projects-service:flywayMigrateTest --no-daemon --scan
       - env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
