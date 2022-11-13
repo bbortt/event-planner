@@ -52,4 +52,4 @@ jobs:
         with:
           distribution: temurin
           java-version: 17
-      - run: ./gradlew :apps:projects-service:bootBuildImage --no-daemon --scan
+      - run: ./gradlew :apps:projects-service:bootBuildImage --imageName=event-planner/projects-service --no-daemon --scan
