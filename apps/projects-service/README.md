@@ -1,4 +1,6 @@
-# PostgreSQL
+# Projects Service
+
+## PostgreSQL
 
 > **Note:** All Microservices use a single database instance (called `event_planner`). They are separated by schemas!
 
@@ -12,7 +14,7 @@ pod_id=$(
       -e POSTGRES_DB=event_planner \
       -e POSTGRES_USER=event_planner \
       -e POSTGRES_PASSWORD=event_planner_password \
-      postgres:14.1-alpine
+      postgres:14.6-alpine
 )
 cat apps/projects-service/src/test/resources/db/scripts/init-projects_service.sql | \
   docker exec -i $pod_id psql -U event_planner -f - event_planner
