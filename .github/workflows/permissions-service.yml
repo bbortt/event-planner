@@ -52,5 +52,5 @@ jobs:
         with:
           distribution: temurin
           java-version: 17
-      - run: ./gradlew :apps:permissions-service:build -Dquarkus.package.type=native -Dquarkus.native.container-build=true --no-daemon --scan
+      - run: ./gradlew :apps:permissions-service:quarkusBuild -Dquarkus.package.type=native -Dquarkus.native.container-build=true --no-daemon --scan
       - run: docker build -t event-planner/permissions-service apps/permissions-service

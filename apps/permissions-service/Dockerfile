@@ -8,7 +8,7 @@ EXPOSE 8080
 
 WORKDIR /work/
 
-COPY --from=build /code/target/*-runner /work/application
+COPY build/permissions-service-*-runner /work/application
 
 RUN chmod 775 /work /work/application \
   && chown -R 1001 /work \
