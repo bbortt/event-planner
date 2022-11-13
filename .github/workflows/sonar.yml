@@ -15,7 +15,7 @@ jobs:
     environment: build
     services:
       postgres:
-        image: postgres:14.1-alpine
+        image: postgres:14.6-alpine
         env:
           POSTGRES_DB: event_planner_test
           POSTGRES_USER: event_planner
