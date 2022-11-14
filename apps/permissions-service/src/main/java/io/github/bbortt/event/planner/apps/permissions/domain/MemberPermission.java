@@ -21,16 +21,12 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 @Entity
 @IdClass(MemberPermissionId.class)
 @Table(name = "member_permission", schema = "permissions_service")
-@NamedQueries(
-  {
-    @NamedQuery(
-      name = "MemberPermission.deleteByAuth0UserIdAndProjectId",
-      query = "delete from MemberPermission mp" +
-      " where mp.permission.id = :permission" +
-      "   and mp.member.projectId = :projectId" +
-      "   and mp.member.auth0UserId = :auth0UserId"
-    ),
-  }
+@NamedQuery(
+  name = "MemberPermission.deleteByAuth0UserIdAndProjectId",
+  query = "delete from MemberPermission mp" +
+  " where mp.permission.id = :permission" +
+  "   and mp.member.projectId = :projectId" +
+  "   and mp.member.auth0UserId = :auth0UserId"
 )
 public class MemberPermission extends PanacheEntityBase {
 

@@ -2,7 +2,6 @@ package io.github.bbortt.event.planner.apps.projects.domain.converter;
 
 import io.github.bbortt.event.planner.apps.projects.domain.Project;
 import io.github.bbortt.event.planner.apps.projects.v1.dto.ProjectDto;
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 
