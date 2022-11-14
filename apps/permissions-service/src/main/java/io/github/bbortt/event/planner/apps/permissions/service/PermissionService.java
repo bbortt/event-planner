@@ -3,6 +3,7 @@ package io.github.bbortt.event.planner.apps.permissions.service;
 import io.github.bbortt.event.planner.apps.permissions.domain.Member;
 import io.github.bbortt.event.planner.apps.permissions.domain.MemberPermission;
 import io.github.bbortt.event.planner.apps.permissions.domain.Permission;
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import io.quarkus.panache.common.Parameters;
 import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
@@ -16,16 +17,17 @@ public class PermissionService {
     return Permission.findAllByAuth0UserIdAndProjectId(auth0UserId, projectId);
   }
 
+  @Transactional
   public boolean hasAnyPermissionInProject(List<String> permissions, Long projectId, String auth0UserId) {
     return findAllByAuth0UserIdAndProjectId(auth0UserId, projectId).stream().anyMatch(permissions::contains);
   }
 
   @Transactional
   public void grantPermissionInProject(String permissionId, String auth0UserId, long projectId) {
-    Permission permission = (Permission) Permission
+    Permission permission = (Permission) PanacheEntityBase
       .findByIdOptional(permissionId)
       .orElseThrow(() -> new IllegalArgumentException(String.format("Invalid Permission '%s'!", permissionId)));
-    Member member = (Member) Member
+    Member member = (Member) PanacheEntityBase
       .find(
         "projectId = :projectId and auth0UserId = :auth0UserId",
         Parameters.with("projectId", projectId).and("auth0UserId", auth0UserId).map()

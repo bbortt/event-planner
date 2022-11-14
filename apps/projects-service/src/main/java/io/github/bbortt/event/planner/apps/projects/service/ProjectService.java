@@ -4,7 +4,6 @@ import io.github.bbortt.event.planner.apps.projects.domain.Project;
 import io.github.bbortt.event.planner.apps.projects.domain.repository.ProjectJpaRepository;
 import io.github.bbortt.event.planner.apps.projects.security.SecurityUtils;
 import io.github.bbortt.event.planner.apps.projects.system.model.rest.v1.ProjectApi;
-import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;

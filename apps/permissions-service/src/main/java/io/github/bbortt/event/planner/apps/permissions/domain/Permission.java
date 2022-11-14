@@ -20,15 +20,11 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 @Entity
 @Table(name = "permission", schema = "permissions_service")
-@NamedQueries(
-  {
-    @NamedQuery(
-      name = "Permission.findAllByAuth0UserIdAndProjectId",
-      query = "select mp.permission from MemberPermission mp" +
-      " where mp.member.projectId = :projectId" +
-      "   and mp.member.auth0UserId = :auth0UserId"
-    ),
-  }
+@NamedQuery(
+  name = "Permission.findAllByAuth0UserIdAndProjectId",
+  query = "select mp.permission from MemberPermission mp" +
+  " where mp.member.projectId = :projectId" +
+  "   and mp.member.auth0UserId = :auth0UserId"
 )
 public class Permission extends PanacheEntityBase {
 
