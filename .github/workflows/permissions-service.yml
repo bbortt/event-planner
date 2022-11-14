@@ -43,14 +43,3 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('build.gradle', 'package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-
-  native:
-    runs-on: ubuntu-20.04
-    needs: build
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-java@v3
-        with:
-          distribution: temurin
-          java-version: 17
-      - run: ./gradlew :apps:permissions-service:quarkusBuild -Dquarkus.package.type=native -Dquarkus.native.container-build=true --no-daemon --scan
-      - run: docker build -t event-planner/permissions-service apps/permissions-service
