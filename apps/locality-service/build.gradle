@@ -1,0 +1,70 @@
+import org.flywaydb.gradle.task.FlywayCleanTask
+import org.flywaydb.gradle.task.FlywayMigrateTask
+import org.openapitools.generator.gradle.plugin.tasks.GenerateTask
+
+plugins {
+    id "io.quarkus"  version "2.14.1.Final"
+    id "org.flywaydb.flyway"
+    id "org.openapi.generator"
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven { url "https://plugins.gradle.org/m2/" }
+}
+
+task prepareKotlinBuildScriptModel {
+
+}
+
+sourceSets {
+    src {
+        java.srcDirs = ["${project.buildDir}/generated-sources/locality-service/src"]
+        groovy.srcDirs += ["src", "src/groovy"]
+    }
+}
+
+apply plugin: "org.openapi.generator"
+
+task generateLocalityServiceApi(type: GenerateTask){
+    generatorName = "rust-server"
+    inputSpec = "${project.rootDir}/specs/locality-service-v1.yml".toString()
+    outputDir = "${project.buildDir}/generated-sources/locality-service".toString()
+    apiPackage = "io.github.bbortt.event.planner.apps.locality.v1.rest"
+    invokerPackage = "io.github.bbortt.event.planner.apps.locality.v1"
+    modelNameSuffix = "Dto"
+    modelPackage = "io.github.bbortt.event.planner.apps.locality.v1.dto"
+}
+assemble.dependsOn tasks.generateLocalityServiceApi
+//.srcDirs += "${project.buildDir}/generated-sources/locality-service/src"
+
+task wrapper {}
+
+flyway {
+    locations = ["filesystem:src/main/resources/db/migration"]
+}
+
+task flywayMigrateDev(type: FlywayMigrateTask) {
+    url = "jdbc:postgresql://localhost:5432/event_planner"
+    user = "event_planner"
+    password = "event_planner_password"
+    defaultSchema = "locality_service"
+}
+
+task flywayMigrateTest(type: FlywayMigrateTask) {
+    url = "jdbc:postgresql://localhost:5432/event_planner_test"
+    user = "event_planner"
+    password = "event_planner_password"
+    defaultSchema = "locality_service"
+}
+
+task flywayCleanTest(type: FlywayCleanTask) {
+    url = "jdbc:postgresql://localhost:5432/event_planner_test"
+    user = "event_planner"
+    password = "event_planner_password"
+    defaultSchema = "locality_service"
+}
+
+//apply from: "gradle/native.gradle"
+//apply from: "gradle/sonar.gradle"

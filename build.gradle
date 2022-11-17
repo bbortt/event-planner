@@ -1,5 +1,6 @@
 plugins {
     id "base"
+    id "groovy"
     id "com.github.node-gradle.node"
     id "jacoco"
     id "org.sonarqube"
@@ -12,6 +13,10 @@ defaultTasks "check"
 
 apply from: "gradle/sonar.gradle"
 
+allprojects {
+    apply plugin: 'groovy'
+}
+
 repositories {
 }
 
@@ -22,17 +27,12 @@ clean {
 }
 
 node {
+    download = project.hasProperty("nodeInstall")
     version = "16.17.0"
     npmVersion = "8.15.0"
     npmInstallCommand = "ci"
     workDir = file("${project.rootDir}/.gradle/nodejs")
     npmWorkDir = file("${project.rootDir}/.gradle/npm")
-}
-
-if (project.hasProperty("nodeInstall")) {
-    node {
-        download = true
-    }
 }
 check.dependsOn npmInstall
 

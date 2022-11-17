@@ -7,7 +7,7 @@ plugins {
 }
 
 sourceCompatibility = "17"
-assert System.properties["java.specification.version"] == "17"
+assert System.properties["java.specification.version"] == "18" || "17" || "16"
 
 repositories {
     mavenLocal()

@@ -13,5 +13,5 @@ pluginManagement {
 }
 
 rootProject.name = 'event-planner'
-include ":apps:development-gateway", ":apps:frontend", ":apps:permissions-service", ":apps:projects-service"
+include ":apps:development-gateway", ":apps:frontend", ":apps:permissions-service", ":apps:projects-service", ":apps:locality-service"
 include ":libs:common-java"
