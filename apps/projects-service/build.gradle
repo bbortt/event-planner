@@ -18,7 +18,7 @@ repositories {
     maven { url "https://repo.spring.io/release" }
 }
 
-def openFeignVersion = "12.0"
+def openFeignVersion = "12.1"
 def resilience4jVersion = "1.7.1"
 
 dependencies {
