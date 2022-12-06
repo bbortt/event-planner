@@ -19,7 +19,7 @@ repositories {
 }
 
 def openFeignVersion = "12.1"
-def resilience4jVersion = "2.0.0"
+def resilience4jVersion = "2.0.1"
 
 dependencies {
     implementation platform("org.springframework.cloud:spring-cloud-dependencies:2021.0.5")
