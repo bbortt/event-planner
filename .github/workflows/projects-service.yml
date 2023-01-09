@@ -34,7 +34,7 @@ jobs:
       - run: PGPASSWORD=event_planner_password psql -h localhost -U event_planner -f apps/projects-service/src/test/resources/db/scripts/init-projects_service.sql event_planner_test
       - run: ./gradlew :apps:projects-service:flywayMigrateTest --no-daemon --scan
       - run: ./gradlew :apps:projects-service:build --no-daemon --scan
-      - uses: actions/cache@v3.0.11
+      - uses: actions/cache@v3.2.3
         with:
           path: |
             ~/.gradle/caches
