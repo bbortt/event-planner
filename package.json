@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@commitlint/cli": "^17.3.0",
-    "@commitlint/config-conventional": "^17.4.0"
+    "@commitlint/config-conventional": "^17.4.2"
   },
   "devDependencies": {
     "@semantic-release/commit-analyzer": "^9.0.2",
