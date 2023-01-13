@@ -22,7 +22,7 @@ def openFeignVersion = "12.1"
 def resilience4jVersion = "2.0.2"
 
 dependencies {
-    implementation platform("org.springframework.cloud:spring-cloud-dependencies:2021.0.5")
+    implementation platform("org.springframework.cloud:spring-cloud-dependencies:2022.0.0")
     implementation project(":libs:common-java")
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
     implementation "com.google.code.findbugs:jsr305:3.0.2"
