@@ -5,7 +5,7 @@ plugins {
     id "org.flywaydb.flyway"
     id "org.openapi.generator"
     id "org.sonarqube"
-    id "org.springframework.boot" version "2.7.5"
+    id "org.springframework.boot" version "3.0.2"
     id "org.springframework.experimental.aot" version "0.12.2"
 }
 
