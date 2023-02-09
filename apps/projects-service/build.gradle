@@ -44,7 +44,7 @@ dependencies {
     developmentOnly "org.springframework.boot:spring-boot-devtools"
     runtimeOnly "com.h2database:h2"
     runtimeOnly "org.postgresql:postgresql"
-    testImplementation "org.bitbucket.b_c:jose4j:0.9.2"
+    testImplementation "org.bitbucket.b_c:jose4j:0.9.3"
     testImplementation "org.springframework.boot:spring-boot-starter-test"
     testImplementation "org.springframework.cloud:spring-cloud-contract-wiremock"
     testImplementation "org.springframework.security:spring-security-test"
