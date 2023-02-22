@@ -36,7 +36,7 @@ spring:
     type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:postgresql://localhost:5432/eventplanner
     username: eventplanner
-    password:
+    password: eventplanner
     hikari:
       poolName: Hikari
       auto-commit: false

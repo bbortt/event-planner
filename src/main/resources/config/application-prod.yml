@@ -26,6 +26,8 @@ management:
         enabled: false
 
 spring:
+  cache:
+    type: redis
   devtools:
     restart:
       enabled: false
@@ -33,9 +35,9 @@ spring:
       enabled: false
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:postgresql://localhost:5432/eventplanner
-    username: eventplanner
-    password:
+    url: ${appl.datasource.url}
+    username: ${appl.datasource.username}
+    password: ${appl.datasource.password}
     hikari:
       poolName: Hikari
       auto-commit: false
