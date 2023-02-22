@@ -92,7 +92,7 @@ management:
 
 spring:
   application:
-    name: eventplanner
+    name: event-planner
   profiles:
     # The commented value for `active` can be replaced with valid Spring profiles to load.
     # Otherwise, it will be filled in by gradle when building the JAR file
@@ -187,7 +187,7 @@ info:
 
 jhipster:
   clientApp:
-    name: 'eventplannerApp'
+    name: 'EventPlannerApp'
   # By default CORS is disabled. Uncomment to enable.
   # cors:
   #   allowed-origins: "http://localhost:8100,http://localhost:9000"
@@ -201,8 +201,8 @@ jhipster:
   api-docs:
     default-include-pattern: ${server.servlet.context-path:}/api/**
     management-include-pattern: ${server.servlet.context-path:}/management/**
-    title: Eventplanner API
-    description: Eventplanner API documentation
+    title: Event Planner API
+    description: Event Planner API documentation
     version: 0.0.1
     terms-of-service-url:
     contact-name:

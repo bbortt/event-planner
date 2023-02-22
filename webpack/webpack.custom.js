@@ -30,7 +30,7 @@ module.exports = async (config, options, targetOptions) => {
         },
       }),
       new WebpackNotifierPlugin({
-        title: 'Eventplanner',
+        title: 'Event Planner',
         contentImage: path.join(__dirname, 'logo-jhipster.png'),
       })
     );
