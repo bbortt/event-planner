@@ -1,0 +1,58 @@
+# This configuration is intended for development purpose, it's **your** responsibility to harden it for production
+version: '3.8'
+services:
+  eventplanner-app:
+    image: eventplanner
+    environment:
+      - _JAVA_OPTIONS=-Xmx512m -Xms256m
+      - SPRING_PROFILES_ACTIVE=prod,api-docs
+      - MANAGEMENT_METRICS_EXPORT_PROMETHEUS_ENABLED=true
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://eventplanner-postgresql:5432/eventplanner
+      - SPRING_LIQUIBASE_URL=jdbc:postgresql://eventplanner-postgresql:5432/eventplanner
+      - JHIPSTER_CACHE_REDIS_SERVER=redis://eventplanner-redis:6379
+      - JHIPSTER_CACHE_REDIS_CLUSTER=false
+      # - JHIPSTER_CACHE_REDIS_SERVER=redis://eventplanner-redis:6379
+      # - JHIPSTER_CACHE_REDIS_CLUSTER=true
+      - SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_OIDC_ISSUER_URI=http://keycloak:9080/realms/jhipster
+      - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_OIDC_CLIENT_ID=web_app
+      - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_OIDC_CLIENT_SECRET=web_app
+      - JHIPSTER_SLEEP=30 # gives time for other services to boot before the application
+    # If you want to expose these ports outside your dev PC,
+    # remove the "127.0.0.1:" prefix
+    ports:
+      - 127.0.0.1:8080:8080
+  eventplanner-postgresql:
+    image: postgres:14.5
+    # volumes:
+    #   - ~/volumes/jhipster/eventplanner/postgresql/:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=eventplanner
+      - POSTGRES_PASSWORD=
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    # If you want to expose these ports outside your dev PC,
+    # remove the "127.0.0.1:" prefix
+    ports:
+      - 127.0.0.1:5432:5432
+  eventplanner-redis:
+    image: redis:6.2.7
+    # If you want to expose these ports outside your dev PC,
+    # remove the "127.0.0.1:" prefix
+    ports:
+      - 127.0.0.1:6379:6379
+  keycloak:
+    image: quay.io/keycloak/keycloak:19.0.1
+    command: ['start-dev --import-realm']
+    volumes:
+      - ./realm-config:/opt/keycloak/data/import
+    environment:
+      - KC_DB=dev-file
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+      - KC_FEATURES=scripts
+      - KC_HTTP_PORT=9080
+      - KC_HTTPS_PORT=9443
+    # If you want to expose these ports outside your dev PC,
+    # remove the "127.0.0.1:" prefix
+    ports:
+      - 127.0.0.1:9080:9080
+      - 127.0.0.1:9443:9443
