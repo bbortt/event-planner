@@ -3,7 +3,12 @@
     "applicationType": "monolith",
     "authenticationType": "oauth2",
     "baseName": "eventplanner",
-    "blueprints": [],
+    "blueprints": [
+      {
+        "name": "generator-jhipster-entity-audit",
+        "version": "4.0.0"
+      }
+    ],
     "buildTool": "gradle",
     "cacheProvider": "redis",
     "clientFramework": "angularX",
@@ -19,15 +24,22 @@
     "enableHibernateCache": false,
     "enableSwaggerCodegen": true,
     "enableTranslation": true,
+    "entities": ["Project"],
     "entitySuffix": "",
     "jhiPrefix": "jhi",
     "jhipsterVersion": "7.9.3",
     "languages": ["de", "en"],
+    "lastLiquibaseTimestamp": 1677173100000,
     "messageBroker": false,
     "microfrontend": false,
     "microfrontends": [],
     "nativeLanguage": "de",
-    "otherModules": [],
+    "otherModules": [
+      {
+        "name": "generator-jhipster-entity-audit",
+        "version": "4.0.0"
+      }
+    ],
     "packageName": "io.github.bbortt.event.planner",
     "pages": [],
     "prodDatabaseType": "postgresql",
@@ -43,5 +55,10 @@
     "testFrameworks": [],
     "websocket": "spring-websocket",
     "withAdminUi": true
+  },
+  "generator-jhipster-entity-audit": {
+    "auditFramework": "custom",
+    "auditPage": true,
+    "entityAuditEventChangelogDate": "20230223172500"
   }
 }

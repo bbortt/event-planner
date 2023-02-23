@@ -147,8 +147,8 @@ If you'd like to use [Auth0](https://auth0.com/) instead of Keycloak, follow the
 
 - Create a free developer account at <https://auth0.com/signup>. After successful sign-up, your account will be associated with a unique domain like `dev-xxx.us.auth0.com`
 - Create a new application of type `Regular Web Applications`. Switch to the `Settings` tab, and configure your application settings like:
-  - Allowed Callback URLs: `http://localhost:8080/login/oauth2/code/oidc,http://localhost:4200/login/oauth2/code/oidc`
-  - Allowed Logout URLs: `http://localhost:8080,http://localhost:4200`
+  - Allowed Callback URLs: `http://localhost:9000/login/oauth2/code/oidc,http://localhost:4200/login/oauth2/code/oidc`
+  - Allowed Logout URLs: `http://localhost:9000,http://localhost:4200`
 - Navigate to **User Management** > **Roles** and create new roles named `ROLE_ADMIN`, and `ROLE_USER`.
 - Navigate to **User Management** > **Users** and create a new user account. Click on the **Role** tab to assign roles to the newly created user account.
 - Navigate to **Auth Pipeline** > **Rules** and create a new Rule. Choose `Empty rule` template. Provide a meaningful name like `JHipster claims` and replace `Script` content with the following and Save.

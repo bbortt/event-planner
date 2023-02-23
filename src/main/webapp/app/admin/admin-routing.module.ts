@@ -30,6 +30,11 @@ import { RouterModule } from '@angular/router';
         path: 'tracker',
         loadChildren: () => import('./tracker/tracker.module').then(m => m.TrackerModule),
       },
+      {
+        path: 'entity-audit',
+        data: { pageTitle: 'EntityAudit' },
+        loadChildren: () => import('./entity-audit/entity-audit.module').then(m => m.EntityAuditModule),
+      },
       /* jhipster-needle-add-admin-route - JHipster will add admin routes here */
     ]),
   ],
