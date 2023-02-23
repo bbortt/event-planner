@@ -1,6 +1,7 @@
 package io.github.bbortt.event.planner.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.github.bbortt.event.planner.audit.EntityAuditEventListener;
 import java.io.Serializable;
 import java.time.Instant;
 import javax.persistence.Column;
@@ -17,7 +18,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
  * last modified by attributes.
  */
 @MappedSuperclass
-@EntityListeners(AuditingEntityListener.class)
+@EntityListeners({ AuditingEntityListener.class, EntityAuditEventListener.class })
 @JsonIgnoreProperties(value = { "createdBy", "createdDate", "lastModifiedBy", "lastModifiedDate" }, allowGetters = true)
 public abstract class AbstractAuditingEntity<T> implements Serializable {
 

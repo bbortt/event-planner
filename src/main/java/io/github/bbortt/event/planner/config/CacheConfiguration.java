@@ -73,6 +73,7 @@ public class CacheConfiguration {
         return cm -> {
             createCache(cm, io.github.bbortt.event.planner.repository.UserRepository.USERS_BY_LOGIN_CACHE, jcacheConfiguration);
             createCache(cm, io.github.bbortt.event.planner.repository.UserRepository.USERS_BY_EMAIL_CACHE, jcacheConfiguration);
+            createCache(cm, io.github.bbortt.event.planner.domain.EntityAuditEvent.class.getName(), jcacheConfiguration);
             // jhipster-needle-redis-add-entry
         };
     }

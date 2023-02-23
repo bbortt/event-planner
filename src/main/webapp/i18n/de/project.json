@@ -1,0 +1,33 @@
+{
+  "eventplannerApp": {
+    "project": {
+      "home": {
+        "title": "Projekte",
+        "refreshListLabel": "Liste aktualisieren",
+        "createLabel": "Projekt erstellen",
+        "createOrEditLabel": "Projekt erstellen oder bearbeiten",
+        "notFound": "Keine Projekte gefunden"
+      },
+      "created": "Projekt erstellt mit ID {{ param }}",
+      "updated": "Projekt aktualisiert mit ID {{ param }}",
+      "deleted": "Projekt gelöscht mit ID {{ param }}",
+      "delete": {
+        "question": "Soll Projekt {{ id }} wirklich dauerhaft gelöscht werden?"
+      },
+      "detail": {
+        "title": "Projekt"
+      },
+      "id": "ID",
+      "token": "Token",
+      "name": "Name",
+      "description": "Beschreibung",
+      "startDate": "Start Datum",
+      "endDate": "End Datum",
+      "archived": "Archiviert",
+      "createdBy": "Erstellt von",
+      "createdDate": "Erstellt am",
+      "lastModifiedBy": "Zuletzt bearbeitet von",
+      "lastModifiedDate": "Zuletzt bearbeitet am"
+    }
+  }
+}
