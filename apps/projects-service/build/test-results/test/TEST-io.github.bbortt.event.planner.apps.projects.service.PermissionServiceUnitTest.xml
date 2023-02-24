@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="io.github.bbortt.event.planner.apps.projects.service.PermissionServiceUnitTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2022-10-08T17:39:22" hostname="debian" time="1.028">
-  <properties/>
-  <testcase name="findAllQueriesRepository()" classname="io.github.bbortt.event.planner.apps.projects.service.PermissionServiceUnitTest" time="0.975"/>
-  <testcase name="hasProjectPermissionsReturnsFalseWithoutAuth0UserSub()" classname="io.github.bbortt.event.planner.apps.projects.service.PermissionServiceUnitTest" time="0.027"/>
-  <testcase name="hasProjectPermissionsQueriesRepository()" classname="io.github.bbortt.event.planner.apps.projects.service.PermissionServiceUnitTest" time="0.022"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

@@ -3,6 +3,7 @@ on:
   pull_request:
 jobs:
   label:
+    name: 'Label Pull-Request'
     runs-on: ubuntu-latest
     if: ${{ github.actor != 'dependabot[bot]' }}
     steps:
@@ -10,6 +11,7 @@ jobs:
         with:
           repo-token: '${{ secrets.GITHUB_TOKEN }}'
   dependabot:
+    name: 'Autobots, roll out!'
     runs-on: ubuntu-latest
     if: ${{ github.actor == 'dependabot[bot]' }}
     steps:
