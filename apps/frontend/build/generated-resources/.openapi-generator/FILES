@@ -1,0 +1,10 @@
+.openapi-generator-ignore
+apis/ProjectApi.ts
+apis/index.ts
+index.ts
+models/PagingInformation.ts
+models/Project.ts
+models/ReadProjects200Response.ts
+models/ReadProjects200ResponseAllOf.ts
+models/index.ts
+runtime.ts

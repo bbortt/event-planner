@@ -1,0 +1,32 @@
+quarkus:
+  datasource:
+    db-kind: postgresql
+    username: ${APPL_JDBC_USERNAME}
+    password: ${APPL_JDBC_PASSWORD}
+    jdbc:
+      url: ${APPL_JDBC_URL}
+  hibernate-orm:
+    database:
+      generation: validate
+  http:
+    port: 8080
+'%dev':
+  quarkus:
+    datasource:
+      username: permissions_service
+      password: permissions_service
+      jdbc:
+        url: jdbc:postgresql://localhost:5432/event_planner?currentSchema=permissions_service
+    http:
+      port: 8082
+'%h2':
+  quarkus:
+    datasource:
+      db-kind: h2
+      username: sa
+      password: password
+      jdbc:
+        url: jdbc:h2:mem:event_planner;MODE=PostgreSQL
+    hibernate-orm:
+      database:
+        generation: drop-and-create

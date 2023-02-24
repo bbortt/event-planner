@@ -59,7 +59,7 @@ class UserResourceIT {
     @Autowired
     private EntityManager em;
 
-    @Autowired
+    @Autowired(required = false)
     private CacheManager cacheManager;
 
     @Autowired
@@ -69,8 +69,10 @@ class UserResourceIT {
 
     @BeforeEach
     public void setup() {
-        cacheManager.getCache(UserRepository.USERS_BY_LOGIN_CACHE).clear();
-        cacheManager.getCache(UserRepository.USERS_BY_EMAIL_CACHE).clear();
+        if (!Objects.isNull(cacheManager)) {
+            cacheManager.getCache(UserRepository.USERS_BY_LOGIN_CACHE).clear();
+            cacheManager.getCache(UserRepository.USERS_BY_EMAIL_CACHE).clear();
+        }
     }
 
     /**

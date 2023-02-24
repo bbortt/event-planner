@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Permission.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">projects-service</a> &gt; <a href="index.source.html" class="el_package">io.github.bbortt.event.planner.apps.projects.domain</a> &gt; <span class="el_source">Permission.java</span></div><h1>Permission.java</h1><pre class="source lang-java linenums">package io.github.bbortt.event.planner.apps.projects.domain;
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.validation.constraints.Size;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+@Entity
+@Table(schema = &quot;projects_service&quot;)
+<span class="nc" id="L17">public class Permission {</span>
+
+  @Id
+  @Size(min = 1, max = 20)
+  @Column(nullable = false, updatable = false)
+  private String id;
+
+<span class="nc" id="L24">  @OneToMany(mappedBy = &quot;permission&quot;)</span>
+  private Set&lt;MemberPermission&gt; members = new HashSet&lt;&gt;();
+
+  public String getId() {
+<span class="nc" id="L28">    return id;</span>
+  }
+
+  public Set&lt;Member&gt; getMembers() {
+<span class="nc" id="L32">    return members.stream().map(MemberPermission::getMember).collect(Collectors.toSet());</span>
+  }
+
+  public void setMembers(Set&lt;Member&gt; members) {
+<span class="nc" id="L36">    this.members = members.stream().map(member -&gt; new MemberPermission(member, this)).collect(Collectors.toSet());</span>
+<span class="nc" id="L37">  }</span>
+
+  @Override
+  public boolean equals(Object o) {
+<span class="nc bnc" id="L41" title="All 2 branches missed.">    if (this == o) {</span>
+<span class="nc" id="L42">      return true;</span>
+    }
+
+<span class="nc bnc" id="L45" title="All 4 branches missed.">    if (o == null || getClass() != o.getClass()) {</span>
+<span class="nc" id="L46">      return false;</span>
+    }
+
+<span class="nc" id="L49">    Permission that = (Permission) o;</span>
+
+    // Noted: It's ok to use the @Id here, because this entity will *always* be persisted!
+<span class="nc" id="L52">    return new EqualsBuilder().append(getId(), that.getId()).isEquals();</span>
+  }
+
+  @Override
+  public int hashCode() {
+<span class="nc" id="L57">    return new HashCodeBuilder(17, 37).append(getId()).toHashCode();</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -1,0 +1,1 @@
+DROP TABLE permissions_service.project_admin_member;
