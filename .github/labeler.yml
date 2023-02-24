@@ -1,0 +1,16 @@
+ci/cd:
+  - '.github/*'
+  - '.husky/*'
+  - '*.gradle'
+  - './{,**/}Dockerfile'
+github_actions:
+  - '.github/*'
+documentation:
+  - '*.md'
+
+java: '*.java'
+javascript: '*.ts{,x}'
+
+backend: 'src/main/java/**'
+frontend: 'src/main/webapp/**'
+testing: 'src/test/**'
