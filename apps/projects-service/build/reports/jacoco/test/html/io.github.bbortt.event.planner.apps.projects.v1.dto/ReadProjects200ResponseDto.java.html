@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ReadProjects200ResponseDto.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">projects-service</a> &gt; <a href="index.source.html" class="el_package">io.github.bbortt.event.planner.apps.projects.v1.dto</a> &gt; <span class="el_source">ReadProjects200ResponseDto.java</span></div><h1>ReadProjects200ResponseDto.java</h1><pre class="source lang-java linenums">package io.github.bbortt.event.planner.apps.projects.v1.dto;
+
+import java.net.URI;
+import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+import io.github.bbortt.event.planner.apps.projects.v1.dto.ProjectDto;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.time.OffsetDateTime;
+import javax.validation.Valid;
+import javax.validation.constraints.*;
+import io.swagger.v3.oas.annotations.media.Schema;
+
+
+import java.util.*;
+import javax.annotation.Generated;
+
+/**
+ * ReadProjects200ResponseDto
+ */
+
+@JsonTypeName(&quot;readProjects_200_response&quot;)
+@Generated(value = &quot;org.openapitools.codegen.languages.SpringCodegen&quot;, date = &quot;2022-10-08T16:49:31.140405563+02:00[Europe/Zurich]&quot;)
+<span class="nc" id="L28">public class ReadProjects200ResponseDto {</span>
+
+<span class="nc" id="L30">  @JsonProperty(&quot;contents&quot;)</span>
+  @Valid
+  private List&lt;ProjectDto&gt; contents = null;
+
+  @JsonProperty(&quot;totalElements&quot;)
+  private BigDecimal totalElements;
+
+  @JsonProperty(&quot;totalPages&quot;)
+  private BigDecimal totalPages;
+
+  @JsonProperty(&quot;number&quot;)
+  private BigDecimal number;
+
+  public ReadProjects200ResponseDto contents(List&lt;ProjectDto&gt; contents) {
+<span class="nc" id="L44">    this.contents = contents;</span>
+<span class="nc" id="L45">    return this;</span>
+  }
+
+  public ReadProjects200ResponseDto addContentsItem(ProjectDto contentsItem) {
+<span class="nc bnc" id="L49" title="All 2 branches missed.">    if (this.contents == null) {</span>
+<span class="nc" id="L50">      this.contents = new ArrayList&lt;&gt;();</span>
+    }
+<span class="nc" id="L52">    this.contents.add(contentsItem);</span>
+<span class="nc" id="L53">    return this;</span>
+  }
+
+  /**
+   * Get contents
+   * @return contents
+  */
+  @Valid 
+  @Schema(name = &quot;contents&quot;, required = false)
+  public List&lt;ProjectDto&gt; getContents() {
+<span class="nc" id="L63">    return contents;</span>
+  }
+
+  public void setContents(List&lt;ProjectDto&gt; contents) {
+<span class="nc" id="L67">    this.contents = contents;</span>
+<span class="nc" id="L68">  }</span>
+
+  public ReadProjects200ResponseDto totalElements(BigDecimal totalElements) {
+<span class="nc" id="L71">    this.totalElements = totalElements;</span>
+<span class="nc" id="L72">    return this;</span>
+  }
+
+  /**
+   * Get totalElements
+   * @return totalElements
+  */
+  @Valid 
+  @Schema(name = &quot;totalElements&quot;, required = false)
+  public BigDecimal getTotalElements() {
+<span class="nc" id="L82">    return totalElements;</span>
+  }
+
+  public void setTotalElements(BigDecimal totalElements) {
+<span class="nc" id="L86">    this.totalElements = totalElements;</span>
+<span class="nc" id="L87">  }</span>
+
+  public ReadProjects200ResponseDto totalPages(BigDecimal totalPages) {
+<span class="nc" id="L90">    this.totalPages = totalPages;</span>
+<span class="nc" id="L91">    return this;</span>
+  }
+
+  /**
+   * Get totalPages
+   * @return totalPages
+  */
+  @Valid 
+  @Schema(name = &quot;totalPages&quot;, required = false)
+  public BigDecimal getTotalPages() {
+<span class="nc" id="L101">    return totalPages;</span>
+  }
+
+  public void setTotalPages(BigDecimal totalPages) {
+<span class="nc" id="L105">    this.totalPages = totalPages;</span>
+<span class="nc" id="L106">  }</span>
+
+  public ReadProjects200ResponseDto number(BigDecimal number) {
+<span class="nc" id="L109">    this.number = number;</span>
+<span class="nc" id="L110">    return this;</span>
+  }
+
+  /**
+   * Get number
+   * @return number
+  */
+  @Valid 
+  @Schema(name = &quot;number&quot;, required = false)
+  public BigDecimal getNumber() {
+<span class="nc" id="L120">    return number;</span>
+  }
+
+  public void setNumber(BigDecimal number) {
+<span class="nc" id="L124">    this.number = number;</span>
+<span class="nc" id="L125">  }</span>
+
+  @Override
+  public boolean equals(Object o) {
+<span class="nc bnc" id="L129" title="All 2 branches missed.">    if (this == o) {</span>
+<span class="nc" id="L130">      return true;</span>
+    }
+<span class="nc bnc" id="L132" title="All 4 branches missed.">    if (o == null || getClass() != o.getClass()) {</span>
+<span class="nc" id="L133">      return false;</span>
+    }
+<span class="nc" id="L135">    ReadProjects200ResponseDto readProjects200Response = (ReadProjects200ResponseDto) o;</span>
+<span class="nc bnc" id="L136" title="All 2 branches missed.">    return Objects.equals(this.contents, readProjects200Response.contents) &amp;&amp;</span>
+<span class="nc bnc" id="L137" title="All 2 branches missed.">        Objects.equals(this.totalElements, readProjects200Response.totalElements) &amp;&amp;</span>
+<span class="nc bnc" id="L138" title="All 2 branches missed.">        Objects.equals(this.totalPages, readProjects200Response.totalPages) &amp;&amp;</span>
+<span class="nc bnc" id="L139" title="All 2 branches missed.">        Objects.equals(this.number, readProjects200Response.number);</span>
+  }
+
+  @Override
+  public int hashCode() {
+<span class="nc" id="L144">    return Objects.hash(contents, totalElements, totalPages, number);</span>
+  }
+
+  @Override
+  public String toString() {
+<span class="nc" id="L149">    StringBuilder sb = new StringBuilder();</span>
+<span class="nc" id="L150">    sb.append(&quot;class ReadProjects200ResponseDto {\n&quot;);</span>
+<span class="nc" id="L151">    sb.append(&quot;    contents: &quot;).append(toIndentedString(contents)).append(&quot;\n&quot;);</span>
+<span class="nc" id="L152">    sb.append(&quot;    totalElements: &quot;).append(toIndentedString(totalElements)).append(&quot;\n&quot;);</span>
+<span class="nc" id="L153">    sb.append(&quot;    totalPages: &quot;).append(toIndentedString(totalPages)).append(&quot;\n&quot;);</span>
+<span class="nc" id="L154">    sb.append(&quot;    number: &quot;).append(toIndentedString(number)).append(&quot;\n&quot;);</span>
+<span class="nc" id="L155">    sb.append(&quot;}&quot;);</span>
+<span class="nc" id="L156">    return sb.toString();</span>
+  }
+
+  /**
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
+   */
+  private String toIndentedString(Object o) {
+<span class="nc bnc" id="L164" title="All 2 branches missed.">    if (o == null) {</span>
+<span class="nc" id="L165">      return &quot;null&quot;;</span>
+    }
+<span class="nc" id="L167">    return o.toString().replace(&quot;\n&quot;, &quot;\n    &quot;);</span>
+  }
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

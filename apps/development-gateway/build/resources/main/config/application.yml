@@ -1,0 +1,12 @@
+logging:
+  level:
+    web: debug
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: projects-service
+          uri: http://localhost:8081
+          predicates:
+            - Path=/api/rest/v1/projects
+            - Path=/api/rest/v1/projects/**

@@ -21,6 +21,8 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
+
 /**
  * Integration tests for the {@link UserResource} REST controller.
  */
@@ -37,7 +39,7 @@ class PublicUserResourceIT {
     @Autowired
     private EntityManager em;
 
-    @Autowired
+    @Autowired(required = false)
     private CacheManager cacheManager;
 
     @Autowired
@@ -47,8 +49,10 @@ class PublicUserResourceIT {
 
     @BeforeEach
     public void setup() {
-        cacheManager.getCache(UserRepository.USERS_BY_LOGIN_CACHE).clear();
-        cacheManager.getCache(UserRepository.USERS_BY_EMAIL_CACHE).clear();
+        if (!Objects.isNull(cacheManager)) {
+            cacheManager.getCache(UserRepository.USERS_BY_LOGIN_CACHE).clear();
+            cacheManager.getCache(UserRepository.USERS_BY_EMAIL_CACHE).clear();
+        }
     }
 
     @BeforeEach

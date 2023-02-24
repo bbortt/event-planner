@@ -1,0 +1,82 @@
+name: Application CI
+on: [push, pull_request]
+jobs:
+  validation:
+    name: 'Gradle Wrapper Validation'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: gradle/wrapper-validation-action@v1
+  pipeline:
+    name: 'Fullbuild Event Planner'
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[ci skip]') && !contains(github.event.head_commit.message, '[skip ci]') && !contains(github.event.pull_request.title, '[skip ci]') && !contains(github.event.pull_request.title, '[ci skip]')"
+    environment: build
+    services:
+      postgres:
+        image: postgres:15.2-alpine
+        env:
+          POSTGRES_USER: eventplanner
+          POSTGRES_PASSWORD: eventplanner
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      NODE_VERSION: 18.14.2
+      SPRING_OUTPUT_ANSI_ENABLED: DETECT
+      SPRING_JPA_SHOW_SQL: false
+      JHI_DISABLE_WEBPACK_LOGS: true
+      NG_CLI_ANALYTICS: false
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18.14.2
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: 17
+      - name: Install node.js packages
+        run: npm install
+      - name: Install Snyk CLI
+        run: |
+          curl -Lo ./snyk $(curl -s https://api.github.com/repos/snyk/snyk/releases/latest | grep "browser_download_url.*snyk-linux" | cut -d ':' -f 2,3 | tr -d \" | tr -d ' ')
+          chmod +x snyk
+      - name: Snyk test
+        continue-on-error: true
+        run: ./snyk test --all-projects
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      - name: Snyk monitor
+        continue-on-error: true
+        run: ./snyk monitor --all-projects
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      - name: Run backend test
+        run: |
+          chmod +x gradlew
+          npm run ci:backend:test
+      - name: Run frontend test
+        run: npm run ci:frontend:test
+      - name: Analyze code with SonarQube
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          if [ ! -z "$SONAR_TOKEN" ]; then
+              ./gradlew sonarqube --no-daemon -Dsonar.organization=bbortt-github -Dsonar.host.url=https://sonarcloud.io
+          else
+              echo No SONAR_TOKEN, skipping...
+          fi
+      - name: Package application
+        run: npm run java:jar:prod
+      - name: Build and publish docker image
+        if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/'))
+        run: |
+          GIT_TAG=:${GITHUB_REF#refs/tags/}
+          DOCKER_TAG=${GIT_TAG#:refs/heads/main}
+          ./gradlew jib -Djib.to.image=event-planner${DOCKER_TAG} -Djib.to.auth.username="${{ secrets.DOCKER_USERNAME }}" -Djib.to.auth.password="${{ secrets.DOCKER_PASSWORD }}" -Pprod

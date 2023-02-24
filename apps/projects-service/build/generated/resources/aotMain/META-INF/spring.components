@@ -1,0 +1,16 @@
+#
+#Sat Oct 08 20:50:51 CEST 2022
+io.github.bbortt.event.planner.apps.projects.domain.Project=javax.persistence.Entity,javax.persistence.Table
+io.github.bbortt.event.planner.apps.projects.domain.Member=javax.persistence.Entity,javax.persistence.EntityListeners,javax.persistence.Table
+io.github.bbortt.event.planner.apps.projects.config.JwtDecoderConfig=org.springframework.stereotype.Component
+io.github.bbortt.event.planner.apps.projects.domain.Permission=javax.persistence.Entity,javax.persistence.Table
+io.github.bbortt.event.planner.apps.projects.domain.repository.PermissionJpaRepository=org.springframework.stereotype.Component,org.springframework.data.repository.Repository
+io.github.bbortt.event.planner.apps.projects.domain.repository.ProjectJpaRepository=org.springframework.stereotype.Component,org.springframework.data.repository.Repository
+io.github.bbortt.event.planner.apps.projects.config.SecurityConfig=org.springframework.stereotype.Component
+io.github.bbortt.event.planner.apps.projects.ProjectsServiceApplication=org.springframework.stereotype.Component,org.springframework.boot.SpringBootConfiguration
+io.github.bbortt.event.planner.apps.projects.domain.AbstractAuditingEntity=javax.persistence.MappedSuperclass,javax.persistence.EntityListeners
+io.github.bbortt.event.planner.apps.projects.service.ProjectService=org.springframework.stereotype.Component
+io.github.bbortt.event.planner.apps.projects.service.PermissionService=org.springframework.stereotype.Component
+io.github.bbortt.event.planner.apps.projects.config.JpaAuditingConfig=org.springframework.stereotype.Component
+io.github.bbortt.event.planner.apps.projects.domain.MemberPermission=javax.persistence.Entity,javax.persistence.IdClass,javax.persistence.Table
+io.github.bbortt.event.planner.apps.projects.rest.v1.ProjectApiController=org.springframework.stereotype.Component

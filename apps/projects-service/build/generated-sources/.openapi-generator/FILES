@@ -1,0 +1,9 @@
+.openapi-generator-ignore
+README.md
+pom.xml
+src/main/java/io/github/bbortt/event/planner/apps/projects/v1/dto/PagingInformationDto.java
+src/main/java/io/github/bbortt/event/planner/apps/projects/v1/dto/ProjectDto.java
+src/main/java/io/github/bbortt/event/planner/apps/projects/v1/dto/ReadProjects200ResponseAllOfDto.java
+src/main/java/io/github/bbortt/event/planner/apps/projects/v1/dto/ReadProjects200ResponseDto.java
+src/main/java/io/github/bbortt/event/planner/apps/projects/v1/rest/ApiUtil.java
+src/main/java/io/github/bbortt/event/planner/apps/projects/v1/rest/ProjectApi.java
