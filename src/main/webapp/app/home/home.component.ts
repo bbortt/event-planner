@@ -17,8 +17,4 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.accountService.identity().subscribe(account => (this.account = account));
   }
-
-  login(): void {
-    this.loginService.login();
-  }
 }
