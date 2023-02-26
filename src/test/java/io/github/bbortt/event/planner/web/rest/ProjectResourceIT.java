@@ -57,6 +57,11 @@ class ProjectResourceIT {
     private static final Boolean DEFAULT_ARCHIVED = false;
     private static final Boolean UPDATED_ARCHIVED = true;
 
+    private static final String CREATED_BY = "Osheen Emilie";
+    private static final Instant CREATED_DATE = Instant.now().minus(1, ChronoUnit.MINUTES);
+    private static final String MODIFIED_BY = "Maximinus Loherangrin";
+    private static final Instant MODIFIED_DATE = Instant.now();
+
     private static final String ENTITY_API_URL = "/api/projects";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
@@ -90,7 +95,9 @@ class ProjectResourceIT {
             .description(DEFAULT_DESCRIPTION)
             .startDate(DEFAULT_START_DATE)
             .endDate(DEFAULT_END_DATE)
-            .archived(DEFAULT_ARCHIVED);
+            .archived(DEFAULT_ARCHIVED)
+            .createdBy(CREATED_BY)
+            .createdDate(CREATED_DATE);
         return project;
     }
 
@@ -107,7 +114,11 @@ class ProjectResourceIT {
             .description(UPDATED_DESCRIPTION)
             .startDate(UPDATED_START_DATE)
             .endDate(UPDATED_END_DATE)
-            .archived(UPDATED_ARCHIVED);
+            .archived(UPDATED_ARCHIVED)
+            .createdBy(CREATED_BY)
+            .createdDate(CREATED_DATE)
+            .lastModifiedBy(MODIFIED_BY)
+            .lastModifiedDate(MODIFIED_DATE);
         return project;
     }
 
@@ -141,6 +152,7 @@ class ProjectResourceIT {
         assertThat(testProject.getStartDate()).isEqualTo(DEFAULT_START_DATE);
         assertThat(testProject.getEndDate()).isEqualTo(DEFAULT_END_DATE);
         assertThat(testProject.getArchived()).isEqualTo(DEFAULT_ARCHIVED);
+        assertThat(testProject.getCreatedBy()).isNotEmpty();
     }
 
     @Test

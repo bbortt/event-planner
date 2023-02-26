@@ -20,11 +20,11 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @MappedSuperclass
 @EntityListeners({ AuditingEntityListener.class, EntityAuditEventListener.class })
 @JsonIgnoreProperties(value = { "createdBy", "createdDate", "lastModifiedBy", "lastModifiedDate" }, allowGetters = true)
-public abstract class AbstractAuditingEntity<T> implements Serializable {
+public abstract class AbstractAuditingEntity<T, I> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public abstract T getId();
+    public abstract I getId();
 
     @CreatedBy
     @Column(name = "created_by", nullable = false, length = 50, updatable = false)
@@ -50,12 +50,22 @@ public abstract class AbstractAuditingEntity<T> implements Serializable {
         this.createdBy = createdBy;
     }
 
+    public T createdBy(String createdBy) {
+        setCreatedBy(createdBy);
+        return (T) this;
+    }
+
     public Instant getCreatedDate() {
         return createdDate;
     }
 
     public void setCreatedDate(Instant createdDate) {
         this.createdDate = createdDate;
+    }
+
+    public T createdDate(Instant createdDate) {
+        setCreatedDate(createdDate);
+        return (T) this;
     }
 
     public String getLastModifiedBy() {
@@ -66,11 +76,21 @@ public abstract class AbstractAuditingEntity<T> implements Serializable {
         this.lastModifiedBy = lastModifiedBy;
     }
 
+    public T lastModifiedBy(String lastModifiedBy) {
+        setLastModifiedBy(lastModifiedBy);
+        return (T) this;
+    }
+
     public Instant getLastModifiedDate() {
         return lastModifiedDate;
     }
 
     public void setLastModifiedDate(Instant lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
+    }
+
+    public T lastModifiedDate(Instant lastModifiedDate) {
+        setLastModifiedDate(lastModifiedDate);
+        return (T) this;
     }
 }
