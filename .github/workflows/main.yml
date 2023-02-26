@@ -12,19 +12,6 @@ jobs:
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, '[ci skip]') && !contains(github.event.head_commit.message, '[skip ci]') && !contains(github.event.pull_request.title, '[skip ci]') && !contains(github.event.pull_request.title, '[ci skip]')"
     environment: build
-    services:
-      postgres:
-        image: postgres:15.2-alpine
-        env:
-          POSTGRES_USER: eventplanner
-          POSTGRES_PASSWORD: eventplanner
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
     env:
       NODE_VERSION: 18.14.2
       SPRING_OUTPUT_ANSI_ENABLED: DETECT

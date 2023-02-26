@@ -1,11 +1,11 @@
 package io.github.bbortt.event.planner.domain;
 
 import java.io.Serializable;
-import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  * A Project.
@@ -13,7 +13,7 @@ import javax.validation.constraints.*;
 @Entity
 @Table(name = "project")
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class Project implements Serializable {
+public class Project extends AbstractAuditingEntity<Project, Long> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -48,20 +48,9 @@ public class Project implements Serializable {
     @Column(name = "archived", nullable = false)
     private Boolean archived;
 
-    @Column(name = "created_by")
-    private String createdBy;
-
-    @Column(name = "created_date")
-    private Instant createdDate;
-
-    @Column(name = "last_modified_by")
-    private String lastModifiedBy;
-
-    @Column(name = "last_modified_date")
-    private Instant lastModifiedDate;
-
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
+    @Override
     public Long getId() {
         return this.id;
     }
@@ -151,58 +140,6 @@ public class Project implements Serializable {
 
     public void setArchived(Boolean archived) {
         this.archived = archived;
-    }
-
-    public String getCreatedBy() {
-        return this.createdBy;
-    }
-
-    public Project createdBy(String createdBy) {
-        this.setCreatedBy(createdBy);
-        return this;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public Instant getCreatedDate() {
-        return this.createdDate;
-    }
-
-    public Project createdDate(Instant createdDate) {
-        this.setCreatedDate(createdDate);
-        return this;
-    }
-
-    public void setCreatedDate(Instant createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public String getLastModifiedBy() {
-        return this.lastModifiedBy;
-    }
-
-    public Project lastModifiedBy(String lastModifiedBy) {
-        this.setLastModifiedBy(lastModifiedBy);
-        return this;
-    }
-
-    public void setLastModifiedBy(String lastModifiedBy) {
-        this.lastModifiedBy = lastModifiedBy;
-    }
-
-    public Instant getLastModifiedDate() {
-        return this.lastModifiedDate;
-    }
-
-    public Project lastModifiedDate(Instant lastModifiedDate) {
-        this.setLastModifiedDate(lastModifiedDate);
-        return this;
-    }
-
-    public void setLastModifiedDate(Instant lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
