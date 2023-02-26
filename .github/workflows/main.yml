@@ -39,6 +39,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: ./gradlew sonarqube --no-daemon -Dsonar.organization=bbortt-github -Dsonar.host.url=https://sonarcloud.io
       - name: Package Application
+        if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/'))
         run: npm run java:jar:prod
       - name: Build and Publish to DockerHub
         if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/'))
