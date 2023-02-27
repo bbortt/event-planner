@@ -14,7 +14,6 @@ describe('Landing Page Component', () => {
   let comp: HomeComponent;
   let fixture: ComponentFixture<HomeComponent>;
   let mockAccountService: AccountService;
-  let mockLoginService: LoginService;
   const account: Account = {
     activated: true,
     authorities: [],
@@ -41,7 +40,6 @@ describe('Landing Page Component', () => {
     mockAccountService = TestBed.inject(AccountService);
     mockAccountService.identity = jest.fn(() => of(null));
     mockAccountService.getAuthenticationState = jest.fn(() => of(null));
-    mockLoginService = TestBed.inject(LoginService);
   });
 
   describe('ngOnInit', () => {
