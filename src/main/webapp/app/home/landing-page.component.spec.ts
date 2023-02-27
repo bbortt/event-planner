@@ -5,7 +5,6 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { of } from 'rxjs';
 
 import { AccountService } from 'app/core/auth/account.service';
-import { Account } from 'app/core/auth/account.model';
 import { LoginService } from 'app/login/login.service';
 
 import { LandingPageComponent } from './landing-page.component';
@@ -15,16 +14,6 @@ describe('Landing Page Component', () => {
   let fixture: ComponentFixture<LandingPageComponent>;
   let mockAccountService: AccountService;
   let mockLoginService: LoginService;
-  const account: Account = {
-    activated: true,
-    authorities: [],
-    email: '',
-    firstName: null,
-    langKey: '',
-    lastName: null,
-    login: 'login',
-    imageUrl: null,
-  };
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
