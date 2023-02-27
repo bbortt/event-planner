@@ -1,13 +1,8 @@
 <div>
   <h2 id="page-heading" data-cy="ProjectHeading">
-    <span jhiTranslate="eventplannerApp.project.home.title">Projekte</span>
+    <span jhiTranslate="eventplannerApp.project.home.title">Meine Projekte</span>
 
     <div class="d-flex justify-content-end">
-      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
-        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
-        <span jhiTranslate="eventplannerApp.project.home.refreshListLabel">Liste aktualisieren</span>
-      </button>
-
       <button
         id="jh-create-entity"
         data-cy="entityCreateButton"
@@ -101,7 +96,12 @@
           <th scope="col"></th>
         </tr>
       </thead>
-      <tbody>
+      <tbody
+        infinite-scroll
+        (scrolled)="loadPage(page + 1)"
+        [infiniteScrollDisabled]="page - 1 >= links['last']"
+        [infiniteScrollDistance]="0"
+      >
         <tr *ngFor="let project of projects; trackBy: trackId" data-cy="entityTable">
           <td>
             <a [routerLink]="['/project', project.id, 'view']">{{ project.id }}</a>
@@ -137,33 +137,10 @@
                 <fa-icon icon="pencil-alt"></fa-icon>
                 <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Bearbeiten</span>
               </button>
-
-              <button type="submit" (click)="delete(project)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
-                <fa-icon icon="times"></fa-icon>
-                <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Löschen</span>
-              </button>
             </div>
           </td>
         </tr>
       </tbody>
     </table>
-  </div>
-
-  <div *ngIf="projects && projects.length > 0">
-    <div class="d-flex justify-content-center">
-      <jhi-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></jhi-item-count>
-    </div>
-
-    <div class="d-flex justify-content-center">
-      <ngb-pagination
-        [collectionSize]="totalItems"
-        [page]="page"
-        [pageSize]="itemsPerPage"
-        [maxSize]="5"
-        [rotate]="true"
-        [boundaryLinks]="true"
-        (pageChange)="navigateToPage($event)"
-      ></ngb-pagination>
-    </div>
   </div>
 </div>
