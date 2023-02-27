@@ -1,6 +1,8 @@
 package io.github.bbortt.event.planner.repository;
 
 import io.github.bbortt.event.planner.domain.Project;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 
@@ -9,4 +11,6 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface ProjectRepository extends JpaRepository<Project, Long> {}
+public interface ProjectRepository extends JpaRepository<Project, Long> {
+    Slice<Project> findSliceBy(Pageable pageable);
+}

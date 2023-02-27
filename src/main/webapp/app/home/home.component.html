@@ -1,15 +1,7 @@
 <div class="row">
-  <div class="col-md-3">
-    <span class="hipster img-fluid rounded"></span>
-  </div>
-
-  <div class="col-md-9">
+  <div class="col-md-12">
     <h1 class="display-4"><span jhiTranslate="home.title">Willkommen, Event Planner!</span></h1>
 
-    <p class="lead" jhiTranslate="home.subtitle">Dies ist Ihre Hauptseite</p>
-
-    <span id="home-logged-message" *ngIf="account" jhiTranslate="home.logged.message" [translateValues]="{ username: account.login }"
-      >Sie sind als Benutzer "{{ account.login }}" angemeldet.</span
-    >
+    <app-my-projects-list></app-my-projects-list>
   </div>
 </div>
