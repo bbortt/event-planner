@@ -16,150 +16,19 @@ plugins {
     //jhipster-needle-gradle-plugins - JHipster will add additional gradle plugins here
 }
 
+
 group = "io.github.bbortt.event.planner"
 version = "${version}"
 
 description = "Event planning tool."
 
-sourceCompatibility=17
-targetCompatibility=17
+sourceCompatibility = 17
+targetCompatibility = 17
 assert System.properties["java.specification.version"] == "17" || "18"
 
-apply from: "gradle/docker.gradle"
-apply from: "gradle/sonar.gradle"
-apply from: "gradle/swagger.gradle"
-//jhipster-needle-gradle-apply-from - JHipster will add additional gradle scripts to be applied here
 
-if (project.hasProperty("prod") || project.hasProperty("gae")) {
-    apply from: "gradle/profile_prod.gradle"
-} else {
-    apply from: "gradle/profile_dev.gradle"
-}
-
-if (project.hasProperty("gae")) {
-    apply plugin: 'maven'
-    apply plugin: 'org.springframework.boot.experimental.thin-launcher'
-    apply plugin: 'io.spring.dependency-management'
-
-    dependencyManagement {
-        imports {
-            mavenBom "tech.jhipster:jhipster-dependencies:${jhipsterDependenciesVersion}"
-        }
-    }
-    appengineStage.dependsOn thinResolve
-}
-
-
-idea {
-    module {
-        excludeDirs += files("node_modules")
-    }
-}
-
-eclipse {
-    sourceSets {
-        main {
-            java {
-                srcDirs += ["build/generated/sources/annotationProcessor/java/main"]
-            }
-        }
-    }
-}
-
-defaultTasks "bootRun"
-
-springBoot {
-    mainClass = "io.github.bbortt.event.planner.EventPlannerApp"
-}
-
-test {
-    useJUnitPlatform()
-    exclude "**/*IT*", "**/*IntTest*"
-    testLogging {
-        events 'FAILED', 'SKIPPED'
-    }
-    jvmArgs += '-Djava.security.egd=file:/dev/./urandom -Xmx512m'
-    // uncomment if the tests reports are not generated
-    // see https://github.com/jhipster/generator-jhipster/pull/2771 and https://github.com/jhipster/generator-jhipster/pull/4484
-    // ignoreFailures true
-    reports.html.enabled = false
-}
-
-modernizer {
-    failOnViolations = true
-    includeTestClasses = true
-}
-
-check.dependsOn integrationTest
-task testReport(type: TestReport) {
-    destinationDir = file("$buildDir/reports/tests")
-    reportOn test
-}
-
-task integrationTestReport(type: TestReport) {
-    destinationDir = file("$buildDir/reports/tests")
-    reportOn integrationTest
-}
-
-if (!project.hasProperty("runList")) {
-    project.ext.runList = "main"
-}
-
-project.ext.diffChangelogFile = "src/main/resources/config/liquibase/changelog/" + new Date().format("yyyyMMddHHmmss") + "_changelog.xml"
-
-liquibase {
-    activities {
-        main {
-            driver "org.postgresql.Driver"
-            url "jdbc:postgresql://localhost:5432/eventplanner"
-            username "eventplanner"
-            password ""
-            changeLogFile "src/main/resources/config/liquibase/master.xml"
-            defaultSchemaName ""
-            logLevel "debug"
-            classpath "src/main/resources/"
-        }
-        diffLog {
-            driver "org.postgresql.Driver"
-            url "jdbc:postgresql://localhost:5432/eventplanner"
-            username "eventplanner"
-            password ""
-            changeLogFile project.ext.diffChangelogFile
-            referenceUrl "hibernate:spring:io.github.bbortt.event.planner.domain?dialect=tech.jhipster.domain.util.FixedPostgreSQL10Dialect&hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy&hibernate.implicit_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy"
-            defaultSchemaName ""
-            logLevel "debug"
-            classpath "$buildDir/classes/java/main"
-            excludeObjects "oauth_access_token, oauth_approvals, oauth_client_details, oauth_client_token, oauth_code, oauth_refresh_token"
-        }
-    }
-
-    runList = project.ext.runList
-}
-
-gitProperties {
-    failOnNoGitDirectory = false
-    keys = ["git.branch", "git.commit.id.abbrev", "git.commit.id.describe"]
-}
-
-checkstyle {
-    toolVersion "${checkstyleVersion}"
-    configFile file("checkstyle.xml")
-    checkstyleTest.enabled = false
-}
-nohttp {
-    source.include "build.gradle", "README.md"
-}
-
-configurations {
-    providedRuntime
-    implementation.exclude module: "spring-boot-starter-tomcat"
-    all {
-        resolutionStrategy {
-            // Inherited version from Spring Boot can't be used because of regressions:
-            // To be removed as soon as spring-boot use the same version
-            force 'org.liquibase:liquibase-core:4.19.1'
-        }
-    }
+wrapper {
+    gradleVersion = "7.4.2"
 }
 
 repositories {
@@ -168,6 +37,21 @@ repositories {
     maven { url "https://repo.spring.io/release" }
     //jhipster-needle-gradle-repositories - JHipster will add additional repositories
 }
+
+
+if (project.hasProperty("prod") || project.hasProperty("gae")) {
+    apply from: "gradle/profile_prod.gradle"
+} else {
+    apply from: "gradle/profile_dev.gradle"
+}
+
+
+defaultTasks "bootRun"
+
+springBoot {
+    mainClass = "io.github.bbortt.event.planner.EventPlannerApp"
+}
+
 
 dependencies {
     // import JHipster dependencies BOM
@@ -227,9 +111,72 @@ dependencies {
     //jhipster-needle-gradle-dependency - JHipster will add additional dependencies here
 }
 
+compileJava.dependsOn processResources
+processResources.dependsOn bootBuildInfo
+
+configurations {
+    providedRuntime
+    implementation.exclude module: "spring-boot-starter-tomcat"
+    all {
+        resolutionStrategy {
+            // Inherited version from Spring Boot can't be used because of regressions:
+            // To be removed as soon as spring-boot use the same version
+            force "org.liquibase:liquibase-core:4.19.1"
+        }
+    }
+}
+
+
+eclipse {
+    sourceSets {
+        main {
+            java {
+                srcDirs += ["build/generated/sources/annotationProcessor/java/main"]
+            }
+        }
+    }
+}
+
+checkstyle {
+    toolVersion "${checkstyleVersion}"
+    configFile file("checkstyle.xml")
+    checkstyleTest.enabled = false
+}
+
+gitProperties {
+    failOnNoGitDirectory = false
+    keys = ["git.branch", "git.commit.id.abbrev", "git.commit.id.describe"]
+}
+
+modernizer {
+    failOnViolations = true
+    includeTestClasses = true
+}
+
+nohttp {
+    source.include "build.gradle", "README.md"
+}
+
+
+if (!project.hasProperty("runList")) {
+    project.ext.runList = "main"
+}
+
+
 if (project.hasProperty("gae")) {
+    apply plugin: "maven"
+    apply plugin: "org.springframework.boot.experimental.thin-launcher"
+    apply plugin: "io.spring.dependency-management"
+
+    dependencyManagement {
+        imports {
+            mavenBom "tech.jhipster:jhipster-dependencies:${jhipsterDependenciesVersion}"
+        }
+    }
+    appengineStage.dependsOn thinResolve
+
     task createPom {
-        def basePath = 'build/resources/main/META-INF/maven'
+        def basePath = "build/resources/main/META-INF/maven"
         doLast {
             pom {
                 withXml(dependencyManagement.pomConfigurer)
@@ -239,17 +186,70 @@ if (project.hasProperty("gae")) {
     bootJar.dependsOn = [createPom]
 }
 
-task cleanResources(type: Delete) {
-    delete "build/resources"
+
+task openApiGenerateBackend(type: org.openapitools.generator.gradle.plugin.tasks.GenerateTask) {
+    generatorName = "spring"
+    inputSpec = "$rootDir/src/main/resources/swagger/api.yml".toString()
+    outputDir = "$buildDir/openapi".toString()
+    apiPackage = "io.github.bbortt.event.planner.web.api"
+    modelPackage = "io.github.bbortt.event.planner.service.api.dto"
+    apiFilesConstrainedTo = [""]
+    modelFilesConstrainedTo = [""]
+    supportingFilesConstrainedTo = ["ApiUtil.java"]
+    configOptions = [
+        delegatePattern: "true",
+        useOptional    : "true",
+        useTags        : "true",
+        title          : "eventplanner"
+    ]
+    validateSpec = true
+    importMappings = [Problem: "org.zalando.problem.Problem"]
 }
 
-wrapper {
-    gradleVersion = "7.4.2"
+task openApiGenerateFrontend(type: org.openapitools.generator.gradle.plugin.tasks.GenerateTask) {
+    generatorName = "typescript-angular"
+    inputSpec = "$rootDir/src/main/resources/swagger/api.yml".toString()
+    outputDir = "$rootDir/src/main/webapp/app/api".toString()
+    validateSpec = true
 }
 
-task webapp_test(type: NpmTask, dependsOn: "npm_install") {
-    args = ["run", "webapp:test"]
+sourceSets {
+    main {
+        java {
+            srcDir file("${project.buildDir.path}/openapi/src/main/java")
+        }
+    }
 }
+
+compileJava.dependsOn "openApiGenerateBackend"
+compileJava.dependsOn "openApiGenerateFrontend"
+
+
+test {
+    useJUnitPlatform()
+    exclude "**/*IT*", "**/*IntTest*"
+    testLogging {
+        events "FAILED", "SKIPPED"
+    }
+    jvmArgs += "-Djava.security.egd=file:/dev/./urandom -Xmx512m"
+    // uncomment if the tests reports are not generated
+    // see https://github.com/jhipster/generator-jhipster/pull/2771 and https://github.com/jhipster/generator-jhipster/pull/4484
+    // ignoreFailures true
+    reports.html.enabled = false
+}
+
+task testReport(type: TestReport) {
+    destinationDir = file("$buildDir/reports/tests")
+    reportOn test
+}
+
+task integrationTestReport(type: TestReport) {
+    destinationDir = file("$buildDir/reports/tests")
+    reportOn integrationTest
+}
+
+check.dependsOn integrationTest
+
 
 node {
     version = "18.14.2"
@@ -257,19 +257,63 @@ node {
     download = project.hasProperty("nodeInstall")
 }
 
+task cleanResources(type: Delete) {
+    delete "build/resources"
+}
+
+task webapp_test(type: NpmTask, dependsOn: "npm_install") {
+    args = ["run", "webapp:test"]
+}
+
+
 // Copy local node and npm to a fixed location for npmw
 def fixedNode = tasks.register("fixedNode", Copy) {
     from nodeSetup
-    into 'build/node'
+    into "build/node"
 }
 tasks.named("nodeSetup").configure { finalizedBy fixedNode }
 
 def fixedNpm = tasks.register("fixedNpm", Copy) {
     from npmSetup
-    into 'build/node'
+    into "build/node"
 }
 tasks.named("npmSetup").configure { finalizedBy fixedNpm }
 
 test.dependsOn webapp_test
-compileJava.dependsOn processResources
-processResources.dependsOn bootBuildInfo
+
+
+project.ext.diffChangelogFile = "src/main/resources/config/liquibase/changelog/" + new Date().format("yyyyMMddHHmmss") + "_changelog.xml"
+
+liquibase {
+    activities {
+        main {
+            driver "org.postgresql.Driver"
+            url "jdbc:postgresql://localhost:5432/eventplanner"
+            username "eventplanner"
+            password ""
+            changeLogFile "src/main/resources/config/liquibase/master.xml"
+            defaultSchemaName ""
+            logLevel "debug"
+            classpath "src/main/resources/"
+        }
+        diffLog {
+            driver "org.postgresql.Driver"
+            url "jdbc:postgresql://localhost:5432/eventplanner"
+            username "eventplanner"
+            password ""
+            changeLogFile project.ext.diffChangelogFile
+            referenceUrl "hibernate:spring:io.github.bbortt.event.planner.domain?dialect=tech.jhipster.domain.util.FixedPostgreSQL10Dialect&hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy&hibernate.implicit_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy"
+            defaultSchemaName ""
+            logLevel "debug"
+            classpath "$buildDir/classes/java/main"
+            excludeObjects "oauth_access_token, oauth_approvals, oauth_client_details, oauth_client_token, oauth_code, oauth_refresh_token"
+        }
+    }
+
+    runList = project.ext.runList
+}
+
+
+apply from: "gradle/docker.gradle"
+apply from: "gradle/sonar.gradle"
+//jhipster-needle-gradle-apply-from - JHipster will add additional gradle scripts to be applied here
