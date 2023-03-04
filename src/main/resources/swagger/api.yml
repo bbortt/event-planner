@@ -9,16 +9,116 @@ servers:
     description: Development server
   - url: https://localhost:8080/api
     description: Development server with TLS Profile
-paths: {}
+tags:
+  - name: project
+    description: Project resource.
+paths:
+  /api/rest/v1/projects:
+    get:
+      tags:
+        - project
+      security:
+        - oauth
+        - openid
+      summary: Receive all projects to which the user has access to.
+      description: |
+        Return all projects to which the user has access to. E.g. he
+        has either created the project or received an invitation to it.
+        This will only return projects that are not archived.
+      operationId: readUserProjects
+      parameters:
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageNumber'
+        - $ref: '#/components/parameters/Sort'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PagingInformation'
+                  - type: object
+                    properties:
+                      contents:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Project'
 components:
+  parameters:
+    PageSize:
+      name: pageSize
+      in: query
+      description: |
+        Number of records to return. Must be greater than 0, else the
+        default value of 10 will be used.
+      schema:
+        type: integer
+        format: Int32
+    PageNumber:
+      name: pageNumber
+      in: query
+      description: Start index for paging.
+      schema:
+        type: integer
+        format: Int32
+    Sort:
+      name: sort
+      in: query
+      description: |
+        Attributes of the resource to sort by: A semicolon separated list.
+        Each attribute can optionally be followed by the sorting direction,
+        comma separated. Default is `id[,asc]`.
+      schema:
+        type: string
   responses:
     Problem:
-      description: error occurred - see status code and problem object for more information.
+      description: |
+        An error occurred - see status code and problem object for
+        more information.
       content:
         'application/problem+json':
           schema:
             $ref: 'https://opensource.zalando.com/problem/schema.yaml#/Problem'
-
+  schemas:
+    PagingInformation:
+      type: object
+      required:
+        - isLast
+      properties:
+        contents:
+          type: array
+          items: {}
+        totalElements:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+        number:
+          type: integer
+    Project:
+      type: object
+      required:
+        - name
+        - startDate
+        - endDate
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+          maxLength: 50
+          minLength: 1
+        description:
+          type: string
+          maxLength: 300
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
   securitySchemes:
     oauth:
       type: oauth2
@@ -36,5 +136,5 @@ components:
       description: OpenID Connect authentication with KeyCloak
       openIdConnectUrl: http://localhost:9080/realms/jhipster/.well-known/openid-configuration
 security:
-  - oauth: [jhipster, email, profile]
-  - openId: [jhipster, email, profile]
+  - oauth: [openid, profile, email, offline_access]
+  - openId: [openid, profile, email, offline_access]
