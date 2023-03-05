@@ -213,6 +213,10 @@ task openApiGenerateFrontend(type: org.openapitools.generator.gradle.plugin.task
     validateSpec = true
 }
 
+clean.doFirst {
+    delete "${rootDir}/src/main/webapp/app/api"
+}
+
 sourceSets {
     main {
         java {

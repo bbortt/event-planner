@@ -10,4 +10,4 @@ jest.conf.js
 postcss.config.js
 
 src/main/docker/
-src/main/webapp/api/
+src/main/webapp/app/api/
