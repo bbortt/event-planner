@@ -1,19 +1,17 @@
-# API-first development with OpenAPI
-# This file will be used at compile time to generate Spring-MVC endpoint stubs using openapi-generator
 openapi: '3.0.1'
 info:
-  title: 'eventplanner'
+  title: 'Event Planner'
   version: 0.0.1
 servers:
-  - url: http://localhost:8080/api
+  - url: http://localhost:8080/api/rest
     description: Development server
-  - url: https://localhost:8080/api
+  - url: https://localhost:8080/api/rest
     description: Development server with TLS Profile
 tags:
   - name: project
     description: Project resource.
 paths:
-  /api/rest/v1/projects:
+  /v1/projects:
     get:
       tags:
         - project
@@ -22,9 +20,8 @@ paths:
         - openid
       summary: Receive all projects to which the user has access to.
       description: |
-        Return all projects to which the user has access to. E.g. he
-        has either created the project or received an invitation to it.
-        This will only return projects that are not archived.
+        Return all projects to which the user has access to. E.g. he has either created the project or received an
+        invitation to it. This will only return projects that are not archived.
       operationId: readUserProjects
       parameters:
         - $ref: '#/components/parameters/PageSize'
@@ -36,22 +33,24 @@ paths:
           content:
             application/json:
               schema:
-                allOf:
-                  - $ref: '#/components/schemas/PagingInformation'
-                  - type: object
-                    properties:
-                      contents:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/Project'
+                type: object
+                properties:
+                  contents:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Project'
+          headers:
+            Has-Next-Page:
+              schema:
+                type: boolean
+              description: If a next page is available.
 components:
   parameters:
     PageSize:
       name: pageSize
       in: query
       description: |
-        Number of records to return. Must be greater than 0, else the
-        default value of 10 will be used.
+        Number of records to return. Must be greater than 0, else the default value of 10 will be used.
       schema:
         type: integer
         format: Int32
@@ -66,36 +65,21 @@ components:
       name: sort
       in: query
       description: |
-        Attributes of the resource to sort by: A semicolon separated list.
-        Each attribute can optionally be followed by the sorting direction,
+        Attributes of the resource to sort by. Each attribute can optionally be followed by the sorting direction,
         comma separated. Default is `id[,asc]`.
       schema:
-        type: string
+        type: array
+        items:
+          type: string
   responses:
     Problem:
       description: |
-        An error occurred - see status code and problem object for
-        more information.
+        An error occurred - see status code and problem object for more information.
       content:
         'application/problem+json':
           schema:
             $ref: 'https://opensource.zalando.com/problem/schema.yaml#/Problem'
   schemas:
-    PagingInformation:
-      type: object
-      required:
-        - isLast
-      properties:
-        contents:
-          type: array
-          items: {}
-        totalElements:
-          type: integer
-          format: int64
-        totalPages:
-          type: integer
-        number:
-          type: integer
     Project:
       type: object
       required:

@@ -8,6 +8,9 @@
         "createOrEditLabel": "Create or edit a Project",
         "notFound": "No Projects found"
       },
+      "mine": {
+        "title": "My Projects"
+      },
       "created": "A new Project is created with identifier {{ param }}",
       "updated": "A Project is updated with identifier {{ param }}",
       "deleted": "A Project is deleted with identifier {{ param }}",

@@ -25,7 +25,7 @@ bootRun {
     args = ["--spring.profiles.active=${profiles}"]
 }
 
-task webapp(type: NpmTask) {
+task webapp(type: NpmTask, dependsOn: "openApiGenerateFrontend") {
     inputs.property('appVersion', project.version)
     inputs.files("package-lock.json")
         .withPropertyName('package-lock')

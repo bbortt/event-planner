@@ -157,3 +157,8 @@ Desktop.ini
 ######################
 /coverage/
 /.nyc_output/
+
+######################
+# Generated from OpenAPI
+######################
+src/main/webapp/app/api

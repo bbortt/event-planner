@@ -1,5 +1,7 @@
 package io.github.bbortt.event.planner.web.rest.util;
 
+import static io.github.bbortt.event.planner.config.Constants.SLICE_HAS_NEXT_PAGE_HEADER;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpHeaders;
@@ -26,7 +28,7 @@ public class PaginationUtil {
 
     public static HttpHeaders generateSliceHttpHeaders(Slice<?> slice) {
         HttpHeaders headers = new HttpHeaders();
-        headers.add("X-Has-Next-Page", "" + slice.hasNext());
+        headers.add(SLICE_HAS_NEXT_PAGE_HEADER, "" + slice.hasNext());
         return headers;
     }
 }
