@@ -1,9 +1,13 @@
-node_modules/
-src/main/docker/
-jest.conf.js
-webpack/
 target/
 build/
+
 node/
+node_modules/
+webpack/
+
 commitlint.config.js
+jest.conf.js
 postcss.config.js
+
+src/main/docker/
+src/main/webapp/api/

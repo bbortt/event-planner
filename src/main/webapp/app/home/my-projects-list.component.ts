@@ -1,4 +1,4 @@
-import { HttpHeaders } from '@angular/common/http';
+import { HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Data, ParamMap, Router } from '@angular/router';
 
@@ -6,13 +6,13 @@ import { combineLatest, Observable, switchMap, tap } from 'rxjs';
 
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { ITEMS_PER_PAGE } from '../config/pagination.constants';
+import { Project, ProjectService as ApiProjectService, ReadUserProjects200Response } from '../api';
+
+import { HAS_NEXT_PAGE_HEADER, ITEMS_PER_PAGE } from '../config/pagination.constants';
 import { ASC, DEFAULT_SORT_DATA, DESC, SORT } from '../config/navigation.constants';
 
-import { ParseLinks } from '../core/util/parse-links.service';
-
 import { IProject } from '../entities/project/project.model';
-import { EntityArrayResponseType, ProjectService } from '../entities/project/service/project.service';
+import { ProjectService } from '../entities/project/service/project.service';
 
 @Component({
   selector: 'app-my-projects-list',
@@ -27,16 +27,14 @@ export class MyProjectsListComponent implements OnInit {
   ascending = true;
 
   itemsPerPage = ITEMS_PER_PAGE;
-  links: { [key: string]: number } = {
-    last: 0,
-  };
+  hasNextPage = true;
   page = 1;
 
   constructor(
     protected projectService: ProjectService,
+    protected apiProjectService: ApiProjectService,
     protected activatedRoute: ActivatedRoute,
     public router: Router,
-    protected parseLinks: ParseLinks,
     protected modalService: NgbModal
   ) {}
 
@@ -52,8 +50,8 @@ export class MyProjectsListComponent implements OnInit {
   }
 
   load(): void {
-    this.loadFromBackendWithRouteInformations().subscribe({
-      next: (res: EntityArrayResponseType) => {
+    this.loadFromBackendWithRouteInformation().subscribe({
+      next: (res: HttpResponse<ReadUserProjects200Response>) => {
         this.onResponseSuccess(res);
       },
     });
@@ -63,7 +61,7 @@ export class MyProjectsListComponent implements OnInit {
     this.handleNavigation(this.page, this.predicate, this.ascending);
   }
 
-  protected loadFromBackendWithRouteInformations(): Observable<EntityArrayResponseType> {
+  protected loadFromBackendWithRouteInformation(): Observable<HttpResponse<ReadUserProjects200Response>> {
     return combineLatest([this.activatedRoute.queryParamMap, this.activatedRoute.data]).pipe(
       tap(([params, data]) => this.fillComponentAttributeFromRoute(params, data)),
       switchMap(() => this.queryBackend(this.page, this.predicate, this.ascending))
@@ -76,28 +74,21 @@ export class MyProjectsListComponent implements OnInit {
     this.ascending = sort[1] === ASC;
   }
 
-  protected onResponseSuccess(response: EntityArrayResponseType): void {
+  protected onResponseSuccess(response: HttpResponse<ReadUserProjects200Response>): void {
     this.fillComponentAttributesFromResponseHeader(response.headers);
-    const dataFromBody = this.fillComponentAttributesFromResponseBody(response.body);
+    const dataFromBody = this.fillComponentAttributesFromResponseBody(response.body?.contents);
     this.projects = dataFromBody;
   }
 
-  protected fillComponentAttributesFromResponseBody(data: IProject[] | null): IProject[] {
-    return data ?? [];
+  protected fillComponentAttributesFromResponseBody(data: Array<Project> | undefined): IProject[] {
+    return (data ?? []).map(project => ({ id: project.id, name: project.name, description: project.description } as IProject));
   }
 
   protected fillComponentAttributesFromResponseHeader(headers: HttpHeaders): void {
-    const linkHeader = headers.get('link');
-    if (linkHeader) {
-      this.links = this.parseLinks.parse(linkHeader);
-    } else {
-      this.links = {
-        last: 0,
-      };
-    }
+    this.hasNextPage = Boolean(headers.get(HAS_NEXT_PAGE_HEADER) ?? 'false');
   }
 
-  protected queryBackend(page?: number, predicate?: string, ascending?: boolean): Observable<EntityArrayResponseType> {
+  protected queryBackend(page?: number, predicate?: string, ascending?: boolean): Observable<HttpResponse<ReadUserProjects200Response>> {
     this.isLoading = true;
     const pageToLoad: number = page ?? 1;
     const queryObject = {
@@ -105,7 +96,10 @@ export class MyProjectsListComponent implements OnInit {
       size: this.itemsPerPage,
       sort: this.getSortQueryParam(predicate, ascending),
     };
-    return this.projectService.query(queryObject).pipe(tap(() => (this.isLoading = false)));
+
+    return this.apiProjectService
+      .readUserProjects(this.itemsPerPage, pageToLoad, this.getSortQueryParam(predicate, ascending), 'response', false, {})
+      .pipe(tap(() => (this.isLoading = false)));
   }
 
   protected handleNavigation(page = this.page, predicate?: string, ascending?: boolean): void {

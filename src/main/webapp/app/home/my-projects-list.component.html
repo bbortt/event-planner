@@ -1,6 +1,6 @@
 <div>
   <h2 id="page-heading" data-cy="ProjectHeading">
-    <span jhiTranslate="eventplannerApp.project.home.title">Meine Projekte</span>
+    <span jhiTranslate="eventplannerApp.project.mine.title">Meine Projekte</span>
 
     <div class="d-flex justify-content-end">
       <button
@@ -96,12 +96,7 @@
           <th scope="col"></th>
         </tr>
       </thead>
-      <tbody
-        infinite-scroll
-        (scrolled)="loadPage(page + 1)"
-        [infiniteScrollDisabled]="page - 1 >= links['last']"
-        [infiniteScrollDistance]="0"
-      >
+      <tbody infinite-scroll (scrolled)="loadPage(page + 1)" [infiniteScrollDisabled]="!hasNextPage" [infiniteScrollDistance]="0">
         <tr *ngFor="let project of projects; trackBy: trackId" data-cy="entityTable">
           <td>
             <a [routerLink]="['/project', project.id, 'view']">{{ project.id }}</a>

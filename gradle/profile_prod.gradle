@@ -25,7 +25,7 @@ bootRun {
     args = ["--spring.profiles.active=${profiles}"]
 }
 
-task webapp(type: NpmTask, dependsOn: "npm_install") {
+task webapp(type: NpmTask, dependsOn: ["npm_install", "openApiGenerateFrontend"]) {
     args = ["run", "webapp:prod"]
     environment = [APP_VERSION: project.version]
 }
