@@ -11,6 +11,8 @@ public final class Constants {
     public static final String SYSTEM = "system";
     public static final String DEFAULT_LANGUAGE = "de";
 
+    public static final int DEFAULT_PAGE_SIZE = 10;
+    public static final String DEFAULT_SORT_DIRECTION_SPLIT = ",";
     public static final String SLICE_HAS_NEXT_PAGE_HEADER = "Has-Next-Page";
 
     private Constants() {}

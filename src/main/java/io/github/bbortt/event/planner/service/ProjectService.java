@@ -9,6 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
  * Service Implementation for managing {@link Project}.
  */
 @Service
-@Transactional
 public class ProjectService {
 
     private final Logger log = LoggerFactory.getLogger(ProjectService.class);
@@ -36,6 +37,8 @@ public class ProjectService {
      * @param projectDTO the entity to save.
      * @return the persisted entity.
      */
+    @Modifying
+    @Transactional
     public ProjectDTO save(ProjectDTO projectDTO) {
         log.debug("Request to save Project : {}", projectDTO);
         Project project = projectMapper.toEntity(projectDTO);
@@ -49,6 +52,8 @@ public class ProjectService {
      * @param projectDTO the entity to save.
      * @return the persisted entity.
      */
+    @Modifying
+    @Transactional
     public ProjectDTO update(ProjectDTO projectDTO) {
         log.debug("Request to update Project : {}", projectDTO);
         Project project = projectMapper.toEntity(projectDTO);
@@ -62,6 +67,8 @@ public class ProjectService {
      * @param projectDTO the entity to update partially.
      * @return the persisted entity.
      */
+    @Modifying
+    @Transactional
     public Optional<ProjectDTO> partialUpdate(ProjectDTO projectDTO) {
         log.debug("Request to partially update Project : {}", projectDTO);
 
@@ -105,8 +112,15 @@ public class ProjectService {
      *
      * @param id the id of the entity.
      */
+    @Modifying
+    @Transactional
     public void delete(Long id) {
         log.debug("Request to delete Project : {}", id);
         projectRepository.deleteById(id);
+    }
+
+    public Slice<ProjectDTO> findForCurrentUser(Pageable pageable) {
+        // TODO: Look for projects which current user is a member of
+        return projectRepository.findSlice(pageable).map(projectMapper::toDto);
     }
 }
