@@ -1,7 +1,6 @@
 package io.github.bbortt.event.planner.web.api;
 
 import io.github.bbortt.event.planner.service.api.dto.ReadUserProjects200Response;
-import io.github.bbortt.event.planner.web.rest.ProjectResource;
 import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -12,7 +11,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProjectApiDelegateImpl implements ProjectApiDelegate {
 
-    private final Logger logger = LoggerFactory.getLogger(ProjectResource.class);
+    private final Logger logger = LoggerFactory.getLogger(ProjectApiDelegateImpl.class);
 
     @Override
     public ResponseEntity<ReadUserProjects200Response> readUserProjects(

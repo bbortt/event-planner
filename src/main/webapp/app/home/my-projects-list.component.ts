@@ -91,12 +91,6 @@ export class MyProjectsListComponent implements OnInit {
   protected queryBackend(page?: number, predicate?: string, ascending?: boolean): Observable<HttpResponse<ReadUserProjects200Response>> {
     this.isLoading = true;
     const pageToLoad: number = page ?? 1;
-    const queryObject = {
-      page: pageToLoad - 1,
-      size: this.itemsPerPage,
-      sort: this.getSortQueryParam(predicate, ascending),
-    };
-
     return this.apiProjectService
       .readUserProjects(this.itemsPerPage, pageToLoad, this.getSortQueryParam(predicate, ascending), 'response', false, {})
       .pipe(tap(() => (this.isLoading = false)));
