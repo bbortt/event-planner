@@ -15,6 +15,7 @@ import { ProjectService } from '../service/project.service';
 export class ProjectUpdateComponent implements OnInit {
   isSaving = false;
   project: IProject | null = null;
+  isProjectArchived = false;
 
   editForm: ProjectFormGroup = this.projectFormService.createProjectFormGroup();
 
@@ -29,6 +30,8 @@ export class ProjectUpdateComponent implements OnInit {
       this.project = project;
       if (project) {
         this.updateForm(project);
+        this.isProjectArchived = project.archived;
+        this.editForm.disable();
       }
     });
   }
@@ -68,6 +71,6 @@ export class ProjectUpdateComponent implements OnInit {
 
   protected updateForm(project: IProject): void {
     this.project = project;
-    this.projectFormService.resetForm(this.editForm, project);
+    this.projectFormService.resetForm(this.editForm, this.project);
   }
 }

@@ -6,13 +6,13 @@ import { combineLatest, Observable, switchMap, tap } from 'rxjs';
 
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { Project, ProjectService as ApiProjectService, ReadUserProjects200Response } from '../api';
+import { Project, ProjectService as ApiProjectService, ReadUserProjects200Response } from '../../api';
 
-import { HAS_NEXT_PAGE_HEADER, ITEMS_PER_PAGE } from '../config/pagination.constants';
-import { ASC, DEFAULT_SORT_DATA, DESC, SORT } from '../config/navigation.constants';
+import { HAS_NEXT_PAGE_HEADER, ITEMS_PER_PAGE } from '../../config/pagination.constants';
+import { ASC, DEFAULT_SORT_DATA, DESC, SORT } from '../../config/navigation.constants';
 
-import { IProject } from '../entities/project/project.model';
-import { ProjectService } from '../entities/project/service/project.service';
+import { IProject } from '../../entities/project/project.model';
+import { ProjectService } from '../../entities/project/service/project.service';
 
 @Component({
   selector: 'app-my-projects-list',
