@@ -120,7 +120,8 @@ public class ProjectService {
     }
 
     public Slice<ProjectDTO> findForCurrentUser(Pageable pageable) {
+        log.debug("Request to get all Projects for current user");
         // TODO: Look for projects which current user is a member of
-        return projectRepository.findSlice(pageable).map(projectMapper::toDto);
+        return projectRepository.findSliceByCreatedByEquals("Euro", pageable).map(projectMapper::toDto);
     }
 }
