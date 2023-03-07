@@ -1,5 +1,8 @@
 name: Application CI
 on: [push]
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   gradle:
     name: 'Gradle Wrapper Validation'
