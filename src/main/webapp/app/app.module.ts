@@ -34,14 +34,14 @@ import { ActiveMenuDirective } from './layouts/navbar/active-menu.directive';
 import { NavbarComponent } from './layouts/navbar/navbar.component';
 import { PageRibbonComponent } from './layouts/profiles/page-ribbon.component';
 
-import { HomeModule } from './home/home.module';
+import { LandingPageModule } from './landing-page/landing-page.module';
 // jhipster-needle-angular-add-module-import JHipster will add new module here
 
 @NgModule({
   imports: [
     BrowserModule,
     SharedModule,
-    HomeModule,
+    LandingPageModule,
     // jhipster-needle-angular-add-module JHipster will add new module here
     AppRoutingModule,
     // Set this to true to enable service worker (PWA)

@@ -5,7 +5,7 @@
         "title": "Projekte",
         "refreshListLabel": "Liste aktualisieren",
         "createLabel": "Projekt erstellen",
-        "createOrEditLabel": "Projekt erstellen oder bearbeiten",
+        "editLabel": "Projekt bearbeiten",
         "notFound": "Keine Projekte gefunden"
       },
       "mine": {
@@ -27,6 +27,7 @@
       "startDate": "Start Datum",
       "endDate": "End Datum",
       "archived": "Archiviert",
+      "archivedFullText": "Dieses Projekt wurde archiviert!",
       "createdBy": "Erstellt von",
       "createdDate": "Erstellt am",
       "lastModifiedBy": "Zuletzt bearbeitet von",
