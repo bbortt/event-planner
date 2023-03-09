@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import dayjs from 'dayjs/esm';
-import { DATE_TIME_FORMAT } from 'app/config/input.constants';
+
+import { DATE_FORMAT } from 'app/config/input.constants';
+
 import { IProject, NewProject } from '../project.model';
 
 /**
@@ -19,18 +21,16 @@ type ProjectFormGroupInput = IProject | PartialWithRequiredKeyOf<NewProject>;
 /**
  * Type that converts some properties for forms.
  */
-type FormValueOf<T extends IProject | NewProject> = Omit<T, 'startDate' | 'endDate' | 'createdDate' | 'lastModifiedDate'> & {
+type FormValueOf<T extends IProject | NewProject> = Omit<T, 'startDate' | 'endDate'> & {
   startDate?: string | null;
   endDate?: string | null;
-  createdDate?: string | null;
-  lastModifiedDate?: string | null;
 };
 
 type ProjectFormRawValue = FormValueOf<IProject>;
 
 type NewProjectFormRawValue = FormValueOf<NewProject>;
 
-type ProjectFormDefaults = Pick<NewProject, 'id' | 'startDate' | 'endDate' | 'archived' | 'createdDate' | 'lastModifiedDate'>;
+type ProjectFormDefaults = Pick<NewProject, 'id' | 'startDate' | 'endDate' | 'archived'>;
 
 type ProjectFormGroupContent = {
   id: FormControl<ProjectFormRawValue['id'] | NewProject['id']>;
@@ -64,7 +64,7 @@ export class ProjectFormService {
         }
       ),
       token: new FormControl(projectRawValue.token, {
-        validators: [Validators.required],
+        validators: [],
       }),
       name: new FormControl(projectRawValue.name, {
         validators: [Validators.required, Validators.minLength(1), Validators.maxLength(63)],
@@ -78,7 +78,7 @@ export class ProjectFormService {
       endDate: new FormControl(projectRawValue.endDate, {
         validators: [Validators.required],
       }),
-      archived: new FormControl(projectRawValue.archived, {
+      archived: new FormControl(projectRawValue.archived ?? false, {
         validators: [Validators.required],
       }),
       createdBy: new FormControl(projectRawValue.createdBy),
@@ -110,18 +110,14 @@ export class ProjectFormService {
       startDate: currentTime,
       endDate: currentTime,
       archived: false,
-      createdDate: currentTime,
-      lastModifiedDate: currentTime,
     };
   }
 
   private convertProjectRawValueToProject(rawProject: ProjectFormRawValue | NewProjectFormRawValue): IProject | NewProject {
     return {
       ...rawProject,
-      startDate: dayjs(rawProject.startDate, DATE_TIME_FORMAT),
-      endDate: dayjs(rawProject.endDate, DATE_TIME_FORMAT),
-      createdDate: dayjs(rawProject.createdDate, DATE_TIME_FORMAT),
-      lastModifiedDate: dayjs(rawProject.lastModifiedDate, DATE_TIME_FORMAT),
+      startDate: dayjs(rawProject.startDate, DATE_FORMAT),
+      endDate: dayjs(rawProject.endDate, DATE_FORMAT),
     };
   }
 
@@ -130,10 +126,8 @@ export class ProjectFormService {
   ): ProjectFormRawValue | PartialWithRequiredKeyOf<NewProjectFormRawValue> {
     return {
       ...project,
-      startDate: project.startDate ? project.startDate.format(DATE_TIME_FORMAT) : undefined,
-      endDate: project.endDate ? project.endDate.format(DATE_TIME_FORMAT) : undefined,
-      createdDate: project.createdDate ? project.createdDate.format(DATE_TIME_FORMAT) : undefined,
-      lastModifiedDate: project.lastModifiedDate ? project.lastModifiedDate.format(DATE_TIME_FORMAT) : undefined,
+      startDate: project.startDate ? project.startDate.format(DATE_FORMAT) : undefined,
+      endDate: project.endDate ? project.endDate.format(DATE_FORMAT) : undefined,
     };
   }
 }
