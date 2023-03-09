@@ -15,7 +15,6 @@ public class ProjectDTO implements Serializable {
 
     private Long id;
 
-    @NotNull
     private UUID token;
 
     @NotNull
@@ -32,7 +31,7 @@ public class ProjectDTO implements Serializable {
     private ZonedDateTime endDate;
 
     @NotNull
-    private Boolean archived;
+    private Boolean archived = false;
 
     private String createdBy;
 

@@ -76,13 +76,12 @@ public class ProjectResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated projectDTO,
      * or with status {@code 400 (Bad Request)} if the projectDTO is not valid,
      * or with status {@code 500 (Internal Server Error)} if the projectDTO couldn't be updated.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/projects/{id}")
     public ResponseEntity<ProjectDTO> updateProject(
         @PathVariable(value = "id", required = false) final Long id,
         @Valid @RequestBody ProjectDTO projectDTO
-    ) throws URISyntaxException {
+    ) {
         log.debug("REST request to update Project : {}, {}", id, projectDTO);
         if (projectDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
@@ -111,13 +110,12 @@ public class ProjectResource {
      * or with status {@code 400 (Bad Request)} if the projectDTO is not valid,
      * or with status {@code 404 (Not Found)} if the projectDTO is not found,
      * or with status {@code 500 (Internal Server Error)} if the projectDTO couldn't be updated.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/projects/{id}", consumes = { "application/json", "application/merge-patch+json" })
     public ResponseEntity<ProjectDTO> partialUpdateProject(
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody ProjectDTO projectDTO
-    ) throws URISyntaxException {
+    ) {
         log.debug("REST request to partial update Project partially : {}, {}", id, projectDTO);
         if (projectDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");

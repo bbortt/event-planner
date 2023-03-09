@@ -1,6 +1,8 @@
 import dayjs from 'dayjs/esm';
 
-export interface IProject {
+import { AuditingEntity } from '../common/auditing-entity.model';
+
+export interface IProject extends AuditingEntity {
   id: number;
   token?: string | null;
   name?: string | null;
@@ -8,10 +10,6 @@ export interface IProject {
   startDate?: dayjs.Dayjs | null;
   endDate?: dayjs.Dayjs | null;
   archived?: boolean | null;
-  createdBy?: string | null;
-  createdDate?: dayjs.Dayjs | null;
-  lastModifiedBy?: string | null;
-  lastModifiedDate?: dayjs.Dayjs | null;
 }
 
 export type NewProject = Omit<IProject, 'id'> & { id: null };
