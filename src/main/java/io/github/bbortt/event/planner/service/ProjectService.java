@@ -5,6 +5,7 @@ import io.github.bbortt.event.planner.repository.ProjectRepository;
 import io.github.bbortt.event.planner.service.dto.ProjectDTO;
 import io.github.bbortt.event.planner.service.mapper.ProjectMapper;
 import java.util.Optional;
+import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -42,6 +43,10 @@ public class ProjectService {
     public ProjectDTO save(ProjectDTO projectDTO) {
         log.debug("Request to save Project : {}", projectDTO);
         Project project = projectMapper.toEntity(projectDTO);
+
+        // Sanitize new project
+        project.token(UUID.randomUUID()).archived(Boolean.FALSE);
+
         project = projectRepository.save(project);
         return projectMapper.toDto(project);
     }
