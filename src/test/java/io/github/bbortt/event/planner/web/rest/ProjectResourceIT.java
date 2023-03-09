@@ -2,6 +2,7 @@ package io.github.bbortt.event.planner.web.rest;
 
 import static io.github.bbortt.event.planner.web.rest.TestUtil.sameInstant;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.emptyString;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -88,8 +89,12 @@ class ProjectResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
+    public static Project createNewEntity(EntityManager em) {
+        return new Project().name(DEFAULT_NAME).description(DEFAULT_DESCRIPTION).startDate(DEFAULT_START_DATE).endDate(DEFAULT_END_DATE);
+    }
+
     public static Project createEntity(EntityManager em) {
-        Project project = new Project()
+        return new Project()
             .token(DEFAULT_TOKEN)
             .name(DEFAULT_NAME)
             .description(DEFAULT_DESCRIPTION)
@@ -98,7 +103,6 @@ class ProjectResourceIT {
             .archived(DEFAULT_ARCHIVED)
             .createdBy(CREATED_BY)
             .createdDate(CREATED_DATE);
-        return project;
     }
 
     /**
@@ -108,7 +112,7 @@ class ProjectResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Project createUpdatedEntity(EntityManager em) {
-        Project project = new Project()
+        return new Project()
             .token(UPDATED_TOKEN)
             .name(UPDATED_NAME)
             .description(UPDATED_DESCRIPTION)
@@ -119,7 +123,6 @@ class ProjectResourceIT {
             .createdDate(CREATED_DATE)
             .lastModifiedBy(MODIFIED_BY)
             .lastModifiedDate(MODIFIED_DATE);
-        return project;
     }
 
     @BeforeEach
@@ -131,8 +134,10 @@ class ProjectResourceIT {
     @Transactional
     void createProject() throws Exception {
         int databaseSizeBeforeCreate = projectRepository.findAll().size();
+
         // Create the Project
-        ProjectDTO projectDTO = projectMapper.toDto(project);
+        ProjectDTO projectDTO = projectMapper.toDto(createNewEntity(em));
+
         restProjectMockMvc
             .perform(
                 post(ENTITY_API_URL)
@@ -145,14 +150,8 @@ class ProjectResourceIT {
         // Validate the Project in the database
         List<Project> projectList = projectRepository.findAll();
         assertThat(projectList).hasSize(databaseSizeBeforeCreate + 1);
-        Project testProject = projectList.get(projectList.size() - 1);
-        assertThat(testProject.getToken()).isEqualTo(DEFAULT_TOKEN);
-        assertThat(testProject.getName()).isEqualTo(DEFAULT_NAME);
-        assertThat(testProject.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
-        assertThat(testProject.getStartDate()).isEqualTo(DEFAULT_START_DATE);
-        assertThat(testProject.getEndDate()).isEqualTo(DEFAULT_END_DATE);
-        assertThat(testProject.getArchived()).isEqualTo(DEFAULT_ARCHIVED);
-        assertThat(testProject.getCreatedBy()).isNotEmpty();
+
+        validateNewProject(projectList.get(projectList.size() - 1));
     }
 
     @Test
@@ -181,13 +180,15 @@ class ProjectResourceIT {
 
     @Test
     @Transactional
-    void checkTokenIsRequired() throws Exception {
-        int databaseSizeBeforeTest = projectRepository.findAll().size();
-        // set the field null
-        project.setToken(null);
+    void checkTokenIsIgnored() throws Exception {
+        Project newProject = createNewEntity(em);
+        // set a token
+        newProject.setToken(UUID.randomUUID());
 
-        // Create the Project, which fails.
-        ProjectDTO projectDTO = projectMapper.toDto(project);
+        // Create the Project, which passes
+        ProjectDTO projectDTO = projectMapper.toDto(newProject);
+
+        int databaseSizeBeforeCreate = projectRepository.findAll().size();
 
         restProjectMockMvc
             .perform(
@@ -196,10 +197,17 @@ class ProjectResourceIT {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtil.convertObjectToJsonBytes(projectDTO))
             )
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isCreated());
 
+        // Validate the Project in the database
         List<Project> projectList = projectRepository.findAll();
-        assertThat(projectList).hasSize(databaseSizeBeforeTest);
+        assertThat(projectList).hasSize(databaseSizeBeforeCreate + 1);
+
+        Project testProject = projectList.get(projectList.size() - 1);
+
+        validateNewProject(testProject);
+
+        assertThat(testProject.getToken().toString()).isNotEqualTo(newProject.getToken());
     }
 
     @Test
@@ -273,13 +281,15 @@ class ProjectResourceIT {
 
     @Test
     @Transactional
-    void checkArchivedIsRequired() throws Exception {
-        int databaseSizeBeforeTest = projectRepository.findAll().size();
-        // set the field null
-        project.setArchived(null);
+    void checkArchivedIsIgnored() throws Exception {
+        Project newProject = createNewEntity(em);
+        // archive the project
+        newProject.setArchived(Boolean.TRUE);
 
-        // Create the Project, which fails.
-        ProjectDTO projectDTO = projectMapper.toDto(project);
+        // Create the Project, which passes
+        ProjectDTO projectDTO = projectMapper.toDto(newProject);
+
+        int databaseSizeBeforeCreate = projectRepository.findAll().size();
 
         restProjectMockMvc
             .perform(
@@ -288,10 +298,24 @@ class ProjectResourceIT {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtil.convertObjectToJsonBytes(projectDTO))
             )
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isCreated());
 
+        // Validate the Project in the database
         List<Project> projectList = projectRepository.findAll();
-        assertThat(projectList).hasSize(databaseSizeBeforeTest);
+        assertThat(projectList).hasSize(databaseSizeBeforeCreate + 1);
+
+        validateNewProject(projectList.get(projectList.size() - 1));
+    }
+
+    private void validateNewProject(Project project) {
+        assertThat(project.getToken().toString()).isNotEmpty();
+        assertThat(project.getName()).isEqualTo(DEFAULT_NAME);
+        assertThat(project.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
+        assertThat(project.getStartDate()).isEqualTo(DEFAULT_START_DATE);
+        assertThat(project.getEndDate()).isEqualTo(DEFAULT_END_DATE);
+        assertThat(project.getArchived()).isEqualTo(DEFAULT_ARCHIVED);
+        assertThat(project.getCreatedBy()).isNotEmpty();
+        assertThat(project.getCreatedDate()).isNotNull();
     }
 
     @Test
@@ -311,7 +335,7 @@ class ProjectResourceIT {
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
             .andExpect(jsonPath("$.[*].startDate").value(hasItem(sameInstant(DEFAULT_START_DATE))))
             .andExpect(jsonPath("$.[*].endDate").value(hasItem(sameInstant(DEFAULT_END_DATE))))
-            .andExpect(jsonPath("$.[*].archived").value(hasItem(DEFAULT_ARCHIVED.booleanValue())));
+            .andExpect(jsonPath("$.[*].archived").value(hasItem(DEFAULT_ARCHIVED)));
     }
 
     @Test
@@ -331,7 +355,7 @@ class ProjectResourceIT {
             .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION))
             .andExpect(jsonPath("$.startDate").value(sameInstant(DEFAULT_START_DATE)))
             .andExpect(jsonPath("$.endDate").value(sameInstant(DEFAULT_END_DATE)))
-            .andExpect(jsonPath("$.archived").value(DEFAULT_ARCHIVED.booleanValue()));
+            .andExpect(jsonPath("$.archived").value(DEFAULT_ARCHIVED));
     }
 
     @Test
@@ -350,7 +374,7 @@ class ProjectResourceIT {
         int databaseSizeBeforeUpdate = projectRepository.findAll().size();
 
         // Update the project
-        Project updatedProject = projectRepository.findById(project.getId()).get();
+        Project updatedProject = projectRepository.findById(project.getId()).orElseThrow(IllegalArgumentException::new);
         // Disconnect from session so that the updates on updatedProject are not directly saved in db
         em.detach(updatedProject);
         updatedProject

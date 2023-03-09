@@ -31,3 +31,11 @@ Make sure that you export the following environment variables with your secret v
 - `APPL_OIDC_CLIENT_ID`
 - `APPL_OIDC_CLIENT_SECRET`
 - `APPL_OIDC_ISSUER_URI`
+
+## Testing
+
+### Running Tests on localhost
+
+If you want to run tests on localhost, make sure you have Docker available. Execute the backend tests
+with `SPRING_PROFILES_ACTIVE=testdev` to start all required dependencies (e.g. Redis and PostgreSQL) inside test
+containers.
