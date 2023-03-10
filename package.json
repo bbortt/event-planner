@@ -117,7 +117,7 @@
     "@types/sockjs-client": "1.5.1",
     "@typescript-eslint/eslint-plugin": "5.36.1",
     "@typescript-eslint/parser": "5.54.1",
-    "browser-sync": "2.27.10",
+    "browser-sync": "2.28.3",
     "browser-sync-webpack-plugin": "2.3.0",
     "concurrently": "7.6.0",
     "copy-webpack-plugin": "11.0.0",
