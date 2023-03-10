@@ -162,3 +162,4 @@ Desktop.ini
 # Generated from OpenAPI
 ######################
 src/main/webapp/app/api
+!src/main/webapp/app/api/**/*.spec.ts
