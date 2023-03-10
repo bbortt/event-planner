@@ -23,6 +23,7 @@ describe('Project Service', () => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
     });
+
     expectedResult = null;
     service = TestBed.inject(ProjectService);
     httpMock = TestBed.inject(HttpTestingController);

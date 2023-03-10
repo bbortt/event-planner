@@ -213,9 +213,13 @@ task openApiGenerateFrontend(type: org.openapitools.generator.gradle.plugin.task
     validateSpec = true
 }
 
-clean.doFirst {
-    delete "${rootDir}/src/main/webapp/app/api"
+task cleanApi(type: Delete) {
+    delete fileTree("${rootDir}/src/main/webapp/app/api") {
+        include "**/*"
+        exclude "**/*.spec.ts"
+    }
 }
+clean.dependsOn cleanApi
 
 sourceSets {
     main {

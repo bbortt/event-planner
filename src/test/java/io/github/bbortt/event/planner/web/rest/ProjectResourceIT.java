@@ -207,7 +207,7 @@ class ProjectResourceIT {
 
         validateNewProject(testProject);
 
-        assertThat(testProject.getToken().toString()).isNotEqualTo(newProject.getToken());
+        assertThat(testProject.getToken()).isNotEqualTo(newProject.getToken());
     }
 
     @Test
