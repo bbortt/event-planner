@@ -20,11 +20,11 @@ public class Project extends AbstractAuditingEntity<Project, Long> implements Se
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
-    @Column(name = "id")
+    @Column(name = "id", nullable = false, updatable = false)
     private Long id;
 
     @NotNull
-    @Column(name = "token", nullable = false, unique = true)
+    @Column(name = "token", nullable = false, unique = true, updatable = false)
     private UUID token;
 
     @NotNull
@@ -37,11 +37,11 @@ public class Project extends AbstractAuditingEntity<Project, Long> implements Se
     private String description;
 
     @NotNull
-    @Column(name = "start_date", nullable = false)
+    @Column(name = "start_date", nullable = false, updatable = false)
     private ZonedDateTime startDate;
 
     @NotNull
-    @Column(name = "end_date", nullable = false)
+    @Column(name = "end_date", nullable = false, updatable = false)
     private ZonedDateTime endDate;
 
     @NotNull

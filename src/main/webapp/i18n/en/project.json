@@ -3,6 +3,7 @@
     "project": {
       "home": {
         "title": "Projects",
+        "loadMoreLabel": "Load more",
         "refreshListLabel": "Refresh list",
         "createLabel": "Create a new Project",
         "editLabel": "Edit a Project",

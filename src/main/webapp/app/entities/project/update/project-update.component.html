@@ -1,7 +1,7 @@
 <div class="d-flex justify-content-center">
   <div class="col-8">
     <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
-      <h2 id="jhi-project-heading" data-cy="ProjectCreateUpdateHeading" [ngSwitch]="project?.id">
+      <h2 id="jhi-project-heading" data-cy="ProjectCreateUpdateHeading" [ngSwitch]="!!project?.id">
         <span *ngSwitchCase="true" jhiTranslate="eventplannerApp.project.home.editLabel">Projekt bearbeiten</span>
         <span *ngSwitchDefault jhiTranslate="eventplannerApp.project.home.createLabel">Projekt erstellen</span>
       </h2>
@@ -102,18 +102,16 @@
 
         <div class="row mb-3">
           <label class="form-label" jhiTranslate="eventplannerApp.project.startDate" for="field_startDate">Start Date</label>
-          <div class="d-flex">
-            <input
-              id="field_startDate"
-              data-cy="startDate"
-              type="date"
-              class="form-control"
-              name="startDate"
-              formControlName="startDate"
-              placeholder="YYYY-MM-DD"
-              [readOnly]="isProjectArchived"
-            />
-          </div>
+          <input
+            id="field_startDate"
+            data-cy="startDate"
+            type="date"
+            class="form-control"
+            name="startDate"
+            formControlName="startDate"
+            placeholder="YYYY-MM-DD"
+            [readOnly]="isProjectArchived"
+          />
           <div *ngIf="editForm.get('startDate')!.invalid && (editForm.get('startDate')!.dirty || editForm.get('startDate')!.touched)">
             <small
               class="form-text text-danger"
@@ -134,18 +132,16 @@
 
         <div class="row mb-3">
           <label class="form-label" jhiTranslate="eventplannerApp.project.endDate" for="field_endDate">End Date</label>
-          <div class="d-flex">
-            <input
-              id="field_endDate"
-              data-cy="endDate"
-              type="date"
-              class="form-control"
-              name="endDate"
-              formControlName="endDate"
-              placeholder="YYYY-MM-DD"
-              [readOnly]="isProjectArchived"
-            />
-          </div>
+          <input
+            id="field_endDate"
+            data-cy="endDate"
+            type="date"
+            class="form-control"
+            name="endDate"
+            formControlName="endDate"
+            placeholder="YYYY-MM-DD"
+            [readOnly]="isProjectArchived"
+          />
           <div *ngIf="editForm.get('endDate')!.invalid && (editForm.get('endDate')!.dirty || editForm.get('endDate')!.touched)">
             <small
               class="form-text text-danger"

@@ -31,9 +31,21 @@ export class ProjectUpdateComponent implements OnInit {
       if (project) {
         this.updateForm(project);
         this.isProjectArchived = project.archived;
-        this.editForm.disable();
+
+        if (this.isProjectArchived) {
+          this.editForm.disable();
+        } else if (project.id) {
+          this.disableInformativeFields();
+        }
       }
     });
+  }
+
+  private disableInformativeFields() {
+    this.editForm.controls.id.disable();
+    this.editForm.controls.token.disable();
+    this.editForm.controls.startDate.disable();
+    this.editForm.controls.endDate.disable();
   }
 
   previousState(): void {
