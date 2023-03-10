@@ -2,6 +2,7 @@ package io.github.bbortt.event.planner.web.rest.util;
 
 import static io.github.bbortt.event.planner.config.Constants.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -15,6 +16,9 @@ import org.springframework.web.util.UriComponentsBuilder;
  */
 @Component
 public class PaginationUtil {
+
+    private static final String ORDER_ASC_LITERAL = "asc";
+    private static final String ORDER_DESC_LITERAL = "desc";
 
     private PaginationUtil() {}
 
@@ -43,11 +47,14 @@ public class PaginationUtil {
         String defaultSortingPropertyName
     ) {
         PageRequest pageRequest = PageRequest.ofSize(pageSizeOrDefault(pageSize));
-        pageNumber.ifPresent(pageRequest::withPage);
-        sort
-            .filter(Predicate.not(List::isEmpty))
-            .ifPresentOrElse(s -> pageRequest.withSort(parseSort(s)), () -> Sort.by(defaultSortingPropertyName).descending());
-        return pageRequest;
+
+        if (pageNumber.isPresent()) {
+            pageRequest = pageRequest.withPage(pageNumber.get());
+        }
+
+        return pageRequest.withSort(
+            sort.filter(Predicate.not(List::isEmpty)).map(this::parseSort).orElseGet(() -> Sort.by(defaultSortingPropertyName).descending())
+        );
     }
 
     private Integer pageSizeOrDefault(Optional<Integer> pageSize) {
@@ -55,26 +62,25 @@ public class PaginationUtil {
     }
 
     private Sort parseSort(List<String> sort) {
-        List<Sort.Order> orders = sort.stream().map(this::parseOrder).filter(Optional::isPresent).map(Optional::get).toList();
+        List<Sort.Order> orders = new ArrayList<>();
+
+        for (int i = 0; i < sort.size(); i++) {
+            if (sort.size() > i + 1 && isDirection(sort.get(i + 1))) {
+                if (sort.get(i + 1).equals(ORDER_ASC_LITERAL)) {
+                    orders.add(Sort.Order.asc(sort.get(i)));
+                } else {
+                    orders.add(Sort.Order.desc(sort.get(i)));
+                }
+                i++;
+            } else {
+                orders.add(Sort.Order.desc(sort.get(i)));
+            }
+        }
 
         return Sort.by(orders);
     }
 
-    private Optional<Sort.Order> parseOrder(String order) {
-        String[] attributeAndDirection = order.split(DEFAULT_SORT_DIRECTION_SPLIT);
-        switch (attributeAndDirection.length) {
-            case 1:
-                return Optional.of(Sort.Order.desc(attributeAndDirection[0]));
-            case 2:
-                if (attributeAndDirection[1].equals("asc")) {
-                    return Optional.of(Sort.Order.asc(attributeAndDirection[0]));
-                } else if (attributeAndDirection[1].equals("desc")) {
-                    return Optional.of(Sort.Order.desc(attributeAndDirection[0]));
-                } else {
-                    throw new IllegalArgumentException(String.format("Invalid order '%s'!", order));
-                }
-            default:
-                return Optional.empty();
-        }
+    private boolean isDirection(String possibleDirection) {
+        return ORDER_ASC_LITERAL.equals(possibleDirection) || ORDER_DESC_LITERAL.equals(possibleDirection);
     }
 }

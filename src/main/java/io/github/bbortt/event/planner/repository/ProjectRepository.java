@@ -12,5 +12,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, Long> {
-    Slice<Project> findSliceByCreatedByEquals(@Param("createdBy") String createdBy, Pageable pageable);
+    Slice<Project> findAllByCreatedByEquals(@Param("createdBy") String createdBy, Pageable pageable);
 }
