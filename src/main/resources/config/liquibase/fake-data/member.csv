@@ -1,0 +1,11 @@
+id;accepted;accepted_by;accepted_date;project_id
+1;true;Bedfordshire Frozen;2023-03-12T14:45:37;1
+2;false;Corporate Intranet AGP;2023-03-12T11:43:00;2
+3;true;Litauen;2023-03-11T21:49:10;3
+4;false;Kolumbien;2023-03-12T16:26:51;4
+5;false;Analyst;2023-03-12T18:57:57;5
+6;true;Awesome;2023-03-12T08:10:53;6
+7;false;services mint;2023-03-12T18:04:52;7
+8;true;Ball;2023-03-11T23:21:08;8
+9;false;Checking;2023-03-12T14:54:55;9
+10;true;user-facing transmitting withdrawal;2023-03-11T21:47:11;10

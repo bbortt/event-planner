@@ -1,11 +1,14 @@
 package io.github.bbortt.event.planner.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.io.Serializable;
-import java.time.ZonedDateTime;
+import java.time.Instant;
+import java.util.Set;
 import java.util.UUID;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import org.mapstruct.Mapping;
 
 /**
  * A Project.
@@ -18,9 +21,9 @@ public class Project extends AbstractAuditingEntity<Project, Long> implements Se
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator")
     @Column(name = "id", nullable = false, updatable = false)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
     private Long id;
 
     @NotNull
@@ -38,17 +41,21 @@ public class Project extends AbstractAuditingEntity<Project, Long> implements Se
 
     @NotNull
     @Column(name = "start_date", nullable = false, updatable = false)
-    private ZonedDateTime startDate;
+    private Instant startDate;
 
     @NotNull
     @Column(name = "end_date", nullable = false, updatable = false)
-    private ZonedDateTime endDate;
+    private Instant endDate;
 
     @NotNull
     @Column(name = "archived", nullable = false)
     private Boolean archived;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
+
+    @JsonBackReference
+    @OneToMany(mappedBy = "project")
+    private Set<Member> members;
 
     @Override
     public Long getId() {
@@ -103,29 +110,29 @@ public class Project extends AbstractAuditingEntity<Project, Long> implements Se
         this.description = description;
     }
 
-    public ZonedDateTime getStartDate() {
+    public Instant getStartDate() {
         return this.startDate;
     }
 
-    public Project startDate(ZonedDateTime startDate) {
+    public Project startDate(Instant startDate) {
         this.setStartDate(startDate);
         return this;
     }
 
-    public void setStartDate(ZonedDateTime startDate) {
+    public void setStartDate(Instant startDate) {
         this.startDate = startDate;
     }
 
-    public ZonedDateTime getEndDate() {
+    public Instant getEndDate() {
         return this.endDate;
     }
 
-    public Project endDate(ZonedDateTime endDate) {
+    public Project endDate(Instant endDate) {
         this.setEndDate(endDate);
         return this;
     }
 
-    public void setEndDate(ZonedDateTime endDate) {
+    public void setEndDate(Instant endDate) {
         this.endDate = endDate;
     }
 
@@ -143,6 +150,14 @@ public class Project extends AbstractAuditingEntity<Project, Long> implements Se
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+
+    public Set<Member> getMembers() {
+        return members;
+    }
+
+    public void setMembers(Set<Member> members) {
+        this.members = members;
+    }
 
     @Override
     public boolean equals(Object o) {

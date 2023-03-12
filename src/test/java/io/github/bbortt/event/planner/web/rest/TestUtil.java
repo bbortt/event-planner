@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.List;
@@ -102,6 +103,46 @@ public final class TestUtil {
      */
     public static ZonedDateTimeMatcher sameInstant(ZonedDateTime date) {
         return new ZonedDateTimeMatcher(date);
+    }
+
+    /**
+     * A matcher that tests that the examined string represents the same instant as the reference instant.
+     */
+    public static class InstantMatcher extends TypeSafeDiagnosingMatcher<String> {
+
+        private final Instant date;
+
+        public InstantMatcher(Instant date) {
+            this.date = date;
+        }
+
+        @Override
+        protected boolean matchesSafely(String item, Description mismatchDescription) {
+            try {
+                if (!date.equals(Instant.parse(item))) {
+                    mismatchDescription.appendText("was ").appendValue(item);
+                    return false;
+                }
+                return true;
+            } catch (DateTimeParseException e) {
+                mismatchDescription.appendText("was ").appendValue(item).appendText(", which could not be parsed as a ZonedDateTime");
+                return false;
+            }
+        }
+
+        @Override
+        public void describeTo(Description description) {
+            description.appendText("a String representing the same Instant as ").appendValue(date);
+        }
+    }
+
+    /**
+     * Creates a matcher that matches when the examined string represents the same instant as the reference instant.
+     *
+     * @param date the reference instant against which the examined string is checked.
+     */
+    public static InstantMatcher sameInstant(Instant date) {
+        return new InstantMatcher(date);
     }
 
     /**

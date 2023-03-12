@@ -23,12 +23,12 @@
     },
     {
       "fieldName": "startDate",
-      "fieldType": "ZonedDateTime",
+      "fieldType": "Instant",
       "fieldValidateRules": ["required"]
     },
     {
       "fieldName": "endDate",
-      "fieldType": "ZonedDateTime",
+      "fieldType": "Instant",
       "fieldValidateRules": ["required"]
     },
     {
