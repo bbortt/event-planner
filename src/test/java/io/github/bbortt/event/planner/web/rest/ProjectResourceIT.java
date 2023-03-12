@@ -38,7 +38,7 @@ import org.springframework.transaction.annotation.Transactional;
 @IntegrationTest
 @AutoConfigureMockMvc
 @WithMockUser
-class ProjectResourceIT {
+public class ProjectResourceIT {
 
     private static final UUID DEFAULT_TOKEN = UUID.randomUUID();
     private static final UUID UPDATED_TOKEN = UUID.randomUUID();
