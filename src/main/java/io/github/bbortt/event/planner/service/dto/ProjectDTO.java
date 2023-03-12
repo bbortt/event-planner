@@ -2,7 +2,6 @@ package io.github.bbortt.event.planner.service.dto;
 
 import java.io.Serializable;
 import java.time.Instant;
-import java.time.ZonedDateTime;
 import java.util.Objects;
 import java.util.UUID;
 import javax.validation.constraints.*;
@@ -25,13 +24,12 @@ public class ProjectDTO implements Serializable {
     private String description;
 
     @NotNull
-    private ZonedDateTime startDate;
+    private Instant startDate;
 
     @NotNull
-    private ZonedDateTime endDate;
+    private Instant endDate;
 
-    @NotNull
-    private Boolean archived = false;
+    private Boolean archived;
 
     private String createdBy;
 
@@ -73,19 +71,19 @@ public class ProjectDTO implements Serializable {
         this.description = description;
     }
 
-    public ZonedDateTime getStartDate() {
+    public Instant getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(ZonedDateTime startDate) {
+    public void setStartDate(Instant startDate) {
         this.startDate = startDate;
     }
 
-    public ZonedDateTime getEndDate() {
+    public Instant getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(ZonedDateTime endDate) {
+    public void setEndDate(Instant endDate) {
         this.endDate = endDate;
     }
 

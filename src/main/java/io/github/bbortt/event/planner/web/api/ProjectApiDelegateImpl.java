@@ -5,6 +5,8 @@ import io.github.bbortt.event.planner.service.api.dto.Project;
 import io.github.bbortt.event.planner.service.api.dto.ReadUserProjects200Response;
 import io.github.bbortt.event.planner.service.dto.ProjectDTO;
 import io.github.bbortt.event.planner.web.rest.util.PaginationUtil;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -51,7 +53,7 @@ public class ProjectApiDelegateImpl implements ProjectApiDelegate {
             .id(projectDTO.getId())
             .name(projectDTO.getName())
             .description(projectDTO.getDescription())
-            .startDate(projectDTO.getStartDate().toLocalDate())
-            .endDate(projectDTO.getEndDate().toLocalDate());
+            .startDate(LocalDateTime.ofInstant(projectDTO.getStartDate(), ZoneId.systemDefault()).toLocalDate())
+            .endDate(LocalDateTime.ofInstant(projectDTO.getEndDate(), ZoneId.systemDefault()).toLocalDate());
     }
 }
