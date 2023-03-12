@@ -41,13 +41,6 @@ export class ProjectUpdateComponent implements OnInit {
     });
   }
 
-  private disableInformativeFields() {
-    this.editForm.controls.id.disable();
-    this.editForm.controls.token.disable();
-    this.editForm.controls.startDate.disable();
-    this.editForm.controls.endDate.disable();
-  }
-
   previousState(): void {
     window.history.back();
   }
@@ -84,5 +77,12 @@ export class ProjectUpdateComponent implements OnInit {
   protected updateForm(project: IProject): void {
     this.project = project;
     this.projectFormService.resetForm(this.editForm, this.project);
+  }
+
+  private disableInformativeFields(): void {
+    this.editForm.controls.id.disable();
+    this.editForm.controls.token.disable();
+    this.editForm.controls.startDate.disable();
+    this.editForm.controls.endDate.disable();
   }
 }

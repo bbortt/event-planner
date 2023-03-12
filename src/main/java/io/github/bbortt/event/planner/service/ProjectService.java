@@ -2,6 +2,7 @@ package io.github.bbortt.event.planner.service;
 
 import io.github.bbortt.event.planner.domain.Project;
 import io.github.bbortt.event.planner.repository.ProjectRepository;
+import io.github.bbortt.event.planner.security.SecurityUtils;
 import io.github.bbortt.event.planner.service.dto.ProjectDTO;
 import io.github.bbortt.event.planner.service.mapper.ProjectMapper;
 import java.util.Optional;
@@ -12,6 +13,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -124,9 +127,16 @@ public class ProjectService {
         projectRepository.deleteById(id);
     }
 
+    @Transactional(readOnly = true)
+    @PreAuthorize("T(io.github.bbortt.event.planner.security.SecurityUtils).isAuthenticated()")
     public Slice<ProjectDTO> findForCurrentUser(Pageable pageable) {
         log.debug("Request to get all Projects for current user");
-        // TODO: Look for projects which current user is a member of
-        return projectRepository.findAllByCreatedByEquals("Euro", pageable).map(projectMapper::toDto);
+        String login = SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new IllegalArgumentException("Cannot find current user!"));
+
+        if (log.isTraceEnabled()) {
+            log.trace("Current login is '{}'", login);
+        }
+
+        return projectRepository.findAllByCreatedByEquals(login, pageable).map(projectMapper::toDto);
     }
 }

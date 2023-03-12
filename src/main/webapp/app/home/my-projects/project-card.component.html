@@ -3,7 +3,7 @@
     <h5 class="card-title">
       {{ project.name }}
     </h5>
-    <p class="card-text mt-1 p-1 rounded text-bg-light">{{ project.description }}</p>
+    <p class="card-text mt-1 p-1 rounded" [class.text-bg-light]="project.description">{{ project.description }}</p>
     <div class="btn-group">
       <button type="submit" [routerLink]="['/project', project.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
         <fa-icon icon="pencil-alt"></fa-icon>
