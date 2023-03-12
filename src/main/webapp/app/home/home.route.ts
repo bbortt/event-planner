@@ -10,7 +10,7 @@ export const HOME_ROUTES: Route[] = [
     component: HomeComponent,
     data: {
       pageTitle: 'home.title',
-      [DEFAULT_SORT_DATA]: 'createdDate',
+      [DEFAULT_SORT_DATA]: 'startDate',
     },
   },
 ];

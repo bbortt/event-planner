@@ -2,9 +2,7 @@ package io.github.bbortt.event.planner.web.rest.util;
 
 import static io.github.bbortt.event.planner.config.Constants.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Predicate;
 import org.springframework.data.domain.*;
 import org.springframework.http.HttpHeaders;
@@ -19,8 +17,6 @@ public class PaginationUtil {
 
     private static final String ORDER_ASC_LITERAL = "asc";
     private static final String ORDER_DESC_LITERAL = "desc";
-
-    private PaginationUtil() {}
 
     /**
      * Static reference to {@link tech.jhipster.web.util.PaginationUtil#generatePaginationHttpHeaders(UriComponentsBuilder, Page)}. Mimics an {@code extends tech.jhipster.web.util.PaginationUtil}.
@@ -53,8 +49,18 @@ public class PaginationUtil {
         }
 
         return pageRequest.withSort(
-            sort.filter(Predicate.not(List::isEmpty)).map(this::parseSort).orElseGet(() -> Sort.by(defaultSortingPropertyName).descending())
+            sort
+                .filter(Predicate.not(List::isEmpty))
+                .map(this::splitSortingInformation)
+                .map(this::parseSort)
+                .orElseGet(() -> Sort.by(defaultSortingPropertyName).descending())
         );
+    }
+
+    private List<String> splitSortingInformation(List<String> sorts) {
+        List<String> splittedSortings = new ArrayList<>();
+        sorts.forEach(sort -> splittedSortings.addAll(Arrays.asList(sort.split(","))));
+        return splittedSortings;
     }
 
     private Integer pageSizeOrDefault(Optional<Integer> pageSize) {

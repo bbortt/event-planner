@@ -76,28 +76,6 @@ export class MyProjectsListComponent implements OnInit {
     this.projects = this.createTriplets(dataFromBody);
   }
 
-  private createTriplets(projects: IProject[]): IProject[][] {
-    const triplets: IProject[][] = [];
-
-    if (!projects) {
-      return triplets;
-    }
-
-    for (let i = 0; i < this.page; i++) {
-      triplets.push([]);
-
-      for (let j = 0; j < this.itemsPerPage; j++) {
-        const currentIndex = i * j + j;
-
-        if (projects?.length > currentIndex) {
-          triplets[i].push(projects![currentIndex]);
-        }
-      }
-    }
-
-    return triplets;
-  }
-
   protected fillComponentAttributesFromResponseBody(data: Array<Project> | undefined): IProject[] {
     return (data ?? []).map(
       project =>
@@ -128,5 +106,23 @@ export class MyProjectsListComponent implements OnInit {
     } else {
       return [predicate + encodeURI(',') + ascendingQueryParam];
     }
+  }
+
+  private createTriplets(projects: IProject[]): IProject[][] {
+    const triplets: IProject[][] = [];
+
+    for (let i = 0; i < this.page; i++) {
+      triplets.push([]);
+
+      for (let j = 0; j < this.itemsPerPage; j++) {
+        const currentIndex = i * j + j;
+
+        if (projects.length > currentIndex) {
+          triplets[i].push(projects[currentIndex]);
+        }
+      }
+    }
+
+    return triplets;
   }
 }
