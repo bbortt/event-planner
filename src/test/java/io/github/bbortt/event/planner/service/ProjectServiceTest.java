@@ -78,7 +78,7 @@ class ProjectServiceTest {
         assertEquals(projectDTO, result);
 
         verify(projectMock).token(any(UUID.class));
-        verify(projectMock).archived(eq(Boolean.FALSE));
+        verify(projectMock).archived(Boolean.FALSE);
         verify(projectRepositoryMock).save(projectMock);
     }
 
