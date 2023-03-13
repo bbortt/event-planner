@@ -34,7 +34,7 @@ type MemberFormGroupContent = {
   accepted: FormControl<MemberFormRawValue['accepted']>;
   acceptedBy: FormControl<MemberFormRawValue['acceptedBy']>;
   acceptedDate: FormControl<MemberFormRawValue['acceptedDate']>;
-  member_of: FormControl<MemberFormRawValue['member_of']>;
+  project: FormControl<MemberFormRawValue['project']>;
 };
 
 export type MemberFormGroup = FormGroup<MemberFormGroupContent>;
@@ -59,7 +59,7 @@ export class MemberFormService {
       }),
       acceptedBy: new FormControl(memberRawValue.acceptedBy),
       acceptedDate: new FormControl(memberRawValue.acceptedDate),
-      member_of: new FormControl(memberRawValue.member_of, {
+      project: new FormControl(memberRawValue.project, {
         validators: [Validators.required],
       }),
     });

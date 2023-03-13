@@ -57,23 +57,23 @@
         </div>
 
         <div class="row mb-3">
-          <label class="form-label" jhiTranslate="eventplannerApp.member.member_of" for="field_member_of">Member Of</label>
+          <label class="form-label" jhiTranslate="eventplannerApp.member.project" for="field_project">Member Of</label>
           <select
             class="form-control"
-            id="field_member_of"
-            data-cy="member_of"
-            name="member_of"
-            formControlName="member_of"
+            id="field_project"
+            data-cy="project"
+            name="project"
+            formControlName="project"
             [compareWith]="compareProject"
           >
-            <option *ngIf="!editForm.get('member_of')!.value" [ngValue]="null" selected></option>
+            <option *ngIf="!editForm.get('project')!.value" [ngValue]="null" selected></option>
             <option [ngValue]="projectOption" *ngFor="let projectOption of projectsSharedCollection">{{ projectOption.name }}</option>
           </select>
         </div>
-        <div *ngIf="editForm.get(['member_of'])!.invalid && (editForm.get(['member_of'])!.dirty || editForm.get(['member_of'])!.touched)">
+        <div *ngIf="editForm.get(['project'])!.invalid && (editForm.get(['project'])!.dirty || editForm.get(['project'])!.touched)">
           <small
             class="form-text text-danger"
-            *ngIf="editForm.get(['member_of'])?.errors?.required"
+            *ngIf="editForm.get(['project'])?.errors?.required"
             jhiTranslate="entity.validation.required"
           >
             Dieses Feld wird benötigt.

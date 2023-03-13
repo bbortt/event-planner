@@ -81,7 +81,7 @@ export class MemberUpdateComponent implements OnInit {
 
     this.projectsSharedCollection = this.projectService.addProjectToCollectionIfMissing<IProject>(
       this.projectsSharedCollection,
-      member.member_of
+      member.project
     );
   }
 
@@ -89,7 +89,7 @@ export class MemberUpdateComponent implements OnInit {
     this.projectService
       .query()
       .pipe(map((res: HttpResponse<IProject[]>) => res.body ?? []))
-      .pipe(map((projects: IProject[]) => this.projectService.addProjectToCollectionIfMissing<IProject>(projects, this.member?.member_of)))
+      .pipe(map((projects: IProject[]) => this.projectService.addProjectToCollectionIfMissing<IProject>(projects, this.member?.project)))
       .subscribe((projects: IProject[]) => (this.projectsSharedCollection = projects));
   }
 }

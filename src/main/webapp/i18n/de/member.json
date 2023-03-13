@@ -2,26 +2,26 @@
   "eventplannerApp": {
     "member": {
       "home": {
-        "title": "Members",
+        "title": "Mitglieder",
         "refreshListLabel": "Liste aktualisieren",
-        "createLabel": "Member erstellen",
-        "createOrEditLabel": "Member erstellen oder bearbeiten",
-        "notFound": "Keine Members gefunden"
+        "createLabel": "Mitglied erstellen",
+        "createOrEditLabel": "Mitglied erstellen oder bearbeiten",
+        "notFound": "Keine Mitglieder gefunden"
       },
-      "created": "Member erstellt mit ID {{ param }}",
-      "updated": "Member aktualisiert mit ID {{ param }}",
-      "deleted": "Member gelöscht mit ID {{ param }}",
+      "created": "Mitglied erstellt mit ID {{ param }}",
+      "updated": "Mitglied aktualisiert mit ID {{ param }}",
+      "deleted": "Mitglied gelöscht mit ID {{ param }}",
       "delete": {
-        "question": "Soll Member {{ id }} wirklich dauerhaft gelöscht werden?"
+        "question": "Soll Mitglied {{ id }} wirklich dauerhaft gelöscht werden?"
       },
       "detail": {
-        "title": "Member"
+        "title": "Mitglied"
       },
       "id": "ID",
-      "accepted": "Accepted",
-      "acceptedBy": "Accepted By",
-      "acceptedDate": "Accepted Date",
-      "member_of": "Member Of"
+      "accepted": "Akzeptiert",
+      "acceptedBy": "Akzeptiert von",
+      "acceptedDate": "Akzeptiert am",
+      "project": "Mitglied von"
     }
   }
 }
