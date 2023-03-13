@@ -45,7 +45,7 @@ public class PaginationUtil {
         PageRequest pageRequest = PageRequest.ofSize(pageSizeOrDefault(pageSize));
 
         if (pageNumber.isPresent()) {
-            pageRequest = pageRequest.withPage(pageNumber.get());
+            pageRequest = pageRequest.withPage(pageNumber.get() - 1);
         }
 
         return pageRequest.withSort(

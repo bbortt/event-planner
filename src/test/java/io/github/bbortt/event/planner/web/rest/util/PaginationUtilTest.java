@@ -65,8 +65,9 @@ class PaginationUtilTest {
         );
 
         assertEquals(DEFAULT_PAGE_SIZE, pageable.getPageSize());
-        assertEquals(pageNumber, pageable.getPageNumber());
-        assertEquals(pageNumber * DEFAULT_PAGE_SIZE, pageable.getOffset());
+        // Note: The page number ist a zero based index
+        assertEquals(pageNumber - 1, pageable.getPageNumber());
+        assertEquals((pageNumber - 1) * DEFAULT_PAGE_SIZE, pageable.getOffset());
         assertEquals(Sort.by(Sort.Order.desc(defaultSorgingPropertyName)), pageable.getSort());
     }
 
