@@ -1,0 +1,29 @@
+package io.github.bbortt.event.planner.service.mapper;
+
+import io.github.bbortt.event.planner.domain.Location;
+import io.github.bbortt.event.planner.domain.Project;
+import io.github.bbortt.event.planner.service.dto.LocationDTO;
+import io.github.bbortt.event.planner.service.dto.ProjectDTO;
+import org.mapstruct.*;
+
+/**
+ * Mapper for the entity {@link Location} and its DTO {@link LocationDTO}.
+ */
+@Mapper(componentModel = "spring")
+public interface LocationMapper extends EntityMapper<LocationDTO, Location> {
+    @Mapping(target = "project", source = "project", qualifiedByName = "projectName")
+    @Mapping(target = "parent", source = "parent", qualifiedByName = "locationName")
+    LocationDTO toDto(Location s);
+
+    @Named("projectName")
+    @BeanMapping(ignoreByDefault = true)
+    @Mapping(target = "id", source = "id")
+    @Mapping(target = "name", source = "name")
+    ProjectDTO toDtoProjectName(Project project);
+
+    @Named("locationName")
+    @BeanMapping(ignoreByDefault = true)
+    @Mapping(target = "id", source = "id")
+    @Mapping(target = "name", source = "name")
+    LocationDTO toDtoLocationName(Location location);
+}

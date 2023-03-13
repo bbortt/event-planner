@@ -26,7 +26,7 @@
         <dd>
           <span>{{ member.acceptedDate | formatMediumDatetime }}</span>
         </dd>
-        <dt><span jhiTranslate="eventplannerApp.member.project">Member Of</span></dt>
+        <dt><span jhiTranslate="eventplannerApp.member.project">Project</span></dt>
         <dd>
           <div *ngIf="member.project">
             <a [routerLink]="['/project', member.project.id, 'view']">{{ member.project.name }}</a>
