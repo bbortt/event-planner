@@ -56,9 +56,9 @@
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
-          <th scope="col" jhiSortBy="member_of.name">
+          <th scope="col" jhiSortBy="project.name">
             <div class="d-flex">
-              <span jhiTranslate="eventplannerApp.member.member_of">Member Of</span>
+              <span jhiTranslate="eventplannerApp.member.project">Member Of</span>
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
@@ -74,8 +74,8 @@
           <td>{{ member.acceptedBy }}</td>
           <td>{{ member.acceptedDate | formatMediumDatetime }}</td>
           <td>
-            <div *ngIf="member.member_of">
-              <a [routerLink]="['/project', member.member_of.id, 'view']">{{ member.member_of.name }}</a>
+            <div *ngIf="member.project">
+              <a [routerLink]="['/project', member.project.id, 'view']">{{ member.project.name }}</a>
             </div>
           </td>
           <td class="text-end">

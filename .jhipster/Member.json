@@ -33,7 +33,7 @@
     {
       "otherEntityField": "name",
       "otherEntityName": "project",
-      "relationshipName": "member_of",
+      "relationshipName": "project",
       "relationshipType": "many-to-one",
       "relationshipValidateRules": ["required"]
     }

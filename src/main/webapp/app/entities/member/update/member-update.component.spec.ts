@@ -51,12 +51,12 @@ describe('Member Management Update Component', () => {
   describe('ngOnInit', () => {
     it('Should call Project query and add missing value', () => {
       const member: IMember = { id: 456 };
-      const member_of: IProject = { id: 7538 };
-      member.member_of = member_of;
+      const project: IProject = { id: 7538 };
+      member.project = project;
 
       const projectCollection: IProject[] = [{ id: 3153 }];
       jest.spyOn(projectService, 'query').mockReturnValue(of(new HttpResponse({ body: projectCollection })));
-      const additionalProjects = [member_of];
+      const additionalProjects = [project];
       const expectedCollection: IProject[] = [...additionalProjects, ...projectCollection];
       jest.spyOn(projectService, 'addProjectToCollectionIfMissing').mockReturnValue(expectedCollection);
 
@@ -73,13 +73,13 @@ describe('Member Management Update Component', () => {
 
     it('Should update editForm', () => {
       const member: IMember = { id: 456 };
-      const member_of: IProject = { id: 30364 };
-      member.member_of = member_of;
+      const project: IProject = { id: 30364 };
+      member.project = project;
 
       activatedRoute.data = of({ member });
       comp.ngOnInit();
 
-      expect(comp.projectsSharedCollection).toContain(member_of);
+      expect(comp.projectsSharedCollection).toContain(project);
       expect(comp.member).toEqual(member);
     });
   });

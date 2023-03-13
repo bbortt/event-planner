@@ -6,7 +6,7 @@ export interface IMember {
   accepted?: boolean | null;
   acceptedBy?: string | null;
   acceptedDate?: dayjs.Dayjs | null;
-  member_of?: Pick<IProject, 'id' | 'name'> | null;
+  project?: Pick<IProject, 'id' | 'name'> | null;
 }
 
 export type NewMember = Omit<IMember, 'id'> & { id: null };
