@@ -19,7 +19,6 @@ export class ProjectCreateModalComponent implements OnInit, OnDestroy {
   constructor(private modalService: NgbModal) {}
 
   ngOnInit(): void {
-    console.log('open modal');
     this.modalRef = this.modalService.open(ProjectCreateModalContentComponent, { size: 'lg' });
     this.modalRef.result.catch(() => window.history.back());
   }
