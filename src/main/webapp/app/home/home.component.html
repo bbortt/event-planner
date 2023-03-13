@@ -1,7 +1,11 @@
 <div class="row">
   <div class="col-md-12">
-    <h1 class="display-4"><span jhiTranslate="home.title">Willkommen, Event Planner!</span></h1>
+    <h1 class="display-4" *ngIf="account">
+      <span jhiTranslate="home.title" [translateValues]="{ username: account.firstName ?? 'Event Planner' }"
+        >Willkommen, {{ account.firstName ?? 'Event Planner' }}</span
+      >
+    </h1>
 
-    <app-my-projects-list></app-my-projects-list>
+    <router-outlet></router-outlet>
   </div>
 </div>

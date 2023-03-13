@@ -10,7 +10,7 @@
         "notFound": "Keine Projekte gefunden"
       },
       "mine": {
-        "title": "Meine Projekte"
+        "title": "Deine Projekte"
       },
       "created": "Projekt erstellt mit ID {{ param }}",
       "updated": "Projekt aktualisiert mit ID {{ param }}",

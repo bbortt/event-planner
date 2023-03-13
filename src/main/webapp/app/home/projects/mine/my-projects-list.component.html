@@ -1,6 +1,6 @@
 <div>
   <h2 id="page-heading" data-cy="ProjectHeading">
-    <span jhiTranslate="eventplannerApp.project.mine.title">Meine Projekte</span>
+    <span jhiTranslate="eventplannerApp.project.mine.title">Deine Projekte</span>
 
     <div class="d-flex justify-content-end">
       <div class="btn-group">
@@ -13,7 +13,7 @@
           id="jh-create-entity"
           data-cy="entityCreateButton"
           class="btn btn-primary jh-create-entity create-project"
-          [routerLink]="[{ outlets: { modal: ['project', 'new'] } }]"
+          [routerLink]="[{ outlets: { modal: ['projects', 'new'] } }]"
         >
           <fa-icon icon="plus"></fa-icon>
           <span jhiTranslate="eventplannerApp.project.home.createLabel"> Projekt erstellen </span>
