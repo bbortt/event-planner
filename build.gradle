@@ -22,9 +22,8 @@ version = "${version}"
 
 description = "Event planning tool."
 
-sourceCompatibility = 17
-targetCompatibility = 17
-assert System.properties["java.specification.version"] == "17" || "18"
+sourceCompatibility = "${sourceCompatibility}"
+assert System.properties["java.specification.version"] == "17" || "18" || "19"
 
 
 wrapper {
