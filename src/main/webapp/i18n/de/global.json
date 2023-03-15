@@ -9,7 +9,7 @@
         "main": "Entitäten",
         "project": "Project",
         "member": "Member",
-        "location": "Location",
+        "location": "Lokalität",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {
