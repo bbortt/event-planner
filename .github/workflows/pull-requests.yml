@@ -1,4 +1,4 @@
-name: pull-requests
+name: PR's
 on:
   pull_request:
 jobs:
