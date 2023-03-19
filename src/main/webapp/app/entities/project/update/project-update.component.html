@@ -2,8 +2,8 @@
   <div class="col-8">
     <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
       <h2 id="jhi-project-heading" data-cy="ProjectCreateUpdateHeading" [ngSwitch]="!!project?.id">
-        <span *ngSwitchCase="true" jhiTranslate="eventplannerApp.project.home.editLabel">Projekt bearbeiten</span>
-        <span *ngSwitchDefault jhiTranslate="eventplannerApp.project.home.createLabel">Projekt erstellen</span>
+        <span *ngSwitchCase="true" jhiTranslate="app.project.home.editLabel">Projekt bearbeiten</span>
+        <span *ngSwitchDefault jhiTranslate="app.project.home.createLabel">Projekt erstellen</span>
       </h2>
 
       <div class="mt-3">
@@ -11,7 +11,7 @@
 
         <div class="row" *ngIf="isProjectArchived">
           <ngb-alert [dismissible]="false" type="info">
-            <span jhiTranslate="eventplannerApp.project.archivedFullText">Dieses Projekt wurde archiviert!</span>
+            <span jhiTranslate="app.project.archivedFullText">Dieses Projekt wurde archiviert!</span>
           </ngb-alert>
         </div>
 
@@ -30,7 +30,7 @@
         </div>
 
         <div class="row mb-3" *ngIf="editForm.controls.token.value !== null">
-          <label class="form-label" jhiTranslate="eventplannerApp.project.token" for="field_token">Token</label>
+          <label class="form-label" jhiTranslate="app.project.token" for="field_token">Token</label>
           <input
             type="text"
             class="form-control"
@@ -44,7 +44,7 @@
         </div>
 
         <div class="row mb-3">
-          <label class="form-label" jhiTranslate="eventplannerApp.project.name" for="field_name">Name</label>
+          <label class="form-label" jhiTranslate="app.project.name" for="field_name">Name</label>
           <input
             type="text"
             class="form-control"
@@ -78,7 +78,7 @@
         </div>
 
         <div class="row mb-3">
-          <label class="form-label" jhiTranslate="eventplannerApp.project.description" for="field_description">Description</label>
+          <label class="form-label" jhiTranslate="app.project.description" for="field_description">Description</label>
           <input
             type="text"
             class="form-control"
@@ -101,7 +101,7 @@
         </div>
 
         <div class="row mb-3">
-          <label class="form-label" jhiTranslate="eventplannerApp.project.startDate" for="field_startDate">Start Date</label>
+          <label class="form-label" jhiTranslate="app.project.startDate" for="field_startDate">Start Date</label>
           <input
             id="field_startDate"
             data-cy="startDate"
@@ -131,7 +131,7 @@
         </div>
 
         <div class="row mb-3">
-          <label class="form-label" jhiTranslate="eventplannerApp.project.endDate" for="field_endDate">End Date</label>
+          <label class="form-label" jhiTranslate="app.project.endDate" for="field_endDate">End Date</label>
           <input
             id="field_endDate"
             data-cy="endDate"

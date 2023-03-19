@@ -6,17 +6,17 @@ import { RouterModule } from '@angular/router';
     RouterModule.forChild([
       {
         path: 'project',
-        data: { pageTitle: 'eventplannerApp.project.home.title' },
+        data: { pageTitle: 'app.project.home.title' },
         loadChildren: () => import('./project/project.module').then(m => m.ProjectModule),
       },
       {
         path: 'member',
-        data: { pageTitle: 'eventplannerApp.member.home.title' },
+        data: { pageTitle: 'app.member.home.title' },
         loadChildren: () => import('./member/member.module').then(m => m.MemberModule),
       },
       {
         path: 'location',
-        data: { pageTitle: 'eventplannerApp.location.home.title' },
+        data: { pageTitle: 'app.location.home.title' },
         loadChildren: () => import('./location/location.module').then(m => m.LocationModule),
       },
       /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */

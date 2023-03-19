@@ -2,9 +2,6 @@
   "home": {
     "title": "Welcome, Event Planner!",
     "subtitle": "This is your homepage",
-    "logged": {
-      "message": "You are logged in as user \"{{username}}\"."
-    },
     "question": "If you have any question on JHipster:",
     "link": {
       "homepage": "JHipster homepage",

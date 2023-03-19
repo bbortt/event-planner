@@ -1,11 +1,11 @@
 <div>
   <h2 id="page-heading" data-cy="MemberHeading">
-    <span jhiTranslate="eventplannerApp.member.home.title">Members</span>
+    <span jhiTranslate="app.member.home.title">Members</span>
 
     <div class="d-flex justify-content-end">
       <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
         <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
-        <span jhiTranslate="eventplannerApp.member.home.refreshListLabel">Liste aktualisieren</span>
+        <span jhiTranslate="app.member.home.refreshListLabel">Liste aktualisieren</span>
       </button>
 
       <button
@@ -15,7 +15,7 @@
         [routerLink]="['/member/new']"
       >
         <fa-icon icon="plus"></fa-icon>
-        <span jhiTranslate="eventplannerApp.member.home.createLabel"> Member erstellen </span>
+        <span jhiTranslate="app.member.home.createLabel"> Member erstellen </span>
       </button>
     </div>
   </h2>
@@ -25,7 +25,7 @@
   <jhi-alert></jhi-alert>
 
   <div class="alert alert-warning" id="no-result" *ngIf="members?.length === 0">
-    <span jhiTranslate="eventplannerApp.member.home.notFound">Keine Members gefunden</span>
+    <span jhiTranslate="app.member.home.notFound">Keine Members gefunden</span>
   </div>
 
   <div class="table-responsive table-entities" id="entities" *ngIf="members && members.length > 0">
@@ -40,25 +40,25 @@
           </th>
           <th scope="col" jhiSortBy="accepted">
             <div class="d-flex">
-              <span jhiTranslate="eventplannerApp.member.accepted">Accepted</span>
+              <span jhiTranslate="app.member.accepted">Accepted</span>
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
           <th scope="col" jhiSortBy="acceptedBy">
             <div class="d-flex">
-              <span jhiTranslate="eventplannerApp.member.acceptedBy">Accepted By</span>
+              <span jhiTranslate="app.member.acceptedBy">Accepted By</span>
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
           <th scope="col" jhiSortBy="acceptedDate">
             <div class="d-flex">
-              <span jhiTranslate="eventplannerApp.member.acceptedDate">Accepted Date</span>
+              <span jhiTranslate="app.member.acceptedDate">Accepted Date</span>
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
           <th scope="col" jhiSortBy="project.name">
             <div class="d-flex">
-              <span jhiTranslate="eventplannerApp.member.project">Member Of</span>
+              <span jhiTranslate="app.member.project">Member Of</span>
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>

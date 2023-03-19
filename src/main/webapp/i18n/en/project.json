@@ -1,5 +1,5 @@
 {
-  "eventplannerApp": {
+  "app": {
     "project": {
       "home": {
         "title": "Projects",
@@ -10,7 +10,10 @@
         "notFound": "No Projects found"
       },
       "mine": {
-        "title": "Your Projects"
+        "title": "Your Projects",
+        "action": {
+          "administration": "Administration"
+        }
       },
       "created": "A new Project is created with identifier {{ param }}",
       "updated": "A Project is updated with identifier {{ param }}",

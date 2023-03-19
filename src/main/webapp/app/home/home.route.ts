@@ -7,11 +7,9 @@ export const HOME_ROUTES: Route[] = [
   {
     path: '',
     component: HomeComponent,
-    children: [
-      {
-        path: 'projects',
-        loadChildren: () => import('./projects/projects.module').then(m => m.ProjectsModule),
-      },
-    ],
+  },
+  {
+    path: 'projects',
+    loadChildren: () => import('./projects/projects.module').then(m => m.ProjectsModule),
   },
 ];
