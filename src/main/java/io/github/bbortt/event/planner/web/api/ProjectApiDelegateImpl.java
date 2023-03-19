@@ -1,14 +1,14 @@
 package io.github.bbortt.event.planner.web.api;
 
 import io.github.bbortt.event.planner.service.ProjectService;
-import io.github.bbortt.event.planner.service.api.dto.Project;
-import io.github.bbortt.event.planner.service.api.dto.ReadUserProjects200Response;
+import io.github.bbortt.event.planner.service.api.dto.*;
 import io.github.bbortt.event.planner.service.dto.ProjectDTO;
 import io.github.bbortt.event.planner.web.rest.util.PaginationUtil;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
+import org.apache.commons.lang3.NotImplementedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Slice;
@@ -32,7 +32,16 @@ public class ProjectApiDelegateImpl implements ProjectApiDelegate {
     }
 
     @Override
-    public ResponseEntity<ReadUserProjects200Response> readUserProjects(
+    public ResponseEntity<GetProjectMembers200Response> getProjectMembers(
+        Optional<Integer> pageSize,
+        Optional<Integer> pageNumber,
+        Optional<List<String>> sort
+    ) {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public ResponseEntity<GetUserProjects200Response> getUserProjects(
         Optional<Integer> pageSize,
         Optional<Integer> pageNumber,
         Optional<List<String>> sort
@@ -45,7 +54,12 @@ public class ProjectApiDelegateImpl implements ProjectApiDelegate {
         return ResponseEntity
             .ok()
             .headers(headers)
-            .body(new ReadUserProjects200Response().contents(slice.getContent().stream().map(this::projectFromProjectDTO).toList()));
+            .body(new GetUserProjects200Response().contents(slice.getContent().stream().map(this::projectFromProjectDTO).toList()));
+    }
+
+    @Override
+    public ResponseEntity<Void> inviteMemberToProject(Long projectId, InviteMemberToProjectRequest inviteMemberToProjectRequest) {
+        throw new NotImplementedException();
     }
 
     private Project projectFromProjectDTO(ProjectDTO projectDTO) {

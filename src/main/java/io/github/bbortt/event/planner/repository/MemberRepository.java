@@ -28,4 +28,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Override
     @EntityGraph(attributePaths = { "project" })
     Optional<Member> findById(@Param("id") Long id);
+
+    Page<Member> findAllByProjectIdEquals(@Param("projectId") Long projectId, Pageable pageable);
 }
