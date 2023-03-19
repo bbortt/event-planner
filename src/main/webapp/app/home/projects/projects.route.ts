@@ -6,11 +6,9 @@ export const MY_PROJECTS_ROUTES: Route[] = [
     path: '',
     loadChildren: () => import('./mine/my-projects.module').then(m => m.MyProjectsModule),
   },
-  { path: ':id', pathMatch: 'full', redirectTo: ':id/settings' },
   {
     path: ':id',
     loadChildren: () => import('./admin/project-admin.module').then(m => m.ProjectAdminModule),
-    pathMatch: 'prefix',
     resolve: {
       project: ProjectRoutingResolveService,
     },
