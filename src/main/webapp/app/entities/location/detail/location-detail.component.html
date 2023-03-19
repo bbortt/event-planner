@@ -1,7 +1,7 @@
 <div class="d-flex justify-content-center">
   <div class="col-8">
     <div *ngIf="location">
-      <h2 data-cy="locationDetailsHeading"><span jhiTranslate="eventplannerApp.location.detail.title">Location</span></h2>
+      <h2 data-cy="locationDetailsHeading"><span jhiTranslate="app.location.detail.title">Location</span></h2>
 
       <hr />
 
@@ -14,37 +14,37 @@
         <dd>
           <span>{{ location.id }}</span>
         </dd>
-        <dt><span jhiTranslate="eventplannerApp.location.name">Name</span></dt>
+        <dt><span jhiTranslate="app.location.name">Name</span></dt>
         <dd>
           <span>{{ location.name }}</span>
         </dd>
-        <dt><span jhiTranslate="eventplannerApp.location.description">Description</span></dt>
+        <dt><span jhiTranslate="app.location.description">Description</span></dt>
         <dd>
           <span>{{ location.description }}</span>
         </dd>
-        <dt><span jhiTranslate="eventplannerApp.location.createdBy">Created By</span></dt>
+        <dt><span jhiTranslate="app.location.createdBy">Created By</span></dt>
         <dd>
           <span>{{ location.createdBy }}</span>
         </dd>
-        <dt><span jhiTranslate="eventplannerApp.location.createdDate">Created Date</span></dt>
+        <dt><span jhiTranslate="app.location.createdDate">Created Date</span></dt>
         <dd>
           <span>{{ location.createdDate | formatMediumDatetime }}</span>
         </dd>
-        <dt><span jhiTranslate="eventplannerApp.location.lastModifiedBy">Last Modified By</span></dt>
+        <dt><span jhiTranslate="app.location.lastModifiedBy">Last Modified By</span></dt>
         <dd>
           <span>{{ location.lastModifiedBy }}</span>
         </dd>
-        <dt><span jhiTranslate="eventplannerApp.location.lastModifiedDate">Last Modified Date</span></dt>
+        <dt><span jhiTranslate="app.location.lastModifiedDate">Last Modified Date</span></dt>
         <dd>
           <span>{{ location.lastModifiedDate | formatMediumDatetime }}</span>
         </dd>
-        <dt><span jhiTranslate="eventplannerApp.location.project">Project</span></dt>
+        <dt><span jhiTranslate="app.location.project">Project</span></dt>
         <dd>
           <div *ngIf="location.project">
             <a [routerLink]="['/project', location.project.id, 'view']">{{ location.project.name }}</a>
           </div>
         </dd>
-        <dt><span jhiTranslate="eventplannerApp.location.parent">Parent</span></dt>
+        <dt><span jhiTranslate="app.location.parent">Parent</span></dt>
         <dd>
           <div *ngIf="location.parent">
             <a [routerLink]="['/location', location.parent.id, 'view']">{{ location.parent.name }}</a>

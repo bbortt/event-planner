@@ -1,7 +1,7 @@
 <div class="d-flex justify-content-center">
   <div class="col-8">
     <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
-      <h2 id="jhi-member-heading" data-cy="MemberCreateUpdateHeading" jhiTranslate="eventplannerApp.member.home.createOrEditLabel">
+      <h2 id="jhi-member-heading" data-cy="MemberCreateUpdateHeading" jhiTranslate="app.member.home.createOrEditLabel">
         Member erstellen oder bearbeiten
       </h2>
 
@@ -14,7 +14,7 @@
         </div>
 
         <div class="row mb-3">
-          <label class="form-label" jhiTranslate="eventplannerApp.member.accepted" for="field_accepted">Accepted</label>
+          <label class="form-label" jhiTranslate="app.member.accepted" for="field_accepted">Accepted</label>
           <input type="checkbox" class="form-check" name="accepted" id="field_accepted" data-cy="accepted" formControlName="accepted" />
           <div *ngIf="editForm.get('accepted')!.invalid && (editForm.get('accepted')!.dirty || editForm.get('accepted')!.touched)">
             <small
@@ -28,7 +28,7 @@
         </div>
 
         <div class="row mb-3" *ngIf="editForm.controls.acceptedBy.value !== null">
-          <label class="form-label" jhiTranslate="eventplannerApp.member.acceptedBy" for="field_acceptedBy">Accepted By</label>
+          <label class="form-label" jhiTranslate="app.member.acceptedBy" for="field_acceptedBy">Accepted By</label>
           <input
             type="text"
             class="form-control"
@@ -41,7 +41,7 @@
         </div>
 
         <div class="row mb-3" *ngIf="editForm.controls.acceptedDate.value !== null">
-          <label class="form-label" jhiTranslate="eventplannerApp.member.acceptedDate" for="field_acceptedDate">Accepted Date</label>
+          <label class="form-label" jhiTranslate="app.member.acceptedDate" for="field_acceptedDate">Accepted Date</label>
           <div class="d-flex">
             <input
               id="field_acceptedDate"
@@ -57,7 +57,7 @@
         </div>
 
         <div class="row mb-3">
-          <label class="form-label" jhiTranslate="eventplannerApp.member.project" for="field_project">Member Of</label>
+          <label class="form-label" jhiTranslate="app.member.project" for="field_project">Member Of</label>
           <select
             class="form-control"
             id="field_project"

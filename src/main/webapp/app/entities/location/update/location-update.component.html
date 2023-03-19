@@ -1,7 +1,7 @@
 <div class="d-flex justify-content-center">
   <div class="col-8">
     <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
-      <h2 id="jhi-location-heading" data-cy="LocationCreateUpdateHeading" jhiTranslate="eventplannerApp.location.home.createOrEditLabel">
+      <h2 id="jhi-location-heading" data-cy="LocationCreateUpdateHeading" jhiTranslate="app.location.home.createOrEditLabel">
         Location erstellen oder bearbeiten
       </h2>
 
@@ -14,7 +14,7 @@
         </div>
 
         <div class="row mb-3">
-          <label class="form-label" jhiTranslate="eventplannerApp.location.name" for="field_name">Name</label>
+          <label class="form-label" jhiTranslate="app.location.name" for="field_name">Name</label>
           <input type="text" class="form-control" name="name" id="field_name" data-cy="name" formControlName="name" />
           <div *ngIf="editForm.get('name')!.invalid && (editForm.get('name')!.dirty || editForm.get('name')!.touched)">
             <small class="form-text text-danger" *ngIf="editForm.get('name')?.errors?.required" jhiTranslate="entity.validation.required">
@@ -40,7 +40,7 @@
         </div>
 
         <div class="row mb-3">
-          <label class="form-label" jhiTranslate="eventplannerApp.location.description" for="field_description">Description</label>
+          <label class="form-label" jhiTranslate="app.location.description" for="field_description">Description</label>
           <input
             type="text"
             class="form-control"
@@ -62,7 +62,7 @@
         </div>
 
         <div class="row mb-3" *ngIf="editForm.controls.createdBy.value !== null">
-          <label class="form-label" jhiTranslate="eventplannerApp.location.createdBy" for="field_createdBy">Created By</label>
+          <label class="form-label" jhiTranslate="app.location.createdBy" for="field_createdBy">Created By</label>
           <input
             type="text"
             class="form-control"
@@ -75,7 +75,7 @@
         </div>
 
         <div class="row mb-3" *ngIf="editForm.controls.createdDate.value !== null">
-          <label class="form-label" jhiTranslate="eventplannerApp.location.createdDate" for="field_createdDate">Created Date</label>
+          <label class="form-label" jhiTranslate="app.location.createdDate" for="field_createdDate">Created Date</label>
           <div class="d-flex">
             <input
               id="field_createdDate"
@@ -91,9 +91,7 @@
         </div>
 
         <div class="row mb-3" *ngIf="editForm.controls.lastModifiedBy.value !== null">
-          <label class="form-label" jhiTranslate="eventplannerApp.location.lastModifiedBy" for="field_lastModifiedBy"
-            >Last Modified By</label
-          >
+          <label class="form-label" jhiTranslate="app.location.lastModifiedBy" for="field_lastModifiedBy">Last Modified By</label>
           <input
             type="text"
             class="form-control"
@@ -106,9 +104,7 @@
         </div>
 
         <div class="row mb-3" *ngIf="editForm.controls.lastModifiedDate.value !== null">
-          <label class="form-label" jhiTranslate="eventplannerApp.location.lastModifiedDate" for="field_lastModifiedDate"
-            >Last Modified Date</label
-          >
+          <label class="form-label" jhiTranslate="app.location.lastModifiedDate" for="field_lastModifiedDate">Last Modified Date</label>
           <div class="d-flex">
             <input
               id="field_lastModifiedDate"
@@ -124,7 +120,7 @@
         </div>
 
         <div class="row mb-3">
-          <label class="form-label" jhiTranslate="eventplannerApp.location.project" for="field_project">Project</label>
+          <label class="form-label" jhiTranslate="app.location.project" for="field_project">Project</label>
           <select
             class="form-control"
             id="field_project"
@@ -148,7 +144,7 @@
         </div>
 
         <div class="row mb-3">
-          <label class="form-label" jhiTranslate="eventplannerApp.location.parent" for="field_parent">Parent</label>
+          <label class="form-label" jhiTranslate="app.location.parent" for="field_parent">Parent</label>
           <select
             class="form-control"
             id="field_parent"

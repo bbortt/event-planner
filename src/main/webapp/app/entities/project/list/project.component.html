@@ -1,11 +1,11 @@
 <div>
   <h2 id="page-heading" data-cy="ProjectHeading">
-    <span jhiTranslate="eventplannerApp.project.home.title">Projekte</span>
+    <span jhiTranslate="app.project.home.title">Projekte</span>
 
     <div class="d-flex justify-content-end">
       <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
         <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
-        <span jhiTranslate="eventplannerApp.project.home.refreshListLabel">Liste aktualisieren</span>
+        <span jhiTranslate="app.project.home.refreshListLabel">Liste aktualisieren</span>
       </button>
 
       <button
@@ -15,7 +15,7 @@
         [routerLink]="['/project/new']"
       >
         <fa-icon icon="plus"></fa-icon>
-        <span jhiTranslate="eventplannerApp.project.home.createLabel"> Projekt erstellen </span>
+        <span jhiTranslate="app.project.home.createLabel"> Projekt erstellen </span>
       </button>
     </div>
   </h2>
@@ -25,7 +25,7 @@
   <jhi-alert></jhi-alert>
 
   <div class="alert alert-warning" id="no-result" *ngIf="projects?.length === 0">
-    <span jhiTranslate="eventplannerApp.project.home.notFound">Keine Projekte gefunden</span>
+    <span jhiTranslate="app.project.home.notFound">Keine Projekte gefunden</span>
   </div>
 
   <div class="table-responsive table-entities" id="entities" *ngIf="projects && projects.length > 0">
@@ -40,61 +40,61 @@
           </th>
           <th scope="col" jhiSortBy="token">
             <div class="d-flex">
-              <span jhiTranslate="eventplannerApp.project.token">Token</span>
+              <span jhiTranslate="app.project.token">Token</span>
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
           <th scope="col" jhiSortBy="name">
             <div class="d-flex">
-              <span jhiTranslate="eventplannerApp.project.name">Name</span>
+              <span jhiTranslate="app.project.name">Name</span>
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
           <th scope="col" jhiSortBy="description">
             <div class="d-flex">
-              <span jhiTranslate="eventplannerApp.project.description">Description</span>
+              <span jhiTranslate="app.project.description">Description</span>
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
           <th scope="col" jhiSortBy="startDate">
             <div class="d-flex">
-              <span jhiTranslate="eventplannerApp.project.startDate">Start Date</span>
+              <span jhiTranslate="app.project.startDate">Start Date</span>
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
           <th scope="col" jhiSortBy="endDate">
             <div class="d-flex">
-              <span jhiTranslate="eventplannerApp.project.endDate">End Date</span>
+              <span jhiTranslate="app.project.endDate">End Date</span>
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
           <th scope="col" jhiSortBy="archived">
             <div class="d-flex">
-              <span jhiTranslate="eventplannerApp.project.archived">Archived</span>
+              <span jhiTranslate="app.project.archived">Archived</span>
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
           <th scope="col" jhiSortBy="createdBy">
             <div class="d-flex">
-              <span jhiTranslate="eventplannerApp.project.createdBy">Created By</span>
+              <span jhiTranslate="app.project.createdBy">Created By</span>
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
           <th scope="col" jhiSortBy="createdDate">
             <div class="d-flex">
-              <span jhiTranslate="eventplannerApp.project.createdDate">Created Date</span>
+              <span jhiTranslate="app.project.createdDate">Created Date</span>
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
           <th scope="col" jhiSortBy="lastModifiedBy">
             <div class="d-flex">
-              <span jhiTranslate="eventplannerApp.project.lastModifiedBy">Last Modified By</span>
+              <span jhiTranslate="app.project.lastModifiedBy">Last Modified By</span>
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
           <th scope="col" jhiSortBy="lastModifiedDate">
             <div class="d-flex">
-              <span jhiTranslate="eventplannerApp.project.lastModifiedDate">Last Modified Date</span>
+              <span jhiTranslate="app.project.lastModifiedDate">Last Modified Date</span>
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>

@@ -1,7 +1,7 @@
 <div class="d-flex justify-content-center">
   <div class="col-8">
     <div *ngIf="member">
-      <h2 data-cy="memberDetailsHeading"><span jhiTranslate="eventplannerApp.member.detail.title">Member</span></h2>
+      <h2 data-cy="memberDetailsHeading"><span jhiTranslate="app.member.detail.title">Member</span></h2>
 
       <hr />
 
@@ -14,19 +14,19 @@
         <dd>
           <span>{{ member.id }}</span>
         </dd>
-        <dt><span jhiTranslate="eventplannerApp.member.accepted">Accepted</span></dt>
+        <dt><span jhiTranslate="app.member.accepted">Accepted</span></dt>
         <dd>
           <span>{{ member.accepted }}</span>
         </dd>
-        <dt><span jhiTranslate="eventplannerApp.member.acceptedBy">Accepted By</span></dt>
+        <dt><span jhiTranslate="app.member.acceptedBy">Accepted By</span></dt>
         <dd>
           <span>{{ member.acceptedBy }}</span>
         </dd>
-        <dt><span jhiTranslate="eventplannerApp.member.acceptedDate">Accepted Date</span></dt>
+        <dt><span jhiTranslate="app.member.acceptedDate">Accepted Date</span></dt>
         <dd>
           <span>{{ member.acceptedDate | formatMediumDatetime }}</span>
         </dd>
-        <dt><span jhiTranslate="eventplannerApp.member.project">Project</span></dt>
+        <dt><span jhiTranslate="app.member.project">Project</span></dt>
         <dd>
           <div *ngIf="member.project">
             <a [routerLink]="['/project', member.project.id, 'view']">{{ member.project.name }}</a>
