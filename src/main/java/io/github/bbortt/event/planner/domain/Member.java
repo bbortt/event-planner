@@ -34,6 +34,11 @@ public class Member implements Serializable {
     @Column(name = "accepted_by", nullable = false, updatable = false)
     private String acceptedBy;
 
+    // TODO: Link to user
+    //    @ManyToOne(optional = false)
+    //    @JoinColumn(name = "accepted_by", referencedColumnName = "id", nullable = false, updatable = false)
+    //    private User user;
+
     @CreatedDate
     @Column(name = "accepted_date", nullable = false, updatable = false)
     private Instant acceptedDate;

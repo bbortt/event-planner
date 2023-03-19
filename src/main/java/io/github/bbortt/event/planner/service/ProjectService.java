@@ -49,8 +49,7 @@ public class ProjectService {
         // Sanitize new project
         project.token(UUID.randomUUID()).archived(Boolean.FALSE);
 
-        project = projectRepository.save(project);
-        return projectMapper.toDto(project);
+        return projectMapper.toDto(projectRepository.save(project));
     }
 
     /**
@@ -136,6 +135,7 @@ public class ProjectService {
             log.trace("Current login is '{}'", login);
         }
 
+        // TODO: This will only return projects that are not archived.
         return projectRepository.findAllByCreatedByEquals(login, pageable).map(projectMapper::toDto);
     }
 }

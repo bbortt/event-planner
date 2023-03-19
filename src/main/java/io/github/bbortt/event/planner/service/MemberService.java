@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,8 +40,11 @@ public class MemberService {
     public MemberDTO save(MemberDTO memberDTO) {
         log.debug("Request to save Member : {}", memberDTO);
         Member member = memberMapper.toEntity(memberDTO);
-        member = memberRepository.save(member);
-        return memberMapper.toDto(member);
+
+        // Sanitize new membership
+        member.accepted(Boolean.FALSE);
+
+        return memberMapper.toDto(memberRepository.save(member));
     }
 
     /**
@@ -117,5 +121,15 @@ public class MemberService {
     public void delete(Long id) {
         log.debug("Request to delete Member : {}", id);
         memberRepository.deleteById(id);
+    }
+
+    @Transactional(readOnly = true)
+    @PreAuthorize("T(io.github.bbortt.event.planner.security.SecurityUtils).isAuthenticated()")
+    public Page<MemberDTO> findInProject(Long projectId, Pageable pageable) {
+        log.debug("Request to get all Members in Project '{}'", projectId);
+
+        // TODO: Sanitize project id?
+
+        return memberRepository.findAllByProjectIdEquals(projectId, pageable).map(memberMapper::toDto);
     }
 }

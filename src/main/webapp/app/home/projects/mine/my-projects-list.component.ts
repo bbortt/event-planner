@@ -6,7 +6,7 @@ import { combineLatest, Observable, switchMap, tap } from 'rxjs';
 
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { Project, ProjectService as ApiProjectService, ReadUserProjects200Response } from '../../../api';
+import { Project, ProjectService as ApiProjectService, GetUserProjects200Response } from '../../../api';
 
 import { HAS_NEXT_PAGE_HEADER } from '../../../config/pagination.constants';
 import { ASC, DEFAULT_SORT_DATA, DESC, SORT } from '../../../config/navigation.constants';
@@ -50,13 +50,13 @@ export class MyProjectsListComponent implements OnInit {
 
   load(): void {
     this.loadFromBackendWithRouteInformation().subscribe({
-      next: (res: HttpResponse<ReadUserProjects200Response>) => {
+      next: (res: HttpResponse<GetUserProjects200Response>) => {
         this.onResponseSuccess(res);
       },
     });
   }
 
-  protected loadFromBackendWithRouteInformation(): Observable<HttpResponse<ReadUserProjects200Response>> {
+  protected loadFromBackendWithRouteInformation(): Observable<HttpResponse<GetUserProjects200Response>> {
     return combineLatest([this.activatedRoute.queryParamMap, this.activatedRoute.data]).pipe(
       tap(([params, data]) => this.fillComponentAttributeFromRoute(params, data)),
       switchMap(() => this.queryBackend(this.page, this.predicate, this.ascending))
@@ -69,7 +69,7 @@ export class MyProjectsListComponent implements OnInit {
     this.ascending = sort[1] === ASC;
   }
 
-  protected onResponseSuccess(response: HttpResponse<ReadUserProjects200Response>): void {
+  protected onResponseSuccess(response: HttpResponse<GetUserProjects200Response>): void {
     this.fillComponentAttributesFromResponseHeader(response.headers);
     const dataFromBody = this.fillComponentAttributesFromResponseBody(response.body?.contents);
     this.projects = this.createTriplets(dataFromBody);
@@ -90,11 +90,11 @@ export class MyProjectsListComponent implements OnInit {
     this.hasNextPage = 'true' === headers.get(HAS_NEXT_PAGE_HEADER);
   }
 
-  protected queryBackend(page?: number, predicate?: string, ascending?: boolean): Observable<HttpResponse<ReadUserProjects200Response>> {
+  protected queryBackend(page?: number, predicate?: string, ascending?: boolean): Observable<HttpResponse<GetUserProjects200Response>> {
     this.isLoading = true;
     const pageToLoad: number = page ?? 1;
     return this.apiProjectService
-      .readUserProjects(this.itemsPerPage, pageToLoad, this.getSortQueryParam(predicate, ascending), 'response', false, {})
+      .getUserProjects(this.itemsPerPage, pageToLoad, this.getSortQueryParam(predicate, ascending), 'response', false, {})
       .pipe(tap(() => (this.isLoading = false)));
   }
 
