@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import io.github.bbortt.event.planner.IntegrationTest;
 import io.github.bbortt.event.planner.domain.Member;
 import io.github.bbortt.event.planner.domain.Project;
+import io.github.bbortt.event.planner.domain.User;
 import io.github.bbortt.event.planner.repository.MemberRepository;
 import io.github.bbortt.event.planner.service.MemberService;
 import io.github.bbortt.event.planner.service.dto.MemberDTO;
@@ -44,6 +45,8 @@ import org.springframework.transaction.annotation.Transactional;
 @AutoConfigureMockMvc
 @WithMockUser
 public class MemberResourceIT {
+
+    private static final String DEFAULT_INVITED_EMAIL = "ant-man@localhost";
 
     private static final Boolean DEFAULT_ACCEPTED = false;
     private static final Boolean UPDATED_ACCEPTED = true;
@@ -81,7 +84,7 @@ public class MemberResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Member createEntity(EntityManager em) {
-        Member member = new Member().accepted(DEFAULT_ACCEPTED);
+        Member member = new Member().invitedEmail(DEFAULT_INVITED_EMAIL).accepted(DEFAULT_ACCEPTED);
         // Add required entity
         Project project;
         if (TestUtil.findAll(em, Project.class).isEmpty()) {
@@ -102,7 +105,7 @@ public class MemberResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Member createUpdatedEntity(EntityManager em) {
-        Member member = new Member().accepted(UPDATED_ACCEPTED);
+        Member member = new Member().invitedEmail(DEFAULT_INVITED_EMAIL).accepted(UPDATED_ACCEPTED);
         // Add required entity
         Project project;
         if (TestUtil.findAll(em, Project.class).isEmpty()) {
@@ -118,6 +121,10 @@ public class MemberResourceIT {
 
     @BeforeEach
     public void initTest() {
+        User defaultUser = UserResourceIT.createEntity(em);
+        defaultUser.setEmail(DEFAULT_INVITED_EMAIL);
+        em.persist(defaultUser);
+
         member = createEntity(em);
     }
 
@@ -140,6 +147,7 @@ public class MemberResourceIT {
         List<Member> memberList = memberRepository.findAll();
         assertThat(memberList).hasSize(databaseSizeBeforeCreate + 1);
         Member testMember = memberList.get(memberList.size() - 1);
+        assertThat(testMember.getInvitedEmail()).isEqualTo(DEFAULT_INVITED_EMAIL);
         assertThat(testMember.getAccepted()).isEqualTo(DEFAULT_ACCEPTED);
     }
 
@@ -165,6 +173,52 @@ public class MemberResourceIT {
         // Validate the Member in the database
         List<Member> memberList = memberRepository.findAll();
         assertThat(memberList).hasSize(databaseSizeBeforeCreate);
+    }
+
+    @Test
+    @Transactional
+    void checkInvitedEmailIsRequired() throws Exception {
+        int databaseSizeBeforeTest = memberRepository.findAll().size();
+        // set the field null
+        member.setInvitedEmail(null);
+
+        // Create the Member, which fails.
+        MemberDTO memberDTO = memberMapper.toDto(member);
+
+        restMemberMockMvc
+            .perform(
+                post(ENTITY_API_URL)
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(memberDTO))
+            )
+            .andExpect(status().isBadRequest());
+
+        List<Member> memberList = memberRepository.findAll();
+        assertThat(memberList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    void checkInvitedEmailMustMatchFormat() throws Exception {
+        int databaseSizeBeforeTest = memberRepository.findAll().size();
+        // invalidate the field
+        member.setInvitedEmail("this-is-not-an-email");
+
+        // Create the Member, which fails.
+        MemberDTO memberDTO = memberMapper.toDto(member);
+
+        restMemberMockMvc
+            .perform(
+                post(ENTITY_API_URL)
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(memberDTO))
+            )
+            .andExpect(status().isBadRequest());
+
+        List<Member> memberList = memberRepository.findAll();
+        assertThat(memberList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
@@ -202,12 +256,13 @@ public class MemberResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(member.getId().intValue())))
-            .andExpect(jsonPath("$.[*].accepted").value(hasItem(DEFAULT_ACCEPTED.booleanValue())));
+            .andExpect(jsonPath("$.[*].invitedEmail").value(hasItem(DEFAULT_INVITED_EMAIL)))
+            .andExpect(jsonPath("$.[*].accepted").value(hasItem(DEFAULT_ACCEPTED)));
     }
 
     @SuppressWarnings({ "unchecked" })
     void getAllMembersWithEagerRelationshipsIsEnabled() throws Exception {
-        when(memberServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+        when(memberServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl<>(new ArrayList<>()));
 
         restMemberMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
 
@@ -216,7 +271,7 @@ public class MemberResourceIT {
 
     @SuppressWarnings({ "unchecked" })
     void getAllMembersWithEagerRelationshipsIsNotEnabled() throws Exception {
-        when(memberServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+        when(memberServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl<>(new ArrayList<>()));
 
         restMemberMockMvc.perform(get(ENTITY_API_URL + "?eagerload=false")).andExpect(status().isOk());
         verify(memberRepositoryMock, times(1)).findAll(any(Pageable.class));
@@ -234,7 +289,8 @@ public class MemberResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(member.getId().intValue()))
-            .andExpect(jsonPath("$.accepted").value(DEFAULT_ACCEPTED.booleanValue()));
+            .andExpect(jsonPath("$.invitedEmail").value(DEFAULT_INVITED_EMAIL))
+            .andExpect(jsonPath("$.accepted").value(DEFAULT_ACCEPTED));
     }
 
     @Test
@@ -256,7 +312,7 @@ public class MemberResourceIT {
         Member updatedMember = memberRepository.findById(member.getId()).get();
         // Disconnect from session so that the updates on updatedMember are not directly saved in db
         em.detach(updatedMember);
-        updatedMember.accepted(UPDATED_ACCEPTED);
+        updatedMember.invitedEmail("the-wasp@localhost").accepted(UPDATED_ACCEPTED);
         MemberDTO memberDTO = memberMapper.toDto(updatedMember);
 
         restMemberMockMvc
@@ -272,6 +328,10 @@ public class MemberResourceIT {
         List<Member> memberList = memberRepository.findAll();
         assertThat(memberList).hasSize(databaseSizeBeforeUpdate);
         Member testMember = memberList.get(memberList.size() - 1);
+
+        em.refresh(testMember);
+
+        assertThat(testMember.getInvitedEmail()).isEqualTo(DEFAULT_INVITED_EMAIL);
         assertThat(testMember.getAccepted()).isEqualTo(UPDATED_ACCEPTED);
     }
 
@@ -374,6 +434,7 @@ public class MemberResourceIT {
         List<Member> memberList = memberRepository.findAll();
         assertThat(memberList).hasSize(databaseSizeBeforeUpdate);
         Member testMember = memberList.get(memberList.size() - 1);
+        assertThat(testMember.getInvitedEmail()).isEqualTo(DEFAULT_INVITED_EMAIL);
         assertThat(testMember.getAccepted()).isEqualTo(UPDATED_ACCEPTED);
     }
 
@@ -389,7 +450,7 @@ public class MemberResourceIT {
         Member partialUpdatedMember = new Member();
         partialUpdatedMember.setId(member.getId());
 
-        partialUpdatedMember.accepted(UPDATED_ACCEPTED);
+        partialUpdatedMember.invitedEmail("the-wasp@localhost").accepted(UPDATED_ACCEPTED);
 
         restMemberMockMvc
             .perform(
@@ -404,6 +465,10 @@ public class MemberResourceIT {
         List<Member> memberList = memberRepository.findAll();
         assertThat(memberList).hasSize(databaseSizeBeforeUpdate);
         Member testMember = memberList.get(memberList.size() - 1);
+
+        em.refresh(testMember);
+
+        assertThat(testMember.getInvitedEmail()).isEqualTo(DEFAULT_INVITED_EMAIL);
         assertThat(testMember.getAccepted()).isEqualTo(UPDATED_ACCEPTED);
     }
 

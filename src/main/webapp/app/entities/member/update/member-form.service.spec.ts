@@ -20,6 +20,7 @@ describe('Member Form Service', () => {
         expect(formGroup.controls).toEqual(
           expect.objectContaining({
             id: expect.any(Object),
+            invitedEmail: expect.any(Object),
             accepted: expect.any(Object),
             acceptedBy: expect.any(Object),
             acceptedDate: expect.any(Object),
@@ -34,6 +35,7 @@ describe('Member Form Service', () => {
         expect(formGroup.controls).toEqual(
           expect.objectContaining({
             id: expect.any(Object),
+            invitedEmail: expect.any(Object),
             accepted: expect.any(Object),
             acceptedBy: expect.any(Object),
             acceptedDate: expect.any(Object),

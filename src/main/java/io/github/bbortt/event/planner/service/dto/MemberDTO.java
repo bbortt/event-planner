@@ -13,6 +13,11 @@ public class MemberDTO implements Serializable {
 
     private Long id;
 
+    @Email
+    @NotNull
+    @Size(min = 1, max = 191)
+    private String invitedEmail;
+
     @NotNull
     private Boolean accepted;
 
@@ -28,6 +33,14 @@ public class MemberDTO implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getInvitedEmail() {
+        return invitedEmail;
+    }
+
+    public void setInvitedEmail(String invitedEmail) {
+        this.invitedEmail = invitedEmail;
     }
 
     public Boolean getAccepted() {
@@ -88,6 +101,7 @@ public class MemberDTO implements Serializable {
     public String toString() {
         return "MemberDTO{" +
             "id=" + getId() +
+            ", invitedEmail='" +getInvitedEmail() + "'" +
             ", accepted='" + getAccepted() + "'" +
             ", acceptedBy='" + getAcceptedBy() + "'" +
             ", acceptedDate='" + getAcceptedDate() + "'" +

@@ -40,7 +40,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProjectResourceIT {
 
     private static final UUID DEFAULT_TOKEN = UUID.randomUUID();
-    private static final UUID UPDATED_TOKEN = UUID.randomUUID();
 
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
@@ -48,11 +47,9 @@ public class ProjectResourceIT {
     private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
     private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
 
-    private static final Instant DEFAULT_START_DATE = Instant.now();
-    private static final Instant UPDATED_START_DATE = Instant.now().plus(1, ChronoUnit.MINUTES);
+    private static final Instant DEFAULT_START_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
-    private static final Instant DEFAULT_END_DATE = Instant.now();
-    private static final Instant UPDATED_END_DATE = Instant.now().plus(1, ChronoUnit.MINUTES);
+    private static final Instant DEFAULT_END_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
     private static final Boolean DEFAULT_ARCHIVED = false;
     private static final Boolean UPDATED_ARCHIVED = true;
@@ -112,11 +109,11 @@ public class ProjectResourceIT {
      */
     public static Project createUpdatedEntity(EntityManager em) {
         return new Project()
-            .token(UPDATED_TOKEN)
+            .token(DEFAULT_TOKEN)
             .name(UPDATED_NAME)
             .description(UPDATED_DESCRIPTION)
-            .startDate(UPDATED_START_DATE)
-            .endDate(UPDATED_END_DATE)
+            .startDate(DEFAULT_START_DATE)
+            .endDate(DEFAULT_END_DATE)
             .archived(UPDATED_ARCHIVED)
             .createdBy(CREATED_BY)
             .createdDate(CREATED_DATE)
@@ -377,11 +374,11 @@ public class ProjectResourceIT {
         // Disconnect from session so that the updates on updatedProject are not directly saved in db
         em.detach(updatedProject);
         updatedProject
-            .token(UPDATED_TOKEN)
+            .token(UUID.randomUUID())
             .name(UPDATED_NAME)
             .description(UPDATED_DESCRIPTION)
-            .startDate(UPDATED_START_DATE)
-            .endDate(UPDATED_END_DATE)
+            .startDate(DEFAULT_START_DATE.plus(1, ChronoUnit.MINUTES))
+            .endDate(DEFAULT_END_DATE.plus(1, ChronoUnit.MINUTES))
             .archived(UPDATED_ARCHIVED);
         ProjectDTO projectDTO = projectMapper.toDto(updatedProject);
 
@@ -398,11 +395,14 @@ public class ProjectResourceIT {
         List<Project> projectList = projectRepository.findAll();
         assertThat(projectList).hasSize(databaseSizeBeforeUpdate);
         Project testProject = projectList.get(projectList.size() - 1);
-        assertThat(testProject.getToken()).isEqualTo(UPDATED_TOKEN);
+
+        em.refresh(testProject);
+
+        assertThat(testProject.getToken()).isEqualTo(DEFAULT_TOKEN);
         assertThat(testProject.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testProject.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
-        assertThat(testProject.getStartDate()).isEqualTo(UPDATED_START_DATE);
-        assertThat(testProject.getEndDate()).isEqualTo(UPDATED_END_DATE);
+        assertThat(testProject.getStartDate()).isEqualTo(DEFAULT_START_DATE);
+        assertThat(testProject.getEndDate()).isEqualTo(DEFAULT_END_DATE);
         assertThat(testProject.getArchived()).isEqualTo(UPDATED_ARCHIVED);
     }
 
@@ -490,7 +490,7 @@ public class ProjectResourceIT {
         Project partialUpdatedProject = new Project();
         partialUpdatedProject.setId(project.getId());
 
-        partialUpdatedProject.token(UPDATED_TOKEN).startDate(UPDATED_START_DATE).endDate(UPDATED_END_DATE);
+        partialUpdatedProject.setName(UPDATED_NAME);
 
         restProjectMockMvc
             .perform(
@@ -505,11 +505,11 @@ public class ProjectResourceIT {
         List<Project> projectList = projectRepository.findAll();
         assertThat(projectList).hasSize(databaseSizeBeforeUpdate);
         Project testProject = projectList.get(projectList.size() - 1);
-        assertThat(testProject.getToken()).isEqualTo(UPDATED_TOKEN);
-        assertThat(testProject.getName()).isEqualTo(DEFAULT_NAME);
+        assertThat(testProject.getToken()).isEqualTo(DEFAULT_TOKEN);
+        assertThat(testProject.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testProject.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
-        assertThat(testProject.getStartDate()).isEqualTo(UPDATED_START_DATE);
-        assertThat(testProject.getEndDate()).isEqualTo(UPDATED_END_DATE);
+        assertThat(testProject.getStartDate()).isEqualTo(DEFAULT_START_DATE);
+        assertThat(testProject.getEndDate()).isEqualTo(DEFAULT_END_DATE);
         assertThat(testProject.getArchived()).isEqualTo(DEFAULT_ARCHIVED);
     }
 
@@ -526,11 +526,11 @@ public class ProjectResourceIT {
         partialUpdatedProject.setId(project.getId());
 
         partialUpdatedProject
-            .token(UPDATED_TOKEN)
+            .token(UUID.randomUUID())
             .name(UPDATED_NAME)
             .description(UPDATED_DESCRIPTION)
-            .startDate(UPDATED_START_DATE)
-            .endDate(UPDATED_END_DATE)
+            .startDate(DEFAULT_START_DATE.plus(1, ChronoUnit.MINUTES))
+            .endDate(DEFAULT_END_DATE.plus(1, ChronoUnit.MINUTES))
             .archived(UPDATED_ARCHIVED);
 
         restProjectMockMvc
@@ -546,11 +546,14 @@ public class ProjectResourceIT {
         List<Project> projectList = projectRepository.findAll();
         assertThat(projectList).hasSize(databaseSizeBeforeUpdate);
         Project testProject = projectList.get(projectList.size() - 1);
-        assertThat(testProject.getToken()).isEqualTo(UPDATED_TOKEN);
+
+        em.refresh(testProject);
+
+        assertThat(testProject.getToken()).isEqualTo(DEFAULT_TOKEN);
         assertThat(testProject.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testProject.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
-        assertThat(testProject.getStartDate()).isEqualTo(UPDATED_START_DATE);
-        assertThat(testProject.getEndDate()).isEqualTo(UPDATED_END_DATE);
+        assertThat(testProject.getStartDate()).isEqualTo(DEFAULT_START_DATE);
+        assertThat(testProject.getEndDate()).isEqualTo(DEFAULT_END_DATE);
         assertThat(testProject.getArchived()).isEqualTo(UPDATED_ARCHIVED);
     }
 

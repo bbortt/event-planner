@@ -18,6 +18,7 @@
         "title": "Mitglied"
       },
       "id": "ID",
+      "invitedEmail": "Email",
       "accepted": "Akzeptiert",
       "acceptedBy": "Akzeptiert von",
       "acceptedDate": "Akzeptiert am",

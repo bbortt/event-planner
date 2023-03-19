@@ -101,7 +101,7 @@ public final class SecurityUtils {
     }
 
     public static List<GrantedAuthority> extractAuthorityFromClaims(Map<String, Object> claims) {
-        return mapRolesToGrantedAuthorities(getRolesFromClaims(claims));
+        return (List<GrantedAuthority>) mapRolesToGrantedAuthorities(getRolesFromClaims(claims));
     }
 
     @SuppressWarnings("unchecked")
@@ -112,7 +112,7 @@ public final class SecurityUtils {
         );
     }
 
-    private static List<GrantedAuthority> mapRolesToGrantedAuthorities(Collection<String> roles) {
-        return roles.stream().filter(role -> role.startsWith("ROLE_")).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+    private static List<? extends GrantedAuthority> mapRolesToGrantedAuthorities(Collection<String> roles) {
+        return roles.stream().filter(role -> role.startsWith("ROLE_")).map(SimpleGrantedAuthority::new).toList();
     }
 }
