@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
+
 import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
@@ -28,7 +29,6 @@ export class ProjectUpdateComponent implements OnInit {
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ project }) => {
       this.project = project;
-      console.log('this.project:', this.project);
       if (project) {
         this.updateForm(project);
         this.isProjectArchived = project.archived;
