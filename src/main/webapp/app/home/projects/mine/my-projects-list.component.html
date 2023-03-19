@@ -1,5 +1,5 @@
 <div>
-  <h2 id="page-heading" data-cy="ProjectHeading">
+  <h2 id="page-heading" data-cy="ProjectHeading" class="mb-3">
     <span jhiTranslate="app.project.mine.title">Deine Projekte</span>
 
     <div class="d-flex justify-content-end">
@@ -39,7 +39,7 @@
       </div>
     </div>
 
-    <div class="row mt-3 justify-content-center">
+    <div class="row justify-content-center">
       <div class="col-md-2">
         <button class="btn btn-info" (click)="loadPage(page + 1)" [disabled]="!hasNextPage || isLoading">
           <fa-icon icon="sync" [spin]="isLoading"></fa-icon>

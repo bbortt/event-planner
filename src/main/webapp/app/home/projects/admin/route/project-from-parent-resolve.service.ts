@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Resolve, Router } from '@angular/router';
+import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
 
 import { Observable, of } from 'rxjs';
 
@@ -7,13 +7,11 @@ import { IProject } from '../../../../entities/project/project.model';
 
 @Injectable({ providedIn: 'root' })
 export class ProjectFromParentResolveService implements Resolve<IProject | null> {
-  constructor(protected router: Router) {}
-
-  resolve(route: ActivatedRouteSnapshot): Observable<IProject | null | never> {
+  resolve(route: ActivatedRouteSnapshot): Observable<IProject | null> {
     if (!route.parent) {
       return of(null);
     }
 
-    return of(route.parent.data.project);
+    return of(route.parent.data.project as IProject);
   }
 }
