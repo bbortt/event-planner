@@ -1,0 +1,28 @@
+<nav data-cy="NavbarProjectAdmin" class="sidebar">
+  <ul class="nav nav-pills flex-column ms-auto">
+    <li class="nav-item">
+      <a routerLink="settings" routerLinkActive="active" class="nav-link link-dark" #rls="routerLinkActive">
+        <i>
+          <fa-icon [class.active]="rls.isActive" [fixedWidth]="true" icon="house"></fa-icon>
+        </i>
+        <span>{{ project?.name }}</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a routerLink="locations" routerLinkActive="active" class="nav-link link-dark" #rll="routerLinkActive">
+        <i>
+          <fa-icon [class.active]="rll.isActive" [fixedWidth]="true" [icon]="faLocationDot"></fa-icon>
+        </i>
+        <span jhiTranslate="app.location.home.title">Lokalitäten</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a routerLink="members" routerLinkActive="active" class="nav-link link-dark" #rlm="routerLinkActive">
+        <i>
+          <fa-icon [class.active]="rlm.isActive" [fixedWidth]="true" icon="user"></fa-icon>
+        </i>
+        <span jhiTranslate="app.member.home.title">Mitglieder</span>
+      </a>
+    </li>
+  </ul>
+</nav>

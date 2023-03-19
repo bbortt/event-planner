@@ -1,0 +1,9 @@
+@import '~bootswatch/dist/minty/variables';
+
+i {
+  color: $primary;
+
+  .active {
+    color: $white;
+  }
+}

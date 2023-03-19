@@ -1,0 +1,164 @@
+<div class="d-flex justify-content-center">
+  <div class="col-12">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-project-heading" data-cy="ProjectCreateUpdateHeading">
+        <span jhiTranslate="global.menu.account.settings">Einstellungen</span>
+      </h2>
+
+      <div class="mt-3 p-3">
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="row" *ngIf="isProjectArchived">
+          <ngb-alert [dismissible]="false" type="info">
+            <span jhiTranslate="app.project.archivedFullText">Dieses Projekt wurde archiviert!</span>
+          </ngb-alert>
+        </div>
+
+        <div class="row mb-3" *ngIf="editForm.controls.token.value !== null">
+          <label class="form-label" jhiTranslate="app.project.token" for="field_token">Token</label>
+          <input
+            type="text"
+            class="form-control"
+            name="token"
+            id="field_token"
+            data-cy="token"
+            formControlName="token"
+            [readonly]="true"
+            [disabled]="true"
+          />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="app.project.name" for="field_name">Name</label>
+          <input
+            type="text"
+            class="form-control"
+            name="name"
+            id="field_name"
+            data-cy="name"
+            formControlName="name"
+            [readOnly]="isProjectArchived"
+          />
+          <div *ngIf="editForm.get('name')!.invalid && (editForm.get('name')!.dirty || editForm.get('name')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('name')?.errors?.required" jhiTranslate="entity.validation.required">
+              Dieses Feld wird benötigt.
+            </small>
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('name')?.errors?.minlength"
+              jhiTranslate="entity.validation.minlength"
+              [translateValues]="{ min: 1 }"
+            >
+              Dieses Feld muss mind. 1 Zeichen lang sein.
+            </small>
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('name')?.errors?.maxlength"
+              jhiTranslate="entity.validation.maxlength"
+              [translateValues]="{ max: 63 }"
+            >
+              Dieses Feld darf max. 63 Zeichen lang sein.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="app.project.description" for="field_description">Description</label>
+          <input
+            type="text"
+            class="form-control"
+            name="description"
+            id="field_description"
+            data-cy="description"
+            formControlName="description"
+            [readOnly]="isProjectArchived"
+          />
+          <div *ngIf="editForm.get('description')!.invalid && (editForm.get('description')!.dirty || editForm.get('description')!.touched)">
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('description')?.errors?.maxlength"
+              jhiTranslate="entity.validation.maxlength"
+              [translateValues]="{ max: 255 }"
+            >
+              Dieses Feld darf max. 255 Zeichen lang sein.
+            </small>
+          </div>
+        </div>
+
+        <div class="row justify-content-between mb-3">
+          <div class="col-5 p-0">
+            <label class="form-label" jhiTranslate="app.project.startDate" for="field_startDate">Start Date</label>
+            <input
+              id="field_startDate"
+              data-cy="startDate"
+              type="date"
+              class="form-control"
+              name="startDate"
+              formControlName="startDate"
+              placeholder="YYYY-MM-DD"
+              [readOnly]="isProjectArchived"
+            />
+            <div *ngIf="editForm.get('startDate')!.invalid && (editForm.get('startDate')!.dirty || editForm.get('startDate')!.touched)">
+              <small
+                class="form-text text-danger"
+                *ngIf="editForm.get('startDate')?.errors?.required"
+                jhiTranslate="entity.validation.required"
+              >
+                Dieses Feld wird benötigt.
+              </small>
+              <small
+                class="form-text text-danger"
+                [hidden]="!editForm.get('startDate')?.errors?.datetimelocal"
+                jhiTranslate="entity.validation.datetimelocal"
+              >
+                Dieses Feld muss eine Datums- und Zeitangabe enthalten.
+              </small>
+            </div>
+          </div>
+
+          <div class="col-5 p-0">
+            <label class="form-label" jhiTranslate="app.project.endDate" for="field_endDate">End Date</label>
+            <input
+              id="field_endDate"
+              data-cy="endDate"
+              type="date"
+              class="form-control"
+              name="endDate"
+              formControlName="endDate"
+              placeholder="YYYY-MM-DD"
+              [readOnly]="isProjectArchived"
+            />
+            <div *ngIf="editForm.get('endDate')!.invalid && (editForm.get('endDate')!.dirty || editForm.get('endDate')!.touched)">
+              <small
+                class="form-text text-danger"
+                *ngIf="editForm.get('endDate')?.errors?.required"
+                jhiTranslate="entity.validation.required"
+              >
+                Dieses Feld wird benötigt.
+              </small>
+              <small
+                class="form-text text-danger"
+                [hidden]="!editForm.get('endDate')?.errors?.datetimelocal"
+                jhiTranslate="entity.validation.datetimelocal"
+              >
+                Dieses Feld muss eine Datums- und Zeitangabe enthalten.
+              </small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-group">
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Speichern</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
