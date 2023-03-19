@@ -1,7 +1,7 @@
 name: Application CI
 on: [push]
 concurrency:
-  group: ${{ github.ref }}
+  group: application-ci-${{ github.ref }}
   cancel-in-progress: true
 jobs:
   gradle:
