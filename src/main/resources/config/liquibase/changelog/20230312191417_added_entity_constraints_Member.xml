@@ -8,10 +8,19 @@
     -->
     <changeSet id="20230312191417-2" author="jhipster">
 
+        <addForeignKeyConstraint baseColumnNames="invited_email"
+                                 baseTableName="member"
+                                 constraintName="fk_member__user_email"
+                                 referencedColumnNames="email"
+                                 referencedTableName="jhi_user"
+                                 validate="false"/>
+
         <addForeignKeyConstraint baseColumnNames="project_id"
                                  baseTableName="member"
                                  constraintName="fk_member__project_id"
                                  referencedColumnNames="id"
                                  referencedTableName="project"/>
+
+        <addUniqueConstraint tableName="member" columnNames="invited_email, project_id"/>
     </changeSet>
 </databaseChangeLog>

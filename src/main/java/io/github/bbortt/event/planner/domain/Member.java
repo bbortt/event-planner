@@ -13,7 +13,10 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
  * A Member.
  */
 @Entity
-@Table(name = "member")
+@Table(
+    name = "member",
+    uniqueConstraints = { @UniqueConstraint(name = "ux_invitation_per_project", columnNames = { "invited_email", "project_id" }) }
+)
 @EntityListeners({ AuditingEntityListener.class, EntityAuditEventListener.class })
 @SuppressWarnings("common-java:DuplicatedBlocks")
 public class Member implements Serializable {
@@ -27,6 +30,11 @@ public class Member implements Serializable {
     private Long id;
 
     @NotNull
+    @Size(min = 1, max = 191)
+    @Column(name = "invited_email", length = 191, nullable = false, updatable = false)
+    private String invitedEmail;
+
+    @NotNull
     @Column(name = "accepted", nullable = false)
     private Boolean accepted;
 
@@ -34,10 +42,10 @@ public class Member implements Serializable {
     @Column(name = "accepted_by", nullable = false, updatable = false)
     private String acceptedBy;
 
-    // TODO: Link to user
-    //    @ManyToOne(optional = false)
-    //    @JoinColumn(name = "accepted_by", referencedColumnName = "id", nullable = false, updatable = false)
-    //    private User user;
+    @Transient
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "accepted_by", referencedColumnName = "email", nullable = false, updatable = false)
+    private User user;
 
     @CreatedDate
     @Column(name = "accepted_date", nullable = false, updatable = false)
@@ -63,6 +71,19 @@ public class Member implements Serializable {
         this.id = id;
     }
 
+    public String getInvitedEmail() {
+        return invitedEmail;
+    }
+
+    public void setInvitedEmail(String invitedEmail) {
+        this.invitedEmail = invitedEmail;
+    }
+
+    public Member invitedEmail(String invitedEmail) {
+        this.setInvitedEmail(invitedEmail);
+        return this;
+    }
+
     public Boolean getAccepted() {
         return this.accepted;
     }
@@ -82,6 +103,19 @@ public class Member implements Serializable {
 
     public Member acceptedBy(String acceptedBy) {
         this.setAcceptedBy(acceptedBy);
+        return this;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Member user(User user) {
+        setUser(user);
         return this;
     }
 
@@ -139,6 +173,7 @@ public class Member implements Serializable {
     public String toString() {
         return "Member{" +
             "id=" + getId() +
+            ", invitedEmail='" +getInvitedEmail() + "'" +
             ", accepted='" + getAccepted() + "'" +
             ", acceptedBy='" + getAcceptedBy() + "'" +
             ", acceptedDate='" + getAcceptedDate() + "'" +

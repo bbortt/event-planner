@@ -102,7 +102,7 @@ public class ExceptionTranslator implements ProblemHandling, SecurityAdviceTrait
                     StringUtils.isNotBlank(f.getDefaultMessage()) ? f.getDefaultMessage() : f.getCode()
                 )
             )
-            .collect(Collectors.toList());
+            .toList();
 
         Problem problem = Problem
             .builder()

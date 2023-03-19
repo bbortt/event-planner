@@ -31,6 +31,7 @@ type MemberFormDefaults = Pick<NewMember, 'id' | 'accepted' | 'acceptedDate'>;
 
 type MemberFormGroupContent = {
   id: FormControl<MemberFormRawValue['id'] | NewMember['id']>;
+  invitedEmail: FormControl<MemberFormRawValue['invitedEmail']>;
   accepted: FormControl<MemberFormRawValue['accepted']>;
   acceptedBy: FormControl<MemberFormRawValue['acceptedBy']>;
   acceptedDate: FormControl<MemberFormRawValue['acceptedDate']>;
@@ -54,6 +55,9 @@ export class MemberFormService {
           validators: [Validators.required],
         }
       ),
+      invitedEmail: new FormControl(memberRawValue.invitedEmail, {
+        validators: [Validators.required, Validators.minLength(1), Validators.maxLength(191)],
+      }),
       accepted: new FormControl(memberRawValue.accepted, {
         validators: [Validators.required],
       }),

@@ -38,6 +38,12 @@
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
+          <th scope="col" jhiSortBy="invitedEmail">
+            <div class="d-flex">
+              <span jhiTranslate="app.member.invitedEmail">Invited email</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
           <th scope="col" jhiSortBy="accepted">
             <div class="d-flex">
               <span jhiTranslate="app.member.accepted">Accepted</span>
@@ -70,6 +76,7 @@
           <td>
             <a [routerLink]="['/member', member.id, 'view']">{{ member.id }}</a>
           </td>
+          <td>{{ member.invitedEmail }}</td>
           <td>{{ member.accepted }}</td>
           <td>{{ member.acceptedBy }}</td>
           <td>{{ member.acceptedDate | formatMediumDatetime }}</td>
