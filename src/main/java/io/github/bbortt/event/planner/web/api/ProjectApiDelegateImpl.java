@@ -3,7 +3,7 @@ package io.github.bbortt.event.planner.web.api;
 import io.github.bbortt.event.planner.service.ProjectService;
 import io.github.bbortt.event.planner.service.api.dto.GetProjectMembers200Response;
 import io.github.bbortt.event.planner.service.api.dto.GetUserProjects200Response;
-import io.github.bbortt.event.planner.service.api.dto.InviteMemberToProjectRequest;
+import io.github.bbortt.event.planner.service.api.dto.InviteMemberToProjectRequestInner;
 import io.github.bbortt.event.planner.service.api.dto.Project;
 import io.github.bbortt.event.planner.service.dto.ProjectDTO;
 import io.github.bbortt.event.planner.web.rest.util.PaginationUtil;
@@ -61,7 +61,10 @@ public class ProjectApiDelegateImpl implements ProjectApiDelegate {
     }
 
     @Override
-    public ResponseEntity<Void> inviteMemberToProject(Long projectId, InviteMemberToProjectRequest inviteMemberToProjectRequest) {
+    public ResponseEntity<Void> inviteMemberToProject(
+        Long projectId,
+        List<InviteMemberToProjectRequestInner> inviteMemberToProjectRequestInner
+    ) {
         throw new NotImplementedException();
     }
 
