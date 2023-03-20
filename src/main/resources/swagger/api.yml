@@ -104,14 +104,18 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              required:
-                - email
-              properties:
-                email:
-                  type: string
-                  description: The email to which the invitation will be sent.
-                  example: timon.borter@gmx.ch
+              type: array
+              items:
+                type: object
+                required:
+                  - email
+                properties:
+                  email:
+                    type: string
+                    format: email
+                    maxLength: 191
+                    minLength: 1
+                    description: The email to which the invitation will be sent.
       responses:
         201:
           description: Created
@@ -153,11 +157,17 @@ components:
   schemas:
     Member:
       type: object
-      required: []
+      required:
+        - email
       properties:
         id:
           type: integer
           format: int64
+        email:
+          type: string
+          format: email
+          maxLength: 191
+          minLength: 1
         accepted:
           type: boolean
         acceptedDate:
