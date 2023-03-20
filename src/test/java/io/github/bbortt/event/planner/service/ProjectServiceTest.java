@@ -3,8 +3,10 @@ package io.github.bbortt.event.planner.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 
 import io.github.bbortt.event.planner.domain.Project;
 import io.github.bbortt.event.planner.repository.ProjectRepository;
@@ -24,8 +26,6 @@ import org.springframework.data.domain.SliceImpl;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.parameters.P;
-import org.springframework.security.test.context.TestSecurityContextHolder;
 import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
@@ -95,14 +95,16 @@ class ProjectServiceTest {
         doReturn(projectDTO).when(projectMapperMock).toDto(projectMock);
 
         Pageable pageable = Pageable.unpaged();
-        doReturn(new SliceImpl<>(List.of(projectMock))).when(projectRepositoryMock).findAllByCreatedByEquals(login, pageable);
+        doReturn(new SliceImpl<>(List.of(projectMock)))
+            .when(projectRepositoryMock)
+            .findAllByCreatedByEqualsAndArchivedIsFalse(login, pageable);
 
         Slice<ProjectDTO> result = fixture.findForCurrentUser(pageable);
 
         assertEquals(1, result.getContent().size());
         assertEquals(projectDTO, result.getContent().get(0));
 
-        verify(projectRepositoryMock).findAllByCreatedByEquals(login, pageable);
+        verify(projectRepositoryMock).findAllByCreatedByEqualsAndArchivedIsFalse(login, pageable);
     }
 
     @Test

@@ -63,10 +63,6 @@ public class ProjectService {
     public ProjectDTO update(ProjectDTO projectDTO) {
         log.debug("Request to update Project : {}", projectDTO);
         Project project = projectMapper.toEntity(projectDTO);
-
-        // Prevail unmodifiable columns
-        //        project.token(projectRepository.findById(project.getId()).get().getToken());
-
         project = projectRepository.save(project);
         return projectMapper.toDto(project);
     }
@@ -139,7 +135,6 @@ public class ProjectService {
             log.trace("Current login is '{}'", login);
         }
 
-        // TODO: This will only return projects that are not archived.
-        return projectRepository.findAllByCreatedByEquals(login, pageable).map(projectMapper::toDto);
+        return projectRepository.findAllByCreatedByEqualsAndArchivedIsFalse(login, pageable).map(projectMapper::toDto);
     }
 }

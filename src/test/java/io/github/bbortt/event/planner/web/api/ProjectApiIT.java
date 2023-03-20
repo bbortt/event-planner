@@ -38,12 +38,12 @@ class ProjectApiIT {
     @Test
     @Transactional
     void getMyProjectsWithNextPage() throws Exception {
-        int projects = 4;
+        int projectCount = 4;
 
-        createAndPersistProjects(projects);
+        createAndPersistProjects(projectCount);
 
         restProjectMockMvc
-            .perform(get(ENTITY_API_URL + "?pageSize="+PAGE_SIZE))
+            .perform(get(ENTITY_API_URL + "?pageSize=" + PAGE_SIZE))
             .andExpect(status().isOk())
             .andExpect(header().string(SLICE_HAS_NEXT_PAGE_HEADER, equalTo("true")))
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -53,21 +53,41 @@ class ProjectApiIT {
     @Test
     @Transactional
     void getMyProjectsWithoutNextPage() throws Exception {
-        int projects = PAGE_SIZE;
+        int projectCount = PAGE_SIZE;
 
-        createAndPersistProjects(projects);
+        createAndPersistProjects(projectCount);
 
         restProjectMockMvc
-            .perform(get(ENTITY_API_URL + "?pageSize="+PAGE_SIZE))
+            .perform(get(ENTITY_API_URL + "?pageSize=" + PAGE_SIZE))
             .andExpect(status().isOk())
             .andExpect(header().string(SLICE_HAS_NEXT_PAGE_HEADER, equalTo("false")))
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.contents.size()").value(equalTo(PAGE_SIZE)));
     }
 
+    @Test
+    @Transactional
+    void getMyProjectsWithoutArchivedProjects() throws Exception {
+        int projectCount = 2;
+
+        createAndPersistProjects(projectCount);
+        createAndPersistProjects(projectCount, Boolean.TRUE);
+
+        restProjectMockMvc
+            .perform(get(ENTITY_API_URL + "?pageSize=" + PAGE_SIZE))
+            .andExpect(status().isOk())
+            .andExpect(header().string(SLICE_HAS_NEXT_PAGE_HEADER, equalTo("false")))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.contents.size()").value(equalTo(projectCount)));
+    }
+
     private void createAndPersistProjects(int count) {
+        createAndPersistProjects(count, Boolean.FALSE);
+    }
+
+    private void createAndPersistProjects(int count, Boolean archived) {
         for (int i = 0; i < count; i++) {
-            projectRepository.save(ProjectResourceIT.createEntity(entityManager).token(UUID.randomUUID()));
+            projectRepository.save(ProjectResourceIT.createEntity(entityManager).token(UUID.randomUUID()).archived(archived));
         }
     }
 }

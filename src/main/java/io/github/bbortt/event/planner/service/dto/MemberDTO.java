@@ -3,7 +3,9 @@ package io.github.bbortt.event.planner.service.dto;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
-import javax.validation.constraints.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  * A DTO for the {@link io.github.bbortt.event.planner.domain.Member} entity.
@@ -101,7 +103,7 @@ public class MemberDTO implements Serializable {
     public String toString() {
         return "MemberDTO{" +
             "id=" + getId() +
-            ", invitedEmail='" +getInvitedEmail() + "'" +
+            ", invitedEmail='" + getInvitedEmail() + "'" +
             ", accepted='" + getAccepted() + "'" +
             ", acceptedBy='" + getAcceptedBy() + "'" +
             ", acceptedDate='" + getAcceptedDate() + "'" +

@@ -4,7 +4,8 @@ import io.github.bbortt.event.planner.audit.EntityAuditEventListener;
 import java.io.Serializable;
 import java.time.Instant;
 import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -173,7 +174,7 @@ public class Member implements Serializable {
     public String toString() {
         return "Member{" +
             "id=" + getId() +
-            ", invitedEmail='" +getInvitedEmail() + "'" +
+            ", invitedEmail='" + getInvitedEmail() + "'" +
             ", accepted='" + getAccepted() + "'" +
             ", acceptedBy='" + getAcceptedBy() + "'" +
             ", acceptedDate='" + getAcceptedDate() + "'" +
