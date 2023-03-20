@@ -40,9 +40,9 @@ import org.springframework.transaction.annotation.Transactional;
  * Integration tests for the {@link LocationResource} REST controller.
  */
 @IntegrationTest
-@ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
-@WithMockUser
+@ExtendWith(MockitoExtension.class)
+@WithMockUser("location-resource-it")
 public class LocationResourceIT {
 
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
