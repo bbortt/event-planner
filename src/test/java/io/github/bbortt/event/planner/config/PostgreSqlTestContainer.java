@@ -23,12 +23,14 @@ public class PostgreSqlTestContainer implements SqlTestContainer {
     @Override
     public void afterPropertiesSet() {
         if (null == postgreSQLContainer) {
-            postgreSQLContainer =
-                new PostgreSQLContainer<>("postgres:14.5")
+            try (PostgreSQLContainer postgreSQLContainer = new PostgreSQLContainer<>("postgres:15.2-alpine")) {
+                postgreSQLContainer
                     .withDatabaseName("eventplanner")
                     .withTmpFs(Collections.singletonMap("/testtmpfs", "rw"))
                     .withLogConsumer(new Slf4jLogConsumer(log))
                     .withReuse(true);
+                this.postgreSQLContainer = postgreSQLContainer;
+            }
         }
         if (!postgreSQLContainer.isRunning()) {
             postgreSQLContainer.start();
