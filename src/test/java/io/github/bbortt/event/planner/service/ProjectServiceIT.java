@@ -15,8 +15,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.security.test.context.support.WithMockUser;
 
-@WithMockUser
 @IntegrationTest
+@WithMockUser("project-service-it")
 public class ProjectServiceIT {
 
     @Autowired

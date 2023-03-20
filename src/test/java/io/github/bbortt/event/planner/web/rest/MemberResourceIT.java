@@ -41,9 +41,9 @@ import org.springframework.transaction.annotation.Transactional;
  * Integration tests for the {@link MemberResource} REST controller.
  */
 @IntegrationTest
-@ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
-@WithMockUser
+@ExtendWith(MockitoExtension.class)
+@WithMockUser("member-resource-it")
 public class MemberResourceIT {
 
     private static final String DEFAULT_INVITED_EMAIL = "ant-man@localhost";

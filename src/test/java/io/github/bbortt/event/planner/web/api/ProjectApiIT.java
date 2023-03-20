@@ -18,9 +18,9 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-@WithMockUser
 @IntegrationTest
 @AutoConfigureMockMvc
+@WithMockUser("project-api-it")
 class ProjectApiIT {
 
     private static final String ENTITY_API_URL = "/api/rest/v1/projects";
