@@ -21,6 +21,8 @@
                                  referencedColumnNames="id"
                                  referencedTableName="project"/>
 
-        <addUniqueConstraint tableName="member" columnNames="invited_email, project_id"/>
+        <addUniqueConstraint constraintName="ux_invitation_per_project"
+                             tableName="member"
+                             columnNames="invited_email, project_id"/>
     </changeSet>
 </databaseChangeLog>
