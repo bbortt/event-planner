@@ -27,9 +27,11 @@ export type EntityArrayResponseType = HttpResponse<ILocation[]>;
 
 @Injectable({ providedIn: 'root' })
 export class LocationService {
-  protected resourceUrl = this.applicationConfigService.getEndpointFor('api/locations');
+  protected resourceUrl;
 
-  constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) {}
+  constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) {
+    this.resourceUrl = this.applicationConfigService.getEndpointFor('api/locations');
+  }
 
   create(location: NewLocation): Observable<EntityResponseType> {
     const copy = this.convertDateFromClient(location);

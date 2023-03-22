@@ -19,13 +19,15 @@ export class ProjectSettingsComponent implements OnInit {
   project: IProject | null = null;
   isProjectArchived = false;
 
-  editForm: ProjectFormGroup = this.projectFormService.createProjectFormGroup();
+  editForm: ProjectFormGroup;
 
   constructor(
     protected projectService: ProjectService,
     protected projectFormService: ProjectFormService,
     protected activatedRoute: ActivatedRoute
-  ) {}
+  ) {
+    this.editForm = this.projectFormService.createProjectFormGroup();
+  }
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ project }) => {

@@ -15,9 +15,9 @@
     "importHelpers": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "target": "es2020",
-    "module": "es2020",
-    "lib": ["es2018", "dom"]
+    "target": "ESNext",
+    "module": "ESNext",
+    "lib": ["ESNext", "DOM"]
   },
   "angularCompilerOptions": {
     "strictInjectionParameters": true,

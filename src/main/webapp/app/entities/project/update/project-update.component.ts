@@ -18,13 +18,15 @@ export class ProjectUpdateComponent implements OnInit {
   project: IProject | null = null;
   isProjectArchived = false;
 
-  editForm: ProjectFormGroup = this.projectFormService.createProjectFormGroup();
+  editForm: ProjectFormGroup;
 
   constructor(
     protected projectService: ProjectService,
     protected projectFormService: ProjectFormService,
     protected activatedRoute: ActivatedRoute
-  ) {}
+  ) {
+    this.editForm = this.projectFormService.createProjectFormGroup();
+  }
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ project }) => {
@@ -59,7 +61,7 @@ export class ProjectUpdateComponent implements OnInit {
   protected subscribeToSaveResponse(result: Observable<HttpResponse<IProject>>): void {
     result.pipe(finalize(() => this.onSaveFinalize())).subscribe({
       next: () => this.onSaveSuccess(),
-      error: () => this.onSaveError(),
+      error: err => this.onSaveError(err),
     });
   }
 
@@ -67,7 +69,8 @@ export class ProjectUpdateComponent implements OnInit {
     this.previousState();
   }
 
-  protected onSaveError(): void {
+  protected onSaveError(err: any): void {
+    // TODO: Error handling -> JHipster error event?
     // Api for inheritance.
   }
 
