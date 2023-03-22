@@ -20,14 +20,16 @@ export class MemberUpdateComponent implements OnInit {
 
   projectsSharedCollection: IProject[] = [];
 
-  editForm: MemberFormGroup = this.memberFormService.createMemberFormGroup();
+  editForm: MemberFormGroup;
 
   constructor(
     protected memberService: MemberService,
     protected memberFormService: MemberFormService,
     protected projectService: ProjectService,
     protected activatedRoute: ActivatedRoute
-  ) {}
+  ) {
+    this.editForm = this.memberFormService.createMemberFormGroup();
+  }
 
   compareProject = (o1: IProject | null, o2: IProject | null): boolean => this.projectService.compareProject(o1, o2);
 

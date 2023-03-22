@@ -26,9 +26,11 @@ export type EntityArrayResponseType = HttpResponse<IMember[]>;
 
 @Injectable({ providedIn: 'root' })
 export class MemberService {
-  protected resourceUrl = this.applicationConfigService.getEndpointFor('api/members');
+  protected resourceUrl;
 
-  constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) {}
+  constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) {
+    this.resourceUrl = this.applicationConfigService.getEndpointFor('api/members');
+  }
 
   create(member: NewMember): Observable<EntityResponseType> {
     const copy = this.convertDateFromClient(member);

@@ -21,14 +21,16 @@ export class LocationUpdateComponent implements OnInit {
   projectsSharedCollection: IProject[] = [];
   locationsSharedCollection: ILocation[] = [];
 
-  editForm: LocationFormGroup = this.locationFormService.createLocationFormGroup();
+  editForm: LocationFormGroup;
 
   constructor(
     protected locationService: LocationService,
     protected locationFormService: LocationFormService,
     protected projectService: ProjectService,
     protected activatedRoute: ActivatedRoute
-  ) {}
+  ) {
+    this.editForm = this.locationFormService.createLocationFormGroup();
+  }
 
   compareProject = (o1: IProject | null, o2: IProject | null): boolean => this.projectService.compareProject(o1, o2);
 
