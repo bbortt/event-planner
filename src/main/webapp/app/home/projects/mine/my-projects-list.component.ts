@@ -1,8 +1,8 @@
 import { HttpHeaders, HttpResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Data, ParamMap, Router } from '@angular/router';
 
-import { combineLatest, Observable, switchMap, tap } from 'rxjs';
+import { combineLatest, Observable, Subscription, switchMap, tap } from 'rxjs';
 
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -18,7 +18,7 @@ import { ProjectService } from '../../../entities/project/service/project.servic
   selector: 'app-my-projects-list',
   templateUrl: './my-projects-list.component.html',
 })
-export class MyProjectsListComponent implements OnInit {
+export class MyProjectsListComponent implements OnInit, OnDestroy {
   projects?: IProject[][];
   isLoading = false;
 
@@ -28,6 +28,8 @@ export class MyProjectsListComponent implements OnInit {
   itemsPerPage = 3;
   hasNextPage = true;
   page = 1;
+
+  private projectUpdatedSource: Subscription | null = null;
 
   constructor(
     protected projectService: ProjectService,
@@ -45,7 +47,22 @@ export class MyProjectsListComponent implements OnInit {
   trackId = (_index: number, item: IProject): number => this.projectService.getProjectIdentifier(item);
 
   ngOnInit(): void {
+    this.projectUpdatedSource = this.projectService.projectUpdatedSource$.subscribe(project => {
+      this.projects = this.createTriplets(
+        this.projectService.addProjectToCollectionIfMissing(
+          (this.projects || []).flatMap(p => p),
+          project
+        )
+      );
+    });
+
     this.load();
+  }
+
+  ngOnDestroy() {
+    if (this.projectUpdatedSource) {
+      this.projectUpdatedSource.unsubscribe();
+    }
   }
 
   load(): void {
@@ -72,7 +89,12 @@ export class MyProjectsListComponent implements OnInit {
   protected onResponseSuccess(response: HttpResponse<GetUserProjects200Response>): void {
     this.fillComponentAttributesFromResponseHeader(response.headers);
     const dataFromBody = this.fillComponentAttributesFromResponseBody(response.body?.contents);
-    this.projects = this.createTriplets(dataFromBody);
+    this.projects = this.createTriplets(
+      this.projectService.addProjectToCollectionIfMissing(
+        (this.projects || []).flatMap(p => p),
+        ...dataFromBody
+      )
+    );
   }
 
   protected fillComponentAttributesFromResponseBody(data: Array<Project> | undefined): IProject[] {

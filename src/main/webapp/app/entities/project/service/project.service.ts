@@ -1,12 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+
+import { MonoTypeOperatorFunction, Observable, Subject } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
+
 import dayjs from 'dayjs/esm';
 
-import { isPresent } from 'app/core/util/operators';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { createRequestOption } from 'app/core/request/request-util';
+import { isPresent } from 'app/core/util/operators';
+
 import { IProject, NewProject } from '../project.model';
 
 export type PartialUpdateProject = Partial<IProject> & Pick<IProject, 'id'>;
@@ -29,29 +32,41 @@ export type EntityArrayResponseType = HttpResponse<IProject[]>;
 
 @Injectable({ providedIn: 'root' })
 export class ProjectService {
-  protected resourceUrl = this.applicationConfigService.getEndpointFor('api/projects');
+  protected resourceUrl;
 
-  constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) {}
+  private projectUpdatedSource = new Subject<IProject>();
+  private _projectUpdatedSource$ = this.projectUpdatedSource.asObservable();
+
+  constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) {
+    this.resourceUrl = this.applicationConfigService.getEndpointFor('api/projects');
+  }
+
+  get projectUpdatedSource$(): Observable<IProject> {
+    return this._projectUpdatedSource$;
+  }
 
   create(project: NewProject): Observable<EntityResponseType> {
     const copy = this.convertDateFromClient(project);
-    return this.http
-      .post<RestProject>(this.resourceUrl, copy, { observe: 'response' })
-      .pipe(map(res => this.convertResponseFromServer(res)));
+    return this.http.post<RestProject>(this.resourceUrl, copy, { observe: 'response' }).pipe(
+      map(res => this.convertResponseFromServer(res)),
+      tap(res => this.notifySubscribersOfChangedProject(res))
+    );
   }
 
   update(project: IProject): Observable<EntityResponseType> {
     const copy = this.convertDateFromClient(project);
-    return this.http
-      .put<RestProject>(`${this.resourceUrl}/${this.getProjectIdentifier(project)}`, copy, { observe: 'response' })
-      .pipe(map(res => this.convertResponseFromServer(res)));
+    return this.http.put<RestProject>(`${this.resourceUrl}/${this.getProjectIdentifier(project)}`, copy, { observe: 'response' }).pipe(
+      map(res => this.convertResponseFromServer(res)),
+      tap(res => this.notifySubscribersOfChangedProject(res))
+    );
   }
 
   partialUpdate(project: PartialUpdateProject): Observable<EntityResponseType> {
     const copy = this.convertDateFromClient(project);
-    return this.http
-      .patch<RestProject>(`${this.resourceUrl}/${this.getProjectIdentifier(project)}`, copy, { observe: 'response' })
-      .pipe(map(res => this.convertResponseFromServer(res)));
+    return this.http.patch<RestProject>(`${this.resourceUrl}/${this.getProjectIdentifier(project)}`, copy, { observe: 'response' }).pipe(
+      map(res => this.convertResponseFromServer(res)),
+      tap(res => this.notifySubscribersOfChangedProject(res))
+    );
   }
 
   find(id: number): Observable<EntityResponseType> {
@@ -129,5 +144,11 @@ export class ProjectService {
     return res.clone({
       body: res.body ? res.body.map(item => this.convertDateFromServer(item)) : null,
     });
+  }
+
+  private notifySubscribersOfChangedProject(res: HttpResponse<IProject>): void {
+    if (res.body) {
+      this.projectUpdatedSource.next(res.body);
+    }
   }
 }
