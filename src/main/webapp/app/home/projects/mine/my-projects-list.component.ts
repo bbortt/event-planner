@@ -52,7 +52,7 @@ export class MyProjectsListComponent implements OnInit, OnDestroy {
     this.load();
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     if (this.projectUpdatedSource) {
       this.projectUpdatedSource.unsubscribe();
     }
@@ -83,7 +83,7 @@ export class MyProjectsListComponent implements OnInit, OnDestroy {
     this.fillComponentAttributesFromResponseHeader(response.headers);
     const dataFromBody = this.fillComponentAttributesFromResponseBody(response.body?.contents);
 
-    this.projects = this.createTriplets([...(this.projects || []).flatMap(p => p), ...dataFromBody]);
+    this.projects = this.createTriplets([...(this.projects ?? []).flatMap(p => p), ...dataFromBody]);
   }
 
   protected fillComponentAttributesFromResponseBody(data: Array<Project> | undefined): IProject[] {

@@ -7,7 +7,12 @@
   </div>
   <div class="card-footer">
     <div class="btn-group">
-      <button type="submit" [routerLink]="['/project', project.id, 'admin']" class="btn btn-info btn-sm" data-cy="entityEditButton">
+      <button
+        type="submit"
+        [routerLink]="['/home', 'projects', project.id, 'admin']"
+        class="btn btn-info btn-sm"
+        data-cy="entityEditButton"
+      >
         <fa-icon icon="gears"></fa-icon>
         <span class="d-none d-md-inline" jhiTranslate="app.project.mine.action.administration">Administration</span>
       </button>
