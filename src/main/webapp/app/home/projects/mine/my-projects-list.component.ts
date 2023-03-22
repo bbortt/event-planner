@@ -47,14 +47,7 @@ export class MyProjectsListComponent implements OnInit, OnDestroy {
   trackId = (_index: number, item: IProject): number => this.projectService.getProjectIdentifier(item);
 
   ngOnInit(): void {
-    this.projectUpdatedSource = this.projectService.projectUpdatedSource$.subscribe(project => {
-      this.projects = this.createTriplets(
-        this.projectService.addProjectToCollectionIfMissing(
-          (this.projects || []).flatMap(p => p),
-          project
-        )
-      );
-    });
+    this.projectUpdatedSource = this.projectService.projectUpdatedSource$.subscribe(() => this.load());
 
     this.load();
   }
@@ -89,12 +82,8 @@ export class MyProjectsListComponent implements OnInit, OnDestroy {
   protected onResponseSuccess(response: HttpResponse<GetUserProjects200Response>): void {
     this.fillComponentAttributesFromResponseHeader(response.headers);
     const dataFromBody = this.fillComponentAttributesFromResponseBody(response.body?.contents);
-    this.projects = this.createTriplets(
-      this.projectService.addProjectToCollectionIfMissing(
-        (this.projects || []).flatMap(p => p),
-        ...dataFromBody
-      )
-    );
+
+    this.projects = this.createTriplets([...(this.projects || []).flatMap(p => p), ...dataFromBody]);
   }
 
   protected fillComponentAttributesFromResponseBody(data: Array<Project> | undefined): IProject[] {
@@ -136,9 +125,8 @@ export class MyProjectsListComponent implements OnInit, OnDestroy {
       triplets.push([]);
 
       for (let j = 0; j < this.itemsPerPage; j++) {
-        const currentIndex = i * j + j;
-
-        if (projects.length > currentIndex) {
+        const currentIndex = i * this.itemsPerPage + j;
+        if (currentIndex < projects.length) {
           triplets[i].push(projects[currentIndex]);
         }
       }
