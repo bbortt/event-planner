@@ -1,12 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
-import { Observable } from 'rxjs';
+
+import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
+
 import dayjs from 'dayjs/esm';
 
-import { isPresent } from 'app/core/util/operators';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { createRequestOption } from 'app/core/request/request-util';
+import { isPresent } from 'app/core/util/operators';
+
 import { IMember, NewMember } from '../member.model';
 
 export type PartialUpdateMember = Partial<IMember> & Pick<IMember, 'id'>;
@@ -28,8 +31,15 @@ export type EntityArrayResponseType = HttpResponse<IMember[]>;
 export class MemberService {
   protected resourceUrl;
 
+  private memberUpdatedSource = new Subject<IMember>();
+  private _memberUpdatedSource$ = this.memberUpdatedSource.asObservable();
+
   constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) {
     this.resourceUrl = this.applicationConfigService.getEndpointFor('api/members');
+  }
+
+  get memberUpdatedSource$(): Observable<IMember> {
+    return this._memberUpdatedSource$;
   }
 
   create(member: NewMember): Observable<EntityResponseType> {

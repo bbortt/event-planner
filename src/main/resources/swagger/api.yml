@@ -43,9 +43,7 @@ paths:
                       $ref: '#/components/schemas/Project'
           headers:
             Has-Next-Page:
-              schema:
-                type: boolean
-              description: If a next page is available.
+              $ref: '#/components/headers/hasNextPage'
   /v1/projects/:projectId/members:
     get:
       tags:
@@ -75,10 +73,10 @@ paths:
                     items:
                       $ref: '#/components/schemas/Member'
           headers:
-            Has-Next-Page:
-              schema:
-                type: boolean
-              description: If a next page is available.
+            link:
+              $ref: '#/components/headers/link'
+            x-total-count:
+              $ref: '#/components/headers/xTotalCount'
     post:
       tags:
         - project
@@ -154,6 +152,21 @@ components:
         'application/problem+json':
           schema:
             $ref: 'https://opensource.zalando.com/problem/schema.yaml#/Problem'
+  headers:
+    hasNextPage:
+      schema:
+        type: boolean
+      description: If a next page is available.
+    link:
+      schema:
+        type: string
+      description: The navigation links.
+      example: <http://localhost:9000/api/members?eagerload=true&sort=id%2Casc&page=0&size=20>; rel="last",<http://localhost:9000/api/members?eagerload=true&sort=id%2Casc&page=0&size=20>; rel="first"
+    xTotalCount:
+      schema:
+        type: integer
+        format: int64
+      description: Total amount of pages.
   schemas:
     Member:
       type: object

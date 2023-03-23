@@ -1,19 +1,25 @@
-import { Component, OnInit } from '@angular/core';
-import { IMember } from '../../../../entities/member/member.model';
-import { ITEMS_PER_PAGE, PAGE_HEADER, TOTAL_COUNT_RESPONSE_HEADER } from '../../../../config/pagination.constants';
-import { EntityArrayResponseType, MemberService } from '../../../../entities/member/service/member.service';
-import { ActivatedRoute, Data, ParamMap, Router } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { MemberDeleteDialogComponent } from '../../../../entities/member/delete/member-delete-dialog.component';
-import { combineLatest, filter, Observable, switchMap, tap } from 'rxjs';
-import { ASC, DEFAULT_SORT_DATA, DESC, ITEM_DELETED_EVENT, SORT } from '../../../../config/navigation.constants';
 import { HttpHeaders } from '@angular/common/http';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Data, ParamMap, Router } from '@angular/router';
+
+import { combineLatest, filter, Observable, Subscription, switchMap, tap } from 'rxjs';
+
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+
+import { ProjectService as ApiProjectService } from '../../../../api';
+
+import { ITEMS_PER_PAGE, PAGE_HEADER, TOTAL_COUNT_RESPONSE_HEADER } from '../../../../config/pagination.constants';
+import { ASC, DEFAULT_SORT_DATA, DESC, ITEM_DELETED_EVENT, SORT } from '../../../../config/navigation.constants';
+
+import { IMember } from '../../../../entities/member/member.model';
+import { MemberDeleteDialogComponent } from '../../../../entities/member/delete/member-delete-dialog.component';
+import { EntityArrayResponseType, MemberService } from '../../../../entities/member/service/member.service';
 
 @Component({
   selector: 'jhi-project-member-list',
   templateUrl: './project-member-list.component.html',
 })
-export class ProjectMemberListComponent implements OnInit {
+export class ProjectMemberListComponent implements OnDestroy, OnInit {
   members?: IMember[];
   isLoading = false;
 
@@ -24,18 +30,29 @@ export class ProjectMemberListComponent implements OnInit {
   totalItems = 0;
   page = 1;
 
+  private memberUpdatedSource: Subscription | null = null;
+
   constructor(
     protected memberService: MemberService,
+    protected apiProjectService: ApiProjectService,
     protected activatedRoute: ActivatedRoute,
     public router: Router,
     protected modalService: NgbModal
   ) {}
 
-  trackId = (_index: number, item: IMember): number => this.memberService.getMemberIdentifier(item);
-
   ngOnInit(): void {
+    this.memberUpdatedSource = this.memberService.memberUpdatedSource$.subscribe(() => this.load());
+
     this.load();
   }
+
+  ngOnDestroy(): void {
+    if (this.memberUpdatedSource) {
+      this.memberUpdatedSource.unsubscribe();
+    }
+  }
+
+  trackId = (_index: number, item: IMember): number => this.memberService.getMemberIdentifier(item);
 
   delete(member: IMember): void {
     const modalRef = this.modalService.open(MemberDeleteDialogComponent, { size: 'lg', backdrop: 'static' });

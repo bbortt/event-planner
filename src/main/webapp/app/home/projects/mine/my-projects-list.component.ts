@@ -4,9 +4,7 @@ import { ActivatedRoute, Data, ParamMap, Router } from '@angular/router';
 
 import { combineLatest, Observable, Subscription, switchMap, tap } from 'rxjs';
 
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-
-import { Project, ProjectService as ApiProjectService, GetUserProjects200Response } from '../../../api';
+import { GetUserProjects200Response, Project, ProjectService as ApiProjectService } from '../../../api';
 
 import { HAS_NEXT_PAGE_HEADER } from '../../../config/pagination.constants';
 import { ASC, DEFAULT_SORT_DATA, DESC, SORT } from '../../../config/navigation.constants';
@@ -35,16 +33,8 @@ export class MyProjectsListComponent implements OnInit, OnDestroy {
     protected projectService: ProjectService,
     protected apiProjectService: ApiProjectService,
     protected activatedRoute: ActivatedRoute,
-    public router: Router,
-    protected modalService: NgbModal
+    public router: Router
   ) {}
-
-  loadPage(page: number): void {
-    this.page = page;
-    this.load();
-  }
-
-  trackId = (_index: number, item: IProject): number => this.projectService.getProjectIdentifier(item);
 
   ngOnInit(): void {
     this.projectUpdatedSource = this.projectService.projectUpdatedSource$.subscribe(() => this.load());
@@ -57,6 +47,13 @@ export class MyProjectsListComponent implements OnInit, OnDestroy {
       this.projectUpdatedSource.unsubscribe();
     }
   }
+
+  loadPage(page: number): void {
+    this.page = page;
+    this.load();
+  }
+
+  trackId = (_index: number, item: IProject): number => this.projectService.getProjectIdentifier(item);
 
   load(): void {
     this.loadFromBackendWithRouteInformation().subscribe({
