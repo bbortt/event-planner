@@ -5,11 +5,10 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { AccountService } from 'app/core/auth/account.service';
-import { LoginService } from 'app/login/login.service';
 
 @Injectable({ providedIn: 'root' })
 export class AnonymousRouteAccessService implements CanActivate {
-  constructor(private router: Router, private loginService: LoginService, private accountService: AccountService) {}
+  constructor(private router: Router, private accountService: AccountService) {}
 
   canActivate(): Observable<boolean> {
     return this.accountService.identity().pipe(

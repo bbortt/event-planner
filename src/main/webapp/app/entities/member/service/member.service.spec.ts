@@ -1,8 +1,10 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
+import { Subject } from 'rxjs';
+
 import { IMember } from '../member.model';
-import { sampleWithRequiredData, sampleWithNewData, sampleWithPartialData, sampleWithFullData } from '../member.test-samples';
+import { sampleWithFullData, sampleWithNewData, sampleWithPartialData, sampleWithRequiredData } from '../member.test-samples';
 
 import { MemberService, RestMember } from './member.service';
 
@@ -16,6 +18,9 @@ describe('Member Service', () => {
   let httpMock: HttpTestingController;
   let expectedResult: IMember | IMember[] | boolean | null;
 
+  const memberEventsSubject = new Subject<IMember>();
+  const nextMemberEvent = jest.spyOn(memberEventsSubject, 'next');
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
@@ -23,6 +28,12 @@ describe('Member Service', () => {
     expectedResult = null;
     service = TestBed.inject(MemberService);
     httpMock = TestBed.inject(HttpTestingController);
+  });
+
+  beforeEach(() => {
+    // @ts-ignore: force this private property value for testing.
+    service.memberUpdatedSource = memberEventsSubject;
+    nextMemberEvent.mockReset();
   });
 
   describe('Service methods', () => {
@@ -48,6 +59,8 @@ describe('Member Service', () => {
       const req = httpMock.expectOne({ method: 'POST' });
       req.flush(returnedFromService);
       expect(expectedResult).toMatchObject(expected);
+
+      expect(nextMemberEvent).toHaveBeenCalledWith(expected);
     });
 
     it('should update a Member', () => {
@@ -60,6 +73,8 @@ describe('Member Service', () => {
       const req = httpMock.expectOne({ method: 'PUT' });
       req.flush(returnedFromService);
       expect(expectedResult).toMatchObject(expected);
+
+      expect(nextMemberEvent).toHaveBeenCalledWith(expected);
     });
 
     it('should partial update a Member', () => {
@@ -72,6 +87,8 @@ describe('Member Service', () => {
       const req = httpMock.expectOne({ method: 'PATCH' });
       req.flush(returnedFromService);
       expect(expectedResult).toMatchObject(expected);
+
+      expect(nextMemberEvent).toHaveBeenCalledWith(expected);
     });
 
     it('should return a list of Member', () => {
