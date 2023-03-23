@@ -1,13 +1,14 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-
-import { faLocationDot } from '@fortawesome/free-solid-svg-icons';
-
-import { IProject } from '../../../../entities/project/project.model';
-import { TranslateService } from '@ngx-translate/core';
 import { Event, NavigationEnd, Router } from '@angular/router';
+
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
+
+import { faLocationDot } from '@fortawesome/free-solid-svg-icons';
+import { TranslateService } from '@ngx-translate/core';
+
+import { IProject } from '../../../../entities/project/project.model';
 
 @Component({
   selector: 'app-project-admin-side-nav',
@@ -18,7 +19,6 @@ export class SideNavComponent implements OnDestroy, OnInit {
   @Input() project: IProject | null = null;
 
   protected faLocationDot = faLocationDot;
-  protected isNavbarCollapsed = true;
 
   private routerSubscription: Subscription | null = null;
 
@@ -34,16 +34,9 @@ export class SideNavComponent implements OnDestroy, OnInit {
 
   ngOnDestroy(): void {
     if (this.routerSubscription) {
+      console.log('unsubscribe');
       this.routerSubscription.unsubscribe();
     }
-  }
-
-  collapseNavbar(): void {
-    this.isNavbarCollapsed = true;
-  }
-
-  toggleNavbar(): void {
-    this.isNavbarCollapsed = !this.isNavbarCollapsed;
   }
 
   private updateTitleBasedOnUrl(url: string): void {
