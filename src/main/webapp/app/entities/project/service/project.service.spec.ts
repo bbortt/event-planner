@@ -1,8 +1,10 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
+import { Subject } from 'rxjs';
+
 import { IProject } from '../project.model';
-import { sampleWithRequiredData, sampleWithNewData, sampleWithPartialData, sampleWithFullData } from '../project.test-samples';
+import { sampleWithFullData, sampleWithNewData, sampleWithPartialData, sampleWithRequiredData } from '../project.test-samples';
 
 import { ProjectService, RestProject } from './project.service';
 
@@ -19,6 +21,9 @@ describe('Project Service', () => {
   let httpMock: HttpTestingController;
   let expectedResult: IProject | IProject[] | boolean | null;
 
+  const projectEventsSubject = new Subject<IProject>();
+  const nextProjectEvent = jest.spyOn(projectEventsSubject, 'next');
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
@@ -27,6 +32,12 @@ describe('Project Service', () => {
     expectedResult = null;
     service = TestBed.inject(ProjectService);
     httpMock = TestBed.inject(HttpTestingController);
+  });
+
+  beforeEach(() => {
+    // @ts-ignore: force this private property value for testing.
+    service.projectUpdatedSource = projectEventsSubject;
+    nextProjectEvent.mockReset();
   });
 
   describe('Service methods', () => {
@@ -52,6 +63,8 @@ describe('Project Service', () => {
       const req = httpMock.expectOne({ method: 'POST' });
       req.flush(returnedFromService);
       expect(expectedResult).toMatchObject(expected);
+
+      expect(nextProjectEvent).toHaveBeenCalledWith(expected);
     });
 
     it('should update a Project', () => {
@@ -64,6 +77,8 @@ describe('Project Service', () => {
       const req = httpMock.expectOne({ method: 'PUT' });
       req.flush(returnedFromService);
       expect(expectedResult).toMatchObject(expected);
+
+      expect(nextProjectEvent).toHaveBeenCalledWith(expected);
     });
 
     it('should partial update a Project', () => {
@@ -76,6 +91,8 @@ describe('Project Service', () => {
       const req = httpMock.expectOne({ method: 'PATCH' });
       req.flush(returnedFromService);
       expect(expectedResult).toMatchObject(expected);
+
+      expect(nextProjectEvent).toHaveBeenCalledWith(expected);
     });
 
     it('should return a list of Project', () => {
