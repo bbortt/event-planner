@@ -171,6 +171,7 @@ components:
     Member:
       type: object
       required:
+        - id
         - email
       properties:
         id:
@@ -186,7 +187,19 @@ components:
         acceptedDate:
           type: string
           format: date-time
-        # TODO: Add user information
+        login:
+          type: string
+          maxLength: 50
+          minLength: 1
+        firstName:
+          type: string
+          maxLength: 50
+        lastName:
+          type: string
+          maxLength: 50
+        imageUrl:
+          type: string
+          maxLength: 256
     Project:
       type: object
       required:

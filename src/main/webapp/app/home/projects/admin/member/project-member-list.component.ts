@@ -1,4 +1,4 @@
-import { HttpHeaders } from '@angular/common/http';
+import { HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Data, ParamMap, Router } from '@angular/router';
 
@@ -6,21 +6,20 @@ import { combineLatest, filter, Observable, Subscription, switchMap, tap } from 
 
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { ProjectService as ApiProjectService } from '../../../../api';
+import { GetProjectMembers200Response, Member, ProjectService as ApiProjectService } from '../../../../api';
 
 import { ITEMS_PER_PAGE, PAGE_HEADER, TOTAL_COUNT_RESPONSE_HEADER } from '../../../../config/pagination.constants';
 import { ASC, DEFAULT_SORT_DATA, DESC, ITEM_DELETED_EVENT, SORT } from '../../../../config/navigation.constants';
 
-import { IMember } from '../../../../entities/member/member.model';
 import { MemberDeleteDialogComponent } from '../../../../entities/member/delete/member-delete-dialog.component';
-import { EntityArrayResponseType, MemberService } from '../../../../entities/member/service/member.service';
+import { MemberService } from '../../../../entities/member/service/member.service';
 
 @Component({
   selector: 'jhi-project-member-list',
   templateUrl: './project-member-list.component.html',
 })
 export class ProjectMemberListComponent implements OnDestroy, OnInit {
-  members?: IMember[];
+  members?: Member[];
   isLoading = false;
 
   predicate = 'id';
@@ -52,9 +51,9 @@ export class ProjectMemberListComponent implements OnDestroy, OnInit {
     }
   }
 
-  trackId = (_index: number, item: IMember): number => this.memberService.getMemberIdentifier(item);
+  trackId = (_index: number, item: Member): number => this.memberService.getMemberIdentifier(item);
 
-  delete(member: IMember): void {
+  delete(member: Member): void {
     const modalRef = this.modalService.open(MemberDeleteDialogComponent, { size: 'lg', backdrop: 'static' });
     modalRef.componentInstance.member = member;
     // unsubscribe not needed because closed completes on modal close
@@ -64,7 +63,7 @@ export class ProjectMemberListComponent implements OnDestroy, OnInit {
         switchMap(() => this.loadFromBackendWithRouteInformation())
       )
       .subscribe({
-        next: (res: EntityArrayResponseType) => {
+        next: (res: HttpResponse<GetProjectMembers200Response>) => {
           this.onResponseSuccess(res);
         },
       });
@@ -72,7 +71,7 @@ export class ProjectMemberListComponent implements OnDestroy, OnInit {
 
   load(): void {
     this.loadFromBackendWithRouteInformation().subscribe({
-      next: (res: EntityArrayResponseType) => {
+      next: (res: HttpResponse<GetProjectMembers200Response>) => {
         this.onResponseSuccess(res);
       },
     });
@@ -86,7 +85,7 @@ export class ProjectMemberListComponent implements OnDestroy, OnInit {
     this.handleNavigation(page, this.predicate, this.ascending);
   }
 
-  protected loadFromBackendWithRouteInformation(): Observable<EntityArrayResponseType> {
+  protected loadFromBackendWithRouteInformation(): Observable<HttpResponse<GetProjectMembers200Response>> {
     return combineLatest([this.activatedRoute.queryParamMap, this.activatedRoute.data]).pipe(
       tap(([params, data]) => this.fillComponentAttributeFromRoute(params, data)),
       switchMap(() => this.queryBackend(this.page, this.predicate, this.ascending))
@@ -101,13 +100,13 @@ export class ProjectMemberListComponent implements OnDestroy, OnInit {
     this.ascending = sort[1] === ASC;
   }
 
-  protected onResponseSuccess(response: EntityArrayResponseType): void {
+  protected onResponseSuccess(response: HttpResponse<GetProjectMembers200Response>): void {
     this.fillComponentAttributesFromResponseHeader(response.headers);
-    const dataFromBody = this.fillComponentAttributesFromResponseBody(response.body);
+    const dataFromBody = this.fillComponentAttributesFromResponseBody(response.body?.contents);
     this.members = dataFromBody;
   }
 
-  protected fillComponentAttributesFromResponseBody(data: IMember[] | null): IMember[] {
+  protected fillComponentAttributesFromResponseBody(data: Array<Member> | undefined): Member[] {
     return data ?? [];
   }
 
@@ -115,16 +114,12 @@ export class ProjectMemberListComponent implements OnDestroy, OnInit {
     this.totalItems = Number(headers.get(TOTAL_COUNT_RESPONSE_HEADER));
   }
 
-  protected queryBackend(page?: number, predicate?: string, ascending?: boolean): Observable<EntityArrayResponseType> {
+  protected queryBackend(page?: number, predicate?: string, ascending?: boolean): Observable<HttpResponse<GetProjectMembers200Response>> {
     this.isLoading = true;
     const pageToLoad: number = page ?? 1;
-    const queryObject = {
-      page: pageToLoad - 1,
-      size: this.itemsPerPage,
-      eagerload: true,
-      sort: this.getSortQueryParam(predicate, ascending),
-    };
-    return this.memberService.query(queryObject).pipe(tap(() => (this.isLoading = false)));
+    return this.apiProjectService
+      .getProjectMembers(this.itemsPerPage, pageToLoad - 1, this.getSortQueryParam(predicate, ascending), 'response')
+      .pipe(tap(() => (this.isLoading = false)));
   }
 
   protected handleNavigation(page = this.page, predicate?: string, ascending?: boolean): void {

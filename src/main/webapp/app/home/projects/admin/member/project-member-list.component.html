@@ -1,6 +1,6 @@
 <div>
   <h2 id="page-heading" data-cy="MemberHeading">
-    <span jhiTranslate="app.member.home.title">Members</span>
+    <span jhiTranslate="app.member.home.title">Mitglieder</span>
 
     <div class="d-flex justify-content-end">
       <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
@@ -15,7 +15,7 @@
         [routerLink]="['/member/new']"
       >
         <fa-icon icon="plus"></fa-icon>
-        <span jhiTranslate="app.member.home.createLabel"> Member erstellen </span>
+        <span jhiTranslate="app.member.home.createLabel"> Mitglied erstellen </span>
       </button>
     </div>
   </h2>
@@ -25,7 +25,7 @@
   <jhi-alert></jhi-alert>
 
   <div class="alert alert-warning" id="no-result" *ngIf="members?.length === 0">
-    <span jhiTranslate="app.member.home.notFound">Keine Members gefunden</span>
+    <span jhiTranslate="app.member.home.notFound">Keine Mitglieder gefunden</span>
   </div>
 
   <div class="table-responsive table-entities" id="entities" *ngIf="members && members.length > 0">
@@ -50,24 +50,18 @@
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
-          <th scope="col" jhiSortBy="acceptedBy">
-            <div class="d-flex">
-              <span jhiTranslate="app.member.acceptedBy">Accepted By</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="acceptedDate">
-            <div class="d-flex">
-              <span jhiTranslate="app.member.acceptedDate">Accepted Date</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="project.name">
-            <div class="d-flex">
-              <span jhiTranslate="app.member.project">Member Of</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
+          <!--          <th scope="col" jhiSortBy="acceptedBy">-->
+          <!--            <div class="d-flex">-->
+          <!--              <span jhiTranslate="app.member.acceptedBy">Accepted By</span>-->
+          <!--              <fa-icon class="p-1" icon="sort"></fa-icon>-->
+          <!--            </div>-->
+          <!--          </th>-->
+          <!--          <th scope="col" jhiSortBy="acceptedDate">-->
+          <!--            <div class="d-flex">-->
+          <!--              <span jhiTranslate="app.member.acceptedDate">Accepted Date</span>-->
+          <!--              <fa-icon class="p-1" icon="sort"></fa-icon>-->
+          <!--            </div>-->
+          <!--          </th>-->
           <th scope="col"></th>
         </tr>
       </thead>
@@ -76,15 +70,10 @@
           <td>
             <a [routerLink]="['/member', member.id, 'view']">{{ member.id }}</a>
           </td>
-          <td>{{ member.invitedEmail }}</td>
+          <td>{{ member.email }}</td>
           <td>{{ member.accepted }}</td>
-          <td>{{ member.acceptedBy }}</td>
-          <td>{{ member.acceptedDate | formatMediumDatetime }}</td>
-          <td>
-            <div *ngIf="member.project">
-              <a [routerLink]="['/project', member.project.id, 'view']">{{ member.project.name }}</a>
-            </div>
-          </td>
+          <!--          <td>{{ member.acceptedBy }}</td>-->
+          <!--          <td>{{ member.acceptedDate | formatMediumDatetime }}</td>-->
           <td class="text-end">
             <div class="btn-group">
               <button type="submit" [routerLink]="['/member', member.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
