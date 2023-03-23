@@ -34,7 +34,6 @@ export class SideNavComponent implements OnDestroy, OnInit {
 
   ngOnDestroy(): void {
     if (this.routerSubscription) {
-      console.log('unsubscribe');
       this.routerSubscription.unsubscribe();
     }
   }
@@ -48,6 +47,7 @@ export class SideNavComponent implements OnDestroy, OnInit {
   }
 
   private updateTitleWithTranslation(key: string): void {
-    this.translateService.get(key).subscribe(translation => this.titleService.setTitle(`${translation}: ${this.project?.name}`));
+    const projectName = this.project?.name ? `: ${this.project.name}` : '';
+    this.translateService.get(key).subscribe((translation: string) => this.titleService.setTitle(`${translation}${projectName}`));
   }
 }
