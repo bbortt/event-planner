@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 
 import { Observable, Subject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 
 import dayjs from 'dayjs/esm';
 
@@ -44,23 +44,26 @@ export class MemberService {
 
   create(member: NewMember): Observable<EntityResponseType> {
     const copy = this.convertDateFromClient(member);
-    return this.http
-      .post<RestMember>(this.resourceUrl, copy, { observe: 'response' })
-      .pipe(map(res => this.convertResponseFromServer(res)));
+    return this.http.post<RestMember>(this.resourceUrl, copy, { observe: 'response' }).pipe(
+      map(res => this.convertResponseFromServer(res)),
+      tap(res => this.notifySubscribersOfChangedProject(res))
+    );
   }
 
   update(member: IMember): Observable<EntityResponseType> {
     const copy = this.convertDateFromClient(member);
-    return this.http
-      .put<RestMember>(`${this.resourceUrl}/${this.getMemberIdentifier(member)}`, copy, { observe: 'response' })
-      .pipe(map(res => this.convertResponseFromServer(res)));
+    return this.http.put<RestMember>(`${this.resourceUrl}/${this.getMemberIdentifier(member)}`, copy, { observe: 'response' }).pipe(
+      map(res => this.convertResponseFromServer(res)),
+      tap(res => this.notifySubscribersOfChangedProject(res))
+    );
   }
 
   partialUpdate(member: PartialUpdateMember): Observable<EntityResponseType> {
     const copy = this.convertDateFromClient(member);
-    return this.http
-      .patch<RestMember>(`${this.resourceUrl}/${this.getMemberIdentifier(member)}`, copy, { observe: 'response' })
-      .pipe(map(res => this.convertResponseFromServer(res)));
+    return this.http.patch<RestMember>(`${this.resourceUrl}/${this.getMemberIdentifier(member)}`, copy, { observe: 'response' }).pipe(
+      map(res => this.convertResponseFromServer(res)),
+      tap(res => this.notifySubscribersOfChangedProject(res))
+    );
   }
 
   find(id: number): Observable<EntityResponseType> {
@@ -132,5 +135,11 @@ export class MemberService {
     return res.clone({
       body: res.body ? res.body.map(item => this.convertDateFromServer(item)) : null,
     });
+  }
+
+  private notifySubscribersOfChangedProject(res: HttpResponse<IMember>): void {
+    if (res.body) {
+      this.memberUpdatedSource.next(res.body);
+    }
   }
 }
