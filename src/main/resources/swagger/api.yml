@@ -138,7 +138,7 @@ components:
     PageNumber:
       name: pageNumber
       in: query
-      description: Start index for paging.
+      description: Start index for paging, 1-based.
       schema:
         type: integer
         format: Int32

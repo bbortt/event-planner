@@ -128,7 +128,7 @@ export class ProjectMemberListComponent implements OnDestroy, OnInit {
     this.isLoading = true;
     const pageToLoad: number = page ?? 1;
     return this.projectMemberService
-      .getProjectMembers(this.project!.id!, this.itemsPerPage, pageToLoad - 1, this.getSortQueryParam(predicate, ascending), 'response')
+      .getProjectMembers(this.project!.id!, this.itemsPerPage, pageToLoad, this.getSortQueryParam(predicate, ascending), 'response')
       .pipe(tap(() => (this.isLoading = false)));
   }
 

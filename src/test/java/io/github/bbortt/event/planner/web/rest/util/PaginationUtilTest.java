@@ -2,9 +2,11 @@ package io.github.bbortt.event.planner.web.rest.util;
 
 import static io.github.bbortt.event.planner.config.Constants.DEFAULT_PAGE_SIZE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
 import java.util.Optional;
+import javax.swing.text.html.Option;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.Pageable;
@@ -69,6 +71,20 @@ class PaginationUtilTest {
         assertEquals(pageNumber - 1, pageable.getPageNumber());
         assertEquals((pageNumber - 1) * DEFAULT_PAGE_SIZE, pageable.getOffset());
         assertEquals(Sort.by(Sort.Order.desc(defaultSorgingPropertyName)), pageable.getSort());
+    }
+
+    @Test
+    void createPagingInformationWith0BasedPageNumber() {
+        Optional<Integer> pageSize = Optional.empty();
+        Optional<Integer> pageNumber = Optional.of(0);
+        Optional<List<String>> sort = Optional.empty();
+
+        IllegalArgumentException exception = assertThrows(
+            IllegalArgumentException.class,
+            () -> fixture.createPagingInformation(pageSize, pageNumber, sort, defaultSorgingPropertyName)
+        );
+
+        assertEquals("Page number is 1-based!", exception.getMessage());
     }
 
     @Test
