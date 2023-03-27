@@ -32,13 +32,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 class UserServiceIT {
 
-    private static final String DEFAULT_LOGIN = "johndoe";
+    private static final String DEFAULT_LOGIN = "tonystark";
 
-    private static final String DEFAULT_EMAIL = "johndoe@localhost";
+    private static final String DEFAULT_EMAIL = "tony-stark@localhost";
 
-    private static final String DEFAULT_FIRSTNAME = "john";
+    private static final String DEFAULT_FIRSTNAME = "tony";
 
-    private static final String DEFAULT_LASTNAME = "doe";
+    private static final String DEFAULT_LASTNAME = "stark";
 
     private static final String DEFAULT_IMAGEURL = "http://placehold.it/50x50";
 

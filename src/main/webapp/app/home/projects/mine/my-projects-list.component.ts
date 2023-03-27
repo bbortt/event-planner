@@ -37,9 +37,8 @@ export class MyProjectsListComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.projectUpdatedSource = this.projectService.projectUpdatedSource$.subscribe(() => this.load());
-
     this.load();
+    this.projectUpdatedSource = this.projectService.projectUpdatedSource$.subscribe(() => this.load());
   }
 
   ngOnDestroy(): void {

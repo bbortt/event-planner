@@ -30,9 +30,9 @@ class UserMapperTest {
         user = new User();
         user.setLogin(DEFAULT_LOGIN);
         user.setActivated(true);
-        user.setEmail("johndoe@localhost");
-        user.setFirstName("john");
-        user.setLastName("doe");
+        user.setEmail("ava-ayala@localhost");
+        user.setFirstName("ava");
+        user.setLastName("ayala");
         user.setImageUrl("image_url");
         user.setLangKey("en");
 

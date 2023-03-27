@@ -126,10 +126,7 @@ public class MemberService {
     @Transactional(readOnly = true)
     @PreAuthorize("T(io.github.bbortt.event.planner.security.SecurityUtils).isAuthenticated()")
     public Page<MemberDTO> findInProject(Long projectId, Pageable pageable) {
-        log.debug("Request to get all Members in Project '{}'", projectId);
-
-        // TODO: Sanitize project id?
-
+        log.debug("Request to get a page of Members in Project '{}'", projectId);
         return memberRepository.findAllByProjectIdEquals(projectId, pageable).map(memberMapper::toDto);
     }
 }
