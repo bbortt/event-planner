@@ -1,10 +1,18 @@
 package io.github.bbortt.event.planner.web.rest.util;
 
-import static io.github.bbortt.event.planner.config.Constants.*;
+import static io.github.bbortt.event.planner.config.Constants.DEFAULT_PAGE_SIZE;
+import static io.github.bbortt.event.planner.config.Constants.SLICE_HAS_NEXT_PAGE_HEADER;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -45,7 +53,11 @@ public class PaginationUtil {
         PageRequest pageRequest = PageRequest.ofSize(pageSizeOrDefault(pageSize));
 
         if (pageNumber.isPresent()) {
-            pageRequest = pageRequest.withPage(pageNumber.get() - 1);
+            if (pageNumber.get() < 1) {
+                throw new IllegalArgumentException("Page number is 1-based!");
+            } else {
+                pageRequest = pageRequest.withPage(pageNumber.get() - 1);
+            }
         }
 
         return pageRequest.withSort(
