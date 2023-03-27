@@ -44,11 +44,11 @@ paths:
           headers:
             Has-Next-Page:
               $ref: '#/components/headers/hasNextPage'
-  /v1/projects/:projectId/members:
+  /v1/projects/{projectId}/members:
     get:
       tags:
-        - project
         - project-member
+        - project
       security:
         - oauth
         - openid
@@ -60,6 +60,14 @@ paths:
         - $ref: '#/components/parameters/PageSize'
         - $ref: '#/components/parameters/PageNumber'
         - $ref: '#/components/parameters/Sort'
+        - name: projectId
+          in: path
+          description: |
+            The restricting project id.
+          schema:
+            type: integer
+            format: int64
+          required: true
       responses:
         200:
           description: OK
@@ -79,8 +87,8 @@ paths:
               $ref: '#/components/headers/xTotalCount'
     post:
       tags:
-        - project
         - project-member
+        - project
       security:
         - oauth
         - openid

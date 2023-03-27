@@ -6,7 +6,7 @@ import { combineLatest, filter, Observable, Subscription, switchMap, tap } from 
 
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { GetProjectMembers200Response, Member, ProjectService as ApiProjectService } from '../../../../api';
+import { GetProjectMembers200Response, Member, Project, ProjectMemberService } from '../../../../api';
 
 import { ITEMS_PER_PAGE, PAGE_HEADER, TOTAL_COUNT_RESPONSE_HEADER } from '../../../../config/pagination.constants';
 import { ASC, DEFAULT_SORT_DATA, DESC, ITEM_DELETED_EVENT, SORT } from '../../../../config/navigation.constants';
@@ -19,6 +19,8 @@ import { MemberService } from '../../../../entities/member/service/member.servic
   templateUrl: './project-member-list.component.html',
 })
 export class ProjectMemberListComponent implements OnDestroy, OnInit {
+  project: Project | null = null;
+
   members?: Member[];
   isLoading = false;
 
@@ -33,16 +35,24 @@ export class ProjectMemberListComponent implements OnDestroy, OnInit {
 
   constructor(
     protected memberService: MemberService,
-    protected apiProjectService: ApiProjectService,
+    protected projectMemberService: ProjectMemberService,
     protected activatedRoute: ActivatedRoute,
     public router: Router,
     protected modalService: NgbModal
   ) {}
 
   ngOnInit(): void {
-    this.memberUpdatedSource = this.memberService.memberUpdatedSource$.subscribe(() => this.load());
+    this.activatedRoute.data
+      .pipe(
+        tap(({ project }) => {
+          if (project) {
+            this.project = project;
+          }
+        })
+      )
+      .subscribe(() => this.load());
 
-    this.load();
+    this.memberUpdatedSource = this.memberService.memberUpdatedSource$.subscribe(() => this.load());
   }
 
   ngOnDestroy(): void {
@@ -117,8 +127,8 @@ export class ProjectMemberListComponent implements OnDestroy, OnInit {
   protected queryBackend(page?: number, predicate?: string, ascending?: boolean): Observable<HttpResponse<GetProjectMembers200Response>> {
     this.isLoading = true;
     const pageToLoad: number = page ?? 1;
-    return this.apiProjectService
-      .getProjectMembers(this.itemsPerPage, pageToLoad - 1, this.getSortQueryParam(predicate, ascending), 'response')
+    return this.projectMemberService
+      .getProjectMembers(this.project!.id!, this.itemsPerPage, pageToLoad - 1, this.getSortQueryParam(predicate, ascending), 'response')
       .pipe(tap(() => (this.isLoading = false)));
   }
 

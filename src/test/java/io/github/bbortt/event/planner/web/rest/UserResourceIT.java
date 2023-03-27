@@ -36,15 +36,15 @@ import org.springframework.transaction.annotation.Transactional;
 @IntegrationTest
 class UserResourceIT {
 
-    private static final String DEFAULT_LOGIN = "johndoe";
+    private static final String DEFAULT_LOGIN = "markspector";
 
     private static final String DEFAULT_ID = "id1";
 
-    private static final String DEFAULT_EMAIL = "johndoe@localhost";
+    private static final String DEFAULT_EMAIL = "mark-spector@localhost";
 
-    private static final String DEFAULT_FIRSTNAME = "john";
+    private static final String DEFAULT_FIRSTNAME = "mark";
 
-    private static final String DEFAULT_LASTNAME = "doe";
+    private static final String DEFAULT_LASTNAME = "spector";
 
     private static final String DEFAULT_IMAGEURL = "http://placehold.it/50x50";
 

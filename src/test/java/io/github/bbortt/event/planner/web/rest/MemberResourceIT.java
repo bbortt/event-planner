@@ -46,7 +46,7 @@ import org.springframework.transaction.annotation.Transactional;
 @WithMockUser("member-resource-it")
 public class MemberResourceIT {
 
-    private static final String DEFAULT_INVITED_EMAIL = "ant-man@localhost";
+    private static final String DEFAULT_INVITED_EMAIL = "scott-lang@localhost";
 
     private static final Boolean DEFAULT_ACCEPTED = false;
     private static final Boolean UPDATED_ACCEPTED = true;
@@ -312,7 +312,7 @@ public class MemberResourceIT {
         Member updatedMember = memberRepository.findById(member.getId()).get();
         // Disconnect from session so that the updates on updatedMember are not directly saved in db
         em.detach(updatedMember);
-        updatedMember.invitedEmail("the-wasp@localhost").accepted(UPDATED_ACCEPTED);
+        updatedMember.invitedEmail("hope-pym@localhost").accepted(UPDATED_ACCEPTED);
         MemberDTO memberDTO = memberMapper.toDto(updatedMember);
 
         restMemberMockMvc
@@ -450,7 +450,7 @@ public class MemberResourceIT {
         Member partialUpdatedMember = new Member();
         partialUpdatedMember.setId(member.getId());
 
-        partialUpdatedMember.invitedEmail("the-wasp@localhost").accepted(UPDATED_ACCEPTED);
+        partialUpdatedMember.invitedEmail("hope-pym@localhost").accepted(UPDATED_ACCEPTED);
 
         restMemberMockMvc
             .perform(
