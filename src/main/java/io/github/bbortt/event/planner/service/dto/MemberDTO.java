@@ -1,5 +1,7 @@
 package io.github.bbortt.event.planner.service.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
@@ -26,6 +28,8 @@ public class MemberDTO implements Serializable {
     private String acceptedBy;
 
     private Instant acceptedDate;
+
+    private AdminUserDTO user;
 
     private ProjectDTO project;
 
@@ -69,6 +73,15 @@ public class MemberDTO implements Serializable {
         this.acceptedDate = acceptedDate;
     }
 
+    @JsonIgnore
+    public AdminUserDTO getUser() {
+        return user;
+    }
+
+    public void setUser(AdminUserDTO user) {
+        this.user = user;
+    }
+
     public ProjectDTO getProject() {
         return project;
     }
@@ -90,6 +103,7 @@ public class MemberDTO implements Serializable {
         if (this.id == null) {
             return false;
         }
+
         return Objects.equals(this.id, memberDTO.id);
     }
 
@@ -107,6 +121,7 @@ public class MemberDTO implements Serializable {
             ", accepted='" + getAccepted() + "'" +
             ", acceptedBy='" + getAcceptedBy() + "'" +
             ", acceptedDate='" + getAcceptedDate() + "'" +
+            ", user='" + getUser() + "'" +
             ", project=" + getProject() +
             "}";
     }

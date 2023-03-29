@@ -29,13 +29,13 @@ public class ProjectServiceIT {
     private ProjectService projectService;
 
     @Test
-    void findForCurrentUserReturnsActiveProjectsOnly() {
+    void findAllNotArchivedForCurrentUserReturnsActiveProjectsOnly() {
         int projectCount = 2;
 
         createAndPersistProjects(projectCount, Boolean.FALSE);
         createAndPersistProjects(projectCount, Boolean.TRUE);
 
-        Slice<ProjectDTO> projects = projectService.findForCurrentUser(Pageable.ofSize(projectCount));
+        Slice<ProjectDTO> projects = projectService.findAllNotArchivedForCurrentUser(Pageable.ofSize(projectCount));
 
         assertEquals(projectCount, projects.getNumberOfElements());
         assertFalse(projects.hasNext());

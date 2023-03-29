@@ -12,7 +12,7 @@ import org.mapstruct.Named;
 /**
  * Mapper for the entity {@link Member} and its DTO {@link MemberDTO}.
  */
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = { UserMapper.class })
 public interface MemberMapper extends EntityMapper<MemberDTO, Member> {
     @Mapping(target = "project", source = "project", qualifiedByName = "projectName")
     MemberDTO toDto(Member s);

@@ -7,6 +7,10 @@ import io.github.bbortt.event.planner.service.api.dto.InviteMemberToProjectReque
 import io.github.bbortt.event.planner.service.api.dto.Member;
 import io.github.bbortt.event.planner.service.dto.MemberDTO;
 import io.github.bbortt.event.planner.web.rest.util.PaginationUtil;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 import org.apache.commons.lang3.NotImplementedException;
@@ -43,8 +47,7 @@ public class ProjectMemberApiDelegateImpl implements ProjectMemberApiDelegate {
         Optional<Integer> pageNumber,
         Optional<List<String>> sort
     ) {
-        // TODO: This could be more performant with an "exists" check!
-        if (projectService.findOne(projectId).isEmpty()) {
+        if (!projectService.exists(projectId)) {
             logger.warn("REST request to get a page of Members in non-existent Project '{}'!", projectId);
             return ResponseEntity.notFound().build();
         }
@@ -75,11 +78,11 @@ public class ProjectMemberApiDelegateImpl implements ProjectMemberApiDelegate {
         return new Member()
             .id(memberDTO.getId())
             .email(memberDTO.getInvitedEmail()) // TODO: Use user email if accepted
-            .accepted(
-                memberDTO.getAccepted()
-            )//            .acceptedDate(LocalDateTime.ofInstant(memberDTO.getAcceptedDate(), ZoneId.systemDefault()).toLocalDate())
-        //            .login(memberDTO.getLogin())
-        //            .firstName()
-        ;
+            .accepted(memberDTO.getAccepted())
+            .acceptedDate(memberDTO.getAcceptedDate().atOffset(ZoneId.systemDefault().getRules().getOffset(memberDTO.getAcceptedDate())))
+            .login(memberDTO.getUser().getLogin())
+            .firstName(memberDTO.getUser().getFirstName())
+            .lastName(memberDTO.getUser().getLastName())
+            .imageUrl(memberDTO.getUser().getImageUrl());
     }
 }
