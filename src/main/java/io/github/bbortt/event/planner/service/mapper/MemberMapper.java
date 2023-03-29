@@ -1,5 +1,7 @@
 package io.github.bbortt.event.planner.service.mapper;
 
+import static org.mapstruct.NullValueCheckStrategy.ALWAYS;
+
 import io.github.bbortt.event.planner.domain.Member;
 import io.github.bbortt.event.planner.domain.Project;
 import io.github.bbortt.event.planner.service.dto.MemberDTO;
@@ -14,6 +16,7 @@ import org.mapstruct.Named;
  */
 @Mapper(componentModel = "spring", uses = { UserMapper.class })
 public interface MemberMapper extends EntityMapper<MemberDTO, Member> {
+    @Mapping(target = "user", source = "user", nullValueCheckStrategy = ALWAYS)
     @Mapping(target = "project", source = "project", qualifiedByName = "projectName")
     MemberDTO toDto(Member s);
 
