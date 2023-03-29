@@ -22,7 +22,7 @@ class LocationMapperTest {
     private LocationDTO locationDTO;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         fixture = new LocationMapperImpl();
 
         location =

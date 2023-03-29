@@ -17,7 +17,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 
 @IntegrationTest
 @WithMockUser("project-service-it")
-public class ProjectServiceIT {
+class ProjectServiceIT {
 
     @Autowired
     private EntityManager entityManager;

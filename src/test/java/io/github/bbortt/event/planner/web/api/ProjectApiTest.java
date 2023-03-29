@@ -45,7 +45,7 @@ class ProjectApiTest {
     }
 
     @Test
-    public void testGetUserProjects() {
+    void testGetUserProjects() {
         int pageSize = 10;
         int pageNumber = 0;
         List<String> sort = Collections.singletonList("id,asc");

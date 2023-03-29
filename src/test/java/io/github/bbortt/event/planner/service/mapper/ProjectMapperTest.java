@@ -19,7 +19,7 @@ class ProjectMapperTest {
     private ProjectMapper fixture;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         fixture = new ProjectMapperImpl();
 
         project =

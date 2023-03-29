@@ -120,7 +120,7 @@ public class MemberResourceIT {
     }
 
     @BeforeEach
-    public void initTest() {
+    void initTest() {
         User defaultUser = UserResourceIT.createEntity(em);
         defaultUser.setEmail(DEFAULT_INVITED_EMAIL);
         em.persist(defaultUser);

@@ -120,7 +120,7 @@ public class LocationResourceIT {
     }
 
     @BeforeEach
-    public void initTest() {
+    void initTest() {
         location = createEntity(em);
     }
 
