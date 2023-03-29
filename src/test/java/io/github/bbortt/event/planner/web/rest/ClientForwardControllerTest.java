@@ -22,7 +22,7 @@ class ClientForwardControllerTest {
     private MockMvc restMockMvc;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         ClientForwardController clientForwardController = new ClientForwardController();
         this.restMockMvc = MockMvcBuilders.standaloneSetup(clientForwardController, new TestController()).build();
     }

@@ -19,7 +19,7 @@ class ApiProjectMapperTest {
     private ApiProjectMapper fixture;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         fixture = new ApiProjectMapperImpl();
 
         project =

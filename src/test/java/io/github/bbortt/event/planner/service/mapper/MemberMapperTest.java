@@ -39,7 +39,7 @@ class MemberMapperTest {
     private MemberMapper fixture;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         fixture = new MemberMapperImpl();
         ReflectionTestUtils.setField(fixture, "userMapper", userMapper, UserMapper.class);
 

@@ -62,7 +62,7 @@ public class UserResourceIT {
     private User user;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         if (!Objects.isNull(cacheManager)) {
             cacheManager.getCache(UserRepository.USERS_BY_LOGIN_CACHE).clear();
             cacheManager.getCache(UserRepository.USERS_BY_EMAIL_CACHE).clear();
@@ -100,7 +100,7 @@ public class UserResourceIT {
     }
 
     @BeforeEach
-    public void initTest() {
+    void initTest() {
         user = initTestUser(userRepository, em);
     }
 

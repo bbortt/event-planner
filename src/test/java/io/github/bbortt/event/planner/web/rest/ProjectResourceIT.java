@@ -122,7 +122,7 @@ public class ProjectResourceIT {
     }
 
     @BeforeEach
-    public void initTest() {
+    void initTest() {
         project = createEntity(em);
     }
 

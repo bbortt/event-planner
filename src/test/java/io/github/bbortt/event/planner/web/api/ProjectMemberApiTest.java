@@ -33,7 +33,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @ExtendWith(MockitoExtension.class)
-public class ProjectMemberApiTest {
+class ProjectMemberApiTest {
 
     @Mock
     private MemberService memberServiceMock;

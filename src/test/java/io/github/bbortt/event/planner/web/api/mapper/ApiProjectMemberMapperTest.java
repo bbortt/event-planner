@@ -14,7 +14,7 @@ import java.time.ZoneId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class ApiProjectMemberMapperTest {
+class ApiProjectMemberMapperTest {
 
     private Member member;
     private MemberDTO memberDTO;
