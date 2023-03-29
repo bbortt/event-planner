@@ -7,15 +7,21 @@ import java.time.ZoneId;
 
 class TimeUtils {
 
-    private TimeUtils() {
-        // Static utility class
+    private final ZoneIdProvider zoneIdProvider;
+
+    TimeUtils(ZoneIdProvider zoneIdProvider) {
+        this.zoneIdProvider = zoneIdProvider;
     }
 
-    public static OffsetDateTime toOffsetDateTime(Instant instant) {
-        return OffsetDateTime.ofInstant(instant, ZoneId.systemDefault());
+    OffsetDateTime toOffsetDateTime(Instant instant) {
+        return OffsetDateTime.ofInstant(instant, zoneIdProvider.getZoneId());
     }
 
-    public static LocalDate toLocalDate(Instant instant) {
-        return LocalDate.ofInstant(instant, ZoneId.systemDefault());
+    LocalDate toLocalDate(Instant instant) {
+        return LocalDate.ofInstant(instant, zoneIdProvider.getZoneId());
+    }
+
+    static interface ZoneIdProvider {
+        ZoneId getZoneId();
     }
 }
