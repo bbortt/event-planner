@@ -83,7 +83,16 @@ class ProjectServiceTest {
     }
 
     @Test
-    void findForCurrentUserReadsCurrentUser() {
+    void existsLooksForPersistedEntity() {
+        Long projectId = 1234L;
+
+        fixture.exists(projectId);
+
+        verify(projectRepositoryMock).existsById(projectId);
+    }
+
+    @Test
+    void findAllNotArchivedForCurrentUserReadsCurrentUser() {
         doReturn(authenticationMock).when(securityContextMock).getAuthentication();
 
         String login = "test-login";
@@ -99,7 +108,7 @@ class ProjectServiceTest {
             .when(projectRepositoryMock)
             .findAllByCreatedByEqualsAndArchivedIsFalse(login, pageable);
 
-        Slice<ProjectDTO> result = fixture.findForCurrentUser(pageable);
+        Slice<ProjectDTO> result = fixture.findAllNotArchivedForCurrentUser(pageable);
 
         assertEquals(1, result.getContent().size());
         assertEquals(projectDTO, result.getContent().get(0));
@@ -108,12 +117,15 @@ class ProjectServiceTest {
     }
 
     @Test
-    void findForCurrentUserThrowsExceptionIfNotAuthorized() {
+    void findAllNotArchivedForCurrentUserThrowsExceptionIfNotAuthorized() {
         doReturn(authenticationMock).when(securityContextMock).getAuthentication();
 
         Pageable pageable = Pageable.unpaged();
 
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> fixture.findForCurrentUser(pageable));
+        IllegalArgumentException exception = assertThrows(
+            IllegalArgumentException.class,
+            () -> fixture.findAllNotArchivedForCurrentUser(pageable)
+        );
 
         assertEquals("Cannot find current user!", exception.getMessage());
         verifyNoInteractions(projectRepositoryMock);

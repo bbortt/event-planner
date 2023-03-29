@@ -90,6 +90,18 @@ public class ProjectService {
     }
 
     /**
+     * Check if specific project by id exists.
+     *
+     * @param projectId the id of the entity.
+     * @return true if the project exists, false otherwise.
+     */
+    @Transactional(readOnly = true)
+    public boolean exists(Long projectId) {
+        log.debug("Request to check if Project with id '{}' exists", projectId);
+        return projectRepository.existsById(projectId);
+    }
+
+    /**
      * Get all the projects.
      *
      * @param pageable the pagination information.
@@ -114,6 +126,25 @@ public class ProjectService {
     }
 
     /**
+     * Find all projects in which the current user takes part in.
+     *
+     * @param pageable the pagination information.
+     * @return the list of entities.
+     */
+    @Transactional(readOnly = true)
+    @PreAuthorize("T(io.github.bbortt.event.planner.security.SecurityUtils).isAuthenticated()")
+    public Slice<ProjectDTO> findAllNotArchivedForCurrentUser(Pageable pageable) {
+        log.debug("Request to get all Projects for current user");
+        String login = SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new IllegalArgumentException("Cannot find current user!"));
+
+        if (log.isTraceEnabled()) {
+            log.trace("Current login is '{}'", login);
+        }
+
+        return projectRepository.findAllByCreatedByEqualsAndArchivedIsFalse(login, pageable).map(projectMapper::toDto);
+    }
+
+    /**
      * Delete the project by id.
      *
      * @param id the id of the entity.
@@ -123,18 +154,5 @@ public class ProjectService {
     public void delete(Long id) {
         log.debug("Request to delete Project : {}", id);
         projectRepository.deleteById(id);
-    }
-
-    @Transactional(readOnly = true)
-    @PreAuthorize("T(io.github.bbortt.event.planner.security.SecurityUtils).isAuthenticated()")
-    public Slice<ProjectDTO> findForCurrentUser(Pageable pageable) {
-        log.debug("Request to get all Projects for current user");
-        String login = SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new IllegalArgumentException("Cannot find current user!"));
-
-        if (log.isTraceEnabled()) {
-            log.trace("Current login is '{}'", login);
-        }
-
-        return projectRepository.findAllByCreatedByEqualsAndArchivedIsFalse(login, pageable).map(projectMapper::toDto);
     }
 }

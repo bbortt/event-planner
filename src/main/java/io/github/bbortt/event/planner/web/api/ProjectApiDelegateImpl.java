@@ -38,7 +38,7 @@ public class ProjectApiDelegateImpl implements ProjectApiDelegate {
         Optional<List<String>> sort
     ) {
         logger.debug("REST request to get a page of Projects");
-        Slice<ProjectDTO> slice = projectService.findForCurrentUser(
+        Slice<ProjectDTO> slice = projectService.findAllNotArchivedForCurrentUser(
             paginationUtil.createPagingInformation(pageSize, pageNumber, sort, PROJECT_ID_ATTRIBUTE_NAME)
         );
         HttpHeaders headers = paginationUtil.generateSliceHttpHeaders(slice);

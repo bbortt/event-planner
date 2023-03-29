@@ -43,14 +43,14 @@ public class Member implements Serializable {
     @Column(name = "accepted_by", nullable = false, updatable = false)
     private String acceptedBy;
 
+    @CreatedDate
+    @Column(name = "accepted_date", nullable = false, updatable = false)
+    private Instant acceptedDate;
+
     @Transient
     @ManyToOne(optional = false)
     @JoinColumn(name = "accepted_by", referencedColumnName = "email", nullable = false, updatable = false)
     private User user;
-
-    @CreatedDate
-    @Column(name = "accepted_date", nullable = false, updatable = false)
-    private Instant acceptedDate;
 
     @NotNull
     @ManyToOne(optional = false)
@@ -107,19 +107,6 @@ public class Member implements Serializable {
         return this;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Member user(User user) {
-        setUser(user);
-        return this;
-    }
-
     public void setAcceptedBy(String acceptedBy) {
         this.acceptedBy = acceptedBy;
     }
@@ -135,6 +122,19 @@ public class Member implements Serializable {
 
     public void setAcceptedDate(Instant acceptedDate) {
         this.acceptedDate = acceptedDate;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Member user(User user) {
+        setUser(user);
+        return this;
     }
 
     public Project getProject() {
@@ -178,6 +178,8 @@ public class Member implements Serializable {
             ", accepted='" + getAccepted() + "'" +
             ", acceptedBy='" + getAcceptedBy() + "'" +
             ", acceptedDate='" + getAcceptedDate() + "'" +
+            ", user='" +getUser() + "'" +
+            ", project='" +getProject() + "'" +
             "}";
     }
 }
