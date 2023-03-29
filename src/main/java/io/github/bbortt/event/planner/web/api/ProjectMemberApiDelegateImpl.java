@@ -6,14 +6,13 @@ import io.github.bbortt.event.planner.service.api.dto.GetProjectMembers200Respon
 import io.github.bbortt.event.planner.service.api.dto.InviteMemberToProjectRequestInner;
 import io.github.bbortt.event.planner.service.api.dto.Member;
 import io.github.bbortt.event.planner.service.dto.MemberDTO;
+import io.github.bbortt.event.planner.web.api.mapper.ApiProjectMemberMapper;
 import io.github.bbortt.event.planner.web.rest.util.PaginationUtil;
-import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import org.apache.commons.lang3.NotImplementedException;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -32,11 +31,18 @@ public class ProjectMemberApiDelegateImpl implements ProjectMemberApiDelegate {
 
     private final MemberService memberService;
     private final ProjectService projectService;
+    private final ApiProjectMemberMapper apiProjectMemberMapper;
     private final PaginationUtil paginationUtil;
 
-    public ProjectMemberApiDelegateImpl(MemberService memberService, ProjectService projectService, PaginationUtil paginationUtil) {
+    public ProjectMemberApiDelegateImpl(
+        MemberService memberService,
+        ProjectService projectService,
+        ApiProjectMemberMapper apiProjectMemberMapper,
+        PaginationUtil paginationUtil
+    ) {
         this.memberService = memberService;
         this.projectService = projectService;
+        this.apiProjectMemberMapper = apiProjectMemberMapper;
         this.paginationUtil = paginationUtil;
     }
 
@@ -49,6 +55,7 @@ public class ProjectMemberApiDelegateImpl implements ProjectMemberApiDelegate {
     ) {
         if (!projectService.exists(projectId)) {
             logger.warn("REST request to get a page of Members in non-existent Project '{}'!", projectId);
+            // TODO: This should throw a more understandable error message using a `ResponseEntity<Problem>`!
             return ResponseEntity.notFound().build();
         }
 
@@ -60,10 +67,18 @@ public class ProjectMemberApiDelegateImpl implements ProjectMemberApiDelegate {
         );
         HttpHeaders headers = paginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return new ResponseEntity<>(
-            new GetProjectMembers200Response().contents(page.getContent().stream().map(this::memberFromMemberDto).toList()),
+            new GetProjectMembers200Response().contents(page.getContent().stream().map(this::toApiDTO).toList()),
             headers,
             HttpStatus.OK
         );
+    }
+
+    private Member toApiDTO(MemberDTO memberDTO) {
+        Member member = apiProjectMemberMapper.toApiDTO(memberDTO);
+        if (!Objects.isNull(memberDTO.getUser()) && StringUtils.isNoneBlank(memberDTO.getUser().getEmail())) {
+            member.setEmail(memberDTO.getUser().getEmail());
+        }
+        return member;
     }
 
     @Override
@@ -72,17 +87,5 @@ public class ProjectMemberApiDelegateImpl implements ProjectMemberApiDelegate {
         List<InviteMemberToProjectRequestInner> inviteMemberToProjectRequestInner
     ) {
         throw new NotImplementedException();
-    }
-
-    private Member memberFromMemberDto(MemberDTO memberDTO) {
-        return new Member()
-            .id(memberDTO.getId())
-            .email(memberDTO.getInvitedEmail()) // TODO: Use user email if accepted
-            .accepted(memberDTO.getAccepted())
-            .acceptedDate(memberDTO.getAcceptedDate().atOffset(ZoneId.systemDefault().getRules().getOffset(memberDTO.getAcceptedDate())))
-            .login(memberDTO.getUser().getLogin())
-            .firstName(memberDTO.getUser().getFirstName())
-            .lastName(memberDTO.getUser().getLastName())
-            .imageUrl(memberDTO.getUser().getImageUrl());
     }
 }

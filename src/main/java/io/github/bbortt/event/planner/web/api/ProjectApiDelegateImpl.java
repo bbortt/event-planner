@@ -2,11 +2,9 @@ package io.github.bbortt.event.planner.web.api;
 
 import io.github.bbortt.event.planner.service.ProjectService;
 import io.github.bbortt.event.planner.service.api.dto.GetUserProjects200Response;
-import io.github.bbortt.event.planner.service.api.dto.Project;
 import io.github.bbortt.event.planner.service.dto.ProjectDTO;
+import io.github.bbortt.event.planner.web.api.mapper.ApiProjectMapper;
 import io.github.bbortt.event.planner.web.rest.util.PaginationUtil;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -24,10 +22,12 @@ public class ProjectApiDelegateImpl implements ProjectApiDelegate {
     private static final String PROJECT_ID_ATTRIBUTE_NAME = "id";
 
     private final ProjectService projectService;
+    private final ApiProjectMapper apiProjectMapper;
     private final PaginationUtil paginationUtil;
 
-    public ProjectApiDelegateImpl(ProjectService projectService, PaginationUtil paginationUtil) {
+    public ProjectApiDelegateImpl(ProjectService projectService, ApiProjectMapper apiProjectMapper, PaginationUtil paginationUtil) {
         this.projectService = projectService;
+        this.apiProjectMapper = apiProjectMapper;
         this.paginationUtil = paginationUtil;
     }
 
@@ -45,15 +45,6 @@ public class ProjectApiDelegateImpl implements ProjectApiDelegate {
         return ResponseEntity
             .ok()
             .headers(headers)
-            .body(new GetUserProjects200Response().contents(slice.getContent().stream().map(this::projectFromProjectDTO).toList()));
-    }
-
-    private Project projectFromProjectDTO(ProjectDTO projectDTO) {
-        return new Project()
-            .id(projectDTO.getId())
-            .name(projectDTO.getName())
-            .description(projectDTO.getDescription())
-            .startDate(LocalDateTime.ofInstant(projectDTO.getStartDate(), ZoneId.systemDefault()).toLocalDate())
-            .endDate(LocalDateTime.ofInstant(projectDTO.getEndDate(), ZoneId.systemDefault()).toLocalDate());
+            .body(new GetUserProjects200Response().contents(slice.getContent().stream().map(apiProjectMapper::toApiDTO).toList()));
     }
 }

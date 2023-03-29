@@ -13,9 +13,10 @@ import org.junit.jupiter.api.Test;
 
 class ProjectMapperTest {
 
-    private ProjectMapper fixture;
     private Project project;
     private ProjectDTO projectDTO;
+
+    private ProjectMapper fixture;
 
     @BeforeEach
     public void setUp() {

@@ -39,7 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
 @WithMockUser("project-resource-it")
 public class ProjectResourceIT {
 
-    private static final UUID DEFAULT_TOKEN = UUID.randomUUID();
+    private static final UUID DEFAULT_TOKEN = UUID.fromString("1da8f581-c281-4374-b0e7-7ffed990e0bd");
 
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
@@ -179,7 +179,7 @@ public class ProjectResourceIT {
     void checkTokenIsIgnored() throws Exception {
         Project newProject = createNewEntity(em);
         // set a token
-        newProject.setToken(UUID.randomUUID());
+        newProject.setToken(UUID.fromString("f31932de-2141-495b-9b30-117cc1327c25"));
 
         // Create the Project, which passes
         ProjectDTO projectDTO = projectMapper.toDto(newProject);
@@ -374,7 +374,7 @@ public class ProjectResourceIT {
         // Disconnect from session so that the updates on updatedProject are not directly saved in db
         em.detach(updatedProject);
         updatedProject
-            .token(UUID.randomUUID())
+            .token(UUID.fromString("2e09095b-aeec-43b3-bd66-c433ff7d0917"))
             .name(UPDATED_NAME)
             .description(UPDATED_DESCRIPTION)
             .startDate(DEFAULT_START_DATE.plus(1, ChronoUnit.MINUTES))
@@ -526,7 +526,7 @@ public class ProjectResourceIT {
         partialUpdatedProject.setId(project.getId());
 
         partialUpdatedProject
-            .token(UUID.randomUUID())
+            .token(UUID.fromString("0e20cc30-3ce7-47bc-943f-68b9aeaa56ae"))
             .name(UPDATED_NAME)
             .description(UPDATED_DESCRIPTION)
             .startDate(DEFAULT_START_DATE.plus(1, ChronoUnit.MINUTES))

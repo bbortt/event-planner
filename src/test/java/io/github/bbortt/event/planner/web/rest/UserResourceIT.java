@@ -77,7 +77,7 @@ public class UserResourceIT {
      */
     public static User createEntity(EntityManager em) {
         User user = new User();
-        user.setId(UUID.randomUUID().toString());
+        user.setId("8eda44c7-0be1-42b8-b9ed-c6e6e94aed11");
         user.setLogin(DEFAULT_LOGIN + RandomStringUtils.randomAlphabetic(5));
         user.setActivated(true);
         user.setEmail(RandomStringUtils.randomAlphabetic(5) + DEFAULT_EMAIL);
