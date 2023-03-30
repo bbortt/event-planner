@@ -114,7 +114,7 @@
     "@commitlint/cli": "^17.5.1",
     "@commitlint/config-conventional": "^17.4.4",
     "@types/jest": "28.1.8",
-    "@types/node": "18.15.7",
+    "@types/node": "18.15.11",
     "@types/sockjs-client": "1.5.1",
     "@typescript-eslint/eslint-plugin": "5.57.0",
     "@typescript-eslint/parser": "5.57.0",
