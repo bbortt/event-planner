@@ -9,11 +9,22 @@ import { ProjectEntityModule } from '../../../entities/project/project-entity.mo
 
 import { AdminLayoutComponent } from './layout/admin-layout.component';
 import { SideNavComponent } from './layout/side-nav.component';
+import {
+  ProjectMemberInviteModalComponent,
+  ProjectMemberInviteModalContentComponent,
+} from './member/project-member-invite-modal.component';
 import { ProjectMemberListComponent } from './member/project-member-list.component';
 import { ProjectSettingsComponent } from './settings/project-settings.component';
 
 @NgModule({
   imports: [SharedModule, ProjectEntityModule, RouterModule.forChild(PROJECT_ADMIN_ROUTES)],
-  declarations: [AdminLayoutComponent, ProjectMemberListComponent, ProjectSettingsComponent, SideNavComponent],
+  declarations: [
+    AdminLayoutComponent,
+    ProjectMemberInviteModalComponent,
+    ProjectMemberInviteModalContentComponent,
+    ProjectMemberListComponent,
+    ProjectSettingsComponent,
+    SideNavComponent,
+  ],
 })
 export class ProjectAdminModule {}
