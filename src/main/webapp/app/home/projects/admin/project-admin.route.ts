@@ -7,6 +7,8 @@ import { DEFAULT_SORT_DATA } from '../../../config/navigation.constants';
 import { AdminLayoutComponent } from './layout/admin-layout.component';
 import { ProjectMemberListComponent } from './member/project-member-list.component';
 import { ProjectSettingsComponent } from './settings/project-settings.component';
+import { ProjectMemberInviteModalComponent } from './member/project-member-invite-modal.component';
+import { ProjectRoutingResolveService } from '../../../entities/project/route/project-routing-resolve.service';
 
 export const PROJECT_ADMIN_ROUTES: Route[] = [
   {
@@ -30,6 +32,17 @@ export const PROJECT_ADMIN_ROUTES: Route[] = [
           [DEFAULT_SORT_DATA]: 'acceptedDate,desc',
         },
         resolve: { project: ProjectFromParentResolveService },
+        children: [
+          {
+            path: 'project/:id/members/invite',
+            component: ProjectMemberInviteModalComponent,
+            outlet: 'modal',
+            pathMatch: 'full',
+            resolve: {
+              project: ProjectRoutingResolveService,
+            },
+          },
+        ],
       },
     ],
     resolve: { project: ProjectFromParentResolveService },
