@@ -120,7 +120,7 @@
     "@typescript-eslint/parser": "5.57.0",
     "browser-sync": "2.29.1",
     "browser-sync-webpack-plugin": "2.3.0",
-    "concurrently": "7.6.0",
+    "concurrently": "8.0.1",
     "copy-webpack-plugin": "11.0.0",
     "eslint": "8.37.0",
     "eslint-config-prettier": "8.8.0",
