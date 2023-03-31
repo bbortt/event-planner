@@ -6,6 +6,7 @@
         "refreshListLabel": "Refresh list",
         "createLabel": "Create a new Member",
         "createOrEditLabel": "Create or edit a Member",
+        "inviteLabel": "Invite Member",
         "notFound": "No Members found"
       },
       "created": "A new Member is created with identifier {{ param }}",

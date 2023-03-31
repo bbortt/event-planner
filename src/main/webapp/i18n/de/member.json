@@ -6,6 +6,7 @@
         "refreshListLabel": "Liste aktualisieren",
         "createLabel": "Mitglied erstellen",
         "createOrEditLabel": "Mitglied erstellen oder bearbeiten",
+        "inviteLabel": "Mitglied einladen",
         "notFound": "Keine Mitglieder gefunden"
       },
       "created": "Mitglied erstellt mit ID {{ param }}",

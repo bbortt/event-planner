@@ -1,16 +1,33 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
-import { Project } from '../../../../api';
-import { ActivatedRoute } from '@angular/router';
+
+import { Project, ProjectMemberService } from '../../../../api';
+
+import { MemberFormGroup, MemberFormService } from '../../../../entities/member/update/member-form.service';
 
 @Component({
   selector: 'app-project-member-invite-modal-content',
   templateUrl: './project-member-invite-modal.component.html',
 })
 export class ProjectMemberInviteModalContentComponent {
-  project: Project | null = null;
+  protected project: Project | null = null;
+
+  isSaving = false;
+
+  protected inviteForm: MemberFormGroup;
+
+  constructor(private memberFormService: MemberFormService, private projectMemberService: ProjectMemberService) {
+    this.inviteForm = this.memberFormService.createMemberFormGroup();
+  }
+
+  protected previousState() {
+    window.history.back();
+  }
+
+  protected save() {}
 }
 
 @Component({
