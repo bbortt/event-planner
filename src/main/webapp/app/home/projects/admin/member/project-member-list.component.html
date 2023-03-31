@@ -3,20 +3,22 @@
     <span jhiTranslate="app.member.home.title">Mitglieder</span>
 
     <div class="d-flex justify-content-end">
-      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
-        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
-        <span jhiTranslate="app.member.home.refreshListLabel">Liste aktualisieren</span>
-      </button>
+      <div class="btn-group">
+        <button class="btn btn-info" (click)="load()" [disabled]="isLoading">
+          <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+          <span jhiTranslate="app.member.home.refreshListLabel">Liste aktualisieren</span>
+        </button>
 
-      <button
-        id="jh-create-entity"
-        data-cy="entityCreateButton"
-        class="btn btn-primary jh-create-entity create-member"
-        [routerLink]="[{ outlets: { modal: ['project', project.id, 'members', 'invite'] } }]"
-      >
-        <fa-icon icon="plus"></fa-icon>
-        <span jhiTranslate="app.member.home.createLabel"> Mitglied erstellen </span>
-      </button>
+        <button
+          id="jh-create-entity"
+          data-cy="entityCreateButton"
+          class="btn btn-primary jh-create-entity create-member"
+          [routerLink]="[{ outlets: { modal: ['project', project.id, 'members', 'invite'] } }]"
+        >
+          <fa-icon icon="plus"></fa-icon>
+          <span jhiTranslate="app.member.home.createLabel"> Mitglied erstellen </span>
+        </button>
+      </div>
     </div>
   </h2>
 

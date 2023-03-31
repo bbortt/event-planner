@@ -71,7 +71,7 @@ export class ProjectSettingsComponent implements OnInit {
   }
 
   protected onSaveError(): void {
-    // Api for inheritance.
+    // TODO: Post a nice and readable error message
   }
 
   protected onSaveFinalize(): void {

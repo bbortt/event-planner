@@ -42,11 +42,15 @@ export class MemberService {
     return this._memberUpdatedSource$;
   }
 
+  public notifyMemberUpdates(member: IMember): void {
+    this.notifySubscribersOfChangedMember({ body: member } as HttpResponse<IMember>);
+  }
+
   create(member: NewMember): Observable<EntityResponseType> {
     const copy = this.convertDateFromClient(member);
     return this.http.post<RestMember>(this.resourceUrl, copy, { observe: 'response' }).pipe(
       map(res => this.convertResponseFromServer(res)),
-      tap(res => this.notifySubscribersOfChangedProject(res))
+      tap(res => this.notifySubscribersOfChangedMember(res))
     );
   }
 
@@ -54,7 +58,7 @@ export class MemberService {
     const copy = this.convertDateFromClient(member);
     return this.http.put<RestMember>(`${this.resourceUrl}/${this.getMemberIdentifier(member)}`, copy, { observe: 'response' }).pipe(
       map(res => this.convertResponseFromServer(res)),
-      tap(res => this.notifySubscribersOfChangedProject(res))
+      tap(res => this.notifySubscribersOfChangedMember(res))
     );
   }
 
@@ -62,7 +66,7 @@ export class MemberService {
     const copy = this.convertDateFromClient(member);
     return this.http.patch<RestMember>(`${this.resourceUrl}/${this.getMemberIdentifier(member)}`, copy, { observe: 'response' }).pipe(
       map(res => this.convertResponseFromServer(res)),
-      tap(res => this.notifySubscribersOfChangedProject(res))
+      tap(res => this.notifySubscribersOfChangedMember(res))
     );
   }
 
@@ -137,7 +141,7 @@ export class MemberService {
     });
   }
 
-  private notifySubscribersOfChangedProject(res: HttpResponse<IMember>): void {
+  private notifySubscribersOfChangedMember(res: HttpResponse<IMember>): void {
     if (res.body) {
       this.memberUpdatedSource.next(res.body);
     }
