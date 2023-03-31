@@ -1,3 +1,70 @@
-<div class="mt-3 mb-3">
-  <h1>hi!</h1>
+<div class="d-flex justify-content-center mt-3 mb-3">
+  <div class="col-8">
+    <form name="inviteForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="inviteForm">
+      <h2 id="jhi-project-heading" data-cy="ProjectMemberInviteHeading">
+        <span jhiTranslate="app.member.home.inviteLabel"> Mitglied einladen </span>
+      </h2>
+
+      <div class="mt-3">
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="app.member.invitedEmail" for="field_invitedEmail">Email</label>
+          <input
+            type="email"
+            class="form-control"
+            name="invitedEmail"
+            id="field_invitedEmail"
+            data-cy="invitedEmail"
+            formControlName="invitedEmail"
+          />
+          <div
+            *ngIf="
+              inviteForm.get('invitedEmail')!.invalid && (inviteForm.get('invitedEmail')!.dirty || inviteForm.get('invitedEmail')!.touched)
+            "
+          >
+            <small
+              class="form-text text-danger"
+              *ngIf="inviteForm.get('invitedEmail')?.errors?.required"
+              jhiTranslate="entity.validation.required"
+            >
+              Dieses Feld wird benötigt.
+            </small>
+            <small
+              class="form-text text-danger"
+              *ngIf="inviteForm.get('invitedEmail')?.errors?.minlength"
+              jhiTranslate="entity.validation.minlength"
+              [translateValues]="{ min: 1 }"
+            >
+              Dieses Feld muss mind. 1 Zeichen lang sein.
+            </small>
+            <small
+              class="form-text text-danger"
+              *ngIf="inviteForm.get('invitedEmail')?.errors?.maxlength"
+              jhiTranslate="entity.validation.maxlength"
+              [translateValues]="{ max: 63 }"
+            >
+              Dieses Feld darf max. 191 Zeichen lang sein.
+            </small>
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-group">
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Abbrechen</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="inviteForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Speichern</span>
+        </button>
+      </div>
+    </form>
+  </div>
 </div>
