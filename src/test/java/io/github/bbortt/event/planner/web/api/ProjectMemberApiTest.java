@@ -2,6 +2,7 @@ package io.github.bbortt.event.planner.web.api;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
@@ -30,6 +31,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @ExtendWith(MockitoExtension.class)
@@ -111,13 +113,11 @@ class ProjectMemberApiTest {
         // Project by ID does not exist
         doReturn(false).when(projectServiceMock).exists(projectId);
 
-        ResponseEntity<GetProjectMembers200Response> result = fixture.getProjectMembers(
-            projectId,
-            Optional.of(pageSize),
-            Optional.of(pageNumber),
-            Optional.of(sort)
+        ResponseStatusException exception = assertThrows(
+            ResponseStatusException.class,
+            () -> fixture.getProjectMembers(projectId, Optional.of(pageSize), Optional.of(pageNumber), Optional.of(sort))
         );
 
-        assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
+        assertEquals(HttpStatus.NOT_FOUND, exception.getStatus());
     }
 }

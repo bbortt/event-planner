@@ -9,7 +9,7 @@ import { finalize } from 'rxjs/operators';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 
-import { Member, ProjectMemberService } from '../../../../api';
+import { GetProjectMembers200Response, ProjectMemberService } from '../../../../api';
 
 import { MemberService } from '../../../../entities/member/service/member.service';
 import { MemberFormService } from '../../../../entities/member/update/member-form.service';
@@ -22,9 +22,9 @@ type InviteFormType = { email: FormControl<string | null> };
   templateUrl: './project-member-invite-modal.component.html',
 })
 export class ProjectMemberInviteModalContentComponent {
-  protected project: IProject | null = null;
-
   isSaving = false;
+
+  protected project: IProject | null = null;
 
   protected inviteForm: FormGroup<InviteFormType>;
 
@@ -40,29 +40,31 @@ export class ProjectMemberInviteModalContentComponent {
     });
   }
 
-  protected previousState() {
+  protected previousState(): void {
     window.history.back();
   }
 
-  protected save() {
+  protected save(): void {
     if (this.project) {
       this.isSaving = true;
       this.subscribeToSaveResponse(
-        this.projectMemberService.inviteMemberToProject(this.project.id!, [{ email: this.inviteForm.getRawValue().email! }], 'response')
+        this.projectMemberService.inviteMemberToProject(this.project.id, [{ email: this.inviteForm.getRawValue().email! }], 'response')
       );
     }
   }
 
-  protected subscribeToSaveResponse(result: Observable<HttpResponse<Member>>): void {
+  protected subscribeToSaveResponse(result: Observable<HttpResponse<GetProjectMembers200Response>>): void {
     result.pipe(finalize(() => this.onSaveFinalize())).subscribe({
       next: response => this.onSaveSuccess(response.body),
       error: () => this.onSaveError(),
     });
   }
 
-  protected onSaveSuccess(member: Member | null): void {
-    if (member) {
-      this.memberService.notifyMemberUpdates({ id: member.id, invitedEmail: member.email, accepted: false, project: this.project! });
+  protected onSaveSuccess(members: GetProjectMembers200Response | null): void {
+    if (members) {
+      members.contents?.forEach(member =>
+        this.memberService.notifyMemberUpdates({ id: member.id, invitedEmail: member.email, accepted: false, project: this.project! })
+      );
     }
 
     this.previousState();

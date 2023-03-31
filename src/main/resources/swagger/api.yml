@@ -128,7 +128,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Member'
+                type: object
+                properties:
+                  contents:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Member'
         400:
           description: Bad Request
 components:

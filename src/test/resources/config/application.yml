@@ -63,7 +63,7 @@ server:
 # ===================================================================
 jhipster:
   clientApp:
-    name: 'eventplannerApp'
+    name: 'app'
   mail:
     from: eventplanner@localhost.com
     base-url: http://127.0.0.1:8080
