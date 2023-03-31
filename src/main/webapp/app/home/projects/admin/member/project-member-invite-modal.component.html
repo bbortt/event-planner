@@ -10,29 +10,18 @@
 
         <div class="row mb-3">
           <label class="form-label" jhiTranslate="app.member.invitedEmail" for="field_invitedEmail">Email</label>
-          <input
-            type="email"
-            class="form-control"
-            name="invitedEmail"
-            id="field_invitedEmail"
-            data-cy="invitedEmail"
-            formControlName="invitedEmail"
-          />
-          <div
-            *ngIf="
-              inviteForm.get('invitedEmail')!.invalid && (inviteForm.get('invitedEmail')!.dirty || inviteForm.get('invitedEmail')!.touched)
-            "
-          >
+          <input type="email" class="form-control" name="email" id="field_invitedEmail" data-cy="email" formControlName="email" />
+          <div *ngIf="inviteForm.get('email')!.invalid && (inviteForm.get('email')!.dirty || inviteForm.get('email')!.touched)">
             <small
               class="form-text text-danger"
-              *ngIf="inviteForm.get('invitedEmail')?.errors?.required"
+              *ngIf="inviteForm.get('email')?.errors?.required"
               jhiTranslate="entity.validation.required"
             >
               Dieses Feld wird benötigt.
             </small>
             <small
               class="form-text text-danger"
-              *ngIf="inviteForm.get('invitedEmail')?.errors?.minlength"
+              *ngIf="inviteForm.get('email')?.errors?.minlength"
               jhiTranslate="entity.validation.minlength"
               [translateValues]="{ min: 1 }"
             >
@@ -40,7 +29,7 @@
             </small>
             <small
               class="form-text text-danger"
-              *ngIf="inviteForm.get('invitedEmail')?.errors?.maxlength"
+              *ngIf="inviteForm.get('email')?.errors?.maxlength"
               jhiTranslate="entity.validation.maxlength"
               [translateValues]="{ max: 63 }"
             >
@@ -50,20 +39,22 @@
         </div>
       </div>
 
-      <div class="btn-group">
-        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
-          <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Abbrechen</span>
-        </button>
+      <div class="d-flex justify-content-end">
+        <div class="btn-group">
+          <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+            <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Abbrechen</span>
+          </button>
 
-        <button
-          type="submit"
-          id="save-entity"
-          data-cy="entityCreateSaveButton"
-          [disabled]="inviteForm.invalid || isSaving"
-          class="btn btn-primary"
-        >
-          <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Speichern</span>
-        </button>
+          <button
+            type="submit"
+            id="save-entity"
+            data-cy="entityCreateSaveButton"
+            [disabled]="inviteForm.invalid || isSaving"
+            class="btn btn-primary"
+          >
+            <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Speichern</span>
+          </button>
+        </div>
       </div>
     </form>
   </div>
