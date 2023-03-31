@@ -10,6 +10,7 @@
         "notFound": "No Members found"
       },
       "created": "A new Member is created with identifier {{ param }}",
+      "invited": "Member(s) successfully invited",
       "updated": "A Member is updated with identifier {{ param }}",
       "deleted": "A Member is deleted with identifier {{ param }}",
       "delete": {

@@ -2,6 +2,7 @@ package io.github.bbortt.event.planner.service;
 
 import io.github.bbortt.event.planner.domain.Member;
 import io.github.bbortt.event.planner.repository.MemberRepository;
+import io.github.bbortt.event.planner.service.api.dto.InviteMemberToProjectRequestInner;
 import io.github.bbortt.event.planner.service.dto.MemberDTO;
 import io.github.bbortt.event.planner.service.mapper.MemberMapper;
 import java.util.Optional;
@@ -9,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -128,5 +130,14 @@ public class MemberService {
     public Page<MemberDTO> findInProject(Long projectId, Pageable pageable) {
         log.debug("Request to get a page of Members in Project '{}'", projectId);
         return memberRepository.findAllByProjectIdEquals(projectId, pageable).map(memberMapper::toDto);
+    }
+
+    @Modifying
+    @Transactional
+    @PreAuthorize("T(io.github.bbortt.event.planner.security.SecurityUtils).isAuthenticated()")
+    public MemberDTO inviteToProject(String email, Long projectId) {
+        log.debug("Request to invite Member '{}' to Project '{}'", email, projectId);
+        // TODO: Send invitation email with project link
+        return memberMapper.toDto(memberRepository.save(new Member().invitedEmail(email)));
     }
 }

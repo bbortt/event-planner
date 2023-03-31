@@ -215,6 +215,16 @@ describe('Member Service', () => {
         expect(compareResult2).toEqual(true);
       });
     });
+
+    describe('notifyMemberUpdates', () => {
+      test('notifies subscribers', () => {
+        const member: IMember = { id: 1234 };
+
+        service.notifyMemberUpdates(member);
+
+        expect(nextMemberEvent).toHaveBeenCalledWith(member);
+      });
+    });
   });
 
   afterEach(() => {
