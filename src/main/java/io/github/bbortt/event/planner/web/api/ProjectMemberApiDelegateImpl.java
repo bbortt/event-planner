@@ -6,6 +6,7 @@ import io.github.bbortt.event.planner.service.api.dto.GetProjectMembers200Respon
 import io.github.bbortt.event.planner.service.api.dto.InviteMemberToProjectRequestInner;
 import io.github.bbortt.event.planner.service.api.dto.Member;
 import io.github.bbortt.event.planner.service.dto.MemberDTO;
+import io.github.bbortt.event.planner.service.dto.ProjectDTO;
 import io.github.bbortt.event.planner.web.api.mapper.ApiProjectMemberMapper;
 import io.github.bbortt.event.planner.web.rest.util.PaginationUtil;
 import java.net.URI;
@@ -60,7 +61,10 @@ public class ProjectMemberApiDelegateImpl implements ProjectMemberApiDelegate {
         Optional<Integer> pageNumber,
         Optional<List<String>> sort
     ) {
-        existingProjectSanityCheck(projectId);
+        if (!projectService.exists(projectId)) {
+            logger.warn("REST request to get a page of Members in non-existent Project '{}'!", projectId);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
 
         logger.debug("REST request to get a page of Members in Project '{}'", projectId);
 
@@ -81,7 +85,11 @@ public class ProjectMemberApiDelegateImpl implements ProjectMemberApiDelegate {
         Long projectId,
         List<InviteMemberToProjectRequestInner> inviteMemberToProjectRequestInner
     ) {
-        existingProjectSanityCheck(projectId);
+        Optional<ProjectDTO> project = projectService.findOne(projectId);
+        if (project.isEmpty()) {
+            logger.warn("REST request to get a page of Members in non-existent Project '{}'!", projectId);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
 
         logger.debug("REST request to invite new Members '{}' to Project '{}'", inviteMemberToProjectRequestInner, projectId);
 
@@ -94,7 +102,7 @@ public class ProjectMemberApiDelegateImpl implements ProjectMemberApiDelegate {
                         inviteMemberToProjectRequestInner
                             .stream()
                             .map(InviteMemberToProjectRequestInner::getEmail)
-                            .map(email -> memberService.inviteToProject(email, projectId))
+                            .map(email -> memberService.inviteToProject(email, project.get()))
                             .map(apiProjectMemberMapper::toApiDTO)
                             .toList()
                     )
@@ -109,13 +117,6 @@ public class ProjectMemberApiDelegateImpl implements ProjectMemberApiDelegate {
             throw new IllegalArgumentException(e);
         }
         return entitiesUri;
-    }
-
-    private void existingProjectSanityCheck(Long projectId) {
-        if (!projectService.exists(projectId)) {
-            logger.warn("REST request to get a page of Members in non-existent Project '{}'!", projectId);
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
     }
 
     private Member toApiDTO(MemberDTO memberDTO) {
