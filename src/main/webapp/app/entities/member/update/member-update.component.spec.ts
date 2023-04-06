@@ -1,23 +1,28 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpResponse } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
+
 import { of, Subject, from } from 'rxjs';
 
-import { MemberFormService } from './member-form.service';
-import { MemberService } from '../service/member.service';
-import { IMember } from '../member.model';
+import { EventManager } from 'app/core/util/event-manager.service';
+
 import { IProject } from 'app/entities/project/project.model';
 import { ProjectService } from 'app/entities/project/service/project.service';
 
+import { MemberService } from '../service/member.service';
+
+import { IMember } from '../member.model';
+import { MemberFormService } from './member-form.service';
 import { MemberUpdateComponent } from './member-update.component';
 
 describe('Member Management Update Component', () => {
   let comp: MemberUpdateComponent;
   let fixture: ComponentFixture<MemberUpdateComponent>;
   let activatedRoute: ActivatedRoute;
+  let eventManager: EventManager;
   let memberFormService: MemberFormService;
   let memberService: MemberService;
   let projectService: ProjectService;
@@ -41,6 +46,7 @@ describe('Member Management Update Component', () => {
 
     fixture = TestBed.createComponent(MemberUpdateComponent);
     activatedRoute = TestBed.inject(ActivatedRoute);
+    eventManager = TestBed.inject(EventManager);
     memberFormService = TestBed.inject(MemberFormService);
     memberService = TestBed.inject(MemberService);
     projectService = TestBed.inject(ProjectService);
@@ -133,11 +139,15 @@ describe('Member Management Update Component', () => {
 
     it('Should set isSaving to false on error', () => {
       // GIVEN
-      const saveSubject = new Subject<HttpResponse<IMember>>();
-      const member = { id: 123 };
-      jest.spyOn(memberService, 'update').mockReturnValue(saveSubject);
       jest.spyOn(comp, 'previousState');
+      jest.spyOn(eventManager, 'broadcast');
+
+      const saveSubject = new Subject<HttpResponse<IMember>>();
+      jest.spyOn(memberService, 'update').mockReturnValue(saveSubject);
+
+      const member = { id: 123 };
       activatedRoute.data = of({ member });
+
       comp.ngOnInit();
 
       // WHEN
@@ -147,6 +157,7 @@ describe('Member Management Update Component', () => {
 
       // THEN
       expect(memberService.update).toHaveBeenCalled();
+      expect(eventManager.broadcast).toHaveBeenCalled();
       expect(comp.isSaving).toEqual(false);
       expect(comp.previousState).not.toHaveBeenCalled();
     });
