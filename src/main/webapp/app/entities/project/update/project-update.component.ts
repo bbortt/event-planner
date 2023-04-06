@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 
 import { Observable } from 'rxjs';
@@ -8,6 +8,7 @@ import { finalize } from 'rxjs/operators';
 import { ProjectFormService, ProjectFormGroup } from './project-form.service';
 import { IProject } from '../project.model';
 import { ProjectService } from '../service/project.service';
+import { EventManager, EventWithContent } from '../../../core/util/event-manager.service';
 
 @Component({
   selector: 'jhi-project-update',
@@ -21,6 +22,7 @@ export class ProjectUpdateComponent implements OnInit {
   editForm: ProjectFormGroup;
 
   constructor(
+    private eventManager: EventManager,
     protected projectService: ProjectService,
     protected projectFormService: ProjectFormService,
     protected activatedRoute: ActivatedRoute
@@ -61,7 +63,7 @@ export class ProjectUpdateComponent implements OnInit {
   protected subscribeToSaveResponse(result: Observable<HttpResponse<IProject>>): void {
     result.pipe(finalize(() => this.onSaveFinalize())).subscribe({
       next: () => this.onSaveSuccess(),
-      error: err => this.onSaveError(err),
+      error: response => this.onSaveError(response),
     });
   }
 
@@ -69,9 +71,9 @@ export class ProjectUpdateComponent implements OnInit {
     this.previousState();
   }
 
-  protected onSaveError(err: any): void {
-    // TODO: Error handling -> JHipster error event?
-    // Api for inheritance.
+  protected onSaveError(httpErrorResponse: HttpErrorResponse): void {
+    this.eventManager.broadcast(new EventWithContent('error.unknown', httpErrorResponse));
+    this.previousState();
   }
 
   protected onSaveFinalize(): void {
