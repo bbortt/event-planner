@@ -106,16 +106,16 @@ class ProjectMemberApiTest {
     void getProjectMembersForNonexistentProject() {
         Long projectId = 1L;
 
-        int pageSize = 10;
-        int pageNumber = 0;
-        List<String> sort = Collections.singletonList("id,asc");
+        Optional<Integer> pageSize = Optional.of(10);
+        Optional<Integer> pageNumber = Optional.of(0);
+        Optional<List<String>> sort = Optional.of(Collections.singletonList("id,asc"));
 
         // Project by ID does not exist
         doReturn(false).when(projectServiceMock).exists(projectId);
 
         ResponseStatusException exception = assertThrows(
             ResponseStatusException.class,
-            () -> fixture.getProjectMembers(projectId, Optional.of(pageSize), Optional.of(pageNumber), Optional.of(sort))
+            () -> fixture.getProjectMembers(projectId, pageSize, pageNumber, sort)
         );
 
         assertEquals(HttpStatus.NOT_FOUND, exception.getStatus());

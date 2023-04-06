@@ -7,15 +7,12 @@ import io.github.bbortt.event.planner.service.api.dto.InviteMemberToProjectReque
 import io.github.bbortt.event.planner.service.api.dto.Member;
 import io.github.bbortt.event.planner.service.dto.MemberDTO;
 import io.github.bbortt.event.planner.web.api.mapper.ApiProjectMemberMapper;
-import io.github.bbortt.event.planner.web.rest.MemberResource;
 import io.github.bbortt.event.planner.web.rest.util.PaginationUtil;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import javax.persistence.EntityNotFoundException;
-import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +29,7 @@ import tech.jhipster.web.util.HeaderUtil;
 @RestController
 public class ProjectMemberApiDelegateImpl implements ProjectMemberApiDelegate {
 
-    private final Logger logger = LoggerFactory.getLogger(ProjectApiDelegateImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(ProjectMemberApiDelegateImpl.class);
 
     private static final String MEMBER_ID_ATTRIBUTE_NAME = "id";
 
