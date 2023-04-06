@@ -4,13 +4,13 @@ import { ActivatedRoute, Data, ParamMap, Router } from '@angular/router';
 
 import { combineLatest, Observable, Subscription, switchMap, tap } from 'rxjs';
 
-import { GetUserProjects200Response, Project, ProjectService as ApiProjectService } from '../../../api';
+import { GetUserProjects200Response, Project, ProjectService as ApiProjectService } from 'app/api';
 
-import { HAS_NEXT_PAGE_HEADER } from '../../../config/pagination.constants';
-import { ASC, DEFAULT_SORT_DATA, DESC, SORT } from '../../../config/navigation.constants';
+import { HAS_NEXT_PAGE_HEADER } from 'app/config/pagination.constants';
+import { ASC, DEFAULT_SORT_DATA, DESC, SORT } from 'app/config/navigation.constants';
 
-import { IProject } from '../../../entities/project/project.model';
-import { ProjectService } from '../../../entities/project/service/project.service';
+import { IProject } from 'app/entities/project/project.model';
+import { ProjectService } from 'app/entities/project/service/project.service';
 
 @Component({
   selector: 'app-my-projects-list',

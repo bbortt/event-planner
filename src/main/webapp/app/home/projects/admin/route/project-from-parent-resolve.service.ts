@@ -3,7 +3,7 @@ import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
 
 import { Observable, of } from 'rxjs';
 
-import { IProject } from '../../../../entities/project/project.model';
+import { IProject } from 'app/entities/project/project.model';
 
 @Injectable({ providedIn: 'root' })
 export class ProjectFromParentResolveService implements Resolve<IProject | null> {

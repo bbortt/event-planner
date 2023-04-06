@@ -6,7 +6,7 @@ import { of, Subject } from 'rxjs';
 
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
-import { IProject } from '../../../../entities/project/project.model';
+import { IProject } from 'app/entities/project/project.model';
 
 import { SideNavComponent } from './side-nav.component';
 

@@ -1,14 +1,15 @@
 import { Route } from '@angular/router';
 
-import { ProjectFromParentResolveService } from './route/project-from-parent-resolve.service';
+import { DEFAULT_SORT_DATA } from 'app/config/navigation.constants';
 
-import { DEFAULT_SORT_DATA } from '../../../config/navigation.constants';
+import { ProjectRoutingResolveService } from 'app/entities/project/route/project-routing-resolve.service';
+
+import { ProjectFromParentResolveService } from './route/project-from-parent-resolve.service';
 
 import { AdminLayoutComponent } from './layout/admin-layout.component';
 import { ProjectMemberListComponent } from './member/project-member-list.component';
 import { ProjectSettingsComponent } from './settings/project-settings.component';
 import { ProjectMemberInviteModalComponent } from './member/project-member-invite-modal.component';
-import { ProjectRoutingResolveService } from '../../../entities/project/route/project-routing-resolve.service';
 
 export const PROJECT_ADMIN_ROUTES: Route[] = [
   {

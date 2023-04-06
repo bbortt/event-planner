@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
+import { ProjectEntityModule } from 'app/entities/project/project-entity.module';
+
 import { SharedModule } from 'app/shared/shared.module';
 
 import { PROJECT_ADMIN_ROUTES } from './project-admin.route';
-
-import { ProjectEntityModule } from '../../../entities/project/project-entity.module';
 
 import { AdminLayoutComponent } from './layout/admin-layout.component';
 import { SideNavComponent } from './layout/side-nav.component';

@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 
-import { Configuration } from '../api';
-
-import { ApplicationConfigService } from '../core/config/application-config.service';
+import { Configuration } from 'app/api';
+import { ApplicationConfigService } from 'app/core/config/application-config.service';
 
 @Injectable()
 export class ApiConfiguration extends Configuration {

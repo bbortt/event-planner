@@ -6,12 +6,14 @@ import { Observable } from 'rxjs';
 import { finalize, map } from 'rxjs/operators';
 
 import { EventManager, EventWithContent } from 'app/core/util/event-manager.service';
+
 import { IProject } from 'app/entities/project/project.model';
 import { ProjectService } from 'app/entities/project/service/project.service';
 
 import { MemberService } from '../service/member.service';
 
 import { IMember } from '../member.model';
+
 import { MemberFormService, MemberFormGroup } from './member-form.service';
 
 @Component({

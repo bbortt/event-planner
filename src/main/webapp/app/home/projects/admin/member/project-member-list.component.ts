@@ -6,13 +6,13 @@ import { combineLatest, filter, Observable, Subscription, switchMap, tap } from 
 
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { GetProjectMembers200Response, Member, Project, ProjectMemberService } from '../../../../api';
+import { GetProjectMembers200Response, Member, Project, ProjectMemberService } from 'app/api';
 
-import { ITEMS_PER_PAGE, PAGE_HEADER, TOTAL_COUNT_RESPONSE_HEADER } from '../../../../config/pagination.constants';
-import { ASC, DEFAULT_SORT_DATA, DESC, ITEM_DELETED_EVENT, SORT } from '../../../../config/navigation.constants';
+import { ASC, DEFAULT_SORT_DATA, DESC, ITEM_DELETED_EVENT, SORT } from 'app/config/navigation.constants';
+import { ITEMS_PER_PAGE, PAGE_HEADER, TOTAL_COUNT_RESPONSE_HEADER } from 'app/config/pagination.constants';
 
-import { MemberDeleteDialogComponent } from '../../../../entities/member/delete/member-delete-dialog.component';
-import { MemberService } from '../../../../entities/member/service/member.service';
+import { MemberDeleteDialogComponent } from 'app/entities/member/delete/member-delete-dialog.component';
+import { MemberService } from 'app/entities/member/service/member.service';
 
 @Component({
   selector: 'jhi-project-member-list',

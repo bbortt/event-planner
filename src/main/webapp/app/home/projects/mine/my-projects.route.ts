@@ -1,8 +1,9 @@
 import { Route } from '@angular/router';
 
+import { DEFAULT_SORT_DATA } from 'app/config/navigation.constants';
+
 import { MyProjectsListComponent } from './my-projects-list.component';
 import { ProjectCreateModalComponent } from './project-create-modal.component';
-import { DEFAULT_SORT_DATA } from '../../../config/navigation.constants';
 
 export const MY_PROJECTS_ROUTES: Route[] = [
   {

@@ -9,12 +9,13 @@ import { finalize } from 'rxjs/operators';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 
-import { GetProjectMembers200Response, ProjectMemberService } from '../../../../api';
-import { EventManager, EventWithContent } from '../../../../core/util/event-manager.service';
+import { GetProjectMembers200Response, ProjectMemberService } from 'app/api';
 
-import { MemberService } from '../../../../entities/member/service/member.service';
-import { MemberFormService } from '../../../../entities/member/update/member-form.service';
-import { IProject } from '../../../../entities/project/project.model';
+import { EventManager, EventWithContent } from 'app/core/util/event-manager.service';
+
+import { IProject } from 'app/entities/project/project.model';
+import { MemberService } from 'app/entities/member/service/member.service';
+import { MemberFormService } from 'app/entities/member/update/member-form.service';
 
 type InviteFormType = { email: FormControl<string | null> };
 
