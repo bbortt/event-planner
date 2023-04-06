@@ -15,9 +15,9 @@
           "administration": "Administration"
         }
       },
-      "created": "Projekt erstellt mit ID {{ param }}",
-      "updated": "Projekt aktualisiert mit ID {{ param }}",
-      "deleted": "Projekt gelöscht mit ID {{ param }}",
+      "created": "Projekt mit ID {{ param }} erstellt",
+      "updated": "Projekt mit ID {{ param }} aktualisiert",
+      "deleted": "Projekt mit ID {{ param }} gelöscht",
       "delete": {
         "question": "Soll Projekt {{ id }} wirklich dauerhaft gelöscht werden?"
       },

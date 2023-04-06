@@ -9,10 +9,10 @@
         "inviteLabel": "Mitglied einladen",
         "notFound": "Keine Mitglieder gefunden"
       },
-      "created": "Mitglied erstellt mit ID {{ param }}",
+      "created": "Mitglied mit ID {{ param }} erstellt",
       "invited": "Mieglied(er) erfolgreich eingeladen",
-      "updated": "Mitglied aktualisiert mit ID {{ param }}",
-      "deleted": "Mitglied gelöscht mit ID {{ param }}",
+      "updated": "Mitglied mit ID {{ param }} aktualisiert",
+      "deleted": "Mitglied mit ID {{ param }} gelöscht",
       "delete": {
         "question": "Soll Mitglied {{ id }} wirklich dauerhaft gelöscht werden?"
       },
