@@ -1,14 +1,18 @@
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { HttpResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
+
 import { Observable } from 'rxjs';
 import { finalize, map } from 'rxjs/operators';
 
-import { LocationFormService, LocationFormGroup } from './location-form.service';
-import { ILocation } from '../location.model';
-import { LocationService } from '../service/location.service';
+import { EventManager, EventWithContent } from 'app/core/util/event-manager.service';
 import { IProject } from 'app/entities/project/project.model';
 import { ProjectService } from 'app/entities/project/service/project.service';
+
+import { LocationService } from '../service/location.service';
+
+import { ILocation } from '../location.model';
+import { LocationFormService, LocationFormGroup } from './location-form.service';
 
 @Component({
   selector: 'jhi-location-update',
@@ -24,6 +28,7 @@ export class LocationUpdateComponent implements OnInit {
   editForm: LocationFormGroup;
 
   constructor(
+    private eventManager: EventManager,
     protected locationService: LocationService,
     protected locationFormService: LocationFormService,
     protected projectService: ProjectService,
@@ -64,7 +69,7 @@ export class LocationUpdateComponent implements OnInit {
   protected subscribeToSaveResponse(result: Observable<HttpResponse<ILocation>>): void {
     result.pipe(finalize(() => this.onSaveFinalize())).subscribe({
       next: () => this.onSaveSuccess(),
-      error: () => this.onSaveError(),
+      error: response => this.onSaveError(response),
     });
   }
 
@@ -72,8 +77,9 @@ export class LocationUpdateComponent implements OnInit {
     this.previousState();
   }
 
-  protected onSaveError(): void {
-    // Api for inheritance.
+  protected onSaveError(httpErrorResponse: HttpErrorResponse): void {
+    this.eventManager.broadcast(new EventWithContent('error.unknown', httpErrorResponse));
+    this.previousState();
   }
 
   protected onSaveFinalize(): void {
