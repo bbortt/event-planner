@@ -15,5 +15,7 @@ public final class Constants {
     public static final String DEFAULT_SORT_DIRECTION_SPLIT = ",";
     public static final String SLICE_HAS_NEXT_PAGE_HEADER = "Has-Next-Page";
 
+    public static final String SPRING_PROFILE_MAIL = "mail";
+
     private Constants() {}
 }

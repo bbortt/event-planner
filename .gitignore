@@ -1,8 +1,9 @@
 ######################
 # Project Specific
 ######################
-/src/main/webapp/content/css/main.css
 /build/resources/main/static/**
+/src/main/resources/config/application-mail.yml
+/src/main/webapp/content/css/main.css
 /src/test/javascript/coverage/
 
 ######################
