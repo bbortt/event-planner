@@ -3,8 +3,11 @@ package io.github.bbortt.event.planner.service;
 import io.github.bbortt.event.planner.domain.Member;
 import io.github.bbortt.event.planner.repository.MemberRepository;
 import io.github.bbortt.event.planner.service.dto.MemberDTO;
+import io.github.bbortt.event.planner.service.dto.ProjectDTO;
 import io.github.bbortt.event.planner.service.mapper.MemberMapper;
+import io.github.bbortt.event.planner.service.mapper.ProjectMapper;
 import java.util.Optional;
+import javax.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -26,10 +29,12 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     private final MemberMapper memberMapper;
+    private final ProjectMapper projectMapper;
 
-    public MemberService(MemberRepository memberRepository, MemberMapper memberMapper) {
+    public MemberService(MemberRepository memberRepository, MemberMapper memberMapper, ProjectMapper projectMapper) {
         this.memberRepository = memberRepository;
         this.memberMapper = memberMapper;
+        this.projectMapper = projectMapper;
     }
 
     /**
@@ -134,9 +139,11 @@ public class MemberService {
     @Modifying
     @Transactional
     @PreAuthorize("T(io.github.bbortt.event.planner.security.SecurityUtils).isAuthenticated()")
-    public MemberDTO inviteToProject(String email, Long projectId) {
-        log.debug("Request to invite Member '{}' to Project '{}'", email, projectId);
+    public MemberDTO inviteToProject(String email, @Nonnull ProjectDTO project) {
+        log.debug("Request to invite Member '{}' to Project '{}'", email, project);
         // TODO: Send invitation email with project link
-        return memberMapper.toDto(memberRepository.save(new Member().invitedEmail(email)));
+        return memberMapper.toDto(
+            memberRepository.save(new Member().accepted(Boolean.FALSE).invitedEmail(email).project(projectMapper.toEntity(project)))
+        );
     }
 }
