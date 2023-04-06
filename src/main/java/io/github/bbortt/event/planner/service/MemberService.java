@@ -2,7 +2,6 @@ package io.github.bbortt.event.planner.service;
 
 import io.github.bbortt.event.planner.domain.Member;
 import io.github.bbortt.event.planner.repository.MemberRepository;
-import io.github.bbortt.event.planner.service.api.dto.InviteMemberToProjectRequestInner;
 import io.github.bbortt.event.planner.service.dto.MemberDTO;
 import io.github.bbortt.event.planner.service.mapper.MemberMapper;
 import java.util.Optional;

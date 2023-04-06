@@ -1,7 +1,6 @@
 package io.github.bbortt.event.planner.service.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
