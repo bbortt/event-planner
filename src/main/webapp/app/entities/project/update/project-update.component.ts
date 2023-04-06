@@ -25,10 +25,10 @@ export class ProjectUpdateComponent implements OnInit {
   editForm: ProjectFormGroup;
 
   constructor(
+    protected activatedRoute: ActivatedRoute,
     private eventManager: EventManager,
     protected projectService: ProjectService,
-    protected projectFormService: ProjectFormService,
-    protected activatedRoute: ActivatedRoute
+    protected projectFormService: ProjectFormService
   ) {
     this.editForm = this.projectFormService.createProjectFormGroup();
   }
@@ -76,7 +76,6 @@ export class ProjectUpdateComponent implements OnInit {
 
   protected onSaveError(httpErrorResponse: HttpErrorResponse): void {
     this.eventManager.broadcast(new EventWithContent('error.unknown', httpErrorResponse));
-    this.previousState();
   }
 
   protected onSaveFinalize(): void {

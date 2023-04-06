@@ -78,7 +78,6 @@ export class MemberUpdateComponent implements OnInit {
 
   protected onSaveError(httpErrorResponse: HttpErrorResponse): void {
     this.eventManager.broadcast(new EventWithContent('error.unknown', httpErrorResponse));
-    this.previousState();
   }
 
   protected onSaveFinalize(): void {

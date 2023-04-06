@@ -1,23 +1,28 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpResponse } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
+
 import { of, Subject, from } from 'rxjs';
 
-import { LocationFormService } from './location-form.service';
-import { LocationService } from '../service/location.service';
-import { ILocation } from '../location.model';
+import { EventManager } from 'app/core/util/event-manager.service';
+
 import { IProject } from 'app/entities/project/project.model';
 import { ProjectService } from 'app/entities/project/service/project.service';
 
+import { LocationService } from '../service/location.service';
+
+import { ILocation } from '../location.model';
+import { LocationFormService } from './location-form.service';
 import { LocationUpdateComponent } from './location-update.component';
 
 describe('Location Management Update Component', () => {
   let comp: LocationUpdateComponent;
   let fixture: ComponentFixture<LocationUpdateComponent>;
   let activatedRoute: ActivatedRoute;
+  let eventManager: EventManager;
   let locationFormService: LocationFormService;
   let locationService: LocationService;
   let projectService: ProjectService;
@@ -41,6 +46,7 @@ describe('Location Management Update Component', () => {
 
     fixture = TestBed.createComponent(LocationUpdateComponent);
     activatedRoute = TestBed.inject(ActivatedRoute);
+    eventManager = TestBed.inject(EventManager);
     locationFormService = TestBed.inject(LocationFormService);
     locationService = TestBed.inject(LocationService);
     projectService = TestBed.inject(ProjectService);
@@ -158,11 +164,15 @@ describe('Location Management Update Component', () => {
 
     it('Should set isSaving to false on error', () => {
       // GIVEN
-      const saveSubject = new Subject<HttpResponse<ILocation>>();
-      const location = { id: 123 };
-      jest.spyOn(locationService, 'update').mockReturnValue(saveSubject);
       jest.spyOn(comp, 'previousState');
+      jest.spyOn(eventManager, 'broadcast');
+
+      const saveSubject = new Subject<HttpResponse<ILocation>>();
+      jest.spyOn(locationService, 'update').mockReturnValue(saveSubject);
+
+      const location = { id: 123 };
       activatedRoute.data = of({ location });
+
       comp.ngOnInit();
 
       // WHEN
@@ -172,6 +182,7 @@ describe('Location Management Update Component', () => {
 
       // THEN
       expect(locationService.update).toHaveBeenCalled();
+      expect(eventManager.broadcast).toHaveBeenCalled();
       expect(comp.isSaving).toEqual(false);
       expect(comp.previousState).not.toHaveBeenCalled();
     });
