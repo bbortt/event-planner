@@ -9,6 +9,7 @@
       "500": "Internal server error."
     },
     "concurrencyFailure": "Another user modified this data at the same time as you. Your changes were rejected.",
+    "unknown": "An unexpected error has occurred! Please retry the action.",
     "validation": "Validation error on the server."
   }
 }
