@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.thymeleaf.org"
+  th:lang="${#locale.language}"
+  lang="de"
+>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="${baseUrl}/favicon.ico" />
+    <title>${applicationName}: Invitation to Project '${projectName}'.</title>
+
+    <link rel="stylesheet" href="https://bootswatch.com/5/minty/bootstrap.css" />
+    <link rel="stylesheet" href="https://bootswatch.com/_vendor/bootstrap-icons/font/bootstrap-icons.css" />
+    <link rel="stylesheet" href="https://bootswatch.com/_vendor/prismjs/themes/prism-okaidia.css" />
+    <link rel="stylesheet" href="https://bootswatch.com/_assets/css/custom.min.css" />
+
+    <script src="https://kit.fontawesome.com/85a33373d7.js" crossorigin="anonymous"></script>
+
+    <style>
+      .logo-img {
+        background-image: url('${baseUrl}/logo-event-planner.png');
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="heading">
+        <h2 id="page-heading" class="mb-3">
+          <span th:text="#{project.invitation.heading}">Einladung zum Mitarbeiten an</span>
+          <i>${projectName}</i>
+        </h2>
+      </div>
+
+      <div class="content">
+        <span th:text="#{project.invitation.hello}">Hallo</span>,
+        <p>
+          <span th:text="#{project.invitation.body.introduction}">Du wurdest eingeladen am Projekt</span>
+          <i>${projectName}</i>
+          <span th:text="#{project.invitation.body.introduction.ending}">mitzumachen</span>.
+          <span th:text="#{project.invitation.body.action}">Bitte klicke auf nachfolgenden Knopf, um die Einladung anzunehmen</span>.
+        </p>
+
+        <div class="btn-group mb-3">
+          <a href="${baseUrl}/">
+            <button class="btn btn-info" type="button">
+              <i class="fa-solid fa-rocket"></i>
+              <span th:text="#{project.invitation.body.action.button}">Einladung annehmen</span>
+            </button>
+          </a>
+        </div>
+
+        <p>
+          <span th:text="#{project.invitation.body.postfix}"
+            >Wir freuen uns über deine Teilnahme! Gemeinsam können wir spannend Projekte umsetzen.</span
+          >
+        </p>
+
+        <p><span th:text="#{project.invitation.body.greeting}">Bis bald</span>, ${applicationName}.</p>
+
+        <p>
+          <small class="text-muted">
+            <span th:text="#{project.invitation.body.link.alternative}"
+              >Falls der Link nicht richtig angezeigt wird kannst du auch hier klicken</span
+            >: <a href="${baseUrl}" th:text="#{project.invitation.body.action.button}">Einladung annehmen</a>.
+          </small>
+        </p>
+      </div>
+
+      <div class="footer">
+        <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4">
+          <div class="col-md-4 d-flex align-items-center">
+            <a href="${baseUrl}" class="mb-3 me-2 mb-md-0 text-muted text-decoration-none lh-1">
+              <span class="bi logo-img"></span>
+            </a>
+            <span class="text-muted">© 2023 Timon Borter</span>
+          </div>
+
+          <div class="col-md-4 justify-content-center list-unstyled d-flex">
+            <span class="text-muted">${applicationName}</span>
+          </div>
+
+          <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
+            <li class="ms-3">
+              <a class="text-muted" href="https://github.com/bbortt/event-planner" target="_blank" rel="noopener noreferrer">
+                <i class="fa-brands fa-github"></i>
+              </a>
+            </li>
+          </ul>
+        </footer>
+      </div>
+    </div>
+  </body>
+</html>

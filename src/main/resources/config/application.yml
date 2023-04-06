@@ -196,8 +196,6 @@ jhipster:
   #   exposed-headers: 'Authorization,Link,X-Total-Count,X-${jhipster.clientApp.name}-alert,X-${jhipster.clientApp.name}-error,X-${jhipster.clientApp.name}-params'
   #   allow-credentials: true
   #   max-age: 1800
-  mail:
-    from: ${appl.email.from}
   api-docs:
     default-include-pattern: ${server.servlet.context-path:}/api/**
     management-include-pattern: ${server.servlet.context-path:}/management/**
@@ -210,6 +208,10 @@ jhipster:
     contact-email:
     license: unlicensed
     license-url:
+  mail:
+    base-url: ${appl.base.url}
+    enabled: true
+    from: ${appl.email.from:${spring.mail.username}}
   security:
     content-security-policy: "default-src 'self'; frame-src 'self' data:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://storage.googleapis.com; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; img-src 'self' data:; font-src 'self' https://fonts.gstatic.com data:"
     oauth2:
