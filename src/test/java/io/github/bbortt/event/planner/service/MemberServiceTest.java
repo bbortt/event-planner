@@ -14,7 +14,6 @@ import io.github.bbortt.event.planner.service.dto.ProjectDTO;
 import io.github.bbortt.event.planner.service.mapper.MemberMapper;
 import io.github.bbortt.event.planner.service.mapper.ProjectMapper;
 import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,7 +24,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
 class MemberServiceTest {
@@ -74,10 +72,18 @@ class MemberServiceTest {
     @Test
     void inviteToProjectSetsDefaultValuesAndSendsMail() {
         String email = "delroy-garrett@localhost";
-        Project project = new Project();
-        MemberDTO memberDto = new MemberDTO();
 
-        MemberDTO result = inviteToProject(email, project, memberDto);
+        Project project = new Project();
+        ProjectDTO projectDTO = new ProjectDTO();
+        doReturn(project).when(projectMapperMock).toEntity(projectDTO);
+
+        Member member = new Member();
+        doReturn(member).when(memberRepositoryMock).save(any(Member.class));
+
+        MemberDTO memberDto = new MemberDTO();
+        doReturn(memberDto).when(memberMapperMock).toDto(member);
+
+        MemberDTO result = fixture.inviteToProject(email, projectDTO);
 
         assertEquals(memberDto, result);
 
@@ -88,32 +94,6 @@ class MemberServiceTest {
         assertEquals(Boolean.FALSE, persistedEntity.getAccepted());
         assertEquals(project, persistedEntity.getProject());
 
-        verify(mailServiceMock).sendInvitationEmail(memberDto);
-    }
-
-    @Test
-    void mailSendingIsOptional() {
-        ReflectionTestUtils.setField(fixture, "mailService", Optional.empty(), Optional.class);
-
-        ProjectDTO projectDTO = new ProjectDTO();
-        projectDTO.setId(1234L);
-
-        MemberDTO memberDTO = new MemberDTO();
-        memberDTO.setInvitedEmail("edith-freiberg@localhost");
-        memberDTO.setProject(projectDTO);
-
-        inviteToProject(memberDTO.getInvitedEmail(), new Project(), memberDTO);
-    }
-
-    private MemberDTO inviteToProject(String email, Project project, MemberDTO memberDto) {
-        ProjectDTO projectDTO = new ProjectDTO();
-        doReturn(project).when(projectMapperMock).toEntity(projectDTO);
-
-        Member member = new Member();
-        doReturn(member).when(memberRepositoryMock).save(any(Member.class));
-
-        doReturn(memberDto).when(memberMapperMock).toDto(member);
-
-        return fixture.inviteToProject(email, projectDTO);
+        verify(mailServiceMock).sendProjectInvitationEmail(memberDto);
     }
 }

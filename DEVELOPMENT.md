@@ -14,11 +14,13 @@ experience:
 ./gradlew -x webapp & npm start
 ```
 
+### Mailing
+
 If you want to test the mailing as well, you must add the
 file [`/src/main/resources/config/application-mail.yml`](./src/main/resources/config/application-mail.yml) and configure
 it according to [the official documentation](https://www.jhipster.tech/tips/011_tip_configuring_email_in_jhipster.html)
-(adding the `spring.mail` properties, that is). If no mailing provider is available, mailing information will be printed
-to stdout.
+(adding the `spring.mail` properties, that is). Make sure you do overwrite `jhipster.mailing.enabled=true` inside that
+properties file too. If no mailing provider is available, the messages will be printed to stdout.
 
 ### PostgreSQL configuration
 
