@@ -32,9 +32,10 @@ class MemberRepositoryIT {
 
         memberRepository.saveAndFlush(createNewMember(project));
 
+        Member constraintViolatingMember = createNewMember(project);
         DataIntegrityViolationException exception = assertThrows(
             DataIntegrityViolationException.class,
-            () -> memberRepository.saveAndFlush(createNewMember(project))
+            () -> memberRepository.saveAndFlush(constraintViolatingMember)
         );
         assertTrue(Objects.requireNonNull(exception.getMessage()).contains("ux_invitation_per_project"));
     }

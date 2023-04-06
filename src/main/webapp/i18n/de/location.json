@@ -8,9 +8,9 @@
         "createOrEditLabel": "Lokalität erstellen oder bearbeiten",
         "notFound": "Keine Lokalitäten gefunden"
       },
-      "created": "Lokalität erstellt mit ID {{ param }}",
-      "updated": "Lokalität aktualisiert mit ID {{ param }}",
-      "deleted": "Lokalität gelöscht mit ID {{ param }}",
+      "created": "Lokalität mit ID {{ param }} erstellt",
+      "updated": "Lokalität mit ID {{ param }} aktualisiert",
+      "deleted": "Lokalität mit ID {{ param }} gelöscht",
       "delete": {
         "question": "Soll Lokalität {{ id }} wirklich dauerhaft gelöscht werden?"
       },
