@@ -9,6 +9,7 @@
       "500": "Interner Serverfehler."
     },
     "concurrencyFailure": "Ein anderer Benutzer hat diese Daten zeitgleich mit Ihnen geändert. Ihre Änderungen wurden abgelehnt.",
+    "unknown": "Ein unerwarteter Fehler ist aufgetreten! Bitte versuche die Aktion erneut auszuführen.",
     "validation": "Validierungsfehler auf dem Server."
   }
 }

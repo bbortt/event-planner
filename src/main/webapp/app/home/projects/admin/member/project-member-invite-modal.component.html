@@ -12,6 +12,9 @@
           <label class="form-label" jhiTranslate="app.member.invitedEmail" for="field_invitedEmail">Email</label>
           <input type="email" class="form-control" name="email" id="field_invitedEmail" data-cy="email" formControlName="email" />
           <div *ngIf="inviteForm.get('email')!.invalid && (inviteForm.get('email')!.dirty || inviteForm.get('email')!.touched)">
+            <small class="form-text text-danger" *ngIf="inviteForm.get('email')?.errors?.email" jhiTranslate="entity.validation.email">
+              Dieses Feld muss eine valide Email Adresse enthalten.
+            </small>
             <small
               class="form-text text-danger"
               *ngIf="inviteForm.get('email')?.errors?.required"

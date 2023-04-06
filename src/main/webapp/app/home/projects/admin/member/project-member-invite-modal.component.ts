@@ -1,4 +1,4 @@
-import { HttpResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -10,6 +10,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 
 import { GetProjectMembers200Response, ProjectMemberService } from '../../../../api';
+import { EventManager, EventWithContent } from '../../../../core/util/event-manager.service';
 
 import { MemberService } from '../../../../entities/member/service/member.service';
 import { MemberFormService } from '../../../../entities/member/update/member-form.service';
@@ -29,13 +30,14 @@ export class ProjectMemberInviteModalContentComponent {
   protected inviteForm: FormGroup<InviteFormType>;
 
   constructor(
+    private eventManager: EventManager,
     private memberService: MemberService,
     private memberFormService: MemberFormService,
     private projectMemberService: ProjectMemberService
   ) {
     this.inviteForm = new FormGroup<InviteFormType>({
       email: new FormControl(null, {
-        validators: [Validators.required, Validators.minLength(1), Validators.maxLength(191)],
+        validators: [Validators.email, Validators.required, Validators.minLength(1), Validators.maxLength(191)],
       }),
     });
   }
@@ -56,7 +58,7 @@ export class ProjectMemberInviteModalContentComponent {
   protected subscribeToSaveResponse(result: Observable<HttpResponse<GetProjectMembers200Response>>): void {
     result.pipe(finalize(() => this.onSaveFinalize())).subscribe({
       next: response => this.onSaveSuccess(response.body),
-      error: () => this.onSaveError(),
+      error: response => this.onSaveError(response),
     });
   }
 
@@ -70,8 +72,9 @@ export class ProjectMemberInviteModalContentComponent {
     this.previousState();
   }
 
-  protected onSaveError(): void {
-    // TODO: Post a nice and readable error message
+  protected onSaveError(httpErrorResponse: HttpErrorResponse): void {
+    this.eventManager.broadcast(new EventWithContent('error.unknown', httpErrorResponse));
+    this.previousState();
   }
 
   protected onSaveFinalize(): void {
