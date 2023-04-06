@@ -197,7 +197,7 @@ jhipster:
   #   allow-credentials: true
   #   max-age: 1800
   mail:
-    from: eventplanner@localhost
+    from: ${appl.email.from}
   api-docs:
     default-include-pattern: ${server.servlet.context-path:}/api/**
     management-include-pattern: ${server.servlet.context-path:}/management/**

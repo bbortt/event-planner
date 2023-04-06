@@ -65,7 +65,7 @@ jhipster:
   clientApp:
     name: 'app'
   mail:
-    from: eventplanner@localhost.com
+    from: eventplanner@localhost
     base-url: http://127.0.0.1:8080
   logging:
     # To test json console appender

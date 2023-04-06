@@ -1,15 +1,22 @@
 package io.github.bbortt.event.planner.service;
 
 import io.github.bbortt.event.planner.domain.Member;
+import io.github.bbortt.event.planner.mail.MailService;
 import io.github.bbortt.event.planner.repository.MemberRepository;
 import io.github.bbortt.event.planner.service.dto.MemberDTO;
 import io.github.bbortt.event.planner.service.dto.ProjectDTO;
 import io.github.bbortt.event.planner.service.mapper.MemberMapper;
 import io.github.bbortt.event.planner.service.mapper.ProjectMapper;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.validation.constraints.Null;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
@@ -30,11 +37,18 @@ public class MemberService {
 
     private final MemberMapper memberMapper;
     private final ProjectMapper projectMapper;
+    private final Optional<MailService> mailService;
 
-    public MemberService(MemberRepository memberRepository, MemberMapper memberMapper, ProjectMapper projectMapper) {
+    public MemberService(
+        MemberRepository memberRepository,
+        MemberMapper memberMapper,
+        ProjectMapper projectMapper,
+        @Autowired(required = false) @Nullable MailService mailService
+    ) {
         this.memberRepository = memberRepository;
         this.memberMapper = memberMapper;
         this.projectMapper = projectMapper;
+        this.mailService = Optional.ofNullable(mailService);
     }
 
     /**
@@ -141,9 +155,22 @@ public class MemberService {
     @PreAuthorize("T(io.github.bbortt.event.planner.security.SecurityUtils).isAuthenticated()")
     public MemberDTO inviteToProject(String email, @Nonnull ProjectDTO project) {
         log.debug("Request to invite Member '{}' to Project '{}'", email, project);
-        // TODO: Send invitation email with project link
-        return memberMapper.toDto(
+
+        MemberDTO memberDTO = memberMapper.toDto(
             memberRepository.save(new Member().accepted(Boolean.FALSE).invitedEmail(email).project(projectMapper.toEntity(project)))
+        );
+
+        mailService.ifPresentOrElse(mailService -> mailService.sendInvitationEmail(memberDTO), () -> printInvitationLink(memberDTO));
+
+        return memberDTO;
+    }
+
+    private void printInvitationLink(MemberDTO memberDTO) {
+        log.info(
+            "Mailing is disabled, invitation link sent to '{}' would be: /invitation/{}?email={}",
+            memberDTO.getInvitedEmail(),
+            memberDTO.getProject().getId(),
+            URLEncoder.encode(memberDTO.getInvitedEmail(), StandardCharsets.UTF_8)
         );
     }
 }
