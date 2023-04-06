@@ -3,9 +3,9 @@ import { RouterModule } from '@angular/router';
 
 import { SharedModule } from 'app/shared/shared.module';
 
-import { MY_PROJECTS_ROUTES } from './my-projects.route';
+import { ProjectEntityModule } from 'app/entities/project/project-entity.module';
 
-import { ProjectEntityModule } from '../../../entities/project/project-entity.module';
+import { MY_PROJECTS_ROUTES } from './my-projects.route';
 
 import { MyProjectsListComponent } from './my-projects-list.component';
 import { ProjectCardComponent } from './project-card.component';

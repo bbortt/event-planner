@@ -1,5 +1,6 @@
 import { Route } from '@angular/router';
-import { ProjectRoutingResolveService } from '../../entities/project/route/project-routing-resolve.service';
+
+import { ProjectRoutingResolveService } from 'app/entities/project/route/project-routing-resolve.service';
 
 export const MY_PROJECTS_ROUTES: Route[] = [
   {

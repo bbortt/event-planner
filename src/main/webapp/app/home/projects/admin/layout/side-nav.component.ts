@@ -8,7 +8,7 @@ import { filter } from 'rxjs/operators';
 import { faLocationDot } from '@fortawesome/free-solid-svg-icons';
 import { TranslateService } from '@ngx-translate/core';
 
-import { IProject } from '../../../../entities/project/project.model';
+import { IProject } from 'app/entities/project/project.model';
 
 @Component({
   selector: 'app-project-admin-side-nav',

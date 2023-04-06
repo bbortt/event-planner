@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 
-import { IProject } from '../../../../entities/project/project.model';
+import { IProject } from 'app/entities/project/project.model';
 
 import { ProjectFromParentResolveService } from './project-from-parent-resolve.service';
 

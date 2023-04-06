@@ -5,11 +5,11 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
-import { IProject } from 'app/entities/project/project.model';
-import { EventManager, EventWithContent } from '../../../../core/util/event-manager.service';
+import { EventManager, EventWithContent } from 'app/core/util/event-manager.service';
 
-import { ProjectFormGroup, ProjectFormService } from '../../../../entities/project/update/project-form.service';
-import { ProjectService } from '../../../../entities/project/service/project.service';
+import { IProject } from 'app/entities/project/project.model';
+import { ProjectService } from 'app/entities/project/service/project.service';
+import { ProjectFormGroup, ProjectFormService } from 'app/entities/project/update/project-form.service';
 
 @Component({
   selector: 'jhi-project-update',

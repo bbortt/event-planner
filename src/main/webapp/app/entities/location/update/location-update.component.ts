@@ -6,12 +6,14 @@ import { Observable } from 'rxjs';
 import { finalize, map } from 'rxjs/operators';
 
 import { EventManager, EventWithContent } from 'app/core/util/event-manager.service';
+
 import { IProject } from 'app/entities/project/project.model';
 import { ProjectService } from 'app/entities/project/service/project.service';
 
 import { LocationService } from '../service/location.service';
 
 import { ILocation } from '../location.model';
+
 import { LocationFormService, LocationFormGroup } from './location-form.service';
 
 @Component({

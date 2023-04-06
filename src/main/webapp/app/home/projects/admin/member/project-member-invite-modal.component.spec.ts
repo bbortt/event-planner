@@ -6,8 +6,9 @@ import { of } from 'rxjs';
 import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 
+import { IProject } from 'app/entities/project/project.model';
+
 import { ProjectMemberInviteModalComponent, ProjectMemberInviteModalContentComponent } from './project-member-invite-modal.component';
-import { IProject } from '../../../../entities/project/project.model';
 
 class MockNgbModalRef {
   componentInstance = { project: null };
