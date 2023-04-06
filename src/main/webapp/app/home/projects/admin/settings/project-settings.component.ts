@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 
 import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
 import { IProject } from 'app/entities/project/project.model';
+import { EventManager, EventWithContent } from '../../../../core/util/event-manager.service';
 
 import { ProjectFormGroup, ProjectFormService } from '../../../../entities/project/update/project-form.service';
 import { ProjectService } from '../../../../entities/project/service/project.service';
@@ -22,6 +23,7 @@ export class ProjectSettingsComponent implements OnInit {
   editForm: ProjectFormGroup;
 
   constructor(
+    private eventManager: EventManager,
     protected projectService: ProjectService,
     protected projectFormService: ProjectFormService,
     protected activatedRoute: ActivatedRoute
@@ -62,7 +64,7 @@ export class ProjectSettingsComponent implements OnInit {
   protected subscribeToSaveResponse(result: Observable<HttpResponse<IProject>>): void {
     result.pipe(finalize(() => this.onSaveFinalize())).subscribe({
       next: () => this.onSaveSuccess(),
-      error: () => this.onSaveError(),
+      error: response => this.onSaveError(response),
     });
   }
 
@@ -70,8 +72,9 @@ export class ProjectSettingsComponent implements OnInit {
     this.previousState();
   }
 
-  protected onSaveError(): void {
-    // TODO: Post a nice and readable error message
+  protected onSaveError(httpErrorResponse: HttpErrorResponse): void {
+    this.eventManager.broadcast(new EventWithContent('error.unknown', httpErrorResponse));
+    this.previousState();
   }
 
   protected onSaveFinalize(): void {
