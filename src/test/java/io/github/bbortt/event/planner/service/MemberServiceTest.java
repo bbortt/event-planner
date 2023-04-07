@@ -56,15 +56,15 @@ class MemberServiceTest {
         Pageable pageable = Pageable.unpaged();
 
         Member member = new Member();
-        MemberDTO memberDto = new MemberDTO();
+        MemberDTO memberDTO = new MemberDTO();
 
         doReturn(new PageImpl<>(List.of(member))).when(memberRepositoryMock).findAllByProjectIdEquals(projectId, pageable);
-        doReturn(memberDto).when(memberMapperMock).toDto(member);
+        doReturn(memberDTO).when(memberMapperMock).toDto(member);
 
         Page<MemberDTO> result = fixture.findInProject(projectId, pageable);
 
         assertEquals(1, result.getContent().size());
-        assertEquals(memberDto, result.getContent().get(0));
+        assertEquals(memberDTO, result.getContent().get(0));
 
         verify(memberRepositoryMock).findAllByProjectIdEquals(projectId, pageable);
     }
@@ -80,12 +80,12 @@ class MemberServiceTest {
         Member member = new Member();
         doReturn(member).when(memberRepositoryMock).save(any(Member.class));
 
-        MemberDTO memberDto = new MemberDTO();
-        doReturn(memberDto).when(memberMapperMock).toDto(member);
+        MemberDTO memberDTO = new MemberDTO();
+        doReturn(memberDTO).when(memberMapperMock).toDto(member);
 
         MemberDTO result = fixture.inviteToProject(email, projectDTO);
 
-        assertEquals(memberDto, result);
+        assertEquals(memberDTO, result);
 
         verify(memberRepositoryMock).save(memberArgumentCaptor.capture());
 
@@ -94,6 +94,6 @@ class MemberServiceTest {
         assertEquals(Boolean.FALSE, persistedEntity.getAccepted());
         assertEquals(project, persistedEntity.getProject());
 
-        verify(mailServiceMock).sendProjectInvitationEmail(memberDto);
+        verify(mailServiceMock).sendProjectInvitationEmail(memberDTO);
     }
 }

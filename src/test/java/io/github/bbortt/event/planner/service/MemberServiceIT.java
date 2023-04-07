@@ -79,6 +79,7 @@ class MemberServiceIT {
 
         ProjectDTO projectDTO = new ProjectDTO();
         projectDTO.setId(project1.getId());
+        projectDTO.setToken(UUID.fromString("fc2da339-e3de-4ee4-9df7-668c2fb82a4d"));
 
         MemberDTO memberDTO = memberService.inviteToProject(email, projectDTO);
 

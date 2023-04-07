@@ -93,9 +93,9 @@ public class UserMapper {
         if (user == null) {
             return null;
         }
-        UserDTO userDto = new UserDTO();
-        userDto.setId(user.getId());
-        return userDto;
+        UserDTO userDTO = new UserDTO();
+        userDTO.setId(user.getId());
+        return userDTO;
     }
 
     @Named("idSet")
@@ -122,10 +122,10 @@ public class UserMapper {
         if (user == null) {
             return null;
         }
-        UserDTO userDto = new UserDTO();
-        userDto.setId(user.getId());
-        userDto.setLogin(user.getLogin());
-        return userDto;
+        UserDTO userDTO = new UserDTO();
+        userDTO.setId(user.getId());
+        userDTO.setLogin(user.getLogin());
+        return userDTO;
     }
 
     @Named("loginSet")

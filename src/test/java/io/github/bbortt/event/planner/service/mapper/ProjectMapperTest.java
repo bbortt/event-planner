@@ -51,11 +51,11 @@ class ProjectMapperTest {
 
     @Test
     void toEntity() {
-        List<ProjectDTO> projectsDto = new ArrayList<>();
-        projectsDto.add(projectDTO);
-        projectsDto.add(null);
+        List<ProjectDTO> projectDTOs = new ArrayList<>();
+        projectDTOs.add(projectDTO);
+        projectDTOs.add(null);
 
-        List<Project> projects = fixture.toEntity(projectsDto);
+        List<Project> projects = fixture.toEntity(projectDTOs);
 
         assertThat(projects).isNotEmpty().size().isEqualTo(2);
         assertThat(projects.get(0)).usingRecursiveComparison().isEqualTo(project);

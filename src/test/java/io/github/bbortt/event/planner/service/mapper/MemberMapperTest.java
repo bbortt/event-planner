@@ -75,11 +75,11 @@ class MemberMapperTest {
     void toEntity() {
         doReturn(member.getUser()).when(userMapper).userDTOToUser(memberDTO.getUser());
 
-        List<MemberDTO> membersDto = new ArrayList<>();
-        membersDto.add(memberDTO);
-        membersDto.add(null);
+        List<MemberDTO> memberDTOs = new ArrayList<>();
+        memberDTOs.add(memberDTO);
+        memberDTOs.add(null);
 
-        List<Member> members = fixture.toEntity(membersDto);
+        List<Member> members = fixture.toEntity(memberDTOs);
 
         assertThat(members).isNotEmpty().size().isEqualTo(2);
         assertThat(members.get(0)).usingRecursiveComparison().ignoringFields("project").isEqualTo(member);

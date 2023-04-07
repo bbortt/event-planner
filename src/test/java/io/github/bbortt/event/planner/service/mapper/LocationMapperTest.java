@@ -50,9 +50,9 @@ class LocationMapperTest {
 
     @Test
     void toEntity() {
-        List<LocationDTO> locationsDto = getLocationDTOS();
+        List<LocationDTO> locationDTOs = getLocationDTOS();
 
-        List<Location> locations = fixture.toEntity(locationsDto);
+        List<Location> locations = fixture.toEntity(locationDTOs);
 
         assertThat(locations).isNotEmpty().size().isEqualTo(2);
         assertThat(locations.get(0)).usingRecursiveComparison().ignoringFields("project").isEqualTo(location);
@@ -82,9 +82,9 @@ class LocationMapperTest {
         parent.setName(PARENT_LOCATION_NAME);
         locationDTO.setParent(parent);
 
-        List<LocationDTO> locationsDto = getLocationDTOS();
+        List<LocationDTO> locationDTOs = getLocationDTOS();
 
-        List<Location> locations = fixture.toEntity(locationsDto);
+        List<Location> locations = fixture.toEntity(locationDTOs);
 
         assertThat(locations).isNotEmpty().size().isEqualTo(2);
         assertThat(locations.get(0)).usingRecursiveComparison().ignoringFields("parent", "project").isEqualTo(location);
@@ -104,9 +104,9 @@ class LocationMapperTest {
 
     @NotNull
     private List<LocationDTO> getLocationDTOS() {
-        List<LocationDTO> locationsDto = new ArrayList<>();
-        locationsDto.add(locationDTO);
-        locationsDto.add(null);
-        return locationsDto;
+        List<LocationDTO> locationDTOs = new ArrayList<>();
+        locationDTOs.add(locationDTO);
+        locationDTOs.add(null);
+        return locationDTOs;
     }
 }
