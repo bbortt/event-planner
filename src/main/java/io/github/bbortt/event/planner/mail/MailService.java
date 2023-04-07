@@ -11,11 +11,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.http.MediaType;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import tech.jhipster.config.JHipsterProperties;
 
 @Lazy
 @Service
@@ -23,18 +21,13 @@ public class MailService {
 
     private final Logger log = LoggerFactory.getLogger(MailService.class);
 
-    private static final String HTML_MIME_TYPE = MediaType.TEXT_HTML_VALUE + "; charset=" + StandardCharsets.UTF_8;
-
-    private final JHipsterProperties jHipsterProperties;
     private final ProjectInvitationMailFactory projectInvitationMailFactory;
     private final Optional<JavaMailSender> javaMailSender;
 
     public MailService(
-        JHipsterProperties jHipsterProperties,
         ProjectInvitationMailFactory projectInvitationMailFactory,
         @Nullable @Autowired(required = false) JavaMailSender javaMailSender
     ) {
-        this.jHipsterProperties = jHipsterProperties;
         this.projectInvitationMailFactory = projectInvitationMailFactory;
         this.javaMailSender = Optional.ofNullable(javaMailSender);
     }
@@ -86,6 +79,7 @@ public class MailService {
         MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true, StandardCharsets.UTF_8.toString());
 
         message.setFrom(emailConfiguration.fromEmail());
+        message.setReplyTo(emailConfiguration.fromEmail());
         message.setSubject(emailConfiguration.subject());
         message.setTo(emailConfiguration.toEmail());
 

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.LocaleResolver;
-import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.ITemplateEngine;
 import org.thymeleaf.context.Context;
 import tech.jhipster.config.JHipsterProperties;
 
@@ -22,13 +22,13 @@ public class ProjectInvitationMailFactory {
 
     private final String applicationName;
     private final JHipsterProperties.Mail mailProperties;
-    private final TemplateEngine templateEngine;
+    private final ITemplateEngine templateEngine;
     private final LocaleResolver localeResolver;
 
     public ProjectInvitationMailFactory(
         @Value("${spring.application.name:event-planner}") String applicationName,
         JHipsterProperties jHipsterProperties,
-        TemplateEngine templateEngine,
+        ITemplateEngine templateEngine,
         LocaleResolver localeResolver
     ) {
         this.applicationName = applicationName;
@@ -61,7 +61,7 @@ public class ProjectInvitationMailFactory {
         context.setVariable("baseUrl", mailProperties.getBaseUrl());
         context.setVariable("projectName", projectName);
 
-        return this.templateEngine.process(TEMPLATE_LOCATION, context);
+        return templateEngine.process(TEMPLATE_LOCATION, context);
     }
 
     private Optional<HttpServletRequest> getCurrentHttpRequest() {

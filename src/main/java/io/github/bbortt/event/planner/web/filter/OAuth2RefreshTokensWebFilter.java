@@ -54,11 +54,11 @@ public class OAuth2RefreshTokensWebFilter extends OncePerRequestFilter {
         if ((authentication instanceof OAuth2AuthenticationToken)) {
             try {
                 OAuth2AuthorizedClient authorizedClient = authorizedClient((OAuth2AuthenticationToken) authentication);
-                this.authorizedClientRepository.saveAuthorizedClient(authorizedClient, authentication, request, response);
+                authorizedClientRepository.saveAuthorizedClient(authorizedClient, authentication, request, response);
             } catch (Exception e) {
-                OAuth2AuthorizationRequest authorizationRequest = this.authorizationRequestResolver.resolve(request);
+                OAuth2AuthorizationRequest authorizationRequest = authorizationRequestResolver.resolve(request);
                 if (authorizationRequest != null) {
-                    this.authorizationRedirectStrategy.sendRedirect(request, response, authorizationRequest.getAuthorizationRequestUri());
+                    authorizationRedirectStrategy.sendRedirect(request, response, authorizationRequest.getAuthorizationRequestUri());
                     return;
                 }
             }

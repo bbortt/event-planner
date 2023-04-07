@@ -22,8 +22,6 @@ spring:
   jackson:
     serialization:
       write-durations-as-timestamps: false
-  mail:
-    host: localhost
   main:
     allow-bean-definition-overriding: true
   mvc:

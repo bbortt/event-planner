@@ -22,7 +22,7 @@ class UserMapperTest {
 
     private UserMapper userMapper;
     private User user;
-    private AdminUserDTO userDto;
+    private AdminUserDTO userDTO;
 
     @BeforeEach
     void init() {
@@ -36,7 +36,7 @@ class UserMapperTest {
         user.setImageUrl("image_url");
         user.setLangKey("en");
 
-        userDto = new AdminUserDTO(user);
+        userDTO = new AdminUserDTO(user);
     }
 
     @Test
@@ -52,11 +52,11 @@ class UserMapperTest {
 
     @Test
     void userDTOsToUsersShouldMapOnlyNonNullUsers() {
-        List<AdminUserDTO> usersDto = new ArrayList<>();
-        usersDto.add(userDto);
-        usersDto.add(null);
+        List<AdminUserDTO> userDTOs = new ArrayList<>();
+        userDTOs.add(userDTO);
+        userDTOs.add(null);
 
-        List<User> users = userMapper.userDTOsToUsers(usersDto);
+        List<User> users = userMapper.userDTOsToUsers(userDTOs);
 
         assertThat(users).isNotEmpty().size().isEqualTo(1);
     }
@@ -65,12 +65,12 @@ class UserMapperTest {
     void userDTOsToUsersWithAuthoritiesStringShouldMapToUsersWithAuthoritiesDomain() {
         Set<String> authoritiesAsString = new HashSet<>();
         authoritiesAsString.add("ADMIN");
-        userDto.setAuthorities(authoritiesAsString);
+        userDTO.setAuthorities(authoritiesAsString);
 
-        List<AdminUserDTO> usersDto = new ArrayList<>();
-        usersDto.add(userDto);
+        List<AdminUserDTO> userDTOs = new ArrayList<>();
+        userDTOs.add(userDTO);
 
-        List<User> users = userMapper.userDTOsToUsers(usersDto);
+        List<User> users = userMapper.userDTOsToUsers(userDTOs);
 
         assertThat(users).isNotEmpty().size().isEqualTo(1);
         assertThat(users.get(0).getAuthorities()).isNotNull();
@@ -80,12 +80,12 @@ class UserMapperTest {
 
     @Test
     void userDTOsToUsersMapWithNullAuthoritiesStringShouldReturnUserWithEmptyAuthorities() {
-        userDto.setAuthorities(null);
+        userDTO.setAuthorities(null);
 
-        List<AdminUserDTO> usersDto = new ArrayList<>();
-        usersDto.add(userDto);
+        List<AdminUserDTO> userDTOs = new ArrayList<>();
+        userDTOs.add(userDTO);
 
-        List<User> users = userMapper.userDTOsToUsers(usersDto);
+        List<User> users = userMapper.userDTOsToUsers(userDTOs);
 
         assertThat(users).isNotEmpty().size().isEqualTo(1);
         assertThat(users.get(0).getAuthorities()).isNotNull();
@@ -96,9 +96,9 @@ class UserMapperTest {
     void userDTOToUserMapWithAuthoritiesStringShouldReturnUserWithAuthorities() {
         Set<String> authoritiesAsString = new HashSet<>();
         authoritiesAsString.add("ADMIN");
-        userDto.setAuthorities(authoritiesAsString);
+        userDTO.setAuthorities(authoritiesAsString);
 
-        User user = userMapper.userDTOToUser(userDto);
+        User user = userMapper.userDTOToUser(userDTO);
 
         assertThat(user).isNotNull();
         assertThat(user.getAuthorities()).isNotNull();
@@ -108,9 +108,9 @@ class UserMapperTest {
 
     @Test
     void userDTOToUserMapWithNullAuthoritiesStringShouldReturnUserWithEmptyAuthorities() {
-        userDto.setAuthorities(null);
+        userDTO.setAuthorities(null);
 
-        User user = userMapper.userDTOToUser(userDto);
+        User user = userMapper.userDTOToUser(userDTO);
 
         assertThat(user).isNotNull();
         assertThat(user.getAuthorities()).isNotNull();
