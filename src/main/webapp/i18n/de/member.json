@@ -24,7 +24,14 @@
       "accepted": "Akzeptiert",
       "acceptedBy": "Akzeptiert von",
       "acceptedDate": "Akzeptiert am",
-      "project": "Mitglied von"
+      "createdBy": "Erstellt von",
+      "createdDate": "Erstellt am",
+      "project": "Mitglied von",
+      "status": {
+        "label": "Status",
+        "accepted": "Akzeptiert",
+        "notAccepted": "Nicht akzeptiert"
+      }
     }
   }
 }

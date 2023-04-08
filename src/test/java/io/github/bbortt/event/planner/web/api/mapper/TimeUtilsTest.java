@@ -20,7 +20,7 @@ class TimeUtilsTest {
 
     @BeforeEach
     void beforeEachSetup() {
-        fixture = new TimeUtils(() -> ZoneId.of("UTC"));
+        fixture = new TimeUtils().zoneIdProvider(() -> ZoneId.of("UTC"));
     }
 
     @Test

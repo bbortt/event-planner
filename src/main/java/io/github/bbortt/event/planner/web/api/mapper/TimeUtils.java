@@ -7,10 +7,15 @@ import java.time.ZoneId;
 
 class TimeUtils {
 
-    private final ZoneIdProvider zoneIdProvider;
+    private ZoneIdProvider zoneIdProvider;
 
-    TimeUtils(ZoneIdProvider zoneIdProvider) {
+    TimeUtils() {
+        this.zoneIdProvider = () -> ZoneId.systemDefault();
+    }
+
+    TimeUtils zoneIdProvider(ZoneIdProvider zoneIdProvider) {
         this.zoneIdProvider = zoneIdProvider;
+        return this;
     }
 
     OffsetDateTime toOffsetDateTime(Instant instant) {

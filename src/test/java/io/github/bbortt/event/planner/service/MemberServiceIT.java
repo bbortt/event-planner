@@ -92,6 +92,6 @@ class MemberServiceIT {
     }
 
     private boolean findByEmail(String email) {
-        return memberRepository.findOne(Example.of(new Member().invitedEmail(email))).isPresent();
+        return memberRepository.findOne(Example.of(new Member().invitedEmail(email).createdDate(null))).isPresent();
     }
 }

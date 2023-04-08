@@ -24,7 +24,12 @@
       "accepted": "Accepted",
       "acceptedBy": "Accepted By",
       "acceptedDate": "Accepted Date",
-      "project": "Member Of"
+      "project": "Member Of",
+      "status": {
+        "label": "Status",
+        "accepted": "Accepted",
+        "notAccepted": "Not Accepted"
+      }
     }
   }
 }

@@ -35,6 +35,14 @@ public class Member implements Serializable {
     @Column(name = "invited_email", length = 191, nullable = false, updatable = false)
     private String invitedEmail;
 
+    @CreatedBy
+    @Column(name = "created_by", nullable = false, length = 50, updatable = false)
+    private String createdBy;
+
+    @CreatedDate
+    @Column(name = "created_date", nullable = false, updatable = false)
+    private Instant createdDate = Instant.now();
+
     @NotNull
     @Column(name = "accepted", nullable = false)
     private Boolean accepted;
@@ -82,6 +90,32 @@ public class Member implements Serializable {
 
     public Member invitedEmail(String invitedEmail) {
         this.setInvitedEmail(invitedEmail);
+        return this;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Member createdBy(String createdBy) {
+        this.setCreatedBy(createdBy);
+        return this;
+    }
+
+    public Instant getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Instant createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public Member createdDate(Instant createdDate) {
+        this.setCreatedDate(createdDate);
         return this;
     }
 
@@ -175,6 +209,8 @@ public class Member implements Serializable {
         return "Member{" +
             "id=" + getId() +
             ", invitedEmail='" + getInvitedEmail() + "'" +
+            ", createdBy='" + getCreatedBy() + "'" +
+            ", createdDate='" + getCreatedDate() + "'" +
             ", accepted='" + getAccepted() + "'" +
             ", acceptedBy='" + getAcceptedBy() + "'" +
             ", acceptedDate='" + getAcceptedDate() + "'" +

@@ -10,7 +10,7 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface ApiProjectMemberMapper {
-    TimeUtils timeUtils = new TimeUtils(ZoneId::systemDefault);
+    TimeUtils timeUtils = new TimeUtils();
 
     @Mapping(target = "email", source = "invitedEmail")
     @Mapping(target = "login", source = "user.login")
