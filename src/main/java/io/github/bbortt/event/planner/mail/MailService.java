@@ -58,7 +58,9 @@ public class MailService {
     }
 
     private void sendProjectInvitationEmail(EmailConfiguration emailConfiguration, JavaMailSender mailSender) {
-        log.debug("Send project invitation email to '{}':\n{}", emailConfiguration.toEmail(), emailConfiguration.htmlContent());
+        if (log.isDebugEnabled()) {
+            log.debug("Send project invitation email to '{}':\n{}", emailConfiguration.toEmail(), emailConfiguration.htmlContent());
+        }
 
         try {
             mailSender.send(getMimeMessage(emailConfiguration, mailSender));
@@ -69,11 +71,13 @@ public class MailService {
     }
 
     private MimeMessage getMimeMessage(EmailConfiguration emailConfiguration, JavaMailSender mailSender) throws MessagingException {
-        log.debug(
-            "Construct MIME message for message with subject '{}' to '{}'",
-            emailConfiguration.subject(),
-            emailConfiguration.toEmail()
-        );
+        if (log.isDebugEnabled()) {
+            log.debug(
+                "Construct MIME message for message with subject '{}' to '{}'",
+                emailConfiguration.subject(),
+                emailConfiguration.toEmail()
+            );
+        }
 
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true, StandardCharsets.UTF_8.toString());
