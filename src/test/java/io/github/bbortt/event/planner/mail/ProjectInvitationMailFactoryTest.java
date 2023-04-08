@@ -5,7 +5,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import javax.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,7 +16,6 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.LocaleResolver;
 import org.thymeleaf.ITemplateEngine;
-import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import tech.jhipster.config.JHipsterProperties;
 
@@ -58,7 +56,6 @@ class ProjectInvitationMailFactoryTest {
 
         String htmlContent = "test-html-content";
         doReturn(htmlContent).when(templateEngineMock).process(eq("mail/project-invitation.html"), any(Context.class));
-        //        when(templateEngineMock.process(eq("mail/project-invitation.html"), any(Context.class))).thenReturn(htmlContent);
 
         EmailConfiguration result = fixture.getEmailConfiguration(invitedEmail, projectName, projectToken);
         assertEquals(FROM_EMAIL, result.fromEmail());
