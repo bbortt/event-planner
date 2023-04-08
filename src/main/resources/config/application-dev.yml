@@ -79,6 +79,7 @@ jhipster:
       port: 5000
       queue-size: 512
   mail:
+    base-url: http://localhost:9000
     enabled: false
 # ===================================================================
 # Application specific properties

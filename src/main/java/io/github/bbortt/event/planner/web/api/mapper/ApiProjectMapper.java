@@ -9,7 +9,7 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface ApiProjectMapper {
-    TimeUtils timeUtils = new TimeUtils(ZoneId::systemDefault);
+    TimeUtils timeUtils = new TimeUtils();
 
     Project toApiDTO(ProjectDTO entity);
 

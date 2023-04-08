@@ -8,6 +8,29 @@
       "fieldValidateRules": ["required"]
     },
     {
+      "columnType": "varchar(191)",
+      "fieldName": "invitedEmail",
+      "fieldType": "String",
+      "nullable": false,
+    },
+    {
+      "auditField": true,
+      "autoGenerate": true,
+      "columnType": "varchar(50)",
+      "fieldName": "createdBy",
+      "fieldType": "String",
+      "nullable": false,
+      "readonly": true
+    },
+    {
+      "auditField": true,
+      "autoGenerate": true,
+      "fieldName": "createdDate",
+      "fieldType": "Instant",
+      "nullable": false,
+      "readonly": true
+    },
+    {
       "auditField": true,
       "autoGenerate": true,
       "columnType": "varchar(50)",

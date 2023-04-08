@@ -6,6 +6,8 @@ import { combineLatest, filter, Observable, Subscription, switchMap, tap } from 
 
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
+import dayjs from 'dayjs/esm';
+
 import { GetProjectMembers200Response, Member, Project, ProjectMemberService } from 'app/api';
 
 import { ASC, DEFAULT_SORT_DATA, DESC, ITEM_DELETED_EVENT, SORT } from 'app/config/navigation.constants';
@@ -61,25 +63,9 @@ export class ProjectMemberListComponent implements OnDestroy, OnInit {
     }
   }
 
-  trackId = (_index: number, item: Member): number => this.memberService.getMemberIdentifier(item);
+  protected trackId = (_index: number, item: Member): number => this.memberService.getMemberIdentifier(item);
 
-  delete(member: Member): void {
-    const modalRef = this.modalService.open(MemberDeleteDialogComponent, { size: 'lg', backdrop: 'static' });
-    modalRef.componentInstance.member = member;
-    // unsubscribe not needed because closed completes on modal close
-    modalRef.closed
-      .pipe(
-        filter(reason => reason === ITEM_DELETED_EVENT),
-        switchMap(() => this.loadFromBackendWithRouteInformation())
-      )
-      .subscribe({
-        next: (res: HttpResponse<GetProjectMembers200Response>) => {
-          this.onResponseSuccess(res);
-        },
-      });
-  }
-
-  load(): void {
+  protected load(): void {
     this.loadFromBackendWithRouteInformation().subscribe({
       next: (res: HttpResponse<GetProjectMembers200Response>) => {
         this.onResponseSuccess(res);
@@ -87,11 +73,11 @@ export class ProjectMemberListComponent implements OnDestroy, OnInit {
     });
   }
 
-  navigateToWithComponentValues(): void {
+  protected navigateToWithComponentValues(): void {
     this.handleNavigation(this.page, this.predicate, this.ascending);
   }
 
-  navigateToPage(page = this.page): void {
+  protected navigateToPage(page = this.page): void {
     this.handleNavigation(page, this.predicate, this.ascending);
   }
 
@@ -152,5 +138,25 @@ export class ProjectMemberListComponent implements OnDestroy, OnInit {
     } else {
       return [predicate + ',' + ascendingQueryParam];
     }
+  }
+
+  protected delete(member: Member): void {
+    const modalRef = this.modalService.open(MemberDeleteDialogComponent, { size: 'lg', backdrop: 'static' });
+    modalRef.componentInstance.member = member;
+    // unsubscribe not needed because closed completes on modal close
+    modalRef.closed
+      .pipe(
+        filter(reason => reason === ITEM_DELETED_EVENT),
+        switchMap(() => this.loadFromBackendWithRouteInformation())
+      )
+      .subscribe({
+        next: (res: HttpResponse<GetProjectMembers200Response>) => {
+          this.onResponseSuccess(res);
+        },
+      });
+  }
+
+  protected convertToDayjs(date: string): dayjs.Dayjs | null | undefined {
+    return dayjs(date);
   }
 }

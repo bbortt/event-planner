@@ -192,6 +192,8 @@ components:
       required:
         - id
         - email
+        - createdBy
+        - createdDate
       properties:
         id:
           type: integer
@@ -201,6 +203,14 @@ components:
           format: email
           maxLength: 191
           minLength: 1
+        createdBy:
+          type: string
+          format: email
+          maxLength: 50
+          minLength: 1
+        createdDate:
+          type: string
+          format: date-time
         accepted:
           type: boolean
         acceptedDate:

@@ -17,6 +17,12 @@
             <column name="invited_email" type="varchar(191)">
                 <constraints nullable="false"/>
             </column>
+            <column name="created_by" type="varchar(50)">
+                <constraints nullable="false" />
+            </column>
+            <column name="created_date" type="${datetimeType}">
+                <constraints nullable="false" />
+            </column>
             <column name="accepted" type="boolean">
                 <constraints nullable="false" />
             </column>
@@ -51,6 +57,9 @@
                   tableName="member"
                   usePreparedStatements="true">
             <column name="id" type="numeric"/>
+            <column name="invited_email" type="string"/>
+            <column name="created_by" type="string"/>
+            <column name="created_date" type="date"/>
             <column name="accepted" type="boolean"/>
             <column name="accepted_by" type="string"/>
             <column name="accepted_date" type="date"/>

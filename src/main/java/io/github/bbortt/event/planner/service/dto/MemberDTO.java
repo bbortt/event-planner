@@ -21,6 +21,10 @@ public class MemberDTO implements Serializable {
     @Size(min = 1, max = 191)
     private String invitedEmail;
 
+    private String createdBy;
+
+    private Instant createdDate;
+
     @NotNull
     private Boolean accepted;
 
@@ -46,6 +50,22 @@ public class MemberDTO implements Serializable {
 
     public void setInvitedEmail(String invitedEmail) {
         this.invitedEmail = invitedEmail;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Instant getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Instant createdDate) {
+        this.createdDate = createdDate;
     }
 
     public Boolean getAccepted() {
@@ -117,6 +137,8 @@ public class MemberDTO implements Serializable {
         return "MemberDTO{" +
             "id=" + getId() +
             ", invitedEmail='" + getInvitedEmail() + "'" +
+            ", createdBy='" + getCreatedBy() + "'" +
+            ", createdDate='" + getCreatedDate() + "'" +
             ", accepted='" + getAccepted() + "'" +
             ", acceptedBy='" + getAcceptedBy() + "'" +
             ", acceptedDate='" + getAcceptedDate() + "'" +

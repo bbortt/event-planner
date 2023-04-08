@@ -48,6 +48,9 @@ public class MemberResourceIT {
 
     private static final String DEFAULT_INVITED_EMAIL = "scott-lang@localhost";
 
+    private static final String CREATED_BY = "Carlos LaMuerto";
+    private static final Instant CREATED_DATE = Instant.now().minus(1, ChronoUnit.MINUTES);
+
     private static final Boolean DEFAULT_ACCEPTED = false;
     private static final Boolean UPDATED_ACCEPTED = true;
 
@@ -84,7 +87,11 @@ public class MemberResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Member createEntity(EntityManager em) {
-        Member member = new Member().invitedEmail(DEFAULT_INVITED_EMAIL).accepted(DEFAULT_ACCEPTED);
+        Member member = new Member()
+            .invitedEmail(DEFAULT_INVITED_EMAIL)
+            .createdBy(CREATED_BY)
+            .createdDate(CREATED_DATE)
+            .accepted(DEFAULT_ACCEPTED);
         // Add required entity
         Project project;
         if (TestUtil.findAll(em, Project.class).isEmpty()) {
@@ -105,7 +112,11 @@ public class MemberResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Member createUpdatedEntity(EntityManager em) {
-        Member member = new Member().invitedEmail(DEFAULT_INVITED_EMAIL).accepted(UPDATED_ACCEPTED);
+        Member member = new Member()
+            .invitedEmail(DEFAULT_INVITED_EMAIL)
+            .createdBy(CREATED_BY)
+            .createdDate(CREATED_DATE)
+            .accepted(UPDATED_ACCEPTED);
         // Add required entity
         Project project;
         if (TestUtil.findAll(em, Project.class).isEmpty()) {
@@ -147,8 +158,8 @@ public class MemberResourceIT {
         List<Member> memberList = memberRepository.findAll();
         assertThat(memberList).hasSize(databaseSizeBeforeCreate + 1);
         Member testMember = memberList.get(memberList.size() - 1);
-        assertThat(testMember.getInvitedEmail()).isEqualTo(DEFAULT_INVITED_EMAIL);
-        assertThat(testMember.getAccepted()).isEqualTo(DEFAULT_ACCEPTED);
+
+        validateNewMember(member);
     }
 
     @Test
@@ -242,6 +253,13 @@ public class MemberResourceIT {
 
         List<Member> memberList = memberRepository.findAll();
         assertThat(memberList).hasSize(databaseSizeBeforeTest);
+    }
+
+    private void validateNewMember(Member member) {
+        assertThat(member.getInvitedEmail()).isEqualTo(DEFAULT_INVITED_EMAIL);
+        assertThat(member.getAccepted()).isEqualTo(DEFAULT_ACCEPTED);
+        assertThat(member.getCreatedBy()).isNotEmpty();
+        assertThat(member.getCreatedDate()).isNotNull();
     }
 
     @Test
