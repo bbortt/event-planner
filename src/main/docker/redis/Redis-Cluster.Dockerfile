@@ -1,7 +1,9 @@
-FROM redis:6.2.7
+FROM redis:7.0.10-alpine
 
 RUN apt update && \
-    apt install dnsutils -y \
+    apt install \
+      --no-install-recommends -y \
+      dnsutils
 
 COPY redis/connectRedisCluster.sh /usr/local/bin/connectRedisCluster
 

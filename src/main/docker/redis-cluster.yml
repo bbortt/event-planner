@@ -2,7 +2,7 @@
 version: '3.8'
 services:
   eventplanner-redis:
-    image: redis:6.2.7
+    image: redis:7.0.10-alpine
     command:
       - 'redis-server'
       - '--port 6379'
@@ -13,7 +13,7 @@ services:
     ports:
       - '6379:6379'
   eventplanner-redis-1:
-    image: redis:6.2.7
+    image: redis:7.0.10-alpine
     command:
       - 'redis-server'
       - '--port 6379'
@@ -24,7 +24,7 @@ services:
     ports:
       - '16379:6379'
   eventplanner-redis-2:
-    image: redis:6.2.7
+    image: redis:7.0.10-alpine
     command:
       - 'redis-server'
       - '--port 6379'
@@ -35,7 +35,7 @@ services:
     ports:
       - '26379:6379'
   eventplanner-redis-3:
-    image: redis:6.2.7
+    image: redis:7.0.10-alpine
     command:
       - 'redis-server'
       - '--port 6379'
@@ -46,7 +46,7 @@ services:
     ports:
       - '36379:6379'
   eventplanner-redis-4:
-    image: redis:6.2.7
+    image: redis:7.0.10-alpine
     command:
       - 'redis-server'
       - '--port 6379'
@@ -57,7 +57,7 @@ services:
     ports:
       - '46379:6379'
   eventplanner-redis-5:
-    image: redis:6.2.7
+    image: redis:7.0.10-alpine
     command:
       - 'redis-server'
       - '--port 6379'
