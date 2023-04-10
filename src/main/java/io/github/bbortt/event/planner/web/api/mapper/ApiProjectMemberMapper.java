@@ -4,7 +4,6 @@ import io.github.bbortt.event.planner.service.api.dto.Member;
 import io.github.bbortt.event.planner.service.dto.MemberDTO;
 import java.time.Instant;
 import java.time.OffsetDateTime;
-import java.time.ZoneId;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

@@ -10,7 +10,7 @@ class TimeUtils {
     private ZoneIdProvider zoneIdProvider;
 
     TimeUtils() {
-        this.zoneIdProvider = () -> ZoneId.systemDefault();
+        this.zoneIdProvider = ZoneId::systemDefault;
     }
 
     TimeUtils zoneIdProvider(ZoneIdProvider zoneIdProvider) {

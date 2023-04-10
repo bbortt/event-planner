@@ -11,7 +11,7 @@
       "columnType": "varchar(191)",
       "fieldName": "invitedEmail",
       "fieldType": "String",
-      "nullable": false,
+      "nullable": false
     },
     {
       "auditField": true,
