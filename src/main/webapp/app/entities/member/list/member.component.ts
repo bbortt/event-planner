@@ -40,7 +40,7 @@ export class MemberComponent implements OnInit {
   }
 
   delete(member: IMember): void {
-    const modalRef = this.modalService.open(MemberDeleteDialogComponent, { size: 'lg', backdrop: 'static' });
+    const modalRef = this.modalService.open(MemberDeleteDialogComponent, { size: 'lg' });
     modalRef.componentInstance.member = member;
     // unsubscribe not needed because closed completes on modal close
     modalRef.closed
