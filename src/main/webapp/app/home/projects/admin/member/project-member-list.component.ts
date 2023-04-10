@@ -36,11 +36,11 @@ export class ProjectMemberListComponent implements OnDestroy, OnInit {
   private memberUpdatedSource: Subscription | null = null;
 
   constructor(
-    protected memberService: MemberService,
-    protected projectMemberService: ProjectMemberService,
     protected activatedRoute: ActivatedRoute,
-    public router: Router,
-    protected modalService: NgbModal
+    protected memberService: MemberService,
+    protected modalService: NgbModal,
+    protected projectMemberService: ProjectMemberService,
+    public router: Router
   ) {}
 
   ngOnInit(): void {
@@ -141,7 +141,7 @@ export class ProjectMemberListComponent implements OnDestroy, OnInit {
   }
 
   protected delete(member: Member): void {
-    const modalRef = this.modalService.open(MemberDeleteDialogComponent, { size: 'lg', backdrop: 'static' });
+    const modalRef = this.modalService.open(MemberDeleteDialogComponent, { size: 'lg' });
     modalRef.componentInstance.member = member;
     // unsubscribe not needed because closed completes on modal close
     modalRef.closed

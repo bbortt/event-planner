@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
+import { ITEM_DELETED_EVENT } from 'app/config/navigation.constants';
+
 import { IMember } from '../member.model';
 import { MemberService } from '../service/member.service';
-import { ITEM_DELETED_EVENT } from 'app/config/navigation.constants';
 
 @Component({
   templateUrl: './member-delete-dialog.component.html',

@@ -40,7 +40,7 @@ export class ProjectComponent implements OnInit {
   }
 
   delete(project: IProject): void {
-    const modalRef = this.modalService.open(ProjectDeleteDialogComponent, { size: 'lg', backdrop: 'static' });
+    const modalRef = this.modalService.open(ProjectDeleteDialogComponent, { size: 'lg' });
     modalRef.componentInstance.project = project;
     // unsubscribe not needed because closed completes on modal close
     modalRef.closed

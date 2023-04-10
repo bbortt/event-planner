@@ -1,8 +1,6 @@
 <form *ngIf="project" name="deleteForm" (ngSubmit)="confirmDelete(project.id!)">
   <div class="modal-header">
     <h4 class="modal-title" data-cy="projectDeleteDialogHeading" jhiTranslate="entity.delete.title">Löschen bestätigen</h4>
-
-    <button type="button" class="btn-close" data-dismiss="modal" aria-hidden="true" (click)="cancel()">&times;</button>
   </div>
 
   <div class="modal-body">

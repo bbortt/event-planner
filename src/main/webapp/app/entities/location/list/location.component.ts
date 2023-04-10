@@ -40,7 +40,7 @@ export class LocationComponent implements OnInit {
   }
 
   delete(location: ILocation): void {
-    const modalRef = this.modalService.open(LocationDeleteDialogComponent, { size: 'lg', backdrop: 'static' });
+    const modalRef = this.modalService.open(LocationDeleteDialogComponent, { size: 'lg' });
     modalRef.componentInstance.location = location;
     // unsubscribe not needed because closed completes on modal close
     modalRef.closed
