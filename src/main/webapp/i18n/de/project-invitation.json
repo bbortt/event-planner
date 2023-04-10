@@ -1,0 +1,10 @@
+{
+  "app": {
+    "project": {
+      "invitation": {
+        "title": "Willkommen, Event Planner",
+        "subtitle": "Um die Einladung anzunehmen, logge dich bitte ein"
+      }
+    }
+  }
+}
