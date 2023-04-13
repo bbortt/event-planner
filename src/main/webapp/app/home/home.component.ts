@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+
+import { Subscription } from 'rxjs';
 
 import { AccountService } from 'app/core/auth/account.service';
 import { Account } from 'app/core/auth/account.model';
@@ -8,14 +10,22 @@ import { Account } from 'app/core/auth/account.model';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   account: Account | null = null;
+
+  private accountSubscription: Subscription | null = null;
 
   constructor(private accountService: AccountService) {}
 
   ngOnInit(): void {
-    this.accountService.identity().subscribe(account => {
+    this.accountSubscription = this.accountService.identity().subscribe(account => {
       this.account = account;
     });
+  }
+
+  ngOnDestroy(): void {
+    if (this.accountSubscription) {
+      this.accountSubscription.unsubscribe();
+    }
   }
 }

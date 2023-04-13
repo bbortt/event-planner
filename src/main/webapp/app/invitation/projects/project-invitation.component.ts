@@ -1,4 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+
+import { Subscription } from 'rxjs';
 
 import { Account } from 'app/core/auth/account.model';
 import { AccountService } from 'app/core/auth/account.service';
@@ -7,14 +10,25 @@ import { AccountService } from 'app/core/auth/account.service';
   selector: 'app-project-invitation',
   templateUrl: './project-invitation.component.html',
 })
-export class ProjectInvitationComponent {
+export class ProjectInvitationComponent implements OnInit, OnDestroy {
+  invitationEmail: string | null = null;
   account: Account | null = null;
 
-  constructor(private accountService: AccountService) {}
+  private accountSubscription: Subscription | null = null;
+
+  constructor(private activatedRoute: ActivatedRoute, private accountService: AccountService) {}
 
   ngOnInit(): void {
-    this.accountService.identity().subscribe(account => {
+    this.accountSubscription = this.accountService.identity().subscribe(account => {
       this.account = account;
     });
   }
+
+  ngOnDestroy(): void {
+    if (this.accountSubscription) {
+      this.accountSubscription.unsubscribe();
+    }
+  }
+
+  acceptInvitation() {}
 }
