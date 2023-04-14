@@ -29,5 +29,8 @@ export class ProjectInvitationComponent implements OnInit {
     );
   }
 
-  acceptInvitation() {}
+  acceptInvitation(): void {
+    // TODO: Accept invitation
+    console.log('invitation will be accepted here..');
+  }
 }

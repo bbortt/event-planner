@@ -1,25 +1,27 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { TestBed, waitForAsync } from '@angular/core/testing';
-import { ActivatedRoute, ActivatedRouteSnapshot, convertToParamMap, Router } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
+jest.mock('app/core/auth/account.service');
 
-import { MissingTranslationHandler, TranslateModule, TranslateService } from '@ngx-translate/core';
-import { NgxWebstorageModule, SessionStorageService } from 'ngx-webstorage';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { TestBed } from '@angular/core/testing';
+import { ActivatedRoute, ActivatedRouteSnapshot, convertToParamMap, Router } from '@angular/router';
+
+import { firstValueFrom, of } from 'rxjs';
+
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { Project, ProjectService as ApiProjectService } from 'app/api';
-import { missingTranslationHandler } from 'app/config/translation.config';
+import { Account } from 'app/core/auth/account.model';
+import { AccountService } from 'app/core/auth/account.service';
 
 import { ProjectTokenRoutingResolveService } from './project-token-routing-resolve.service';
-import { firstValueFrom, of } from 'rxjs';
-import { AccountService } from '../../../core/auth/account.service';
+
+const project = {} as Project;
 
 describe('Project token routing resolve service', () => {
-  let accountService: AccountService;
+  let mockAccountService: AccountService;
   let apiProjectService: ApiProjectService;
   let mockRouter: Router;
 
   let mockTranslateService: TranslateService;
-  let sessionStorageService: SessionStorageService;
 
   let mockActivatedRouteSnapshot: ActivatedRouteSnapshot;
 
@@ -27,7 +29,7 @@ describe('Project token routing resolve service', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, RouterTestingModule.withRoutes([]), TranslateModule.forRoot(), NgxWebstorageModule.forRoot()],
+      imports: [HttpClientTestingModule, TranslateModule.forRoot()],
       providers: [
         AccountService,
         {
@@ -41,7 +43,8 @@ describe('Project token routing resolve service', () => {
       ],
     });
 
-    accountService = TestBed.inject(AccountService);
+    mockAccountService = TestBed.inject(AccountService);
+    mockAccountService.identity = jest.fn(() => of(null));
 
     apiProjectService = TestBed.inject(ApiProjectService);
     apiProjectService.findProjectByToken = jest.fn();
@@ -51,7 +54,6 @@ describe('Project token routing resolve service', () => {
 
     mockTranslateService = TestBed.inject(TranslateService);
     jest.spyOn(mockTranslateService, 'use').mockImplementation(() => of(''));
-    sessionStorageService = TestBed.inject(SessionStorageService);
 
     mockActivatedRouteSnapshot = TestBed.inject(ActivatedRoute).snapshot;
     mockActivatedRouteSnapshot.params = { token: '0c4b3e09-525a-45e5-afe4-4557838aa361' };
@@ -62,24 +64,33 @@ describe('Project token routing resolve service', () => {
   describe('resolve', () => {
     it('should return null if token is not provided', async () => {
       mockActivatedRouteSnapshot.params = {};
-      const accountServiceIdentityMock = jest.spyOn(accountService, 'identity');
 
       const result = await firstValueFrom(fixture.resolve(mockActivatedRouteSnapshot));
 
-      expect(accountServiceIdentityMock).not.toHaveBeenCalled();
+      expect(mockAccountService.identity).not.toHaveBeenCalled();
       expect(apiProjectService.findProjectByToken).not.toHaveBeenCalled();
       expect(result).toEqual(null);
     });
 
-    //  it ('does not resolve project if not logged in', async()=>{
-    // const accountServiceIdentityMock=  jest.spyOn(accountService, 'identity').mockReturnValue(of(null));
-    //    // accountServiceIdentityMock.mockReturnValueOnce(of(null));
-    //
-    //    const result=await   firstValueFrom(   fixture.resolve(mockActivatedRouteSnapshot));
-    //
-    //    expect(accountServiceIdentityMock).toHaveBeenCalled();
-    //    expect(apiProjectService.findProjectByToken).not.toHaveBeenCalled();
-    //    expect(result).toEqual(null);
-    //  });
+    it('does resolve project if logged in', async () => {
+      (mockAccountService.identity as jest.Mock).mockReturnValueOnce(of({} as Account));
+      (apiProjectService.findProjectByToken as jest.Mock).mockReturnValueOnce(of({ body: project }));
+
+      const result = await firstValueFrom(fixture.resolve(mockActivatedRouteSnapshot));
+
+      expect(mockAccountService.identity).toHaveBeenCalled();
+      expect(apiProjectService.findProjectByToken).toHaveBeenCalledWith('0c4b3e09-525a-45e5-afe4-4557838aa361', 'response');
+      expect(result).toEqual(project);
+    });
+
+    it('does not resolve project if not logged in', async () => {
+      (apiProjectService.findProjectByToken as jest.Mock).mockReturnValueOnce(of({ body: project }));
+
+      const result = await firstValueFrom(fixture.resolve(mockActivatedRouteSnapshot));
+
+      expect(mockAccountService.identity).toHaveBeenCalled();
+      expect(apiProjectService.findProjectByToken).toHaveBeenCalledWith('0c4b3e09-525a-45e5-afe4-4557838aa361', 'response');
+      expect(result).toEqual(null);
+    });
   });
 });
