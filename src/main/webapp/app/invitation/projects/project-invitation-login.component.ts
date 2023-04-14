@@ -9,7 +9,7 @@ import { StateStorageService } from '../../core/auth/state-storage.service';
   templateUrl: './project-invitation-login.component.html',
 })
 export class ProjectInvitationLoginComponent {
-  @Input() invitationEmail: String | null = null;
+  @Input() invitationEmail: string | null = null;
 
   constructor(private loginService: LoginService, private stateStorageService: StateStorageService, private router: Router) {}
 

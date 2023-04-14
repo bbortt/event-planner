@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, Router } from '@angular/router';
 
-import { EMPTY, iif, Observable, of } from 'rxjs';
+import { iif, Observable, of } from 'rxjs';
 import { catchError, filter, map, mergeMap } from 'rxjs/operators';
 
 import { Project, ProjectService as ApiProjectService } from 'app/api';
