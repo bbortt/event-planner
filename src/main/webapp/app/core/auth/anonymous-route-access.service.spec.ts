@@ -14,8 +14,9 @@ import { AnonymousRouteAccessService } from './anonymous-route-access.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('Anonymous Route Access Service', () => {
-  let service: AnonymousRouteAccessService;
   let accountService: AccountService;
+
+  let service: AnonymousRouteAccessService;
 
   const mockNavigate = jest.fn();
 
@@ -35,8 +36,9 @@ describe('Anonymous Route Access Service', () => {
       ],
     });
 
-    service = TestBed.inject(AnonymousRouteAccessService);
     accountService = TestBed.inject(AccountService);
+
+    service = TestBed.inject(AnonymousRouteAccessService);
   });
 
   beforeEach(() => {

@@ -1,7 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { Subscription } from 'rxjs';
+import { combineLatest } from 'rxjs';
+
+import { Project } from 'app/api';
 
 import { Account } from 'app/core/auth/account.model';
 import { AccountService } from 'app/core/auth/account.service';
@@ -10,24 +12,21 @@ import { AccountService } from 'app/core/auth/account.service';
   selector: 'app-project-invitation',
   templateUrl: './project-invitation.component.html',
 })
-export class ProjectInvitationComponent implements OnInit, OnDestroy {
-  invitationEmail: string | null = null;
+export class ProjectInvitationComponent implements OnInit {
   account: Account | null = null;
-
-  private accountSubscription: Subscription | null = null;
+  project: Project | null = null;
+  invitationEmail: string | null = null;
 
   constructor(private activatedRoute: ActivatedRoute, private accountService: AccountService) {}
 
   ngOnInit(): void {
-    this.accountSubscription = this.accountService.identity().subscribe(account => {
-      this.account = account;
-    });
-  }
-
-  ngOnDestroy(): void {
-    if (this.accountSubscription) {
-      this.accountSubscription.unsubscribe();
-    }
+    combineLatest([this.accountService.identity(), this.activatedRoute.data, this.activatedRoute.queryParams]).subscribe(
+      ([account, { project }, { email }]) => {
+        this.account = account;
+        this.project = project;
+        this.invitationEmail = email;
+      }
+    );
   }
 
   acceptInvitation() {}

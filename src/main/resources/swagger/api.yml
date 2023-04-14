@@ -44,6 +44,36 @@ paths:
           headers:
             Has-Next-Page:
               $ref: '#/components/headers/hasNextPage'
+  /v1/projects/token/{projectToken}:
+    get:
+      tags:
+        - project
+      security:
+        - oauth
+        - openid
+      summary: Find the Project matching the given token.
+      description: |
+        Find the Project matching the given token or fail if this Project does not exist.
+      operationId: findProjectByToken
+      parameters:
+        - name: projectToken
+          in: path
+          description: |
+            The restricting project token.
+          schema:
+            type: string
+            maxLength: 36
+            minLength: 36
+          required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        404:
+          description: NOT FOUND
   /v1/projects/{projectId}/members:
     get:
       tags:

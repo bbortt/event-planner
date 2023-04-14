@@ -2,8 +2,11 @@
   "app": {
     "project": {
       "invitation": {
-        "title": "Willkommen, Event Planner",
-        "subtitle": "Um die Einladung anzunehmen, logge dich bitte ein"
+        "title": "Willkommen, {{ email }}",
+        "subtitle": "Um die Einladung anzunehmen, logge dich bitte ein",
+        "error": {
+          "invalidToken": "Leider können wir das Projekt aus deiner Einladung nicht finden. Bitte prüfe den verwendeten Link!"
+        }
       }
     }
   }

@@ -1,7 +1,9 @@
 <div class="row">
   <div class="col-md-12">
     <h2 id="page-heading" data-cy="projectInvitationLoginHeading">
-      <span jhiTranslate="app.project.invitation.title">Willkommen, Event Planner</span>
+      <span jhiTranslate="app.project.invitation.title" [translateValues]="{ email: invitationEmail || 'Event Planner' }"
+        >Willkommen, Event Planner</span
+      >
     </h2>
 
     <p class="lead"><span jhiTranslate="app.project.invitation.subtitle"> Um die Einladung anzunehmen, logge dich bitte ein </span>.</p>
