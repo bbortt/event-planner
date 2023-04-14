@@ -2,6 +2,7 @@ package io.github.bbortt.event.planner.web.api;
 
 import io.github.bbortt.event.planner.service.ProjectService;
 import io.github.bbortt.event.planner.service.api.dto.GetUserProjects200Response;
+import io.github.bbortt.event.planner.service.api.dto.Project;
 import io.github.bbortt.event.planner.service.dto.ProjectDTO;
 import io.github.bbortt.event.planner.web.api.mapper.ApiProjectMapper;
 import io.github.bbortt.event.planner.web.rest.util.PaginationUtil;
@@ -11,6 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,6 +32,11 @@ public class ProjectApiDelegateImpl implements ProjectApiDelegate {
         this.projectService = projectService;
         this.apiProjectMapper = apiProjectMapper;
         this.paginationUtil = paginationUtil;
+    }
+
+    @Override
+    public ResponseEntity<Project> findProjectByToken(String projectToken) {
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @Override

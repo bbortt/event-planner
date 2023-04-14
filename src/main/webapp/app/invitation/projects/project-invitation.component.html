@@ -1,5 +1,5 @@
 <div [ngSwitch]="!!account">
-  <app-project-invitation-login *ngSwitchDefault></app-project-invitation-login>
+  <app-project-invitation-login [invitationEmail]="invitationEmail" *ngSwitchDefault></app-project-invitation-login>
 
   <div *ngSwitchCase="true">
     <div class="row">
