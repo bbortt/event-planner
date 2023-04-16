@@ -22,7 +22,7 @@ paths:
         - openid
       summary: Receive all projects to which the user has access to.
       description: |
-        Return all projects to which the user has access to. E.g. he has either created the project or received an
+        Return all projects to which the user has access to. E.g. he has either created the Project or received an
         invitation to it. This will only return projects that are not archived.
       operationId: getUserProjects
       parameters:
@@ -59,7 +59,7 @@ paths:
         - name: projectToken
           in: path
           description: |
-            The restricting project token.
+            The restricting Project token.
           schema:
             type: string
             maxLength: 36
@@ -84,7 +84,7 @@ paths:
         - openid
       summary: List all members collaborating on the project.
       description: |
-        Return all members invited to the given project by id.
+        Return all members invited to the given Project by id.
       operationId: getProjectMembers
       parameters:
         - $ref: '#/components/parameters/PageSize'
@@ -93,7 +93,7 @@ paths:
         - name: projectId
           in: path
           description: |
-            The restricting project id.
+            The restricting Project id.
           schema:
             type: integer
             format: int64
@@ -122,11 +122,11 @@ paths:
       security:
         - oauth
         - openid
-      summary: Invite a new member to collaborate on the project.
+      summary: Invite a new Member to collaborate on the project.
       description: |
-        Invite a new member to collaborate on the project based on its e-mail
-        address. An invitation for the particular project will be sent to the
-        use. He can join the project using an existing account and the sent link.
+        Invite a new Member to collaborate on the Project based on its email
+        address. An invitation for the particular Project will be sent to the
+        use. He can join the Project using an existing account and the sent link.
       operationId: inviteMemberToProject
       parameters:
         - name: projectId
@@ -166,6 +166,45 @@ paths:
                       $ref: '#/components/schemas/Member'
         400:
           description: Bad Request
+  /v1/projects/{projectId}/members/email/{invitationEmail}:
+    get:
+      tags:
+        - project-member
+        - project
+      security:
+        - oauth
+        - openid
+      summary: Find the Project Member matching the given token and invitationEmail.
+      description: |
+        Find the Member matching the given invitationEmail in the Project identified by id. Fail if this Project or Member does not exist.
+      operationId: findProjectMemberByTokenAndEmail
+      parameters:
+        - name: projectId
+          in: path
+          description: |
+            The restricting Project id.
+          schema:
+            type: integer
+            format: int64
+          required: true
+        - name: invitationEmail
+          in: path
+          description: |
+            The restricting Member invitationEmail.
+          schema:
+            type: string
+            maxLength: 191
+            minLength: 191
+          required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Member'
+        404:
+          description: NOT FOUND
 components:
   parameters:
     PageSize:

@@ -1,9 +1,9 @@
+jest.mock('app/login/login.service');
+
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
 import { NgxWebstorageModule } from 'ngx-webstorage';
-
-jest.mock('app/login/login.service');
 
 import { StateStorageService } from 'app/core/auth/state-storage.service';
 import { LoginService } from 'app/login/login.service';

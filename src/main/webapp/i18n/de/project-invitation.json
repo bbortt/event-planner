@@ -4,6 +4,7 @@
       "invitation": {
         "title": "Willkommen, {{ email }}",
         "subtitle": "Um die Einladung anzunehmen, logge dich bitte ein",
+        "loading": "Daten werden geladen",
         "error": {
           "invalidToken": "Leider können wir das Projekt aus deiner Einladung nicht finden. Bitte prüfe den verwendeten Link!"
         }
