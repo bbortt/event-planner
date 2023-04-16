@@ -13,9 +13,6 @@ const testProject = {} as Project;
 const testAccount = {} as Account;
 
 describe('ProjectInvitationComponent', () => {
-  let activatedRoute: ActivatedRoute;
-  let accountService: AccountService;
-
   let fixture: ComponentFixture<ProjectInvitationComponent>;
   let component: ProjectInvitationComponent;
 
@@ -32,9 +29,6 @@ describe('ProjectInvitationComponent', () => {
   }));
 
   beforeEach(() => {
-    activatedRoute = TestBed.inject(ActivatedRoute);
-    accountService = TestBed.inject(AccountService);
-
     fixture = TestBed.createComponent(ProjectInvitationComponent);
     component = fixture.componentInstance;
   });

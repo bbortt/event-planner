@@ -55,6 +55,11 @@ public class ProjectMemberApiDelegateImpl implements ProjectMemberApiDelegate {
     }
 
     @Override
+    public ResponseEntity<Member> findProjectMemberByTokenAndEmail(Long projectId, String invitationEmail) {
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @Override
     public ResponseEntity<GetProjectMembers200Response> getProjectMembers(
         Long projectId,
         Optional<Integer> pageSize,

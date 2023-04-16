@@ -5,8 +5,11 @@
         "title": "Welcome, {{ email }}",
         "subtitle": "To accept the invitation, please log in",
         "loading": "Data being loaded",
+        "accepting": {
+          "success": "Invitation successfully accepted. You've joined Project '{{ projectName }}'!"
+        },
         "error": {
-          "invalidToken": "Unfortunately we can't find the project from your invitation. Please check the link you used!"
+          "invalidToken": "Unfortunately we can't find the Project from your invitation. Please check the link you used!"
         }
       }
     }

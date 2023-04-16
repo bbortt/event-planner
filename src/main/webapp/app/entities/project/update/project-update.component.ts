@@ -75,7 +75,7 @@ export class ProjectUpdateComponent implements OnInit {
   }
 
   protected onSaveError(httpErrorResponse: HttpErrorResponse): void {
-    this.eventManager.broadcast(new EventWithContent('error.unknown', httpErrorResponse));
+    this.eventManager.broadcast(new EventWithContent('app.httpError', httpErrorResponse));
   }
 
   protected onSaveFinalize(): void {

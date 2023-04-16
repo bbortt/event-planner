@@ -5,6 +5,9 @@
         "title": "Willkommen, {{ email }}",
         "subtitle": "Um die Einladung anzunehmen, logge dich bitte ein",
         "loading": "Daten werden geladen",
+        "accepting": {
+          "success": "Die Einladung wurde erfolgreich angenommen. Du bist Projekt '{{ projectName }}' beigetreten!"
+        },
         "error": {
           "invalidToken": "Leider können wir das Projekt aus deiner Einladung nicht finden. Bitte prüfe den verwendeten Link!"
         }
