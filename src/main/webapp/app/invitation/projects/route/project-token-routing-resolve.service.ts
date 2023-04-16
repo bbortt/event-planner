@@ -31,7 +31,7 @@ export class ProjectTokenRoutingResolveService implements Resolve<Project | null
           () => !!account,
           this.apiProjectService.findProjectByToken(token, 'response').pipe(
             filter(project => !!project.body),
-            map(project => project.body)
+            map(project => project.body!)
           ),
           of(null)
         )
