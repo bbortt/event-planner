@@ -1,0 +1,24 @@
+<div class="row">
+  <div class="col-md-12">
+    <h2 id="page-heading" data-cy="projectInvitationLoginHeading">
+      <span jhiTranslate="app.project.invitation.title" [translateValues]="{ email }">Willkommen, Event Planner</span>
+    </h2>
+
+    <div [ngSwitch]="isLoading">
+      <ngb-alert *ngSwitchCase="true" [dismissible]="false" type="info">
+        <span jhiTranslate="app.project.invitation.loading"> Daten werden geladen </span>
+      </ngb-alert>
+
+      <div *ngSwitchDefault>
+        <p class="lead"><span jhiTranslate="app.project.invitation.subtitle"> Du kannst nun die Einladung annehmen </span>.</p>
+
+        <div class="btn-group">
+          <button type="button" class="btn btn-info btn-sm" data-cy="loginButton" (click)="acceptInvitation()">
+            <fa-icon icon="sign-in-alt" [fixedWidth]="true"></fa-icon>
+            <span jhiTranslate="global.menu.account.login">Einladung annehmen</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
