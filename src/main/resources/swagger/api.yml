@@ -11,7 +11,7 @@ tags:
   - name: project
     description: Resource controlling projects.
   - name: project-member
-    description: Resource controlling memberships inside a project.
+    description: Resource controlling memberships inside a Project.
 paths:
   /v1/projects:
     get:
@@ -82,7 +82,7 @@ paths:
       security:
         - oauth
         - openid
-      summary: List all members collaborating on the project.
+      summary: List all members collaborating on the Project.
       description: |
         Return all members invited to the given Project by id.
       operationId: getProjectMembers
@@ -122,7 +122,7 @@ paths:
       security:
         - oauth
         - openid
-      summary: Invite a new Member to collaborate on the project.
+      summary: Invite a new Member to collaborate on the Project.
       description: |
         Invite a new Member to collaborate on the Project based on its email
         address. An invitation for the particular Project will be sent to the
@@ -166,7 +166,7 @@ paths:
                       $ref: '#/components/schemas/Member'
         400:
           description: Bad Request
-  /v1/projects/{projectId}/members/email/{invitationEmail}:
+  /v1/projects/{projectId}/members/email/{invitedEmail}:
     get:
       tags:
         - project-member
@@ -174,9 +174,9 @@ paths:
       security:
         - oauth
         - openid
-      summary: Find the Project Member matching the given token and invitationEmail.
+      summary: Find the Project Member matching the given invitedEmail.
       description: |
-        Find the Member matching the given invitationEmail in the Project identified by id. Fail if this Project or Member does not exist.
+        Find the Member matching the given invitedEmail in the Project identified by id. Fail if this Project or Member does not exist.
       operationId: findProjectMemberByTokenAndEmail
       parameters:
         - name: projectId
@@ -187,10 +187,10 @@ paths:
             type: integer
             format: int64
           required: true
-        - name: invitationEmail
+        - name: invitedEmail
           in: path
           description: |
-            The restricting Member invitationEmail.
+            The restricting Member invitedEmail.
           schema:
             type: string
             maxLength: 191

@@ -126,6 +126,18 @@ public class ProjectService {
     }
 
     /**
+     * Get one project by id.
+     *
+     * @param token the token of the entity.
+     * @return the entity.
+     */
+    @Transactional(readOnly = true)
+    public Optional<ProjectDTO> findOneByToken(String token) {
+        log.debug("Request to get Project by token: {}", token);
+        return projectRepository.findByToken(token).map(projectMapper::toDto);
+    }
+
+    /**
      * Find all projects in which the current user takes part in.
      *
      * @param pageable the pagination information.

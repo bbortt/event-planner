@@ -2,6 +2,7 @@ package io.github.bbortt.event.planner.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -13,6 +14,7 @@ import io.github.bbortt.event.planner.repository.ProjectRepository;
 import io.github.bbortt.event.planner.service.dto.ProjectDTO;
 import io.github.bbortt.event.planner.service.mapper.ProjectMapper;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -61,6 +63,38 @@ class ProjectServiceTest {
     void constructorRespectsArguments() {
         assertEquals(projectRepositoryMock, ReflectionTestUtils.getField(fixture, "projectRepository"));
         assertEquals(projectMapperMock, ReflectionTestUtils.getField(fixture, "projectMapper"));
+    }
+
+    @Test
+    void findOneCallsRepository() {
+        Long projectId = 1234L;
+
+        Project project = new Project().id(projectId);
+        doReturn(Optional.of(project)).when(projectRepositoryMock).findById(projectId);
+
+        ProjectDTO projectDTO = new ProjectDTO();
+        doReturn(projectDTO).when(projectMapperMock).toDto(project);
+
+        Optional<ProjectDTO> result = fixture.findOne(projectId);
+
+        assertTrue(result.isPresent());
+        assertEquals(projectDTO, result.get());
+    }
+
+    @Test
+    void findOneByTokenCallsRepository() {
+        String token = "e10563fd-26f4-4cd6-98de-f9d92e8f9e73";
+
+        Project project = new Project().id(1234L);
+        doReturn(Optional.of(project)).when(projectRepositoryMock).findByToken(token);
+
+        ProjectDTO projectDTO = new ProjectDTO();
+        doReturn(projectDTO).when(projectMapperMock).toDto(project);
+
+        Optional<ProjectDTO> result = fixture.findOneByToken(token);
+
+        assertTrue(result.isPresent());
+        assertEquals(projectDTO, result.get());
     }
 
     @Test

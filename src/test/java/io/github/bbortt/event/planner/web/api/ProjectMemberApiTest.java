@@ -12,7 +12,9 @@ import io.github.bbortt.event.planner.service.ProjectService;
 import io.github.bbortt.event.planner.service.api.dto.GetProjectMembers200Response;
 import io.github.bbortt.event.planner.service.api.dto.Member;
 import io.github.bbortt.event.planner.service.dto.MemberDTO;
+import io.github.bbortt.event.planner.service.dto.ProjectDTO;
 import io.github.bbortt.event.planner.web.api.mapper.ApiProjectMemberMapper;
+import io.github.bbortt.event.planner.web.rest.errors.BadRequestAlertException;
 import io.github.bbortt.event.planner.web.rest.util.PaginationUtil;
 import java.util.Collections;
 import java.util.List;
@@ -31,8 +33,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.zalando.problem.Status;
 
 @ExtendWith(MockitoExtension.class)
 class ProjectMemberApiTest {
@@ -60,6 +62,44 @@ class ProjectMemberApiTest {
     }
 
     @Test
+    void findProjectMemberByTokenAndEmailForExistingProject() {
+        Long projectId = 1L;
+        String invitedEmail = "wand-wilson@localhost";
+
+        // Project by ID exists
+        doReturn(Optional.of(new ProjectDTO())).when(projectServiceMock).findOne(projectId);
+
+        MemberDTO memberDTO = new MemberDTO();
+        doReturn(Optional.of(memberDTO)).when(memberServiceMock).findOneInProjectByInvitationEmail(projectId, invitedEmail);
+
+        Member member = new Member();
+        doReturn(member).when(apiProjectMemberMapperMock).toApiDTO(memberDTO);
+
+        ResponseEntity<Member> result = fixture.findProjectMemberByTokenAndEmail(projectId, invitedEmail);
+
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+
+        Member response = result.getBody();
+        assertEquals(member, response);
+    }
+
+    @Test
+    void findProjectMemberByTokenAndEmailForNonexistentProject() {
+        Long projectId = 1L;
+        String invitedEmail = "nicholas-scratch@localhost";
+
+        // Project by ID does not exist
+        doReturn(Optional.empty()).when(projectServiceMock).findOne(projectId);
+
+        BadRequestAlertException exception = assertThrows(
+            BadRequestAlertException.class,
+            () -> fixture.findProjectMemberByTokenAndEmail(projectId, invitedEmail)
+        );
+
+        assertEquals(Status.BAD_REQUEST, exception.getStatus());
+    }
+
+    @Test
     void getProjectMembersForExistingProject() {
         Long projectId = 1L;
 
@@ -68,7 +108,7 @@ class ProjectMemberApiTest {
         List<String> sort = Collections.singletonList("id,asc");
 
         // Project by ID exists
-        doReturn(true).when(projectServiceMock).exists(projectId);
+        doReturn(Optional.of(new ProjectDTO())).when(projectServiceMock).findOne(projectId);
 
         PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
         doReturn(pageRequest)
@@ -77,7 +117,7 @@ class ProjectMemberApiTest {
 
         MemberDTO memberDTO = new MemberDTO();
         Page<MemberDTO> page = new PageImpl<>(List.of(memberDTO));
-        doReturn(page).when(memberServiceMock).findInProject(projectId, pageRequest);
+        doReturn(page).when(memberServiceMock).findAllInProject(projectId, pageRequest);
 
         HttpHeaders httpHeaders = new HttpHeaders();
         doReturn(httpHeaders).when(paginationUtilMock).generatePaginationHttpHeaders(any(ServletUriComponentsBuilder.class), eq(page));
@@ -111,13 +151,13 @@ class ProjectMemberApiTest {
         Optional<List<String>> sort = Optional.of(Collections.singletonList("id,asc"));
 
         // Project by ID does not exist
-        doReturn(false).when(projectServiceMock).exists(projectId);
+        doReturn(Optional.empty()).when(projectServiceMock).findOne(projectId);
 
-        ResponseStatusException exception = assertThrows(
-            ResponseStatusException.class,
+        BadRequestAlertException exception = assertThrows(
+            BadRequestAlertException.class,
             () -> fixture.getProjectMembers(projectId, pageSize, pageNumber, sort)
         );
 
-        assertEquals(HttpStatus.NOT_FOUND, exception.getStatus());
+        assertEquals(Status.BAD_REQUEST, exception.getStatus());
     }
 }
