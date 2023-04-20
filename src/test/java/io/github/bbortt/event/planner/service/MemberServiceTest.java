@@ -1,6 +1,7 @@
 package io.github.bbortt.event.planner.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
@@ -14,6 +15,7 @@ import io.github.bbortt.event.planner.service.dto.ProjectDTO;
 import io.github.bbortt.event.planner.service.mapper.MemberMapper;
 import io.github.bbortt.event.planner.service.mapper.ProjectMapper;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -51,7 +53,7 @@ class MemberServiceTest {
     }
 
     @Test
-    void findInProjectCallsRepository() {
+    void findAllInProjectCallsRepository() {
         Long projectId = 1234l;
         Pageable pageable = Pageable.unpaged();
 
@@ -61,12 +63,29 @@ class MemberServiceTest {
         doReturn(new PageImpl<>(List.of(member))).when(memberRepositoryMock).findAllByProjectIdEquals(projectId, pageable);
         doReturn(memberDTO).when(memberMapperMock).toDto(member);
 
-        Page<MemberDTO> result = fixture.findInProject(projectId, pageable);
+        Page<MemberDTO> result = fixture.findAllInProject(projectId, pageable);
 
         assertEquals(1, result.getContent().size());
         assertEquals(memberDTO, result.getContent().get(0));
 
         verify(memberRepositoryMock).findAllByProjectIdEquals(projectId, pageable);
+    }
+
+    @Test
+    void findOneInProjectByInvitationEmailCallsRepository() {
+        Long projectId = 1234l;
+        String invitedEmail = "alice@localhost";
+
+        Member member = new Member();
+        doReturn(Optional.of(member)).when(memberRepositoryMock).findOneByInvitedEmailEqualsAndProjectIdEquals(invitedEmail, projectId);
+
+        MemberDTO memberDTO = new MemberDTO();
+        doReturn(memberDTO).when(memberMapperMock).toDto(member);
+
+        Optional<MemberDTO> result = fixture.findOneInProjectByInvitationEmail(projectId, invitedEmail);
+
+        assertTrue(result.isPresent());
+        assertEquals(memberDTO, result.get());
     }
 
     @Test

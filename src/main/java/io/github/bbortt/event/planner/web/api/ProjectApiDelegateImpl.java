@@ -12,15 +12,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+import tech.jhipster.web.util.ResponseUtil;
 
 @RestController
 public class ProjectApiDelegateImpl implements ProjectApiDelegate {
 
-    private final Logger logger = LoggerFactory.getLogger(ProjectApiDelegateImpl.class);
+    private final Logger log = LoggerFactory.getLogger(ProjectApiDelegateImpl.class);
 
+    public static final String ENTITY_NAME = "project";
     private static final String PROJECT_ID_ATTRIBUTE_NAME = "id";
 
     private final ProjectService projectService;
@@ -35,7 +36,9 @@ public class ProjectApiDelegateImpl implements ProjectApiDelegate {
 
     @Override
     public ResponseEntity<Project> findProjectByToken(String projectToken) {
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        log.debug("REST request to get Project by token '{}'", projectToken);
+
+        return ResponseUtil.wrapOrNotFound(projectService.findOneByToken(projectToken).map(apiProjectMapper::toApiDTO));
     }
 
     @Override
@@ -44,11 +47,14 @@ public class ProjectApiDelegateImpl implements ProjectApiDelegate {
         Optional<Integer> pageNumber,
         Optional<List<String>> sort
     ) {
-        logger.debug("REST request to get a page of Projects");
+        log.debug("REST request to get a page of Projects");
+
         Slice<ProjectDTO> slice = projectService.findAllNotArchivedForCurrentUser(
             paginationUtil.createPagingInformation(pageSize, pageNumber, sort, PROJECT_ID_ATTRIBUTE_NAME)
         );
+
         HttpHeaders headers = paginationUtil.generateSliceHttpHeaders(slice);
+
         return ResponseEntity
             .ok()
             .headers(headers)

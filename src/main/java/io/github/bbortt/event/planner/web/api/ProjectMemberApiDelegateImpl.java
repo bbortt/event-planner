@@ -8,6 +8,7 @@ import io.github.bbortt.event.planner.service.api.dto.Member;
 import io.github.bbortt.event.planner.service.dto.MemberDTO;
 import io.github.bbortt.event.planner.service.dto.ProjectDTO;
 import io.github.bbortt.event.planner.web.api.mapper.ApiProjectMemberMapper;
+import io.github.bbortt.event.planner.web.rest.errors.BadRequestAlertException;
 import io.github.bbortt.event.planner.web.rest.util.PaginationUtil;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -23,15 +24,16 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
+import tech.jhipster.web.util.ResponseUtil;
 
 @RestController
 public class ProjectMemberApiDelegateImpl implements ProjectMemberApiDelegate {
 
-    private final Logger logger = LoggerFactory.getLogger(ProjectMemberApiDelegateImpl.class);
+    private final Logger log = LoggerFactory.getLogger(ProjectMemberApiDelegateImpl.class);
 
+    public static final String ENTITY_NAME = "member";
     private static final String MEMBER_ID_ATTRIBUTE_NAME = "id";
 
     private final MemberService memberService;
@@ -56,7 +58,13 @@ public class ProjectMemberApiDelegateImpl implements ProjectMemberApiDelegate {
 
     @Override
     public ResponseEntity<Member> findProjectMemberByTokenAndEmail(Long projectId, String invitationEmail) {
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        log.debug("REST request to get Member with email '{}' in Project '{}'", invitationEmail, projectId);
+
+        getProjectByIdOrThrowBadRequestAlertException(projectId);
+
+        return ResponseUtil.wrapOrNotFound(
+            memberService.findOneInProjectByInvitationEmail(projectId, invitationEmail).map(apiProjectMemberMapper::toApiDTO)
+        );
     }
 
     @Override
@@ -66,14 +74,11 @@ public class ProjectMemberApiDelegateImpl implements ProjectMemberApiDelegate {
         Optional<Integer> pageNumber,
         Optional<List<String>> sort
     ) {
-        if (!projectService.exists(projectId)) {
-            logger.warn("REST request to get a page of Members in non-existent Project '{}'!", projectId);
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
+        log.debug("REST request to get a page of Members in Project '{}'", projectId);
 
-        logger.debug("REST request to get a page of Members in Project '{}'", projectId);
+        getProjectByIdOrThrowBadRequestAlertException(projectId);
 
-        Page<MemberDTO> page = memberService.findInProject(
+        Page<MemberDTO> page = memberService.findAllInProject(
             projectId,
             paginationUtil.createPagingInformation(pageSize, pageNumber, sort, MEMBER_ID_ATTRIBUTE_NAME)
         );
@@ -90,13 +95,9 @@ public class ProjectMemberApiDelegateImpl implements ProjectMemberApiDelegate {
         Long projectId,
         List<InviteMemberToProjectRequestInner> inviteMemberToProjectRequestInner
     ) {
-        Optional<ProjectDTO> project = projectService.findOne(projectId);
-        if (project.isEmpty()) {
-            logger.warn("REST request to get a page of Members in non-existent Project '{}'!", projectId);
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
+        log.debug("REST request to invite new Members '{}' to Project '{}'", inviteMemberToProjectRequestInner, projectId);
 
-        logger.debug("REST request to invite new Members '{}' to Project '{}'", inviteMemberToProjectRequestInner, projectId);
+        ProjectDTO project = getProjectByIdOrThrowBadRequestAlertException(projectId);
 
         return ResponseEntity
             .created(createProjectMembersUri(projectId))
@@ -107,20 +108,33 @@ public class ProjectMemberApiDelegateImpl implements ProjectMemberApiDelegate {
                         inviteMemberToProjectRequestInner
                             .stream()
                             .map(InviteMemberToProjectRequestInner::getEmail)
-                            .map(email -> memberService.inviteToProject(email, project.get()))
+                            .map(email -> memberService.inviteToProject(email, project))
                             .map(apiProjectMemberMapper::toApiDTO)
                             .toList()
                     )
             );
     }
 
+    private ProjectDTO getProjectByIdOrThrowBadRequestAlertException(Long projectId) {
+        Optional<ProjectDTO> project = projectService.findOne(projectId);
+
+        if (project.isEmpty()) {
+            log.warn("REST request for Members in non-existent Project '{}'!", projectId);
+            throw new BadRequestAlertException("Entity not found", ProjectApiDelegateImpl.ENTITY_NAME, "idnotfound");
+        }
+
+        return project.get();
+    }
+
     private static URI createProjectMembersUri(Long projectId) {
         URI entitiesUri;
+
         try {
             entitiesUri = new URI(String.format("home/projects/%s/admin/members", projectId));
         } catch (URISyntaxException e) {
             throw new IllegalArgumentException(e);
         }
+
         return entitiesUri;
     }
 

@@ -2,7 +2,9 @@ package io.github.bbortt.event.planner.web.api;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.verifyNoInteractions;
 
 import io.github.bbortt.event.planner.service.ProjectService;
 import io.github.bbortt.event.planner.service.api.dto.GetUserProjects200Response;
@@ -24,6 +26,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.server.ResponseStatusException;
 
 @ExtendWith(MockitoExtension.class)
 class ProjectApiTest {
@@ -42,6 +45,35 @@ class ProjectApiTest {
     @BeforeEach
     void beforeEachSetup() {
         fixture = new ProjectApiDelegateImpl(projectServiceMock, apiProjectMapperMock, paginationUtilMock);
+    }
+
+    @Test
+    void findProjectByToken() {
+        String projectToken = "2fdbfe19-b872-4fde-b8bd-f49a4ac3149b";
+
+        ProjectDTO projectDTO = new ProjectDTO();
+        doReturn(Optional.of(projectDTO)).when(projectServiceMock).findOneByToken(projectToken);
+
+        Project project = new Project();
+        doReturn(project).when(apiProjectMapperMock).toApiDTO(projectDTO);
+
+        ResponseEntity<Project> result = fixture.findProjectByToken(projectToken);
+
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+
+        Project response = result.getBody();
+        assertNotNull(response);
+        assertEquals(project, response);
+    }
+
+    @Test
+    void findProjectByTokenNotFound() {
+        String projectToken = "cc48d8a7-c01a-47d5-af2b-d13e01bb4c23";
+        doReturn(Optional.empty()).when(projectServiceMock).findOneByToken(projectToken);
+
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> fixture.findProjectByToken(projectToken));
+
+        assertEquals(HttpStatus.NOT_FOUND, exception.getStatus());
     }
 
     @Test

@@ -64,7 +64,7 @@ class MemberServiceIT {
             MemberResourceIT.createEntity(entityManager).invitedEmail("john-walker@localhost").accepted(Boolean.TRUE).project(project2)
         );
 
-        Page<MemberDTO> members = memberService.findInProject(project1.getId(), Pageable.ofSize(3));
+        Page<MemberDTO> members = memberService.findAllInProject(project1.getId(), Pageable.ofSize(3));
 
         assertEquals(1, members.getTotalPages());
         assertEquals(2, members.getTotalElements());

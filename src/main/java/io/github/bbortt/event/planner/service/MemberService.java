@@ -7,6 +7,7 @@ import io.github.bbortt.event.planner.service.dto.MemberDTO;
 import io.github.bbortt.event.planner.service.dto.ProjectDTO;
 import io.github.bbortt.event.planner.service.mapper.MemberMapper;
 import io.github.bbortt.event.planner.service.mapper.ProjectMapper;
+import io.github.bbortt.event.planner.web.api.mapper.ApiProjectMemberMapper;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import org.slf4j.Logger;
@@ -145,13 +146,42 @@ public class MemberService {
         memberRepository.deleteById(id);
     }
 
+    /**
+     * Get all the members of a {@link io.github.bbortt.event.planner.domain.Project}
+     *
+     * @param projectId the id of the {@link io.github.bbortt.event.planner.domain.Project}.
+     * @param pageable the pagination information.
+     *
+     * @return the list of entities.
+     */
     @Transactional(readOnly = true)
     @PreAuthorize("T(io.github.bbortt.event.planner.security.SecurityUtils).isAuthenticated()")
-    public Page<MemberDTO> findInProject(Long projectId, Pageable pageable) {
+    public Page<MemberDTO> findAllInProject(Long projectId, Pageable pageable) {
         log.debug("Request to get a page of Members in Project '{}'", projectId);
         return memberRepository.findAllByProjectIdEquals(projectId, pageable).map(memberMapper::toDto);
     }
 
+    /**
+     * Get one member in a {@link io.github.bbortt.event.planner.domain.Project} by invitation email
+     *
+     * @param projectId the id of the {@link io.github.bbortt.event.planner.domain.Project}.
+     * @param invitedEmail the invitation email of the entity.
+     *
+     * @return the entity.
+     */
+    public Optional<MemberDTO> findOneInProjectByInvitationEmail(Long projectId, String invitedEmail) {
+        log.debug("Request to get Member with email '{}' in Project '{}'", invitedEmail, projectId);
+        return memberRepository.findOneByInvitedEmailEqualsAndProjectIdEquals(invitedEmail, projectId).map(memberMapper::toDto);
+    }
+
+    /**
+     * Invite a member to collaborate on a {@link io.github.bbortt.event.planner.domain.Project}
+     *
+     * @param email the invitation email of the entity.
+     * @param project the {@link io.github.bbortt.event.planner.domain.Project} to collaborate on.
+     *
+     * @return the persisted entity.
+     */
     @Modifying
     @Transactional
     @PreAuthorize("T(io.github.bbortt.event.planner.security.SecurityUtils).isAuthenticated()")

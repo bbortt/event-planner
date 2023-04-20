@@ -1,6 +1,7 @@
 package io.github.bbortt.event.planner.repository;
 
 import io.github.bbortt.event.planner.domain.Member;
+import io.github.bbortt.event.planner.web.api.mapper.ApiProjectMemberMapper;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,4 +31,9 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findById(@Param("id") Long id);
 
     Page<Member> findAllByProjectIdEquals(@Param("projectId") Long projectId, Pageable pageable);
+
+    Optional<Member> findOneByInvitedEmailEqualsAndProjectIdEquals(
+        @Param("invitedEmail") String invitedEmail,
+        @Param("projectId") Long projectId
+    );
 }
