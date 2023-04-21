@@ -1,7 +1,6 @@
 package io.github.bbortt.event.planner.repository;
 
 import io.github.bbortt.event.planner.domain.Member;
-import io.github.bbortt.event.planner.web.api.mapper.ApiProjectMemberMapper;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
