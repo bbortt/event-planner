@@ -7,7 +7,6 @@ import io.github.bbortt.event.planner.service.dto.MemberDTO;
 import io.github.bbortt.event.planner.service.dto.ProjectDTO;
 import io.github.bbortt.event.planner.service.mapper.MemberMapper;
 import io.github.bbortt.event.planner.service.mapper.ProjectMapper;
-import io.github.bbortt.event.planner.web.api.mapper.ApiProjectMemberMapper;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import org.slf4j.Logger;

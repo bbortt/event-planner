@@ -1,5 +1,5 @@
 <div>
-  <h2 jhiTranslate="entityAudit.home.title">Entity Audit</h2>
+  <h2 id="entity-audit-page-heading" jhiTranslate="entityAudit.home.title">Entity Audit</h2>
 
   <jhi-alert></jhi-alert>
 
@@ -64,7 +64,7 @@
         </div>
       </form>
 
-      <table class="table table-condensed table-striped table-bordered">
+      <table class="table table-condensed table-striped table-bordered" aria-describedby="entity-audit-page-heading">
         <thead>
           <tr>
             <th (click)="orderBy('entityId')" jhiTranslate="entityAudit.result.tableHeader.entityId">Entity Id</th>
