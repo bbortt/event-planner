@@ -33,8 +33,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.zalando.problem.Status;
+import org.zalando.problem.StatusType;
 
 @ExtendWith(MockitoExtension.class)
 class ProjectMemberApiTest {
@@ -97,6 +99,26 @@ class ProjectMemberApiTest {
         );
 
         assertEquals(Status.BAD_REQUEST, exception.getStatus());
+        assertEquals("idnotfound", exception.getErrorKey());
+        assertEquals("project", exception.getEntityName());
+    }
+
+    @Test
+    void findNonExistentProjectMemberByTokenAndEmailForExistingProject() {
+        Long projectId = 1L;
+        String invitedEmail = "ryoko-saguri@localhost";
+
+        // Project by ID exists
+        doReturn(Optional.of(new ProjectDTO())).when(projectServiceMock).findOne(projectId);
+
+        doReturn(Optional.empty()).when(memberServiceMock).findOneInProjectByInvitationEmail(projectId, invitedEmail);
+
+        ResponseStatusException exception = assertThrows(
+            ResponseStatusException.class,
+            () -> fixture.findProjectMemberByTokenAndEmail(projectId, invitedEmail)
+        );
+
+        assertEquals(HttpStatus.NOT_FOUND, exception.getStatus());
     }
 
     @Test
@@ -159,5 +181,7 @@ class ProjectMemberApiTest {
         );
 
         assertEquals(Status.BAD_REQUEST, exception.getStatus());
+        assertEquals("idnotfound", exception.getErrorKey());
+        assertEquals("project", exception.getEntityName());
     }
 }

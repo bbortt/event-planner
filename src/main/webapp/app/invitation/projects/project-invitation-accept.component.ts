@@ -39,8 +39,11 @@ export class ProjectInvitationAcceptComponent implements OnInit {
       this.projectMemberService
         .findProjectMemberByTokenAndEmail(this.project.id!, this.email, 'response')
         .pipe(finalize(() => (this.isLoading = false)))
-        .subscribe((response: HttpResponse<Member>) => {
-          this.member = response.body;
+        .subscribe({
+          next: (response: HttpResponse<Member>) => {
+            this.member = response.body;
+          },
+          error: (response: HttpErrorResponse) => this.onAcceptFailed(response),
         });
     }
   }

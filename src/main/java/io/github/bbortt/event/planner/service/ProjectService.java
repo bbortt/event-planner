@@ -134,7 +134,7 @@ public class ProjectService {
     @Transactional(readOnly = true)
     public Optional<ProjectDTO> findOneByToken(String token) {
         log.debug("Request to get Project by token: {}", token);
-        return projectRepository.findByToken(token).map(projectMapper::toDto);
+        return projectRepository.findByToken(UUID.fromString(token)).map(projectMapper::toDto);
     }
 
     /**

@@ -1,4 +1,7 @@
 <div [ngSwitch]="!!account">
+  <jhi-alert></jhi-alert>
+  <jhi-alert-error></jhi-alert-error>
+
   <app-project-invitation-login [invitationEmail]="invitationEmail" *ngSwitchDefault></app-project-invitation-login>
 
   <app-project-invitation-accept *ngSwitchCase="true" [email]="account?.email ?? invitationEmail" [project]="project">
