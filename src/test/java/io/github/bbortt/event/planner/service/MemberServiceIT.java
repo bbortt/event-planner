@@ -41,10 +41,10 @@ class MemberServiceIT {
 
     @BeforeEach
     void beforeEachSetup() {
-        project1 = ProjectResourceIT.createEntity(entityManager).token(UUID.randomUUID());
+        project1 = ProjectResourceIT.createEntity(entityManager).token(UUID.fromString("8f60d6c3-89cb-49da-9604-1d5acd5fdd76"));
         entityManager.persist(project1);
 
-        project2 = ProjectResourceIT.createEntity(entityManager).token(UUID.randomUUID());
+        project2 = ProjectResourceIT.createEntity(entityManager).token(UUID.fromString("93bbcb2c-50a5-496b-b524-62f9f32eb300"));
         entityManager.persist(project2);
     }
 

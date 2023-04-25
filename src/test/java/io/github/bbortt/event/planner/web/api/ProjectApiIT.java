@@ -53,9 +53,7 @@ class ProjectApiIT {
     @Test
     @Transactional
     void getMyProjectsWithoutNextPage() throws Exception {
-        int projectCount = PAGE_SIZE;
-
-        createAndPersistProjects(projectCount);
+        createAndPersistProjects(PAGE_SIZE);
 
         restProjectMockMvc
             .perform(get(ENTITY_API_URL + "?pageSize=" + PAGE_SIZE))

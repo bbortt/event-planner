@@ -194,7 +194,7 @@ paths:
           schema:
             type: string
             maxLength: 191
-            minLength: 191
+            minLength: 1
           required: true
       responses:
         200:

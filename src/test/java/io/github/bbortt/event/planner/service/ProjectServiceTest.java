@@ -83,7 +83,7 @@ class ProjectServiceTest {
 
     @Test
     void findOneByTokenCallsRepository() {
-        String token = "e10563fd-26f4-4cd6-98de-f9d92e8f9e73";
+        UUID token = UUID.fromString("e10563fd-26f4-4cd6-98de-f9d92e8f9e73");
 
         Project project = new Project().id(1234L);
         doReturn(Optional.of(project)).when(projectRepositoryMock).findByToken(token);
@@ -91,7 +91,7 @@ class ProjectServiceTest {
         ProjectDTO projectDTO = new ProjectDTO();
         doReturn(projectDTO).when(projectMapperMock).toDto(project);
 
-        Optional<ProjectDTO> result = fixture.findOneByToken(token);
+        Optional<ProjectDTO> result = fixture.findOneByToken(token.toString());
 
         assertTrue(result.isPresent());
         assertEquals(projectDTO, result.get());

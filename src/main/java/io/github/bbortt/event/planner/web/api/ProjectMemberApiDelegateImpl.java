@@ -33,7 +33,6 @@ public class ProjectMemberApiDelegateImpl implements ProjectMemberApiDelegate {
 
     private final Logger log = LoggerFactory.getLogger(ProjectMemberApiDelegateImpl.class);
 
-    public static final String ENTITY_NAME = "member";
     private static final String MEMBER_ID_ATTRIBUTE_NAME = "id";
 
     private final MemberService memberService;
