@@ -51,6 +51,14 @@ describe('ProjectInvitationAcceptComponent', () => {
     component = fixture.componentInstance;
   });
 
+  const verifySuccessResponse = (): void => {
+    expect(mockRouter.navigate).toHaveBeenCalledWith(['/']);
+    expect(alertService.addAlert).toHaveBeenCalledWith({
+      type: 'success',
+      translationKey: 'app.project.invitation.accepting.success',
+    });
+  };
+
   it('should create', () => {
     expect(component).toBeTruthy();
   });
@@ -72,17 +80,24 @@ describe('ProjectInvitationAcceptComponent', () => {
       expect(component.member).toEqual(member);
       expect(projectMemberService.findProjectMemberByTokenAndEmail).toHaveBeenCalledWith(project.id, email, 'response');
     });
+
+    it('should redirect to home page if membership was already accepted', () => {
+      const project: Project = { id: 1234 } as Project;
+      component.project = project;
+
+      const email = 'jackson-day@localhost';
+      component.email = email;
+
+      const member: Member = { accepted: true } as Member;
+      jest.spyOn(projectMemberService, 'findProjectMemberByTokenAndEmail').mockReturnValueOnce(of(new HttpResponse({ body: member })));
+
+      component.ngOnInit();
+
+      verifySuccessResponse();
+    });
   });
 
   describe('acceptInvitation', () => {
-    const verifySuccessResponse = (): void => {
-      expect(mockRouter.navigate).toHaveBeenCalledWith(['/']);
-      expect(alertService.addAlert).toHaveBeenCalledWith({
-        type: 'success',
-        translationKey: 'app.project.invitation.accepting.success',
-      });
-    };
-
     it('should call memberService.partialUpdate when called with a valid member', () => {
       const member: Member = { id: 1234 } as Member;
       component.member = member;
