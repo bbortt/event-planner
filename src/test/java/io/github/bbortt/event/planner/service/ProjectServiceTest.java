@@ -138,16 +138,14 @@ class ProjectServiceTest {
         doReturn(projectDTO).when(projectMapperMock).toDto(projectMock);
 
         Pageable pageable = Pageable.unpaged();
-        doReturn(new SliceImpl<>(List.of(projectMock)))
-            .when(projectRepositoryMock)
-            .findAllByCreatedByEqualsAndArchivedIsFalse(login, pageable);
+        doReturn(new SliceImpl<>(List.of(projectMock))).when(projectRepositoryMock).findByUsernameParticipatingIn(login, pageable);
 
         Slice<ProjectDTO> result = fixture.findAllNotArchivedForCurrentUser(pageable);
 
         assertEquals(1, result.getContent().size());
         assertEquals(projectDTO, result.getContent().get(0));
 
-        verify(projectRepositoryMock).findAllByCreatedByEqualsAndArchivedIsFalse(login, pageable);
+        verify(projectRepositoryMock).findByUsernameParticipatingIn(login, pageable);
     }
 
     @Test

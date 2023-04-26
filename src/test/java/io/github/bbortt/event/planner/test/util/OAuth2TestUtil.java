@@ -30,6 +30,10 @@ public class OAuth2TestUtil {
         "Tk3MTU4MywiZXhwIjoxNTQxOTc1MTgzfQ.QaQOarmV8xEUYV7yvWzX3cUE_4W1luMcWCwpr" +
         "oqqUrg";
 
+    private OAuth2TestUtil() {
+        // Static utility class
+    }
+
     public static OAuth2AuthenticationToken testAuthenticationToken() {
         Map<String, Object> claims = new HashMap<>();
         claims.put("sub", TEST_USER_LOGIN);

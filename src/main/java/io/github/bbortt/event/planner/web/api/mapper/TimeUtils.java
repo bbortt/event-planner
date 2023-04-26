@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
+import javax.annotation.Nullable;
 
 class TimeUtils {
 
@@ -18,11 +19,21 @@ class TimeUtils {
         return this;
     }
 
-    OffsetDateTime toOffsetDateTime(Instant instant) {
+    @Nullable
+    OffsetDateTime toOffsetDateTime(@Nullable Instant instant) {
+        if (instant == null) {
+            return null;
+        }
+
         return OffsetDateTime.ofInstant(instant, zoneIdProvider.getZoneId());
     }
 
-    LocalDate toLocalDate(Instant instant) {
+    @Nullable
+    LocalDate toLocalDate(@Nullable Instant instant) {
+        if (instant == null) {
+            return null;
+        }
+
         return LocalDate.ofInstant(instant, zoneIdProvider.getZoneId());
     }
 

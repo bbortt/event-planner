@@ -10,6 +10,7 @@ import io.github.bbortt.event.planner.web.rest.MemberResourceIT;
 import io.github.bbortt.event.planner.web.rest.ProjectResourceIT;
 import java.util.Objects;
 import javax.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -24,15 +25,20 @@ class MemberRepositoryIT {
     @Autowired
     private MemberRepository memberRepository;
 
+    private Project project;
+
+    @BeforeEach
+    void beforeEachSetup() {
+        project = ProjectResourceIT.createEntity(entityManager);
+        entityManager.persist(project);
+    }
+
     @Test
     @Transactional
     void uniqueInvitationPerProject() {
-        Project project = ProjectResourceIT.createEntity(entityManager);
-        entityManager.persist(project);
+        memberRepository.saveAndFlush(createNewMember());
 
-        memberRepository.saveAndFlush(createNewMember(project));
-
-        Member constraintViolatingMember = createNewMember(project);
+        Member constraintViolatingMember = createNewMember();
         DataIntegrityViolationException exception = assertThrows(
             DataIntegrityViolationException.class,
             () -> memberRepository.saveAndFlush(constraintViolatingMember)
@@ -40,7 +46,26 @@ class MemberRepositoryIT {
         assertTrue(Objects.requireNonNull(exception.getMessage()).contains("ux_invitation_per_project"));
     }
 
-    private Member createNewMember(Project project) {
+    @Test
+    @Transactional
+    void uniqueAcceptedPerProject() {
+        String acceptedBy = "matthew-murdoch@localhost";
+
+        memberRepository.saveAndFlush(createAcceptedMember(acceptedBy).invitedEmail("maya-lopez@localhost"));
+
+        Member constraintViolatingMember = createAcceptedMember(acceptedBy);
+        DataIntegrityViolationException exception = assertThrows(
+            DataIntegrityViolationException.class,
+            () -> memberRepository.saveAndFlush(constraintViolatingMember)
+        );
+        assertTrue(Objects.requireNonNull(exception.getMessage()).contains("ux_accepted_per_project"));
+    }
+
+    private Member createAcceptedMember(String acceptedBy) {
+        return createNewMember().accepted(Boolean.TRUE).acceptedBy(acceptedBy);
+    }
+
+    private Member createNewMember() {
         return MemberResourceIT
             .createEntity(entityManager)
             .invitedEmail("victor-von-doom@localhost")

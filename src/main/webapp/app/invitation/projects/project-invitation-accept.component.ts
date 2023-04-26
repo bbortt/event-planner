@@ -5,19 +5,23 @@ import { Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { finalize, tap } from 'rxjs/operators';
 
+import dayjs from 'dayjs/esm';
+
 import { Member, Project, ProjectMemberService } from 'app/api';
 
+import { Account } from 'app/core/auth/account.model';
 import { AlertService } from 'app/core/util/alert.service';
 import { EventManager, EventWithContent } from 'app/core/util/event-manager.service';
 
 import { EntityResponseType, MemberService } from 'app/entities/member/service/member.service';
-import { IProject } from '../../entities/project/project.model';
+import { IProject } from 'app/entities/project/project.model';
 
 @Component({
   selector: 'app-project-invitation-accept',
   templateUrl: './project-invitation-accept.component.html',
 })
 export class ProjectInvitationAcceptComponent implements OnInit {
+  @Input() account: Account | null = null;
   @Input() project: Project | null = null;
   @Input() email: string | null = null;
 
@@ -35,6 +39,10 @@ export class ProjectInvitationAcceptComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    if (!this.email) {
+      this.email = this.account?.email ?? null;
+    }
+
     if (this.project && this.email) {
       this.projectMemberService
         .findProjectMemberByTokenAndEmail(this.project.id!, this.email, 'response')
@@ -50,7 +58,11 @@ export class ProjectInvitationAcceptComponent implements OnInit {
           next: (response: HttpResponse<Member>) => {
             this.member = response.body;
           },
-          error: (response: HttpErrorResponse) => this.onAcceptFailed(response),
+          error: (response: HttpErrorResponse) => {
+            if (response.status !== 404) {
+              this.onAcceptFailed(response);
+            }
+          },
         });
     }
   }
@@ -61,7 +73,14 @@ export class ProjectInvitationAcceptComponent implements OnInit {
       this.subscribeToAcceptResponse(this.memberService.partialUpdate({ id: this.member.id, accepted: true }));
     } else {
       this.subscribeToAcceptResponse(
-        this.memberService.create({ id: null, accepted: true, invitedEmail: this.email, project: this.getProject() })
+        this.memberService.create({
+          id: null,
+          invitedEmail: this.email,
+          accepted: true,
+          acceptedBy: this.email,
+          acceptedDate: dayjs(),
+          project: this.getProject(),
+        })
       );
     }
   }
@@ -77,7 +96,7 @@ export class ProjectInvitationAcceptComponent implements OnInit {
   }
 
   private subscribeToAcceptResponse(result: Observable<EntityResponseType>): void {
-    result.subscribe({
+    result.pipe(finalize(() => (this.isSaving = false))).subscribe({
       next: () => this.onAccepted(),
       error: response => this.onAcceptFailed(response),
     });
@@ -85,7 +104,11 @@ export class ProjectInvitationAcceptComponent implements OnInit {
 
   private onAccepted(): void {
     of(this.router.navigate(['/'])).subscribe(() =>
-      this.alertService.addAlert({ type: 'success', translationKey: 'app.project.invitation.accepting.success' })
+      this.alertService.addAlert({
+        type: 'success',
+        translationKey: 'app.project.invitation.accepting.success',
+        translationParams: { projectName: this.project?.name },
+      })
     );
   }
 

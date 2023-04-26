@@ -3,6 +3,7 @@ package io.github.bbortt.event.planner.web.api.mapper;
 import static io.github.bbortt.event.planner.web.rest.TestUtil.sameInstant;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import io.github.bbortt.event.planner.web.rest.TestUtil;
 import java.sql.Time;
@@ -31,6 +32,12 @@ class TimeUtilsTest {
     }
 
     @Test
+    void toOffsetDateTimeReturnsNullOffsetDateTime() {
+        OffsetDateTime result = fixture.toOffsetDateTime(null);
+        assertNull(result, "OffsetDateTime should be null");
+    }
+
+    @Test
     void toOffsetDateTimeReturnsCorrectOffsetDateTime() {
         OffsetDateTime expected = OffsetDateTime.of(2021, 3, 29, 13, 22, 3, 0, ZoneOffset.UTC);
         Instant instant = expected.toInstant();
@@ -43,6 +50,12 @@ class TimeUtilsTest {
         Instant instant = Instant.now();
         LocalDate result = fixture.toLocalDate(instant);
         assertNotNull(result, "LocalDate should not be null");
+    }
+
+    @Test
+    void toLocalDateReturnsNullLocalDate() {
+        LocalDate result = fixture.toLocalDate(null);
+        assertNull(result, "LocalDate should be null");
     }
 
     @Test

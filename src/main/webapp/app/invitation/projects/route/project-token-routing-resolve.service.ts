@@ -41,12 +41,12 @@ export class ProjectTokenRoutingResolveService implements Resolve<Project | null
   }
 
   private redirectWithProjectDoesNotExistMessage(): Observable<null> {
-    of(this.router.navigate(['/'])).subscribe(() => {
+    of(this.router.navigate(['/'])).subscribe(() =>
       this.alertService.addAlert({
         type: 'danger',
         translationKey: 'app.project.invitation.error.invalidToken',
-      });
-    });
+      })
+    );
 
     return of(null);
   }

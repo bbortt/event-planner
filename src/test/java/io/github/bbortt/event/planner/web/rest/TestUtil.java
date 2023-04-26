@@ -65,6 +65,10 @@ public final class TestUtil {
         return byteArray;
     }
 
+    public static ObjectMapper getObjectMapper() {
+        return mapper;
+    }
+
     /**
      * A matcher that tests that the examined string represents the same instant as the reference datetime.
      */

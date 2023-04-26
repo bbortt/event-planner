@@ -9,6 +9,7 @@ import { of, throwError } from 'rxjs';
 
 import { Member, Project, ProjectMemberService } from 'app/api';
 
+import { Account } from 'app/core/auth/account.model';
 import { AlertService } from 'app/core/util/alert.service';
 import { EventManager } from 'app/core/util/event-manager.service';
 
@@ -27,6 +28,8 @@ describe('ProjectInvitationAcceptComponent', () => {
 
   let fixture: ComponentFixture<ProjectInvitationAcceptComponent>;
   let component: ProjectInvitationAcceptComponent;
+
+  let project: Project;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -49,6 +52,9 @@ describe('ProjectInvitationAcceptComponent', () => {
 
     fixture = TestBed.createComponent(ProjectInvitationAcceptComponent);
     component = fixture.componentInstance;
+
+    project = { id: 1234 } as Project;
+    component.project = project;
   });
 
   const verifySuccessResponse = (): void => {
@@ -56,6 +62,7 @@ describe('ProjectInvitationAcceptComponent', () => {
     expect(alertService.addAlert).toHaveBeenCalledWith({
       type: 'success',
       translationKey: 'app.project.invitation.accepting.success',
+      translationParams: { projectName: project.name },
     });
   };
 
@@ -64,13 +71,28 @@ describe('ProjectInvitationAcceptComponent', () => {
   });
 
   describe('ngOnInit', () => {
-    it('should load member data when project and email are provided', () => {
-      const project: Project = { id: 1234 } as Project;
-      component.project = project;
+    let email: string;
 
-      const email = 'maxwell-jordan@localhost';
+    beforeEach(() => {
+      email = 'maxwell-jordan@localhost';
       component.email = email;
 
+      jest.spyOn(projectMemberService, 'findProjectMemberByTokenAndEmail');
+    });
+
+    it('should autocomplete the email from account if non present', () => {
+      const account: Account = { email } as Account;
+      component.account = account;
+
+      component.email = null;
+
+      component.ngOnInit();
+
+      expect(component.email).toEqual(email);
+      expect(projectMemberService.findProjectMemberByTokenAndEmail).toHaveBeenCalledWith(project.id, email, 'response');
+    });
+
+    it('should load member data when project and email are provided', () => {
       const member: Member = {} as Member;
       jest.spyOn(projectMemberService, 'findProjectMemberByTokenAndEmail').mockReturnValueOnce(of(new HttpResponse({ body: member })));
 
@@ -81,19 +103,30 @@ describe('ProjectInvitationAcceptComponent', () => {
       expect(projectMemberService.findProjectMemberByTokenAndEmail).toHaveBeenCalledWith(project.id, email, 'response');
     });
 
+    it('should not load member data if no project present', () => {
+      component.project = null;
+
+      component.ngOnInit();
+
+      expect(projectMemberService.findProjectMemberByTokenAndEmail).not.toHaveBeenCalled();
+    });
+
+    it('should not load member data if no email present', () => {
+      component.email = null;
+
+      component.ngOnInit();
+
+      expect(projectMemberService.findProjectMemberByTokenAndEmail).not.toHaveBeenCalled();
+    });
+
     it('should redirect to home page if membership was already accepted', () => {
-      const project: Project = { id: 1234 } as Project;
-      component.project = project;
-
-      const email = 'jackson-day@localhost';
-      component.email = email;
-
       const member: Member = { accepted: true } as Member;
       jest.spyOn(projectMemberService, 'findProjectMemberByTokenAndEmail').mockReturnValueOnce(of(new HttpResponse({ body: member })));
 
       component.ngOnInit();
 
       verifySuccessResponse();
+      expect(component.isLoading).toBeFalsy();
     });
   });
 
@@ -109,12 +142,10 @@ describe('ProjectInvitationAcceptComponent', () => {
       expect(memberService.partialUpdate).toHaveBeenCalledWith({ id: member.id, accepted: true });
 
       verifySuccessResponse();
+      expect(component.isSaving).toBeFalsy();
     });
 
     it('should call memberService.create when called with null member', () => {
-      const project: Project = { id: 1234 } as Project;
-      component.project = project;
-
       const email = 'dal-damoc@localhost';
       component.email = email;
 
@@ -122,9 +153,17 @@ describe('ProjectInvitationAcceptComponent', () => {
 
       component.acceptInvitation();
 
-      expect(memberService.create).toHaveBeenCalledWith({ id: null, accepted: true, invitedEmail: email, project });
+      expect(memberService.create).toHaveBeenCalledWith({
+        id: null,
+        invitedEmail: email,
+        accepted: true,
+        acceptedBy: 'dal-damoc@localhost',
+        acceptedDate: expect.anything(),
+        project,
+      });
 
       verifySuccessResponse();
+      expect(component.isSaving).toBeFalsy();
     });
 
     describe('subscribes to error responses', () => {
@@ -148,14 +187,18 @@ describe('ProjectInvitationAcceptComponent', () => {
         component.acceptInvitation();
 
         expect(memberService.partialUpdate).toHaveBeenCalled();
+
         verifyFailedResponse();
+        expect(component.isSaving).toBeFalsy();
       });
 
       it('posts error message when memberService.create fails', () => {
         component.acceptInvitation();
 
         expect(memberService.create).toHaveBeenCalled();
+
         verifyFailedResponse();
+        expect(component.isSaving).toBeFalsy();
       });
     });
   });

@@ -12,6 +12,8 @@ import com.tngtech.archunit.junit.ArchTest;
 import com.tngtech.archunit.lang.ArchRule;
 import io.github.bbortt.event.planner.audit.EntityAuditEventListener;
 import io.github.bbortt.event.planner.domain.AbstractAuditingEntity;
+import io.github.bbortt.event.planner.domain.Member;
+import io.github.bbortt.event.planner.security.SecurityUtils;
 
 @AnalyzeClasses(packagesOf = EventPlannerApp.class, importOptions = DoNotIncludeTests.class)
 class TechnicalStructureTest {
@@ -36,6 +38,7 @@ class TechnicalStructureTest {
 
         .ignoreDependency(resideInAPackage("io.github.bbortt.event.planner.audit"), alwaysTrue())
         .ignoreDependency(type(AbstractAuditingEntity.class), type(EntityAuditEventListener.class))
+        .ignoreDependency(type(Member.class), type(SecurityUtils.class))
         .ignoreDependency(belongToAnyOf(EventPlannerApp.class), alwaysTrue())
         .ignoreDependency(alwaysTrue(), belongToAnyOf(
             io.github.bbortt.event.planner.config.Constants.class,

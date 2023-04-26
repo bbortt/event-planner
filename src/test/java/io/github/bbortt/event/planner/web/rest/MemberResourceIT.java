@@ -258,6 +258,8 @@ public class MemberResourceIT {
     private void validateNewMember(Member member) {
         assertThat(member.getInvitedEmail()).isEqualTo(DEFAULT_INVITED_EMAIL);
         assertThat(member.getAccepted()).isEqualTo(DEFAULT_ACCEPTED);
+        assertThat(member.getAcceptedBy()).isNull();
+        assertThat(member.getAcceptedDate()).isNull();
         assertThat(member.getCreatedBy()).isNotEmpty();
         assertThat(member.getCreatedDate()).isNotNull();
     }
