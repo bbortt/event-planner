@@ -17,5 +17,9 @@
         <addUniqueConstraint constraintName="ux_invitation_per_project"
                              tableName="member"
                              columnNames="invited_email, project_id"/>
+
+        <addUniqueConstraint constraintName="ux_accepted_per_project"
+                             tableName="member"
+                             columnNames="accepted_by, project_id"/>
     </changeSet>
 </databaseChangeLog>

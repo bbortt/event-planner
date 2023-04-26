@@ -1,8 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { LoginService } from '../../login/login.service';
-import { StateStorageService } from '../../core/auth/state-storage.service';
+import { StateStorageService } from 'app/core/auth/state-storage.service';
+import { LoginService } from 'app/login/login.service';
 
 @Component({
   selector: 'app-project-invitation-login',

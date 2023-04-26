@@ -1,7 +1,9 @@
 <div class="row">
   <div class="col-md-12">
     <h2 id="page-heading" data-cy="projectInvitationLoginHeading">
-      <span jhiTranslate="app.project.invitation.title" [translateValues]="{ email }">Willkommen, Event Planner</span>
+      <span jhiTranslate="app.project.invitation.title" [translateValues]="{ email: account?.email || email }"
+        >Willkommen, Event Planner</span
+      >
     </h2>
 
     <ngb-alert *ngIf="isLoading; else acceptInvitationContent" [dismissible]="false" type="info">

@@ -27,10 +27,8 @@
                 <constraints nullable="false" />
             </column>
             <column name="accepted_by" type="varchar(50)">
-                <constraints nullable="false" />
             </column>
             <column name="accepted_date" type="${datetimeType}">
-                <constraints nullable="false" />
             </column>
             <column name="project_id" type="bigint">
                 <constraints nullable="false" />

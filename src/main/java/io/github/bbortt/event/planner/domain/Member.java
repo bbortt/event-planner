@@ -1,9 +1,22 @@
 package io.github.bbortt.event.planner.domain;
 
 import io.github.bbortt.event.planner.audit.EntityAuditEventListener;
+import io.github.bbortt.event.planner.security.SecurityUtils;
 import java.io.Serializable;
 import java.time.Instant;
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.PreUpdate;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import org.springframework.data.annotation.CreatedBy;
@@ -16,7 +29,10 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Entity
 @Table(
     name = "member",
-    uniqueConstraints = { @UniqueConstraint(name = "ux_invitation_per_project", columnNames = { "invited_email", "project_id" }) }
+    uniqueConstraints = {
+        @UniqueConstraint(name = "ux_invitation_per_project", columnNames = { "invited_email", "project_id" }),
+        @UniqueConstraint(name = "ux_accepted_per_project", columnNames = { "accepted_by", "project_id" }),
+    }
 )
 @EntityListeners({ AuditingEntityListener.class, EntityAuditEventListener.class })
 @SuppressWarnings("common-java:DuplicatedBlocks")
@@ -47,12 +63,10 @@ public class Member implements Serializable {
     @Column(name = "accepted", nullable = false)
     private Boolean accepted;
 
-    @CreatedBy
-    @Column(name = "accepted_by", nullable = false, updatable = false)
+    @Column(name = "accepted_by")
     private String acceptedBy;
 
-    @CreatedDate
-    @Column(name = "accepted_date", nullable = false, updatable = false)
+    @Column(name = "accepted_date")
     private Instant acceptedDate;
 
     @Transient
@@ -186,6 +200,14 @@ public class Member implements Serializable {
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
+    @PreUpdate
+    public void preUpdate() {
+        if (acceptedBy == null) {
+            SecurityUtils.getCurrentUserLogin().ifPresent(currentUserLogin -> this.acceptedBy = currentUserLogin);
+        }
+        acceptedDate = Instant.now();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -214,8 +236,8 @@ public class Member implements Serializable {
             ", accepted='" + getAccepted() + "'" +
             ", acceptedBy='" + getAcceptedBy() + "'" +
             ", acceptedDate='" + getAcceptedDate() + "'" +
-            ", user='" +getUser() + "'" +
-            ", project='" +getProject() + "'" +
+            ", user='" + getUser() + "'" +
+            ", project='" + getProject() + "'" +
             "}";
     }
 }

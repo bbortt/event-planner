@@ -1,7 +1,9 @@
 package io.github.bbortt.event.planner.service;
 
+import static io.github.bbortt.event.planner.test.util.SecurityContextUtil.setCurrentUsernameInAuthenticationContext;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import io.github.bbortt.event.planner.IntegrationTest;
@@ -51,16 +53,16 @@ class MemberServiceIT {
     @Test
     @Transactional
     void findInProjectReturnsMembersInProject() {
-        memberRepository.save(
+        entityManager.persist(
             MemberResourceIT.createEntity(entityManager).invitedEmail("victor-von-doom@localhost").accepted(Boolean.FALSE).project(project1)
         );
-        memberRepository.save(
+        entityManager.persist(
             MemberResourceIT.createEntity(entityManager).invitedEmail("john-walker@localhost").accepted(Boolean.TRUE).project(project1)
         );
-        memberRepository.save(
+        entityManager.persist(
             MemberResourceIT.createEntity(entityManager).invitedEmail("victor-von-doom@localhost").accepted(Boolean.FALSE).project(project2)
         );
-        memberRepository.save(
+        entityManager.persist(
             MemberResourceIT.createEntity(entityManager).invitedEmail("john-walker@localhost").accepted(Boolean.TRUE).project(project2)
         );
 
@@ -74,6 +76,9 @@ class MemberServiceIT {
     @Transactional
     void inviteToProjectPersistsNewEntity() {
         String email = "kyle-brock@localhost";
+        String createdBy = "Kyle Brock";
+
+        setCurrentUsernameInAuthenticationContext(createdBy); // sets the Member#createdBy field
 
         assertFalse(findByEmail(email));
 
@@ -86,6 +91,8 @@ class MemberServiceIT {
         assertEquals(email, memberDTO.getInvitedEmail());
         assertEquals(Boolean.FALSE, memberDTO.getAccepted());
         assertEquals(projectDTO, memberDTO.getProject());
+        assertEquals(createdBy, memberDTO.getCreatedBy());
+        assertNull(memberDTO.getAcceptedBy());
 
         assertTrue(memberRepository.findById(memberDTO.getId()).isPresent());
         assertTrue(findByEmail(email));

@@ -153,7 +153,7 @@ public class ProjectService {
             log.trace("Current login is '{}'", login);
         }
 
-        return projectRepository.findAllByCreatedByEqualsAndArchivedIsFalse(login, pageable).map(projectMapper::toDto);
+        return projectRepository.findByUsernameParticipatingIn(login, pageable).map(projectMapper::toDto);
     }
 
     /**
