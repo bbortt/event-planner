@@ -3,7 +3,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { Observable, of } from 'rxjs';
-import { finalize } from 'rxjs/operators';
+import { finalize, tap } from 'rxjs/operators';
 
 import { Member, Project, ProjectMemberService } from 'app/api';
 
@@ -38,7 +38,14 @@ export class ProjectInvitationAcceptComponent implements OnInit {
     if (this.project && this.email) {
       this.projectMemberService
         .findProjectMemberByTokenAndEmail(this.project.id!, this.email, 'response')
-        .pipe(finalize(() => (this.isLoading = false)))
+        .pipe(
+          finalize(() => (this.isLoading = false)),
+          tap(member => {
+            if (member.body?.accepted) {
+              this.onAccepted();
+            }
+          })
+        )
         .subscribe({
           next: (response: HttpResponse<Member>) => {
             this.member = response.body;

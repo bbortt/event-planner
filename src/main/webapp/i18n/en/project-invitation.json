@@ -6,6 +6,8 @@
         "subtitle": "To accept the invitation, please log in",
         "loading": "Data being loaded",
         "accepting": {
+          "action": "Accept invitation",
+          "subtitle": "You may now accept the invitation",
           "success": "Invitation successfully accepted. You've joined Project '{{ projectName }}'!"
         },
         "error": {

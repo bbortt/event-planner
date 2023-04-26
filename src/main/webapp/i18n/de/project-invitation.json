@@ -6,6 +6,8 @@
         "subtitle": "Um die Einladung anzunehmen, logge dich bitte ein",
         "loading": "Daten werden geladen",
         "accepting": {
+          "action": "Einladung annehmen",
+          "subtitle": "Du kannst nun die Einladung annehmen",
           "success": "Die Einladung wurde erfolgreich angenommen. Du bist Projekt '{{ projectName }}' beigetreten!"
         },
         "error": {
