@@ -27,12 +27,13 @@ class ApiProjectMapperTest {
                 .id(1234L)
                 .name("project name")
                 .description("a test description")
+                .token("a47ef93f-b628-4505-9dde-13cdfccc0c64")
                 .startDate(LocalDate.parse("2023-03-29"))
                 .endDate(LocalDate.parse("2023-03-30"));
 
         projectDTO = new ProjectDTO();
         projectDTO.setId(project.getId());
-        projectDTO.setToken(UUID.fromString("a47ef93f-b628-4505-9dde-13cdfccc0c64"));
+        projectDTO.setToken(UUID.fromString(project.getToken()));
         projectDTO.setName(project.getName());
         projectDTO.setDescription(project.getDescription());
         projectDTO.setStartDate(Instant.parse("2023-03-29T00:00:00.00Z"));

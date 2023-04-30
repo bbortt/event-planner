@@ -77,7 +77,7 @@ class MemberServiceTest {
         String invitedEmail = "alice@localhost";
 
         Member member = new Member();
-        doReturn(Optional.of(member)).when(memberRepositoryMock).findOneByInvitedEmailEqualsAndProjectIdEquals(invitedEmail, projectId);
+        doReturn(Optional.of(member)).when(memberRepositoryMock).findMemberInProject(invitedEmail, projectId);
 
         MemberDTO memberDTO = new MemberDTO();
         doReturn(memberDTO).when(memberMapperMock).toDto(member);
