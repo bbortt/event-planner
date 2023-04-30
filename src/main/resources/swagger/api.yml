@@ -302,6 +302,7 @@ components:
       type: object
       required:
         - name
+        - token
         - startDate
         - endDate
       properties:
@@ -315,6 +316,10 @@ components:
         description:
           type: string
           maxLength: 300
+        token:
+          type: string
+          maxLength: 36
+          minLength: 36
         startDate:
           type: string
           format: date

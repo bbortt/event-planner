@@ -2,7 +2,9 @@
   "app": {
     "project": {
       "admin": {
-        "title": "Projekt"
+        "title": "Projekt",
+        "copyInvitationLink": "Link kopieren",
+        "invitationLinkCopied": "Link kopiert"
       }
     }
   }

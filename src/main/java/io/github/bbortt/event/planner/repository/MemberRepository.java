@@ -31,8 +31,11 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Page<Member> findAllByProjectIdEquals(@Param("projectId") Long projectId, Pageable pageable);
 
-    Optional<Member> findOneByInvitedEmailEqualsAndProjectIdEquals(
-        @Param("invitedEmail") String invitedEmail,
-        @Param("projectId") Long projectId
-    );
+    @Query(
+        "SELECT DISTINCT m FROM Member m" +
+        "  WHERE m.invitedEmail = :email" +
+        "  OR m.acceptedBy = :email" +
+        "  AND m.project.id = :projectId"
+    )
+    Optional<Member> findMemberInProject(@Param("email") String email, @Param("projectId") Long projectId);
 }

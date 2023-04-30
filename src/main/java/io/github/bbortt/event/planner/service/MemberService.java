@@ -170,7 +170,7 @@ public class MemberService {
      */
     public Optional<MemberDTO> findOneInProjectByInvitationEmail(Long projectId, String invitedEmail) {
         log.debug("Request to get Member with email '{}' in Project '{}'", invitedEmail, projectId);
-        return memberRepository.findOneByInvitedEmailEqualsAndProjectIdEquals(invitedEmail, projectId).map(memberMapper::toDto);
+        return memberRepository.findMemberInProject(invitedEmail, projectId).map(memberMapper::toDto);
     }
 
     /**
