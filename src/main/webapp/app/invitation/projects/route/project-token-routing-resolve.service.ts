@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, Router } from '@angular/router';
 
 import { iif, Observable, of } from 'rxjs';
-import { catchError, filter, map, mergeMap } from 'rxjs/operators';
+import { catchError, filter, map, mergeMap, tap } from 'rxjs/operators';
 
 import { Project, ProjectService as ApiProjectService } from 'app/api';
 
@@ -31,7 +31,12 @@ export class ProjectTokenRoutingResolveService implements Resolve<Project | null
           () => !!account,
           this.apiProjectService.findProjectByToken(token, 'response').pipe(
             filter(project => !!project.body),
-            map(project => project.body!)
+            map(project => project.body!),
+            tap(project => {
+              if (project.archived) {
+                this.redirectWithProjectDoesNotExistMessage();
+              }
+            })
           ),
           of(null)
         )

@@ -29,7 +29,8 @@ class ApiProjectMapperTest {
                 .description("a test description")
                 .token("a47ef93f-b628-4505-9dde-13cdfccc0c64")
                 .startDate(LocalDate.parse("2023-03-29"))
-                .endDate(LocalDate.parse("2023-03-30"));
+                .endDate(LocalDate.parse("2023-03-30"))
+                .archived(Boolean.TRUE);
 
         projectDTO = new ProjectDTO();
         projectDTO.setId(project.getId());
@@ -38,7 +39,7 @@ class ApiProjectMapperTest {
         projectDTO.setDescription(project.getDescription());
         projectDTO.setStartDate(Instant.parse("2023-03-29T00:00:00.00Z"));
         projectDTO.setEndDate(Instant.parse("2023-03-30T00:00:00.00Z"));
-        projectDTO.setArchived(false);
+        projectDTO.setArchived(project.getArchived());
         projectDTO.setCreatedBy("Cassandra Eleanore Lang");
         projectDTO.setCreatedDate(Instant.now());
         projectDTO.setLastModifiedBy("Nicholas Joseph \"Nick\" Fury");

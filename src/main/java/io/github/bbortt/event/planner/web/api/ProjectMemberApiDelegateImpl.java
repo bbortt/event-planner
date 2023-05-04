@@ -8,7 +8,7 @@ import io.github.bbortt.event.planner.service.api.dto.Member;
 import io.github.bbortt.event.planner.service.dto.MemberDTO;
 import io.github.bbortt.event.planner.service.dto.ProjectDTO;
 import io.github.bbortt.event.planner.web.api.mapper.ApiProjectMemberMapper;
-import io.github.bbortt.event.planner.web.rest.errors.BadRequestAlertException;
+import io.github.bbortt.event.planner.web.rest.errors.EntityNotFoundAlertException;
 import io.github.bbortt.event.planner.web.rest.util.PaginationUtil;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -59,7 +59,7 @@ public class ProjectMemberApiDelegateImpl implements ProjectMemberApiDelegate {
     public ResponseEntity<Member> findProjectMemberByTokenAndEmail(Long projectId, String invitationEmail) {
         log.debug("REST request to get Member with email '{}' in Project '{}'", invitationEmail, projectId);
 
-        getProjectByIdOrThrowBadRequestAlertException(projectId);
+        getProjectByIdOrThrowEntityNotFoundAlertException(projectId);
 
         return ResponseUtil.wrapOrNotFound(
             memberService.findOneInProjectByInvitationEmail(projectId, invitationEmail).map(apiProjectMemberMapper::toApiDTO)
@@ -75,7 +75,7 @@ public class ProjectMemberApiDelegateImpl implements ProjectMemberApiDelegate {
     ) {
         log.debug("REST request to get a page of Members in Project '{}'", projectId);
 
-        getProjectByIdOrThrowBadRequestAlertException(projectId);
+        getProjectByIdOrThrowEntityNotFoundAlertException(projectId);
 
         Page<MemberDTO> page = memberService.findAllInProject(
             projectId,
@@ -96,7 +96,7 @@ public class ProjectMemberApiDelegateImpl implements ProjectMemberApiDelegate {
     ) {
         log.debug("REST request to invite new Members '{}' to Project '{}'", inviteMemberToProjectRequestInner, projectId);
 
-        ProjectDTO project = getProjectByIdOrThrowBadRequestAlertException(projectId);
+        ProjectDTO project = getProjectByIdOrThrowEntityNotFoundAlertException(projectId);
 
         return ResponseEntity
             .created(createProjectMembersUri(projectId))
@@ -114,12 +114,12 @@ public class ProjectMemberApiDelegateImpl implements ProjectMemberApiDelegate {
             );
     }
 
-    private ProjectDTO getProjectByIdOrThrowBadRequestAlertException(Long projectId) {
+    private ProjectDTO getProjectByIdOrThrowEntityNotFoundAlertException(Long projectId) {
         Optional<ProjectDTO> project = projectService.findOne(projectId);
 
         if (project.isEmpty()) {
             log.warn("REST request for Members in non-existent Project '{}'!", projectId);
-            throw new BadRequestAlertException("Entity not found", ProjectApiDelegateImpl.ENTITY_NAME, "idnotfound");
+            throw new EntityNotFoundAlertException("Entity not found", ProjectApiDelegateImpl.ENTITY_NAME, "idnotfound");
         }
 
         return project.get();
@@ -140,8 +140,8 @@ public class ProjectMemberApiDelegateImpl implements ProjectMemberApiDelegate {
     private Member toApiDTO(MemberDTO memberDTO) {
         Member member = apiProjectMemberMapper.toApiDTO(memberDTO);
 
-        if (!Objects.isNull(memberDTO.getUser()) && StringUtils.isNoneBlank(memberDTO.getUser().getEmail())) {
-            member.setEmail(memberDTO.getUser().getEmail());
+        if (Boolean.TRUE.equals(memberDTO.getAccepted())) {
+            member.setEmail(memberDTO.getAcceptedBy());
         }
 
         return member;

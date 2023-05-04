@@ -1,4 +1,5 @@
 jest.mock('app/core/auth/account.service');
+jest.mock('app/core/util/alert.service');
 
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
@@ -11,6 +12,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Project, ProjectService as ApiProjectService } from 'app/api';
 import { Account } from 'app/core/auth/account.model';
 import { AccountService } from 'app/core/auth/account.service';
+import { AlertService } from 'app/core/util/alert.service';
 
 import { ProjectTokenRoutingResolveService } from './project-token-routing-resolve.service';
 
@@ -18,6 +20,7 @@ const project = {} as Project;
 
 describe('Project token routing resolve service', () => {
   let mockAccountService: AccountService;
+  let mockAlertService: AlertService;
   let apiProjectService: ApiProjectService;
   let mockRouter: Router;
 
@@ -40,11 +43,14 @@ describe('Project token routing resolve service', () => {
             },
           },
         },
+        AlertService,
       ],
     });
 
     mockAccountService = TestBed.inject(AccountService);
     mockAccountService.identity = jest.fn(() => of(null));
+
+    mockAlertService = TestBed.inject(AlertService);
 
     apiProjectService = TestBed.inject(ApiProjectService);
     apiProjectService.findProjectByToken = jest.fn();
@@ -91,6 +97,24 @@ describe('Project token routing resolve service', () => {
       expect(mockAccountService.identity).toHaveBeenCalled();
       expect(apiProjectService.findProjectByToken).toHaveBeenCalledWith('0c4b3e09-525a-45e5-afe4-4557838aa361', 'response');
       expect(result).toEqual(null);
+    });
+
+    it('redirects to home page if project has been archived', async () => {
+      const archivedProject = { archived: true };
+
+      (mockAccountService.identity as jest.Mock).mockReturnValueOnce(of({} as Account));
+      (apiProjectService.findProjectByToken as jest.Mock).mockReturnValueOnce(of({ body: archivedProject }));
+
+      const result = await firstValueFrom(fixture.resolve(mockActivatedRouteSnapshot));
+
+      expect(mockAccountService.identity).toHaveBeenCalled();
+      expect(apiProjectService.findProjectByToken).toHaveBeenCalledWith('0c4b3e09-525a-45e5-afe4-4557838aa361', 'response');
+      expect(result).toEqual(archivedProject);
+      expect(mockRouter.navigate).toHaveBeenCalledWith(['/']);
+      expect(mockAlertService.addAlert).toHaveBeenCalledWith({
+        type: 'danger',
+        translationKey: 'app.project.invitation.error.invalidToken',
+      });
     });
   });
 });
