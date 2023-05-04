@@ -41,20 +41,24 @@ describe('ProjectCreateModalComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should open modal', () => {
-    const modalSpy = jest.spyOn(modalService, 'open').mockReturnValueOnce(mockModalRef);
+  describe('ngOnInit', () => {
+    it('should open modal', () => {
+      const modalSpy = jest.spyOn(modalService, 'open').mockReturnValueOnce(mockModalRef);
 
-    component.ngOnInit();
+      component.ngOnInit();
 
-    expect(modalSpy).toHaveBeenCalledWith(ProjectCreateModalContentComponent, { size: 'lg' });
+      expect(modalSpy).toHaveBeenCalledWith(ProjectCreateModalContentComponent, { size: 'lg' });
+    });
   });
 
-  it('should close modal', () => {
-    // @ts-ignore: force this private property value for testing.
-    component.modalRef = mockModalRef;
+  describe('ngOnDestroy', () => {
+    it('should close modal', () => {
+      // @ts-ignore: force this private property value for testing.
+      component.modalRef = mockModalRef;
 
-    component.ngOnDestroy();
+      component.ngOnDestroy();
 
-    expect(closeSpy).toHaveBeenCalled();
+      expect(closeSpy).toHaveBeenCalled();
+    });
   });
 });

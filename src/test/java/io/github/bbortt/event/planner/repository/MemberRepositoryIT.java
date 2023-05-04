@@ -1,5 +1,6 @@
 package io.github.bbortt.event.planner.repository;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -36,7 +37,7 @@ class MemberRepositoryIT {
     @Test
     @Transactional
     void uniqueInvitationPerProject() {
-        memberRepository.saveAndFlush(createNewMember());
+        entityManager.persist(createNewMember());
 
         Member constraintViolatingMember = createNewMember();
         DataIntegrityViolationException exception = assertThrows(
@@ -51,7 +52,7 @@ class MemberRepositoryIT {
     void uniqueAcceptedPerProject() {
         String acceptedBy = "matthew-murdoch@localhost";
 
-        memberRepository.saveAndFlush(createAcceptedMember(acceptedBy).invitedEmail("maya-lopez@localhost"));
+        entityManager.persist(createAcceptedMember(acceptedBy).invitedEmail("maya-lopez@localhost"));
 
         Member constraintViolatingMember = createAcceptedMember(acceptedBy);
         DataIntegrityViolationException exception = assertThrows(
@@ -59,6 +60,18 @@ class MemberRepositoryIT {
             () -> memberRepository.saveAndFlush(constraintViolatingMember)
         );
         assertTrue(Objects.requireNonNull(exception.getMessage()).contains("ux_accepted_per_project"));
+    }
+
+    @Test
+    @Transactional
+    void findMemberInProject() {
+        String acceptedBy = "jennifer-walters@localhost";
+
+        Member member = createAcceptedMember(acceptedBy);
+        entityManager.persist(member);
+
+        assertTrue(memberRepository.findMemberInProject(member.getAcceptedBy(), project.getId()).isPresent());
+        assertTrue(memberRepository.findMemberInProject(member.getInvitedEmail(), project.getId()).isPresent());
     }
 
     private Member createAcceptedMember(String acceptedBy) {

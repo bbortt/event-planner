@@ -73,7 +73,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Project'
         404:
-          description: NOT FOUND
+          description: Not Found
   /v1/projects/{projectId}/members:
     get:
       tags:
@@ -115,6 +115,8 @@ paths:
               $ref: '#/components/headers/link'
             x-total-count:
               $ref: '#/components/headers/xTotalCount'
+        404:
+          description: Not Found
     post:
       tags:
         - project-member
@@ -166,6 +168,8 @@ paths:
                       $ref: '#/components/schemas/Member'
         400:
           description: Bad Request
+        404:
+          description: Not Found
   /v1/projects/{projectId}/members/email/{invitedEmail}:
     get:
       tags:
@@ -204,7 +208,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Member'
         404:
-          description: NOT FOUND
+          description: Not Found
 components:
   parameters:
     PageSize:
@@ -326,6 +330,8 @@ components:
         endDate:
           type: string
           format: date
+        archived:
+          type: boolean
   securitySchemes:
     oauth:
       type: oauth2

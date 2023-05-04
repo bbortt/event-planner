@@ -14,7 +14,7 @@ import io.github.bbortt.event.planner.service.api.dto.Member;
 import io.github.bbortt.event.planner.service.dto.MemberDTO;
 import io.github.bbortt.event.planner.service.dto.ProjectDTO;
 import io.github.bbortt.event.planner.web.api.mapper.ApiProjectMemberMapper;
-import io.github.bbortt.event.planner.web.rest.errors.BadRequestAlertException;
+import io.github.bbortt.event.planner.web.rest.errors.EntityNotFoundAlertException;
 import io.github.bbortt.event.planner.web.rest.util.PaginationUtil;
 import java.util.Collections;
 import java.util.List;
@@ -36,7 +36,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.zalando.problem.Status;
-import org.zalando.problem.StatusType;
 
 @ExtendWith(MockitoExtension.class)
 class ProjectMemberApiTest {
@@ -93,12 +92,12 @@ class ProjectMemberApiTest {
         // Project by ID does not exist
         doReturn(Optional.empty()).when(projectServiceMock).findOne(projectId);
 
-        BadRequestAlertException exception = assertThrows(
-            BadRequestAlertException.class,
+        EntityNotFoundAlertException exception = assertThrows(
+            EntityNotFoundAlertException.class,
             () -> fixture.findProjectMemberByTokenAndEmail(projectId, invitedEmail)
         );
 
-        assertEquals(Status.BAD_REQUEST, exception.getStatus());
+        assertEquals(Status.NOT_FOUND, exception.getStatus());
         assertEquals("idnotfound", exception.getErrorKey());
         assertEquals("project", exception.getEntityName());
     }
@@ -175,12 +174,12 @@ class ProjectMemberApiTest {
         // Project by ID does not exist
         doReturn(Optional.empty()).when(projectServiceMock).findOne(projectId);
 
-        BadRequestAlertException exception = assertThrows(
-            BadRequestAlertException.class,
+        EntityNotFoundAlertException exception = assertThrows(
+            EntityNotFoundAlertException.class,
             () -> fixture.getProjectMembers(projectId, pageSize, pageNumber, sort)
         );
 
-        assertEquals(Status.BAD_REQUEST, exception.getStatus());
+        assertEquals(Status.NOT_FOUND, exception.getStatus());
         assertEquals("idnotfound", exception.getErrorKey());
         assertEquals("project", exception.getEntityName());
     }
