@@ -7,9 +7,10 @@ import { ProjectRoutingResolveService } from 'app/entities/project/route/project
 import { ProjectFromParentResolveService } from './route/project-from-parent-resolve.service';
 
 import { AdminLayoutComponent } from './layout/admin-layout.component';
+import { ProjectLocationsComponent } from './locations/project-locations.component';
+import { ProjectMemberInviteModalComponent } from './member/project-member-invite-modal.component';
 import { ProjectMemberListComponent } from './member/project-member-list.component';
 import { ProjectSettingsComponent } from './settings/project-settings.component';
-import { ProjectMemberInviteModalComponent } from './member/project-member-invite-modal.component';
 
 export const PROJECT_ADMIN_ROUTES: Route[] = [
   {
@@ -24,6 +25,11 @@ export const PROJECT_ADMIN_ROUTES: Route[] = [
       {
         path: 'settings',
         component: ProjectSettingsComponent,
+        resolve: { project: ProjectFromParentResolveService },
+      },
+      {
+        path: 'locations',
+        component: ProjectLocationsComponent,
         resolve: { project: ProjectFromParentResolveService },
       },
       {

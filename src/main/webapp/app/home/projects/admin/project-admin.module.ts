@@ -9,6 +9,7 @@ import { PROJECT_ADMIN_ROUTES } from './project-admin.route';
 
 import { AdminLayoutComponent } from './layout/admin-layout.component';
 import { SideNavComponent } from './layout/side-nav.component';
+import { ProjectLocationsComponent } from './locations/project-locations.component';
 import {
   ProjectMemberInviteModalComponent,
   ProjectMemberInviteModalContentComponent,
@@ -20,6 +21,7 @@ import { ProjectSettingsComponent } from './settings/project-settings.component'
   imports: [SharedModule, ProjectEntityModule, RouterModule.forChild(PROJECT_ADMIN_ROUTES)],
   declarations: [
     AdminLayoutComponent,
+    ProjectLocationsComponent,
     ProjectMemberInviteModalComponent,
     ProjectMemberInviteModalContentComponent,
     ProjectMemberListComponent,
