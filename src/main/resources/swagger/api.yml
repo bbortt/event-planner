@@ -10,6 +10,8 @@ servers:
 tags:
   - name: project
     description: Resource controlling projects.
+  - name: project-location
+    description: Resource controlling locations inside a Project.
   - name: project-member
     description: Resource controlling memberships inside a Project.
 paths:
@@ -72,6 +74,42 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Project'
+        404:
+          description: Not Found
+  /v1/projects/{projectId}/locations:
+    get:
+      tags:
+        - project-location
+        - project
+      security:
+        - oauth
+        - openid
+      summary: List all locations collaborating on the Project.
+      description: |
+        Return all locations of the given Project by id. **Beware:** This
+        endpoint does not implement any pagination!
+      operationId: getProjectLocations
+      parameters:
+        - name: projectId
+          in: path
+          description: |
+            The restricting Project id.
+          schema:
+            type: integer
+            format: int64
+          required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  contents:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Location'
         404:
           description: Not Found
   /v1/projects/{projectId}/members:
@@ -260,6 +298,24 @@ components:
         format: int64
       description: Total amount of pages.
   schemas:
+    Location:
+      type: object
+      required:
+        - id
+        - name
+        - children
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+          maxLength: 63
+          minLength: 1
+        children:
+          type: array
+          items:
+            $ref: '#/components/schemas/Location'
     Member:
       type: object
       required:

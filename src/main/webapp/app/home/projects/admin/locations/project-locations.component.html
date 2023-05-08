@@ -1,5 +1,44 @@
 <div *ngIf="project">
-  <h2 id="page-heading" data-cy="projectMembersHeading">
+  <h2 id="page-heading" class="mb-3" data-cy="projectMembersHeading">
     <span jhiTranslate="app.location.home.title"> Lokalitäten </span>
   </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="locations?.length === 0">
+    <span jhiTranslate="app.location.home.notFound"> Keine Lokalitäten gefunden </span>
+  </div>
+
+  <div class="row">
+    <div class="col-md-5 card h-100 location-list" *ngIf="locations">
+      <h4 class="mt-2" jhiTranslate="app.project.admin.location.topLevel">Oberste Lokalitäten</h4>
+      <div class="card-body" dragula="location-list" [(dragulaModel)]="locations">
+        <app-project-location-drag
+          *ngFor="let location of locations"
+          [attr.data-id]="location.id"
+          [location]="location"
+          (click)="setActiveLocation(location)"
+        ></app-project-location-drag>
+      </div>
+    </div>
+    <div class="col-md-5 card h-100 child-location-list" *ngIf="activeLocation">
+      <h4 class="mt-2">{{ activeLocation.name }}</h4>
+
+      <div class="alert alert-warning" id="no-child-locations" *ngIf="activeLocation.children?.length === 0">
+        <span jhiTranslate="app.project.admin.location.childrenNotFound"> Keine Unter-Lokalitäten gefunden </span>
+      </div>
+
+      <div *ngIf="activeLocation.children">
+        <div class="card-body" dragula="location-list" [(dragulaModel)]="activeLocation.children">
+          <app-project-location-drag
+            *ngFor="let location of activeLocation.children"
+            [attr.data-id]="location.id"
+            [location]="location"
+          ></app-project-location-drag>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

@@ -10,5 +10,9 @@ eg $input-color: red;
 // Import Bootstrap source files from node_modules
 @import 'bootstrap/scss/bootstrap';
 @import 'bootswatch/dist/minty/bootswatch';
+// Import ng2-dragula source files form node_modules
+@import 'dragula/dist/dragula.css';
+// Override ng2-dragula variables
+@import 'dragula-variables';
 
 /* jhipster-needle-scss-add-vendor JHipster will add new css style */
