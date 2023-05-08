@@ -4,7 +4,11 @@
       "admin": {
         "title": "Projekt",
         "copyInvitationLink": "Link kopieren",
-        "invitationLinkCopied": "Link kopiert"
+        "invitationLinkCopied": "Link kopiert",
+        "location": {
+          "childrenNotFound": "Keine Unter-Lokalitäten gefunden",
+          "topLevel": "Oberste Lokalitäten"
+        }
       }
     }
   }
