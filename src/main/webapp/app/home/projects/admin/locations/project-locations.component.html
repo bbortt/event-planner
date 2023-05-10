@@ -7,12 +7,12 @@
 
   <jhi-alert></jhi-alert>
 
-  <div class="alert alert-warning" id="no-result" *ngIf="locations?.length === 0">
+  <div *ngIf="locations?.length === 0" id="no-result" class="alert alert-warning">
     <span jhiTranslate="app.location.home.notFound"> Keine Lokalitäten gefunden </span>
   </div>
 
   <div class="row">
-    <div class="col-md-5 card h-100 location-list" *ngIf="locations">
+    <div *ngIf="locations" class="col-md-5 card h-100 location-list" [class.location-list-disabled]="activeLocation">
       <h4 class="mt-2" jhiTranslate="app.project.admin.location.topLevel">Oberste Lokalitäten</h4>
       <div class="card-body" dragula="location-list" [(dragulaModel)]="locations">
         <app-project-location-drag
@@ -23,10 +23,10 @@
         ></app-project-location-drag>
       </div>
     </div>
-    <div class="col-md-5 card h-100 child-location-list" *ngIf="activeLocation">
+    <div *ngIf="activeLocation" class="col-md-5 card h-100 child-location-list">
       <h4 class="mt-2">{{ activeLocation.name }}</h4>
 
-      <div class="alert alert-warning" id="no-child-locations" *ngIf="activeLocation.children?.length === 0">
+      <div *ngIf="activeLocation.children?.length === 0" id="no-child-locations" class="alert alert-warning">
         <span jhiTranslate="app.project.admin.location.childrenNotFound"> Keine Unter-Lokalitäten gefunden </span>
       </div>
 

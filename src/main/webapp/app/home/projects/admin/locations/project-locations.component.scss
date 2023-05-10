@@ -1,3 +1,15 @@
-.child-location-list {
-  margin-left: 1vw;
+@import 'bootstrap/scss/_functions';
+@import 'bootstrap/scss/_variables';
+@import 'bootstrap/scss/mixins/_breakpoints';
+
+@include media-breakpoint-up(md) {
+  .child-location-list {
+    margin-left: 1vw;
+  }
+}
+
+@include media-breakpoint-down(md) {
+  .location-list-disabled {
+    display: none;
+  }
 }
