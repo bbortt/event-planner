@@ -1,12 +1,15 @@
-import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Injectable } from '@angular/core';
+
+import { Observable, Subject } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
+
 import dayjs from 'dayjs/esm';
 
-import { isPresent } from 'app/core/util/operators';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { createRequestOption } from 'app/core/request/request-util';
+import { isPresent } from 'app/core/util/operators';
+
 import { ILocation, NewLocation } from '../location.model';
 
 export type PartialUpdateLocation = Partial<ILocation> & Pick<ILocation, 'id'>;
@@ -29,29 +32,43 @@ export type EntityArrayResponseType = HttpResponse<ILocation[]>;
 export class LocationService {
   protected resourceUrl;
 
+  private locationUpdatedSource = new Subject<ILocation>();
+  private _locationUpdatedSource$ = this.locationUpdatedSource.asObservable();
+
   constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) {
     this.resourceUrl = this.applicationConfigService.getEndpointFor('api/locations');
   }
 
+  get locationUpdatedSource$(): Observable<ILocation> {
+    return this._locationUpdatedSource$;
+  }
+
+  public notifyLocationUpdates(location: ILocation): void {
+    this.notifySubscribersOfChangedMember({ body: location } as HttpResponse<ILocation>);
+  }
+
   create(location: NewLocation): Observable<EntityResponseType> {
     const copy = this.convertDateFromClient(location);
-    return this.http
-      .post<RestLocation>(this.resourceUrl, copy, { observe: 'response' })
-      .pipe(map(res => this.convertResponseFromServer(res)));
+    return this.http.post<RestLocation>(this.resourceUrl, copy, { observe: 'response' }).pipe(
+      map(res => this.convertResponseFromServer(res)),
+      tap(res => this.notifySubscribersOfChangedMember(res))
+    );
   }
 
   update(location: ILocation): Observable<EntityResponseType> {
     const copy = this.convertDateFromClient(location);
-    return this.http
-      .put<RestLocation>(`${this.resourceUrl}/${this.getLocationIdentifier(location)}`, copy, { observe: 'response' })
-      .pipe(map(res => this.convertResponseFromServer(res)));
+    return this.http.put<RestLocation>(`${this.resourceUrl}/${this.getLocationIdentifier(location)}`, copy, { observe: 'response' }).pipe(
+      map(res => this.convertResponseFromServer(res)),
+      tap(res => this.notifySubscribersOfChangedMember(res))
+    );
   }
 
   partialUpdate(location: PartialUpdateLocation): Observable<EntityResponseType> {
     const copy = this.convertDateFromClient(location);
-    return this.http
-      .patch<RestLocation>(`${this.resourceUrl}/${this.getLocationIdentifier(location)}`, copy, { observe: 'response' })
-      .pipe(map(res => this.convertResponseFromServer(res)));
+    return this.http.patch<RestLocation>(`${this.resourceUrl}/${this.getLocationIdentifier(location)}`, copy, { observe: 'response' }).pipe(
+      map(res => this.convertResponseFromServer(res)),
+      tap(res => this.notifySubscribersOfChangedMember(res))
+    );
   }
 
   find(id: number): Observable<EntityResponseType> {
@@ -125,5 +142,11 @@ export class LocationService {
     return res.clone({
       body: res.body ? res.body.map(item => this.convertDateFromServer(item)) : null,
     });
+  }
+
+  private notifySubscribersOfChangedMember(res: HttpResponse<ILocation>): void {
+    if (res.body) {
+      this.locationUpdatedSource.next(res.body);
+    }
   }
 }

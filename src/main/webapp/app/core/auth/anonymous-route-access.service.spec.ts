@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
-import { firstValueFrom, of } from 'rxjs';
+import { EMPTY, firstValueFrom, of } from 'rxjs';
 
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -18,20 +18,20 @@ describe('Anonymous Route Access Service', () => {
 
   let service: AnonymousRouteAccessService;
 
-  const mockNavigate = jest.fn();
-
-  class MockRouter {
-    navigate = mockNavigate;
-  }
+  let mockNavigateByUrl: jest.Mock;
 
   beforeEach(() => {
+    mockNavigateByUrl = jest.fn().mockReturnValueOnce(Promise.resolve());
+
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, NgxWebstorageModule.forRoot(), TranslateModule.forRoot()],
       providers: [
         AccountService,
         {
           provide: Router,
-          useClass: MockRouter,
+          useValue: {
+            navigateByUrl: mockNavigateByUrl,
+          },
         },
       ],
     });
@@ -41,17 +41,13 @@ describe('Anonymous Route Access Service', () => {
     service = TestBed.inject(AnonymousRouteAccessService);
   });
 
-  beforeEach(() => {
-    mockNavigate.mockReset();
-  });
-
   test('can activate if account is present', async () => {
     jest.spyOn(accountService, 'identity').mockReturnValueOnce(of({} as Account));
 
     const canActivate = await firstValueFrom(service.canActivate());
 
     expect(canActivate).toBeFalsy();
-    expect(mockNavigate).toHaveBeenCalledWith(['home']);
+    expect(mockNavigateByUrl).toHaveBeenCalledWith('home');
   });
 
   test('cannot activate if account is present', async () => {
@@ -60,6 +56,6 @@ describe('Anonymous Route Access Service', () => {
     const canActivate = await firstValueFrom(service.canActivate());
 
     expect(canActivate).toBeTruthy();
-    expect(mockNavigate).not.toHaveBeenCalled();
+    expect(mockNavigateByUrl).not.toHaveBeenCalled();
   });
 });
