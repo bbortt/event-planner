@@ -13,6 +13,7 @@ public class ProjectLocationApiDelegateImpl implements ProjectLocationApiDelegat
 
     private final Logger log = LoggerFactory.getLogger(ProjectLocationApiDelegateImpl.class);
 
+    @Override
     public ResponseEntity<GetProjectLocations200Response> getProjectLocations(Long projectId) {
         log.debug("REST request to get all Locations in Project '{}'", projectId);
 

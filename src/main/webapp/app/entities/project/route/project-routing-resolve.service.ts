@@ -19,7 +19,7 @@ export class ProjectRoutingResolveService implements Resolve<IProject | null> {
           if (project.body) {
             return of(project.body);
           } else {
-            this.router.navigate(['404']);
+            this.router.navigate(['404']).catch(() => (window.location.href = '/404'));
             return EMPTY;
           }
         })

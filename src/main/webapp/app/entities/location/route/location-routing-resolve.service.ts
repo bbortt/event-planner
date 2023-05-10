@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot, Router } from '@angular/router';
+
 import { Observable, of, EMPTY } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 
@@ -11,20 +12,22 @@ import { LocationService } from '../service/location.service';
 export class LocationRoutingResolveService implements Resolve<ILocation | null> {
   constructor(protected service: LocationService, protected router: Router) {}
 
-  resolve(route: ActivatedRouteSnapshot): Observable<ILocation | null | never> {
+  resolve(route: ActivatedRouteSnapshot): Observable<ILocation | null> {
     const id = route.params['id'];
+
     if (id) {
       return this.service.find(id).pipe(
         mergeMap((location: HttpResponse<ILocation>) => {
           if (location.body) {
             return of(location.body);
           } else {
-            this.router.navigate(['404']);
+            this.router.navigate(['404']).catch(() => (window.location.href = '/404'));
             return EMPTY;
           }
         })
       );
     }
+
     return of(null);
   }
 }

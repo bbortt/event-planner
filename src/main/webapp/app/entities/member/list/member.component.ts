@@ -1,15 +1,17 @@
-import { Component, OnInit } from '@angular/core';
 import { HttpHeaders } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Data, ParamMap, Router } from '@angular/router';
-import { combineLatest, filter, Observable, switchMap, tap } from 'rxjs';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { IMember } from '../member.model';
+import { combineLatest, filter, Observable, switchMap, tap } from 'rxjs';
+
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { ITEMS_PER_PAGE, PAGE_HEADER, TOTAL_COUNT_RESPONSE_HEADER } from 'app/config/pagination.constants';
 import { ASC, DESC, SORT, ITEM_DELETED_EVENT, DEFAULT_SORT_DATA } from 'app/config/navigation.constants';
-import { EntityArrayResponseType, MemberService } from '../service/member.service';
+
+import { IMember } from '../member.model';
 import { MemberDeleteDialogComponent } from '../delete/member-delete-dialog.component';
+import { EntityArrayResponseType, MemberService } from '../service/member.service';
 
 @Component({
   selector: 'jhi-member',
@@ -119,10 +121,12 @@ export class MemberComponent implements OnInit {
       sort: this.getSortQueryParam(predicate, ascending),
     };
 
-    this.router.navigate(['./'], {
-      relativeTo: this.activatedRoute,
-      queryParams: queryParamsObj,
-    });
+    this.router
+      .navigate(['./'], {
+        relativeTo: this.activatedRoute,
+        queryParams: queryParamsObj,
+      })
+      .catch(() => window.location.reload());
   }
 
   protected getSortQueryParam(predicate = this.predicate, ascending = this.ascending): string[] {
