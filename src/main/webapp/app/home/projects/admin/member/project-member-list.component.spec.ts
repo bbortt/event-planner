@@ -1,5 +1,3 @@
-import { MemberService } from '../../../../entities/member/service/member.service';
-
 jest.mock('app/core/util/alert.service');
 
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -15,16 +13,17 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Project } from 'app/api';
 import { AlertService } from 'app/core/util/alert.service';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
+import { MemberService } from 'app/entities/member/service/member.service';
 
 import { ProjectMemberListComponent } from './project-member-list.component';
+
+const project = { token: '9b1ec8a6-7dc6-46d3-ad02-2890ab95eb09' } as Project;
 
 describe('ProjectMemberListComponent', () => {
   let alertService: AlertService;
   let applicationConfigService: ApplicationConfigService;
 
   let component: ProjectMemberListComponent;
-
-  let project: Project | null = null;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -48,8 +47,6 @@ describe('ProjectMemberListComponent', () => {
     applicationConfigService = TestBed.inject(ApplicationConfigService);
 
     component = TestBed.createComponent(ProjectMemberListComponent).componentInstance;
-
-    project = { token: '9b1ec8a6-7dc6-46d3-ad02-2890ab95eb09' } as Project;
   });
 
   describe('copyInvitationLink', () => {
@@ -65,12 +62,12 @@ describe('ProjectMemberListComponent', () => {
       component.project = project;
 
       jest.spyOn(navigator.clipboard, 'writeText').mockReturnValueOnce(Promise.resolve());
-      jest.spyOn(applicationConfigService, 'getEndpointFor').mockReturnValueOnce(`invitation/projects/${project!.token}`);
+      jest.spyOn(applicationConfigService, 'getEndpointFor').mockReturnValueOnce(`invitation/projects/${project.token}`);
 
       // @ts-ignore: force this private property value for testing.
       component.copyInvitationLink();
 
-      expect(navigator.clipboard.writeText).toHaveBeenCalledWith(`${window.location.origin}/invitation/projects/${project!.token}`);
+      expect(navigator.clipboard.writeText).toHaveBeenCalledWith(`${window.location.origin}/invitation/projects/${project.token}`);
       expect(alertService.addAlert).toHaveBeenCalledWith({
         type: 'info',
         translationKey: 'app.project.admin.invitationLinkCopied',
@@ -78,7 +75,7 @@ describe('ProjectMemberListComponent', () => {
     });
   });
 
-  describe('ngOnDestroy', () => {
+  describe('ngOnInit', () => {
     it('loads project from route', () => {
       component.ngOnInit();
 
@@ -108,7 +105,7 @@ describe('ProjectMemberListComponent', () => {
 
     test('should not fail if it did not subscribe to router events', () => {
       // @ts-ignore: force this private property value for testing.
-      component.routerSubscription = null;
+      component.memberUpdatedSource = null;
 
       component.ngOnDestroy();
 

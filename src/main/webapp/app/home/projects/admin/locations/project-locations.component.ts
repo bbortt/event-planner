@@ -1,17 +1,18 @@
 import { HttpResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { tap } from 'rxjs';
+import { Subscription, tap } from 'rxjs';
 
 import { GetProjectLocations200Response, Location, Project, ProjectLocationService } from 'app/api';
+import { LocationService } from 'app/entities/location/service/location.service';
 
 @Component({
   selector: 'app-project-locations',
   templateUrl: './project-locations.component.html',
   styleUrls: ['./project-locations.component.scss'],
 })
-export class ProjectLocationsComponent implements OnInit {
+export class ProjectLocationsComponent implements OnDestroy, OnInit {
   project: Project | null = null;
 
   locations?: Location[];
@@ -19,7 +20,13 @@ export class ProjectLocationsComponent implements OnInit {
 
   activeLocation: Location | null = null;
 
-  constructor(private activatedRoute: ActivatedRoute, private projectLocationService: ProjectLocationService) {}
+  private locationUpdatedSource: Subscription | null = null;
+
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private locationService: LocationService,
+    private projectLocationService: ProjectLocationService
+  ) {}
 
   ngOnInit(): void {
     this.activatedRoute.data
@@ -31,6 +38,14 @@ export class ProjectLocationsComponent implements OnInit {
         })
       )
       .subscribe(() => this.load());
+
+    this.locationUpdatedSource = this.locationService.locationUpdatedSource$.subscribe(() => this.load());
+  }
+
+  ngOnDestroy(): void {
+    if (this.locationUpdatedSource) {
+      this.locationUpdatedSource.unsubscribe();
+    }
   }
 
   setActiveLocation(location: Location): void {

@@ -1,10 +1,11 @@
-import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { TestBed } from '@angular/core/testing';
+
+import { Subject } from 'rxjs';
 
 import { ILocation } from '../location.model';
-import { sampleWithRequiredData, sampleWithNewData, sampleWithPartialData, sampleWithFullData } from '../location.test-samples';
-
 import { LocationService, RestLocation } from './location.service';
+import { sampleWithRequiredData, sampleWithNewData, sampleWithPartialData, sampleWithFullData } from '../location.test-samples';
 
 const requireRestSample: RestLocation = {
   ...sampleWithRequiredData,
@@ -17,6 +18,9 @@ describe('Location Service', () => {
   let httpMock: HttpTestingController;
   let expectedResult: ILocation | ILocation[] | boolean | null;
 
+  const locationEventsSubject = new Subject<ILocation>();
+  const nextLocationEvent = jest.spyOn(locationEventsSubject, 'next');
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
@@ -24,6 +28,12 @@ describe('Location Service', () => {
     expectedResult = null;
     service = TestBed.inject(LocationService);
     httpMock = TestBed.inject(HttpTestingController);
+  });
+
+  beforeEach(() => {
+    // @ts-ignore: force this private property value for testing.
+    service.locationUpdatedSource = locationEventsSubject;
+    nextLocationEvent.mockReset();
   });
 
   describe('Service methods', () => {
@@ -49,6 +59,8 @@ describe('Location Service', () => {
       const req = httpMock.expectOne({ method: 'POST' });
       req.flush(returnedFromService);
       expect(expectedResult).toMatchObject(expected);
+
+      expect(nextLocationEvent).toHaveBeenCalledWith(expected);
     });
 
     it('should update a Location', () => {
@@ -61,6 +73,8 @@ describe('Location Service', () => {
       const req = httpMock.expectOne({ method: 'PUT' });
       req.flush(returnedFromService);
       expect(expectedResult).toMatchObject(expected);
+
+      expect(nextLocationEvent).toHaveBeenCalledWith(expected);
     });
 
     it('should partial update a Location', () => {
@@ -73,6 +87,8 @@ describe('Location Service', () => {
       const req = httpMock.expectOne({ method: 'PATCH' });
       req.flush(returnedFromService);
       expect(expectedResult).toMatchObject(expected);
+
+      expect(nextLocationEvent).toHaveBeenCalledWith(expected);
     });
 
     it('should return a list of Location', () => {
@@ -197,6 +213,16 @@ describe('Location Service', () => {
 
         expect(compareResult1).toEqual(true);
         expect(compareResult2).toEqual(true);
+      });
+    });
+
+    describe('notifyLocationUpdates', () => {
+      test('notifies subscribers', () => {
+        const location: ILocation = { id: 1234 };
+
+        service.notifyLocationUpdates(location);
+
+        expect(nextLocationEvent).toHaveBeenCalledWith(location);
       });
     });
   });
