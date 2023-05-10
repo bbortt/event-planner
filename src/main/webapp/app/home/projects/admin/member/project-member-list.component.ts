@@ -86,10 +86,10 @@ export class ProjectMemberListComponent implements OnDestroy, OnInit {
   }
 
   protected copyInvitationLink(): void {
+    const projectInvitationUri = `invitation/projects/${this.project!.token}`;
+
     of(
-      navigator.clipboard.writeText(
-        `${window.location.origin}/${this.applicationConfigService.getEndpointFor(`invitation/projects/${this.project!.token}`)}`
-      )
+      navigator.clipboard.writeText(`${window.location.origin}/${this.applicationConfigService.getEndpointFor(projectInvitationUri)}`)
     ).subscribe(() =>
       this.alertService.addAlert({
         type: 'info',

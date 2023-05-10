@@ -11,20 +11,22 @@ import { MemberService } from '../service/member.service';
 export class MemberRoutingResolveService implements Resolve<IMember | null> {
   constructor(protected service: MemberService, protected router: Router) {}
 
-  resolve(route: ActivatedRouteSnapshot): Observable<IMember | null | never> {
+  resolve(route: ActivatedRouteSnapshot): Observable<IMember | null> {
     const id = route.params['id'];
+
     if (id) {
       return this.service.find(id).pipe(
         mergeMap((member: HttpResponse<IMember>) => {
           if (member.body) {
             return of(member.body);
           } else {
-            this.router.navigate(['404']);
+            this.router.navigate(['404']).catch(() => (window.location.href = '/404'));
             return EMPTY;
           }
         })
       );
     }
+
     return of(null);
   }
 }

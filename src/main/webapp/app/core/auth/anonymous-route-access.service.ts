@@ -14,7 +14,7 @@ export class AnonymousRouteAccessService implements CanActivate {
     return this.accountService.identity().pipe(
       map(account => {
         if (account) {
-          this.router.navigate(['home']);
+          this.router.navigateByUrl('home').catch(() => (window.location.href = '/'));
           return false;
         }
 

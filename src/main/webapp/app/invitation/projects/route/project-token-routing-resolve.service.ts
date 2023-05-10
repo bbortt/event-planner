@@ -18,7 +18,7 @@ export class ProjectTokenRoutingResolveService implements Resolve<Project | null
     private router: Router
   ) {}
 
-  resolve(route: ActivatedRouteSnapshot): Observable<Project | null | never> {
+  resolve(route: ActivatedRouteSnapshot): Observable<Project | null> {
     const token = route.params['token'];
 
     if (!token) {

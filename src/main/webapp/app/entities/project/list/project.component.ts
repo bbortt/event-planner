@@ -1,15 +1,17 @@
-import { Component, OnInit } from '@angular/core';
 import { HttpHeaders } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Data, ParamMap, Router } from '@angular/router';
-import { combineLatest, filter, Observable, switchMap, tap } from 'rxjs';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { IProject } from '../project.model';
+import { combineLatest, filter, Observable, switchMap, tap } from 'rxjs';
+
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { ITEMS_PER_PAGE, PAGE_HEADER, TOTAL_COUNT_RESPONSE_HEADER } from 'app/config/pagination.constants';
 import { ASC, DESC, SORT, ITEM_DELETED_EVENT, DEFAULT_SORT_DATA } from 'app/config/navigation.constants';
-import { EntityArrayResponseType, ProjectService } from '../service/project.service';
+
+import { IProject } from '../project.model';
 import { ProjectDeleteDialogComponent } from '../delete/project-delete-dialog.component';
+import { EntityArrayResponseType, ProjectService } from '../service/project.service';
 
 @Component({
   selector: 'jhi-project',
@@ -118,10 +120,12 @@ export class ProjectComponent implements OnInit {
       sort: this.getSortQueryParam(predicate, ascending),
     };
 
-    this.router.navigate(['./'], {
-      relativeTo: this.activatedRoute,
-      queryParams: queryParamsObj,
-    });
+    this.router
+      .navigate(['./'], {
+        relativeTo: this.activatedRoute,
+        queryParams: queryParamsObj,
+      })
+      .catch(() => window.location.reload());
   }
 
   protected getSortQueryParam(predicate = this.predicate, ascending = this.ascending): string[] {
