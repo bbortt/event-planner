@@ -11,7 +11,7 @@ import { ProjectService } from '../service/project.service';
 export class ProjectRoutingResolveService implements Resolve<IProject | null> {
   constructor(protected service: ProjectService, protected router: Router) {}
 
-  resolve(route: ActivatedRouteSnapshot): Observable<IProject | null | never> {
+  resolve(route: ActivatedRouteSnapshot): Observable<IProject | null> {
     const id = route.params['id'];
     if (id) {
       return this.service.find(id).pipe(

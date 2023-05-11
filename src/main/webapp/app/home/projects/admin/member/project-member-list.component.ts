@@ -165,10 +165,12 @@ export class ProjectMemberListComponent implements OnDestroy, OnInit {
       sort: this.getSortQueryParam(predicate, ascending),
     };
 
-    this.router.navigate(['./'], {
-      relativeTo: this.activatedRoute,
-      queryParams: queryParamsObj,
-    });
+    this.router
+      .navigate(['./'], {
+        relativeTo: this.activatedRoute,
+        queryParams: queryParamsObj,
+      })
+      .catch(() => window.location.reload());
   }
 
   private getSortQueryParam(predicate = this.predicate, ascending = this.ascending): string[] {

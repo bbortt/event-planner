@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
-import { EMPTY, firstValueFrom, of } from 'rxjs';
+import { firstValueFrom, of } from 'rxjs';
 
 import { TranslateModule } from '@ngx-translate/core';
 
