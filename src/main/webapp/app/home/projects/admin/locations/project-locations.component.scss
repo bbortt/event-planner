@@ -9,7 +9,15 @@
 }
 
 @include media-breakpoint-down(md) {
-  .location-list-disabled {
-    display: none;
+  .location-list-with-children {
+    display: none !important;
   }
+}
+
+.breadcrumb-item:hover {
+  cursor: pointer;
+}
+
+.dots {
+  font-size: 300%;
 }
