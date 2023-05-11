@@ -19,6 +19,7 @@ export class ProjectLocationsComponent implements OnDestroy, OnInit {
   isLoading = false;
 
   activeLocation: Location | null = null;
+  activeLocationPath: Location[] = [];
 
   private locationUpdatedSource: Subscription | null = null;
 
@@ -48,8 +49,9 @@ export class ProjectLocationsComponent implements OnDestroy, OnInit {
     }
   }
 
-  setActiveLocation(location: Location): void {
+  setActiveLocation(location: Location | null): void {
     this.activeLocation = location;
+    this.activeLocationPath = location && this.locations ? this.findLocationPathById(location.id, this.locations) : [];
   }
 
   private load(): void {
@@ -69,5 +71,20 @@ export class ProjectLocationsComponent implements OnDestroy, OnInit {
 
   private fillComponentAttributesFromResponseBody(data: Array<Location> | undefined): Location[] {
     return data ?? [];
+  }
+
+  private findLocationPathById(locationId: number, nextLocations: Location[]): Location[] {
+    for (const location of nextLocations) {
+      if (location.id === locationId) {
+        return [location];
+      }
+
+      const childLocations = this.findLocationPathById(locationId, location.children);
+      if (childLocations.length > 0) {
+        return [location, ...childLocations];
+      }
+    }
+
+    return [];
   }
 }

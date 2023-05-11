@@ -12,6 +12,19 @@
   </div>
 
   <div class="row">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a (click)="setActiveLocation(null)" jhiTranslate="app.project.admin.location.topLevel">Oberste Lokalitäten</a>
+        </li>
+        <li class="breadcrumb-item" *ngFor="let location of activeLocationPath">
+          <a (click)="setActiveLocation(location)">{{ location.name }}</a>
+        </li>
+      </ol>
+    </nav>
+  </div>
+
+  <div class="row">
     <div *ngIf="locations" class="col-md-5 card h-100 location-list" [class.location-list-disabled]="activeLocation">
       <h4 class="mt-2" jhiTranslate="app.project.admin.location.topLevel">Oberste Lokalitäten</h4>
       <div class="card-body" dragula="location-list" [(dragulaModel)]="locations">
@@ -23,6 +36,7 @@
         ></app-project-location-drag>
       </div>
     </div>
+
     <div *ngIf="activeLocation" class="col-md-5 card h-100 child-location-list">
       <h4 class="mt-2">{{ activeLocation.name }}</h4>
 
@@ -36,6 +50,7 @@
             *ngFor="let location of activeLocation.children"
             [attr.data-id]="location.id"
             [location]="location"
+            (click)="setActiveLocation(location)"
           ></app-project-location-drag>
         </div>
       </div>

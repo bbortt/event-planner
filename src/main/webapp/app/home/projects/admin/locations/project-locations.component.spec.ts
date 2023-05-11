@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { of, Subscription } from 'rxjs';
 
-import { Project, ProjectLocationService } from 'app/api';
+import { Location, Project, ProjectLocationService } from 'app/api';
 import { LocationService } from 'app/entities/location/service/location.service';
 
 import { ProjectLocationsComponent } from './project-locations.component';
@@ -68,6 +68,53 @@ describe('ProjectLocationsComponent', () => {
       component.ngOnDestroy();
 
       expect(locationUpdatedSource?.unsubscribe).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('setActiveLocation', () => {
+    it('sets the active location', () => {
+      const location = {} as Location;
+
+      component.setActiveLocation(location);
+
+      expect(component.activeLocation).toEqual(location);
+    });
+
+    it('calculates the active location path', () => {
+      const location: Location = {
+        id: 4,
+        name: 'Location 4',
+        children: [],
+      };
+
+      const locations: Location[] = [
+        {
+          id: 1,
+          name: 'Location 1',
+          children: [
+            {
+              id: 2,
+              name: 'Location 2',
+              children: [],
+            },
+            {
+              id: 3,
+              name: 'Location 3',
+              children: [location],
+            },
+          ],
+        },
+        {
+          id: 5,
+          name: 'Location 5',
+          children: [],
+        },
+      ];
+
+      component.locations = locations;
+      component.setActiveLocation(location);
+
+      expect(component.activeLocationPath).toEqual([locations[0], locations[0].children[1], location]);
     });
   });
 });
