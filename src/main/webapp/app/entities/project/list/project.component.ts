@@ -1,5 +1,5 @@
 import { HttpHeaders } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { ActivatedRoute, Data, ParamMap, Router } from '@angular/router';
 
 import { combineLatest, filter, Observable, switchMap, tap } from 'rxjs';
@@ -32,7 +32,8 @@ export class ProjectComponent implements OnInit {
     protected projectService: ProjectService,
     protected activatedRoute: ActivatedRoute,
     public router: Router,
-    protected modalService: NgbModal
+    protected modalService: NgbModal,
+    private ngZone: NgZone
   ) {}
 
   trackId = (_index: number, item: IProject): number => this.projectService.getProjectIdentifier(item);
@@ -66,11 +67,11 @@ export class ProjectComponent implements OnInit {
   }
 
   navigateToWithComponentValues(): void {
-    this.handleNavigation(this.page, this.predicate, this.ascending);
+    this.ngZone.run(() => this.handleNavigation(this.page, this.predicate, this.ascending));
   }
 
   navigateToPage(page = this.page): void {
-    this.handleNavigation(page, this.predicate, this.ascending);
+    this.ngZone.run(() => this.handleNavigation(page, this.predicate, this.ascending));
   }
 
   protected loadFromBackendWithRouteInformation(): Observable<EntityArrayResponseType> {
