@@ -1,8 +1,20 @@
 package io.github.bbortt.event.planner.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
-import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -38,6 +50,10 @@ public class Location extends AbstractAuditingEntity<Location, Long> implements 
     @ManyToOne
     @JsonIgnoreProperties(value = { "project", "parent" }, allowSetters = true)
     private Location parent;
+
+    @JsonBackReference
+    @OneToMany(mappedBy = "parent")
+    private Set<Location> children = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -99,10 +115,27 @@ public class Location extends AbstractAuditingEntity<Location, Long> implements 
 
     public void setParent(Location location) {
         this.parent = location;
+
+        if (!Objects.isNull(this.parent) && !Objects.isNull(this.parent.getChildren())) {
+            this.parent.getChildren().add(this);
+        }
     }
 
-    public Location parent(Location location) {
-        this.setParent(location);
+    public Set<Location> getChildren() {
+        return children;
+    }
+
+    public void setChildren(Set<Location> children) {
+        this.children = children;
+
+        if (!Objects.isNull(this.children)) {
+            this.children.forEach(child -> child.setParent(this));
+        }
+    }
+
+    public Location withChild(Location child) {
+        this.children.add(child);
+        child.setParent(this);
         return this;
     }
 

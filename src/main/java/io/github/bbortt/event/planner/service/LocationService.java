@@ -4,11 +4,13 @@ import io.github.bbortt.event.planner.domain.Location;
 import io.github.bbortt.event.planner.repository.LocationRepository;
 import io.github.bbortt.event.planner.service.dto.LocationDTO;
 import io.github.bbortt.event.planner.service.mapper.LocationMapper;
+import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -117,5 +119,19 @@ public class LocationService {
     public void delete(Long id) {
         log.debug("Request to delete Location : {}", id);
         locationRepository.deleteById(id);
+    }
+
+    /**
+     * Get all locations of a {@link io.github.bbortt.event.planner.domain.Project}.
+     *
+     * @param projectId the id of the {@link io.github.bbortt.event.planner.domain.Project}.
+
+     * @return the list of entities.
+     */
+    @Transactional(readOnly = true)
+    @PreAuthorize("T(io.github.bbortt.event.planner.security.SecurityUtils).isAuthenticated()")
+    public List<LocationDTO> findAllInProject(Long projectId) {
+        log.debug("Request to get all Locations in Project '{}'", projectId);
+        return locationRepository.findAllByProject_IdEquals(projectId).stream().map(locationMapper::toDto).toList();
     }
 }

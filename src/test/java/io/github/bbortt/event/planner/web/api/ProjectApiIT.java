@@ -3,10 +3,12 @@ package io.github.bbortt.event.planner.web.api;
 import static io.github.bbortt.event.planner.config.Constants.SLICE_HAS_NEXT_PAGE_HEADER;
 import static org.hamcrest.Matchers.equalTo;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import io.github.bbortt.event.planner.IntegrationTest;
-import io.github.bbortt.event.planner.repository.ProjectRepository;
 import io.github.bbortt.event.planner.web.rest.ProjectResourceIT;
 import java.util.UUID;
 import javax.persistence.EntityManager;
@@ -28,9 +30,6 @@ class ProjectApiIT {
 
     @Autowired
     private EntityManager entityManager;
-
-    @Autowired
-    private ProjectRepository projectRepository;
 
     @Autowired
     private MockMvc restProjectMockMvc;
@@ -85,7 +84,7 @@ class ProjectApiIT {
 
     private void createAndPersistProjects(int count, Boolean archived) {
         for (int i = 0; i < count; i++) {
-            projectRepository.save(ProjectResourceIT.createEntity(entityManager).token(UUID.randomUUID()).archived(archived));
+            entityManager.persist(ProjectResourceIT.createEntity(entityManager).token(UUID.randomUUID()).archived(archived));
         }
     }
 }

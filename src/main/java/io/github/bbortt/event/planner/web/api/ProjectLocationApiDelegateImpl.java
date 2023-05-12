@@ -1,10 +1,14 @@
 package io.github.bbortt.event.planner.web.api;
 
+import io.github.bbortt.event.planner.service.LocationService;
+import io.github.bbortt.event.planner.service.ProjectService;
 import io.github.bbortt.event.planner.service.api.dto.GetProjectLocations200Response;
 import io.github.bbortt.event.planner.service.api.dto.Location;
-import java.util.List;
+import io.github.bbortt.event.planner.service.dto.LocationDTO;
+import io.github.bbortt.event.planner.web.api.mapper.ApiProjectLocationMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,21 +17,34 @@ public class ProjectLocationApiDelegateImpl implements ProjectLocationApiDelegat
 
     private final Logger log = LoggerFactory.getLogger(ProjectLocationApiDelegateImpl.class);
 
+    private final LocationService locationService;
+    private final ProjectService projectService;
+    private final ApiProjectLocationMapper apiProjectLocationMapper;
+
+    public ProjectLocationApiDelegateImpl(
+        LocationService locationService,
+        ProjectService projectService,
+        ApiProjectLocationMapper apiProjectLocationMapper
+    ) {
+        this.locationService = locationService;
+        this.projectService = projectService;
+        this.apiProjectLocationMapper = apiProjectLocationMapper;
+    }
+
     @Override
     public ResponseEntity<GetProjectLocations200Response> getProjectLocations(Long projectId) {
         log.debug("REST request to get all Locations in Project '{}'", projectId);
 
-        return ResponseEntity.ok(
+        projectService.findOneOrThrowEntityNotFoundAlertException(projectId);
+
+        return new ResponseEntity<>(
             new GetProjectLocations200Response()
-                .contents(
-                    List.of(
-                        new Location().id(1234L).name("some location"),
-                        new Location()
-                            .id(234L)
-                            .name("another location")
-                            .children(List.of(new Location().id(12356L).name("yet another location")))
-                    )
-                )
+                .contents(locationService.findAllInProject(projectId).stream().map(this::toApiDTO).toList()),
+            HttpStatus.OK
         );
+    }
+
+    private Location toApiDTO(LocationDTO locationDTO) {
+        return apiProjectLocationMapper.toApiDTO(locationDTO);
     }
 }

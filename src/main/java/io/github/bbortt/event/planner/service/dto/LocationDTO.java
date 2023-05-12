@@ -2,6 +2,7 @@ package io.github.bbortt.event.planner.service.dto;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.List;
 import java.util.Objects;
 import javax.validation.constraints.*;
 
@@ -31,6 +32,8 @@ public class LocationDTO implements Serializable {
     private ProjectDTO project;
 
     private LocationDTO parent;
+
+    private List<LocationDTO> children;
 
     public Long getId() {
         return id;
@@ -104,6 +107,14 @@ public class LocationDTO implements Serializable {
         this.parent = parent;
     }
 
+    public List<LocationDTO> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<LocationDTO> children) {
+        this.children = children;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -138,6 +149,7 @@ public class LocationDTO implements Serializable {
             ", lastModifiedDate='" + getLastModifiedDate() + "'" +
             ", project=" + getProject() +
             ", parent=" + getParent() +
+            ", children=" + getChildren() +
             "}";
     }
 }
