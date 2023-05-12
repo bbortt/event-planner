@@ -146,7 +146,7 @@ public class MemberService {
     }
 
     /**
-     * Get all the members of a {@link io.github.bbortt.event.planner.domain.Project}
+     * Get all members of a {@link io.github.bbortt.event.planner.domain.Project}.
      *
      * @param projectId the id of the {@link io.github.bbortt.event.planner.domain.Project}.
      * @param pageable the pagination information.
@@ -161,7 +161,7 @@ public class MemberService {
     }
 
     /**
-     * Get one member in a {@link io.github.bbortt.event.planner.domain.Project} by invitation email
+     * Get one member in a {@link io.github.bbortt.event.planner.domain.Project} by invitation email.
      *
      * @param projectId the id of the {@link io.github.bbortt.event.planner.domain.Project}.
      * @param invitedEmail the invitation email of the entity.
@@ -174,7 +174,7 @@ public class MemberService {
     }
 
     /**
-     * Invite a member to collaborate on a {@link io.github.bbortt.event.planner.domain.Project}
+     * Invite a member to collaborate on a {@link io.github.bbortt.event.planner.domain.Project}.
      *
      * @param email the invitation email of the entity.
      * @param project the {@link io.github.bbortt.event.planner.domain.Project} to collaborate on.

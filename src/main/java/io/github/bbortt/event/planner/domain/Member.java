@@ -4,6 +4,7 @@ import io.github.bbortt.event.planner.audit.EntityAuditEventListener;
 import io.github.bbortt.event.planner.security.SecurityUtils;
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -191,6 +192,10 @@ public class Member implements Serializable {
 
     public void setProject(Project project) {
         this.project = project;
+
+        if (!Objects.isNull(project)) {
+            this.project.getMembers().add(this);
+        }
     }
 
     public Member project(Project project) {

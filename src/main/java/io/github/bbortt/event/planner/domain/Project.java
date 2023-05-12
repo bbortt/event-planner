@@ -3,6 +3,7 @@ package io.github.bbortt.event.planner.domain;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 import javax.persistence.*;
@@ -54,7 +55,7 @@ public class Project extends AbstractAuditingEntity<Project, Long> implements Se
 
     @JsonBackReference
     @OneToMany(mappedBy = "project")
-    private Set<Member> members;
+    private Set<Member> members = new HashSet<>();
 
     @Override
     public Long getId() {
@@ -156,6 +157,7 @@ public class Project extends AbstractAuditingEntity<Project, Long> implements Se
 
     public void setMembers(Set<Member> members) {
         this.members = members;
+        this.members.forEach(member -> member.setProject(this));
     }
 
     @Override

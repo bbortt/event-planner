@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
 
 import io.github.bbortt.event.planner.service.MemberService;
 import io.github.bbortt.event.planner.service.ProjectService;
@@ -68,7 +70,7 @@ class ProjectMemberApiTest {
         String invitedEmail = "wand-wilson@localhost";
 
         // Project by ID exists
-        doReturn(Optional.of(new ProjectDTO())).when(projectServiceMock).findOne(projectId);
+        doReturn(new ProjectDTO()).when(projectServiceMock).findOneOrThrowEntityNotFoundAlertException(projectId);
 
         MemberDTO memberDTO = new MemberDTO();
         doReturn(Optional.of(memberDTO)).when(memberServiceMock).findOneInProjectByInvitationEmail(projectId, invitedEmail);
@@ -90,16 +92,15 @@ class ProjectMemberApiTest {
         String invitedEmail = "nicholas-scratch@localhost";
 
         // Project by ID does not exist
-        doReturn(Optional.empty()).when(projectServiceMock).findOne(projectId);
+        EntityNotFoundAlertException entityNotFoundAlertException = mock(EntityNotFoundAlertException.class);
+        doThrow(entityNotFoundAlertException).when(projectServiceMock).findOneOrThrowEntityNotFoundAlertException(projectId);
 
         EntityNotFoundAlertException exception = assertThrows(
             EntityNotFoundAlertException.class,
             () -> fixture.findProjectMemberByTokenAndEmail(projectId, invitedEmail)
         );
 
-        assertEquals(Status.NOT_FOUND, exception.getStatus());
-        assertEquals("idnotfound", exception.getErrorKey());
-        assertEquals("project", exception.getEntityName());
+        assertEquals(entityNotFoundAlertException, exception);
     }
 
     @Test
@@ -108,7 +109,7 @@ class ProjectMemberApiTest {
         String invitedEmail = "ryoko-saguri@localhost";
 
         // Project by ID exists
-        doReturn(Optional.of(new ProjectDTO())).when(projectServiceMock).findOne(projectId);
+        doReturn(new ProjectDTO()).when(projectServiceMock).findOneOrThrowEntityNotFoundAlertException(projectId);
 
         doReturn(Optional.empty()).when(memberServiceMock).findOneInProjectByInvitationEmail(projectId, invitedEmail);
 
@@ -129,7 +130,7 @@ class ProjectMemberApiTest {
         List<String> sort = Collections.singletonList("id,asc");
 
         // Project by ID exists
-        doReturn(Optional.of(new ProjectDTO())).when(projectServiceMock).findOne(projectId);
+        doReturn(new ProjectDTO()).when(projectServiceMock).findOneOrThrowEntityNotFoundAlertException(projectId);
 
         PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
         doReturn(pageRequest)
@@ -172,15 +173,14 @@ class ProjectMemberApiTest {
         Optional<List<String>> sort = Optional.of(Collections.singletonList("id,asc"));
 
         // Project by ID does not exist
-        doReturn(Optional.empty()).when(projectServiceMock).findOne(projectId);
+        EntityNotFoundAlertException entityNotFoundAlertException = mock(EntityNotFoundAlertException.class);
+        doThrow(entityNotFoundAlertException).when(projectServiceMock).findOneOrThrowEntityNotFoundAlertException(projectId);
 
         EntityNotFoundAlertException exception = assertThrows(
             EntityNotFoundAlertException.class,
             () -> fixture.getProjectMembers(projectId, pageSize, pageNumber, sort)
         );
 
-        assertEquals(Status.NOT_FOUND, exception.getStatus());
-        assertEquals("idnotfound", exception.getErrorKey());
-        assertEquals("project", exception.getEntityName());
+        assertEquals(entityNotFoundAlertException, exception);
     }
 }

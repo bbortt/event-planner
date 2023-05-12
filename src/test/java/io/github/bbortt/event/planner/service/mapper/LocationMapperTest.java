@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 class LocationMapperTest {
 
     private static final String PROJECT_NAME = "test project name";
-    private static final String PARENT_LOCATION_NAME = "parent location name";
+    private static final String SECOND_LOCATION_NAME = "parent location name";
 
     private LocationMapper fixture;
     private Location location;
@@ -62,7 +62,7 @@ class LocationMapperTest {
 
     @Test
     void toDtoWithParent() {
-        location.parent(new Location().name(PARENT_LOCATION_NAME));
+        new Location().name(SECOND_LOCATION_NAME).withChild(location);
 
         List<Location> locations = getLocations();
 
@@ -72,14 +72,30 @@ class LocationMapperTest {
         assertThat(locationDTOS.get(0)).usingRecursiveComparison().ignoringFields("parent", "project").isEqualTo(locationDTO);
         assertThat(locationDTOS.get(0))
             .hasFieldOrPropertyWithValue("project.name", PROJECT_NAME)
-            .hasFieldOrPropertyWithValue("parent.name", PARENT_LOCATION_NAME);
+            .hasFieldOrPropertyWithValue("parent.name", SECOND_LOCATION_NAME);
+        assertThat(locationDTOS.get(1)).isNull();
+    }
+
+    @Test
+    void toDtoWithChild() {
+        location.withChild(new Location().name(SECOND_LOCATION_NAME));
+
+        List<Location> locations = getLocations();
+
+        List<LocationDTO> locationDTOS = fixture.toDto(locations);
+
+        assertThat(locationDTOS).isNotEmpty().size().isEqualTo(2);
+        assertThat(locationDTOS.get(0)).usingRecursiveComparison().ignoringFields("children", "project").isEqualTo(locationDTO);
+        assertThat(locationDTOS.get(0)).hasFieldOrPropertyWithValue("project.name", PROJECT_NAME);
+        assertThat(locationDTOS.get(0).getChildren()).isNotEmpty().size().isEqualTo(1);
+        assertThat(locationDTOS.get(0).getChildren().iterator().next()).hasFieldOrPropertyWithValue("name", SECOND_LOCATION_NAME);
         assertThat(locationDTOS.get(1)).isNull();
     }
 
     @Test
     void toEntityWithParent() {
         LocationDTO parent = new LocationDTO();
-        parent.setName(PARENT_LOCATION_NAME);
+        parent.setName(SECOND_LOCATION_NAME);
         locationDTO.setParent(parent);
 
         List<LocationDTO> locationDTOs = getLocationDTOS();
@@ -90,7 +106,25 @@ class LocationMapperTest {
         assertThat(locations.get(0)).usingRecursiveComparison().ignoringFields("parent", "project").isEqualTo(location);
         assertThat(locations.get(0))
             .hasFieldOrPropertyWithValue("project.name", PROJECT_NAME)
-            .hasFieldOrPropertyWithValue("parent.name", PARENT_LOCATION_NAME);
+            .hasFieldOrPropertyWithValue("parent.name", SECOND_LOCATION_NAME);
+        assertThat(locations.get(1)).isNull();
+    }
+
+    @Test
+    void toEntityWithChild() {
+        LocationDTO child = new LocationDTO();
+        child.setName(SECOND_LOCATION_NAME);
+        locationDTO.setChildren(List.of(child));
+
+        List<LocationDTO> locationDTOs = getLocationDTOS();
+
+        List<Location> locations = fixture.toEntity(locationDTOs);
+
+        assertThat(locations).isNotEmpty().size().isEqualTo(2);
+        assertThat(locations.get(0)).usingRecursiveComparison().ignoringFields("children", "project").isEqualTo(location);
+        assertThat(locations.get(0)).hasFieldOrPropertyWithValue("project.name", PROJECT_NAME);
+        assertThat(locations.get(0).getChildren()).isNotEmpty().size().isEqualTo(1);
+        assertThat(locations.get(0).getChildren().iterator().next()).hasFieldOrPropertyWithValue("name", SECOND_LOCATION_NAME);
         assertThat(locations.get(1)).isNull();
     }
 

@@ -5,6 +5,8 @@ import io.github.bbortt.event.planner.repository.ProjectRepository;
 import io.github.bbortt.event.planner.security.SecurityUtils;
 import io.github.bbortt.event.planner.service.dto.ProjectDTO;
 import io.github.bbortt.event.planner.service.mapper.ProjectMapper;
+import io.github.bbortt.event.planner.web.api.ProjectApiDelegateImpl;
+import io.github.bbortt.event.planner.web.rest.errors.EntityNotFoundAlertException;
 import java.util.Optional;
 import java.util.UUID;
 import org.slf4j.Logger;
@@ -123,6 +125,26 @@ public class ProjectService {
     public Optional<ProjectDTO> findOne(Long id) {
         log.debug("Request to get Project : {}", id);
         return projectRepository.findById(id).map(projectMapper::toDto);
+    }
+
+    /**
+     * Get one project by id. Throw an {@link EntityNotFoundAlertException} if it does not exist.
+     *
+     * @param id the id of the entity.
+     * @return the entity.
+     */
+    @Transactional(readOnly = true)
+    public ProjectDTO findOneOrThrowEntityNotFoundAlertException(Long id) {
+        log.debug("Request to get Project : {}", id);
+
+        Optional<ProjectDTO> project = findOne(id);
+
+        if (project.isEmpty()) {
+            log.warn("Project {} does not exist!", id);
+            throw new EntityNotFoundAlertException("Entity not found", ProjectApiDelegateImpl.ENTITY_NAME, "idnotfound");
+        }
+
+        return project.get();
     }
 
     /**

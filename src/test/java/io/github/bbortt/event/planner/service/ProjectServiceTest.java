@@ -13,6 +13,7 @@ import io.github.bbortt.event.planner.domain.Project;
 import io.github.bbortt.event.planner.repository.ProjectRepository;
 import io.github.bbortt.event.planner.service.dto.ProjectDTO;
 import io.github.bbortt.event.planner.service.mapper.ProjectMapper;
+import io.github.bbortt.event.planner.web.rest.errors.EntityNotFoundAlertException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -29,6 +30,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.zalando.problem.Status;
 
 @ExtendWith(MockitoExtension.class)
 class ProjectServiceTest {
@@ -79,6 +81,37 @@ class ProjectServiceTest {
 
         assertTrue(result.isPresent());
         assertEquals(projectDTO, result.get());
+    }
+
+    @Test
+    void findOneOrThrowEntityNotFoundAlertExceptionCallsRepository() {
+        Long projectId = 1234L;
+
+        Project project = new Project().id(projectId);
+        doReturn(Optional.of(project)).when(projectRepositoryMock).findById(projectId);
+
+        ProjectDTO projectDTO = new ProjectDTO();
+        doReturn(projectDTO).when(projectMapperMock).toDto(project);
+
+        ProjectDTO result = fixture.findOneOrThrowEntityNotFoundAlertException(projectId);
+        assertEquals(projectDTO, result);
+    }
+
+    @Test
+    void findOneOrThrowsEntityNotFoundAlertExceptionWhenProjectByIdDoesNotExist() {
+        Long projectId = 1234L;
+        doReturn(Optional.empty()).when(projectRepositoryMock).findById(projectId);
+
+        EntityNotFoundAlertException exception = assertThrows(
+            EntityNotFoundAlertException.class,
+            () -> fixture.findOneOrThrowEntityNotFoundAlertException(projectId)
+        );
+
+        assertEquals(Status.NOT_FOUND, exception.getStatus());
+        assertEquals("idnotfound", exception.getErrorKey());
+        assertEquals("project", exception.getEntityName());
+
+        verifyNoInteractions(projectMapperMock);
     }
 
     @Test
