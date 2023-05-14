@@ -30,6 +30,7 @@ describe('Project from parent routing resolve service', () => {
       const result = await firstValueFrom(
         // @ts-ignore skip conversion for testing
         TestBed.runInInjectionContext(() =>
+          // @ts-ignore skip conversion for testing
           projectFromParentRoute({ parent: { data: { project: { id: mockProjectId } } } }, mockRouter.routerState.snapshot)
         )
       );

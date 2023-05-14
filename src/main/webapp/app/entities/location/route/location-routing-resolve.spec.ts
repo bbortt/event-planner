@@ -3,7 +3,7 @@ import { HttpResponse } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ActivatedRouteSnapshot, ActivatedRoute, Router, convertToParamMap } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { first, firstValueFrom, isEmpty, Observable, of } from 'rxjs';
+import { firstValueFrom, isEmpty, Observable, of } from 'rxjs';
 
 import { ILocation } from '../location.model';
 import { LocationService } from '../service/location.service';
