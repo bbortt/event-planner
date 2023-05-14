@@ -1,12 +1,14 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { UserRouteAccessService } from 'app/core/auth/user-route-access.service';
+import { ASC } from 'app/config/navigation.constants';
+import { userRouteAccess } from 'app/core/auth/user-route-access';
+
+import { LocationRoutingResolveService } from './location-routing-resolve.service';
+
 import { LocationComponent } from '../list/location.component';
 import { LocationDetailComponent } from '../detail/location-detail.component';
 import { LocationUpdateComponent } from '../update/location-update.component';
-import { LocationRoutingResolveService } from './location-routing-resolve.service';
-import { ASC } from 'app/config/navigation.constants';
 
 const locationRoute: Routes = [
   {
@@ -15,7 +17,7 @@ const locationRoute: Routes = [
     data: {
       defaultSort: 'id,' + ASC,
     },
-    canActivate: [UserRouteAccessService],
+    canActivate: [userRouteAccess],
   },
   {
     path: ':id/view',
@@ -23,7 +25,7 @@ const locationRoute: Routes = [
     resolve: {
       location: LocationRoutingResolveService,
     },
-    canActivate: [UserRouteAccessService],
+    canActivate: [userRouteAccess],
   },
   {
     path: 'new',
@@ -31,7 +33,7 @@ const locationRoute: Routes = [
     resolve: {
       location: LocationRoutingResolveService,
     },
-    canActivate: [UserRouteAccessService],
+    canActivate: [userRouteAccess],
   },
   {
     path: ':id/edit',
@@ -39,7 +41,7 @@ const locationRoute: Routes = [
     resolve: {
       location: LocationRoutingResolveService,
     },
-    canActivate: [UserRouteAccessService],
+    canActivate: [userRouteAccess],
   },
 ];
 

@@ -6,7 +6,7 @@ import { navbarRoute } from './layouts/navbar/navbar.route';
 import { DEBUG_INFO_ENABLED } from 'app/app.constants';
 import { Authority } from 'app/config/authority.constants';
 
-import { UserRouteAccessService } from 'app/core/auth/user-route-access.service';
+import { userRouteAccess } from 'app/core/auth/user-route-access';
 
 @NgModule({
   imports: [
@@ -17,12 +17,12 @@ import { UserRouteAccessService } from 'app/core/auth/user-route-access.service'
           data: {
             authorities: [Authority.ADMIN],
           },
-          canActivate: [UserRouteAccessService],
+          canActivate: [userRouteAccess],
           loadChildren: () => import('./admin/admin-routing.module').then(m => m.AdminRoutingModule),
         },
         {
           path: 'home',
-          canActivate: [UserRouteAccessService],
+          canActivate: [userRouteAccess],
           loadChildren: () => import('./home/home.module').then(m => m.HomeModule),
         },
         {
