@@ -31,7 +31,7 @@ class LocationServiceTest {
     }
 
     @Test
-    void asdf() {
+    void findAllInProjectCallsRepository() {
         Long projectId = 1234L;
 
         Location location = new Location();

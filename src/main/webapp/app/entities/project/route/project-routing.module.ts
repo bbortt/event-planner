@@ -1,12 +1,14 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { UserRouteAccessService } from 'app/core/auth/user-route-access.service';
+import { ASC } from 'app/config/navigation.constants';
+import { userRouteAccess } from 'app/core/auth/user-route-access';
+
+import { ProjectRoutingResolveService } from './project-routing-resolve.service';
+
 import { ProjectComponent } from '../list/project.component';
 import { ProjectDetailComponent } from '../detail/project-detail.component';
 import { ProjectUpdateComponent } from '../update/project-update.component';
-import { ProjectRoutingResolveService } from './project-routing-resolve.service';
-import { ASC } from 'app/config/navigation.constants';
 
 const projectRoute: Routes = [
   {
@@ -15,7 +17,7 @@ const projectRoute: Routes = [
     data: {
       defaultSort: 'id,' + ASC,
     },
-    canActivate: [UserRouteAccessService],
+    canActivate: [userRouteAccess],
   },
   {
     path: ':id/view',
@@ -23,7 +25,7 @@ const projectRoute: Routes = [
     resolve: {
       project: ProjectRoutingResolveService,
     },
-    canActivate: [UserRouteAccessService],
+    canActivate: [userRouteAccess],
   },
   {
     path: 'new',
@@ -31,7 +33,7 @@ const projectRoute: Routes = [
     resolve: {
       project: ProjectRoutingResolveService,
     },
-    canActivate: [UserRouteAccessService],
+    canActivate: [userRouteAccess],
   },
   {
     path: ':id/edit',
@@ -39,7 +41,7 @@ const projectRoute: Routes = [
     resolve: {
       project: ProjectRoutingResolveService,
     },
-    canActivate: [UserRouteAccessService],
+    canActivate: [userRouteAccess],
   },
 ];
 
