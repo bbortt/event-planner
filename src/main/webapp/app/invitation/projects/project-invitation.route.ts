@@ -1,7 +1,8 @@
+import { inject } from '@angular/core';
 import { Route } from '@angular/router';
 
 import { ProjectInvitationComponent } from './project-invitation.component';
-import { ProjectTokenRoutingResolveService } from './route/project-token-routing-resolve.service';
+import { projectByToken } from './route/resolve-project-by-token';
 
 export const PROJECT_INVITATION_ROUTES: Route[] = [
   { path: '', redirectTo: '/', pathMatch: 'full' },
@@ -9,7 +10,7 @@ export const PROJECT_INVITATION_ROUTES: Route[] = [
     path: ':token',
     component: ProjectInvitationComponent,
     resolve: {
-      project: ProjectTokenRoutingResolveService,
+      project: inject(projectByToken),
     },
   },
 ];
