@@ -1,10 +1,10 @@
-import { NgModule } from '@angular/core';
+import { inject, NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { ASC } from 'app/config/navigation.constants';
 import { userRouteAccess } from 'app/core/auth/user-route-access';
 
-import { MemberRoutingResolveService } from './member-routing-resolve.service';
+import { memberById } from './member-routing-resolve';
 
 import { MemberComponent } from '../list/member.component';
 import { MemberDetailComponent } from '../detail/member-detail.component';
@@ -23,7 +23,7 @@ const memberRoute: Routes = [
     path: ':id/view',
     component: MemberDetailComponent,
     resolve: {
-      member: MemberRoutingResolveService,
+      member: inject(memberById),
     },
     canActivate: [userRouteAccess],
   },
@@ -31,7 +31,7 @@ const memberRoute: Routes = [
     path: 'new',
     component: MemberUpdateComponent,
     resolve: {
-      member: MemberRoutingResolveService,
+      member: inject(memberById),
     },
     canActivate: [userRouteAccess],
   },
@@ -39,7 +39,7 @@ const memberRoute: Routes = [
     path: ':id/edit',
     component: MemberUpdateComponent,
     resolve: {
-      member: MemberRoutingResolveService,
+      member: inject(memberById),
     },
     canActivate: [userRouteAccess],
   },
