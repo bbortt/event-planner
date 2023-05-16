@@ -48,11 +48,13 @@
     <div *ngIf="activeLocation" class="col-md-5 card child-location-list">
       <h4 class="mt-2">{{ activeLocation.name }}</h4>
 
-      <div *ngIf="activeLocation.children?.length === 0" id="no-child-locations" class="alert alert-warning">
-        <span jhiTranslate="app.project.admin.location.childrenNotFound"> Keine Unter-Lokalitäten gefunden </span>
+      <div *ngIf="activeLocation.children?.length === 0; else childLocationList" id="alert-no-child-locations" class="card-body">
+        <div class="alert alert-warning mb-0">
+          <span jhiTranslate="app.project.admin.location.childrenNotFound"> Keine Unter-Lokalitäten gefunden </span>
+        </div>
       </div>
 
-      <div *ngIf="activeLocation.children">
+      <ng-template #childLocationList>
         <div class="card-body" dragula="location-list" [(dragulaModel)]="activeLocation.children">
           <app-project-location-drag
             *ngFor="let location of activeLocation.children"
@@ -61,7 +63,7 @@
             (click)="setActiveLocation(location)"
           ></app-project-location-drag>
         </div>
-      </div>
+      </ng-template>
     </div>
   </div>
 </div>
