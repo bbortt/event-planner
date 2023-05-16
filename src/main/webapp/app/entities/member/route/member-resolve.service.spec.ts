@@ -44,7 +44,7 @@ describe('Member Resolve Service', () => {
     mockActivatedRouteSnapshot.paramMap = new Map().set('id', member.id);
   });
 
-  describe('byId', () => {
+  describe('memberById', () => {
     it('should return IMember returned by find', async () => {
       memberService.find = jest.fn(id => of(new HttpResponse({ body: { id } })));
 

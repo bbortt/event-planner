@@ -44,7 +44,7 @@ describe('Location Resolve Service', () => {
     mockActivatedRouteSnapshot.paramMap = new Map().set('id', location.id);
   });
 
-  describe('byId', () => {
+  describe('locationById', () => {
     it('should return ILocation returned by find', async () => {
       locationService.find = jest.fn(id => of(new HttpResponse({ body: { id } })));
 
