@@ -6,7 +6,7 @@ import { navbarRoute } from './layouts/navbar/navbar.route';
 import { DEBUG_INFO_ENABLED } from 'app/app.constants';
 import { Authority } from 'app/config/authority.constants';
 
-import { userRouteAccess } from 'app/core/auth/user-route-access';
+import { userRouteAccess } from 'app/core/auth/user-route-access.service';
 
 @NgModule({
   imports: [

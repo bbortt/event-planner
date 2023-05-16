@@ -1,16 +1,19 @@
-import { TestBed } from '@angular/core/testing';
 import { HttpResponse } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { TestBed } from '@angular/core/testing';
 import { ActivatedRouteSnapshot, ActivatedRoute, Router, convertToParamMap } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
+
 import { firstValueFrom, isEmpty, Observable, of } from 'rxjs';
 
 import { ILocation } from '../location.model';
 import { LocationService } from '../service/location.service';
 
-import { locationById } from './location-routing-resolve';
+import { locationById } from './location-resolve.service';
 
-describe('Location by ID', () => {
+const location = { id: 1234 } as ILocation;
+
+describe('Location Resolve Service', () => {
   let locationService: LocationService;
 
   let mockActivatedRouteSnapshot: ActivatedRouteSnapshot;
@@ -37,29 +40,31 @@ describe('Location by ID', () => {
     jest.spyOn(mockRouter, 'navigateByUrl').mockImplementation(() => Promise.resolve(true));
 
     mockActivatedRouteSnapshot = TestBed.inject(ActivatedRoute).snapshot;
+    // @ts-ignore using a natural Map is ok for testing
+    mockActivatedRouteSnapshot.paramMap = new Map().set('id', location.id);
   });
 
-  describe('resolve', () => {
+  describe('byId', () => {
     it('should return ILocation returned by find', async () => {
       locationService.find = jest.fn(id => of(new HttpResponse({ body: { id } })));
-      mockActivatedRouteSnapshot.params = { id: 123 };
 
       const result = await firstValueFrom(
         // @ts-ignore skip conversion for testing
-        TestBed.runInInjectionContext(() => locationById(mockActivatedRouteSnapshot, mockRouter.routerState.snapshot))
+        TestBed.runInInjectionContext(() => locationById(mockActivatedRouteSnapshot))
       );
 
-      expect(result).toEqual({ id: 123 });
-      expect(locationService.find).toBeCalledWith(123);
+      expect(result).toEqual({ id: location.id });
+      expect(locationService.find).toBeCalledWith(location.id);
     });
 
     it('should return null if id is not provided', async () => {
       locationService.find = jest.fn();
-      mockActivatedRouteSnapshot.params = {};
+      // @ts-ignore using a natural Map is ok for testing
+      mockActivatedRouteSnapshot.paramMap = new Map();
 
       const result = await firstValueFrom(
         // @ts-ignore skip conversion for testing
-        TestBed.runInInjectionContext(() => locationById(mockActivatedRouteSnapshot, mockRouter.routerState.snapshot))
+        TestBed.runInInjectionContext(() => locationById(mockActivatedRouteSnapshot))
       );
 
       expect(result).toEqual(null);
@@ -68,18 +73,14 @@ describe('Location by ID', () => {
 
     it('should route to 404 page if data not found in server', async () => {
       jest.spyOn(locationService, 'find').mockReturnValue(of(new HttpResponse<ILocation>({ body: null })));
-      mockActivatedRouteSnapshot.params = { id: 123 };
 
       const result = await firstValueFrom(
-        (
-          TestBed.runInInjectionContext(() =>
-            locationById(mockActivatedRouteSnapshot, mockRouter.routerState.snapshot)
-          ) as Observable<ILocation | null>
-        ).pipe(isEmpty())
+        // @ts-ignore skip conversion for testing
+        (TestBed.runInInjectionContext(() => locationById(mockActivatedRouteSnapshot)) as Observable<ILocation | null>).pipe(isEmpty())
       );
 
       expect(result).toBeTruthy();
-      expect(locationService.find).toBeCalledWith(123);
+      expect(locationService.find).toBeCalledWith(location.id);
       expect(mockRouter.navigateByUrl).toHaveBeenCalledWith('404');
     });
   });

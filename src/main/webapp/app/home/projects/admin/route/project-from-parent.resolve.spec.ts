@@ -5,7 +5,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 
 import { firstValueFrom } from 'rxjs';
 
-import { projectFromParentRoute } from './project-from-parent-resolve';
+import { projectFromParentRoute } from './project-from-parent.resolve';
 
 describe('Project from parent routing resolve service', () => {
   let mockResolveParent: jest.Mock;

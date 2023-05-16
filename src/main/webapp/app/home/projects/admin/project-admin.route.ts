@@ -1,11 +1,10 @@
-import { inject } from '@angular/core';
 import { Route } from '@angular/router';
 
 import { DEFAULT_SORT_DATA } from 'app/config/navigation.constants';
 
-import { projectById } from 'app/entities/project/route/project-routing-resolve';
+import { projectById } from 'app/entities/project/route/project-resolve.service';
 
-import { projectFromParentRoute } from './route/project-from-parent-resolve';
+import { projectFromParentRoute } from './route/project-from-parent.resolve';
 
 import { AdminLayoutComponent } from './layout/admin-layout.component';
 import { ProjectLocationsComponent } from './locations/project-locations.component';
@@ -26,12 +25,12 @@ export const PROJECT_ADMIN_ROUTES: Route[] = [
       {
         path: 'settings',
         component: ProjectSettingsComponent,
-        resolve: { project: inject(projectFromParentRoute) },
+        resolve: { project: projectFromParentRoute },
       },
       {
         path: 'locations',
         component: ProjectLocationsComponent,
-        resolve: { project: inject(projectFromParentRoute) },
+        resolve: { project: projectFromParentRoute },
       },
       {
         path: 'members',
@@ -39,7 +38,7 @@ export const PROJECT_ADMIN_ROUTES: Route[] = [
         data: {
           [DEFAULT_SORT_DATA]: 'acceptedDate,desc',
         },
-        resolve: { project: inject(projectFromParentRoute) },
+        resolve: { project: projectFromParentRoute },
         children: [
           {
             path: 'project/:id/members/invite',
@@ -47,12 +46,12 @@ export const PROJECT_ADMIN_ROUTES: Route[] = [
             outlet: 'modal',
             pathMatch: 'full',
             resolve: {
-              project: inject(projectById),
+              project: projectById,
             },
           },
         ],
       },
     ],
-    resolve: { project: inject(projectFromParentRoute) },
+    resolve: { project: projectFromParentRoute },
   },
 ];
