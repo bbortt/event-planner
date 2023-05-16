@@ -1,6 +1,6 @@
 import { Route } from '@angular/router';
 
-import { anonymousRouteAccess } from 'app/core/auth/anonymous-route-access';
+import { anonymousRouteAccess } from 'app/core/auth/anonymous-route-access.service';
 
 import { LandingPageComponent } from './landing-page.component';
 

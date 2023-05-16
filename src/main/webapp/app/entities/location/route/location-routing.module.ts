@@ -1,10 +1,10 @@
-import { inject, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { ASC } from 'app/config/navigation.constants';
-import { userRouteAccess } from 'app/core/auth/user-route-access';
+import { userRouteAccess } from 'app/core/auth/user-route-access.service';
 
-import { locationById } from './location-routing-resolve';
+import { locationById } from './location-resolve.service';
 
 import { LocationComponent } from '../list/location.component';
 import { LocationDetailComponent } from '../detail/location-detail.component';
@@ -23,7 +23,7 @@ const locationRoute: Routes = [
     path: ':id/view',
     component: LocationDetailComponent,
     resolve: {
-      location: inject(locationById),
+      location: locationById,
     },
     canActivate: [userRouteAccess],
   },
@@ -31,7 +31,7 @@ const locationRoute: Routes = [
     path: 'new',
     component: LocationUpdateComponent,
     resolve: {
-      location: inject(locationById),
+      location: locationById,
     },
     canActivate: [userRouteAccess],
   },
@@ -39,7 +39,7 @@ const locationRoute: Routes = [
     path: ':id/edit',
     component: LocationUpdateComponent,
     resolve: {
-      location: inject(locationById),
+      location: locationById,
     },
     canActivate: [userRouteAccess],
   },

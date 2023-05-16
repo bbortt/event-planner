@@ -1,10 +1,10 @@
-import { inject, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { ASC } from 'app/config/navigation.constants';
-import { userRouteAccess } from 'app/core/auth/user-route-access';
+import { userRouteAccess } from 'app/core/auth/user-route-access.service';
 
-import { projectById } from './project-routing-resolve';
+import { projectById } from './project-resolve.service';
 
 import { ProjectComponent } from '../list/project.component';
 import { ProjectDetailComponent } from '../detail/project-detail.component';
@@ -23,7 +23,7 @@ const projectRoute: Routes = [
     path: ':id/view',
     component: ProjectDetailComponent,
     resolve: {
-      project: inject(projectById),
+      project: projectById,
     },
     canActivate: [userRouteAccess],
   },
@@ -31,7 +31,7 @@ const projectRoute: Routes = [
     path: 'new',
     component: ProjectUpdateComponent,
     resolve: {
-      project: inject(projectById),
+      project: projectById,
     },
     canActivate: [userRouteAccess],
   },
@@ -39,7 +39,7 @@ const projectRoute: Routes = [
     path: ':id/edit',
     component: ProjectUpdateComponent,
     resolve: {
-      project: inject(projectById),
+      project: projectById,
     },
     canActivate: [userRouteAccess],
   },

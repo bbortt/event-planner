@@ -12,9 +12,9 @@ import { NgxWebstorageModule } from 'ngx-webstorage';
 import { Account } from './account.model';
 import { AccountService } from './account.service';
 
-import { anonymousRouteAccess } from './anonymous-route-access';
+import { anonymousRouteAccess } from './anonymous-route-access.service';
 
-describe('Anonymous Route Access', () => {
+describe('Anonymous Route Access Service', () => {
   let accountService: AccountService;
 
   let mockActivatedRouteSnapshot: ActivatedRouteSnapshot;
