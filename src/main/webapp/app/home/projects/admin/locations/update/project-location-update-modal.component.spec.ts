@@ -6,9 +6,11 @@ import { of } from 'rxjs';
 import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 
+import { ILocation } from 'app/entities/location/location.model';
 import { IProject } from 'app/entities/project/project.model';
 
-import { ProjectMemberInviteModalComponent, ProjectMemberInviteModalContentComponent } from './project-member-invite-modal.component';
+import { ProjectLocationUpdateModalComponent } from './project-location-update-modal.component';
+import { ProjectLocationUpdateComponent } from './project-location-update.component';
 
 class MockNgbModalRef {
   componentInstance = { project: null };
@@ -16,25 +18,26 @@ class MockNgbModalRef {
   close = jest.fn();
 }
 
+const location: ILocation = { id: 1234 };
 const project: IProject = { id: 1234 };
 
-describe('Project Member Invite Modal Component', () => {
-  let component: ProjectMemberInviteModalComponent;
+describe('Project Location Update Modal Component', () => {
+  let component: ProjectLocationUpdateModalComponent;
   let modalService: NgbModal;
 
   let mockModalRef: NgbModalRef;
   let closeSpy: jest.SpyInstance<void, [result?: any]>;
 
-  let fixture: ComponentFixture<ProjectMemberInviteModalComponent>;
+  let fixture: ComponentFixture<ProjectLocationUpdateModalComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ProjectMemberInviteModalComponent, ProjectMemberInviteModalContentComponent],
+      declarations: [ProjectLocationUpdateComponent, ProjectLocationUpdateModalComponent],
       providers: [
         {
           provide: ActivatedRoute,
           useValue: {
-            data: of({ project }),
+            data: of({ location, project }),
           },
         },
         NgbModule,
@@ -48,7 +51,7 @@ describe('Project Member Invite Modal Component', () => {
     mockModalRef = new MockNgbModalRef() as unknown as NgbModalRef;
     closeSpy = jest.spyOn(mockModalRef, 'close');
 
-    fixture = TestBed.createComponent(ProjectMemberInviteModalComponent);
+    fixture = TestBed.createComponent(ProjectLocationUpdateModalComponent);
     component = fixture.componentInstance;
   });
 
@@ -61,7 +64,8 @@ describe('Project Member Invite Modal Component', () => {
 
     component.ngOnInit();
 
-    expect(modalSpy).toHaveBeenCalledWith(ProjectMemberInviteModalContentComponent, { size: 'lg' });
+    expect(modalSpy).toHaveBeenCalledWith(ProjectLocationUpdateComponent, { size: 'lg' });
+    expect(mockModalRef.componentInstance.location).toEqual(location);
     expect(mockModalRef.componentInstance.project).toEqual(project);
   });
 

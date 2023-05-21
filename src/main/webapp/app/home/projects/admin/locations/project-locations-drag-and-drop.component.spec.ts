@@ -4,20 +4,24 @@ import { ActivatedRoute } from '@angular/router';
 
 import { of, Subscription } from 'rxjs';
 
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+
 import { Location, Project, ProjectLocationService } from 'app/api';
 import { LocationService } from 'app/entities/location/service/location.service';
 
-import { ProjectLocationsComponent } from './project-locations.component';
+import { ProjectLocationsDragAndDropComponent } from './project-locations-drag-and-drop.component';
 
 const project = { token: 'aaa89f38-c222-4530-b983-6c9b70f26609' } as Project;
 
-describe('ProjectLocationsComponent', () => {
-  let component: ProjectLocationsComponent;
+describe("Project Locations Drag 'n Drop Component", () => {
+  let mockTranslateService: TranslateService;
+
+  let component: ProjectLocationsDragAndDropComponent;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      declarations: [ProjectLocationsComponent],
+      imports: [HttpClientTestingModule, TranslateModule.forRoot()],
+      declarations: [ProjectLocationsDragAndDropComponent],
       providers: [
         {
           provide: ActivatedRoute,
@@ -30,7 +34,10 @@ describe('ProjectLocationsComponent', () => {
       ],
     }).compileComponents();
 
-    component = TestBed.createComponent(ProjectLocationsComponent).componentInstance;
+    mockTranslateService = TestBed.inject(TranslateService);
+    jest.spyOn(mockTranslateService, 'get').mockImplementation((key: string | string[]) => of(`${key as string} translated`));
+
+    component = TestBed.createComponent(ProjectLocationsDragAndDropComponent).componentInstance;
   });
 
   describe('ngOnInit', () => {
@@ -40,6 +47,8 @@ describe('ProjectLocationsComponent', () => {
       expect(component.project).toEqual(project);
       // @ts-ignore: force this private property value for testing.
       expect(component.locationUpdatedSource).not.toBeNull();
+
+      expect(component.createNewLocationWithParentText).toEqual('app.project.admin.location.addChild translated');
     });
   });
 

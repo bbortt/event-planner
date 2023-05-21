@@ -4,15 +4,17 @@ import { ActivatedRoute } from '@angular/router';
 
 import { Subscription, tap } from 'rxjs';
 
+import { TranslateService } from '@ngx-translate/core';
+
 import { GetProjectLocations200Response, Location, Project, ProjectLocationService } from 'app/api';
 import { LocationService } from 'app/entities/location/service/location.service';
 
 @Component({
   selector: 'app-project-locations',
-  templateUrl: './project-locations.component.html',
-  styleUrls: ['./project-locations.component.scss'],
+  templateUrl: './project-locations-drag-and-drop.component.html',
+  styleUrls: ['./project-locations-drag-and-drop.component.scss'],
 })
-export class ProjectLocationsComponent implements OnDestroy, OnInit {
+export class ProjectLocationsDragAndDropComponent implements OnDestroy, OnInit {
   project: Project | null = null;
 
   locations?: Location[];
@@ -21,12 +23,15 @@ export class ProjectLocationsComponent implements OnDestroy, OnInit {
   activeLocation: Location | null = null;
   activeLocationPath: Location[] = [];
 
+  createNewLocationWithParentText = '';
+
   private locationUpdatedSource: Subscription | null = null;
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private locationService: LocationService,
-    private projectLocationService: ProjectLocationService
+    private projectLocationService: ProjectLocationService,
+    private translateService: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -41,6 +46,10 @@ export class ProjectLocationsComponent implements OnDestroy, OnInit {
       .subscribe(() => this.load());
 
     this.locationUpdatedSource = this.locationService.locationUpdatedSource$.subscribe(() => this.load());
+
+    this.translateService
+      .get('app.project.admin.location.addChild')
+      .subscribe((translation: string) => (this.createNewLocationWithParentText = translation));
   }
 
   ngOnDestroy(): void {

@@ -6,6 +6,7 @@
         "copyInvitationLink": "Copy link",
         "invitationLinkCopied": "Link copied",
         "location": {
+          "addChild": "Add Sub-Location",
           "childrenNotFound": "No Sub-Locations exist",
           "topLevel": "Top Level Locations"
         }
