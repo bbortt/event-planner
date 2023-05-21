@@ -1,8 +1,9 @@
 <div class="d-flex justify-content-center mt-3 mb-3">
   <div class="col-8">
     <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
-      <h2 id="jhi-location-heading" data-cy="LocationCreateUpdateHeading" jhiTranslate="app.location.home.createOrEditLabel">
-        Location erstellen oder bearbeiten
+      <h2 id="jhi-location-heading" data-cy="LocationCreateUpdateHeading" [ngSwitch]="this.existingLocation?.id">
+        <span *ngSwitchCase="true" jhiTranslate="app.location.home.editLabel"> Lokalität bearbeiten </span>
+        <span *ngSwitchDefault jhiTranslate="app.location.home.createLabel"> Lokalität erstellen </span>
       </h2>
 
       <div>
@@ -61,7 +62,7 @@
           </div>
         </div>
 
-        <div class="row mb-3" *ngIf="editForm.controls.createdBy.value !== null">
+        <div class="row mb-3" *ngIf="this.existingLocation && editForm.controls.createdBy.value !== null">
           <label class="form-label" jhiTranslate="app.location.createdBy" for="field_createdBy">Created By</label>
           <input
             type="text"
@@ -74,7 +75,7 @@
           />
         </div>
 
-        <div class="row mb-3" *ngIf="editForm.controls.createdDate.value !== null">
+        <div class="row mb-3" *ngIf="this.existingLocation && editForm.controls.createdDate.value !== null">
           <label class="form-label" jhiTranslate="app.location.createdDate" for="field_createdDate">Created Date</label>
           <div class="d-flex">
             <input
@@ -90,7 +91,7 @@
           </div>
         </div>
 
-        <div class="row mb-3" *ngIf="editForm.controls.lastModifiedBy.value !== null">
+        <div class="row mb-3" *ngIf="this.existingLocation && editForm.controls.lastModifiedBy.value !== null">
           <label class="form-label" jhiTranslate="app.location.lastModifiedBy" for="field_lastModifiedBy">Last Modified By</label>
           <input
             type="text"
@@ -103,7 +104,7 @@
           />
         </div>
 
-        <div class="row mb-3" *ngIf="editForm.controls.lastModifiedDate.value !== null">
+        <div class="row mb-3" *ngIf="this.existingLocation && editForm.controls.lastModifiedDate.value !== null">
           <label class="form-label" jhiTranslate="app.location.lastModifiedDate" for="field_lastModifiedDate">Last Modified Date</label>
           <div class="d-flex">
             <input
@@ -117,30 +118,6 @@
               [readonly]="true"
             />
           </div>
-        </div>
-
-        <div class="row mb-3">
-          <label class="form-label" jhiTranslate="app.location.project" for="field_project">Project</label>
-          <select
-            class="form-control"
-            id="field_project"
-            data-cy="project"
-            name="project"
-            formControlName="project"
-            [compareWith]="compareProject"
-          >
-            <option *ngIf="!editForm.get('project')!.value" [ngValue]="null" selected></option>
-            <option [ngValue]="projectOption" *ngFor="let projectOption of projectsSharedCollection">{{ projectOption.name }}</option>
-          </select>
-        </div>
-        <div *ngIf="editForm.get(['project'])!.invalid && (editForm.get(['project'])!.dirty || editForm.get(['project'])!.touched)">
-          <small
-            class="form-text text-danger"
-            *ngIf="editForm.get(['project'])?.errors?.required"
-            jhiTranslate="entity.validation.required"
-          >
-            Dieses Feld wird benötigt.
-          </small>
         </div>
 
         <div class="row mb-3">

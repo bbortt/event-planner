@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, UrlSegment } from '@angular/router';
 
 import { of } from 'rxjs';
 
@@ -22,13 +22,15 @@ const location: ILocation = { id: 1234 };
 const project: IProject = { id: 1234 };
 
 describe('Project Location Update Modal Component', () => {
-  let component: ProjectLocationUpdateModalComponent;
+  let mockActivatedRoute: ActivatedRoute;
+
   let modalService: NgbModal;
 
   let mockModalRef: NgbModalRef;
   let closeSpy: jest.SpyInstance<void, [result?: any]>;
 
   let fixture: ComponentFixture<ProjectLocationUpdateModalComponent>;
+  let component: ProjectLocationUpdateModalComponent;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -38,6 +40,7 @@ describe('Project Location Update Modal Component', () => {
           provide: ActivatedRoute,
           useValue: {
             data: of({ location, project }),
+            url: of([]),
           },
         },
         NgbModule,
@@ -46,6 +49,8 @@ describe('Project Location Update Modal Component', () => {
   }));
 
   beforeEach(() => {
+    mockActivatedRoute = TestBed.inject(ActivatedRoute);
+
     modalService = TestBed.inject(NgbModal);
 
     mockModalRef = new MockNgbModalRef() as unknown as NgbModalRef;
@@ -59,13 +64,41 @@ describe('Project Location Update Modal Component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should open modal', () => {
+  it('should open new modal', () => {
+    mockActivatedRoute.url = of([new UrlSegment('new', {})]);
     const modalSpy = jest.spyOn(modalService, 'open').mockReturnValueOnce(mockModalRef);
 
     component.ngOnInit();
 
     expect(modalSpy).toHaveBeenCalledWith(ProjectLocationUpdateComponent, { size: 'lg' });
-    expect(mockModalRef.componentInstance.location).toEqual(location);
+
+    expect(mockModalRef.componentInstance.existingLocation).toBeUndefined();
+    expect(mockModalRef.componentInstance.parentLocation).toEqual(location);
+    expect(mockModalRef.componentInstance.project).toEqual(project);
+  });
+
+  it('should open update modal', () => {
+    const modalSpy = jest.spyOn(modalService, 'open').mockReturnValueOnce(mockModalRef);
+
+    component.ngOnInit();
+
+    expect(modalSpy).toHaveBeenCalledWith(ProjectLocationUpdateComponent, { size: 'lg' });
+
+    expect(mockModalRef.componentInstance.existingLocation).toEqual(location);
+    expect(mockModalRef.componentInstance.parentLocation).toBeUndefined();
+    expect(mockModalRef.componentInstance.project).toEqual(project);
+  });
+
+  it('should open modal without any location value', () => {
+    mockActivatedRoute.data = of({ project });
+    const modalSpy = jest.spyOn(modalService, 'open').mockReturnValueOnce(mockModalRef);
+
+    component.ngOnInit();
+
+    expect(modalSpy).toHaveBeenCalledWith(ProjectLocationUpdateComponent, { size: 'lg' });
+
+    expect(mockModalRef.componentInstance.existingLocation).toBeUndefined();
+    expect(mockModalRef.componentInstance.parentLocation).toBeUndefined();
     expect(mockModalRef.componentInstance.project).toEqual(project);
   });
 

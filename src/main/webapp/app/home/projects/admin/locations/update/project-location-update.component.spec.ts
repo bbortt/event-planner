@@ -5,7 +5,7 @@ import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 
-import { of, Subject, from } from 'rxjs';
+import { from, of, Subject } from 'rxjs';
 
 import { EventManager } from 'app/core/util/event-manager.service';
 
@@ -13,7 +13,6 @@ import { ILocation } from 'app/entities/location/location.model';
 import { LocationService } from 'app/entities/location/service/location.service';
 import { LocationFormService } from 'app/entities/location/update/location-form.service';
 import { IProject } from 'app/entities/project/project.model';
-import { ProjectService } from 'app/entities/project/service/project.service';
 
 import { ProjectLocationUpdateComponent } from './project-location-update.component';
 
@@ -24,7 +23,6 @@ describe('Location Management Update Component', () => {
   let eventManager: EventManager;
   let locationFormService: LocationFormService;
   let locationService: LocationService;
-  let projectService: ProjectService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -48,36 +46,15 @@ describe('Location Management Update Component', () => {
     eventManager = TestBed.inject(EventManager);
     locationFormService = TestBed.inject(LocationFormService);
     locationService = TestBed.inject(LocationService);
-    projectService = TestBed.inject(ProjectService);
 
     comp = fixture.componentInstance;
   });
 
   describe('ngOnInit', () => {
-    it('Should call Project query and add missing value', () => {
-      const location: ILocation = { id: 456 };
-      const project: IProject = { id: 61649 };
-      location.project = project;
-
-      const projectCollection: IProject[] = [{ id: 73603 }];
-      jest.spyOn(projectService, 'query').mockReturnValue(of(new HttpResponse({ body: projectCollection })));
-      const additionalProjects = [project];
-      const expectedCollection: IProject[] = [...additionalProjects, ...projectCollection];
-      jest.spyOn(projectService, 'addProjectToCollectionIfMissing').mockReturnValue(expectedCollection);
-
-      activatedRoute.data = of({ location });
-      comp.ngOnInit();
-
-      expect(projectService.query).toHaveBeenCalled();
-      expect(projectService.addProjectToCollectionIfMissing).toHaveBeenCalledWith(
-        projectCollection,
-        ...additionalProjects.map(expect.objectContaining)
-      );
-      expect(comp.projectsSharedCollection).toEqual(expectedCollection);
-    });
-
     it('Should call Location query and add missing value', () => {
       const location: ILocation = { id: 456 };
+      const project: IProject = { id: 35176 };
+      location.project = project;
       const parent: ILocation = { id: 83607 };
       location.parent = parent;
 
@@ -87,7 +64,8 @@ describe('Location Management Update Component', () => {
       const expectedCollection: ILocation[] = [...additionalLocations, ...locationCollection];
       jest.spyOn(locationService, 'addLocationToCollectionIfMissing').mockReturnValue(expectedCollection);
 
-      activatedRoute.data = of({ location });
+      comp.existingLocation = location;
+
       comp.ngOnInit();
 
       expect(locationService.query).toHaveBeenCalled();
@@ -96,6 +74,9 @@ describe('Location Management Update Component', () => {
         ...additionalLocations.map(expect.objectContaining)
       );
       expect(comp.locationsSharedCollection).toEqual(expectedCollection);
+
+      expect(comp.editForm.get('parent')?.value).toEqual(parent);
+      expect(comp.editForm.get('project')?.value).toEqual(project);
     });
 
     it('Should update editForm', () => {
@@ -105,12 +86,28 @@ describe('Location Management Update Component', () => {
       const parent: ILocation = { id: 1584 };
       location.parent = parent;
 
-      activatedRoute.data = of({ location });
+      comp.existingLocation = location;
+
       comp.ngOnInit();
 
-      expect(comp.projectsSharedCollection).toContain(project);
       expect(comp.locationsSharedCollection).toContain(parent);
-      expect(comp.location).toEqual(location);
+
+      expect(comp.editForm.get('parent')?.value).toEqual(parent);
+      expect(comp.editForm.get('project')?.value).toEqual(project);
+    });
+
+    it('Should set default values', () => {
+      const parent: ILocation = { id: 1584 };
+      const project: IProject = { id: 35176 };
+
+      comp.parentLocation = parent;
+      comp.project = project;
+
+      comp.ngOnInit();
+
+      expect(comp.editForm.get('parent')?.value).toEqual(parent);
+      expect(comp.editForm.get('parent')?.disabled).toBeTruthy();
+      expect(comp.editForm.get('project')?.value).toEqual(project);
     });
   });
 
@@ -169,8 +166,7 @@ describe('Location Management Update Component', () => {
       const saveSubject = new Subject<HttpResponse<ILocation>>();
       jest.spyOn(locationService, 'update').mockReturnValue(saveSubject);
 
-      const location = { id: 123 };
-      activatedRoute.data = of({ location });
+      comp.existingLocation = { id: 123 };
 
       comp.ngOnInit();
 
@@ -188,16 +184,6 @@ describe('Location Management Update Component', () => {
   });
 
   describe('Compare relationships', () => {
-    describe('compareProject', () => {
-      it('Should forward to projectService', () => {
-        const entity = { id: 123 };
-        const entity2 = { id: 456 };
-        jest.spyOn(projectService, 'compareProject');
-        comp.compareProject(entity, entity2);
-        expect(projectService.compareProject).toHaveBeenCalledWith(entity, entity2);
-      });
-    });
-
     describe('compareLocation', () => {
       it('Should forward to locationService', () => {
         const entity = { id: 123 };

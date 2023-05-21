@@ -6,6 +6,7 @@
         "refreshListLabel": "Liste aktualisieren",
         "createLabel": "Lokalität erstellen",
         "createOrEditLabel": "Lokalität erstellen oder bearbeiten",
+        "editLabel": "Lokalität bearbeiten",
         "notFound": "Keine Lokalitäten gefunden"
       },
       "created": "Lokalität mit ID {{ param }} erstellt",
