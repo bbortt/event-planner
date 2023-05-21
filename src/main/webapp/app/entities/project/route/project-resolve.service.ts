@@ -77,6 +77,6 @@ export class ProjectResolveService {
 }
 
 export const projectById: ResolveFn<IProject | null> = (route: ActivatedRouteSnapshot) =>
-  inject(ProjectResolveService).byId(route.paramMap.get('id'));
+  inject(ProjectResolveService).byId(route.paramMap.get('projectId'));
 export const projectByToken: ResolveFn<Project | null> = (route: ActivatedRouteSnapshot) =>
   inject(ProjectResolveService).byToken(route.paramMap.get('token'));

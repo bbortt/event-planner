@@ -35,7 +35,7 @@ export const PROJECT_ADMIN_ROUTES: Route[] = [
         resolve: { project: projectFromParentRoute },
         children: [
           {
-            path: 'project/:id/locations/new',
+            path: 'project/:projectId/locations/new',
             component: ProjectLocationUpdateModalComponent,
             outlet: 'modal',
             pathMatch: 'full',
@@ -45,7 +45,7 @@ export const PROJECT_ADMIN_ROUTES: Route[] = [
             },
           },
           {
-            path: 'project/:id/locations/:id/new',
+            path: 'project/:projectId/locations/:id/new',
             component: ProjectLocationUpdateModalComponent,
             outlet: 'modal',
             pathMatch: 'full',
@@ -65,7 +65,7 @@ export const PROJECT_ADMIN_ROUTES: Route[] = [
         resolve: { project: projectFromParentRoute },
         children: [
           {
-            path: 'project/:id/members/invite',
+            path: 'project/:projectId/members/invite',
             component: ProjectMemberInviteModalComponent,
             outlet: 'modal',
             pathMatch: 'full',

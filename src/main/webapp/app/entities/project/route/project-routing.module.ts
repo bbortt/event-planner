@@ -20,7 +20,7 @@ const projectRoute: Routes = [
     canActivate: [userRouteAccess],
   },
   {
-    path: ':id/view',
+    path: ':projectId/view',
     component: ProjectDetailComponent,
     resolve: {
       project: projectById,
@@ -36,7 +36,7 @@ const projectRoute: Routes = [
     canActivate: [userRouteAccess],
   },
   {
-    path: ':id/edit',
+    path: ':projectId/edit',
     component: ProjectUpdateComponent,
     resolve: {
       project: projectById,

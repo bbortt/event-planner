@@ -8,7 +8,7 @@ export const MY_PROJECTS_ROUTES: Route[] = [
     loadChildren: () => import('./mine/my-projects.module').then(m => m.MyProjectsModule),
   },
   {
-    path: ':id/admin',
+    path: ':projectId/admin',
     loadChildren: () => import('./admin/project-admin.module').then(m => m.ProjectAdminModule),
     resolve: {
       project: projectById,

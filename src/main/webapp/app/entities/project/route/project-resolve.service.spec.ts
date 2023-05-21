@@ -65,7 +65,7 @@ describe('Project Resolve Service', () => {
 
     mockActivatedRouteSnapshot = TestBed.inject(ActivatedRoute).snapshot;
     // @ts-ignore using a natural Map is ok for testing
-    mockActivatedRouteSnapshot.paramMap = new Map().set('id', project.id).set('token', project.token);
+    mockActivatedRouteSnapshot.paramMap = new Map().set('projectId', project.id).set('token', project.token);
   });
 
   describe('projectById', () => {
