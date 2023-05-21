@@ -41,7 +41,7 @@ describe('Member Resolve Service', () => {
 
     mockActivatedRouteSnapshot = TestBed.inject(ActivatedRoute).snapshot;
     // @ts-ignore using a natural Map is ok for testing
-    mockActivatedRouteSnapshot.paramMap = new Map().set('id', member.id);
+    mockActivatedRouteSnapshot.paramMap = new Map().set('memberId', member.id);
   });
 
   describe('memberById', () => {

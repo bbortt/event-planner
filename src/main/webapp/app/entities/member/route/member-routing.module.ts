@@ -20,7 +20,7 @@ const memberRoute: Routes = [
     canActivate: [userRouteAccess],
   },
   {
-    path: ':id/view',
+    path: ':memberId/view',
     component: MemberDetailComponent,
     resolve: {
       member: memberById,
@@ -36,7 +36,7 @@ const memberRoute: Routes = [
     canActivate: [userRouteAccess],
   },
   {
-    path: ':id/edit',
+    path: ':memberId/edit',
     component: MemberUpdateComponent,
     resolve: {
       member: memberById,

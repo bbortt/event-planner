@@ -31,4 +31,4 @@ export class MemberResolveService {
 }
 
 export const memberById: ResolveFn<IMember | null> = (route: ActivatedRouteSnapshot) =>
-  inject(MemberResolveService).byId(route.paramMap.get('id'));
+  inject(MemberResolveService).byId(route.paramMap.get('memberId'));
