@@ -26,7 +26,21 @@
 
   <div class="row">
     <div *ngIf="locations" class="col-md-5 card h-100 location-list" [class.location-list-with-children]="activeLocation">
-      <h4 class="mt-2" jhiTranslate="app.project.admin.location.topLevel">Oberste Lokalitäten</h4>
+      <div class="d-flex align-items-center justify-content-between">
+        <h4 class="mt-2" jhiTranslate="app.project.admin.location.topLevel">Oberste Lokalitäten</h4>
+
+        <button
+          type="button"
+          class="btn btn-primary btn-sm btn-quadratic"
+          data-cy="addRootLocationButton"
+          data-toggle="tooltip"
+          [title]="createNewLocationWithParentText"
+          [routerLink]="[{ outlets: { modal: ['project', project.id, 'locations', 'new'] } }]"
+        >
+          <fa-icon icon="plus"></fa-icon>
+        </button>
+      </div>
+
       <div class="card-body" dragula="location-list" [(dragulaModel)]="locations">
         <app-project-location-drag
           *ngFor="let location of locations"
@@ -46,7 +60,20 @@
     </div>
 
     <div *ngIf="activeLocation" class="col-md-5 card child-location-list">
-      <h4 class="mt-2">{{ activeLocation.name }}</h4>
+      <div class="d-flex align-items-center justify-content-between">
+        <h4 class="mt-2">{{ activeLocation.name }}</h4>
+
+        <button
+          type="button"
+          class="btn btn-primary btn-sm btn-quadratic"
+          data-cy="addRootLocationButton"
+          data-toggle="tooltip"
+          [title]="createNewLocationWithParentText"
+          [routerLink]="[{ outlets: { modal: ['project', project.id, 'locations', activeLocation.id, 'new'] } }]"
+        >
+          <fa-icon icon="plus"></fa-icon>
+        </button>
+      </div>
 
       <div *ngIf="activeLocation.children?.length === 0; else childLocationList" id="alert-no-child-locations" class="card-body">
         <div class="alert alert-warning mb-0">
@@ -66,4 +93,6 @@
       </ng-template>
     </div>
   </div>
+
+  <router-outlet name="modal"></router-outlet>
 </div>
