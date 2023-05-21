@@ -45,7 +45,7 @@ export const PROJECT_ADMIN_ROUTES: Route[] = [
             },
           },
           {
-            path: 'project/:projectId/locations/:id/new',
+            path: 'project/:projectId/locations/:locationId/new',
             component: ProjectLocationUpdateModalComponent,
             outlet: 'modal',
             pathMatch: 'full',
