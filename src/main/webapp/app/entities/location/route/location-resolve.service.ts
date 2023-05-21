@@ -31,4 +31,4 @@ export class LocationResolveService {
 }
 
 export const locationById: ResolveFn<ILocation | null> = (route: ActivatedRouteSnapshot) =>
-  inject(LocationResolveService).byId(route.paramMap.get('id'));
+  inject(LocationResolveService).byId(route.paramMap.get('locationId'));
