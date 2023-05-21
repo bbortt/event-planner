@@ -6,6 +6,7 @@
         "refreshListLabel": "Refresh list",
         "createLabel": "Create a new Location",
         "createOrEditLabel": "Create or edit a Location",
+        "editLabel": "Edit a Location",
         "notFound": "No Locations found"
       },
       "created": "A new Location is created with identifier {{ param }}",

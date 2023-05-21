@@ -1,6 +1,5 @@
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 
 import { Observable } from 'rxjs';
 import { finalize, map } from 'rxjs/operators';
@@ -11,7 +10,6 @@ import { ILocation } from 'app/entities/location/location.model';
 import { LocationService } from 'app/entities/location/service/location.service';
 import { LocationFormGroup, LocationFormService } from 'app/entities/location/update/location-form.service';
 import { IProject } from 'app/entities/project/project.model';
-import { ProjectService } from 'app/entities/project/service/project.service';
 
 @Component({
   selector: 'app-project-location-update',
@@ -19,11 +17,11 @@ import { ProjectService } from 'app/entities/project/service/project.service';
 })
 export class ProjectLocationUpdateComponent implements OnInit {
   project: IProject | null = null;
+  parentLocation: ILocation | null = null;
 
   isSaving = false;
-  location: ILocation | null = null;
+  existingLocation: ILocation | null = null;
 
-  projectsSharedCollection: IProject[] = [];
   locationsSharedCollection: ILocation[] = [];
 
   editForm: LocationFormGroup;
@@ -31,27 +29,29 @@ export class ProjectLocationUpdateComponent implements OnInit {
   constructor(
     private eventManager: EventManager,
     protected locationService: LocationService,
-    protected locationFormService: LocationFormService,
-    protected projectService: ProjectService,
-    protected activatedRoute: ActivatedRoute
+    protected locationFormService: LocationFormService
   ) {
     this.editForm = this.locationFormService.createLocationFormGroup();
   }
 
-  compareProject = (o1: IProject | null, o2: IProject | null): boolean => this.projectService.compareProject(o1, o2);
-
-  compareLocation = (o1: ILocation | null, o2: ILocation | null): boolean => this.locationService.compareLocation(o1, o2);
-
   ngOnInit(): void {
-    this.activatedRoute.data.subscribe(({ location }) => {
-      this.location = location;
-      if (location) {
-        this.updateForm(location);
+    if (this.existingLocation) {
+      this.updateForm(this.existingLocation);
+    } else {
+      if (this.parentLocation) {
+        this.editForm.get('parent')?.setValue(this.parentLocation);
+        this.editForm.controls.parent.disable();
       }
 
-      this.loadRelationshipsOptions();
-    });
+      if (this.project) {
+        this.editForm.get('project')?.setValue(this.project);
+      }
+    }
+
+    this.loadRelationshipsOptions();
   }
+
+  compareLocation = (o1: ILocation | null, o2: ILocation | null): boolean => this.locationService.compareLocation(o1, o2);
 
   previousState(): void {
     window.history.back();
@@ -87,13 +87,8 @@ export class ProjectLocationUpdateComponent implements OnInit {
   }
 
   protected updateForm(location: ILocation): void {
-    this.location = location;
     this.locationFormService.resetForm(this.editForm, location);
 
-    this.projectsSharedCollection = this.projectService.addProjectToCollectionIfMissing<IProject>(
-      this.projectsSharedCollection,
-      location.project
-    );
     this.locationsSharedCollection = this.locationService.addLocationToCollectionIfMissing<ILocation>(
       this.locationsSharedCollection,
       location.parent
@@ -101,17 +96,13 @@ export class ProjectLocationUpdateComponent implements OnInit {
   }
 
   protected loadRelationshipsOptions(): void {
-    this.projectService
-      .query()
-      .pipe(map((res: HttpResponse<IProject[]>) => res.body ?? []))
-      .pipe(map((projects: IProject[]) => this.projectService.addProjectToCollectionIfMissing<IProject>(projects, this.location?.project)))
-      .subscribe((projects: IProject[]) => (this.projectsSharedCollection = projects));
-
     this.locationService
       .query()
       .pipe(map((res: HttpResponse<ILocation[]>) => res.body ?? []))
       .pipe(
-        map((locations: ILocation[]) => this.locationService.addLocationToCollectionIfMissing<ILocation>(locations, this.location?.parent))
+        map((locations: ILocation[]) =>
+          this.locationService.addLocationToCollectionIfMissing<ILocation>(locations, this.existingLocation?.parent)
+        )
       )
       .subscribe((locations: ILocation[]) => (this.locationsSharedCollection = locations));
   }

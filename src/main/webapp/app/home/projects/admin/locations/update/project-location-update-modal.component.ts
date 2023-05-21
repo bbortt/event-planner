@@ -5,6 +5,8 @@ import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { ProjectLocationUpdateComponent } from './project-location-update.component';
+import { combineLatest } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-project-location-update-modal',
@@ -19,15 +21,25 @@ export class ProjectLocationUpdateModalComponent implements OnInit, OnDestroy {
     this.modalRef = this.modalService.open(ProjectLocationUpdateComponent, { size: 'lg' });
     this.modalRef.result.catch(() => window.history.back());
 
-    this.activatedRoute.data.subscribe(({ location, project }) => {
-      if (this.modalRef && project) {
-        this.modalRef.componentInstance.project = project;
+    combineLatest([this.activatedRoute.url, this.activatedRoute.data])
+      .pipe(
+        map(([url, { location, project }]) => ({
+          isNew: url.length > 0 && url[url.length - 1].path.endsWith('new'),
+          location,
+          project,
+        }))
+      )
+      .subscribe(({ isNew, location, project }) => {
+        if (this.modalRef && project) {
+          this.modalRef.componentInstance.project = project;
 
-        if (location) {
-          this.modalRef.componentInstance.location = location;
+          if (isNew && location) {
+            this.modalRef.componentInstance.parentLocation = location;
+          } else if (location) {
+            this.modalRef.componentInstance.existingLocation = location;
+          }
         }
-      }
-    });
+      });
   }
 
   ngOnDestroy(): void {
