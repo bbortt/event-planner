@@ -132,6 +132,6 @@ public class LocationService {
     @PreAuthorize("T(io.github.bbortt.event.planner.security.SecurityUtils).isAuthenticated()")
     public List<LocationDTO> findAllInProject(Long projectId) {
         log.debug("Request to get all Locations in Project '{}'", projectId);
-        return locationRepository.findAllByProject_IdEquals(projectId).stream().map(locationMapper::toDto).toList();
+        return locationRepository.findAllByParentIsNullAndProject_IdEquals(projectId).stream().map(locationMapper::toDto).toList();
     }
 }

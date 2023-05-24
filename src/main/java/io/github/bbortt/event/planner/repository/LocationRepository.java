@@ -38,5 +38,6 @@ public interface LocationRepository extends JpaRepository<Location, Long> {
     @Query("select location from Location location left join fetch location.project left join fetch location.parent where location.id =:id")
     Optional<Location> findOneWithToOneRelationships(@Param("id") Long id);
 
-    List<Location> findAllByProject_IdEquals(@Param("projectId") Long projectId);
+    @EntityGraph(attributePaths = { "children" })
+    List<Location> findAllByParentIsNullAndProject_IdEquals(@Param("projectId") Long projectId);
 }
