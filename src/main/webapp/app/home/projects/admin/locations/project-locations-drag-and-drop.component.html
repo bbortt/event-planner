@@ -7,10 +7,6 @@
 
   <jhi-alert></jhi-alert>
 
-  <div *ngIf="locations?.length === 0" id="no-result" class="alert alert-warning">
-    <span jhiTranslate="app.location.home.notFound"> Keine Lokalitäten gefunden </span>
-  </div>
-
   <div class="row">
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
@@ -25,7 +21,7 @@
   </div>
 
   <div class="row">
-    <div *ngIf="locations" class="col-md-5 card h-100 location-list" [class.location-list-with-children]="activeLocation">
+    <div *ngIf="locations" class="col-md-5 card location-list" [class.location-list-with-children]="activeLocation">
       <div class="d-flex align-items-center justify-content-between">
         <h4 class="mt-2" jhiTranslate="app.project.admin.location.topLevel">Oberste Lokalitäten</h4>
 
@@ -42,6 +38,10 @@
       </div>
 
       <div class="card-body" dragula="location-list" [(dragulaModel)]="locations">
+        <div *ngIf="locations?.length === 0" id="no-result" class="alert alert-warning mb-0">
+          <span jhiTranslate="app.location.home.notFound"> Keine Lokalitäten gefunden </span>
+        </div>
+
         <app-project-location-drag
           *ngFor="let location of locations"
           [attr.data-id]="location.id"
@@ -75,22 +75,18 @@
         </button>
       </div>
 
-      <div *ngIf="activeLocation.children?.length === 0; else childLocationList" id="alert-no-child-locations" class="card-body">
-        <div class="alert alert-warning mb-0">
+      <div class="card-body" dragula="location-list" [(dragulaModel)]="activeLocation.children">
+        <div *ngIf="activeLocation.children?.length === 0" id="alert-no-child-locations" class="alert alert-warning mb-0">
           <span jhiTranslate="app.project.admin.location.childrenNotFound"> Keine Unter-Lokalitäten gefunden </span>
         </div>
-      </div>
 
-      <ng-template #childLocationList>
-        <div class="card-body" dragula="location-list" [(dragulaModel)]="activeLocation.children">
-          <app-project-location-drag
-            *ngFor="let location of activeLocation.children"
-            [attr.data-id]="location.id"
-            [location]="location"
-            (click)="setActiveLocation(location)"
-          ></app-project-location-drag>
-        </div>
-      </ng-template>
+        <app-project-location-drag
+          *ngFor="let location of activeLocation.children"
+          [attr.data-id]="location.id"
+          [location]="location"
+          (click)="setActiveLocation(location)"
+        ></app-project-location-drag>
+      </div>
     </div>
   </div>
 

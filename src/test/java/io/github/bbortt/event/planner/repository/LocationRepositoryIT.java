@@ -6,7 +6,6 @@ import io.github.bbortt.event.planner.IntegrationTest;
 import io.github.bbortt.event.planner.domain.Location;
 import io.github.bbortt.event.planner.web.rest.LocationResourceIT;
 import java.util.List;
-import java.util.Set;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,8 +36,8 @@ class LocationRepositoryIT {
 
     @Test
     @Transactional
-    void findAllInProjectRecursive() {
-        List<Location> result = locationRepository.findAllByProject_IdEquals(location.getProject().getId());
+    void findAllByParentIsNullAndProject_IdEquals() {
+        List<Location> result = locationRepository.findAllByParentIsNullAndProject_IdEquals(location.getProject().getId());
 
         assertEquals(1, result.size());
         assertEquals(location, result.get(0));

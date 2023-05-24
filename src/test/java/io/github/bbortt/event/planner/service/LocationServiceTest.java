@@ -35,7 +35,7 @@ class LocationServiceTest {
         Long projectId = 1234L;
 
         Location location = new Location();
-        doReturn(List.of(location)).when(locationRepositoryMock).findAllByProject_IdEquals(projectId);
+        doReturn(List.of(location)).when(locationRepositoryMock).findAllByParentIsNullAndProject_IdEquals(projectId);
 
         LocationDTO locationDTO = new LocationDTO();
         doReturn(locationDTO).when(locationMapperMock).toDto(location);

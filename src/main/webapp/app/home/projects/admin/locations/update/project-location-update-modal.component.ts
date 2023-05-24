@@ -2,11 +2,12 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import { ActivatedRoute } from '@angular/router';
 
+import { combineLatest } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { ProjectLocationUpdateComponent } from './project-location-update.component';
-import { combineLatest } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-project-location-update-modal',

@@ -59,8 +59,8 @@ export class ProjectLocationsDragAndDropComponent implements OnDestroy, OnInit {
   }
 
   setActiveLocation(location: Location | null): void {
-    this.activeLocation = location;
     this.activeLocationPath = location && this.locations ? this.findLocationPathById(location.id, this.locations) : [];
+    this.activeLocation = this.activeLocationPath[this.activeLocationPath.length - 1];
   }
 
   private load(): void {
@@ -76,6 +76,10 @@ export class ProjectLocationsDragAndDropComponent implements OnDestroy, OnInit {
 
   private onResponseSuccess(response: HttpResponse<GetProjectLocations200Response>): void {
     this.locations = this.fillComponentAttributesFromResponseBody(response.body?.contents);
+
+    if (this.activeLocation) {
+      this.setActiveLocation(this.activeLocation);
+    }
   }
 
   private fillComponentAttributesFromResponseBody(data: Array<Location> | undefined): Location[] {
