@@ -1,6 +1,6 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { of, Subscription } from 'rxjs';
 
@@ -11,9 +11,11 @@ import { LocationService } from 'app/entities/location/service/location.service'
 
 import { ProjectLocationsDragAndDropComponent } from './project-locations-drag-and-drop.component';
 
+const activeLocationPath = '4,3,2';
 const project = { token: 'aaa89f38-c222-4530-b983-6c9b70f26609' } as Project;
 
 describe("Project Locations Drag 'n Drop Component", () => {
+  let mockRouter: Router;
   let mockTranslateService: TranslateService;
 
   let component: ProjectLocationsDragAndDropComponent;
@@ -27,12 +29,20 @@ describe("Project Locations Drag 'n Drop Component", () => {
           provide: ActivatedRoute,
           useValue: {
             data: of({ project }),
+            queryParamMap: of(
+              jest.requireActual('@angular/router').convertToParamMap({
+                activeLocationPath,
+              })
+            ),
           },
         },
         LocationService,
         ProjectLocationService,
       ],
     }).compileComponents();
+
+    mockRouter = TestBed.inject(Router);
+    jest.spyOn(mockRouter, 'navigate').mockImplementation(() => Promise.resolve(true));
 
     mockTranslateService = TestBed.inject(TranslateService);
     jest.spyOn(mockTranslateService, 'get').mockImplementation((key: string | string[]) => of(`${key as string} translated`));
@@ -42,9 +52,52 @@ describe("Project Locations Drag 'n Drop Component", () => {
 
   describe('ngOnInit', () => {
     it('loads project from route', () => {
+      const location = { id: 2, name: 'Location 2' } as Location;
+      component.locations = [
+        {
+          id: 4,
+          name: 'Location 4',
+          children: [
+            {
+              id: 5,
+              name: 'Location 5',
+              children: [],
+            },
+            {
+              id: 3,
+              name: 'Location 3',
+              children: [location],
+            },
+          ],
+        },
+        {
+          id: 1,
+          children: [],
+        },
+      ] as Location[];
+
       component.ngOnInit();
 
       expect(component.project).toEqual(project);
+
+      expect(component.activeLocation).toEqual(location);
+      expect(component.activeLocationPath).toEqual([
+        {
+          id: 4,
+          name: 'Location 4',
+        },
+        {
+          id: 3,
+          name: 'Location 3',
+        },
+        {
+          id: 2,
+          name: 'Location 2',
+        },
+      ]);
+
+      // @ts-ignore: force this private property value for testing.
+      expect(component.activeLocationPathString).toEqual(activeLocationPath);
       // @ts-ignore: force this private property value for testing.
       expect(component.locationUpdatedSource).not.toBeNull();
 
@@ -81,49 +134,13 @@ describe("Project Locations Drag 'n Drop Component", () => {
   });
 
   describe('setActiveLocation', () => {
-    it('sets the active location', () => {
-      const location = {} as Location;
+    it('synchronizes the router state', () => {
+      const location = { id: 2 } as Location;
+      component.locations = [{ id: 1, children: [location] }, { id: 3 }] as Location[];
 
       component.setActiveLocation(location);
 
-      expect(component.activeLocation).toEqual(location);
-    });
-
-    it('calculates the active location path', () => {
-      const location: Location = {
-        id: 4,
-        name: 'Location 4',
-        children: [],
-      };
-
-      const locations: Location[] = [
-        {
-          id: 1,
-          name: 'Location 1',
-          children: [
-            {
-              id: 2,
-              name: 'Location 2',
-              children: [],
-            },
-            {
-              id: 3,
-              name: 'Location 3',
-              children: [location],
-            },
-          ],
-        },
-        {
-          id: 5,
-          name: 'Location 5',
-          children: [],
-        },
-      ];
-
-      component.locations = locations;
-      component.setActiveLocation(location);
-
-      expect(component.activeLocationPath).toEqual([locations[0], locations[0].children[1], location]);
+      expect(mockRouter.navigate).toHaveBeenCalledWith([], { queryParams: { activeLocationPath: '1,2' } });
     });
   });
 });
