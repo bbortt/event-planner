@@ -113,7 +113,7 @@
     "@angular/compiler-cli": "15.2.9",
     "@angular/service-worker": "15.2.9",
     "@commitlint/cli": "^17.6.5",
-    "@commitlint/config-conventional": "^17.6.1",
+    "@commitlint/config-conventional": "^17.6.5",
     "@types/jest": "28.1.8",
     "@types/node": "20.2.3",
     "@types/sockjs-client": "1.5.1",
