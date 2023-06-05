@@ -1,13 +1,21 @@
 import { HttpResponse } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
-import { Subscription, tap } from 'rxjs';
+import { combineLatest, Subscription, tap } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { TranslateService } from '@ngx-translate/core';
 
 import { GetProjectLocations200Response, Location, Project, ProjectLocationService } from 'app/api';
 import { LocationService } from 'app/entities/location/service/location.service';
+
+const ACTIVE_LOCATION_PATH_QUERY_PARAM_NAME = 'activeLocationPath';
+
+interface LocationIdAndName {
+  id: number;
+  name: string;
+}
 
 @Component({
   selector: 'app-project-locations',
@@ -21,25 +29,34 @@ export class ProjectLocationsDragAndDropComponent implements OnDestroy, OnInit {
   isLoading = false;
 
   activeLocation: Location | null = null;
-  activeLocationPath: Location[] = [];
+  activeLocationPath: LocationIdAndName[] = [];
 
   createNewLocationWithParentText = '';
 
+  private activeLocationPathString: string | null = null;
   private locationUpdatedSource: Subscription | null = null;
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private locationService: LocationService,
     private projectLocationService: ProjectLocationService,
+    private router: Router,
     private translateService: TranslateService
   ) {}
 
   ngOnInit(): void {
-    this.activatedRoute.data
+    combineLatest([this.activatedRoute.data, this.activatedRoute.queryParamMap])
       .pipe(
+        map(([{ project }, queryParams]) => ({ locationIds: queryParams.get(ACTIVE_LOCATION_PATH_QUERY_PARAM_NAME), project })),
         tap(({ project }) => {
           if (project) {
             this.project = project;
+          }
+        }),
+        tap(({ locationIds }) => {
+          if (locationIds) {
+            this.synchronizeActiveLocationPathFromRouter(locationIds);
+            this.activeLocationPathString = locationIds;
           }
         })
       )
@@ -58,9 +75,8 @@ export class ProjectLocationsDragAndDropComponent implements OnDestroy, OnInit {
     }
   }
 
-  setActiveLocation(location: Location | null): void {
-    this.activeLocationPath = location && this.locations ? this.findLocationPathById(location.id, this.locations) : [];
-    this.activeLocation = this.activeLocationPath[this.activeLocationPath.length - 1];
+  setActiveLocation(location: LocationIdAndName | null): void {
+    this.synchronizeActiveLocationPathToRouter(location && this.locations ? this.findLocationPathById(location.id, this.locations) : []);
   }
 
   private load(): void {
@@ -79,6 +95,9 @@ export class ProjectLocationsDragAndDropComponent implements OnDestroy, OnInit {
 
     if (this.activeLocation) {
       this.setActiveLocation(this.activeLocation);
+    } else if (this.activeLocationPathString) {
+      this.synchronizeActiveLocationPathFromRouter(this.activeLocationPathString);
+      this.activeLocationPathString = null;
     }
   }
 
@@ -99,5 +118,28 @@ export class ProjectLocationsDragAndDropComponent implements OnDestroy, OnInit {
     }
 
     return [];
+  }
+
+  private locationIdAndName(location: Location): LocationIdAndName {
+    return { id: location.id, name: location.name };
+  }
+
+  private synchronizeActiveLocationPathFromRouter(activeLocationPath: string): void {
+    if (!activeLocationPath) {
+      return;
+    }
+
+    const resolvedPath = this.findLocationPathById(Number(activeLocationPath.split(',').pop()), this.locations ?? []);
+
+    this.activeLocationPath = resolvedPath.map(location => this.locationIdAndName(location));
+    this.activeLocation = resolvedPath[resolvedPath.length - 1];
+  }
+
+  private synchronizeActiveLocationPathToRouter(activeLocationPath: LocationIdAndName[]): void {
+    this.router
+      .navigate([], {
+        queryParams: { [ACTIVE_LOCATION_PATH_QUERY_PARAM_NAME]: activeLocationPath.map(location => location.id).join(',') },
+      })
+      .catch(() => window.location.reload());
   }
 }
