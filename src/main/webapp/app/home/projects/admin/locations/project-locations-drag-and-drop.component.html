@@ -37,7 +37,7 @@
         </button>
       </div>
 
-      <div class="card-body" dragula="location-list" [(dragulaModel)]="locations">
+      <div class="card-body" [dragula]="locationRootList" [(dragulaModel)]="locations">
         <div *ngIf="locations?.length === 0" id="no-result" class="alert alert-warning mb-0">
           <span jhiTranslate="app.location.home.notFound"> Keine Lokalitäten gefunden </span>
         </div>
@@ -46,7 +46,8 @@
           *ngFor="let location of locations"
           [attr.data-id]="location.id"
           [location]="location"
-          (click)="setActiveLocation(location)"
+          [project]="project"
+          [locationSelected]="locationSelectedSource"
         ></app-project-location-drag>
       </div>
     </div>
@@ -75,7 +76,7 @@
         </button>
       </div>
 
-      <div class="card-body" dragula="location-list" [(dragulaModel)]="activeLocation.children">
+      <div class="card-body" [dragula]="locationChildrenList" [(dragulaModel)]="activeLocation.children">
         <div *ngIf="activeLocation.children?.length === 0" id="alert-no-child-locations" class="alert alert-warning mb-0">
           <span jhiTranslate="app.project.admin.location.childrenNotFound"> Keine Unter-Lokalitäten gefunden </span>
         </div>
@@ -84,7 +85,8 @@
           *ngFor="let location of activeLocation.children"
           [attr.data-id]="location.id"
           [location]="location"
-          (click)="setActiveLocation(location)"
+          [project]="project"
+          [locationSelected]="locationSelectedSource"
         ></app-project-location-drag>
       </div>
     </div>

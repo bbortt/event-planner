@@ -312,6 +312,10 @@ components:
           type: string
           maxLength: 63
           minLength: 1
+        description:
+          type: string
+          maxLength: 255
+          minLength: 1
         children:
           type: array
           items:

@@ -8,6 +8,9 @@
         "location": {
           "addChild": "Add Sub-Location",
           "childrenNotFound": "No Sub-Locations exist",
+          "drag": "Drag Location",
+          "edit": "Edit Location",
+          "open": "Open Location",
           "topLevel": "Top Level Locations"
         }
       }

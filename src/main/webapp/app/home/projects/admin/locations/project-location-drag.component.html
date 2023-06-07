@@ -1,7 +1,44 @@
-<div class="card" *ngIf="location">
+<div class="card" *ngIf="location && project">
   <div class="card-body">
-    <h5 class="card-title">
-      {{ location.name }}
-    </h5>
+    <div class="d-flex align-items-center justify-content-between">
+      <h5 class="card-title mb-0">
+        {{ location.name }}
+      </h5>
+
+      <div class="btn-group">
+        <button
+          type="button"
+          class="btn btn-info btn-sm btn-quadratic drag-handle"
+          data-cy="selectLocationButton"
+          data-toggle="tooltip"
+          [title]="openLocationText"
+          (click)="selectLocation()"
+        >
+          <fa-icon icon="arrow-right"></fa-icon>
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary btn-sm btn-quadratic"
+          data-cy="editLocationButton"
+          data-toggle="tooltip"
+          [title]="editLocationText"
+          [routerLink]="[{ outlets: { modal: ['project', project?.id, 'locations', location.id, 'edit'] } }]"
+        >
+          <fa-icon icon="pencil-alt"></fa-icon>
+        </button>
+        <button
+          type="button"
+          class="btn btn-outline-primary btn-sm btn-quadratic drag-handle"
+          data-cy="editLocationButton"
+          data-toggle="tooltip"
+          [title]="editLocationText"
+          [routerLink]="[{ outlets: { modal: ['project', project?.id, 'locations', location.id, 'edit'] } }]"
+        >
+          <fa-icon icon="hand"></fa-icon>
+        </button>
+      </div>
+    </div>
+
+    <p *ngIf="location.description" class="bg-light card-text mt-1 p-1 rounded">{{ location.description }}</p>
   </div>
 </div>

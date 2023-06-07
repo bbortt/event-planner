@@ -2,13 +2,15 @@ import { HttpResponse } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { combineLatest, Subscription, tap } from 'rxjs';
+import { combineLatest, Subject, Subscription, tap } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { TranslateService } from '@ngx-translate/core';
 
 import { GetProjectLocations200Response, Location, Project, ProjectLocationService } from 'app/api';
 import { LocationService } from 'app/entities/location/service/location.service';
+import { DragulaService } from 'ng2-dragula';
+import { ILocation } from '../../../../entities/location/location.model';
 
 const ACTIVE_LOCATION_PATH_QUERY_PARAM_NAME = 'activeLocationPath';
 
@@ -23,10 +25,15 @@ interface LocationIdAndName {
   styleUrls: ['./project-locations-drag-and-drop.component.scss'],
 })
 export class ProjectLocationsDragAndDropComponent implements OnDestroy, OnInit {
+  locationRootList = 'location-root-list';
+  locationChildrenList = 'location-children-list';
+
   project: Project | null = null;
 
   locations?: Location[];
   isLoading = false;
+
+  locationSelectedSource = new Subject<Location>();
 
   activeLocation: Location | null = null;
   activeLocationPath: LocationIdAndName[] = [];
@@ -38,13 +45,23 @@ export class ProjectLocationsDragAndDropComponent implements OnDestroy, OnInit {
 
   constructor(
     private activatedRoute: ActivatedRoute,
+    private dragulaService: DragulaService,
     private locationService: LocationService,
     private projectLocationService: ProjectLocationService,
     private router: Router,
     private translateService: TranslateService
-  ) {}
+  ) {
+    dragulaService.createGroup(this.locationRootList, {
+      moves: this.moveWithHandleOnly,
+    });
+    dragulaService.createGroup(this.locationChildrenList, {
+      moves: this.moveWithHandleOnly,
+    });
+  }
 
   ngOnInit(): void {
+    this.locationSelectedSource.subscribe((location: Location) => this.setActiveLocation(location));
+
     combineLatest([this.activatedRoute.data, this.activatedRoute.queryParamMap])
       .pipe(
         map(([{ project }, queryParams]) => ({ locationIds: queryParams.get(ACTIVE_LOCATION_PATH_QUERY_PARAM_NAME), project })),
@@ -69,14 +86,14 @@ export class ProjectLocationsDragAndDropComponent implements OnDestroy, OnInit {
       .subscribe((translation: string) => (this.createNewLocationWithParentText = translation));
   }
 
+  setActiveLocation(location: LocationIdAndName | null): void {
+    this.synchronizeActiveLocationPathToRouter(location && this.locations ? this.findLocationPathById(location.id, this.locations) : []);
+  }
+
   ngOnDestroy(): void {
     if (this.locationUpdatedSource) {
       this.locationUpdatedSource.unsubscribe();
     }
-  }
-
-  setActiveLocation(location: LocationIdAndName | null): void {
-    this.synchronizeActiveLocationPathToRouter(location && this.locations ? this.findLocationPathById(location.id, this.locations) : []);
   }
 
   private load(): void {
@@ -141,5 +158,15 @@ export class ProjectLocationsDragAndDropComponent implements OnDestroy, OnInit {
         queryParams: { [ACTIVE_LOCATION_PATH_QUERY_PARAM_NAME]: activeLocationPath.map(location => location.id).join(',') },
       })
       .catch(() => window.location.reload());
+  }
+
+  private moveWithHandleOnly(
+    el?: Element | undefined,
+    container?: Element | undefined,
+    handle?: Element | undefined,
+    sibling?: Element | undefined
+  ): boolean {
+    console.log('handle?.className:', handle?.classList);
+    return handle?.classList.contains('drag-handle') ?? false;
   }
 }
