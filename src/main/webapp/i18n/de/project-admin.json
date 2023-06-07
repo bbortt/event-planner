@@ -8,6 +8,9 @@
         "location": {
           "addChild": "Unterlokalität hinzufügen",
           "childrenNotFound": "Keine Unter-Lokalitäten gefunden",
+          "drag": "Lokalität verschieben",
+          "edit": "Lokalität bearbeiten",
+          "open": "Lokalität öffnen",
           "topLevel": "Oberste Lokalitäten"
         }
       }
