@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -32,6 +33,7 @@ export class ProjectMemberInviteModalContentComponent {
 
   constructor(
     private eventManager: EventManager,
+    private location: Location,
     private memberService: MemberService,
     private memberFormService: MemberFormService,
     private projectMemberService: ProjectMemberService
@@ -44,7 +46,7 @@ export class ProjectMemberInviteModalContentComponent {
   }
 
   protected previousState(): void {
-    window.history.back();
+    this.location.back();
   }
 
   protected save(): void {
@@ -90,11 +92,11 @@ export class ProjectMemberInviteModalContentComponent {
 export class ProjectMemberInviteModalComponent implements OnInit, OnDestroy {
   private modalRef: NgbModalRef | undefined;
 
-  constructor(private activatedRoute: ActivatedRoute, private modalService: NgbModal) {}
+  constructor(private activatedRoute: ActivatedRoute, private location: Location, private modalService: NgbModal) {}
 
   ngOnInit(): void {
     this.modalRef = this.modalService.open(ProjectMemberInviteModalContentComponent, { size: 'lg' });
-    this.modalRef.result.catch(() => window.history.back());
+    this.modalRef.result.catch(() => this.location.back());
 
     this.activatedRoute.data.subscribe(({ project }) => {
       if (this.modalRef && project) {

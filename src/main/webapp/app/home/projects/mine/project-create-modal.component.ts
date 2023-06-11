@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -16,11 +17,11 @@ export class ProjectCreateModalContentComponent {}
 export class ProjectCreateModalComponent implements OnInit, OnDestroy {
   private modalRef: NgbModalRef | undefined;
 
-  constructor(private modalService: NgbModal) {}
+  constructor(private location: Location, private modalService: NgbModal) {}
 
   ngOnInit(): void {
     this.modalRef = this.modalService.open(ProjectCreateModalContentComponent, { size: 'lg' });
-    this.modalRef.result.catch(() => window.history.back());
+    this.modalRef.result.catch(() => this.location.back());
   }
 
   ngOnDestroy(): void {

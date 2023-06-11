@@ -7,10 +7,10 @@ import { map } from 'rxjs/operators';
 
 import { TranslateService } from '@ngx-translate/core';
 
+import { DragulaService } from 'ng2-dragula';
+
 import { GetProjectLocations200Response, Location, Project, ProjectLocationService } from 'app/api';
 import { LocationService } from 'app/entities/location/service/location.service';
-import { DragulaService } from 'ng2-dragula';
-import { ILocation } from '../../../../entities/location/location.model';
 
 const ACTIVE_LOCATION_PATH_QUERY_PARAM_NAME = 'activeLocationPath';
 
@@ -160,13 +160,7 @@ export class ProjectLocationsDragAndDropComponent implements OnDestroy, OnInit {
       .catch(() => window.location.reload());
   }
 
-  private moveWithHandleOnly(
-    el?: Element | undefined,
-    container?: Element | undefined,
-    handle?: Element | undefined,
-    sibling?: Element | undefined
-  ): boolean {
-    console.log('handle?.className:', handle?.classList);
+  private moveWithHandleOnly(el?: Element | undefined, container?: Element | undefined, handle?: Element | undefined): boolean {
     return handle?.classList.contains('drag-handle') ?? false;
   }
 }

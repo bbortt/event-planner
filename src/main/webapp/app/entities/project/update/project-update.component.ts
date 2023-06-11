@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { Observable } from 'rxjs';
@@ -25,8 +26,9 @@ export class ProjectUpdateComponent implements OnInit {
   editForm: ProjectFormGroup;
 
   constructor(
-    protected activatedRoute: ActivatedRoute,
+    private activatedRoute: ActivatedRoute,
     private eventManager: EventManager,
+    private location: Location,
     protected projectService: ProjectService,
     protected projectFormService: ProjectFormService
   ) {
@@ -50,7 +52,7 @@ export class ProjectUpdateComponent implements OnInit {
   }
 
   previousState(): void {
-    window.history.back();
+    this.location.back();
   }
 
   save(): void {

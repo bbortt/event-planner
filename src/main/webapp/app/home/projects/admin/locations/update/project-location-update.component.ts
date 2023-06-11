@@ -10,6 +10,7 @@ import { ILocation } from 'app/entities/location/location.model';
 import { LocationService } from 'app/entities/location/service/location.service';
 import { LocationFormGroup, LocationFormService } from 'app/entities/location/update/location-form.service';
 import { IProject } from 'app/entities/project/project.model';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-project-location-update',
@@ -28,6 +29,7 @@ export class ProjectLocationUpdateComponent implements OnInit {
 
   constructor(
     private eventManager: EventManager,
+    private location: Location,
     protected locationService: LocationService,
     protected locationFormService: LocationFormService
   ) {
@@ -54,7 +56,7 @@ export class ProjectLocationUpdateComponent implements OnInit {
   compareLocation = (o1: ILocation | null, o2: ILocation | null): boolean => this.locationService.compareLocation(o1, o2);
 
   previousState(): void {
-    window.history.back();
+    this.location.back();
   }
 
   save(): void {

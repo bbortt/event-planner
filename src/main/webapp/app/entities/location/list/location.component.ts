@@ -30,7 +30,7 @@ export class LocationComponent implements OnInit {
 
   constructor(
     protected locationService: LocationService,
-    protected activatedRoute: ActivatedRoute,
+    private activatedRoute: ActivatedRoute,
     public router: Router,
     protected modalService: NgbModal,
     private ngZone: NgZone
