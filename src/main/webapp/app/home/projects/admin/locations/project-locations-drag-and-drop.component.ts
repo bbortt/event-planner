@@ -51,9 +51,11 @@ export class ProjectLocationsDragAndDropComponent implements OnDestroy, OnInit {
     private router: Router,
     private translateService: TranslateService
   ) {
+    dragulaService.destroy(this.locationRootList);
     dragulaService.createGroup(this.locationRootList, {
       moves: this.moveWithHandleOnly,
     });
+    dragulaService.destroy(this.locationChildrenList);
     dragulaService.createGroup(this.locationChildrenList, {
       moves: this.moveWithHandleOnly,
     });
