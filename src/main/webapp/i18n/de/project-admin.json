@@ -8,6 +8,7 @@
         "location": {
           "addChild": "Unterlokalität hinzufügen",
           "childrenNotFound": "Keine Unter-Lokalitäten gefunden",
+          "delete": "Lokalität löschen",
           "drag": "Lokalität verschieben",
           "edit": "Lokalität bearbeiten",
           "open": "Lokalität öffnen",

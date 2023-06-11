@@ -6,17 +6,20 @@ import { of, Subscription } from 'rxjs';
 
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
-import { Location, Project, ProjectLocationService } from 'app/api';
+import { GetProjectLocations200Response, Location, Project, ProjectLocationService } from 'app/api';
 import { LocationService } from 'app/entities/location/service/location.service';
 
 import { ProjectLocationsDragAndDropComponent } from './project-locations-drag-and-drop.component';
+import { HttpResponse } from '@angular/common/http';
 
 const activeLocationPath = '4,3,2';
-const project = { token: 'aaa89f38-c222-4530-b983-6c9b70f26609' } as Project;
+const project = { id: 1234, token: 'aaa89f38-c222-4530-b983-6c9b70f26609' } as Project;
 
 describe("Project Locations Drag 'n Drop Component", () => {
   let mockRouter: Router;
   let mockTranslateService: TranslateService;
+
+  let mockProjectLocationService: ProjectLocationService;
 
   let component: ProjectLocationsDragAndDropComponent;
 
@@ -46,6 +49,8 @@ describe("Project Locations Drag 'n Drop Component", () => {
 
     mockTranslateService = TestBed.inject(TranslateService);
     jest.spyOn(mockTranslateService, 'get').mockImplementation((key: string | string[]) => of(`${key as string} translated`));
+
+    mockProjectLocationService = TestBed.inject(ProjectLocationService);
 
     component = TestBed.createComponent(ProjectLocationsDragAndDropComponent).componentInstance;
   });
@@ -133,14 +138,41 @@ describe("Project Locations Drag 'n Drop Component", () => {
     });
   });
 
-  describe('setActiveLocation', () => {
-    it('synchronizes the router state', () => {
-      const location = { id: 2 } as Location;
-      component.locations = [{ id: 1, children: [location] }, { id: 3 }] as Location[];
+  describe('handleLocationControl', () => {
+    describe('with "select"', () => {
+      it('synchronizes the router state with location', () => {
+        const location = { id: 2 } as Location;
+        component.locations = [{ id: 1, children: [location] }, { id: 3 }] as Location[];
 
-      component.setActiveLocation(location);
+        component.handleLocationControl({ type: 'select', location });
 
-      expect(mockRouter.navigate).toHaveBeenCalledWith([], { queryParams: { activeLocationPath: '1,2' } });
+        expect(component.activeLocation).toEqual(location);
+        expect(mockRouter.navigate).toHaveBeenCalledWith([], { queryParams: { activeLocationPath: '1,2' } });
+      });
+
+      it('selects location root with null', () => {
+        component.locations = [{ id: 1, children: [{ id: 2 }] }, { id: 3 }] as Location[];
+
+        component.handleLocationControl({ type: 'select' });
+
+        expect(component.activeLocation).toBeNull();
+        expect(mockRouter.navigate).toHaveBeenCalledWith([], { queryParams: { activeLocationPath: '' } });
+      });
+    });
+
+    describe('with "delete"', () => {
+      it('reloads the locations', () => {
+        jest.spyOn(mockProjectLocationService, 'getProjectLocations').mockReturnValueOnce(of(new HttpResponse({ body: {} })));
+
+        component.project = project;
+
+        component.handleLocationControl({ type: 'delete' });
+
+        expect(component.activeLocation).toBeNull();
+        expect(mockRouter.navigate).not.toHaveBeenCalled();
+        expect(mockProjectLocationService.getProjectLocations).toHaveBeenCalledWith(project.id, 'response');
+        expect(component.isLoading).toBeFalsy();
+      });
     });
   });
 });

@@ -28,6 +28,18 @@
         </button>
         <button
           type="button"
+          class="btn btn-danger btn-sm btn-quadratic"
+          data-cy="deleteLocationButton"
+          data-toggle="tooltip"
+          [title]="deleteLocationText"
+          (click)="delete()"
+        >
+          <fa-icon icon="times"></fa-icon>
+        </button>
+        <!--
+        TODO: Maybe implement drag 'n drop?
+        <button
+          type="button"
           class="btn btn-outline-primary btn-sm btn-quadratic drag-handle"
           data-cy="editLocationButton"
           data-toggle="tooltip"
@@ -36,6 +48,7 @@
         >
           <fa-icon icon="hand"></fa-icon>
         </button>
+        -->
       </div>
     </div>
 

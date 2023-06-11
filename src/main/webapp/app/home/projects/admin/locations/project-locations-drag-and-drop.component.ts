@@ -14,10 +14,15 @@ import { LocationService } from 'app/entities/location/service/location.service'
 
 const ACTIVE_LOCATION_PATH_QUERY_PARAM_NAME = 'activeLocationPath';
 
-interface LocationIdAndName {
+type LocationIdAndName = {
   id: number;
   name: string;
-}
+};
+
+export type LocationControl = {
+  type: 'select' | 'delete';
+  location?: Location | LocationIdAndName;
+};
 
 @Component({
   selector: 'app-project-locations',
@@ -33,7 +38,7 @@ export class ProjectLocationsDragAndDropComponent implements OnDestroy, OnInit {
   locations?: Location[];
   isLoading = false;
 
-  locationSelectedSource = new Subject<Location>();
+  locationControlSource = new Subject<LocationControl>();
 
   activeLocation: Location | null = null;
   activeLocationPath: LocationIdAndName[] = [];
@@ -62,7 +67,7 @@ export class ProjectLocationsDragAndDropComponent implements OnDestroy, OnInit {
   }
 
   ngOnInit(): void {
-    this.locationSelectedSource.subscribe((location: Location) => this.setActiveLocation(location));
+    this.locationControlSource.subscribe((location: LocationControl) => this.handleLocationControl(location));
 
     combineLatest([this.activatedRoute.data, this.activatedRoute.queryParamMap])
       .pipe(
@@ -74,7 +79,7 @@ export class ProjectLocationsDragAndDropComponent implements OnDestroy, OnInit {
         }),
         tap(({ locationIds }) => {
           if (locationIds) {
-            this.synchronizeActiveLocationPathFromRouter(locationIds);
+            this.synchronizeActiveLocationPathStringFromRouter(locationIds);
             this.activeLocationPathString = locationIds;
           }
         })
@@ -88,14 +93,26 @@ export class ProjectLocationsDragAndDropComponent implements OnDestroy, OnInit {
       .subscribe((translation: string) => (this.createNewLocationWithParentText = translation));
   }
 
-  setActiveLocation(location: LocationIdAndName | null): void {
-    this.synchronizeActiveLocationPathToRouter(location && this.locations ? this.findLocationPathById(location.id, this.locations) : []);
-  }
-
   ngOnDestroy(): void {
     if (this.locationUpdatedSource) {
       this.locationUpdatedSource.unsubscribe();
     }
+  }
+
+  handleLocationControl(control: LocationControl): void {
+    switch (control.type) {
+      case 'delete':
+        this.load();
+        break;
+      case 'select':
+      default:
+        this.setActiveLocation(control.location ?? null);
+    }
+  }
+
+  private setActiveLocation(location: Location | LocationIdAndName | null): void {
+    this.activeLocation = location as Location;
+    this.synchronizeActiveLocationPathToRouter(location && this.locations ? this.findLocationPathById(location.id, this.locations) : []);
   }
 
   private load(): void {
@@ -114,8 +131,9 @@ export class ProjectLocationsDragAndDropComponent implements OnDestroy, OnInit {
 
     if (this.activeLocation) {
       this.setActiveLocation(this.activeLocation);
+      this.synchronizeActiveLocationPathFromRouter(this.activeLocation.id);
     } else if (this.activeLocationPathString) {
-      this.synchronizeActiveLocationPathFromRouter(this.activeLocationPathString);
+      this.synchronizeActiveLocationPathStringFromRouter(this.activeLocationPathString);
       this.activeLocationPathString = null;
     }
   }
@@ -143,13 +161,12 @@ export class ProjectLocationsDragAndDropComponent implements OnDestroy, OnInit {
     return { id: location.id, name: location.name };
   }
 
-  private synchronizeActiveLocationPathFromRouter(activeLocationPath: string): void {
-    if (!activeLocationPath) {
-      return;
-    }
+  private synchronizeActiveLocationPathStringFromRouter(locationIds: string): void {
+    this.synchronizeActiveLocationPathFromRouter(Number(locationIds.split(',').pop()));
+  }
 
-    const resolvedPath = this.findLocationPathById(Number(activeLocationPath.split(',').pop()), this.locations ?? []);
-
+  private synchronizeActiveLocationPathFromRouter(activeLocationId: number): void {
+    const resolvedPath = this.findLocationPathById(activeLocationId, this.locations ?? []);
     this.activeLocationPath = resolvedPath.map(location => this.locationIdAndName(location));
     this.activeLocation = resolvedPath[resolvedPath.length - 1];
   }
@@ -159,7 +176,7 @@ export class ProjectLocationsDragAndDropComponent implements OnDestroy, OnInit {
       .navigate([], {
         queryParams: { [ACTIVE_LOCATION_PATH_QUERY_PARAM_NAME]: activeLocationPath.map(location => location.id).join(',') },
       })
-      .catch(() => window.location.reload());
+      .catch(() => this.load());
   }
 
   private moveWithHandleOnly(el?: Element | undefined, container?: Element | undefined, handle?: Element | undefined): boolean {
