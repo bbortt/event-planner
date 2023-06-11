@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
@@ -30,11 +31,12 @@ export class LocationUpdateComponent implements OnInit {
   editForm: LocationFormGroup;
 
   constructor(
+    private angularLocation: Location,
     private eventManager: EventManager,
     protected locationService: LocationService,
     protected locationFormService: LocationFormService,
     protected projectService: ProjectService,
-    protected activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute
   ) {
     this.editForm = this.locationFormService.createLocationFormGroup();
   }
@@ -55,7 +57,7 @@ export class LocationUpdateComponent implements OnInit {
   }
 
   previousState(): void {
-    window.history.back();
+    this.angularLocation.back();
   }
 
   save(): void {

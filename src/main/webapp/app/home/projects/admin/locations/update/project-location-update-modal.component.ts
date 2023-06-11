@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import { ActivatedRoute } from '@angular/router';
@@ -16,11 +17,11 @@ import { ProjectLocationUpdateComponent } from './project-location-update.compon
 export class ProjectLocationUpdateModalComponent implements OnInit, OnDestroy {
   private modalRef: NgbModalRef | undefined;
 
-  constructor(private activatedRoute: ActivatedRoute, private modalService: NgbModal) {}
+  constructor(private activatedRoute: ActivatedRoute, private location: Location, private modalService: NgbModal) {}
 
   ngOnInit(): void {
     this.modalRef = this.modalService.open(ProjectLocationUpdateComponent, { size: 'lg' });
-    this.modalRef.result.catch(() => window.history.back());
+    this.modalRef.result.catch(() => this.location.back());
 
     combineLatest([this.activatedRoute.url, this.activatedRoute.data])
       .pipe(

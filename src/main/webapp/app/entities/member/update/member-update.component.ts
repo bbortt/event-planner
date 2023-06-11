@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
@@ -30,10 +31,11 @@ export class MemberUpdateComponent implements OnInit {
 
   constructor(
     private eventManager: EventManager,
+    private location: Location,
     protected memberService: MemberService,
     protected memberFormService: MemberFormService,
     protected projectService: ProjectService,
-    protected activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute
   ) {
     this.editForm = this.memberFormService.createMemberFormGroup();
   }
@@ -52,7 +54,7 @@ export class MemberUpdateComponent implements OnInit {
   }
 
   previousState(): void {
-    window.history.back();
+    this.location.back();
   }
 
   save(): void {

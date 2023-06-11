@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
@@ -10,7 +11,7 @@ import { IMember } from '../member.model';
 export class MemberDetailComponent implements OnInit {
   member: IMember | null = null;
 
-  constructor(protected activatedRoute: ActivatedRoute) {}
+  constructor(private activatedRoute: ActivatedRoute, private location: Location) {}
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ member }) => {
@@ -19,6 +20,6 @@ export class MemberDetailComponent implements OnInit {
   }
 
   previousState(): void {
-    window.history.back();
+    this.location.back();
   }
 }

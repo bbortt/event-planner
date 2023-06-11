@@ -11,7 +11,7 @@ import { ProjectService } from 'app/entities/project/service/project.service';
 export class AdminLayoutComponent implements OnInit {
   protected project: IProject | null = null;
 
-  constructor(protected projectService: ProjectService, protected activatedRoute: ActivatedRoute) {}
+  constructor(protected projectService: ProjectService, private activatedRoute: ActivatedRoute) {}
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ project }) => {

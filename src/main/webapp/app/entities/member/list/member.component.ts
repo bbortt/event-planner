@@ -30,7 +30,7 @@ export class MemberComponent implements OnInit {
 
   constructor(
     protected memberService: MemberService,
-    protected activatedRoute: ActivatedRoute,
+    private activatedRoute: ActivatedRoute,
     public router: Router,
     protected modalService: NgbModal,
     private ngZone: NgZone

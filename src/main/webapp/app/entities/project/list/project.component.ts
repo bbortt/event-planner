@@ -30,7 +30,7 @@ export class ProjectComponent implements OnInit {
 
   constructor(
     protected projectService: ProjectService,
-    protected activatedRoute: ActivatedRoute,
+    private activatedRoute: ActivatedRoute,
     public router: Router,
     protected modalService: NgbModal,
     private ngZone: NgZone

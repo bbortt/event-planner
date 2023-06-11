@@ -32,7 +32,7 @@ export class MyProjectsListComponent implements OnInit, OnDestroy {
   constructor(
     protected projectService: ProjectService,
     protected apiProjectService: ApiProjectService,
-    protected activatedRoute: ActivatedRoute,
+    private activatedRoute: ActivatedRoute,
     public router: Router
   ) {}
 
