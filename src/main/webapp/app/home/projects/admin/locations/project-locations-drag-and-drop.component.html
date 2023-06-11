@@ -11,10 +11,10 @@
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
         <li class="breadcrumb-item">
-          <a (click)="setActiveLocation(null)" jhiTranslate="app.project.admin.location.topLevel">Oberste Lokalitäten</a>
+          <a (click)="handleLocationControl({ type: 'select' })" jhiTranslate="app.project.admin.location.topLevel">Oberste Lokalitäten</a>
         </li>
         <li class="breadcrumb-item" *ngFor="let location of activeLocationPath">
-          <a (click)="setActiveLocation(location)">{{ location.name }}</a>
+          <a (click)="handleLocationControl({ type: 'select', location })">{{ location.name }}</a>
         </li>
       </ol>
     </nav>
@@ -48,7 +48,7 @@
           [attr.data-id]="location.id"
           [location]="location"
           [project]="project"
-          [locationSelected]="locationSelectedSource"
+          [locationSelected]="locationControlSource"
         ></app-project-location-drag>
       </div>
     </div>
@@ -88,7 +88,7 @@
           [attr.data-id]="location.id"
           [location]="location"
           [project]="project"
-          [locationSelected]="locationSelectedSource"
+          [locationSelected]="locationControlSource"
         ></app-project-location-drag>
       </div>
     </div>
