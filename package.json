@@ -102,7 +102,7 @@
     "sockjs-client": "1.6.1",
     "tslib": "2.5.3",
     "webstomp-client": "1.2.6",
-    "zone.js": "0.13.0"
+    "zone.js": "0.13.1"
   },
   "devDependencies": {
     "@angular-builders/custom-webpack": "15.0.0",
