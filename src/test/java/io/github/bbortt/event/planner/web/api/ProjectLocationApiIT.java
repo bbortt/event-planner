@@ -7,9 +7,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import io.github.bbortt.event.planner.IntegrationTest;
+import io.github.bbortt.event.planner.domain.Location;
 import io.github.bbortt.event.planner.domain.Project;
+import io.github.bbortt.event.planner.repository.LocationRepository;
 import io.github.bbortt.event.planner.web.rest.LocationResourceIT;
 import io.github.bbortt.event.planner.web.rest.ProjectResourceIT;
+import java.util.List;
 import java.util.UUID;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,6 +36,9 @@ class ProjectLocationApiIT {
 
     @Autowired
     private MockMvc restProjectMockMvc;
+
+    @Autowired
+    private LocationRepository locationRepository;
 
     private Project project1;
     private Project project2;
@@ -59,6 +65,24 @@ class ProjectLocationApiIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.contents.size()").value(equalTo(locationsCount)));
+    }
+
+    @Test
+    @Transactional
+    void getProjectLocationsWithoutSelf() throws Exception {
+        int locationsCount = 4;
+
+        createAndPersistLocations(locationsCount, project1);
+        createAndPersistLocations(locationsCount, project2);
+
+        List<Location> locations = locationRepository.findAllByParentIsNullAndProject_IdEquals(project1.getId());
+        Location excludedLocation = locations.get(2);
+
+        restProjectMockMvc
+            .perform(get(ENTITY_API_URL + "/{locationId}/allInProjectExceptThis", project1.getId(), excludedLocation.getId()))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(jsonPath("$.contents.size()").value(equalTo(locationsCount - 1)));
     }
 
     private void createAndPersistLocations(int count, Project project) {

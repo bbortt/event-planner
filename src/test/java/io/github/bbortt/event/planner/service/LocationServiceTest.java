@@ -7,7 +7,9 @@ import io.github.bbortt.event.planner.domain.Location;
 import io.github.bbortt.event.planner.repository.LocationRepository;
 import io.github.bbortt.event.planner.service.dto.LocationDTO;
 import io.github.bbortt.event.planner.service.mapper.LocationMapper;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,6 +43,24 @@ class LocationServiceTest {
         doReturn(locationDTO).when(locationMapperMock).toDto(location);
 
         List<LocationDTO> result = fixture.findAllInProject(projectId);
+
+        assertEquals(1, result.size());
+        assertEquals(locationDTO, result.get(0));
+    }
+
+    @Test
+    void findAllInProjectExceptThisCallsRepository() {
+        Long projectId = 1234L;
+        Long locationId = 2345L;
+
+        Location location = new Location().id(1234L).withChild(new Location().id(locationId));
+        doReturn(List.of(location)).when(locationRepositoryMock).findAllByParentIsNullAndProject_IdEquals(projectId);
+
+        LocationDTO locationDTO = new LocationDTO();
+        locationDTO.setChildren(Collections.emptyList());
+        doReturn(locationDTO).when(locationMapperMock).toDto(location);
+
+        List<LocationDTO> result = fixture.findAllInProjectExceptThis(projectId, locationId);
 
         assertEquals(1, result.size());
         assertEquals(locationDTO, result.get(0));
