@@ -7,8 +7,8 @@ import { RouterTestingModule } from '@angular/router/testing';
 
 import { from, of, Subject } from 'rxjs';
 
+import { GetProjectLocations200Response, Location as ApiLocation, ProjectLocationService } from 'app/api';
 import { EventManager } from 'app/core/util/event-manager.service';
-
 import { ILocation } from 'app/entities/location/location.model';
 import { LocationService } from 'app/entities/location/service/location.service';
 import { LocationFormService } from 'app/entities/location/update/location-form.service';
@@ -16,13 +16,15 @@ import { IProject } from 'app/entities/project/project.model';
 
 import { ProjectLocationUpdateComponent } from './project-location-update.component';
 
-describe('Location Management Update Component', () => {
-  let comp: ProjectLocationUpdateComponent;
-  let fixture: ComponentFixture<ProjectLocationUpdateComponent>;
+describe('Project Location Update Component', () => {
   let activatedRoute: ActivatedRoute;
   let eventManager: EventManager;
   let locationFormService: LocationFormService;
   let locationService: LocationService;
+  let projectLocationService: ProjectLocationService;
+
+  let fixture: ComponentFixture<ProjectLocationUpdateComponent>;
+  let comp: ProjectLocationUpdateComponent;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -46,33 +48,84 @@ describe('Location Management Update Component', () => {
     eventManager = TestBed.inject(EventManager);
     locationFormService = TestBed.inject(LocationFormService);
     locationService = TestBed.inject(LocationService);
+    projectLocationService = TestBed.inject(ProjectLocationService);
 
     comp = fixture.componentInstance;
   });
 
   describe('ngOnInit', () => {
-    it('Should call Location query and add missing value', () => {
+    const verifyDefaultFormSettings = (): void => {
+      expect(comp.editForm.controls.createdBy.disabled).toBeTruthy();
+      expect(comp.editForm.controls.createdDate.disabled).toBeTruthy();
+      expect(comp.editForm.controls.lastModifiedBy.disabled).toBeTruthy();
+      expect(comp.editForm.controls.lastModifiedDate.disabled).toBeTruthy();
+    };
+
+    it('Should not load anything if no Project present', () => {
+      jest.spyOn(projectLocationService, 'getProjectLocations');
+      jest.spyOn(projectLocationService, 'getProjectLocationsWithoutSelf');
+
+      const location: ILocation = { id: 456 };
+      comp.existingLocation = location;
+
+      comp.ngOnInit();
+
+      expect(projectLocationService.getProjectLocations).not.toHaveBeenCalled();
+      expect(projectLocationService.getProjectLocationsWithoutSelf).not.toHaveBeenCalled();
+
+      verifyDefaultFormSettings();
+    });
+
+    it('Should load all Locations from Project', () => {
+      const id = 19644;
+      const name = 'test-name';
+
+      const project: IProject = { id: 35176 };
+
+      const locationCollection: ApiLocation[] = [{ id, name, children: [] }];
+      jest
+        .spyOn(projectLocationService, 'getProjectLocations')
+        .mockReturnValue(of(new HttpResponse<GetProjectLocations200Response>({ body: { contents: locationCollection } })));
+      const expectedCollection: ILocation[] = [{ id, name }];
+      jest.spyOn(locationService, 'addLocationToCollectionIfMissing').mockReturnValue(expectedCollection);
+
+      comp.project = project;
+
+      comp.ngOnInit();
+
+      expect(projectLocationService.getProjectLocations).toHaveBeenCalledWith(project.id, 'response');
+      expect(locationService.addLocationToCollectionIfMissing).toHaveBeenCalledWith(expectedCollection, undefined);
+      expect(comp.locationsSharedCollection).toEqual(expectedCollection);
+
+      expect(comp.editForm.controls.parent.value).toBeNull();
+      expect(comp.editForm.controls.project.value).toEqual(project);
+    });
+
+    it('Should load all Locations from Project except the existing Location', () => {
+      const id = 19655;
+      const name = 'test-location';
+
       const location: ILocation = { id: 456 };
       const project: IProject = { id: 35176 };
       location.project = project;
       const parent: ILocation = { id: 83607 };
       location.parent = parent;
 
-      const locationCollection: ILocation[] = [{ id: 19644 }];
-      jest.spyOn(locationService, 'query').mockReturnValue(of(new HttpResponse({ body: locationCollection })));
+      const locationCollection: ApiLocation[] = [{ id, name, children: [] }];
+      jest
+        .spyOn(projectLocationService, 'getProjectLocationsWithoutSelf')
+        .mockReturnValue(of(new HttpResponse<GetProjectLocations200Response>({ body: { contents: locationCollection } })));
       const additionalLocations = [parent];
-      const expectedCollection: ILocation[] = [...additionalLocations, ...locationCollection];
+      const expectedCollection: ILocation[] = [...additionalLocations, { id, name }];
       jest.spyOn(locationService, 'addLocationToCollectionIfMissing').mockReturnValue(expectedCollection);
 
       comp.existingLocation = location;
+      comp.project = project;
 
       comp.ngOnInit();
 
-      expect(locationService.query).toHaveBeenCalled();
-      expect(locationService.addLocationToCollectionIfMissing).toHaveBeenCalledWith(
-        locationCollection,
-        ...additionalLocations.map(expect.objectContaining)
-      );
+      expect(projectLocationService.getProjectLocationsWithoutSelf).toHaveBeenCalledWith(project.id, location.id, 'response');
+      expect(locationService.addLocationToCollectionIfMissing).toHaveBeenCalledTimes(2);
       expect(comp.locationsSharedCollection).toEqual(expectedCollection);
 
       expect(comp.editForm.get('parent')?.value).toEqual(parent);

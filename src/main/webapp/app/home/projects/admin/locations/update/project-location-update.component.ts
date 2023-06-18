@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 
@@ -6,11 +7,11 @@ import { finalize, map } from 'rxjs/operators';
 
 import { EventManager, EventWithContent } from 'app/core/util/event-manager.service';
 
+import { GetProjectLocations200Response, Location as ApiLocation, ProjectLocationService } from 'app/api';
 import { ILocation } from 'app/entities/location/location.model';
 import { LocationService } from 'app/entities/location/service/location.service';
 import { LocationFormGroup, LocationFormService } from 'app/entities/location/update/location-form.service';
 import { IProject } from 'app/entities/project/project.model';
-import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-project-location-update',
@@ -30,8 +31,9 @@ export class ProjectLocationUpdateComponent implements OnInit {
   constructor(
     private eventManager: EventManager,
     private location: Location,
-    protected locationService: LocationService,
-    protected locationFormService: LocationFormService
+    private locationService: LocationService,
+    private locationFormService: LocationFormService,
+    private projectLocationService: ProjectLocationService
   ) {
     this.editForm = this.locationFormService.createLocationFormGroup();
   }
@@ -51,6 +53,7 @@ export class ProjectLocationUpdateComponent implements OnInit {
     }
 
     this.loadRelationshipsOptions();
+    this.disableInformativeFields();
   }
 
   compareLocation = (o1: ILocation | null, o2: ILocation | null): boolean => this.locationService.compareLocation(o1, o2);
@@ -98,14 +101,33 @@ export class ProjectLocationUpdateComponent implements OnInit {
   }
 
   protected loadRelationshipsOptions(): void {
-    this.locationService
-      .query()
-      .pipe(map((res: HttpResponse<ILocation[]>) => res.body ?? []))
+    if (this.project && this.existingLocation) {
+      this.prepareRelationshipsOptions(
+        this.projectLocationService.getProjectLocationsWithoutSelf(this.project.id, this.existingLocation.id, 'response')
+      );
+    } else if (this.project) {
+      this.prepareRelationshipsOptions(this.projectLocationService.getProjectLocations(this.project.id, 'response'));
+    }
+  }
+
+  private prepareRelationshipsOptions(projectLocations: Observable<HttpResponse<GetProjectLocations200Response>>): void {
+    projectLocations
       .pipe(
+        map((res: HttpResponse<GetProjectLocations200Response>) => res.body?.contents ?? []),
+        map((locations: ApiLocation[]) =>
+          locations.map(location => ({ id: location.id, name: location.name, description: location.description } as ILocation))
+        ),
         map((locations: ILocation[]) =>
           this.locationService.addLocationToCollectionIfMissing<ILocation>(locations, this.existingLocation?.parent)
         )
       )
       .subscribe((locations: ILocation[]) => (this.locationsSharedCollection = locations));
+  }
+
+  private disableInformativeFields(): void {
+    this.editForm.controls.createdBy.disable();
+    this.editForm.controls.createdDate.disable();
+    this.editForm.controls.lastModifiedBy.disable();
+    this.editForm.controls.lastModifiedDate.disable();
   }
 }

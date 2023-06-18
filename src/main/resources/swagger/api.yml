@@ -84,9 +84,9 @@ paths:
       security:
         - oauth
         - openid
-      summary: List all locations collaborating on the Project.
+      summary: List all Locations of the Project.
       description: |
-        Return all locations of the given Project by id. **Beware:** This
+        Return all Locations of the given Project by id. **Beware:** This
         endpoint does not implement any pagination!
       operationId: getProjectLocations
       parameters:
@@ -94,6 +94,53 @@ paths:
           in: path
           description: |
             The restricting Project id.
+          schema:
+            type: integer
+            format: int64
+          required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  contents:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Location'
+        404:
+          description: Not Found
+  /v1/projects/{projectId}/locations/{locationId}/allInProjectExceptThis:
+    get:
+      tags:
+        - project-location
+        - project
+      security:
+        - oauth
+        - openid
+      summary: List Locations of the Project, except this one.
+      description: |
+        Return all Locations of the given Project by id, except the one
+        given by id and any of its children. This endpoint must be used
+        in order to retrieve possible new parents when editing a
+        location. **Beware:** This endpoint does not implement any
+        pagination!
+      operationId: getProjectLocationsWithoutSelf
+      parameters:
+        - name: projectId
+          in: path
+          description: |
+            The restricting Project id.
+          schema:
+            type: integer
+            format: int64
+          required: true
+        - name: locationId
+          in: path
+          description: |
+            The restricting Location id.
           schema:
             type: integer
             format: int64

@@ -77,18 +77,16 @@
 
         <div class="row mb-3" *ngIf="this.existingLocation && editForm.controls.createdDate.value !== null">
           <label class="form-label" jhiTranslate="app.location.createdDate" for="field_createdDate">Created Date</label>
-          <div class="d-flex">
-            <input
-              id="field_createdDate"
-              data-cy="createdDate"
-              type="datetime-local"
-              class="form-control"
-              name="createdDate"
-              formControlName="createdDate"
-              placeholder="YYYY-MM-DD HH:mm"
-              [readonly]="true"
-            />
-          </div>
+          <input
+            id="field_createdDate"
+            data-cy="createdDate"
+            type="datetime-local"
+            class="form-control"
+            name="createdDate"
+            formControlName="createdDate"
+            placeholder="YYYY-MM-DD HH:mm"
+            [readonly]="true"
+          />
         </div>
 
         <div class="row mb-3" *ngIf="this.existingLocation && editForm.controls.lastModifiedBy.value !== null">
@@ -106,18 +104,16 @@
 
         <div class="row mb-3" *ngIf="this.existingLocation && editForm.controls.lastModifiedDate.value !== null">
           <label class="form-label" jhiTranslate="app.location.lastModifiedDate" for="field_lastModifiedDate">Last Modified Date</label>
-          <div class="d-flex">
-            <input
-              id="field_lastModifiedDate"
-              data-cy="lastModifiedDate"
-              type="datetime-local"
-              class="form-control"
-              name="lastModifiedDate"
-              formControlName="lastModifiedDate"
-              placeholder="YYYY-MM-DD HH:mm"
-              [readonly]="true"
-            />
-          </div>
+          <input
+            id="field_lastModifiedDate"
+            data-cy="lastModifiedDate"
+            type="datetime-local"
+            class="form-control"
+            name="lastModifiedDate"
+            formControlName="lastModifiedDate"
+            placeholder="YYYY-MM-DD HH:mm"
+            [readonly]="true"
+          />
         </div>
 
         <div class="row mb-3">
