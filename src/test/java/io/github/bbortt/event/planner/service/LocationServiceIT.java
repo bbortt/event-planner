@@ -3,6 +3,7 @@ package io.github.bbortt.event.planner.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import io.github.bbortt.event.planner.IntegrationTest;
+import io.github.bbortt.event.planner.domain.Location;
 import io.github.bbortt.event.planner.domain.Project;
 import io.github.bbortt.event.planner.service.dto.LocationDTO;
 import io.github.bbortt.event.planner.web.rest.LocationResourceIT;
@@ -56,6 +57,25 @@ class LocationServiceIT {
         );
 
         List<LocationDTO> locations = locationService.findAllInProject(project1.getId());
+
+        assertEquals(1, locations.size());
+        assertEquals(1, locations.get(0).getChildren().size());
+    }
+
+    @Test
+    @Transactional
+    void findAllInProjectExceptThisReturnsLocationsInProjectExceptMatchById() {
+        Location validChild = LocationResourceIT.createEntity(entityManager).project(project1);
+        entityManager.persist(validChild);
+
+        Location excludedLocation = LocationResourceIT.createEntity(entityManager).project(project1);
+        entityManager.persist(excludedLocation);
+
+        entityManager.persist(
+            LocationResourceIT.createEntity(entityManager).project(project1).withChild(validChild).withChild(excludedLocation)
+        );
+
+        List<LocationDTO> locations = locationService.findAllInProjectExceptThis(project1.getId(), excludedLocation.getId());
 
         assertEquals(1, locations.size());
         assertEquals(1, locations.get(0).getChildren().size());

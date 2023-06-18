@@ -6,6 +6,8 @@ import io.github.bbortt.event.planner.service.dto.LocationDTO;
 import io.github.bbortt.event.planner.service.mapper.LocationMapper;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -133,5 +135,38 @@ public class LocationService {
     public List<LocationDTO> findAllInProject(Long projectId) {
         log.debug("Request to get all Locations in Project '{}'", projectId);
         return locationRepository.findAllByParentIsNullAndProject_IdEquals(projectId).stream().map(locationMapper::toDto).toList();
+    }
+
+    /**
+     * Get all locations of a {@link io.github.bbortt.event.planner.domain.Project}, except the one {@link Location} by id.
+     *
+     * @param projectId the id of the {@link io.github.bbortt.event.planner.domain.Project}.
+     * @param locationId the id of the {@link io.github.bbortt.event.planner.domain.Location}.
+
+     * @return the list of entities.
+     */
+    @Transactional(readOnly = true)
+    @PreAuthorize("T(io.github.bbortt.event.planner.security.SecurityUtils).isAuthenticated()")
+    public List<LocationDTO> findAllInProjectExceptThis(Long projectId, Long locationId) {
+        log.debug("Request to get all Locations except '{}' in Project '{}'", locationId, projectId);
+        return locationRepository
+            .findAllByParentIsNullAndProject_IdEquals(projectId)
+            .stream()
+            .filter(location -> !location.getId().equals(locationId))
+            .peek(location -> location.setChildren(dropLocationsMatchingId(location.getChildren(), locationId)))
+            .map(locationMapper::toDto)
+            .toList();
+    }
+
+    private Set<Location> dropLocationsMatchingId(Set<Location> locations, Long locationId) {
+        if (log.isTraceEnabled()) {
+            log.trace("Filter Locations by id '{}': {}", locationId, locations);
+        }
+
+        return locations
+            .stream()
+            .filter(location -> !location.getId().equals(locationId))
+            .peek(location -> location.setChildren(dropLocationsMatchingId(location.getChildren(), locationId)))
+            .collect(Collectors.toSet());
     }
 }
