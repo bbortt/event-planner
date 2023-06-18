@@ -6,7 +6,7 @@ import { of, Subscription } from 'rxjs';
 
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
-import { GetProjectLocations200Response, Location, Project, ProjectLocationService } from 'app/api';
+import { Location, Project, ProjectLocationService } from 'app/api';
 import { LocationService } from 'app/entities/location/service/location.service';
 
 import { ProjectLocationsDragAndDropComponent } from './project-locations-drag-and-drop.component';
