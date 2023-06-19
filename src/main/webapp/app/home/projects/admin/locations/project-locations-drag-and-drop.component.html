@@ -32,7 +32,6 @@
           data-toggle="tooltip"
           [title]="createNewLocationWithParentText"
           [routerLink]="[{ outlets: { modal: ['project', project.id, 'locations', 'new'] } }]"
-          queryParamsHandling="merge"
         >
           <fa-icon icon="plus"></fa-icon>
         </button>
@@ -72,7 +71,6 @@
           data-toggle="tooltip"
           [title]="createNewLocationWithParentText"
           [routerLink]="[{ outlets: { modal: ['project', project.id, 'locations', activeLocation.id, 'new'] } }]"
-          queryParamsHandling="merge"
         >
           <fa-icon icon="plus"></fa-icon>
         </button>

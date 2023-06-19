@@ -169,7 +169,7 @@ describe("Project Locations Drag 'n Drop Component", () => {
         component.handleLocationControl({ type: 'delete' });
 
         expect(component.activeLocation).toBeNull();
-        expect(mockRouter.navigate).not.toHaveBeenCalled();
+        expect(mockRouter.navigate).toHaveBeenCalledWith([], { queryParams: { activeLocationPath: '' } });
         expect(mockProjectLocationService.getProjectLocations).toHaveBeenCalledWith(project.id, 'response');
         expect(component.isLoading).toBeFalsy();
       });

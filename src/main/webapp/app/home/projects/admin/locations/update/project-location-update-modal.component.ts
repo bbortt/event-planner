@@ -21,7 +21,7 @@ export class ProjectLocationUpdateModalComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.modalRef = this.modalService.open(ProjectLocationUpdateComponent, { size: 'lg' });
-    this.modalRef.result.catch(() => this.location.back());
+    this.modalRef.result.catch(() => this.location.historyGo(-2));
 
     combineLatest([this.activatedRoute.url, this.activatedRoute.data])
       .pipe(
