@@ -153,7 +153,10 @@ public class LocationService {
             .findAllByParentIsNullAndProject_IdEquals(projectId)
             .stream()
             .filter(location -> !location.getId().equals(locationId))
-            .peek(location -> location.setChildren(dropLocationsMatchingId(location.getChildren(), locationId)))
+            .map(location -> {
+                location.setChildren(dropLocationsMatchingId(location.getChildren(), locationId));
+                return location;
+            })
             .map(locationMapper::toDto)
             .toList();
     }
@@ -166,7 +169,10 @@ public class LocationService {
         return locations
             .stream()
             .filter(location -> !location.getId().equals(locationId))
-            .peek(location -> location.setChildren(dropLocationsMatchingId(location.getChildren(), locationId)))
+            .map(location -> {
+                location.setChildren(dropLocationsMatchingId(location.getChildren(), locationId));
+                return location;
+            })
             .collect(Collectors.toSet());
     }
 }
