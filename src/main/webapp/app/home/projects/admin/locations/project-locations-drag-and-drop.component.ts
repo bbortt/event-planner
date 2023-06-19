@@ -135,6 +135,8 @@ export class ProjectLocationsDragAndDropComponent implements OnDestroy, OnInit {
     } else if (this.activeLocationPathString) {
       this.synchronizeActiveLocationPathStringFromRouter(this.activeLocationPathString);
       this.activeLocationPathString = null;
+    } else {
+      this.setActiveLocation(null);
     }
   }
 
