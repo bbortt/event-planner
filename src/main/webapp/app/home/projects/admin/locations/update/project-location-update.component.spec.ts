@@ -53,7 +53,7 @@ describe('Project Location Update Component', () => {
     comp = fixture.componentInstance;
   });
 
-  describe('ngOnInit', () => {
+  describe('lateInit', () => {
     const verifyDefaultFormSettings = (): void => {
       expect(comp.editForm.controls.createdBy.disabled).toBeTruthy();
       expect(comp.editForm.controls.createdDate.disabled).toBeTruthy();
@@ -68,7 +68,7 @@ describe('Project Location Update Component', () => {
       const location: ILocation = { id: 456 };
       comp.existingLocation = location;
 
-      comp.ngOnInit();
+      comp.lateInit();
 
       expect(projectLocationService.getProjectLocations).not.toHaveBeenCalled();
       expect(projectLocationService.getProjectLocationsWithoutSelf).not.toHaveBeenCalled();
@@ -91,7 +91,7 @@ describe('Project Location Update Component', () => {
 
       comp.project = project;
 
-      comp.ngOnInit();
+      comp.lateInit();
 
       expect(projectLocationService.getProjectLocations).toHaveBeenCalledWith(project.id, 'response');
       expect(locationService.addLocationToCollectionIfMissing).toHaveBeenCalledWith(expectedCollection, undefined);
@@ -122,7 +122,7 @@ describe('Project Location Update Component', () => {
       comp.existingLocation = location;
       comp.project = project;
 
-      comp.ngOnInit();
+      comp.lateInit();
 
       expect(projectLocationService.getProjectLocationsWithoutSelf).toHaveBeenCalledWith(project.id, location.id, 'response');
       expect(locationService.addLocationToCollectionIfMissing).toHaveBeenCalledTimes(2);
@@ -141,7 +141,7 @@ describe('Project Location Update Component', () => {
 
       comp.existingLocation = location;
 
-      comp.ngOnInit();
+      comp.lateInit();
 
       expect(comp.locationsSharedCollection).toContain(parent);
 
@@ -156,7 +156,7 @@ describe('Project Location Update Component', () => {
       comp.parentLocation = parent;
       comp.project = project;
 
-      comp.ngOnInit();
+      comp.lateInit();
 
       expect(comp.editForm.get('parent')?.value).toEqual(parent);
       expect(comp.editForm.get('parent')?.disabled).toBeTruthy();
@@ -173,7 +173,7 @@ describe('Project Location Update Component', () => {
       jest.spyOn(locationService, 'update').mockReturnValue(saveSubject);
       jest.spyOn(comp, 'previousState');
       activatedRoute.data = of({ location });
-      comp.ngOnInit();
+      comp.lateInit();
 
       // WHEN
       comp.save();
@@ -196,7 +196,7 @@ describe('Project Location Update Component', () => {
       jest.spyOn(locationService, 'create').mockReturnValue(saveSubject);
       jest.spyOn(comp, 'previousState');
       activatedRoute.data = of({ location: null });
-      comp.ngOnInit();
+      comp.lateInit();
 
       // WHEN
       comp.save();
@@ -221,7 +221,7 @@ describe('Project Location Update Component', () => {
 
       comp.existingLocation = { id: 123 };
 
-      comp.ngOnInit();
+      comp.lateInit();
 
       // WHEN
       comp.save();
