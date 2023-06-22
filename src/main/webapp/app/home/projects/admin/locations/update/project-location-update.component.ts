@@ -1,9 +1,9 @@
 import { Location } from '@angular/common';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { Observable } from 'rxjs';
-import { finalize, map } from 'rxjs/operators';
+import { finalize, map, tap } from 'rxjs/operators';
 
 import { EventManager, EventWithContent } from 'app/core/util/event-manager.service';
 
@@ -17,7 +17,7 @@ import { IProject } from 'app/entities/project/project.model';
   selector: 'app-project-location-update',
   templateUrl: './project-location-update.component.html',
 })
-export class ProjectLocationUpdateComponent implements OnInit {
+export class ProjectLocationUpdateComponent {
   project: IProject | null = null;
   parentLocation: ILocation | null = null;
 
@@ -38,22 +38,11 @@ export class ProjectLocationUpdateComponent implements OnInit {
     this.editForm = this.locationFormService.createLocationFormGroup();
   }
 
-  ngOnInit(): void {
-    if (this.existingLocation) {
-      this.updateForm(this.existingLocation);
-    } else {
-      if (this.parentLocation) {
-        this.editForm.get('parent')?.setValue(this.parentLocation);
-        this.editForm.controls.parent.disable();
-      }
-
-      if (this.project) {
-        this.editForm.get('project')?.setValue(this.project);
-      }
+  lateInit(): void {
+    if (this.locationsSharedCollection.length === 0) {
+      this.loadRelationshipsOptions();
+      this.disableInformativeFields();
     }
-
-    this.loadRelationshipsOptions();
-    this.disableInformativeFields();
   }
 
   compareLocation = (o1: ILocation | null, o2: ILocation | null): boolean => this.locationService.compareLocation(o1, o2);
@@ -114,14 +103,44 @@ export class ProjectLocationUpdateComponent implements OnInit {
     projectLocations
       .pipe(
         map((res: HttpResponse<GetProjectLocations200Response>) => res.body?.contents ?? []),
+        map((locations: ApiLocation[]) => this.flattenLocations(locations)),
         map((locations: ApiLocation[]) =>
-          locations.map(location => ({ id: location.id, name: location.name, description: location.description } as ILocation))
+          locations.map(
+            (location: ApiLocation) => ({ id: location.id, name: location.name, description: location.description } as ILocation)
+          )
         ),
         map((locations: ILocation[]) =>
           this.locationService.addLocationToCollectionIfMissing<ILocation>(locations, this.existingLocation?.parent)
-        )
+        ),
+        tap((locations: ILocation[]) => (this.locationsSharedCollection = locations))
       )
-      .subscribe((locations: ILocation[]) => (this.locationsSharedCollection = locations));
+      .subscribe(() => this.updateLocationDefaultValues());
+  }
+
+  private flattenLocations(locations: ApiLocation[]): ApiLocation[] {
+    const flattenedLocations: ApiLocation[] = [];
+
+    for (const rawLocation of locations) {
+      flattenedLocations.push(rawLocation);
+      this.flattenLocations(rawLocation.children).forEach(flattenedLocation => flattenedLocations.push(flattenedLocation));
+    }
+
+    return flattenedLocations;
+  }
+
+  private updateLocationDefaultValues(): void {
+    if (this.existingLocation) {
+      this.updateForm(this.existingLocation);
+    } else {
+      if (this.parentLocation) {
+        this.editForm.controls.parent.setValue(this.parentLocation);
+        this.editForm.controls.parent.disable();
+      }
+
+      if (this.project) {
+        this.editForm.get('project')?.setValue(this.project);
+      }
+    }
   }
 
   private disableInformativeFields(): void {

@@ -40,6 +40,8 @@ export class ProjectLocationUpdateModalComponent implements OnInit, OnDestroy {
           } else if (location) {
             this.modalRef.componentInstance.existingLocation = location;
           }
+
+          this.modalRef.componentInstance.lateInit();
         }
       });
   }
