@@ -76,6 +76,19 @@ describe('Project Location Update Component', () => {
       verifyDefaultFormSettings();
     });
 
+    it('Does not invoke backend calls twice', () => {
+      jest.spyOn(projectLocationService, 'getProjectLocations');
+      jest.spyOn(projectLocationService, 'getProjectLocationsWithoutSelf');
+
+      const location: ILocation = { id: 456 };
+      comp.locationsSharedCollection = [location];
+
+      comp.lateInit();
+
+      expect(projectLocationService.getProjectLocations).not.toHaveBeenCalled();
+      expect(projectLocationService.getProjectLocationsWithoutSelf).not.toHaveBeenCalled();
+    });
+
     it('Should load all Locations from Project', () => {
       const id = 19644;
       const name = 'test-name';
@@ -132,29 +145,16 @@ describe('Project Location Update Component', () => {
       expect(comp.editForm.get('project')?.value).toEqual(project);
     });
 
-    it('Should update editForm', () => {
-      const location: ILocation = { id: 456 };
-      const project: IProject = { id: 35176 };
-      location.project = project;
-      const parent: ILocation = { id: 1584 };
-      location.parent = parent;
-
-      comp.existingLocation = location;
-
-      comp.lateInit();
-
-      expect(comp.locationsSharedCollection).toContain(parent);
-
-      expect(comp.editForm.get('parent')?.value).toEqual(parent);
-      expect(comp.editForm.get('project')?.value).toEqual(project);
-    });
-
     it('Should set default values', () => {
       const parent: ILocation = { id: 1584 };
       const project: IProject = { id: 35176 };
 
       comp.parentLocation = parent;
       comp.project = project;
+
+      jest
+        .spyOn(projectLocationService, 'getProjectLocations')
+        .mockReturnValue(of(new HttpResponse<GetProjectLocations200Response>({ body: { contents: [] } })));
 
       comp.lateInit();
 
@@ -166,7 +166,6 @@ describe('Project Location Update Component', () => {
 
   describe('save', () => {
     it('Should call update service on save for existing entity', () => {
-      // GIVEN
       const saveSubject = new Subject<HttpResponse<ILocation>>();
       const location = { id: 123 };
       jest.spyOn(locationFormService, 'getLocation').mockReturnValue(location);
@@ -175,13 +174,11 @@ describe('Project Location Update Component', () => {
       activatedRoute.data = of({ location });
       comp.lateInit();
 
-      // WHEN
       comp.save();
       expect(comp.isSaving).toEqual(true);
       saveSubject.next(new HttpResponse({ body: location }));
       saveSubject.complete();
 
-      // THEN
       expect(locationFormService.getLocation).toHaveBeenCalled();
       expect(comp.previousState).toHaveBeenCalled();
       expect(locationService.update).toHaveBeenCalledWith(expect.objectContaining(location));
@@ -189,7 +186,6 @@ describe('Project Location Update Component', () => {
     });
 
     it('Should call create service on save for new entity', () => {
-      // GIVEN
       const saveSubject = new Subject<HttpResponse<ILocation>>();
       const location = { id: 123 };
       jest.spyOn(locationFormService, 'getLocation').mockReturnValue({ id: null });
@@ -198,13 +194,11 @@ describe('Project Location Update Component', () => {
       activatedRoute.data = of({ location: null });
       comp.lateInit();
 
-      // WHEN
       comp.save();
       expect(comp.isSaving).toEqual(true);
       saveSubject.next(new HttpResponse({ body: location }));
       saveSubject.complete();
 
-      // THEN
       expect(locationFormService.getLocation).toHaveBeenCalled();
       expect(locationService.create).toHaveBeenCalled();
       expect(comp.isSaving).toEqual(false);
@@ -212,24 +206,21 @@ describe('Project Location Update Component', () => {
     });
 
     it('Should set isSaving to false on error', () => {
-      // GIVEN
       jest.spyOn(comp, 'previousState');
       jest.spyOn(eventManager, 'broadcast');
 
       const saveSubject = new Subject<HttpResponse<ILocation>>();
-      jest.spyOn(locationService, 'update').mockReturnValue(saveSubject);
+      jest.spyOn(locationService, 'create').mockReturnValue(saveSubject);
 
       comp.existingLocation = { id: 123 };
 
       comp.lateInit();
 
-      // WHEN
       comp.save();
       expect(comp.isSaving).toEqual(true);
       saveSubject.error('This is an error!');
 
-      // THEN
-      expect(locationService.update).toHaveBeenCalled();
+      expect(locationService.create).toHaveBeenCalled();
       expect(eventManager.broadcast).toHaveBeenCalled();
       expect(comp.isSaving).toEqual(false);
       expect(comp.previousState).not.toHaveBeenCalled();

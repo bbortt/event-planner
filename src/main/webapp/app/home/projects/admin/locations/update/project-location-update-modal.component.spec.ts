@@ -56,6 +56,9 @@ describe('Project Location Update Modal Component', () => {
     mockModalRef = new MockNgbModalRef() as unknown as NgbModalRef;
     closeSpy = jest.spyOn(mockModalRef, 'close');
 
+    // @ts-ignore
+    mockModalRef.componentInstance = jest.mocked({ lateInit: jest.fn() });
+
     fixture = TestBed.createComponent(ProjectLocationUpdateModalComponent);
     component = fixture.componentInstance;
   });
@@ -70,6 +73,7 @@ describe('Project Location Update Modal Component', () => {
 
     component.ngOnInit();
 
+    expect(mockModalRef.componentInstance.lateInit).toHaveBeenCalled();
     expect(modalSpy).toHaveBeenCalledWith(ProjectLocationUpdateComponent, { size: 'lg' });
 
     expect(mockModalRef.componentInstance.existingLocation).toBeUndefined();
@@ -82,6 +86,7 @@ describe('Project Location Update Modal Component', () => {
 
     component.ngOnInit();
 
+    expect(mockModalRef.componentInstance.lateInit).toHaveBeenCalled();
     expect(modalSpy).toHaveBeenCalledWith(ProjectLocationUpdateComponent, { size: 'lg' });
 
     expect(mockModalRef.componentInstance.existingLocation).toEqual(location);
@@ -95,6 +100,7 @@ describe('Project Location Update Modal Component', () => {
 
     component.ngOnInit();
 
+    expect(mockModalRef.componentInstance.lateInit).toHaveBeenCalled();
     expect(modalSpy).toHaveBeenCalledWith(ProjectLocationUpdateComponent, { size: 'lg' });
 
     expect(mockModalRef.componentInstance.existingLocation).toBeUndefined();
