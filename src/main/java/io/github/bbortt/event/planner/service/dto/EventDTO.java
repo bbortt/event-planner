@@ -2,24 +2,20 @@ package io.github.bbortt.event.planner.service.dto;
 
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.List;
 import java.util.Objects;
 import javax.validation.constraints.*;
 
 /**
- * A DTO for the {@link io.github.bbortt.event.planner.domain.Location} entity.
+ * A DTO for the {@link io.github.bbortt.event.planner.domain.Event} entity.
  */
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class LocationDTO implements Serializable {
+public class EventDTO implements Serializable {
 
     private Long id;
 
     @NotNull
     @Size(min = 1, max = 63)
     private String name;
-
-    @Size(max = 255)
-    private String description;
 
     private String createdBy;
 
@@ -29,12 +25,7 @@ public class LocationDTO implements Serializable {
 
     private Instant lastModifiedDate;
 
-    private ProjectDTO project;
-
-    private LocationDTO parent;
-
-    private List<LocationDTO> children;
-    private List<EventDTO> events;
+    private LocationDTO location;
 
     public Long getId() {
         return id;
@@ -50,14 +41,6 @@ public class LocationDTO implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public String getCreatedBy() {
@@ -92,36 +75,12 @@ public class LocationDTO implements Serializable {
         this.lastModifiedDate = lastModifiedDate;
     }
 
-    public ProjectDTO getProject() {
-        return project;
+    public LocationDTO getLocation() {
+        return location;
     }
 
-    public void setProject(ProjectDTO project) {
-        this.project = project;
-    }
-
-    public LocationDTO getParent() {
-        return parent;
-    }
-
-    public void setParent(LocationDTO parent) {
-        this.parent = parent;
-    }
-
-    public List<LocationDTO> getChildren() {
-        return children;
-    }
-
-    public void setChildren(List<LocationDTO> children) {
-        this.children = children;
-    }
-
-    public List<EventDTO> getEvents() {
-        return events;
-    }
-
-    public void setEvents(List<EventDTO> events) {
-        this.events = events;
+    public void setLocation(LocationDTO location) {
+        this.location = location;
     }
 
     @Override
@@ -129,15 +88,15 @@ public class LocationDTO implements Serializable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof LocationDTO)) {
+        if (!(o instanceof EventDTO)) {
             return false;
         }
 
-        LocationDTO locationDTO = (LocationDTO) o;
+        EventDTO eventDTO = (EventDTO) o;
         if (this.id == null) {
             return false;
         }
-        return Objects.equals(this.id, locationDTO.id);
+        return Objects.equals(this.id, eventDTO.id);
     }
 
     @Override
@@ -148,18 +107,14 @@ public class LocationDTO implements Serializable {
     // prettier-ignore
     @Override
     public String toString() {
-        return "LocationDTO{" +
+        return "EventDTO{" +
             "id=" + getId() +
             ", name='" + getName() + "'" +
-            ", description='" + getDescription() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +
             ", createdDate='" + getCreatedDate() + "'" +
             ", lastModifiedBy='" + getLastModifiedBy() + "'" +
             ", lastModifiedDate='" + getLastModifiedDate() + "'" +
-            ", project=" + getProject() +
-            ", parent=" + getParent() +
-            ", children=" + getChildren() +
-            ", events=" +getEvents() +
+            ", location=" + getLocation() +
             "}";
     }
 }

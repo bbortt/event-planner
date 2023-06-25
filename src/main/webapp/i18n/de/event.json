@@ -1,0 +1,29 @@
+{
+  "eventplannerApp": {
+    "event": {
+      "home": {
+        "title": "Events",
+        "refreshListLabel": "Liste aktualisieren",
+        "createLabel": "Event erstellen",
+        "createOrEditLabel": "Event erstellen oder bearbeiten",
+        "notFound": "Keine Events gefunden"
+      },
+      "created": "Event mit ID {{ param }} erstellt",
+      "updated": "Event mit ID {{ param }} aktualisiert",
+      "deleted": "Event mit ID {{ param }} gelöscht",
+      "delete": {
+        "question": "Soll Event {{ id }} wirklich dauerhaft gelöscht werden?"
+      },
+      "detail": {
+        "title": "Event"
+      },
+      "id": "ID",
+      "name": "Name",
+      "createdBy": "Erstellt von",
+      "createdDate": "Erstellt am",
+      "lastModifiedBy": "Zuletzt bearbeitet von",
+      "lastModifiedDate": "Zuletzt bearbeitet am",
+      "location": "Lokalität"
+    }
+  }
+}

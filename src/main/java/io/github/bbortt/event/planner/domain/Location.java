@@ -55,6 +55,10 @@ public class Location extends AbstractAuditingEntity<Location, Long> implements 
     @OneToMany(mappedBy = "parent")
     private Set<Location> children = new HashSet<>();
 
+    @JsonBackReference
+    @OneToMany(mappedBy = "location")
+    private Set<Event> events = new HashSet<>();
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
     public Long getId() {
@@ -134,8 +138,22 @@ public class Location extends AbstractAuditingEntity<Location, Long> implements 
     }
 
     public Location withChild(Location child) {
-        this.children.add(child);
         child.setParent(this);
+        this.children.add(child);
+        return this;
+    }
+
+    public Set<Event> getEvents() {
+        return events;
+    }
+
+    public void setEvents(Set<Event> events) {
+        this.events = events;
+    }
+
+    public Location withEvent(Event event) {
+        event.setLocation(this);
+        this.events.add(event);
         return this;
     }
 
