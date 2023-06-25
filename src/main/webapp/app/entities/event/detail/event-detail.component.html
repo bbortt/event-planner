@@ -1,0 +1,54 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="event">
+      <h2 data-cy="eventDetailsHeading"><span jhiTranslate="eventplannerApp.event.detail.title">Event</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="global.field.id">ID</span></dt>
+        <dd>
+          <span>{{ event.id }}</span>
+        </dd>
+        <dt><span jhiTranslate="eventplannerApp.event.name">Name</span></dt>
+        <dd>
+          <span>{{ event.name }}</span>
+        </dd>
+        <dt><span jhiTranslate="eventplannerApp.event.createdBy">Created By</span></dt>
+        <dd>
+          <span>{{ event.createdBy }}</span>
+        </dd>
+        <dt><span jhiTranslate="eventplannerApp.event.createdDate">Created Date</span></dt>
+        <dd>
+          <span>{{ event.createdDate | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span jhiTranslate="eventplannerApp.event.lastModifiedBy">Last Modified By</span></dt>
+        <dd>
+          <span>{{ event.lastModifiedBy }}</span>
+        </dd>
+        <dt><span jhiTranslate="eventplannerApp.event.lastModifiedDate">Last Modified Date</span></dt>
+        <dd>
+          <span>{{ event.lastModifiedDate | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span jhiTranslate="eventplannerApp.event.location">Location</span></dt>
+        <dd>
+          <div *ngIf="event.location">
+            <a [routerLink]="['/location', event.location.id, 'view']">{{ event.location.name }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Zurück</span>
+      </button>
+
+      <button type="button" [routerLink]="['/event', event.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Bearbeiten</span>
+      </button>
+    </div>
+  </div>
+</div>

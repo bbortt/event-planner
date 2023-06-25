@@ -2,6 +2,7 @@ package io.github.bbortt.event.planner.service.mapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import io.github.bbortt.event.planner.domain.Event;
 import io.github.bbortt.event.planner.domain.Location;
 import io.github.bbortt.event.planner.domain.Project;
 import io.github.bbortt.event.planner.service.dto.LocationDTO;
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.Test;
 
 class LocationMapperTest {
 
+    private static final String EVENT_NAME = "test event name";
     private static final String PROJECT_NAME = "test project name";
     private static final String SECOND_LOCATION_NAME = "parent location name";
 
@@ -30,6 +32,7 @@ class LocationMapperTest {
                 .name("location name")
                 .description("a test description")
                 .project(new Project().name(PROJECT_NAME))
+                .withEvent(new Event().name(EVENT_NAME))
                 .createdBy("t'challa")
                 .createdDate(Instant.now());
 
@@ -43,8 +46,10 @@ class LocationMapperTest {
         List<LocationDTO> locationDTOS = fixture.toDto(locations);
 
         assertThat(locationDTOS).isNotEmpty().size().isEqualTo(2);
-        assertThat(locationDTOS.get(0)).usingRecursiveComparison().ignoringFields("project").isEqualTo(locationDTO);
+        assertThat(locationDTOS.get(0)).usingRecursiveComparison().ignoringFields("events", "project").isEqualTo(locationDTO);
         assertThat(locationDTOS.get(0)).hasFieldOrPropertyWithValue("project.name", PROJECT_NAME);
+        assertThat(locationDTOS.get(0).getEvents()).hasSize(1);
+        assertThat(locationDTOS.get(0).getEvents().get(0)).hasFieldOrPropertyWithValue("name", EVENT_NAME);
         assertThat(locationDTOS.get(1)).isNull();
     }
 
@@ -55,8 +60,10 @@ class LocationMapperTest {
         List<Location> locations = fixture.toEntity(locationDTOs);
 
         assertThat(locations).isNotEmpty().size().isEqualTo(2);
-        assertThat(locations.get(0)).usingRecursiveComparison().ignoringFields("project").isEqualTo(location);
+        assertThat(locations.get(0)).usingRecursiveComparison().ignoringFields("events", "project").isEqualTo(location);
         assertThat(locations.get(0)).hasFieldOrPropertyWithValue("project.name", PROJECT_NAME);
+        assertThat(locations.get(0).getEvents()).hasSize(1);
+        assertThat(locations.get(0).getEvents().iterator().next()).hasFieldOrPropertyWithValue("name", EVENT_NAME);
         assertThat(locations.get(1)).isNull();
     }
 
@@ -69,10 +76,12 @@ class LocationMapperTest {
         List<LocationDTO> locationDTOS = fixture.toDto(locations);
 
         assertThat(locationDTOS).isNotEmpty().size().isEqualTo(2);
-        assertThat(locationDTOS.get(0)).usingRecursiveComparison().ignoringFields("parent", "project").isEqualTo(locationDTO);
+        assertThat(locationDTOS.get(0)).usingRecursiveComparison().ignoringFields("events", "parent", "project").isEqualTo(locationDTO);
         assertThat(locationDTOS.get(0))
             .hasFieldOrPropertyWithValue("project.name", PROJECT_NAME)
             .hasFieldOrPropertyWithValue("parent.name", SECOND_LOCATION_NAME);
+        assertThat(locationDTOS.get(0).getEvents()).hasSize(1);
+        assertThat(locationDTOS.get(0).getEvents().get(0)).hasFieldOrPropertyWithValue("name", EVENT_NAME);
         assertThat(locationDTOS.get(1)).isNull();
     }
 
@@ -85,10 +94,12 @@ class LocationMapperTest {
         List<LocationDTO> locationDTOS = fixture.toDto(locations);
 
         assertThat(locationDTOS).isNotEmpty().size().isEqualTo(2);
-        assertThat(locationDTOS.get(0)).usingRecursiveComparison().ignoringFields("children", "project").isEqualTo(locationDTO);
+        assertThat(locationDTOS.get(0)).usingRecursiveComparison().ignoringFields("events", "children", "project").isEqualTo(locationDTO);
         assertThat(locationDTOS.get(0)).hasFieldOrPropertyWithValue("project.name", PROJECT_NAME);
         assertThat(locationDTOS.get(0).getChildren()).isNotEmpty().size().isEqualTo(1);
         assertThat(locationDTOS.get(0).getChildren().iterator().next()).hasFieldOrPropertyWithValue("name", SECOND_LOCATION_NAME);
+        assertThat(locations.get(0).getEvents()).hasSize(1);
+        assertThat(locations.get(0).getEvents().iterator().next()).hasFieldOrPropertyWithValue("name", EVENT_NAME);
         assertThat(locationDTOS.get(1)).isNull();
     }
 
@@ -103,10 +114,12 @@ class LocationMapperTest {
         List<Location> locations = fixture.toEntity(locationDTOs);
 
         assertThat(locations).isNotEmpty().size().isEqualTo(2);
-        assertThat(locations.get(0)).usingRecursiveComparison().ignoringFields("parent", "project").isEqualTo(location);
+        assertThat(locations.get(0)).usingRecursiveComparison().ignoringFields("events", "parent", "project").isEqualTo(location);
         assertThat(locations.get(0))
             .hasFieldOrPropertyWithValue("project.name", PROJECT_NAME)
             .hasFieldOrPropertyWithValue("parent.name", SECOND_LOCATION_NAME);
+        assertThat(locations.get(0).getEvents()).hasSize(1);
+        assertThat(locations.get(0).getEvents().iterator().next()).hasFieldOrPropertyWithValue("name", EVENT_NAME);
         assertThat(locations.get(1)).isNull();
     }
 
@@ -121,10 +134,12 @@ class LocationMapperTest {
         List<Location> locations = fixture.toEntity(locationDTOs);
 
         assertThat(locations).isNotEmpty().size().isEqualTo(2);
-        assertThat(locations.get(0)).usingRecursiveComparison().ignoringFields("children", "project").isEqualTo(location);
+        assertThat(locations.get(0)).usingRecursiveComparison().ignoringFields("events", "children", "project").isEqualTo(location);
         assertThat(locations.get(0)).hasFieldOrPropertyWithValue("project.name", PROJECT_NAME);
         assertThat(locations.get(0).getChildren()).isNotEmpty().size().isEqualTo(1);
         assertThat(locations.get(0).getChildren().iterator().next()).hasFieldOrPropertyWithValue("name", SECOND_LOCATION_NAME);
+        assertThat(locations.get(0).getEvents()).hasSize(1);
+        assertThat(locations.get(0).getEvents().iterator().next()).hasFieldOrPropertyWithValue("name", EVENT_NAME);
         assertThat(locations.get(1)).isNull();
     }
 
