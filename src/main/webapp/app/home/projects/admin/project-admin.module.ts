@@ -20,8 +20,8 @@ import { ProjectLocationUpdateModalComponent } from './locations/update/project-
 import {
   ProjectMemberInviteModalComponent,
   ProjectMemberInviteModalContentComponent,
-} from './member/project-member-invite-modal.component';
-import { ProjectMemberListComponent } from './member/project-member-list.component';
+} from './members/project-member-invite-modal.component';
+import { ProjectMemberListComponent } from './members/project-member-list.component';
 
 import { ProjectSettingsComponent } from './settings/project-settings.component';
 
