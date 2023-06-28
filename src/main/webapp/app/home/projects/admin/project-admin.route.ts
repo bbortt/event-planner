@@ -7,6 +7,7 @@ import { projectById } from 'app/entities/project/route/project-resolve.service'
 
 import { projectFromParentRoute } from './route/project-from-parent.resolve';
 
+import { ProjectEventListComponent } from './events/project-event-list.component';
 import { AdminLayoutComponent } from './layout/admin-layout.component';
 import { ProjectLocationsDragAndDropComponent } from './locations/project-locations-drag-and-drop.component';
 import { ProjectLocationUpdateModalComponent } from './locations/update/project-location-update-modal.component';
@@ -65,6 +66,14 @@ export const PROJECT_ADMIN_ROUTES: Route[] = [
             },
           },
         ],
+      },
+      {
+        path: 'events',
+        component: ProjectEventListComponent,
+        data: {
+          [DEFAULT_SORT_DATA]: 'createdDate,desc',
+        },
+        resolve: { project: projectFromParentRoute },
       },
       {
         path: 'members',
