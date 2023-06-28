@@ -10,8 +10,8 @@ import { projectFromParentRoute } from './route/project-from-parent.resolve';
 import { AdminLayoutComponent } from './layout/admin-layout.component';
 import { ProjectLocationsDragAndDropComponent } from './locations/project-locations-drag-and-drop.component';
 import { ProjectLocationUpdateModalComponent } from './locations/update/project-location-update-modal.component';
-import { ProjectMemberInviteModalComponent } from './member/project-member-invite-modal.component';
-import { ProjectMemberListComponent } from './member/project-member-list.component';
+import { ProjectMemberInviteModalComponent } from './members/project-member-invite-modal.component';
+import { ProjectMemberListComponent } from './members/project-member-list.component';
 import { ProjectSettingsComponent } from './settings/project-settings.component';
 
 export const PROJECT_ADMIN_ROUTES: Route[] = [
