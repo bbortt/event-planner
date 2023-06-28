@@ -12,6 +12,8 @@ import { PROJECT_ADMIN_ROUTES } from './project-admin.route';
 import { AdminLayoutComponent } from './layout/admin-layout.component';
 import { SideNavComponent } from './layout/side-nav.component';
 
+import { ProjectEventListComponent } from './events/project-event-list.component';
+
 import { ProjectLocationsDragAndDropComponent } from './locations/project-locations-drag-and-drop.component';
 import { ProjectLocationDragComponent } from './locations/project-location-drag.component';
 import { ProjectLocationUpdateComponent } from './locations/update/project-location-update.component';
@@ -29,6 +31,7 @@ import { ProjectSettingsComponent } from './settings/project-settings.component'
   imports: [DragulaModule.forRoot(), SharedModule, ProjectEntityModule, RouterModule.forChild(PROJECT_ADMIN_ROUTES)],
   declarations: [
     AdminLayoutComponent,
+    ProjectEventListComponent,
     ProjectLocationsDragAndDropComponent,
     ProjectLocationDragComponent,
     ProjectLocationUpdateComponent,
