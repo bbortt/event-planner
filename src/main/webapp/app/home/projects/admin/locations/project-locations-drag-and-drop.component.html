@@ -11,7 +11,7 @@
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
         <li class="breadcrumb-item">
-          <a (click)="handleLocationControl({ type: 'select' })" jhiTranslate="app.project.admin.location.topLevel">Oberste Lokalitäten</a>
+          <a (click)="handleLocationControl({ type: 'select' })" jhiTranslate="app.project.admin.location.topLevel">Festgelände</a>
         </li>
         <li class="breadcrumb-item" *ngFor="let location of activeLocationPath">
           <a (click)="handleLocationControl({ type: 'select', location })">{{ location.name }}</a>
@@ -23,7 +23,7 @@
   <div class="row">
     <div *ngIf="locations" class="col-md-5 card location-list" [class.location-list-with-children]="activeLocation">
       <div class="d-flex align-items-center justify-content-between">
-        <h4 class="mt-2" jhiTranslate="app.project.admin.location.topLevel">Oberste Lokalitäten</h4>
+        <h4 class="mt-2" jhiTranslate="app.project.admin.location.topLevel">Festgelände</h4>
 
         <button
           type="button"
