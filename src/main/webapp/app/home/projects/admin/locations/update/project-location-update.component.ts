@@ -48,7 +48,7 @@ export class ProjectLocationUpdateComponent {
   compareLocation = (o1: ILocation | null, o2: ILocation | null): boolean => this.locationService.compareLocation(o1, o2);
 
   previousState(): void {
-    this.location.back();
+    this.location.historyGo(-2);
   }
 
   save(): void {
