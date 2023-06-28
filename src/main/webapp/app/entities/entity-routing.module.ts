@@ -21,7 +21,7 @@ import { RouterModule } from '@angular/router';
       },
       {
         path: 'event',
-        data: { pageTitle: 'eventplannerApp.event.home.title' },
+        data: { pageTitle: 'app.event.home.title' },
         loadChildren: () => import('./event/event.module').then(m => m.EventModule),
       },
       /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */

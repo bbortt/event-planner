@@ -5,7 +5,6 @@ import { Event, NavigationEnd, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
-import { faLocationDot } from '@fortawesome/free-solid-svg-icons';
 import { TranslateService } from '@ngx-translate/core';
 
 import { IProject } from 'app/entities/project/project.model';
@@ -17,8 +16,6 @@ import { IProject } from 'app/entities/project/project.model';
 })
 export class SideNavComponent implements OnDestroy, OnInit {
   @Input() project: IProject | null = null;
-
-  protected faLocationDot = faLocationDot;
 
   private routerSubscription: Subscription | null = null;
 
