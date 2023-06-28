@@ -11,9 +11,17 @@
     <li class="nav-item">
       <a routerLink="locations" routerLinkActive="active" class="nav-link link-dark" #rll="routerLinkActive">
         <i>
-          <fa-icon [class.active]="rll.isActive" [fixedWidth]="true" [icon]="faLocationDot"></fa-icon>
+          <fa-icon [class.active]="rll.isActive" [fixedWidth]="true" icon="location-dot"></fa-icon>
         </i>
         <span jhiTranslate="app.location.home.title">Lokalitäten</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a routerLink="events" routerLinkActive="active" class="nav-link link-dark" #rle="routerLinkActive">
+        <i>
+          <fa-icon [class.active]="rle.isActive" [fixedWidth]="true" icon="calendar"></fa-icon>
+        </i>
+        <span jhiTranslate="app.event.home.title">Events</span>
       </a>
     </li>
     <li class="nav-item">

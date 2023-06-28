@@ -8,8 +8,6 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import dayjs from 'dayjs/esm';
 
-import { faCopy } from '@fortawesome/free-solid-svg-icons';
-
 import { GetProjectMembers200Response, Member, Project, ProjectMemberService } from 'app/api';
 
 import { ASC, DEFAULT_SORT_DATA, DESC, ITEM_DELETED_EVENT, SORT } from 'app/config/navigation.constants';
@@ -25,8 +23,6 @@ import { ApplicationConfigService } from '../../../../core/config/application-co
   templateUrl: './project-member-list.component.html',
 })
 export class ProjectMemberListComponent implements OnDestroy, OnInit {
-  faCopy = faCopy;
-
   project: Project | null = null;
 
   members?: Member[];
