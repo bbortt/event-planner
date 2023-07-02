@@ -1,12 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+
+import { Observable, Subject } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
+
 import dayjs from 'dayjs/esm';
 
-import { isPresent } from 'app/core/util/operators';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { createRequestOption } from 'app/core/request/request-util';
+import { isPresent } from 'app/core/util/operators';
+
 import { IEvent, NewEvent } from '../event.model';
 
 export type PartialUpdateEvent = Partial<IEvent> & Pick<IEvent, 'id'>;
@@ -29,27 +32,39 @@ export type EntityArrayResponseType = HttpResponse<IEvent[]>;
 export class EventService {
   protected resourceUrl;
 
+  private eventUpdatedSource = new Subject<IEvent>();
+  private _eventUpdatedSource$ = this.eventUpdatedSource.asObservable();
+
   constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) {
     this.resourceUrl = this.applicationConfigService.getEndpointFor('api/events');
   }
 
+  get eventUpdatedSource$(): Observable<IEvent> {
+    return this._eventUpdatedSource$;
+  }
+
   create(event: NewEvent): Observable<EntityResponseType> {
     const copy = this.convertDateFromClient(event);
-    return this.http.post<RestEvent>(this.resourceUrl, copy, { observe: 'response' }).pipe(map(res => this.convertResponseFromServer(res)));
+    return this.http.post<RestEvent>(this.resourceUrl, copy, { observe: 'response' }).pipe(
+      map(res => this.convertResponseFromServer(res)),
+      tap(res => this.notifySubscribersOfChangedEvent(res))
+    );
   }
 
   update(event: IEvent): Observable<EntityResponseType> {
     const copy = this.convertDateFromClient(event);
-    return this.http
-      .put<RestEvent>(`${this.resourceUrl}/${this.getEventIdentifier(event)}`, copy, { observe: 'response' })
-      .pipe(map(res => this.convertResponseFromServer(res)));
+    return this.http.put<RestEvent>(`${this.resourceUrl}/${this.getEventIdentifier(event)}`, copy, { observe: 'response' }).pipe(
+      map(res => this.convertResponseFromServer(res)),
+      tap(res => this.notifySubscribersOfChangedEvent(res))
+    );
   }
 
   partialUpdate(event: PartialUpdateEvent): Observable<EntityResponseType> {
     const copy = this.convertDateFromClient(event);
-    return this.http
-      .patch<RestEvent>(`${this.resourceUrl}/${this.getEventIdentifier(event)}`, copy, { observe: 'response' })
-      .pipe(map(res => this.convertResponseFromServer(res)));
+    return this.http.patch<RestEvent>(`${this.resourceUrl}/${this.getEventIdentifier(event)}`, copy, { observe: 'response' }).pipe(
+      map(res => this.convertResponseFromServer(res)),
+      tap(res => this.notifySubscribersOfChangedEvent(res))
+    );
   }
 
   find(id: number): Observable<EntityResponseType> {
@@ -123,5 +138,11 @@ export class EventService {
     return res.clone({
       body: res.body ? res.body.map(item => this.convertDateFromServer(item)) : null,
     });
+  }
+
+  private notifySubscribersOfChangedEvent(res: HttpResponse<IEvent>): void {
+    if (res.body) {
+      this.eventUpdatedSource.next(res.body);
+    }
   }
 }
