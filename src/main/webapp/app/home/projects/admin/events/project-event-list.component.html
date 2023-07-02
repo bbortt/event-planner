@@ -44,30 +44,6 @@
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
-          <th scope="col" jhiSortBy="createdBy">
-            <div class="d-flex">
-              <span jhiTranslate="app.event.createdBy">Created By</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="createdDate">
-            <div class="d-flex">
-              <span jhiTranslate="app.event.createdDate">Created Date</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="lastModifiedBy">
-            <div class="d-flex">
-              <span jhiTranslate="app.event.lastModifiedBy">Last Modified By</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
-          <th scope="col" jhiSortBy="lastModifiedDate">
-            <div class="d-flex">
-              <span jhiTranslate="app.event.lastModifiedDate">Last Modified Date</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
           <th scope="col" jhiSortBy="location.name">
             <div class="d-flex">
               <span jhiTranslate="app.event.location">Location</span>
@@ -83,10 +59,6 @@
             <a [routerLink]="['/event', event.id, 'view']">{{ event.id }}</a>
           </td>
           <td>{{ event.name }}</td>
-          <td>{{ event.createdBy }}</td>
-          <td>{{ event.createdDate | formatMediumDatetime }}</td>
-          <td>{{ event.lastModifiedBy }}</td>
-          <td>{{ event.lastModifiedDate | formatMediumDatetime }}</td>
           <td>
             <div *ngIf="event.location">
               <a [routerLink]="['/location', event.location.id, 'view']">{{ event.location.name }}</a>
@@ -94,11 +66,6 @@
           </td>
           <td class="text-end">
             <div class="btn-group">
-              <button type="submit" [routerLink]="['/event', event.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
-                <fa-icon icon="eye"></fa-icon>
-                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">Details</span>
-              </button>
-
               <button type="submit" [routerLink]="['/event', event.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
                 <fa-icon icon="pencil-alt"></fa-icon>
                 <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Bearbeiten</span>

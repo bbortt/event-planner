@@ -5,6 +5,7 @@ import { IEvent } from '../event.model';
 import { sampleWithRequiredData, sampleWithNewData, sampleWithPartialData, sampleWithFullData } from '../event.test-samples';
 
 import { EventService, RestEvent } from './event.service';
+import { Subject } from 'rxjs';
 
 const requireRestSample: RestEvent = {
   ...sampleWithRequiredData,
@@ -17,6 +18,9 @@ describe('Event Service', () => {
   let httpMock: HttpTestingController;
   let expectedResult: IEvent | IEvent[] | boolean | null;
 
+  const eventEventsSubject = new Subject<IEvent>();
+  const nextEventEvent = jest.spyOn(eventEventsSubject, 'next');
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
@@ -24,6 +28,12 @@ describe('Event Service', () => {
     expectedResult = null;
     service = TestBed.inject(EventService);
     httpMock = TestBed.inject(HttpTestingController);
+  });
+
+  beforeEach(() => {
+    // @ts-ignore: force this private property value for testing.
+    service.eventUpdatedSource = eventEventsSubject;
+    nextEventEvent.mockReset();
   });
 
   describe('Service methods', () => {
@@ -49,6 +59,8 @@ describe('Event Service', () => {
       const req = httpMock.expectOne({ method: 'POST' });
       req.flush(returnedFromService);
       expect(expectedResult).toMatchObject(expected);
+
+      expect(nextEventEvent).toHaveBeenCalledWith(expected);
     });
 
     it('should update a Event', () => {
@@ -61,6 +73,8 @@ describe('Event Service', () => {
       const req = httpMock.expectOne({ method: 'PUT' });
       req.flush(returnedFromService);
       expect(expectedResult).toMatchObject(expected);
+
+      expect(nextEventEvent).toHaveBeenCalledWith(expected);
     });
 
     it('should partial update a Event', () => {
@@ -73,6 +87,8 @@ describe('Event Service', () => {
       const req = httpMock.expectOne({ method: 'PATCH' });
       req.flush(returnedFromService);
       expect(expectedResult).toMatchObject(expected);
+
+      expect(nextEventEvent).toHaveBeenCalledWith(expected);
     });
 
     it('should return a list of Event', () => {

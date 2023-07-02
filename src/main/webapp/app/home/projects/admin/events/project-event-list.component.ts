@@ -1,14 +1,15 @@
-import { HttpHeaders } from '@angular/common/http';
+import { HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Data, ParamMap, Router } from '@angular/router';
 
-import { combineLatest, filter, Observable, switchMap, tap } from 'rxjs';
+import { combineLatest, filter, Observable, Subscription, switchMap, tap } from 'rxjs';
 
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { IEvent } from 'app/entities/event/event.model';
+import { Event, GetProjectEvents200Response, Project, ProjectEventsService } from 'app/api';
+
 import { EventDeleteDialogComponent } from 'app/entities/event/delete/event-delete-dialog.component';
-import { EntityArrayResponseType, EventService } from 'app/entities/event/service/event.service';
+import { EventService } from 'app/entities/event/service/event.service';
 
 import { ITEMS_PER_PAGE, PAGE_HEADER, TOTAL_COUNT_RESPONSE_HEADER } from 'app/config/pagination.constants';
 import { ASC, DESC, SORT, ITEM_DELETED_EVENT, DEFAULT_SORT_DATA } from 'app/config/navigation.constants';
@@ -18,7 +19,9 @@ import { ASC, DESC, SORT, ITEM_DELETED_EVENT, DEFAULT_SORT_DATA } from 'app/conf
   templateUrl: './project-event-list.component.html',
 })
 export class ProjectEventListComponent implements OnInit {
-  events?: IEvent[];
+  project: Project | null = null;
+
+  events?: Event[];
   isLoading = false;
 
   predicate = 'id';
@@ -28,38 +31,51 @@ export class ProjectEventListComponent implements OnInit {
   totalItems = 0;
   page = 1;
 
+  private eventUpdatedSource: Subscription | null = null;
+
   constructor(
-    protected eventService: EventService,
-    protected activatedRoute: ActivatedRoute,
-    public router: Router,
-    protected modalService: NgbModal
+    private activatedRoute: ActivatedRoute,
+    private eventService: EventService,
+    private modalService: NgbModal,
+    private projectEventsService: ProjectEventsService,
+    private router: Router
   ) {}
 
-  trackId = (_index: number, item: IEvent): number => this.eventService.getEventIdentifier(item);
-
   ngOnInit(): void {
-    this.load();
+    this.activatedRoute.data
+      .pipe(
+        tap(({ project }) => {
+          if (project) {
+            this.project = project;
+          }
+        })
+      )
+      .subscribe(() => this.load());
+
+    this.eventUpdatedSource = this.eventService.eventUpdatedSource$.subscribe(() => this.load());
   }
 
-  delete(event: IEvent): void {
+  trackId = (_index: number, item: Event): number => this.eventService.getEventIdentifier(item);
+
+  delete(event: Event): void {
     const modalRef = this.modalService.open(EventDeleteDialogComponent, { size: 'lg', backdrop: 'static' });
     modalRef.componentInstance.event = event;
     // unsubscribe not needed because closed completes on modal close
     modalRef.closed
       .pipe(
         filter(reason => reason === ITEM_DELETED_EVENT),
-        switchMap(() => this.loadFromBackendWithRouteInformations())
+        switchMap(() => this.loadFromBackendWithRouteInformation())
       )
       .subscribe({
-        next: (res: EntityArrayResponseType) => {
+        next: (res: HttpResponse<GetProjectEvents200Response>) => {
           this.onResponseSuccess(res);
         },
       });
   }
 
   load(): void {
-    this.loadFromBackendWithRouteInformations().subscribe({
-      next: (res: EntityArrayResponseType) => {
+    this.loadFromBackendWithRouteInformation().subscribe({
+      next: (res: HttpResponse<GetProjectEvents200Response>) => {
         this.onResponseSuccess(res);
       },
     });
@@ -73,14 +89,14 @@ export class ProjectEventListComponent implements OnInit {
     this.handleNavigation(page, this.predicate, this.ascending);
   }
 
-  protected loadFromBackendWithRouteInformations(): Observable<EntityArrayResponseType> {
+  private loadFromBackendWithRouteInformation(): Observable<HttpResponse<GetProjectEvents200Response>> {
     return combineLatest([this.activatedRoute.queryParamMap, this.activatedRoute.data]).pipe(
       tap(([params, data]) => this.fillComponentAttributeFromRoute(params, data)),
       switchMap(() => this.queryBackend(this.page, this.predicate, this.ascending))
     );
   }
 
-  protected fillComponentAttributeFromRoute(params: ParamMap, data: Data): void {
+  private fillComponentAttributeFromRoute(params: ParamMap, data: Data): void {
     const page = params.get(PAGE_HEADER);
     this.page = +(page ?? 1);
     const sort = (params.get(SORT) ?? data[DEFAULT_SORT_DATA]).split(',');
@@ -88,33 +104,30 @@ export class ProjectEventListComponent implements OnInit {
     this.ascending = sort[1] === ASC;
   }
 
-  protected onResponseSuccess(response: EntityArrayResponseType): void {
+  private onResponseSuccess(response: HttpResponse<GetProjectEvents200Response>): void {
     this.fillComponentAttributesFromResponseHeader(response.headers);
-    const dataFromBody = this.fillComponentAttributesFromResponseBody(response.body);
+    const dataFromBody = this.fillComponentAttributesFromResponseBody(response.body?.contents);
     this.events = dataFromBody;
   }
 
-  protected fillComponentAttributesFromResponseBody(data: IEvent[] | null): IEvent[] {
+  private fillComponentAttributesFromResponseBody(data: Array<Event> | undefined): Event[] {
     return data ?? [];
   }
 
-  protected fillComponentAttributesFromResponseHeader(headers: HttpHeaders): void {
+  private fillComponentAttributesFromResponseHeader(headers: HttpHeaders): void {
     this.totalItems = Number(headers.get(TOTAL_COUNT_RESPONSE_HEADER));
   }
 
-  protected queryBackend(page?: number, predicate?: string, ascending?: boolean): Observable<EntityArrayResponseType> {
+  private queryBackend(page?: number, predicate?: string, ascending?: boolean): Observable<HttpResponse<GetProjectEvents200Response>> {
     this.isLoading = true;
+
     const pageToLoad: number = page ?? 1;
-    const queryObject = {
-      page: pageToLoad - 1,
-      size: this.itemsPerPage,
-      eagerload: true,
-      sort: this.getSortQueryParam(predicate, ascending),
-    };
-    return this.eventService.query(queryObject).pipe(tap(() => (this.isLoading = false)));
+    return this.projectEventsService
+      .getProjectEvents(this.project!.id!, this.itemsPerPage, pageToLoad - 1, this.getSortQueryParam(predicate, ascending), 'response')
+      .pipe(tap(() => (this.isLoading = false)));
   }
 
-  protected handleNavigation(page = this.page, predicate?: string, ascending?: boolean): void {
+  private handleNavigation(page = this.page, predicate?: string, ascending?: boolean): void {
     const queryParamsObj = {
       page,
       size: this.itemsPerPage,
@@ -127,7 +140,7 @@ export class ProjectEventListComponent implements OnInit {
     });
   }
 
-  protected getSortQueryParam(predicate = this.predicate, ascending = this.ascending): string[] {
+  private getSortQueryParam(predicate = this.predicate, ascending = this.ascending): string[] {
     const ascendingQueryParam = ascending ? ASC : DESC;
     if (predicate === '') {
       return [];
