@@ -78,10 +78,10 @@ public class ProjectMemberApiDelegateImpl implements ProjectMemberApiDelegate {
             projectId,
             paginationUtil.createPagingInformation(pageSize, pageNumber, sort, MEMBER_ID_ATTRIBUTE_NAME)
         );
-        HttpHeaders headers = paginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+
         return new ResponseEntity<>(
             new GetProjectMembers200Response().contents(page.getContent().stream().map(this::toApiDTO).toList()),
-            headers,
+            paginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page),
             HttpStatus.OK
         );
     }

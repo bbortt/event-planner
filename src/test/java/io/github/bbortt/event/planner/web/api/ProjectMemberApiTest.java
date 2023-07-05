@@ -125,17 +125,15 @@ class ProjectMemberApiTest {
     void getProjectMembersForExistingProject() {
         Long projectId = 1L;
 
-        int pageSize = 10;
-        int pageNumber = 0;
-        List<String> sort = Collections.singletonList("id,asc");
+        Optional<Integer> pageSize = Optional.of(10);
+        Optional<Integer> pageNumber = Optional.of(0);
+        Optional<List<String>> sort = Optional.of(Collections.singletonList("id,asc"));
 
         // Project by ID exists
         doReturn(new ProjectDTO()).when(projectServiceMock).findOneOrThrowEntityNotFoundAlertException(projectId);
 
-        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
-        doReturn(pageRequest)
-            .when(paginationUtilMock)
-            .createPagingInformation(Optional.of(pageSize), Optional.of(pageNumber), Optional.of(sort), "id");
+        PageRequest pageRequest = PageRequest.of(pageNumber.get(), pageSize.get());
+        doReturn(pageRequest).when(paginationUtilMock).createPagingInformation(pageSize, pageNumber, sort, "id");
 
         MemberDTO memberDTO = new MemberDTO();
         Page<MemberDTO> page = new PageImpl<>(List.of(memberDTO));
@@ -147,12 +145,7 @@ class ProjectMemberApiTest {
         Member member = new Member();
         doReturn(member).when(apiProjectMemberMapperMock).toApiDTO(memberDTO);
 
-        ResponseEntity<GetProjectMembers200Response> result = fixture.getProjectMembers(
-            projectId,
-            Optional.of(pageSize),
-            Optional.of(pageNumber),
-            Optional.of(sort)
-        );
+        ResponseEntity<GetProjectMembers200Response> result = fixture.getProjectMembers(projectId, pageSize, pageNumber, sort);
 
         assertEquals(HttpStatus.OK, result.getStatusCode());
         assertEquals(httpHeaders, result.getHeaders());
