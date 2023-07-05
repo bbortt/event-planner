@@ -19,9 +19,10 @@ class LocationMapperTest {
     private static final String PROJECT_NAME = "test project name";
     private static final String SECOND_LOCATION_NAME = "parent location name";
 
-    private LocationMapper fixture;
     private Location location;
     private LocationDTO locationDTO;
+
+    private LocationMapper fixture;
 
     @BeforeEach
     void setUp() {
