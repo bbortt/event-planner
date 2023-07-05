@@ -23,11 +23,12 @@ class ApiProjectLocationMapperTest {
     void beforeEachSetup() {
         fixture = new ApiProjectLocationMapperImpl();
 
-        location = new Location().id(1234L).name("location name").children(List.of(new Location().id(2345L).name("child location")));
+        Location childLocation = new Location().id(2345L).name("child location");
+        location = new Location().id(1234L).name("location name").children(List.of(childLocation));
 
         LocationDTO childLocationDTO = new LocationDTO();
-        childLocationDTO.setId(2345L);
-        childLocationDTO.setName("child location");
+        childLocationDTO.setId(childLocation.getId());
+        childLocationDTO.setName(childLocation.getName());
         childLocationDTO.setChildren(Collections.emptyList());
 
         locationDTO = new LocationDTO();

@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -117,5 +118,18 @@ public class EventService {
     public void delete(Long id) {
         log.debug("Request to delete Event : {}", id);
         eventRepository.deleteById(id);
+    }
+
+    /**
+     * Get all events of a {@link io.github.bbortt.event.planner.domain.Project}.
+     *
+     * @param projectId the id of the {@link io.github.bbortt.event.planner.domain.Project}.
+     * @return the list of entities.
+     */
+    @Transactional(readOnly = true)
+    @PreAuthorize("T(io.github.bbortt.event.planner.security.SecurityUtils).isAuthenticated()")
+    public Page<EventDTO> findAllInProject(Long projectId, Pageable pageable) {
+        log.debug("Request to get a page of Locations in Project '{}'", projectId);
+        return null;
     }
 }
