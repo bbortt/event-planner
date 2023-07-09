@@ -20,10 +20,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class LocationServiceTest {
 
     @Mock
-    private LocationMapper locationMapperMock;
+    private LocationRepository locationRepositoryMock;
 
     @Mock
-    private LocationRepository locationRepositoryMock;
+    private LocationMapper locationMapperMock;
 
     private LocationService fixture;
 

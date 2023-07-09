@@ -130,6 +130,6 @@ public class EventService {
     @PreAuthorize("T(io.github.bbortt.event.planner.security.SecurityUtils).isAuthenticated()")
     public Page<EventDTO> findAllInProject(Long projectId, Pageable pageable) {
         log.debug("Request to get a page of Locations in Project '{}'", projectId);
-        return null;
+        return eventRepository.findAllByLocation_Project_IdEquals(projectId, pageable).map(eventMapper::toDto);
     }
 }

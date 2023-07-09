@@ -43,8 +43,8 @@ public class Location extends AbstractAuditingEntity<Location, Long> implements 
     @Column(name = "description", length = 255)
     private String description;
 
-    @ManyToOne(optional = false)
     @NotNull
+    @ManyToOne(optional = false)
     private Project project;
 
     @ManyToOne

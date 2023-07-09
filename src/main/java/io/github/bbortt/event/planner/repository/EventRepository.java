@@ -37,4 +37,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     @Query("select event from Event event left join fetch event.location where event.id =:id")
     Optional<Event> findOneWithToOneRelationships(@Param("id") Long id);
+
+    Page<Event> findAllByLocation_Project_IdEquals(@Param("locationProjectId") Long projectId, Pageable pageable);
 }

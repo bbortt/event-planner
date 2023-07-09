@@ -5,7 +5,6 @@ import io.github.bbortt.event.planner.service.ProjectService;
 import io.github.bbortt.event.planner.service.api.dto.Event;
 import io.github.bbortt.event.planner.service.api.dto.GetProjectEvents200Response;
 import io.github.bbortt.event.planner.service.dto.EventDTO;
-import io.github.bbortt.event.planner.service.dto.MemberDTO;
 import io.github.bbortt.event.planner.web.api.mapper.ApiProjectEventMapper;
 import io.github.bbortt.event.planner.web.rest.util.PaginationUtil;
 import java.util.List;
