@@ -47,9 +47,9 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @WithMockUser
 @IntegrationTest
-@ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
-class EventResourceIT {
+@ExtendWith(MockitoExtension.class)
+public class EventResourceIT {
 
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";

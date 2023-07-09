@@ -54,7 +54,7 @@ class MemberServiceTest {
 
     @Test
     void findAllInProjectCallsRepository() {
-        Long projectId = 1234l;
+        Long projectId = 1234L;
         Pageable pageable = Pageable.unpaged();
 
         Member member = new Member();
@@ -73,7 +73,7 @@ class MemberServiceTest {
 
     @Test
     void findOneInProjectByInvitationEmailCallsRepository() {
-        Long projectId = 1234l;
+        Long projectId = 1234L;
         String invitedEmail = "alice@localhost";
 
         Member member = new Member();
