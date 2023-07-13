@@ -16,7 +16,7 @@ import SpyInstance = jest.SpyInstance;
 
 const project = { id: 1234, token: '50930adc-8534-4eac-9667-63beba03b658' } as Project;
 
-describe('Event Management Component', () => {
+describe('Project Event List', () => {
   let comp: ProjectEventListComponent;
   let fixture: ComponentFixture<ProjectEventListComponent>;
   let eventService: EventService;
@@ -39,7 +39,7 @@ describe('Event Management Component', () => {
                 page: '1',
                 size: '1',
                 sort: 'id,desc',
-              })
+              }),
             ),
             snapshot: { queryParams: {} },
           },
@@ -63,8 +63,8 @@ describe('Event Management Component', () => {
         new HttpResponse({
           body: { contents: [{ id: 123 }] as Event[] } as GetProjectEvents200Response,
           headers,
-        })
-      )
+        }),
+      ),
     );
   });
 
@@ -75,7 +75,7 @@ describe('Event Management Component', () => {
     comp.ngOnInit();
 
     // THEN
-    expect(projectEventsService.getProjectEvents).toHaveBeenCalledWith(project.id, ITEMS_PER_PAGE, 0, ['id,desc'], 'response');
+    expect(projectEventsService.getProjectEvents).toHaveBeenCalledWith(project.id, ITEMS_PER_PAGE, 1, ['id,desc'], 'response');
     expect(comp.events?.[0]).toEqual(expect.objectContaining({ id: 123 }));
   });
 
@@ -111,7 +111,7 @@ describe('Event Management Component', () => {
         queryParams: expect.objectContaining({
           sort: ['name,asc'],
         }),
-      })
+      }),
     );
   });
 });
