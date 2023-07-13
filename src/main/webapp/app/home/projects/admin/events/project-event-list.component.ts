@@ -38,7 +38,7 @@ export class ProjectEventListComponent implements OnInit {
     private eventService: EventService,
     private modalService: NgbModal,
     private projectEventsService: ProjectEventsService,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -48,7 +48,7 @@ export class ProjectEventListComponent implements OnInit {
           if (project) {
             this.project = project;
           }
-        })
+        }),
       )
       .subscribe(() => this.load());
 
@@ -64,7 +64,7 @@ export class ProjectEventListComponent implements OnInit {
     modalRef.closed
       .pipe(
         filter(reason => reason === ITEM_DELETED_EVENT),
-        switchMap(() => this.loadFromBackendWithRouteInformation())
+        switchMap(() => this.loadFromBackendWithRouteInformation()),
       )
       .subscribe({
         next: (res: HttpResponse<GetProjectEvents200Response>) => {
@@ -92,7 +92,7 @@ export class ProjectEventListComponent implements OnInit {
   private loadFromBackendWithRouteInformation(): Observable<HttpResponse<GetProjectEvents200Response>> {
     return combineLatest([this.activatedRoute.queryParamMap, this.activatedRoute.data]).pipe(
       tap(([params, data]) => this.fillComponentAttributeFromRoute(params, data)),
-      switchMap(() => this.queryBackend(this.page, this.predicate, this.ascending))
+      switchMap(() => this.queryBackend(this.page, this.predicate, this.ascending)),
     );
   }
 
@@ -123,7 +123,7 @@ export class ProjectEventListComponent implements OnInit {
 
     const pageToLoad: number = page ?? 1;
     return this.projectEventsService
-      .getProjectEvents(this.project!.id!, this.itemsPerPage, pageToLoad - 1, this.getSortQueryParam(predicate, ascending), 'response')
+      .getProjectEvents(this.project!.id!, this.itemsPerPage, pageToLoad, this.getSortQueryParam(predicate, ascending), 'response')
       .pipe(tap(() => (this.isLoading = false)));
   }
 
