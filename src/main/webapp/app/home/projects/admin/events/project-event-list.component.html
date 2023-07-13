@@ -1,4 +1,4 @@
-<div>
+<div *ngIf="project">
   <h2 id="page-heading" data-cy="EventHeading">
     <span jhiTranslate="app.event.home.title">Events</span>
 
@@ -12,7 +12,7 @@
         id="jh-create-entity"
         data-cy="entityCreateButton"
         class="btn btn-primary jh-create-entity create-event"
-        [routerLink]="['/event/new']"
+        [routerLink]="[{ outlets: { modal: ['project', project.id, 'events', 'new'] } }]"
       >
         <fa-icon icon="plus"></fa-icon>
         <span jhiTranslate="app.event.home.createLabel"> Event erstellen </span>
@@ -99,4 +99,6 @@
       ></ngb-pagination>
     </div>
   </div>
+
+  <router-outlet name="modal"></router-outlet>
 </div>

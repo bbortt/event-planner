@@ -13,6 +13,8 @@ import { AdminLayoutComponent } from './layout/admin-layout.component';
 import { SideNavComponent } from './layout/side-nav.component';
 
 import { ProjectEventListComponent } from './events/project-event-list.component';
+import { ProjectEventUpdateComponent } from './events/update/project-event-update.component';
+import { ProjectEventUpdateModalComponent } from './events/update/project-event-update-modal.component';
 
 import { ProjectLocationsDragAndDropComponent } from './locations/project-locations-drag-and-drop.component';
 import { ProjectLocationDragComponent } from './locations/project-location-drag.component';
@@ -32,6 +34,8 @@ import { ProjectSettingsComponent } from './settings/project-settings.component'
   declarations: [
     AdminLayoutComponent,
     ProjectEventListComponent,
+    ProjectEventUpdateComponent,
+    ProjectEventUpdateModalComponent,
     ProjectLocationsDragAndDropComponent,
     ProjectLocationDragComponent,
     ProjectLocationUpdateComponent,
