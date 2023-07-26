@@ -16,12 +16,11 @@ spring:
       maximum-pool-size: 1
       poolName: Hikari
   jpa:
-    database-platform: tech.jhipster.domain.util.FixedPostgreSQL10Dialect
     hibernate:
-      ddl-auto: none
+      ddl-auto: validate
       naming:
         implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
-        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+        physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
     open-in-view: false
     properties:
       hibernate.id.new_generator_mappings: true
@@ -30,5 +29,6 @@ spring:
       hibernate.cache.use_query_cache: false
       hibernate.generate_statistics: false
       hibernate.hbm2ddl.auto: validate
+      hibernate.type.preferred_instant_jdbc_type: TIMESTAMP
       hibernate.jdbc.time_zone: UTC
       hibernate.query.fail_on_pagination_over_collection_fetch: true

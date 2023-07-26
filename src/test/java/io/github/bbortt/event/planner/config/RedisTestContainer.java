@@ -6,12 +6,12 @@ import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.output.Slf4jLogConsumer;
-import org.testcontainers.utility.DockerImageName;
 
 public class RedisTestContainer implements InitializingBean, DisposableBean {
 
+    private static final Logger logger = LoggerFactory.getLogger(RedisTestContainer.class);
+
     private GenericContainer redisContainer;
-    private static final Logger log = LoggerFactory.getLogger(RedisTestContainer.class);
 
     @Override
     public void destroy() {
@@ -24,9 +24,9 @@ public class RedisTestContainer implements InitializingBean, DisposableBean {
     public void afterPropertiesSet() {
         if (null == redisContainer) {
             redisContainer =
-                new GenericContainer("redis:7.0.10-alpine")
+                new GenericContainer("redis:7.0.12-alpine")
                     .withExposedPorts(6379)
-                    .withLogConsumer(new Slf4jLogConsumer(log))
+                    .withLogConsumer(new Slf4jLogConsumer(logger))
                     .withReuse(true);
         }
         if (!redisContainer.isRunning()) {

@@ -1,5 +1,32 @@
 package io.github.bbortt.event.planner.web.rest;
 
+import io.github.bbortt.event.planner.IntegrationTest;
+import io.github.bbortt.event.planner.domain.Event;
+import io.github.bbortt.event.planner.domain.Location;
+import io.github.bbortt.event.planner.repository.EventRepository;
+import io.github.bbortt.event.planner.service.EventService;
+import io.github.bbortt.event.planner.service.dto.EventDTO;
+import io.github.bbortt.event.planner.service.mapper.EventMapper;
+import jakarta.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.mockito.Mockito.any;
@@ -15,32 +42,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import io.github.bbortt.event.planner.IntegrationTest;
-import io.github.bbortt.event.planner.domain.Event;
-import io.github.bbortt.event.planner.domain.Location;
-import io.github.bbortt.event.planner.repository.EventRepository;
-import io.github.bbortt.event.planner.service.EventService;
-import io.github.bbortt.event.planner.service.dto.EventDTO;
-import io.github.bbortt.event.planner.service.mapper.EventMapper;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.concurrent.atomic.AtomicLong;
-import javax.persistence.EntityManager;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Integration tests for the {@link EventResource} REST controller.
@@ -259,7 +260,7 @@ public class EventResourceIT {
         int databaseSizeBeforeUpdate = eventRepository.findAll().size();
 
         // Update the event
-        Event updatedEvent = eventRepository.findById(event.getId()).get();
+        Event updatedEvent = eventRepository.findById(event.getId()).orElseThrow(IllegalArgumentException::new);;
         // Disconnect from session so that the updates on updatedEvent are not directly saved in db
         em.detach(updatedEvent);
         updatedEvent.name(UPDATED_NAME);

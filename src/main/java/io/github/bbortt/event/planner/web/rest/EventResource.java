@@ -4,25 +4,36 @@ import io.github.bbortt.event.planner.repository.EventRepository;
 import io.github.bbortt.event.planner.service.EventService;
 import io.github.bbortt.event.planner.service.dto.EventDTO;
 import io.github.bbortt.event.planner.web.rest.errors.BadRequestAlertException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.PaginationUtil;
 import tech.jhipster.web.util.ResponseUtil;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * REST controller for managing {@link io.github.bbortt.event.planner.domain.Event}.
@@ -31,7 +42,7 @@ import tech.jhipster.web.util.ResponseUtil;
 @RequestMapping("/api")
 public class EventResource {
 
-    private final Logger log = LoggerFactory.getLogger(EventResource.class);
+    private static final Logger logger = LoggerFactory.getLogger(EventResource.class);
 
     private static final String ENTITY_NAME = "event";
 
@@ -56,7 +67,7 @@ public class EventResource {
      */
     @PostMapping("/events")
     public ResponseEntity<EventDTO> createEvent(@Valid @RequestBody EventDTO eventDTO) throws URISyntaxException {
-        log.debug("REST request to save Event : {}", eventDTO);
+        logger.debug("REST request to save Event : {}", eventDTO);
         if (eventDTO.getId() != null) {
             throw new BadRequestAlertException("A new event cannot already have an ID", ENTITY_NAME, "idexists");
         }
@@ -82,7 +93,7 @@ public class EventResource {
         @PathVariable(value = "id", required = false) final Long id,
         @Valid @RequestBody EventDTO eventDTO
     ) throws URISyntaxException {
-        log.debug("REST request to update Event : {}, {}", id, eventDTO);
+        logger.debug("REST request to update Event : {}, {}", id, eventDTO);
         if (eventDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
@@ -117,7 +128,7 @@ public class EventResource {
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody EventDTO eventDTO
     ) throws URISyntaxException {
-        log.debug("REST request to partial update Event partially : {}, {}", id, eventDTO);
+        logger.debug("REST request to partial update Event partially : {}, {}", id, eventDTO);
         if (eventDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
@@ -146,10 +157,10 @@ public class EventResource {
      */
     @GetMapping("/events")
     public ResponseEntity<List<EventDTO>> getAllEvents(
-        @org.springdoc.api.annotations.ParameterObject Pageable pageable,
+        @ParameterObject Pageable pageable,
         @RequestParam(required = false, defaultValue = "false") boolean eagerload
     ) {
-        log.debug("REST request to get a page of Events");
+        logger.debug("REST request to get a page of Events");
         Page<EventDTO> page;
         if (eagerload) {
             page = eventService.findAllWithEagerRelationships(pageable);
@@ -168,7 +179,7 @@ public class EventResource {
      */
     @GetMapping("/events/{id}")
     public ResponseEntity<EventDTO> getEvent(@PathVariable Long id) {
-        log.debug("REST request to get Event : {}", id);
+        logger.debug("REST request to get Event : {}", id);
         Optional<EventDTO> eventDTO = eventService.findOne(id);
         return ResponseUtil.wrapOrNotFound(eventDTO);
     }
@@ -181,7 +192,7 @@ public class EventResource {
      */
     @DeleteMapping("/events/{id}")
     public ResponseEntity<Void> deleteEvent(@PathVariable Long id) {
-        log.debug("REST request to delete Event : {}", id);
+        logger.debug("REST request to delete Event : {}", id);
         eventService.delete(id);
         return ResponseEntity
             .noContent()

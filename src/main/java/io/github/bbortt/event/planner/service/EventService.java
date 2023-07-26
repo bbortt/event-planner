@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class EventService {
 
-    private final Logger log = LoggerFactory.getLogger(EventService.class);
+    private static final Logger logger = LoggerFactory.getLogger(EventService.class);
 
     private final EventRepository eventRepository;
 
@@ -38,7 +38,7 @@ public class EventService {
      * @return the persisted entity.
      */
     public EventDTO save(EventDTO eventDTO) {
-        log.debug("Request to save Event : {}", eventDTO);
+        logger.debug("Request to save Event : {}", eventDTO);
         Event event = eventMapper.toEntity(eventDTO);
         event = eventRepository.save(event);
         return eventMapper.toDto(event);
@@ -51,7 +51,7 @@ public class EventService {
      * @return the persisted entity.
      */
     public EventDTO update(EventDTO eventDTO) {
-        log.debug("Request to update Event : {}", eventDTO);
+        logger.debug("Request to update Event : {}", eventDTO);
         Event event = eventMapper.toEntity(eventDTO);
         event = eventRepository.save(event);
         return eventMapper.toDto(event);
@@ -64,7 +64,7 @@ public class EventService {
      * @return the persisted entity.
      */
     public Optional<EventDTO> partialUpdate(EventDTO eventDTO) {
-        log.debug("Request to partially update Event : {}", eventDTO);
+        logger.debug("Request to partially update Event : {}", eventDTO);
 
         return eventRepository
             .findById(eventDTO.getId())
@@ -85,7 +85,7 @@ public class EventService {
      */
     @Transactional(readOnly = true)
     public Page<EventDTO> findAll(Pageable pageable) {
-        log.debug("Request to get all Events");
+        logger.debug("Request to get all Events");
         return eventRepository.findAll(pageable).map(eventMapper::toDto);
     }
 
@@ -106,7 +106,7 @@ public class EventService {
      */
     @Transactional(readOnly = true)
     public Optional<EventDTO> findOne(Long id) {
-        log.debug("Request to get Event : {}", id);
+        logger.debug("Request to get Event : {}", id);
         return eventRepository.findOneWithEagerRelationships(id).map(eventMapper::toDto);
     }
 
@@ -116,7 +116,7 @@ public class EventService {
      * @param id the id of the entity.
      */
     public void delete(Long id) {
-        log.debug("Request to delete Event : {}", id);
+        logger.debug("Request to delete Event : {}", id);
         eventRepository.deleteById(id);
     }
 
@@ -129,7 +129,7 @@ public class EventService {
     @Transactional(readOnly = true)
     @PreAuthorize("T(io.github.bbortt.event.planner.security.SecurityUtils).isAuthenticated()")
     public Page<EventDTO> findAllInProject(Long projectId, Pageable pageable) {
-        log.debug("Request to get a page of Locations in Project '{}'", projectId);
+        logger.debug("Request to get a page of Locations in Project '{}'", projectId);
         return eventRepository.findAllByLocation_Project_IdEquals(projectId, pageable).map(eventMapper::toDto);
     }
 }

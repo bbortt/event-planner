@@ -2,12 +2,7 @@ package io.github.bbortt.event.planner;
 
 import io.github.bbortt.event.planner.config.ApplicationProperties;
 import io.github.bbortt.event.planner.config.CRLFLogConverter;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Optional;
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,11 +14,17 @@ import org.springframework.core.env.Environment;
 import tech.jhipster.config.DefaultProfileUtil;
 import tech.jhipster.config.JHipsterConstants;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Optional;
+
 @SpringBootApplication
-@EnableConfigurationProperties({ LiquibaseProperties.class, ApplicationProperties.class })
+@EnableConfigurationProperties({LiquibaseProperties.class, ApplicationProperties.class})
 public class EventPlannerApp {
 
-    private static final Logger log = LoggerFactory.getLogger(EventPlannerApp.class);
+    private static final Logger logger = LoggerFactory.getLogger(EventPlannerApp.class);
 
     private final Environment env;
 
@@ -45,7 +46,7 @@ public class EventPlannerApp {
             activeProfiles.contains(JHipsterConstants.SPRING_PROFILE_DEVELOPMENT) &&
             activeProfiles.contains(JHipsterConstants.SPRING_PROFILE_PRODUCTION)
         ) {
-            log.error(
+            logger.error(
                 "You have misconfigured your application! It should not run " + "with both the 'dev' and 'prod' profiles at the same time."
             );
         }
@@ -53,7 +54,7 @@ public class EventPlannerApp {
             activeProfiles.contains(JHipsterConstants.SPRING_PROFILE_DEVELOPMENT) &&
             activeProfiles.contains(JHipsterConstants.SPRING_PROFILE_CLOUD)
         ) {
-            log.error(
+            logger.error(
                 "You have misconfigured your application! It should not " + "run with both the 'dev' and 'cloud' profiles at the same time."
             );
         }
@@ -72,6 +73,7 @@ public class EventPlannerApp {
     }
 
     private static void logApplicationStartup(Environment env) {
+        String applicationName= env.getProperty("spring.application.name");
         String protocol = Optional.ofNullable(env.getProperty("server.ssl.key-store")).map(key -> "https").orElse("http");
         String serverPort = env.getProperty("server.port");
         String contextPath = Optional
@@ -82,16 +84,16 @@ public class EventPlannerApp {
         try {
             hostAddress = InetAddress.getLocalHost().getHostAddress();
         } catch (UnknownHostException e) {
-            log.warn("The host name could not be determined, using `localhost` as fallback");
+            logger.warn("The host name could not be determined, using `localhost` as fallback");
         }
-        log.info(
+        logger.info(
             CRLFLogConverter.CRLF_SAFE_MARKER,
             "\n----------------------------------------------------------\n\t" +
             "Application '{}' is running! Access URLs:\n\t" +
             "Local: \t\t{}://localhost:{}{}\n\t" +
             "External: \t{}://{}:{}{}\n\t" +
             "Profile(s): \t{}\n----------------------------------------------------------",
-            env.getProperty("spring.application.name"),
+            applicationName,
             protocol,
             serverPort,
             contextPath,

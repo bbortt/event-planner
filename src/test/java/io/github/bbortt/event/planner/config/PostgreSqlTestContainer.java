@@ -9,7 +9,7 @@ import org.testcontainers.containers.output.Slf4jLogConsumer;
 
 public class PostgreSqlTestContainer implements SqlTestContainer {
 
-    private static final Logger log = LoggerFactory.getLogger(PostgreSqlTestContainer.class);
+    private static final Logger logger = LoggerFactory.getLogger(PostgreSqlTestContainer.class);
 
     private PostgreSQLContainer<?> postgreSQLContainer;
 
@@ -23,11 +23,11 @@ public class PostgreSqlTestContainer implements SqlTestContainer {
     @Override
     public void afterPropertiesSet() {
         if (null == postgreSQLContainer) {
-            try (PostgreSQLContainer postgreSQLContainer = new PostgreSQLContainer<>("postgres:15.2-alpine")) {
+            try (PostgreSQLContainer postgreSQLContainer = new PostgreSQLContainer<>("postgres:15.3-alpine")) {
                 postgreSQLContainer
                     .withDatabaseName("eventplanner")
                     .withTmpFs(Collections.singletonMap("/testtmpfs", "rw"))
-                    .withLogConsumer(new Slf4jLogConsumer(log))
+                    .withLogConsumer(new Slf4jLogConsumer(logger))
                     .withReuse(true);
                 this.postgreSQLContainer = postgreSQLContainer;
             }

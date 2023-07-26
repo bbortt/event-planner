@@ -3,11 +3,15 @@ package io.github.bbortt.event.planner.service.dto;
 import io.github.bbortt.event.planner.config.Constants;
 import io.github.bbortt.event.planner.domain.Authority;
 import io.github.bbortt.event.planner.domain.User;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.validation.constraints.*;
 
 /**
  * A DTO representing a user, with his authorities.

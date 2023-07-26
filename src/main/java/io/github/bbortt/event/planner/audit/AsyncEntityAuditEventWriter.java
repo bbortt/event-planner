@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 @Profile("!testdev & !testprod")
 public class AsyncEntityAuditEventWriter implements EntityAuditEventWriter {
 
-    private final Logger log = LoggerFactory.getLogger(AsyncEntityAuditEventWriter.class);
+    private static final Logger logger = LoggerFactory.getLogger(AsyncEntityAuditEventWriter.class);
 
     private final EntityAuditEventRepository auditingEntityRepository;
 
@@ -45,14 +45,14 @@ public class AsyncEntityAuditEventWriter implements EntityAuditEventWriter {
      */
     @Async
     public void writeAuditEvent(Object target, EntityAuditAction action) {
-        log.debug("-------------- Post {} audit  --------------", action.value());
+        logger.debug("-------------- Post {} audit  --------------", action.value());
         try {
             EntityAuditEvent auditedEntity = prepareAuditEntity(target, action);
             if (auditedEntity != null) {
                 auditingEntityRepository.save(auditedEntity);
             }
         } catch (Exception e) {
-            log.error("Exception while persisting audit entity for {} error: {}", target, e);
+            logger.error("Exception while persisting audit entity for {} error: {}", target, e);
         }
     }
 
@@ -70,7 +70,7 @@ public class AsyncEntityAuditEventWriter implements EntityAuditEventWriter {
         auditedEntity.setEntityType(entityClass.getName());
         Object entityId;
         String entityData;
-        log.trace("Getting Entity Id and Content");
+        logger.trace("Getting Entity Id and Content");
         try {
             Field privateLongField = entityClass.getDeclaredField("id");
             privateLongField.setAccessible(true);
@@ -78,7 +78,7 @@ public class AsyncEntityAuditEventWriter implements EntityAuditEventWriter {
             privateLongField.setAccessible(false);
             entityData = objectMapper.writeValueAsString(entity);
         } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException | IOException e) {
-            log.error("Exception while getting entity ID and content {}", e);
+            logger.error("Exception while getting entity ID and content {}", e);
             // returning null as we don't want to raise an application exception here
             return null;
         }
@@ -94,22 +94,22 @@ public class AsyncEntityAuditEventWriter implements EntityAuditEventWriter {
             auditedEntity.setModifiedDate(abstractAuditEntity.getLastModifiedDate());
             calculateVersion(auditedEntity);
         }
-        log.trace("Audit Entity --> {} ", auditedEntity.toString());
+        logger.trace("Audit Entity --> {} ", auditedEntity.toString());
         return auditedEntity;
     }
 
     private void calculateVersion(EntityAuditEvent auditedEntity) {
-        log.trace("Version calculation. for update/remove");
+        logger.trace("Version calculation. for update/remove");
         Integer lastCommitVersion = auditingEntityRepository.findMaxCommitVersion(
             auditedEntity.getEntityType(),
             auditedEntity.getEntityId()
         );
-        log.trace("Last commit version of entity => {}", lastCommitVersion);
+        logger.trace("Last commit version of entity => {}", lastCommitVersion);
         if (lastCommitVersion != null && lastCommitVersion != 0) {
-            log.trace("Present. Adding version..");
+            logger.trace("Present. Adding version..");
             auditedEntity.setCommitVersion(lastCommitVersion + 1);
         } else {
-            log.trace("No entities.. Adding new version 1");
+            logger.trace("No entities.. Adding new version 1");
             auditedEntity.setCommitVersion(1);
         }
     }

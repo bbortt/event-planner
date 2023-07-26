@@ -8,10 +8,7 @@ import io.github.bbortt.event.planner.repository.UserRepository;
 import io.github.bbortt.event.planner.security.SecurityUtils;
 import io.github.bbortt.event.planner.service.dto.AdminUserDTO;
 import io.github.bbortt.event.planner.service.dto.UserDTO;
-import java.time.Instant;
-import java.util.*;
-import java.util.stream.Collectors;
-import javax.annotation.Nullable;
+import jakarta.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +22,14 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 /**
  * Service class for managing users.
  */
@@ -32,7 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class UserService {
 
-    private final Logger log = LoggerFactory.getLogger(UserService.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     private final UserRepository userRepository;
 
@@ -73,7 +78,7 @@ public class UserService {
                 user.setLangKey(langKey);
                 user.setImageUrl(imageUrl);
                 this.clearUserCaches(user);
-                log.debug("Changed Information for User: {}", user);
+                logger.debug("Changed Information for User: {}", user);
             });
     }
 
@@ -107,7 +112,7 @@ public class UserService {
         Collection<String> userAuthorities = user.getAuthorities().stream().map(Authority::getName).toList();
         for (String authority : userAuthorities) {
             if (!dbAuthorities.contains(authority)) {
-                log.debug("Saving authority '{}' in local database", authority);
+                logger.debug("Saving authority '{}' in local database", authority);
                 Authority authorityToSave = new Authority();
                 authorityToSave.setName(authority);
                 authorityRepository.save(authorityToSave);
@@ -118,7 +123,7 @@ public class UserService {
         if (existingUser.isPresent()) {
             // if IdP sends last updated information, use it to determine if an update should happen
             if (details.get("updated_at") != null) {
-                Instant dbModifiedDate = existingUser.get().getLastModifiedDate();
+                Instant dbModifiedDate = existingUser.orElseThrow(IllegalArgumentException::new).getLastModifiedDate();
                 Instant idpModifiedDate;
                 if (details.get("updated_at") instanceof Instant) {
                     idpModifiedDate = (Instant) details.get("updated_at");
@@ -126,16 +131,16 @@ public class UserService {
                     idpModifiedDate = Instant.ofEpochSecond((Integer) details.get("updated_at"));
                 }
                 if (idpModifiedDate.isAfter(dbModifiedDate)) {
-                    log.debug("Updating user '{}' in local database", user.getLogin());
+                    logger.debug("Updating user '{}' in local database", user.getLogin());
                     updateUser(user.getFirstName(), user.getLastName(), user.getEmail(), user.getLangKey(), user.getImageUrl());
                 }
                 // no last updated info, blindly update
             } else {
-                log.debug("Updating user '{}' in local database", user.getLogin());
+                logger.debug("Updating user '{}' in local database", user.getLogin());
                 updateUser(user.getFirstName(), user.getLastName(), user.getEmail(), user.getLangKey(), user.getImageUrl());
             }
         } else {
-            log.debug("Saving user '{}' in local database", user.getLogin());
+            logger.debug("Saving user '{}' in local database", user.getLogin());
             userRepository.save(user);
             this.clearUserCaches(user);
         }

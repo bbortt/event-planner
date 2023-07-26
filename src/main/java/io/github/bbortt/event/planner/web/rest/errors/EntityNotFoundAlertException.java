@@ -1,13 +1,13 @@
 package io.github.bbortt.event.planner.web.rest.errors;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.ErrorResponseException;
+import tech.jhipster.web.rest.errors.ProblemDetailWithCause;
+
 import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
-import org.zalando.problem.AbstractThrowableProblem;
-import org.zalando.problem.Status;
 
 @SuppressWarnings("java:S110") // Inheritance tree of classes should not be too deep
-public class EntityNotFoundAlertException extends AbstractThrowableProblem {
+public class EntityNotFoundAlertException extends ErrorResponseException {
 
     private static final long serialVersionUID = 1L;
 
@@ -20,7 +20,18 @@ public class EntityNotFoundAlertException extends AbstractThrowableProblem {
     }
 
     public EntityNotFoundAlertException(URI type, String defaultMessage, String entityName, String errorKey) {
-        super(type, defaultMessage, Status.NOT_FOUND, null, null, null, getAlertParameters(entityName, errorKey));
+        super(
+            HttpStatus.NOT_FOUND,
+            ProblemDetailWithCause.ProblemDetailWithCauseBuilder
+                .instance()
+                .withStatus(HttpStatus.NOT_FOUND.value())
+                .withType(type)
+                .withTitle(defaultMessage)
+                .withProperty("message", "error." + errorKey)
+                .withProperty("params", entityName)
+                .build(),
+            null
+        );
         this.entityName = entityName;
         this.errorKey = errorKey;
     }
@@ -31,12 +42,5 @@ public class EntityNotFoundAlertException extends AbstractThrowableProblem {
 
     public String getErrorKey() {
         return errorKey;
-    }
-
-    private static Map<String, Object> getAlertParameters(String entityName, String errorKey) {
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("message", "error." + errorKey);
-        parameters.put("params", entityName);
-        return parameters;
     }
 }

@@ -2,7 +2,7 @@
 version: '3.8'
 services:
   eventplanner-postgresql:
-    image: postgres:15.2-alpine
+    image: postgres:15.3-alpine
     # volumes:
     #   - ~/volumes/jhipster/eventplanner/postgresql/:/var/lib/postgresql/data/
     environment:

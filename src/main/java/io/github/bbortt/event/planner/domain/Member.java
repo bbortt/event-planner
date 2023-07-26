@@ -2,27 +2,28 @@ package io.github.bbortt.event.planner.domain;
 
 import io.github.bbortt.event.planner.audit.EntityAuditEventListener;
 import io.github.bbortt.event.planner.security.SecurityUtils;
-import java.io.Serializable;
-import java.time.Instant;
-import java.util.Objects;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.PreUpdate;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PreUpdate;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
+import jakarta.persistence.UniqueConstraint;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.io.Serializable;
+import java.time.Instant;
+import java.util.Objects;
 
 /**
  * A Member.
@@ -31,8 +32,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Table(
     name = "member",
     uniqueConstraints = {
-        @UniqueConstraint(name = "ux_invitation_per_project", columnNames = { "invited_email", "project_id" }),
-        @UniqueConstraint(name = "ux_accepted_per_project", columnNames = { "accepted_by", "project_id" }),
+        @UniqueConstraint(name = "ux_invitation_per_project", columnNames = {"invited_email", "project_id"}),
+        @UniqueConstraint(name = "ux_accepted_per_project", columnNames = {"accepted_by", "project_id"}),
     }
 )
 @EntityListeners({ AuditingEntityListener.class, EntityAuditEventListener.class })

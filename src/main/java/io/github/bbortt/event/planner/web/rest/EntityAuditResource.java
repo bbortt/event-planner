@@ -29,7 +29,7 @@ import tech.jhipster.web.util.PaginationUtil;
 @Transactional
 public class EntityAuditResource {
 
-    private final Logger log = LoggerFactory.getLogger(EntityAuditResource.class);
+    private static final Logger logger = LoggerFactory.getLogger(EntityAuditResource.class);
 
     private final EntityAuditEventRepository entityAuditEventRepository;
 
@@ -59,7 +59,7 @@ public class EntityAuditResource {
         @RequestParam(value = "entityType") String entityType,
         @RequestParam(value = "limit") int limit
     ) {
-        log.debug("REST request to get a page of EntityAuditEvents");
+        logger.debug("REST request to get a page of EntityAuditEvents");
         Page<EntityAuditEvent> page = entityAuditEventRepository.findAllByEntityType(entityType, PageRequest.of(0, limit));
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);

@@ -1,10 +1,5 @@
 package io.github.bbortt.event.planner.config;
 
-import static io.github.bbortt.event.planner.config.StaticResourcesWebConfiguration.*;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
-
-import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.CacheControl;
@@ -14,6 +9,18 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistra
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import tech.jhipster.config.JHipsterDefaults;
 import tech.jhipster.config.JHipsterProperties;
+
+import java.util.concurrent.TimeUnit;
+
+import static io.github.bbortt.event.planner.config.StaticResourcesWebConfiguration.RESOURCE_LOCATIONS;
+import static io.github.bbortt.event.planner.config.StaticResourcesWebConfiguration.RESOURCE_PATHS;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 class StaticResourcesWebConfigurerTest {
 

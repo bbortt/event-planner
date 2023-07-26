@@ -1,16 +1,15 @@
 package io.github.bbortt.event.planner.web.api.mapper;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertNull;
-
 import io.github.bbortt.event.planner.service.api.dto.Location;
-import io.github.bbortt.event.planner.service.api.dto.Project;
 import io.github.bbortt.event.planner.service.dto.LocationDTO;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.Collections;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class ApiProjectLocationMapperTest {
 

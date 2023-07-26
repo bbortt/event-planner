@@ -1,4 +1,4 @@
-FROM redis:7.0.10-alpine
+FROM redis:7.0.12-alpine
 
 RUN apt update && \
     apt install \

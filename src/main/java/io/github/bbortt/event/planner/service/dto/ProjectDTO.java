@@ -1,10 +1,12 @@
 package io.github.bbortt.event.planner.service.dto;
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
 import java.util.UUID;
-import javax.validation.constraints.*;
 
 /**
  * A DTO for the {@link io.github.bbortt.event.planner.domain.Project} entity.

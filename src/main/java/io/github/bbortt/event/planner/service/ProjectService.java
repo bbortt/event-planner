@@ -25,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ProjectService {
 
-    private final Logger log = LoggerFactory.getLogger(ProjectService.class);
+    private static final Logger logger = LoggerFactory.getLogger(ProjectService.class);
 
     private final ProjectRepository projectRepository;
 
@@ -45,7 +45,7 @@ public class ProjectService {
     @Modifying
     @Transactional
     public ProjectDTO save(ProjectDTO projectDTO) {
-        log.debug("Request to save Project : {}", projectDTO);
+        logger.debug("Request to save Project : {}", projectDTO);
         Project project = projectMapper.toEntity(projectDTO);
 
         // Sanitize new project
@@ -63,7 +63,7 @@ public class ProjectService {
     @Modifying
     @Transactional
     public ProjectDTO update(ProjectDTO projectDTO) {
-        log.debug("Request to update Project : {}", projectDTO);
+        logger.debug("Request to update Project : {}", projectDTO);
         Project project = projectMapper.toEntity(projectDTO);
         project = projectRepository.save(project);
         return projectMapper.toDto(project);
@@ -78,7 +78,7 @@ public class ProjectService {
     @Modifying
     @Transactional
     public Optional<ProjectDTO> partialUpdate(ProjectDTO projectDTO) {
-        log.debug("Request to partially update Project : {}", projectDTO);
+        logger.debug("Request to partially update Project : {}", projectDTO);
 
         return projectRepository
             .findById(projectDTO.getId())
@@ -99,7 +99,7 @@ public class ProjectService {
      */
     @Transactional(readOnly = true)
     public boolean exists(Long projectId) {
-        log.debug("Request to check if Project with id '{}' exists", projectId);
+        logger.debug("Request to check if Project with id '{}' exists", projectId);
         return projectRepository.existsById(projectId);
     }
 
@@ -111,7 +111,7 @@ public class ProjectService {
      */
     @Transactional(readOnly = true)
     public Page<ProjectDTO> findAll(Pageable pageable) {
-        log.debug("Request to get all Projects");
+        logger.debug("Request to get all Projects");
         return projectRepository.findAll(pageable).map(projectMapper::toDto);
     }
 
@@ -123,7 +123,7 @@ public class ProjectService {
      */
     @Transactional(readOnly = true)
     public Optional<ProjectDTO> findOne(Long id) {
-        log.debug("Request to get Project : {}", id);
+        logger.debug("Request to get Project : {}", id);
         return projectRepository.findById(id).map(projectMapper::toDto);
     }
 
@@ -135,16 +135,16 @@ public class ProjectService {
      */
     @Transactional(readOnly = true)
     public ProjectDTO findOneOrThrowEntityNotFoundAlertException(Long id) {
-        log.debug("Request to get Project : {}", id);
+        logger.debug("Request to get Project : {}", id);
 
         Optional<ProjectDTO> project = findOne(id);
 
         if (project.isEmpty()) {
-            log.warn("Project {} does not exist!", id);
+            logger.warn("Project {} does not exist!", id);
             throw new EntityNotFoundAlertException("Entity not found", ProjectApiDelegateImpl.ENTITY_NAME, "idnotfound");
         }
 
-        return project.get();
+        return project.orElseThrow(IllegalArgumentException::new);
     }
 
     /**
@@ -155,7 +155,7 @@ public class ProjectService {
      */
     @Transactional(readOnly = true)
     public Optional<ProjectDTO> findOneByToken(String token) {
-        log.debug("Request to get Project by token: {}", token);
+        logger.debug("Request to get Project by token: {}", token);
         return projectRepository.findByToken(UUID.fromString(token)).map(projectMapper::toDto);
     }
 
@@ -168,11 +168,11 @@ public class ProjectService {
     @Transactional(readOnly = true)
     @PreAuthorize("T(io.github.bbortt.event.planner.security.SecurityUtils).isAuthenticated()")
     public Slice<ProjectDTO> findAllNotArchivedForCurrentUser(Pageable pageable) {
-        log.debug("Request to get all Projects for current user");
+        logger.debug("Request to get all Projects for current user");
         String login = SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new IllegalArgumentException("Cannot find current user!"));
 
-        if (log.isTraceEnabled()) {
-            log.trace("Current login is '{}'", login);
+        if (logger.isTraceEnabled()) {
+            logger.trace("Current login is '{}'", login);
         }
 
         return projectRepository.findByUsernameParticipatingIn(login, pageable).map(projectMapper::toDto);
@@ -186,7 +186,7 @@ public class ProjectService {
     @Modifying
     @Transactional
     public void delete(Long id) {
-        log.debug("Request to delete Project : {}", id);
+        logger.debug("Request to delete Project : {}", id);
         projectRepository.deleteById(id);
     }
 }

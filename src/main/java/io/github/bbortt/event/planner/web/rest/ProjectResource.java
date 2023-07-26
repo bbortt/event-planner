@@ -4,15 +4,11 @@ import io.github.bbortt.event.planner.repository.ProjectRepository;
 import io.github.bbortt.event.planner.service.ProjectService;
 import io.github.bbortt.event.planner.service.dto.ProjectDTO;
 import io.github.bbortt.event.planner.web.rest.errors.BadRequestAlertException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -32,6 +28,12 @@ import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.PaginationUtil;
 import tech.jhipster.web.util.ResponseUtil;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
 /**
  * REST controller for managing {@link io.github.bbortt.event.planner.domain.Project}.
  */
@@ -39,7 +41,7 @@ import tech.jhipster.web.util.ResponseUtil;
 @RequestMapping("/api")
 public class ProjectResource {
 
-    private final Logger log = LoggerFactory.getLogger(ProjectResource.class);
+    private static final Logger logger = LoggerFactory.getLogger(ProjectResource.class);
 
     private static final String ENTITY_NAME = "project";
 
@@ -64,7 +66,7 @@ public class ProjectResource {
      */
     @PostMapping("/projects")
     public ResponseEntity<ProjectDTO> createProject(@Valid @RequestBody ProjectDTO projectDTO) throws URISyntaxException {
-        log.debug("REST request to save Project : {}", projectDTO);
+        logger.debug("REST request to save Project : {}", projectDTO);
         if (projectDTO.getId() != null) {
             throw new BadRequestAlertException("A new project cannot already have an ID", ENTITY_NAME, "idexists");
         }
@@ -89,7 +91,7 @@ public class ProjectResource {
         @PathVariable(value = "id", required = false) final Long id,
         @Valid @RequestBody ProjectDTO projectDTO
     ) {
-        log.debug("REST request to update Project : {}, {}", id, projectDTO);
+        logger.debug("REST request to update Project : {}, {}", id, projectDTO);
         if (projectDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
@@ -123,7 +125,7 @@ public class ProjectResource {
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody ProjectDTO projectDTO
     ) {
-        log.debug("REST request to partial update Project partially : {}, {}", id, projectDTO);
+        logger.debug("REST request to partial update Project partially : {}, {}", id, projectDTO);
         if (projectDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
@@ -150,8 +152,8 @@ public class ProjectResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of projects in body.
      */
     @GetMapping("/projects")
-    public ResponseEntity<List<ProjectDTO>> getAllProjects(@org.springdoc.api.annotations.ParameterObject Pageable pageable) {
-        log.debug("REST request to get a page of Projects");
+    public ResponseEntity<List<ProjectDTO>> getAllProjects(@ParameterObject Pageable pageable) {
+        logger.debug("REST request to get a page of Projects");
         Page<ProjectDTO> page = projectService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
@@ -165,7 +167,7 @@ public class ProjectResource {
      */
     @GetMapping("/projects/{id}")
     public ResponseEntity<ProjectDTO> getProject(@PathVariable Long id) {
-        log.debug("REST request to get Project : {}", id);
+        logger.debug("REST request to get Project : {}", id);
         Optional<ProjectDTO> projectDTO = projectService.findOne(id);
         return ResponseUtil.wrapOrNotFound(projectDTO);
     }
@@ -178,7 +180,7 @@ public class ProjectResource {
      */
     @DeleteMapping("/projects/{id}")
     public ResponseEntity<Void> deleteProject(@PathVariable Long id) {
-        log.debug("REST request to delete Project : {}", id);
+        logger.debug("REST request to delete Project : {}", id);
         projectService.delete(id);
         return ResponseEntity
             .noContent()

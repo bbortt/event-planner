@@ -1,7 +1,6 @@
 package io.github.bbortt.event.planner.config;
 
-import java.util.concurrent.Executor;
-import javax.sql.DataSource;
+
 import liquibase.integration.spring.SpringLiquibase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,10 +16,13 @@ import org.springframework.core.env.Profiles;
 import tech.jhipster.config.JHipsterConstants;
 import tech.jhipster.config.liquibase.SpringLiquibaseUtil;
 
+import javax.sql.DataSource;
+import java.util.concurrent.Executor;
+
 @Configuration
 public class LiquibaseConfiguration {
 
-    private final Logger log = LoggerFactory.getLogger(LiquibaseConfiguration.class);
+    private static final Logger logger = LoggerFactory.getLogger(LiquibaseConfiguration.class);
 
     private final Environment env;
 
@@ -31,15 +33,15 @@ public class LiquibaseConfiguration {
     @Bean
     public SpringLiquibase liquibase(
         @Qualifier("taskExecutor") Executor executor,
-        @LiquibaseDataSource ObjectProvider<DataSource> liquibaseDataSource,
         LiquibaseProperties liquibaseProperties,
+        @LiquibaseDataSource ObjectProvider<DataSource> liquibaseDataSource,
         ObjectProvider<DataSource> dataSource,
         DataSourceProperties dataSourceProperties
     ) {
         // If you don't want Liquibase to start asynchronously, substitute by this:
         // SpringLiquibase liquibase = SpringLiquibaseUtil.createSpringLiquibase(liquibaseDataSource.getIfAvailable(), liquibaseProperties, dataSource.getIfUnique(), dataSourceProperties);
         SpringLiquibase liquibase = SpringLiquibaseUtil.createAsyncSpringLiquibase(
-            env,
+            this.env,
             executor,
             liquibaseDataSource.getIfAvailable(),
             liquibaseProperties,
@@ -54,7 +56,7 @@ public class LiquibaseConfiguration {
         liquibase.setDatabaseChangeLogLockTable(liquibaseProperties.getDatabaseChangeLogLockTable());
         liquibase.setDatabaseChangeLogTable(liquibaseProperties.getDatabaseChangeLogTable());
         liquibase.setDropFirst(liquibaseProperties.isDropFirst());
-        liquibase.setLabels(liquibaseProperties.getLabels());
+        liquibase.setLabelFilter(liquibaseProperties.getLabelFilter());
         liquibase.setChangeLogParameters(liquibaseProperties.getParameters());
         liquibase.setRollbackFile(liquibaseProperties.getRollbackFile());
         liquibase.setTestRollbackOnUpdate(liquibaseProperties.isTestRollbackOnUpdate());
@@ -62,7 +64,7 @@ public class LiquibaseConfiguration {
             liquibase.setShouldRun(false);
         } else {
             liquibase.setShouldRun(liquibaseProperties.isEnabled());
-            log.debug("Configuring Liquibase");
+            logger.debug("Configuring Liquibase");
         }
         return liquibase;
     }

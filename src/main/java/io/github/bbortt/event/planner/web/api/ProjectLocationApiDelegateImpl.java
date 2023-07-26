@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ProjectLocationApiDelegateImpl implements ProjectLocationApiDelegate {
 
-    private final Logger log = LoggerFactory.getLogger(ProjectLocationApiDelegateImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(ProjectLocationApiDelegateImpl.class);
 
     private final LocationService locationService;
     private final ProjectService projectService;
@@ -33,7 +33,7 @@ public class ProjectLocationApiDelegateImpl implements ProjectLocationApiDelegat
 
     @Override
     public ResponseEntity<GetProjectLocations200Response> getProjectLocations(Long projectId) {
-        log.debug("REST request to get all Locations in Project '{}'", projectId);
+        logger.debug("REST request to get all Locations in Project '{}'", projectId);
 
         projectService.findOneOrThrowEntityNotFoundAlertException(projectId);
 
@@ -46,7 +46,7 @@ public class ProjectLocationApiDelegateImpl implements ProjectLocationApiDelegat
 
     @Override
     public ResponseEntity<GetProjectLocations200Response> getProjectLocationsWithoutSelf(Long projectId, Long locationId) {
-        log.debug("REST request to get all Locations except '{}' in Project '{}'", locationId, projectId);
+        logger.debug("REST request to get all Locations except '{}' in Project '{}'", locationId, projectId);
 
         projectService.findOneOrThrowEntityNotFoundAlertException(projectId);
 

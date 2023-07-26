@@ -4,12 +4,17 @@ import io.github.bbortt.event.planner.domain.Authority;
 import io.github.bbortt.event.planner.domain.User;
 import io.github.bbortt.event.planner.service.dto.AdminUserDTO;
 import io.github.bbortt.event.planner.service.dto.UserDTO;
-import java.util.*;
-import java.util.stream.Collectors;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Mapper for the entity {@link User} and its DTO called {@link UserDTO}.

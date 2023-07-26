@@ -1,6 +1,6 @@
 package io.github.bbortt.event.planner.config;
 
-import org.springdoc.core.GroupedOpenApi;
+import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,7 +25,7 @@ public class OpenApiConfiguration {
         return GroupedOpenApi
             .builder()
             .group("openapi")
-            .addOpenApiCustomiser(jhipsterOpenApiCustomizer)
+            .addOpenApiCustomizer(jhipsterOpenApiCustomizer)
             .packagesToScan(API_FIRST_PACKAGE)
             .pathsToMatch(properties.getDefaultIncludePattern())
             .build();

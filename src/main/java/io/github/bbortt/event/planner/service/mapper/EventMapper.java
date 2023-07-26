@@ -4,7 +4,10 @@ import io.github.bbortt.event.planner.domain.Event;
 import io.github.bbortt.event.planner.domain.Location;
 import io.github.bbortt.event.planner.service.dto.EventDTO;
 import io.github.bbortt.event.planner.service.dto.LocationDTO;
-import org.mapstruct.*;
+import org.mapstruct.BeanMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 
 /**
  * Mapper for the entity {@link Event} and its DTO {@link EventDTO}.

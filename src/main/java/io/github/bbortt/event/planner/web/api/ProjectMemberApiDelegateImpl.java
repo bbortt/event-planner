@@ -27,7 +27,7 @@ import tech.jhipster.web.util.ResponseUtil;
 @RestController
 public class ProjectMemberApiDelegateImpl implements ProjectMemberApiDelegate {
 
-    private final Logger log = LoggerFactory.getLogger(ProjectMemberApiDelegateImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(ProjectMemberApiDelegateImpl.class);
 
     private static final String MEMBER_ID_ATTRIBUTE_NAME = "id";
 
@@ -53,7 +53,7 @@ public class ProjectMemberApiDelegateImpl implements ProjectMemberApiDelegate {
 
     @Override
     public ResponseEntity<Member> findProjectMemberByTokenAndEmail(Long projectId, String invitationEmail) {
-        log.debug("REST request to get Member with email '{}' in Project '{}'", invitationEmail, projectId);
+        logger.debug("REST request to get Member with email '{}' in Project '{}'", invitationEmail, projectId);
 
         projectService.findOneOrThrowEntityNotFoundAlertException(projectId);
 
@@ -69,7 +69,7 @@ public class ProjectMemberApiDelegateImpl implements ProjectMemberApiDelegate {
         Optional<Integer> pageNumber,
         Optional<List<String>> sort
     ) {
-        log.debug("REST request to get a page of Members in Project '{}'", projectId);
+        logger.debug("REST request to get a page of Members in Project '{}'", projectId);
 
         projectService.findOneOrThrowEntityNotFoundAlertException(projectId);
 
@@ -90,7 +90,7 @@ public class ProjectMemberApiDelegateImpl implements ProjectMemberApiDelegate {
         Long projectId,
         List<InviteMemberToProjectRequestInner> inviteMemberToProjectRequestInner
     ) {
-        log.debug("REST request to invite new Members '{}' to Project '{}'", inviteMemberToProjectRequestInner, projectId);
+        logger.debug("REST request to invite new Members '{}' to Project '{}'", inviteMemberToProjectRequestInner, projectId);
 
         ProjectDTO project = projectService.findOneOrThrowEntityNotFoundAlertException(projectId);
 

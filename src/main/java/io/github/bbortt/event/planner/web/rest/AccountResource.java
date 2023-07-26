@@ -2,14 +2,15 @@ package io.github.bbortt.event.planner.web.rest;
 
 import io.github.bbortt.event.planner.service.UserService;
 import io.github.bbortt.event.planner.service.dto.AdminUserDTO;
-import java.security.Principal;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.security.Principal;
 
 /**
  * REST controller for managing the current user's account.
@@ -27,7 +28,7 @@ public class AccountResource {
         }
     }
 
-    private final Logger log = LoggerFactory.getLogger(AccountResource.class);
+    private static final Logger logger = LoggerFactory.getLogger(AccountResource.class);
 
     private final UserService userService;
 
@@ -60,7 +61,7 @@ public class AccountResource {
      */
     @GetMapping("/authenticate")
     public String isAuthenticated(HttpServletRequest request) {
-        log.debug("REST request to check if the current user is authenticated");
+        logger.debug("REST request to check if the current user is authenticated");
         return request.getRemoteUser();
     }
 }

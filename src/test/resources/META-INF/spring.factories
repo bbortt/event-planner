@@ -1,1 +1,2 @@
-org.springframework.test.context.ContextCustomizerFactory = io.github.bbortt.event.planner.config.TestContainersSpringContextCustomizerFactory
+org.springframework.test.context.ContextCustomizerFactory = io.github.bbortt.event.planner.config.SqlTestContainersSpringContextCustomizerFactory,\
+  io.github.bbortt.event.planner.config.RedisTestContainersSpringContextCustomizerFactory

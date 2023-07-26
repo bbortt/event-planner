@@ -1,30 +1,14 @@
 package io.github.bbortt.event.planner.web.api;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-
 import io.github.bbortt.event.planner.service.EventService;
 import io.github.bbortt.event.planner.service.ProjectService;
 import io.github.bbortt.event.planner.service.api.dto.Event;
 import io.github.bbortt.event.planner.service.api.dto.GetProjectEvents200Response;
-import io.github.bbortt.event.planner.service.api.dto.GetProjectLocations200Response;
-import io.github.bbortt.event.planner.service.api.dto.Location;
 import io.github.bbortt.event.planner.service.dto.EventDTO;
-import io.github.bbortt.event.planner.service.dto.LocationDTO;
-import io.github.bbortt.event.planner.service.dto.MemberDTO;
 import io.github.bbortt.event.planner.service.dto.ProjectDTO;
 import io.github.bbortt.event.planner.web.api.mapper.ApiProjectEventMapper;
 import io.github.bbortt.event.planner.web.rest.errors.EntityNotFoundAlertException;
 import io.github.bbortt.event.planner.web.rest.util.PaginationUtil;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,6 +24,19 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
 class ProjectEventsApiTest {
@@ -74,7 +71,7 @@ class ProjectEventsApiTest {
         Optional<Integer> pageNumber = Optional.of(0);
         Optional<List<String>> sort = Optional.of(Collections.singletonList("id,asc"));
 
-        PageRequest pageRequest = PageRequest.of(pageNumber.get(), pageSize.get());
+        PageRequest pageRequest = PageRequest.of(pageNumber.orElseThrow(IllegalArgumentException::new), pageSize.orElseThrow(IllegalArgumentException::new));
         doReturn(pageRequest).when(paginationUtilMock).createPagingInformation(pageSize, pageNumber, sort, "id");
 
         // Project by ID exists
