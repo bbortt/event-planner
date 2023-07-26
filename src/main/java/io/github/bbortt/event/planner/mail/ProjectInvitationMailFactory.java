@@ -12,7 +12,7 @@ import tech.jhipster.config.JHipsterProperties;
 @Component
 public class ProjectInvitationMailFactory {
 
-    private final Logger log = LoggerFactory.getLogger(ProjectInvitationMailFactory.class);
+    private static final Logger logger = LoggerFactory.getLogger(ProjectInvitationMailFactory.class);
 
     private static final String TEMPLATE_LOCATION = "mail/project-invitation.html";
 
@@ -36,7 +36,7 @@ public class ProjectInvitationMailFactory {
     }
 
     public EmailConfiguration getEmailConfiguration(String invitedEmail, String projectName, String projectToken) {
-        log.info("Configure project invitation email");
+        logger.info("Configure project invitation email");
         return new EmailConfiguration(
             mailProperties.getFrom(),
             invitedEmail,
@@ -46,7 +46,7 @@ public class ProjectInvitationMailFactory {
     }
 
     private String loadHtmlContent(String invitedEmail, String projectName, String projectToken) {
-        log.debug("Load html content");
+        logger.debug("Load html content");
 
         Context context = new Context(
             localeResolver.resolveLocale(

@@ -10,10 +10,11 @@ pluginManagement {
         id "com.gorylenko.gradle-git-properties" version "${gitPropertiesPluginVersion}"
         id "org.openapi.generator" version "${openapiPluginVersion}"
         id "com.github.node-gradle.node" version "${gradleNodePluginVersion}"
-        id "org.liquibase.gradle" version "${liquibasePluginVersion}"
         id "org.sonarqube" version "${sonarqubePluginVersion}"
+        id "com.diffplug.spotless" version "${spotlessPluginVersion}"
         id "io.spring.nohttp" version "${noHttpCheckstyleVersion}"
         id "com.github.andygoossens.gradle-modernizer-plugin" version "${modernizerPluginVersion}"
+        id "org.liquibase.gradle" version "${liquibasePluginVersion}"
         //jhipster-needle-gradle-plugin-management-plugins - JHipster will add additional entries here
     }
 }

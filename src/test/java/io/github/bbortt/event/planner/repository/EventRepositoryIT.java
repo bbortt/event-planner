@@ -1,24 +1,23 @@
 package io.github.bbortt.event.planner.repository;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import io.github.bbortt.event.planner.IntegrationTest;
 import io.github.bbortt.event.planner.domain.Event;
 import io.github.bbortt.event.planner.domain.Location;
 import io.github.bbortt.event.planner.domain.Project;
-import io.github.bbortt.event.planner.service.dto.EventDTO;
-import io.github.bbortt.event.planner.web.rest.EventResource;
 import io.github.bbortt.event.planner.web.rest.EventResourceIT;
 import io.github.bbortt.event.planner.web.rest.LocationResourceIT;
 import io.github.bbortt.event.planner.web.rest.ProjectResourceIT;
-import java.util.UUID;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @IntegrationTest
 class EventRepositoryIT {

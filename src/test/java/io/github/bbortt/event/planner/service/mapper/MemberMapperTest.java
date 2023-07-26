@@ -1,28 +1,24 @@
 package io.github.bbortt.event.planner.service.mapper;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-
 import io.github.bbortt.event.planner.domain.Member;
-import io.github.bbortt.event.planner.domain.Project;
-import io.github.bbortt.event.planner.domain.User;
 import io.github.bbortt.event.planner.service.dto.AdminUserDTO;
 import io.github.bbortt.event.planner.service.dto.MemberDTO;
-import io.github.bbortt.event.planner.web.rest.ProjectResource;
 import io.github.bbortt.event.planner.web.rest.ProjectResourceIT;
-import io.github.bbortt.event.planner.web.rest.PublicUserResource;
 import io.github.bbortt.event.planner.web.rest.UserResourceIT;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
+
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.doReturn;
 
 @ExtendWith(MockitoExtension.class)
 class MemberMapperTest {

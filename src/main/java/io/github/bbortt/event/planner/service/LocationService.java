@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class LocationService {
 
-    private final Logger log = LoggerFactory.getLogger(LocationService.class);
+    private static final Logger logger = LoggerFactory.getLogger(LocationService.class);
 
     private final LocationRepository locationRepository;
 
@@ -41,7 +41,7 @@ public class LocationService {
      * @return the persisted entity.
      */
     public LocationDTO save(LocationDTO locationDTO) {
-        log.debug("Request to save Location : {}", locationDTO);
+        logger.debug("Request to save Location : {}", locationDTO);
         Location location = locationMapper.toEntity(locationDTO);
         location = locationRepository.save(location);
         return locationMapper.toDto(location);
@@ -54,7 +54,7 @@ public class LocationService {
      * @return the persisted entity.
      */
     public LocationDTO update(LocationDTO locationDTO) {
-        log.debug("Request to update Location : {}", locationDTO);
+        logger.debug("Request to update Location : {}", locationDTO);
         Location location = locationMapper.toEntity(locationDTO);
         location = locationRepository.save(location);
         return locationMapper.toDto(location);
@@ -67,7 +67,7 @@ public class LocationService {
      * @return the persisted entity.
      */
     public Optional<LocationDTO> partialUpdate(LocationDTO locationDTO) {
-        log.debug("Request to partially update Location : {}", locationDTO);
+        logger.debug("Request to partially update Location : {}", locationDTO);
 
         return locationRepository
             .findById(locationDTO.getId())
@@ -88,7 +88,7 @@ public class LocationService {
      */
     @Transactional(readOnly = true)
     public Page<LocationDTO> findAll(Pageable pageable) {
-        log.debug("Request to get all Locations");
+        logger.debug("Request to get all Locations");
         return locationRepository.findAll(pageable).map(locationMapper::toDto);
     }
 
@@ -109,7 +109,7 @@ public class LocationService {
      */
     @Transactional(readOnly = true)
     public Optional<LocationDTO> findOne(Long id) {
-        log.debug("Request to get Location : {}", id);
+        logger.debug("Request to get Location : {}", id);
         return locationRepository.findOneWithEagerRelationships(id).map(locationMapper::toDto);
     }
 
@@ -119,7 +119,7 @@ public class LocationService {
      * @param id the id of the entity.
      */
     public void delete(Long id) {
-        log.debug("Request to delete Location : {}", id);
+        logger.debug("Request to delete Location : {}", id);
         locationRepository.deleteById(id);
     }
 
@@ -133,7 +133,7 @@ public class LocationService {
     @Transactional(readOnly = true)
     @PreAuthorize("T(io.github.bbortt.event.planner.security.SecurityUtils).isAuthenticated()")
     public List<LocationDTO> findAllInProject(Long projectId) {
-        log.debug("Request to get all Locations in Project '{}'", projectId);
+        logger.debug("Request to get all Locations in Project '{}'", projectId);
         return locationRepository.findAllByParentIsNullAndProject_IdEquals(projectId).stream().map(locationMapper::toDto).toList();
     }
 
@@ -148,7 +148,7 @@ public class LocationService {
     @Transactional(readOnly = true)
     @PreAuthorize("T(io.github.bbortt.event.planner.security.SecurityUtils).isAuthenticated()")
     public List<LocationDTO> findAllInProjectExceptThis(Long projectId, Long locationId) {
-        log.debug("Request to get all Locations except '{}' in Project '{}'", locationId, projectId);
+        logger.debug("Request to get all Locations except '{}' in Project '{}'", locationId, projectId);
         return locationRepository
             .findAllByParentIsNullAndProject_IdEquals(projectId)
             .stream()
@@ -162,8 +162,8 @@ public class LocationService {
     }
 
     private Set<Location> dropLocationsMatchingId(Set<Location> locations, Long locationId) {
-        if (log.isTraceEnabled()) {
-            log.trace("Filter Locations by id '{}': {}", locationId, locations);
+        if (logger.isTraceEnabled()) {
+            logger.trace("Filter Locations by id '{}': {}", locationId, locations);
         }
 
         return locations

@@ -7,8 +7,7 @@ import io.github.bbortt.event.planner.service.dto.MemberDTO;
 import io.github.bbortt.event.planner.service.dto.ProjectDTO;
 import io.github.bbortt.event.planner.service.mapper.MemberMapper;
 import io.github.bbortt.event.planner.service.mapper.ProjectMapper;
-import java.util.Optional;
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -18,13 +17,15 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 /**
  * Service Implementation for managing {@link Member}.
  */
 @Service
 public class MemberService {
 
-    private final Logger log = LoggerFactory.getLogger(MemberService.class);
+    private static final Logger logger = LoggerFactory.getLogger(MemberService.class);
 
     private final MemberRepository memberRepository;
 
@@ -53,7 +54,7 @@ public class MemberService {
     @Modifying
     @Transactional
     public MemberDTO save(MemberDTO memberDTO) {
-        log.debug("Request to save Member : {}", memberDTO);
+        logger.debug("Request to save Member : {}", memberDTO);
         Member member = memberMapper.toEntity(memberDTO);
 
         // Sanitize new membership
@@ -71,7 +72,7 @@ public class MemberService {
     @Modifying
     @Transactional
     public MemberDTO update(MemberDTO memberDTO) {
-        log.debug("Request to update Member : {}", memberDTO);
+        logger.debug("Request to update Member : {}", memberDTO);
         Member member = memberMapper.toEntity(memberDTO);
         member = memberRepository.save(member);
         return memberMapper.toDto(member);
@@ -86,7 +87,7 @@ public class MemberService {
     @Modifying
     @Transactional
     public Optional<MemberDTO> partialUpdate(MemberDTO memberDTO) {
-        log.debug("Request to partially update Member : {}", memberDTO);
+        logger.debug("Request to partially update Member : {}", memberDTO);
 
         return memberRepository
             .findById(memberDTO.getId())
@@ -107,7 +108,7 @@ public class MemberService {
      */
     @Transactional(readOnly = true)
     public Page<MemberDTO> findAll(Pageable pageable) {
-        log.debug("Request to get all Members");
+        logger.debug("Request to get all Members");
         return memberRepository.findAll(pageable).map(memberMapper::toDto);
     }
 
@@ -129,7 +130,7 @@ public class MemberService {
      */
     @Transactional(readOnly = true)
     public Optional<MemberDTO> findOne(Long id) {
-        log.debug("Request to get Member : {}", id);
+        logger.debug("Request to get Member : {}", id);
         return memberRepository.findOneWithEagerRelationships(id).map(memberMapper::toDto);
     }
 
@@ -141,7 +142,7 @@ public class MemberService {
     @Modifying
     @Transactional
     public void delete(Long id) {
-        log.debug("Request to delete Member : {}", id);
+        logger.debug("Request to delete Member : {}", id);
         memberRepository.deleteById(id);
     }
 
@@ -156,7 +157,7 @@ public class MemberService {
     @Transactional(readOnly = true)
     @PreAuthorize("T(io.github.bbortt.event.planner.security.SecurityUtils).isAuthenticated()")
     public Page<MemberDTO> findAllInProject(Long projectId, Pageable pageable) {
-        log.debug("Request to get a page of Members in Project '{}'", projectId);
+        logger.debug("Request to get a page of Members in Project '{}'", projectId);
         return memberRepository.findAllByProjectIdEquals(projectId, pageable).map(memberMapper::toDto);
     }
 
@@ -169,7 +170,7 @@ public class MemberService {
      * @return the entity.
      */
     public Optional<MemberDTO> findOneInProjectByInvitationEmail(Long projectId, String invitedEmail) {
-        log.debug("Request to get Member with email '{}' in Project '{}'", invitedEmail, projectId);
+        logger.debug("Request to get Member with email '{}' in Project '{}'", invitedEmail, projectId);
         return memberRepository.findMemberInProject(invitedEmail, projectId).map(memberMapper::toDto);
     }
 
@@ -185,7 +186,7 @@ public class MemberService {
     @Transactional
     @PreAuthorize("T(io.github.bbortt.event.planner.security.SecurityUtils).isAuthenticated()")
     public MemberDTO inviteToProject(String email, @Nonnull ProjectDTO project) {
-        log.debug("Request to invite Member '{}' to Project '{}'", email, project);
+        logger.debug("Request to invite Member '{}' to Project '{}'", email, project);
 
         MemberDTO memberDTO = memberMapper.toDto(
             memberRepository.save(new Member().accepted(Boolean.FALSE).invitedEmail(email).project(projectMapper.toEntity(project)))

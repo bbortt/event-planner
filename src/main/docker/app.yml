@@ -22,7 +22,7 @@ services:
     ports:
       - 127.0.0.1:8080:8080
   eventplanner-postgresql:
-    image: postgres:15.2-alpine
+    image: postgres:15.3-alpine
     # volumes:
     #   - ~/volumes/jhipster/eventplanner/postgresql/:/var/lib/postgresql/data/
     environment:
@@ -34,7 +34,7 @@ services:
     ports:
       - 127.0.0.1:5432:5432
   eventplanner-redis:
-    image: redis:7.0.10-alpine
+    image: redis:7.0.12-alpine
     # If you want to expose these ports outside your dev PC,
     # remove the "127.0.0.1:" prefix
     ports:

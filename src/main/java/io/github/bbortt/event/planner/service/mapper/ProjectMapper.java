@@ -2,7 +2,12 @@ package io.github.bbortt.event.planner.service.mapper;
 
 import io.github.bbortt.event.planner.domain.Project;
 import io.github.bbortt.event.planner.service.dto.ProjectDTO;
-import org.mapstruct.*;
+import org.mapstruct.BeanMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.Named;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 
 /**
  * Mapper for the entity {@link Project} and its DTO {@link ProjectDTO}.

@@ -1,8 +1,21 @@
+configurations {
+    all {
+        resolutionStrategy {
+            // TODO drop forced version. Refer to https://github.com/jhipster/generator-jhipster/issues/22579
+            force "org.hibernate.orm:hibernate-core:${hibernateVersion}"
+            // TODO drop forced version. Refer to https://github.com/jhipster/generator-jhipster/issues/22579
+            force "org.hibernate.orm:hibernate-jcache:${hibernateVersion}"
+        }
+    }
+}
+
+
 dependencies {
     implementation "org.postgresql:postgresql"
     liquibaseRuntime "org.postgresql:postgresql"
     testImplementation "org.testcontainers:postgresql"
 }
+
 
 def profiles = "prod"
 if (project.hasProperty("no-liquibase")) {
@@ -17,18 +30,22 @@ if (project.hasProperty("e2e")) {
     profiles += ",e2e"
 }
 
+
 springBoot {
     buildInfo()
 }
+
 
 bootRun {
     args = ["--spring.profiles.active=${profiles}"]
 }
 
+
 task webapp(type: NpmTask, dependsOn: ["npm_install", "openApiGenerateFrontend"]) {
     args = ["run", "webapp:prod"]
     environment = [APP_VERSION: project.version]
 }
+
 
 processResources {
     inputs.property('version', version)
@@ -42,6 +59,7 @@ processResources {
         }
     }
 }
+
 
 task integrationTest(type: Test) {
     maxHeapSize = "1G"
@@ -57,7 +75,7 @@ task integrationTest(type: Test) {
     // uncomment if the tests reports are not generated
     // see https://github.com/jhipster/generator-jhipster/pull/2771 and https://github.com/jhipster/generator-jhipster/pull/4484
     // ignoreFailures true
-    reports.html.enabled = false
+    reports.html.required = false
 }
 integrationTest.dependsOn test
 

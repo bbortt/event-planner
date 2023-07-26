@@ -20,7 +20,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RestController
 public class ProjectEventsApiDelegateImpl implements ProjectEventsApiDelegate {
 
-    private final Logger log = LoggerFactory.getLogger(ProjectEventsApiDelegateImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(ProjectEventsApiDelegateImpl.class);
 
     private static final String EVENT_ID_ATTRIBUTE_NAME = "id";
 
@@ -48,7 +48,7 @@ public class ProjectEventsApiDelegateImpl implements ProjectEventsApiDelegate {
         Optional<Integer> pageNumber,
         Optional<List<String>> sort
     ) {
-        log.debug("REST request to get all Events in Project '{}'", projectId);
+        logger.debug("REST request to get all Events in Project '{}'", projectId);
 
         projectService.findOneOrThrowEntityNotFoundAlertException(projectId);
 

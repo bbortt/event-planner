@@ -1,0 +1,7 @@
+dependencies {
+  implementation "org.springframework.boot:spring-boot-starter-cache"
+  implementation "org.redisson:redisson"
+  implementation "org.hibernate.orm:hibernate-jcache"
+  testImplementation "org.testcontainers:junit-jupiter"
+  testImplementation "org.testcontainers:testcontainers"
+}

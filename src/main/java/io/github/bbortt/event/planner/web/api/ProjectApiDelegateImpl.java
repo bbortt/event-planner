@@ -19,7 +19,7 @@ import tech.jhipster.web.util.ResponseUtil;
 @RestController
 public class ProjectApiDelegateImpl implements ProjectApiDelegate {
 
-    private final Logger log = LoggerFactory.getLogger(ProjectApiDelegateImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(ProjectApiDelegateImpl.class);
 
     public static final String ENTITY_NAME = "project";
     private static final String PROJECT_ID_ATTRIBUTE_NAME = "id";
@@ -36,7 +36,7 @@ public class ProjectApiDelegateImpl implements ProjectApiDelegate {
 
     @Override
     public ResponseEntity<Project> findProjectByToken(String projectToken) {
-        log.debug("REST request to get Project by token '{}'", projectToken);
+        logger.debug("REST request to get Project by token '{}'", projectToken);
 
         return ResponseUtil.wrapOrNotFound(projectService.findOneByToken(projectToken).map(apiProjectMapper::toApiDTO));
     }
@@ -47,7 +47,7 @@ public class ProjectApiDelegateImpl implements ProjectApiDelegate {
         Optional<Integer> pageNumber,
         Optional<List<String>> sort
     ) {
-        log.debug("REST request to get a page of Projects");
+        logger.debug("REST request to get a page of Projects");
 
         Slice<ProjectDTO> slice = projectService.findAllNotArchivedForCurrentUser(
             paginationUtil.createPagingInformation(pageSize, pageNumber, sort, PROJECT_ID_ATTRIBUTE_NAME)

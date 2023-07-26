@@ -1,14 +1,5 @@
 package io.github.bbortt.event.planner.web.api;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-
 import io.github.bbortt.event.planner.service.MemberService;
 import io.github.bbortt.event.planner.service.ProjectService;
 import io.github.bbortt.event.planner.service.api.dto.GetProjectMembers200Response;
@@ -18,9 +9,6 @@ import io.github.bbortt.event.planner.service.dto.ProjectDTO;
 import io.github.bbortt.event.planner.web.api.mapper.ApiProjectMemberMapper;
 import io.github.bbortt.event.planner.web.rest.errors.EntityNotFoundAlertException;
 import io.github.bbortt.event.planner.web.rest.util.PaginationUtil;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,7 +25,19 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import org.zalando.problem.Status;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
 class ProjectMemberApiTest {
@@ -118,7 +118,7 @@ class ProjectMemberApiTest {
             () -> fixture.findProjectMemberByTokenAndEmail(projectId, invitedEmail)
         );
 
-        assertEquals(HttpStatus.NOT_FOUND, exception.getStatus());
+        assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
     }
 
     @Test
@@ -132,7 +132,7 @@ class ProjectMemberApiTest {
         // Project by ID exists
         doReturn(new ProjectDTO()).when(projectServiceMock).findOneOrThrowEntityNotFoundAlertException(projectId);
 
-        PageRequest pageRequest = PageRequest.of(pageNumber.get(), pageSize.get());
+        PageRequest pageRequest = PageRequest.of(pageNumber.orElseThrow(IllegalArgumentException::new), pageSize.orElseThrow(IllegalArgumentException::new));
         doReturn(pageRequest).when(paginationUtilMock).createPagingInformation(pageSize, pageNumber, sort, "id");
 
         MemberDTO memberDTO = new MemberDTO();

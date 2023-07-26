@@ -1,22 +1,10 @@
 package io.github.bbortt.event.planner.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
-
 import io.github.bbortt.event.planner.domain.Project;
 import io.github.bbortt.event.planner.repository.ProjectRepository;
 import io.github.bbortt.event.planner.service.dto.ProjectDTO;
 import io.github.bbortt.event.planner.service.mapper.ProjectMapper;
 import io.github.bbortt.event.planner.web.rest.errors.EntityNotFoundAlertException;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,11 +14,24 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.zalando.problem.Status;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 
 @ExtendWith(MockitoExtension.class)
 class ProjectServiceTest {
@@ -80,7 +81,7 @@ class ProjectServiceTest {
         Optional<ProjectDTO> result = fixture.findOne(projectId);
 
         assertTrue(result.isPresent());
-        assertEquals(projectDTO, result.get());
+        assertEquals(projectDTO, result.orElseThrow(IllegalArgumentException::new));
     }
 
     @Test
@@ -107,7 +108,7 @@ class ProjectServiceTest {
             () -> fixture.findOneOrThrowEntityNotFoundAlertException(projectId)
         );
 
-        assertEquals(Status.NOT_FOUND, exception.getStatus());
+        assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
         assertEquals("idnotfound", exception.getErrorKey());
         assertEquals("project", exception.getEntityName());
 
@@ -127,7 +128,7 @@ class ProjectServiceTest {
         Optional<ProjectDTO> result = fixture.findOneByToken(token.toString());
 
         assertTrue(result.isPresent());
-        assertEquals(projectDTO, result.get());
+        assertEquals(projectDTO, result.orElseThrow(IllegalArgumentException::new));
     }
 
     @Test

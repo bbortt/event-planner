@@ -1,11 +1,5 @@
 package io.github.bbortt.event.planner.service;
 
-import static io.github.bbortt.event.planner.test.util.SecurityContextUtil.setCurrentUsernameInAuthenticationContext;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import io.github.bbortt.event.planner.IntegrationTest;
 import io.github.bbortt.event.planner.domain.Member;
 import io.github.bbortt.event.planner.domain.Project;
@@ -14,8 +8,7 @@ import io.github.bbortt.event.planner.service.dto.MemberDTO;
 import io.github.bbortt.event.planner.service.dto.ProjectDTO;
 import io.github.bbortt.event.planner.web.rest.MemberResourceIT;
 import io.github.bbortt.event.planner.web.rest.ProjectResourceIT;
-import java.util.UUID;
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +17,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.UUID;
+
+import static io.github.bbortt.event.planner.test.util.SecurityContextUtil.setCurrentUsernameInAuthenticationContext;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @IntegrationTest
 @WithMockUser("member-service-it")

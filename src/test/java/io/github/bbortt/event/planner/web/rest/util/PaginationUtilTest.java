@@ -1,16 +1,16 @@
 package io.github.bbortt.event.planner.web.rest.util;
 
-import static io.github.bbortt.event.planner.config.Constants.DEFAULT_PAGE_SIZE;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
-import java.util.List;
-import java.util.Optional;
-import javax.swing.text.html.Option;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+
+import java.util.List;
+import java.util.Optional;
+
+import static io.github.bbortt.event.planner.config.Constants.DEFAULT_PAGE_SIZE;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class PaginationUtilTest {
 
