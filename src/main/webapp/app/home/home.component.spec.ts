@@ -2,32 +2,38 @@ jest.mock('app/core/auth/account.service');
 jest.mock('app/login/login.service');
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { of } from 'rxjs';
+import { Router } from '@angular/router';
+
+import { of, Subject } from 'rxjs';
 
 import { AccountService } from 'app/core/auth/account.service';
 import { Account } from 'app/core/auth/account.model';
+
 import { LoginService } from 'app/login/login.service';
 
-import { HomeComponent } from './home.component';
+import HomeComponent from './home.component';
+
+const account: Account = {
+  activated: true,
+  authorities: [],
+  email: '',
+  firstName: null,
+  langKey: '',
+  lastName: null,
+  login: 'login',
+  imageUrl: null,
+};
 
 describe('Landing Page Component', () => {
-  let comp: HomeComponent;
-  let fixture: ComponentFixture<HomeComponent>;
   let mockAccountService: AccountService;
-  const account: Account = {
-    activated: true,
-    authorities: [],
-    email: '',
-    firstName: null,
-    langKey: '',
-    lastName: null,
-    login: 'login',
-    imageUrl: null,
-  };
+  let mockRouter: Router;
+
+  let fixture: ComponentFixture<HomeComponent>;
+  let component: HomeComponent;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [HomeComponent],
+      imports: [HomeComponent],
       providers: [AccountService, LoginService],
     })
       .overrideTemplate(HomeComponent, '')
@@ -35,23 +41,77 @@ describe('Landing Page Component', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(HomeComponent);
-    comp = fixture.componentInstance;
     mockAccountService = TestBed.inject(AccountService);
     mockAccountService.identity = jest.fn(() => of(null));
     mockAccountService.getAuthenticationState = jest.fn(() => of(null));
+
+    mockRouter = TestBed.inject(Router);
+    jest.spyOn(mockRouter, 'navigate').mockImplementation(() => Promise.resolve(true));
+
+    fixture = TestBed.createComponent(HomeComponent);
+    component = fixture.componentInstance;
   });
 
   describe('ngOnInit', () => {
     it('Should synchronize account variable with current account', () => {
       // GIVEN
-      mockAccountService.identity = jest.fn(() => of(account));
+      const authenticationState = new Subject<Account | null>();
+      mockAccountService.getAuthenticationState = jest.fn(() => authenticationState.asObservable());
 
       // WHEN
-      comp.ngOnInit();
+      component.ngOnInit();
 
       // THEN
-      expect(comp.account).toEqual(account);
+      expect(component.account).toBeNull();
+
+      // WHEN
+      authenticationState.next(account);
+
+      // THEN
+      expect(component.account).toEqual(account);
+
+      // WHEN
+      authenticationState.next(null);
+
+      // THEN
+      expect(component.account).toBeNull();
+    });
+  });
+
+  describe('ngOnDestroy', () => {
+    it('Should destroy authentication state subscription on component destroy', () => {
+      // GIVEN
+      const authenticationState = new Subject<Account | null>();
+      mockAccountService.getAuthenticationState = jest.fn(() => authenticationState.asObservable());
+
+      // WHEN
+      component.ngOnInit();
+
+      // THEN
+      expect(component.account).toBeNull();
+
+      // WHEN
+      authenticationState.next(account);
+
+      // THEN
+      expect(component.account).toEqual(account);
+
+      // WHEN
+      component.ngOnDestroy();
+      authenticationState.next(null);
+
+      // THEN
+      expect(component.account).toEqual(account);
+    });
+  });
+
+  describe('login', () => {
+    it('Should navigate to /login on login', () => {
+      // WHEN
+      component.login();
+
+      // THEN
+      expect(mockRouter.navigate).toHaveBeenCalledWith(['/login']);
     });
   });
 });

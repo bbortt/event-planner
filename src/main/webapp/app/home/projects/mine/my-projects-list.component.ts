@@ -1,6 +1,9 @@
 import { HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Data, ParamMap, Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, Data, ParamMap, Router, RouterModule } from '@angular/router';
+
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 import { combineLatest, Observable, Subscription, switchMap, tap } from 'rxjs';
 
@@ -12,11 +15,30 @@ import { ASC, DEFAULT_SORT_DATA, DESC, SORT } from 'app/config/navigation.consta
 import { IProject } from 'app/entities/project/project.model';
 import { ProjectService } from 'app/entities/project/service/project.service';
 
+import SharedModule from 'app/shared/shared.module';
+import { DurationPipe, FormatMediumDatePipe, FormatMediumDatetimePipe } from 'app/shared/date';
+import { SortByDirective, SortDirective } from 'app/shared/sort';
+
+import ProjectCardComponent from './project-card.component';
+
 @Component({
+  standalone: true,
   selector: 'app-my-projects-list',
   templateUrl: './my-projects-list.component.html',
+  imports: [
+    SharedModule,
+    RouterModule,
+    FormsModule,
+    SortDirective,
+    SortByDirective,
+    DurationPipe,
+    FormatMediumDatetimePipe,
+    FormatMediumDatePipe,
+    InfiniteScrollModule,
+    ProjectCardComponent,
+  ],
 })
-export class MyProjectsListComponent implements OnInit, OnDestroy {
+export default class MyProjectsListComponent implements OnInit, OnDestroy {
   projects?: IProject[][];
   isLoading = false;
 
@@ -33,7 +55,7 @@ export class MyProjectsListComponent implements OnInit, OnDestroy {
     protected projectService: ProjectService,
     protected apiProjectService: ApiProjectService,
     private activatedRoute: ActivatedRoute,
-    public router: Router
+    public router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -65,7 +87,7 @@ export class MyProjectsListComponent implements OnInit, OnDestroy {
   protected loadFromBackendWithRouteInformation(): Observable<HttpResponse<GetUserProjects200Response>> {
     return combineLatest([this.activatedRoute.queryParamMap, this.activatedRoute.data]).pipe(
       tap(([params, data]) => this.fillComponentAttributeFromRoute(params, data)),
-      switchMap(() => this.queryBackend(this.page, this.predicate, this.ascending))
+      switchMap(() => this.queryBackend(this.page, this.predicate, this.ascending)),
     );
   }
 
@@ -89,7 +111,7 @@ export class MyProjectsListComponent implements OnInit, OnDestroy {
           id: project.id,
           name: project.name,
           description: project.description,
-        } as IProject)
+        }) as IProject,
     );
   }
 

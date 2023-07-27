@@ -3,12 +3,10 @@ jest.mock('app/login/login.service');
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
-import { NgxWebstorageModule } from 'ngx-webstorage';
-
 import { StateStorageService } from 'app/core/auth/state-storage.service';
 import { LoginService } from 'app/login/login.service';
 
-import { ProjectInvitationLoginComponent } from './project-invitation-login.component';
+import ProjectInvitationLoginComponent from './project-invitation-login.component';
 
 const url = 'test-url';
 const testRouter: Router = { url } as Router;
@@ -17,13 +15,12 @@ describe('Project Invitation Login Component', () => {
   let loginService: LoginService;
   let stateStorageService: StateStorageService;
 
-  let comp: ProjectInvitationLoginComponent;
   let fixture: ComponentFixture<ProjectInvitationLoginComponent>;
+  let component: ProjectInvitationLoginComponent;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ProjectInvitationLoginComponent],
-      imports: [NgxWebstorageModule.forRoot()],
+      imports: [ProjectInvitationLoginComponent],
       providers: [
         LoginService,
         {
@@ -41,14 +38,14 @@ describe('Project Invitation Login Component', () => {
     stateStorageService = TestBed.inject(StateStorageService);
 
     fixture = TestBed.createComponent(ProjectInvitationLoginComponent);
-    comp = fixture.componentInstance;
+    component = fixture.componentInstance;
   });
 
   describe('login', () => {
     it('Should call loginService.login on login', () => {
       const storeUrlMock = jest.spyOn(stateStorageService, 'storeUrl');
 
-      comp.login();
+      component.login();
 
       expect(storeUrlMock).toHaveBeenCalledWith(url);
       expect(loginService.login).toHaveBeenCalled();

@@ -1,14 +1,13 @@
 import { Location } from '@angular/common';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 
 import { GetProjectMembers200Response, ProjectMemberService } from 'app/api';
 
@@ -16,13 +15,16 @@ import { EventManager, EventWithContent } from 'app/core/util/event-manager.serv
 
 import { IProject } from 'app/entities/project/project.model';
 import { MemberService } from 'app/entities/member/service/member.service';
-import { MemberFormService } from 'app/entities/member/update/member-form.service';
+
+import SharedModule from 'app/shared/shared.module';
 
 type InviteFormType = { email: FormControl<string | null> };
 
 @Component({
+  standalone: true,
   selector: 'app-project-member-invite-modal-content',
   templateUrl: './project-member-invite-modal.component.html',
+  imports: [SharedModule, FormsModule, ReactiveFormsModule],
 })
 export class ProjectMemberInviteModalContentComponent {
   isSaving = false;
@@ -35,8 +37,7 @@ export class ProjectMemberInviteModalContentComponent {
     private eventManager: EventManager,
     private location: Location,
     private memberService: MemberService,
-    private memberFormService: MemberFormService,
-    private projectMemberService: ProjectMemberService
+    private projectMemberService: ProjectMemberService,
   ) {
     this.inviteForm = new FormGroup<InviteFormType>({
       email: new FormControl(null, {
@@ -53,7 +54,7 @@ export class ProjectMemberInviteModalContentComponent {
     if (this.project) {
       this.isSaving = true;
       this.subscribeToSaveResponse(
-        this.projectMemberService.inviteMemberToProject(this.project.id, [{ email: this.inviteForm.getRawValue().email! }], 'response')
+        this.projectMemberService.inviteMemberToProject(this.project.id, [{ email: this.inviteForm.getRawValue().email! }], 'response'),
       );
     }
   }
@@ -68,7 +69,7 @@ export class ProjectMemberInviteModalContentComponent {
   protected onSaveSuccess(members: GetProjectMembers200Response | null): void {
     if (members) {
       members.contents?.forEach(member =>
-        this.memberService.notifyMemberUpdates({ id: member.id, invitedEmail: member.email, accepted: false, project: this.project! })
+        this.memberService.notifyMemberUpdates({ id: member.id, invitedEmail: member.email, accepted: false, project: this.project! }),
       );
     }
 
@@ -86,13 +87,19 @@ export class ProjectMemberInviteModalContentComponent {
 }
 
 @Component({
+  standalone: true,
   selector: 'app-project-member-invite-modal',
   template: '',
+  imports: [ProjectMemberInviteModalContentComponent],
 })
-export class ProjectMemberInviteModalComponent implements OnInit, OnDestroy {
+export default class ProjectMemberInviteModalComponent implements OnInit, OnDestroy {
   private modalRef: NgbModalRef | undefined;
 
-  constructor(private activatedRoute: ActivatedRoute, private location: Location, private modalService: NgbModal) {}
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private location: Location,
+    private modalService: NgbModal,
+  ) {}
 
   ngOnInit(): void {
     this.modalRef = this.modalService.open(ProjectMemberInviteModalContentComponent, { size: 'lg' });

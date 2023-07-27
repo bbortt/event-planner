@@ -57,7 +57,7 @@ export class LocationFormService {
         {
           nonNullable: true,
           validators: [Validators.required],
-        }
+        },
       ),
       name: new FormControl(locationRawValue.name, {
         validators: [Validators.required, Validators.minLength(1), Validators.maxLength(63)],
@@ -86,7 +86,7 @@ export class LocationFormService {
       {
         ...locationRawValue,
         id: { value: locationRawValue.id, disabled: true },
-      } as any /* cast to workaround https://github.com/angular/angular/issues/46458 */
+      } as any /* cast to workaround https://github.com/angular/angular/issues/46458 */,
     );
   }
 
@@ -109,7 +109,7 @@ export class LocationFormService {
   }
 
   private convertLocationToLocationRawValue(
-    location: ILocation | (Partial<NewLocation> & LocationFormDefaults)
+    location: ILocation | (Partial<NewLocation> & LocationFormDefaults),
   ): LocationFormRawValue | PartialWithRequiredKeyOf<NewLocationFormRawValue> {
     return {
       ...location,

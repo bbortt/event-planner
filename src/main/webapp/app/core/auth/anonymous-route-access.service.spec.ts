@@ -7,8 +7,6 @@ import { firstValueFrom, of } from 'rxjs';
 
 import { TranslateModule } from '@ngx-translate/core';
 
-import { NgxWebstorageModule } from 'ngx-webstorage';
-
 import { Account } from './account.model';
 import { AccountService } from './account.service';
 
@@ -22,7 +20,7 @@ describe('Anonymous Route Access Service', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, NgxWebstorageModule.forRoot(), RouterTestingModule.withRoutes([]), TranslateModule.forRoot()],
+      imports: [HttpClientTestingModule, RouterTestingModule.withRoutes([]), TranslateModule.forRoot()],
       providers: [
         AccountService,
         {
@@ -49,7 +47,7 @@ describe('Anonymous Route Access Service', () => {
 
     const canActivate = await firstValueFrom(
       // @ts-ignore skip conversion for testing
-      TestBed.runInInjectionContext(() => anonymousRouteAccess(mockActivatedRouteSnapshot, mockRouter.routerState.snapshot))
+      TestBed.runInInjectionContext(() => anonymousRouteAccess(mockActivatedRouteSnapshot, mockRouter.routerState.snapshot)),
     );
 
     expect(canActivate).toBeFalsy();
@@ -61,7 +59,7 @@ describe('Anonymous Route Access Service', () => {
 
     const canActivate = await firstValueFrom(
       // @ts-ignore skip conversion for testing
-      TestBed.runInInjectionContext(() => anonymousRouteAccess(mockActivatedRouteSnapshot, mockRouter.routerState.snapshot))
+      TestBed.runInInjectionContext(() => anonymousRouteAccess(mockActivatedRouteSnapshot, mockRouter.routerState.snapshot)),
     );
 
     expect(canActivate).toBeTruthy();

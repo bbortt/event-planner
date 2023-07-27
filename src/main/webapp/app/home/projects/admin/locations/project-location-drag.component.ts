@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { RouterModule } from '@angular/router';
 
 import { filter, Subject } from 'rxjs';
 
@@ -10,15 +11,19 @@ import { Location, Project } from 'app/api';
 
 import { ITEM_DELETED_EVENT } from 'app/config/navigation.constants';
 
-import { LocationDeleteDialogComponent } from 'app/entities/location/delete/location-delete-dialog.component';
+import LocationDeleteDialogComponent from 'app/entities/location/delete/location-delete-dialog.component';
+
+import SharedModule from 'app/shared/shared.module';
 
 import { LocationControl } from './project-locations-drag-and-drop.component';
 
 @Component({
+  standalone: true,
   selector: 'app-project-location-drag',
   templateUrl: './project-location-drag.component.html',
+  imports: [SharedModule, RouterModule],
 })
-export class ProjectLocationDragComponent implements OnInit {
+export default class ProjectLocationDragComponent implements OnInit {
   @Input() location: Location | null = null;
   @Input() project: Project | null = null;
 
@@ -29,7 +34,10 @@ export class ProjectLocationDragComponent implements OnInit {
   deleteLocationText: string | null = null;
   dragLocationText: string | null = null;
 
-  constructor(private modalService: NgbModal, private translateService: TranslateService) {}
+  constructor(
+    private modalService: NgbModal,
+    private translateService: TranslateService,
+  ) {}
 
   ngOnInit(): void {
     this.translateService

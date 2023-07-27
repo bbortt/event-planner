@@ -1,6 +1,7 @@
 import { Location } from '@angular/common';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { Observable } from 'rxjs';
@@ -12,11 +13,15 @@ import { IProject } from 'app/entities/project/project.model';
 import { ProjectService } from 'app/entities/project/service/project.service';
 import { ProjectFormGroup, ProjectFormService } from 'app/entities/project/update/project-form.service';
 
+import SharedModule from 'app/shared/shared.module';
+
 @Component({
-  selector: 'jhi-project-update',
+  standalone: true,
+  selector: 'app-project-settings',
   templateUrl: './project-settings.component.html',
+  imports: [SharedModule, FormsModule, ReactiveFormsModule],
 })
-export class ProjectSettingsComponent implements OnInit {
+export default class ProjectSettingsComponent implements OnInit {
   isSaving = false;
   project: IProject | null = null;
   isProjectArchived = false;
@@ -28,7 +33,7 @@ export class ProjectSettingsComponent implements OnInit {
     private location: Location,
     protected projectService: ProjectService,
     protected projectFormService: ProjectFormService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
   ) {
     this.editForm = this.projectFormService.createProjectFormGroup();
   }

@@ -1,6 +1,7 @@
 import { HttpHeaders } from '@angular/common/http';
 import { Component, NgZone, OnInit } from '@angular/core';
-import { ActivatedRoute, Data, ParamMap, Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, Data, ParamMap, Router, RouterModule } from '@angular/router';
 
 import { combineLatest, filter, Observable, switchMap, tap } from 'rxjs';
 
@@ -9,15 +10,32 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ITEMS_PER_PAGE, PAGE_HEADER, TOTAL_COUNT_RESPONSE_HEADER } from 'app/config/pagination.constants';
 import { ASC, DESC, SORT, ITEM_DELETED_EVENT, DEFAULT_SORT_DATA } from 'app/config/navigation.constants';
 
+import SharedModule from 'app/shared/shared.module';
+import { DurationPipe, FormatMediumDatePipe, FormatMediumDatetimePipe } from 'app/shared/date';
+import { ItemCountComponent } from 'app/shared/pagination';
+import { SortByDirective, SortDirective } from 'app/shared/sort';
+
+import ProjectDeleteDialogComponent from '../delete/project-delete-dialog.component';
 import { IProject } from '../project.model';
-import { ProjectDeleteDialogComponent } from '../delete/project-delete-dialog.component';
 import { EntityArrayResponseType, ProjectService } from '../service/project.service';
 
 @Component({
+  standalone: true,
   selector: 'jhi-project',
   templateUrl: './project.component.html',
+  imports: [
+    SharedModule,
+    RouterModule,
+    FormsModule,
+    SortDirective,
+    SortByDirective,
+    DurationPipe,
+    FormatMediumDatetimePipe,
+    FormatMediumDatePipe,
+    ItemCountComponent,
+  ],
 })
-export class ProjectComponent implements OnInit {
+export default class ProjectComponent implements OnInit {
   projects?: IProject[];
   isLoading = false;
 
@@ -33,7 +51,7 @@ export class ProjectComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     public router: Router,
     protected modalService: NgbModal,
-    private ngZone: NgZone
+    private ngZone: NgZone,
   ) {}
 
   trackId = (_index: number, item: IProject): number => this.projectService.getProjectIdentifier(item);
@@ -49,7 +67,7 @@ export class ProjectComponent implements OnInit {
     modalRef.closed
       .pipe(
         filter(reason => reason === ITEM_DELETED_EVENT),
-        switchMap(() => this.loadFromBackendWithRouteInformation())
+        switchMap(() => this.loadFromBackendWithRouteInformation()),
       )
       .subscribe({
         next: (res: EntityArrayResponseType) => {
@@ -77,7 +95,7 @@ export class ProjectComponent implements OnInit {
   protected loadFromBackendWithRouteInformation(): Observable<EntityArrayResponseType> {
     return combineLatest([this.activatedRoute.queryParamMap, this.activatedRoute.data]).pipe(
       tap(([params, data]) => this.fillComponentAttributeFromRoute(params, data)),
-      switchMap(() => this.queryBackend(this.page, this.predicate, this.ascending))
+      switchMap(() => this.queryBackend(this.page, this.predicate, this.ascending)),
     );
   }
 

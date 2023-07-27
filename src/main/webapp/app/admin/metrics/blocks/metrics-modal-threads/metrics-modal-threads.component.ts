@@ -1,14 +1,17 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
+import SharedModule from 'app/shared/shared.module';
 import { Thread, ThreadState } from 'app/admin/metrics/metrics.model';
 
 @Component({
+  standalone: true,
   selector: 'jhi-thread-modal',
   templateUrl: './metrics-modal-threads.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [SharedModule],
 })
-export class MetricsModalThreadsComponent implements OnInit {
+export default class MetricsModalThreadsComponent implements OnInit {
   ThreadState = ThreadState;
   threadStateFilter?: ThreadState;
   threads?: Thread[];

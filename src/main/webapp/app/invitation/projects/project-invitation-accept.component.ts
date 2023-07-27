@@ -16,11 +16,15 @@ import { EventManager, EventWithContent } from 'app/core/util/event-manager.serv
 import { EntityResponseType, MemberService } from 'app/entities/member/service/member.service';
 import { IProject } from 'app/entities/project/project.model';
 
+import SharedModule from 'app/shared/shared.module';
+
 @Component({
+  standalone: true,
   selector: 'app-project-invitation-accept',
   templateUrl: './project-invitation-accept.component.html',
+  imports: [SharedModule],
 })
-export class ProjectInvitationAcceptComponent implements OnInit {
+export default class ProjectInvitationAcceptComponent implements OnInit {
   @Input() account: Account | null = null;
   @Input() project: Project | null = null;
   @Input() email: string | null = null;
@@ -35,7 +39,7 @@ export class ProjectInvitationAcceptComponent implements OnInit {
     private eventManager: EventManager,
     private memberService: MemberService,
     private projectMemberService: ProjectMemberService,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -52,7 +56,7 @@ export class ProjectInvitationAcceptComponent implements OnInit {
             if (member.body?.accepted) {
               this.onAccepted();
             }
-          })
+          }),
         )
         .subscribe({
           next: (response: HttpResponse<Member>) => {
@@ -80,7 +84,7 @@ export class ProjectInvitationAcceptComponent implements OnInit {
           acceptedBy: this.email,
           acceptedDate: dayjs(),
           project: this.getProject(),
-        })
+        }),
       );
     }
   }
@@ -108,7 +112,7 @@ export class ProjectInvitationAcceptComponent implements OnInit {
         type: 'success',
         translationKey: 'app.project.invitation.accepting.success',
         translationParams: { projectName: this.project?.name },
-      })
+      }),
     );
   }
 

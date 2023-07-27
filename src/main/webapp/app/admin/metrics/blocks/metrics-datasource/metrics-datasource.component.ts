@@ -1,14 +1,17 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
+import SharedModule from 'app/shared/shared.module';
 import { Databases } from 'app/admin/metrics/metrics.model';
 import { filterNaN } from 'app/core/util/operators';
 
 @Component({
+  standalone: true,
   selector: 'jhi-metrics-datasource',
   templateUrl: './metrics-datasource.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [SharedModule],
 })
-export class MetricsDatasourceComponent {
+export default class MetricsDatasourceComponent {
   /**
    * object containing all datasource related metrics
    */

@@ -1,18 +1,27 @@
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { ITEM_DELETED_EVENT } from 'app/config/navigation.constants';
+
+import SharedModule from 'app/shared/shared.module';
 
 import { IProject } from '../project.model';
 import { ProjectService } from '../service/project.service';
 
 @Component({
+  standalone: true,
   templateUrl: './project-delete-dialog.component.html',
+  imports: [SharedModule, FormsModule],
 })
-export class ProjectDeleteDialogComponent {
+export default class ProjectDeleteDialogComponent {
   project?: IProject;
 
-  constructor(protected projectService: ProjectService, protected activeModal: NgbActiveModal) {}
+  constructor(
+    protected projectService: ProjectService,
+    protected activeModal: NgbActiveModal,
+  ) {}
 
   cancel(): void {
     this.activeModal.dismiss();

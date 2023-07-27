@@ -1,36 +1,38 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute } from '@angular/router';
+import { TestBed, waitForAsync } from '@angular/core/testing';
+import { provideRouter, withComponentInputBinding } from '@angular/router';
+import { RouterTestingHarness, RouterTestingModule } from '@angular/router/testing';
+
 import { of } from 'rxjs';
 
-import { ProjectDetailComponent } from './project-detail.component';
+import ProjectDetailComponent from './project-detail.component';
 
 describe('Project Management Detail Component', () => {
-  let comp: ProjectDetailComponent;
-  let fixture: ComponentFixture<ProjectDetailComponent>;
-
-  beforeEach(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ProjectDetailComponent],
+      imports: [ProjectDetailComponent, RouterTestingModule.withRoutes([], { bindToComponentInputs: true })],
       providers: [
-        {
-          provide: ActivatedRoute,
-          useValue: { data: of({ project: { id: 123 } }) },
-        },
+        provideRouter(
+          [
+            {
+              path: '**',
+              component: ProjectDetailComponent,
+              resolve: { project: () => of({ id: 123 }) },
+            },
+          ],
+          withComponentInputBinding(),
+        ),
       ],
     })
       .overrideTemplate(ProjectDetailComponent, '')
       .compileComponents();
-    fixture = TestBed.createComponent(ProjectDetailComponent);
-    comp = fixture.componentInstance;
-  });
+  }));
 
   describe('OnInit', () => {
-    it('Should load project on init', () => {
-      // WHEN
-      comp.ngOnInit();
+    it('Should load project on init', async () => {
+      const harness = await RouterTestingHarness.create();
+      const instance = await harness.navigateByUrl('/', ProjectDetailComponent);
 
-      // THEN
-      expect(comp.project).toEqual(expect.objectContaining({ id: 123 }));
+      expect(instance.project).toEqual(expect.objectContaining({ id: 123 }));
     });
   });
 });

@@ -1,21 +1,32 @@
 import { Injectable } from '@angular/core';
-import { SessionStorageService } from 'ngx-webstorage';
 
 @Injectable({ providedIn: 'root' })
 export class StateStorageService {
+  private localeKey = 'locale';
   private previousUrlKey = 'previousUrl';
 
-  constructor(private sessionStorageService: SessionStorageService) {}
-
   storeUrl(url: string): void {
-    this.sessionStorageService.store(this.previousUrlKey, url);
+    sessionStorage.setItem(this.previousUrlKey, JSON.stringify(url));
   }
 
   getUrl(): string | null {
-    return this.sessionStorageService.retrieve(this.previousUrlKey) as string | null;
+    const previousUrl = sessionStorage.getItem(this.previousUrlKey);
+    return previousUrl ? (JSON.parse(previousUrl) as string | null) : previousUrl;
   }
 
   clearUrl(): void {
-    this.sessionStorageService.clear(this.previousUrlKey);
+    sessionStorage.removeItem(this.previousUrlKey);
+  }
+
+  storeLocale(locale: string): void {
+    sessionStorage.setItem(this.localeKey, locale);
+  }
+
+  getLocale(): string | null {
+    return sessionStorage.getItem(this.localeKey);
+  }
+
+  clearLocale(): void {
+    sessionStorage.removeItem(this.localeKey);
   }
 }

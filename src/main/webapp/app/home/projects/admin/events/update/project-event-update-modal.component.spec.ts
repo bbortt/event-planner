@@ -1,15 +1,19 @@
+jest.mock('@ng-bootstrap/ng-bootstrap');
+
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ActivatedRoute } from '@angular/router';
 
 import { of } from 'rxjs';
 
-import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 
 import { IEvent } from 'app/entities/event/event.model';
 
-import { ProjectEventUpdateModalComponent } from './project-event-update-modal.component';
-import { ProjectEventUpdateComponent } from './project-event-update.component';
+import ProjectEventUpdateModalComponent from './project-event-update-modal.component';
+import ProjectEventUpdateComponent from './project-event-update.component';
+
+import SpyInstance = jest.SpyInstance;
 
 class MockNgbModalRef {
   componentInstance = { project: null };
@@ -22,17 +26,16 @@ const event: IEvent = { id: 1234 };
 describe('Project Event Update Modal Component', () => {
   let mockActivatedRoute: ActivatedRoute;
 
-  let modalService: NgbModal;
-
   let mockModalRef: NgbModalRef;
-  let closeSpy: jest.SpyInstance<void, [result?: any]>;
+  const mockOpen = jest.fn();
+  let closeSpy: SpyInstance<void, [result?: any]>;
 
   let fixture: ComponentFixture<ProjectEventUpdateModalComponent>;
   let component: ProjectEventUpdateModalComponent;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ProjectEventUpdateComponent, ProjectEventUpdateModalComponent],
+      imports: [HttpClientTestingModule, ProjectEventUpdateModalComponent, ProjectEventUpdateComponent],
       providers: [
         {
           provide: ActivatedRoute,
@@ -41,17 +44,23 @@ describe('Project Event Update Modal Component', () => {
             url: of([]),
           },
         },
-        NgbModule,
+        {
+          provide: NgbModal,
+          useValue: {
+            open: mockOpen,
+          },
+        },
       ],
-    }).compileComponents();
+    })
+      .overrideTemplate(ProjectEventUpdateComponent, '')
+      .compileComponents();
   }));
 
   beforeEach(() => {
     mockActivatedRoute = TestBed.inject(ActivatedRoute);
 
-    modalService = TestBed.inject(NgbModal);
-
     mockModalRef = new MockNgbModalRef() as unknown as NgbModalRef;
+    mockOpen.mockReturnValueOnce(mockModalRef);
     closeSpy = jest.spyOn(mockModalRef, 'close');
 
     // @ts-ignore
@@ -68,24 +77,20 @@ describe('Project Event Update Modal Component', () => {
   it('should open new modal', () => {
     mockActivatedRoute.data = of({});
 
-    const modalSpy = jest.spyOn(modalService, 'open').mockReturnValueOnce(mockModalRef);
-
     component.ngOnInit();
 
     expect(mockModalRef.componentInstance.loadRelationshipsOptions).toHaveBeenCalled();
-    expect(modalSpy).toHaveBeenCalledWith(ProjectEventUpdateComponent, { size: 'lg' });
+    expect(mockOpen).toHaveBeenCalledWith(ProjectEventUpdateComponent, { size: 'lg' });
 
     expect(mockModalRef.componentInstance.event).toBeUndefined();
     expect(mockModalRef.componentInstance.updateForm).not.toHaveBeenCalled();
   });
 
   it('should open update modal', () => {
-    const modalSpy = jest.spyOn(modalService, 'open').mockReturnValueOnce(mockModalRef);
-
     component.ngOnInit();
 
     expect(mockModalRef.componentInstance.loadRelationshipsOptions).toHaveBeenCalled();
-    expect(modalSpy).toHaveBeenCalledWith(ProjectEventUpdateComponent, { size: 'lg' });
+    expect(mockOpen).toHaveBeenCalledWith(ProjectEventUpdateComponent, { size: 'lg' });
 
     expect(mockModalRef.componentInstance.event).toEqual(event);
     expect(mockModalRef.componentInstance.updateForm).toHaveBeenCalled();
@@ -98,5 +103,9 @@ describe('Project Event Update Modal Component', () => {
     component.ngOnDestroy();
 
     expect(closeSpy).toHaveBeenCalled();
+  });
+
+  afterEach(() => {
+    jest.resetAllMocks();
   });
 });

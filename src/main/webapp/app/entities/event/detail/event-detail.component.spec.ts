@@ -1,36 +1,38 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute } from '@angular/router';
+import { TestBed, waitForAsync } from '@angular/core/testing';
+import { provideRouter, withComponentInputBinding } from '@angular/router';
+import { RouterTestingHarness, RouterTestingModule } from '@angular/router/testing';
+
 import { of } from 'rxjs';
 
-import { EventDetailComponent } from './event-detail.component';
+import EventDetailComponent from './event-detail.component';
 
 describe('Event Management Detail Component', () => {
-  let comp: EventDetailComponent;
-  let fixture: ComponentFixture<EventDetailComponent>;
-
-  beforeEach(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [EventDetailComponent],
+      imports: [EventDetailComponent, RouterTestingModule.withRoutes([], { bindToComponentInputs: true })],
       providers: [
-        {
-          provide: ActivatedRoute,
-          useValue: { data: of({ event: { id: 123 } }) },
-        },
+        provideRouter(
+          [
+            {
+              path: '**',
+              component: EventDetailComponent,
+              resolve: { event: () => of({ id: 123 }) },
+            },
+          ],
+          withComponentInputBinding(),
+        ),
       ],
     })
       .overrideTemplate(EventDetailComponent, '')
       .compileComponents();
-    fixture = TestBed.createComponent(EventDetailComponent);
-    comp = fixture.componentInstance;
-  });
+  }));
 
   describe('OnInit', () => {
-    it('Should load event on init', () => {
-      // WHEN
-      comp.ngOnInit();
+    it('Should load event on init', async () => {
+      const harness = await RouterTestingHarness.create();
+      const instance = await harness.navigateByUrl('/', EventDetailComponent);
 
-      // THEN
-      expect(comp.event).toEqual(expect.objectContaining({ id: 123 }));
+      expect(instance.event).toEqual(expect.objectContaining({ id: 123 }));
     });
   });
 });

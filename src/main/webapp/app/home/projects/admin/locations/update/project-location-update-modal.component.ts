@@ -1,23 +1,28 @@
 import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import { ActivatedRoute } from '@angular/router';
 
 import { combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 
-import { ProjectLocationUpdateComponent } from './project-location-update.component';
+import ProjectLocationUpdateComponent from './project-location-update.component';
 
 @Component({
+  standalone: true,
   selector: 'app-project-location-update-modal',
   template: '',
+  imports: [ProjectLocationUpdateComponent],
 })
-export class ProjectLocationUpdateModalComponent implements OnInit, OnDestroy {
+export default class ProjectLocationUpdateModalComponent implements OnInit, OnDestroy {
   private modalRef: NgbModalRef | undefined;
 
-  constructor(private activatedRoute: ActivatedRoute, private location: Location, private modalService: NgbModal) {}
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private location: Location,
+    private modalService: NgbModal,
+  ) {}
 
   ngOnInit(): void {
     this.modalRef = this.modalService.open(ProjectLocationUpdateComponent, { size: 'lg' });
@@ -29,7 +34,7 @@ export class ProjectLocationUpdateModalComponent implements OnInit, OnDestroy {
           isNew: url.length > 0 && url[url.length - 1].path.endsWith('new'),
           location,
           project,
-        }))
+        })),
       )
       .subscribe(({ isNew, location, project }) => {
         if (this.modalRef && project) {

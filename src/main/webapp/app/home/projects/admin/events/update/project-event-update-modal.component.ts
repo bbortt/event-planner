@@ -1,17 +1,20 @@
 import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import { ActivatedRoute } from '@angular/router';
 
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 
-import { ProjectEventUpdateComponent } from './project-event-update.component';
+import SharedModule from 'app/shared/shared.module';
+
+import ProjectEventUpdateComponent from './project-event-update.component';
 
 @Component({
+  standalone: true,
   selector: 'app-project-location-update-modal',
   template: '',
+  imports: [SharedModule, ProjectEventUpdateComponent],
 })
-export class ProjectEventUpdateModalComponent implements OnInit, OnDestroy {
+export default class ProjectEventUpdateModalComponent implements OnInit, OnDestroy {
   private modalRef: NgbModalRef | undefined;
 
   constructor(

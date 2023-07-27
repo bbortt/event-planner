@@ -6,26 +6,27 @@ import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { of, Subject, from } from 'rxjs';
 
-import { EventFormService } from './event-form.service';
-import { EventService } from '../service/event.service';
-import { IEvent } from '../event.model';
 import { ILocation } from 'app/entities/location/location.model';
 import { LocationService } from 'app/entities/location/service/location.service';
 
-import { EventUpdateComponent } from './event-update.component';
+import { IEvent } from '../event.model';
+import { EventService } from '../service/event.service';
+
+import { EventFormService } from './event-form.service';
+import EventUpdateComponent from './event-update.component';
 
 describe('Event Management Update Component', () => {
-  let comp: EventUpdateComponent;
-  let fixture: ComponentFixture<EventUpdateComponent>;
   let activatedRoute: ActivatedRoute;
   let eventFormService: EventFormService;
   let eventService: EventService;
   let locationService: LocationService;
 
+  let fixture: ComponentFixture<EventUpdateComponent>;
+  let component: EventUpdateComponent;
+
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, RouterTestingModule.withRoutes([])],
-      declarations: [EventUpdateComponent],
+      imports: [HttpClientTestingModule, RouterTestingModule.withRoutes([]), EventUpdateComponent],
       providers: [
         FormBuilder,
         {
@@ -45,7 +46,7 @@ describe('Event Management Update Component', () => {
     eventService = TestBed.inject(EventService);
     locationService = TestBed.inject(LocationService);
 
-    comp = fixture.componentInstance;
+    component = fixture.componentInstance;
   });
 
   describe('ngOnInit', () => {
@@ -61,14 +62,14 @@ describe('Event Management Update Component', () => {
       jest.spyOn(locationService, 'addLocationToCollectionIfMissing').mockReturnValue(expectedCollection);
 
       activatedRoute.data = of({ event });
-      comp.ngOnInit();
+      component.ngOnInit();
 
       expect(locationService.query).toHaveBeenCalled();
       expect(locationService.addLocationToCollectionIfMissing).toHaveBeenCalledWith(
         locationCollection,
-        ...additionalLocations.map(expect.objectContaining)
+        ...additionalLocations.map(expect.objectContaining),
       );
-      expect(comp.locationsSharedCollection).toEqual(expectedCollection);
+      expect(component.locationsSharedCollection).toEqual(expectedCollection);
     });
 
     it('Should update editForm', () => {
@@ -77,10 +78,10 @@ describe('Event Management Update Component', () => {
       event.location = location;
 
       activatedRoute.data = of({ event });
-      comp.ngOnInit();
+      component.ngOnInit();
 
-      expect(comp.locationsSharedCollection).toContain(location);
-      expect(comp.event).toEqual(event);
+      expect(component.locationsSharedCollection).toContain(location);
+      expect(component.event).toEqual(event);
     });
   });
 
@@ -91,21 +92,21 @@ describe('Event Management Update Component', () => {
       const event = { id: 123 };
       jest.spyOn(eventFormService, 'getEvent').mockReturnValue(event);
       jest.spyOn(eventService, 'update').mockReturnValue(saveSubject);
-      jest.spyOn(comp, 'previousState');
+      jest.spyOn(component, 'previousState');
       activatedRoute.data = of({ event });
-      comp.ngOnInit();
+      component.ngOnInit();
 
       // WHEN
-      comp.save();
-      expect(comp.isSaving).toEqual(true);
+      component.save();
+      expect(component.isSaving).toEqual(true);
       saveSubject.next(new HttpResponse({ body: event }));
       saveSubject.complete();
 
       // THEN
       expect(eventFormService.getEvent).toHaveBeenCalled();
-      expect(comp.previousState).toHaveBeenCalled();
+      expect(component.previousState).toHaveBeenCalled();
       expect(eventService.update).toHaveBeenCalledWith(expect.objectContaining(event));
-      expect(comp.isSaving).toEqual(false);
+      expect(component.isSaving).toEqual(false);
     });
 
     it('Should call create service on save for new entity', () => {
@@ -114,21 +115,21 @@ describe('Event Management Update Component', () => {
       const event = { id: 123 };
       jest.spyOn(eventFormService, 'getEvent').mockReturnValue({ id: null });
       jest.spyOn(eventService, 'create').mockReturnValue(saveSubject);
-      jest.spyOn(comp, 'previousState');
+      jest.spyOn(component, 'previousState');
       activatedRoute.data = of({ event: null });
-      comp.ngOnInit();
+      component.ngOnInit();
 
       // WHEN
-      comp.save();
-      expect(comp.isSaving).toEqual(true);
+      component.save();
+      expect(component.isSaving).toEqual(true);
       saveSubject.next(new HttpResponse({ body: event }));
       saveSubject.complete();
 
       // THEN
       expect(eventFormService.getEvent).toHaveBeenCalled();
       expect(eventService.create).toHaveBeenCalled();
-      expect(comp.isSaving).toEqual(false);
-      expect(comp.previousState).toHaveBeenCalled();
+      expect(component.isSaving).toEqual(false);
+      expect(component.previousState).toHaveBeenCalled();
     });
 
     it('Should set isSaving to false on error', () => {
@@ -136,19 +137,19 @@ describe('Event Management Update Component', () => {
       const saveSubject = new Subject<HttpResponse<IEvent>>();
       const event = { id: 123 };
       jest.spyOn(eventService, 'update').mockReturnValue(saveSubject);
-      jest.spyOn(comp, 'previousState');
+      jest.spyOn(component, 'previousState');
       activatedRoute.data = of({ event });
-      comp.ngOnInit();
+      component.ngOnInit();
 
       // WHEN
-      comp.save();
-      expect(comp.isSaving).toEqual(true);
+      component.save();
+      expect(component.isSaving).toEqual(true);
       saveSubject.error('This is an error!');
 
       // THEN
       expect(eventService.update).toHaveBeenCalled();
-      expect(comp.isSaving).toEqual(false);
-      expect(comp.previousState).not.toHaveBeenCalled();
+      expect(component.isSaving).toEqual(false);
+      expect(component.previousState).not.toHaveBeenCalled();
     });
   });
 
@@ -158,7 +159,7 @@ describe('Event Management Update Component', () => {
         const entity = { id: 123 };
         const entity2 = { id: 456 };
         jest.spyOn(locationService, 'compareLocation');
-        comp.compareLocation(entity, entity2);
+        component.compareLocation(entity, entity2);
         expect(locationService.compareLocation).toHaveBeenCalledWith(entity, entity2);
       });
     });

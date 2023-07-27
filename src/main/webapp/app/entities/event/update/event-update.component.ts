@@ -1,20 +1,28 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+
 import { Observable } from 'rxjs';
 import { finalize, map } from 'rxjs/operators';
 
-import { EventFormService, EventFormGroup } from './event-form.service';
-import { IEvent } from '../event.model';
-import { EventService } from '../service/event.service';
 import { ILocation } from 'app/entities/location/location.model';
 import { LocationService } from 'app/entities/location/service/location.service';
 
+import SharedModule from 'app/shared/shared.module';
+
+import { IEvent } from '../event.model';
+import { EventService } from '../service/event.service';
+
+import { EventFormService, EventFormGroup } from './event-form.service';
+
 @Component({
+  standalone: true,
   selector: 'jhi-event-update',
   templateUrl: './event-update.component.html',
+  imports: [SharedModule, FormsModule, ReactiveFormsModule],
 })
-export class EventUpdateComponent implements OnInit {
+export default class EventUpdateComponent implements OnInit {
   isSaving = false;
   event: IEvent | null = null;
 
@@ -26,7 +34,7 @@ export class EventUpdateComponent implements OnInit {
     protected eventService: EventService,
     protected eventFormService: EventFormService,
     protected locationService: LocationService,
-    protected activatedRoute: ActivatedRoute
+    protected activatedRoute: ActivatedRoute,
   ) {
     this.editForm = this.eventFormService.createEventFormGroup();
   }
@@ -83,7 +91,7 @@ export class EventUpdateComponent implements OnInit {
 
     this.locationsSharedCollection = this.locationService.addLocationToCollectionIfMissing<ILocation>(
       this.locationsSharedCollection,
-      event.location
+      event.location,
     );
   }
 
@@ -92,7 +100,7 @@ export class EventUpdateComponent implements OnInit {
       .query()
       .pipe(map((res: HttpResponse<ILocation[]>) => res.body ?? []))
       .pipe(
-        map((locations: ILocation[]) => this.locationService.addLocationToCollectionIfMissing<ILocation>(locations, this.event?.location))
+        map((locations: ILocation[]) => this.locationService.addLocationToCollectionIfMissing<ILocation>(locations, this.event?.location)),
       )
       .subscribe((locations: ILocation[]) => (this.locationsSharedCollection = locations));
   }

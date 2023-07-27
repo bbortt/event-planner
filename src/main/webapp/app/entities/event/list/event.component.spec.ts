@@ -7,7 +7,8 @@ import { of } from 'rxjs';
 
 import { EventService } from '../service/event.service';
 
-import { EventComponent } from './event.component';
+import EventComponent from './event.component';
+
 import SpyInstance = jest.SpyInstance;
 
 describe('Event Management Component', () => {
@@ -18,8 +19,7 @@ describe('Event Management Component', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule.withRoutes([{ path: 'event', component: EventComponent }]), HttpClientTestingModule],
-      declarations: [EventComponent],
+      imports: [RouterTestingModule.withRoutes([{ path: 'event', component: EventComponent }]), HttpClientTestingModule, EventComponent],
       providers: [
         {
           provide: ActivatedRoute,
@@ -32,7 +32,7 @@ describe('Event Management Component', () => {
                 page: '1',
                 size: '1',
                 sort: 'id,desc',
-              })
+              }),
             ),
             snapshot: { queryParams: {} },
           },
@@ -53,8 +53,8 @@ describe('Event Management Component', () => {
         new HttpResponse({
           body: [{ id: 123 }],
           headers,
-        })
-      )
+        }),
+      ),
     );
   });
 
@@ -107,7 +107,7 @@ describe('Event Management Component', () => {
         queryParams: expect.objectContaining({
           sort: ['name,asc'],
         }),
-      })
+      }),
     );
   });
 });

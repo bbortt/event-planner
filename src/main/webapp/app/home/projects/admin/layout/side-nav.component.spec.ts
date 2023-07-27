@@ -8,7 +8,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { IProject } from 'app/entities/project/project.model';
 
-import { SideNavComponent } from './side-nav.component';
+import SideNavComponent from './side-nav.component';
 
 describe('Side Nav Component', () => {
   let comp: SideNavComponent;

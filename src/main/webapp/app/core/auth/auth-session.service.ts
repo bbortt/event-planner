@@ -9,7 +9,10 @@ import { ApplicationConfigService } from '../config/application-config.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthServerProvider {
-  constructor(private http: HttpClient, private applicationConfigService: ApplicationConfigService) {}
+  constructor(
+    private http: HttpClient,
+    private applicationConfigService: ApplicationConfigService,
+  ) {}
 
   logout(): Observable<Logout> {
     return this.http.post<Logout>(this.applicationConfigService.getEndpointFor('api/logout'), {});

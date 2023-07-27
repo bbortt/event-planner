@@ -13,7 +13,7 @@ import { EventFormService } from 'app/entities/event/update/event-form.service';
 import { ILocation } from 'app/entities/location/location.model';
 import { LocationService } from 'app/entities/location/service/location.service';
 
-import { ProjectEventUpdateComponent } from './project-event-update.component';
+import ProjectEventUpdateComponent from './project-event-update.component';
 
 describe('Project Event Update Component', () => {
   let eventFormService: EventFormService;
@@ -25,8 +25,7 @@ describe('Project Event Update Component', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, RouterTestingModule.withRoutes([])],
-      declarations: [ProjectEventUpdateComponent],
+      imports: [HttpClientTestingModule, RouterTestingModule.withRoutes([]), ProjectEventUpdateComponent],
       providers: [FormBuilder],
     })
       .overrideTemplate(ProjectEventUpdateComponent, '')

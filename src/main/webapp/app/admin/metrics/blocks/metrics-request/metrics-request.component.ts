@@ -1,14 +1,17 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
+import SharedModule from 'app/shared/shared.module';
 import { HttpServerRequests } from 'app/admin/metrics/metrics.model';
 import { filterNaN } from 'app/core/util/operators';
 
 @Component({
+  standalone: true,
   selector: 'jhi-metrics-request',
   templateUrl: './metrics-request.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [SharedModule],
 })
-export class MetricsRequestComponent {
+export default class MetricsRequestComponent {
   /**
    * object containing http request related metrics
    */

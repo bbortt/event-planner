@@ -3,11 +3,13 @@ import { HttpHeaders, HttpResponse } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
+
 import { of } from 'rxjs';
 
 import { MemberService } from '../service/member.service';
 
-import { MemberComponent } from './member.component';
+import MemberComponent from './member.component';
+
 import SpyInstance = jest.SpyInstance;
 
 describe('Member Management Component', () => {
@@ -18,8 +20,7 @@ describe('Member Management Component', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule.withRoutes([{ path: 'member', component: MemberComponent }]), HttpClientTestingModule],
-      declarations: [MemberComponent],
+      imports: [RouterTestingModule.withRoutes([{ path: 'member', component: MemberComponent }]), HttpClientTestingModule, MemberComponent],
       providers: [
         {
           provide: ActivatedRoute,
@@ -32,7 +33,7 @@ describe('Member Management Component', () => {
                 page: '1',
                 size: '1',
                 sort: 'id,desc',
-              })
+              }),
             ),
             snapshot: { queryParams: {} },
           },
@@ -53,8 +54,8 @@ describe('Member Management Component', () => {
         new HttpResponse({
           body: [{ id: 123 }],
           headers,
-        })
-      )
+        }),
+      ),
     );
   });
 
@@ -107,7 +108,7 @@ describe('Member Management Component', () => {
         queryParams: expect.objectContaining({
           sort: ['name,asc'],
         }),
-      })
+      }),
     );
   });
 });

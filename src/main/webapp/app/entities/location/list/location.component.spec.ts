@@ -8,7 +8,7 @@ import { of } from 'rxjs';
 
 import { LocationService } from '../service/location.service';
 
-import { LocationComponent } from './location.component';
+import LocationComponent from './location.component';
 
 import SpyInstance = jest.SpyInstance;
 
@@ -20,8 +20,11 @@ describe('Location Management Component', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule.withRoutes([{ path: 'location', component: LocationComponent }]), HttpClientTestingModule],
-      declarations: [LocationComponent],
+      imports: [
+        RouterTestingModule.withRoutes([{ path: 'location', component: LocationComponent }]),
+        HttpClientTestingModule,
+        LocationComponent,
+      ],
       providers: [
         {
           provide: ActivatedRoute,
@@ -34,7 +37,7 @@ describe('Location Management Component', () => {
                 page: '1',
                 size: '1',
                 sort: 'id,desc',
-              })
+              }),
             ),
             snapshot: { queryParams: {} },
           },
@@ -55,8 +58,8 @@ describe('Location Management Component', () => {
         new HttpResponse({
           body: [{ id: 123 }],
           headers,
-        })
-      )
+        }),
+      ),
     );
   });
 
@@ -109,7 +112,7 @@ describe('Location Management Component', () => {
         queryParams: expect.objectContaining({
           sort: ['name,asc'],
         }),
-      })
+      }),
     );
   });
 });

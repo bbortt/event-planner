@@ -1,14 +1,18 @@
+jest.mock('@ng-bootstrap/ng-bootstrap');
+
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ActivatedRoute } from '@angular/router';
 
 import { of } from 'rxjs';
 
-import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 
 import { IProject } from 'app/entities/project/project.model';
 
-import { ProjectMemberInviteModalComponent, ProjectMemberInviteModalContentComponent } from './project-member-invite-modal.component';
+import ProjectMemberInviteModalComponent, { ProjectMemberInviteModalContentComponent } from './project-member-invite-modal.component';
+
+import SpyInstance = jest.SpyInstance;
 
 class MockNgbModalRef {
   componentInstance = { project: null };
@@ -20,16 +24,16 @@ const project: IProject = { id: 1234 };
 
 describe('Project Member Invite Modal Component', () => {
   let component: ProjectMemberInviteModalComponent;
-  let modalService: NgbModal;
 
   let mockModalRef: NgbModalRef;
-  let closeSpy: jest.SpyInstance<void, [result?: any]>;
+  const mockOpen = jest.fn();
+  let closeSpy: SpyInstance<void, [result?: any]>;
 
   let fixture: ComponentFixture<ProjectMemberInviteModalComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ProjectMemberInviteModalComponent, ProjectMemberInviteModalContentComponent],
+      imports: [HttpClientTestingModule, ProjectMemberInviteModalComponent, ProjectMemberInviteModalContentComponent],
       providers: [
         {
           provide: ActivatedRoute,
@@ -37,15 +41,21 @@ describe('Project Member Invite Modal Component', () => {
             data: of({ project }),
           },
         },
-        NgbModule,
+        {
+          provide: NgbModal,
+          useValue: {
+            open: mockOpen,
+          },
+        },
       ],
-    }).compileComponents();
+    })
+      .overrideTemplate(ProjectMemberInviteModalContentComponent, '')
+      .compileComponents();
   }));
 
   beforeEach(() => {
-    modalService = TestBed.inject(NgbModal);
-
     mockModalRef = new MockNgbModalRef() as unknown as NgbModalRef;
+    mockOpen.mockReturnValueOnce(mockModalRef);
     closeSpy = jest.spyOn(mockModalRef, 'close');
 
     fixture = TestBed.createComponent(ProjectMemberInviteModalComponent);
@@ -57,11 +67,9 @@ describe('Project Member Invite Modal Component', () => {
   });
 
   it('should open modal', () => {
-    const modalSpy = jest.spyOn(modalService, 'open').mockReturnValueOnce(mockModalRef);
-
     component.ngOnInit();
 
-    expect(modalSpy).toHaveBeenCalledWith(ProjectMemberInviteModalContentComponent, { size: 'lg' });
+    expect(mockOpen).toHaveBeenCalledWith(ProjectMemberInviteModalContentComponent, { size: 'lg' });
     expect(mockModalRef.componentInstance.project).toEqual(project);
   });
 
@@ -72,5 +80,9 @@ describe('Project Member Invite Modal Component', () => {
     component.ngOnDestroy();
 
     expect(closeSpy).toHaveBeenCalled();
+  });
+
+  afterEach(() => {
+    jest.resetAllMocks();
   });
 });

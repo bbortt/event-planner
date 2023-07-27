@@ -14,12 +14,16 @@ import { IProject } from 'app/entities/project/project.model';
   templateUrl: './side-nav.component.html',
   styleUrls: ['./side-nav.component.scss'],
 })
-export class SideNavComponent implements OnDestroy, OnInit {
+export default class SideNavComponent implements OnDestroy, OnInit {
   @Input() project: IProject | null = null;
 
   private routerSubscription: Subscription | null = null;
 
-  constructor(private router: Router, private titleService: Title, private translateService: TranslateService) {}
+  constructor(
+    private router: Router,
+    private titleService: Title,
+    private translateService: TranslateService,
+  ) {}
 
   ngOnInit(): void {
     this.routerSubscription = this.router.events

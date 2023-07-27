@@ -25,7 +25,7 @@ describe('Member Form Service', () => {
             acceptedBy: expect.any(Object),
             acceptedDate: expect.any(Object),
             project: expect.any(Object),
-          })
+          }),
         );
       });
 
@@ -40,7 +40,7 @@ describe('Member Form Service', () => {
             acceptedBy: expect.any(Object),
             acceptedDate: expect.any(Object),
             project: expect.any(Object),
-          })
+          }),
         );
       });
     });
