@@ -8,7 +8,7 @@ import { Subject } from 'rxjs';
 import { AccountService } from 'app/core/auth/account.service';
 import { Account } from 'app/core/auth/account.model';
 
-import { HasAnyAuthorityDirective } from './has-any-authority.directive';
+import HasAnyAuthorityDirective from './has-any-authority.directive';
 
 @Component({
   template: ` <div *jhiHasAnyAuthority="'ROLE_ADMIN'" #content></div> `,
@@ -18,13 +18,14 @@ class TestHasAnyAuthorityDirectiveComponent {
   content?: ElementRef;
 }
 
-describe('HasAnyAuthorityDirective tests', () => {
+describe('Directive: HasAnyAuthorityDirective', () => {
   let mockAccountService: AccountService;
   const authenticationState = new Subject<Account | null>();
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [HasAnyAuthorityDirective, TestHasAnyAuthorityDirectiveComponent],
+      imports: [HasAnyAuthorityDirective],
+      declarations: [TestHasAnyAuthorityDirectiveComponent],
       providers: [AccountService],
     });
   }));

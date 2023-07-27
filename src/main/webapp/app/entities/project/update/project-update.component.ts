@@ -1,24 +1,27 @@
 import { Location } from '@angular/common';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
 import { EventManager, EventWithContent } from 'app/core/util/event-manager.service';
+import SharedModule from 'app/shared/shared.module';
 
 import { ProjectService } from '../service/project.service';
-
 import { IProject } from '../project.model';
 
 import { ProjectFormService, ProjectFormGroup } from './project-form.service';
 
 @Component({
+  standalone: true,
   selector: 'jhi-project-update',
   templateUrl: './project-update.component.html',
+  imports: [SharedModule, FormsModule, ReactiveFormsModule],
 })
-export class ProjectUpdateComponent implements OnInit {
+export default class ProjectUpdateComponent implements OnInit {
   isSaving = false;
   project: IProject | null = null;
   isProjectArchived = false;
@@ -30,7 +33,7 @@ export class ProjectUpdateComponent implements OnInit {
     private eventManager: EventManager,
     private location: Location,
     protected projectService: ProjectService,
-    protected projectFormService: ProjectFormService
+    protected projectFormService: ProjectFormService,
   ) {
     this.editForm = this.projectFormService.createProjectFormGroup();
   }

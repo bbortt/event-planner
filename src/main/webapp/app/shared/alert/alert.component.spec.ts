@@ -4,17 +4,17 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { AlertService } from 'app/core/util/alert.service';
 
-import { AlertComponent } from './alert.component';
+import AlertComponent from './alert.component';
 
 describe('Alert Component', () => {
-  let alertService: AlertService;
+  let mockAlertService: AlertService;
 
   let fixture: ComponentFixture<AlertComponent>;
-  let comp: AlertComponent;
+  let component: AlertComponent;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [AlertComponent],
+      imports: [AlertComponent],
       providers: [AlertService],
     })
       .overrideTemplate(AlertComponent, '')
@@ -22,25 +22,24 @@ describe('Alert Component', () => {
   }));
 
   beforeEach(() => {
-    alertService = TestBed.inject(AlertService);
-
     fixture = TestBed.createComponent(AlertComponent);
-    comp = fixture.componentInstance;
+    component = fixture.componentInstance;
+    mockAlertService = TestBed.inject(AlertService);
   });
 
   it('Should call alertService.get on init', () => {
     // WHEN
-    comp.ngOnInit();
+    component.ngOnInit();
 
     // THEN
-    expect(alertService.get).toHaveBeenCalled();
+    expect(mockAlertService.get).toHaveBeenCalled();
   });
 
   it('Should call alertService.clear on destroy', () => {
     // WHEN
-    comp.ngOnDestroy();
+    component.ngOnDestroy();
 
     // THEN
-    expect(alertService.clear).toHaveBeenCalled();
+    expect(mockAlertService.clear).toHaveBeenCalled();
   });
 });

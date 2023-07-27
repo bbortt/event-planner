@@ -14,7 +14,7 @@ import { LocationService } from 'app/entities/location/service/location.service'
 import { LocationFormService } from 'app/entities/location/update/location-form.service';
 import { IProject } from 'app/entities/project/project.model';
 
-import { ProjectLocationUpdateComponent } from './project-location-update.component';
+import ProjectLocationUpdateComponent from './project-location-update.component';
 
 describe('Project Location Update Component', () => {
   let activatedRoute: ActivatedRoute;
@@ -28,8 +28,7 @@ describe('Project Location Update Component', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, RouterTestingModule.withRoutes([])],
-      declarations: [ProjectLocationUpdateComponent],
+      imports: [HttpClientTestingModule, RouterTestingModule.withRoutes([]), ProjectLocationUpdateComponent],
       providers: [
         FormBuilder,
         {

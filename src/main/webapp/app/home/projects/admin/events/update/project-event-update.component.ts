@@ -1,5 +1,6 @@
 import { HttpResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { Observable } from 'rxjs';
 import { finalize, map } from 'rxjs/operators';
@@ -11,11 +12,15 @@ import { EventFormService, EventFormGroup } from 'app/entities/event/update/even
 import { ILocation } from 'app/entities/location/location.model';
 import { LocationService } from 'app/entities/location/service/location.service';
 
+import SharedModule from 'app/shared/shared.module';
+
 @Component({
-  selector: 'jhi-event-update',
+  standalone: true,
+  selector: 'app-project-event-update',
   templateUrl: './project-event-update.component.html',
+  imports: [SharedModule, FormsModule, ReactiveFormsModule],
 })
-export class ProjectEventUpdateComponent {
+export default class ProjectEventUpdateComponent {
   isSaving = false;
   event: IEvent | null = null;
 

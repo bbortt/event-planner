@@ -1,18 +1,23 @@
 import { HttpResponse } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
 import { combineLatest, Subject, Subscription, tap } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { TranslateService } from '@ngx-translate/core';
 
-import { DragulaService } from 'ng2-dragula';
+import { DragulaModule, DragulaService } from 'ng2-dragula';
 
 import { GetProjectLocations200Response, Location, Project, ProjectLocationService } from 'app/api';
+
 import { LocationService } from 'app/entities/location/service/location.service';
 
-const ACTIVE_LOCATION_PATH_QUERY_PARAM_NAME = 'activeLocationPath';
+import SharedModule from 'app/shared/shared.module';
+
+import ProjectLocationDragComponent from './project-location-drag.component';
+
+const activeLocationPathQueryParamName = 'activeLocationPath';
 
 type LocationIdAndName = {
   id: number;
@@ -25,11 +30,13 @@ export type LocationControl = {
 };
 
 @Component({
+  standalone: true,
   selector: 'app-project-locations',
   templateUrl: './project-locations-drag-and-drop.component.html',
   styleUrls: ['./project-locations-drag-and-drop.component.scss'],
+  imports: [SharedModule, RouterModule, DragulaModule, ProjectLocationDragComponent],
 })
-export class ProjectLocationsDragAndDropComponent implements OnDestroy, OnInit {
+export default class ProjectLocationsDragAndDropComponent implements OnDestroy, OnInit {
   locationRootList = 'location-root-list';
   locationChildrenList = 'location-children-list';
 
@@ -54,7 +61,7 @@ export class ProjectLocationsDragAndDropComponent implements OnDestroy, OnInit {
     private locationService: LocationService,
     private projectLocationService: ProjectLocationService,
     private router: Router,
-    private translateService: TranslateService
+    private translateService: TranslateService,
   ) {
     dragulaService.destroy(this.locationRootList);
     dragulaService.createGroup(this.locationRootList, {
@@ -71,7 +78,7 @@ export class ProjectLocationsDragAndDropComponent implements OnDestroy, OnInit {
 
     combineLatest([this.activatedRoute.data, this.activatedRoute.queryParamMap])
       .pipe(
-        map(([{ project }, queryParams]) => ({ locationIds: queryParams.get(ACTIVE_LOCATION_PATH_QUERY_PARAM_NAME), project })),
+        map(([{ project }, queryParams]) => ({ locationIds: queryParams.get(activeLocationPathQueryParamName), project })),
         tap(({ project }) => {
           if (project) {
             this.project = project;
@@ -82,7 +89,7 @@ export class ProjectLocationsDragAndDropComponent implements OnDestroy, OnInit {
             this.synchronizeActiveLocationPathStringFromRouter(locationIds);
             this.activeLocationPathString = locationIds;
           }
-        })
+        }),
       )
       .subscribe(() => this.load());
 
@@ -176,7 +183,7 @@ export class ProjectLocationsDragAndDropComponent implements OnDestroy, OnInit {
   private synchronizeActiveLocationPathToRouter(activeLocationPath: LocationIdAndName[]): void {
     this.router
       .navigate([], {
-        queryParams: { [ACTIVE_LOCATION_PATH_QUERY_PARAM_NAME]: activeLocationPath.map(location => location.id).join(',') },
+        queryParams: { [activeLocationPathQueryParamName]: activeLocationPath.map(location => location.id).join(',') },
       })
       .catch(() => this.load());
   }

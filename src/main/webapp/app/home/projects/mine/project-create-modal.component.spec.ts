@@ -1,9 +1,18 @@
+jest.mock('@ng-bootstrap/ng-bootstrap');
+
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ActivatedRoute } from '@angular/router';
 
-import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 
-import { ProjectCreateModalComponent, ProjectCreateModalContentComponent } from './project-create-modal.component';
+import { AlertService } from 'app/core/util/alert.service';
+
+import { MemberService } from 'app/entities/member/service/member.service';
+
+import ProjectCreateModalComponent, { ProjectCreateModalContentComponent } from './project-create-modal.component';
+
+import SpyInstance = jest.SpyInstance;
 
 class MockNgbModalRef {
   componentInstance = { project: null };
@@ -11,26 +20,40 @@ class MockNgbModalRef {
   close = jest.fn();
 }
 
-describe('ProjectCreateModalComponent', () => {
+describe('Project Create Modal Component', () => {
   let component: ProjectCreateModalComponent;
-  let modalService: NgbModal;
 
   let mockModalRef: NgbModalRef;
-  let closeSpy: jest.SpyInstance<void, [result?: any]>;
+  const mockOpen = jest.fn();
+  let closeSpy: SpyInstance<void, [result?: any]>;
 
   let fixture: ComponentFixture<ProjectCreateModalComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ProjectCreateModalComponent, ProjectCreateModalContentComponent],
-      providers: [NgbModule],
-    }).compileComponents();
+      imports: [HttpClientTestingModule, ProjectCreateModalComponent, ProjectCreateModalContentComponent],
+      providers: [
+        {
+          provide: ActivatedRoute,
+          useValue: {},
+        },
+        AlertService,
+        MemberService,
+        {
+          provide: NgbModal,
+          useValue: {
+            open: mockOpen,
+          },
+        },
+      ],
+    })
+      .overrideTemplate(ProjectCreateModalContentComponent, '')
+      .compileComponents();
   }));
 
   beforeEach(() => {
-    modalService = TestBed.inject(NgbModal);
-
     mockModalRef = new MockNgbModalRef() as unknown as NgbModalRef;
+    mockOpen.mockReturnValueOnce(mockModalRef);
     closeSpy = jest.spyOn(mockModalRef, 'close');
 
     fixture = TestBed.createComponent(ProjectCreateModalComponent);
@@ -43,11 +66,9 @@ describe('ProjectCreateModalComponent', () => {
 
   describe('ngOnInit', () => {
     it('should open modal', () => {
-      const modalSpy = jest.spyOn(modalService, 'open').mockReturnValueOnce(mockModalRef);
-
       component.ngOnInit();
 
-      expect(modalSpy).toHaveBeenCalledWith(ProjectCreateModalContentComponent, { size: 'lg' });
+      expect(mockOpen).toHaveBeenCalledWith(ProjectCreateModalContentComponent, { size: 'lg' });
     });
   });
 
@@ -60,5 +81,9 @@ describe('ProjectCreateModalComponent', () => {
 
       expect(closeSpy).toHaveBeenCalled();
     });
+  });
+
+  afterEach(() => {
+    jest.resetAllMocks();
   });
 });

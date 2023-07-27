@@ -10,9 +10,14 @@ import { IUser, getUserIdentifier } from './user.model';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
-  private resourceUrl = this.applicationConfigService.getEndpointFor('api/users');
+  private readonly resourceUrl;
 
-  constructor(private http: HttpClient, private applicationConfigService: ApplicationConfigService) {}
+  constructor(
+    private http: HttpClient,
+    private applicationConfigService: ApplicationConfigService,
+  ) {
+    this.resourceUrl = this.applicationConfigService.getEndpointFor('api/users');
+  }
 
   query(req?: Pagination): Observable<HttpResponse<IUser[]>> {
     const options = createRequestOption(req);

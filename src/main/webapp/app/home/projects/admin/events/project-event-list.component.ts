@@ -1,6 +1,7 @@
 import { HttpHeaders, HttpResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Data, ParamMap, Router } from '@angular/router';
+import { Component, NgZone, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, Data, ParamMap, Router, RouterModule } from '@angular/router';
 
 import { combineLatest, filter, Observable, Subscription, switchMap, tap } from 'rxjs';
 
@@ -8,17 +9,34 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { Event, GetProjectEvents200Response, Project, ProjectEventsService } from 'app/api';
 
-import { EventDeleteDialogComponent } from 'app/entities/event/delete/event-delete-dialog.component';
-import { EventService } from 'app/entities/event/service/event.service';
-
 import { ITEMS_PER_PAGE, PAGE_HEADER, TOTAL_COUNT_RESPONSE_HEADER } from 'app/config/pagination.constants';
 import { ASC, DESC, SORT, ITEM_DELETED_EVENT, DEFAULT_SORT_DATA } from 'app/config/navigation.constants';
 
+import EventDeleteDialogComponent from 'app/entities/event/delete/event-delete-dialog.component';
+import { EventService } from 'app/entities/event/service/event.service';
+
+import SharedModule from 'app/shared/shared.module';
+import { DurationPipe, FormatMediumDatePipe, FormatMediumDatetimePipe } from 'app/shared/date';
+import { ItemCountComponent } from 'app/shared/pagination';
+import { SortByDirective, SortDirective } from 'app/shared/sort';
+
 @Component({
+  standalone: true,
   selector: 'jhi-event',
   templateUrl: './project-event-list.component.html',
+  imports: [
+    SharedModule,
+    RouterModule,
+    FormsModule,
+    SortDirective,
+    SortByDirective,
+    DurationPipe,
+    FormatMediumDatetimePipe,
+    FormatMediumDatePipe,
+    ItemCountComponent,
+  ],
 })
-export class ProjectEventListComponent implements OnInit {
+export default class ProjectEventListComponent implements OnInit {
   project: Project | null = null;
 
   events?: Event[];
@@ -37,6 +55,7 @@ export class ProjectEventListComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private eventService: EventService,
     private modalService: NgbModal,
+    private ngZone: NgZone,
     private projectEventsService: ProjectEventsService,
     private router: Router,
   ) {}
@@ -134,10 +153,12 @@ export class ProjectEventListComponent implements OnInit {
       sort: this.getSortQueryParam(predicate, ascending),
     };
 
-    this.router.navigate(['./'], {
-      relativeTo: this.activatedRoute,
-      queryParams: queryParamsObj,
-    });
+    this.ngZone.run(() =>
+      this.router.navigate(['./'], {
+        relativeTo: this.activatedRoute,
+        queryParams: queryParamsObj,
+      }),
+    );
   }
 
   private getSortQueryParam(predicate = this.predicate, ascending = this.ascending): string[] {

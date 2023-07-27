@@ -10,7 +10,10 @@ import { MemberService } from '../service/member.service';
 
 @Injectable({ providedIn: 'root' })
 export class MemberResolveService {
-  constructor(private memberService: MemberService, private router: Router) {}
+  constructor(
+    private memberService: MemberService,
+    private router: Router,
+  ) {}
 
   byId(id: string | null): Observable<IMember | null> {
     if (!id) {
@@ -25,7 +28,7 @@ export class MemberResolveService {
           this.router.navigateByUrl('404').catch(() => (window.location.href = '/404'));
           return EMPTY;
         }
-      })
+      }),
     );
   }
 }

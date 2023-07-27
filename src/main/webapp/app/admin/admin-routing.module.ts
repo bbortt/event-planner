@@ -7,36 +7,37 @@ import { RouterModule } from '@angular/router';
     /* jhipster-needle-add-admin-module - JHipster will add admin modules here */
     RouterModule.forChild([
       {
+        path: 'user-management',
+        loadChildren: () => import('./user-management/user-management.route'),
+        title: 'userManagement.home.title',
+      },
+      {
         path: 'docs',
-        loadChildren: () => import('./docs/docs.module').then(m => m.DocsModule),
+        loadComponent: () => import('./docs/docs.component'),
+        title: 'global.menu.admin.apidocs',
       },
       {
         path: 'configuration',
-        loadChildren: () => import('./configuration/configuration.module').then(m => m.ConfigurationModule),
+        loadComponent: () => import('./configuration/configuration.component'),
+        title: 'configuration.title',
       },
       {
         path: 'health',
-        loadChildren: () => import('./health/health.module').then(m => m.HealthModule),
+        loadComponent: () => import('./health/health.component'),
+        title: 'health.title',
       },
       {
         path: 'logs',
-        loadChildren: () => import('./logs/logs.module').then(m => m.LogsModule),
+        loadComponent: () => import('./logs/logs.component'),
+        title: 'logs.title',
       },
       {
         path: 'metrics',
-        loadChildren: () => import('./metrics/metrics.module').then(m => m.MetricsModule),
-      },
-      {
-        path: 'tracker',
-        loadChildren: () => import('./tracker/tracker.module').then(m => m.TrackerModule),
-      },
-      {
-        path: 'entity-audit',
-        data: { pageTitle: 'EntityAudit' },
-        loadChildren: () => import('./entity-audit/entity-audit.module').then(m => m.EntityAuditModule),
+        loadComponent: () => import('./metrics/metrics.component'),
+        title: 'metrics.title',
       },
       /* jhipster-needle-add-admin-route - JHipster will add admin routes here */
     ]),
   ],
 })
-export class AdminRoutingModule {}
+export default class AdminRoutingModule {}

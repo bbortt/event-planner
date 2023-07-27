@@ -1,42 +1,63 @@
+import { HttpResponse } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { of, Subscription } from 'rxjs';
+import { of, Subject, Subscription } from 'rxjs';
 
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { Location, Project, ProjectLocationService } from 'app/api';
 import { LocationService } from 'app/entities/location/service/location.service';
 
-import { ProjectLocationsDragAndDropComponent } from './project-locations-drag-and-drop.component';
-import { HttpResponse } from '@angular/common/http';
+import ProjectLocationsDragAndDropComponent from './project-locations-drag-and-drop.component';
+import { ILocation } from '../../../../entities/location/location.model';
 
-const activeLocationPath = '4,3,2';
 const project = { id: 1234, token: 'aaa89f38-c222-4530-b983-6c9b70f26609' } as Project;
+const projectLocations = [
+  {
+    id: 4,
+    name: 'Location 4',
+    children: [
+      {
+        id: 5,
+        name: 'Location 5',
+        children: [],
+      },
+      {
+        id: 3,
+        name: 'Location 3',
+        children: [{ id: 2, name: 'Location 2' }],
+      },
+    ],
+  },
+  {
+    id: 1,
+    children: [],
+  },
+] as Location[];
 
 describe("Project Locations Drag 'n Drop Component", () => {
-  let mockRouter: Router;
+  let mockActivatedRoute: ActivatedRoute;
   let mockTranslateService: TranslateService;
+  let mockRouter: Router;
 
+  let mockLocationService: LocationService;
   let mockProjectLocationService: ProjectLocationService;
+
+  const locationEventsSubject = new Subject<ILocation>();
 
   let component: ProjectLocationsDragAndDropComponent;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, TranslateModule.forRoot()],
-      declarations: [ProjectLocationsDragAndDropComponent],
+      imports: [HttpClientTestingModule, TranslateModule.forRoot(), ProjectLocationsDragAndDropComponent],
       providers: [
         {
           provide: ActivatedRoute,
           useValue: {
             data: of({ project }),
-            queryParamMap: of(
-              jest.requireActual('@angular/router').convertToParamMap({
-                activeLocationPath,
-              })
-            ),
+            queryParamMap: of(jest.requireActual('@angular/router').convertToParamMap({})),
           },
         },
         LocationService,
@@ -44,11 +65,16 @@ describe("Project Locations Drag 'n Drop Component", () => {
       ],
     }).compileComponents();
 
+    mockActivatedRoute = TestBed.inject(ActivatedRoute);
+
     mockRouter = TestBed.inject(Router);
     jest.spyOn(mockRouter, 'navigate').mockImplementation(() => Promise.resolve(true));
 
     mockTranslateService = TestBed.inject(TranslateService);
-    jest.spyOn(mockTranslateService, 'get').mockImplementation((key: string | string[]) => of(`${key as string} translated`));
+
+    mockLocationService = TestBed.inject(LocationService);
+    // @ts-ignore: force this private property value for testing.
+    mockLocationService.locationUpdatedSource = locationEventsSubject;
 
     mockProjectLocationService = TestBed.inject(ProjectLocationService);
 
@@ -57,35 +83,37 @@ describe("Project Locations Drag 'n Drop Component", () => {
 
   describe('ngOnInit', () => {
     it('loads project from route', () => {
-      const location = { id: 2, name: 'Location 2' } as Location;
-      component.locations = [
-        {
-          id: 4,
-          name: 'Location 4',
-          children: [
-            {
-              id: 5,
-              name: 'Location 5',
-              children: [],
-            },
-            {
-              id: 3,
-              name: 'Location 3',
-              children: [location],
-            },
-          ],
-        },
-        {
-          id: 1,
-          children: [],
-        },
-      ] as Location[];
+      jest
+        .spyOn(mockProjectLocationService, 'getProjectLocations')
+        .mockReturnValueOnce(of(new HttpResponse({ body: { contents: projectLocations } })));
 
       component.ngOnInit();
 
       expect(component.project).toEqual(project);
 
-      expect(component.activeLocation).toEqual(location);
+      expect(mockProjectLocationService.getProjectLocations).toHaveBeenCalledWith(project.id, 'response');
+
+      expect(component.locations).toEqual(projectLocations);
+      expect(component.activeLocation).toBeNull();
+    });
+
+    it('synchronizes the active location path from router', () => {
+      const activeLocationPath = '4,3,2';
+
+      // @ts-ignore: force this read-only property value for testing.
+      mockActivatedRoute.queryParamMap = of(
+        jest.requireActual('@angular/router').convertToParamMap({
+          activeLocationPath,
+        }),
+      );
+
+      component.locations = projectLocations;
+
+      component.ngOnInit();
+
+      // @ts-ignore: force this private property value for testing.
+      expect(component.activeLocationPathString).toEqual(activeLocationPath);
+
       expect(component.activeLocationPath).toEqual([
         {
           id: 4,
@@ -100,11 +128,19 @@ describe("Project Locations Drag 'n Drop Component", () => {
           name: 'Location 2',
         },
       ]);
+    });
+
+    it('subscribes to the location update events', () => {
+      component.ngOnInit();
 
       // @ts-ignore: force this private property value for testing.
-      expect(component.activeLocationPathString).toEqual(activeLocationPath);
-      // @ts-ignore: force this private property value for testing.
       expect(component.locationUpdatedSource).not.toBeNull();
+    });
+
+    it('translated the "addChild" button tooltip', () => {
+      jest.spyOn(mockTranslateService, 'get').mockImplementation((key: string | string[]) => of(`${key as string} translated`));
+
+      component.ngOnInit();
 
       expect(component.createNewLocationWithParentText).toEqual('app.project.admin.location.addChild translated');
     });

@@ -1,23 +1,42 @@
 import { HttpHeaders } from '@angular/common/http';
-import { Component, NgZone, OnInit } from '@angular/core';
-import { ActivatedRoute, Data, ParamMap, Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, Data, ParamMap, Router, RouterModule } from '@angular/router';
 
 import { combineLatest, filter, Observable, switchMap, tap } from 'rxjs';
 
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { ITEMS_PER_PAGE, PAGE_HEADER, TOTAL_COUNT_RESPONSE_HEADER } from 'app/config/pagination.constants';
+import { ITEMS_PER_PAGE, TOTAL_COUNT_RESPONSE_HEADER } from 'app/config/pagination.constants';
 import { ASC, DESC, SORT, ITEM_DELETED_EVENT, DEFAULT_SORT_DATA } from 'app/config/navigation.constants';
 
+import SharedModule from 'app/shared/shared.module';
+import { DurationPipe, FormatMediumDatePipe, FormatMediumDatetimePipe } from 'app/shared/date';
+import { ItemCountComponent } from 'app/shared/pagination';
+import { SortByDirective, SortDirective } from 'app/shared/sort';
+
+import MemberDeleteDialogComponent from '../delete/member-delete-dialog.component';
 import { IMember } from '../member.model';
-import { MemberDeleteDialogComponent } from '../delete/member-delete-dialog.component';
+import { IProject } from '../../project/project.model';
 import { EntityArrayResponseType, MemberService } from '../service/member.service';
 
 @Component({
+  standalone: true,
   selector: 'jhi-member',
   templateUrl: './member.component.html',
+  imports: [
+    SharedModule,
+    RouterModule,
+    FormsModule,
+    SortDirective,
+    SortByDirective,
+    DurationPipe,
+    FormatMediumDatetimePipe,
+    FormatMediumDatePipe,
+    ItemCountComponent,
+  ],
 })
-export class MemberComponent implements OnInit {
+export default class MemberComponent implements OnInit {
   members?: IMember[];
   isLoading = false;
 
@@ -33,7 +52,6 @@ export class MemberComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     public router: Router,
     protected modalService: NgbModal,
-    private ngZone: NgZone
   ) {}
 
   trackId = (_index: number, item: IMember): number => this.memberService.getMemberIdentifier(item);
@@ -49,7 +67,7 @@ export class MemberComponent implements OnInit {
     modalRef.closed
       .pipe(
         filter(reason => reason === ITEM_DELETED_EVENT),
-        switchMap(() => this.loadFromBackendWithRouteInformation())
+        switchMap(() => this.loadFromBackendWithRouteInformation()),
       )
       .subscribe({
         next: (res: EntityArrayResponseType) => {
@@ -67,23 +85,21 @@ export class MemberComponent implements OnInit {
   }
 
   navigateToWithComponentValues(): void {
-    this.ngZone.run(() => this.handleNavigation(this.page, this.predicate, this.ascending));
+    this.handleNavigation(this.page, this.predicate, this.ascending);
   }
 
   navigateToPage(page = this.page): void {
-    this.ngZone.run(() => this.handleNavigation(page, this.predicate, this.ascending));
+    this.handleNavigation(page, this.predicate, this.ascending);
   }
 
   protected loadFromBackendWithRouteInformation(): Observable<EntityArrayResponseType> {
     return combineLatest([this.activatedRoute.queryParamMap, this.activatedRoute.data]).pipe(
       tap(([params, data]) => this.fillComponentAttributeFromRoute(params, data)),
-      switchMap(() => this.queryBackend(this.page, this.predicate, this.ascending))
+      switchMap(() => this.queryBackend(this.page, this.predicate, this.ascending)),
     );
   }
 
   protected fillComponentAttributeFromRoute(params: ParamMap, data: Data): void {
-    const page = params.get(PAGE_HEADER);
-    this.page = +(page ?? 1);
     const sort = (params.get(SORT) ?? data[DEFAULT_SORT_DATA]).split(',');
     this.predicate = sort[0];
     this.ascending = sort[1] === ASC;
@@ -95,7 +111,7 @@ export class MemberComponent implements OnInit {
     this.members = dataFromBody;
   }
 
-  protected fillComponentAttributesFromResponseBody(data: IMember[] | null): IMember[] {
+  protected fillComponentAttributesFromResponseBody(data: IProject[] | null): IProject[] {
     return data ?? [];
   }
 
@@ -106,7 +122,7 @@ export class MemberComponent implements OnInit {
   protected queryBackend(page?: number, predicate?: string, ascending?: boolean): Observable<EntityArrayResponseType> {
     this.isLoading = true;
     const pageToLoad: number = page ?? 1;
-    const queryObject = {
+    const queryObject: any = {
       page: pageToLoad - 1,
       size: this.itemsPerPage,
       eagerload: true,
@@ -122,12 +138,10 @@ export class MemberComponent implements OnInit {
       sort: this.getSortQueryParam(predicate, ascending),
     };
 
-    this.router
-      .navigate(['./'], {
-        relativeTo: this.activatedRoute,
-        queryParams: queryParamsObj,
-      })
-      .catch(() => window.location.reload());
+    this.router.navigate(['./'], {
+      relativeTo: this.activatedRoute,
+      queryParams: queryParamsObj,
+    });
   }
 
   protected getSortQueryParam(predicate = this.predicate, ascending = this.ascending): string[] {

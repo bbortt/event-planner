@@ -1,13 +1,16 @@
 import { Component } from '@angular/core';
 
-import { IconLookup } from '@fortawesome/fontawesome-common-types';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
 
+import SharedModule from 'app/shared/shared.module';
+
 @Component({
+  standalone: true,
   selector: 'jhi-footer',
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.scss'],
+  imports: [SharedModule],
 })
-export class FooterComponent {
-  public faGithub = faGithub as IconLookup;
+export default class FooterComponent {
+  protected readonly faGithub = faGithub;
 }

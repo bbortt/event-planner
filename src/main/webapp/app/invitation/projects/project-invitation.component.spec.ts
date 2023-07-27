@@ -7,7 +7,7 @@ import { Project } from 'app/api';
 import { Account } from 'app/core/auth/account.model';
 import { AccountService } from 'app/core/auth/account.service';
 
-import { ProjectInvitationComponent } from './project-invitation.component';
+import ProjectInvitationComponent from './project-invitation.component';
 
 const testProject = {} as Project;
 const testAccount = {} as Account;
@@ -18,7 +18,7 @@ describe('ProjectInvitationComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ProjectInvitationComponent],
+      imports: [ProjectInvitationComponent],
       providers: [
         { provide: ActivatedRoute, useValue: { data: of({ project: testProject }), queryParams: of({ email: 'test@example.com' }) } },
         { provide: AccountService, useValue: { identity: () => of(testAccount) } },

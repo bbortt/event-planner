@@ -8,53 +8,49 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { ProjectService } from '../service/project.service';
 
-import { ProjectDeleteDialogComponent } from './project-delete-dialog.component';
+import ProjectDeleteDialogComponent from './project-delete-dialog.component';
 
 describe('Project Management Delete Component', () => {
-  let comp: ProjectDeleteDialogComponent;
-  let fixture: ComponentFixture<ProjectDeleteDialogComponent>;
   let service: ProjectService;
   let mockActiveModal: NgbActiveModal;
 
+  let fixture: ComponentFixture<ProjectDeleteDialogComponent>;
+  let component: ProjectDeleteDialogComponent;
+
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      declarations: [ProjectDeleteDialogComponent],
+      imports: [HttpClientTestingModule, ProjectDeleteDialogComponent],
       providers: [NgbActiveModal],
     })
       .overrideTemplate(ProjectDeleteDialogComponent, '')
       .compileComponents();
-    fixture = TestBed.createComponent(ProjectDeleteDialogComponent);
-    comp = fixture.componentInstance;
+
     service = TestBed.inject(ProjectService);
     mockActiveModal = TestBed.inject(NgbActiveModal);
+
+    fixture = TestBed.createComponent(ProjectDeleteDialogComponent);
+    component = fixture.componentInstance;
   });
 
   describe('confirmDelete', () => {
     it('Should call delete service on confirmDelete', inject(
       [],
       fakeAsync(() => {
-        // GIVEN
         jest.spyOn(service, 'delete').mockReturnValue(of(new HttpResponse({ body: {} })));
 
-        // WHEN
-        comp.confirmDelete(123);
+        component.confirmDelete(123);
         tick();
 
-        // THEN
         expect(service.delete).toHaveBeenCalledWith(123);
         expect(mockActiveModal.close).toHaveBeenCalledWith('deleted');
-      })
+      }),
     ));
 
     it('Should not call delete service on clear', () => {
-      // GIVEN
       jest.spyOn(service, 'delete');
 
-      // WHEN
-      comp.cancel();
+      component.cancel();
 
-      // THEN
       expect(service.delete).not.toHaveBeenCalled();
       expect(mockActiveModal.close).not.toHaveBeenCalled();
       expect(mockActiveModal.dismiss).toHaveBeenCalled();

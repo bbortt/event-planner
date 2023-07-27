@@ -6,13 +6,10 @@ import { Observable, ReplaySubject, of } from 'rxjs';
 import { shareReplay, tap, catchError } from 'rxjs/operators';
 
 import { TranslateService } from '@ngx-translate/core';
-import { SessionStorageService } from 'ngx-webstorage';
 
 import { Account } from 'app/core/auth/account.model';
 import { StateStorageService } from 'app/core/auth/state-storage.service';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
-
-import { TrackerService } from '../tracker/tracker.service';
 
 @Injectable({ providedIn: 'root' })
 export class AccountService {
@@ -22,24 +19,21 @@ export class AccountService {
 
   constructor(
     private translateService: TranslateService,
-    private sessionStorageService: SessionStorageService,
     private http: HttpClient,
-    private trackerService: TrackerService,
     private stateStorageService: StateStorageService,
     private router: Router,
-    private applicationConfigService: ApplicationConfigService
+    private applicationConfigService: ApplicationConfigService,
   ) {}
+
+  save(account: Account): Observable<{}> {
+    return this.http.post(this.applicationConfigService.getEndpointFor('api/account'), account);
+  }
 
   authenticate(identity: Account | null): void {
     this.userIdentity = identity;
     this.authenticationState.next(this.userIdentity);
     if (!identity) {
       this.accountCache$ = null;
-    }
-    if (identity) {
-      this.trackerService.connect();
-    } else {
-      this.trackerService.disconnect();
     }
   }
 
@@ -62,13 +56,13 @@ export class AccountService {
           // After retrieve the account info, the language will be changed to
           // the user's preferred language configured in the account setting
           // unless user have choosed other language in the current session
-          if (!this.sessionStorageService.retrieve('locale')) {
+          if (!this.stateStorageService.getLocale()) {
             this.translateService.use(account.langKey);
           }
 
           this.navigateToStoredUrl();
         }),
-        shareReplay()
+        shareReplay(),
       );
     }
     return this.accountCache$.pipe(catchError(() => of(null)));
@@ -92,7 +86,7 @@ export class AccountService {
     const previousUrl = this.stateStorageService.getUrl();
     if (previousUrl) {
       this.stateStorageService.clearUrl();
-      this.router.navigateByUrl(previousUrl).catch(() => (window.location.href = '/'));
+      this.router.navigateByUrl(previousUrl);
     }
   }
 }

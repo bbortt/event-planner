@@ -1,6 +1,7 @@
 import { Location } from '@angular/common';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { Observable } from 'rxjs';
@@ -11,17 +12,19 @@ import { EventManager, EventWithContent } from 'app/core/util/event-manager.serv
 import { IProject } from 'app/entities/project/project.model';
 import { ProjectService } from 'app/entities/project/service/project.service';
 
+import { IMember } from '../member.model';
 import { MemberService } from '../service/member.service';
 
-import { IMember } from '../member.model';
-
 import { MemberFormService, MemberFormGroup } from './member-form.service';
+import SharedModule from 'app/shared/shared.module';
 
 @Component({
+  standalone: true,
   selector: 'jhi-member-update',
   templateUrl: './member-update.component.html',
+  imports: [SharedModule, FormsModule, ReactiveFormsModule],
 })
-export class MemberUpdateComponent implements OnInit {
+export default class MemberUpdateComponent implements OnInit {
   isSaving = false;
   member: IMember | null = null;
 
@@ -35,7 +38,7 @@ export class MemberUpdateComponent implements OnInit {
     protected memberService: MemberService,
     protected memberFormService: MemberFormService,
     protected projectService: ProjectService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
   ) {
     this.editForm = this.memberFormService.createMemberFormGroup();
   }
@@ -92,7 +95,7 @@ export class MemberUpdateComponent implements OnInit {
 
     this.projectsSharedCollection = this.projectService.addProjectToCollectionIfMissing<IProject>(
       this.projectsSharedCollection,
-      member.project
+      member.project,
     );
   }
 

@@ -1,23 +1,22 @@
-import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Location, NgIf } from '@angular/common';
+import { Component, Input } from '@angular/core';
+import { RouterModule } from '@angular/router';
+
+import SharedModule from 'app/shared/shared.module';
+import { DurationPipe, FormatMediumDatePipe, FormatMediumDatetimePipe } from 'app/shared/date';
 
 import { IMember } from '../member.model';
 
 @Component({
+  standalone: true,
   selector: 'jhi-member-detail',
   templateUrl: './member-detail.component.html',
+  imports: [SharedModule, RouterModule, DurationPipe, FormatMediumDatetimePipe, FormatMediumDatePipe, NgIf],
 })
-export class MemberDetailComponent implements OnInit {
-  member: IMember | null = null;
+export default class MemberDetailComponent {
+  @Input() member: IMember | null = null;
 
-  constructor(private activatedRoute: ActivatedRoute, private location: Location) {}
-
-  ngOnInit(): void {
-    this.activatedRoute.data.subscribe(({ member }) => {
-      this.member = member;
-    });
-  }
+  constructor(private location: Location) {}
 
   previousState(): void {
     this.location.back();

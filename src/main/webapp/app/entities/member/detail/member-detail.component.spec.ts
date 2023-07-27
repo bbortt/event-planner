@@ -1,36 +1,38 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute } from '@angular/router';
+import { TestBed, waitForAsync } from '@angular/core/testing';
+import { provideRouter, withComponentInputBinding } from '@angular/router';
+import { RouterTestingHarness, RouterTestingModule } from '@angular/router/testing';
+
 import { of } from 'rxjs';
 
-import { MemberDetailComponent } from './member-detail.component';
+import MemberDetailComponent from './member-detail.component';
 
 describe('Member Management Detail Component', () => {
-  let comp: MemberDetailComponent;
-  let fixture: ComponentFixture<MemberDetailComponent>;
-
-  beforeEach(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [MemberDetailComponent],
+      imports: [MemberDetailComponent, RouterTestingModule.withRoutes([], { bindToComponentInputs: true })],
       providers: [
-        {
-          provide: ActivatedRoute,
-          useValue: { data: of({ member: { id: 123 } }) },
-        },
+        provideRouter(
+          [
+            {
+              path: '**',
+              component: MemberDetailComponent,
+              resolve: { member: () => of({ id: 123 }) },
+            },
+          ],
+          withComponentInputBinding(),
+        ),
       ],
     })
       .overrideTemplate(MemberDetailComponent, '')
       .compileComponents();
-    fixture = TestBed.createComponent(MemberDetailComponent);
-    comp = fixture.componentInstance;
-  });
+  }));
 
   describe('OnInit', () => {
-    it('Should load member on init', () => {
-      // WHEN
-      comp.ngOnInit();
+    it('Should load member on init', async () => {
+      const harness = await RouterTestingHarness.create();
+      const instance = await harness.navigateByUrl('/', MemberDetailComponent);
 
-      // THEN
-      expect(comp.member).toEqual(expect.objectContaining({ id: 123 }));
+      expect(instance.member).toEqual(expect.objectContaining({ id: 123 }));
     });
   });
 });

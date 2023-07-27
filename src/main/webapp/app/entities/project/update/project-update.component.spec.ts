@@ -9,24 +9,24 @@ import { of, Subject, from } from 'rxjs';
 
 import { EventManager } from 'app/core/util/event-manager.service';
 
+import { IProject } from '../project.model';
 import { ProjectService } from '../service/project.service';
 
-import { IProject } from '../project.model';
 import { ProjectFormService } from './project-form.service';
-import { ProjectUpdateComponent } from './project-update.component';
+import ProjectUpdateComponent from './project-update.component';
 
 describe('Project Management Update Component', () => {
-  let comp: ProjectUpdateComponent;
-  let fixture: ComponentFixture<ProjectUpdateComponent>;
   let activatedRoute: ActivatedRoute;
   let eventManager: EventManager;
   let projectFormService: ProjectFormService;
   let projectService: ProjectService;
 
+  let fixture: ComponentFixture<ProjectUpdateComponent>;
+  let component: ProjectUpdateComponent;
+
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, RouterTestingModule.withRoutes([])],
-      declarations: [ProjectUpdateComponent],
+      imports: [HttpClientTestingModule, RouterTestingModule.withRoutes([]), ProjectUpdateComponent],
       providers: [
         FormBuilder,
         {
@@ -40,13 +40,13 @@ describe('Project Management Update Component', () => {
       .overrideTemplate(ProjectUpdateComponent, '')
       .compileComponents();
 
-    fixture = TestBed.createComponent(ProjectUpdateComponent);
     activatedRoute = TestBed.inject(ActivatedRoute);
     eventManager = TestBed.inject(EventManager);
     projectFormService = TestBed.inject(ProjectFormService);
     projectService = TestBed.inject(ProjectService);
 
-    comp = fixture.componentInstance;
+    fixture = TestBed.createComponent(ProjectUpdateComponent);
+    component = fixture.componentInstance;
   });
 
   describe('ngOnInit', () => {
@@ -54,9 +54,9 @@ describe('Project Management Update Component', () => {
       const project: IProject = { id: 456 };
 
       activatedRoute.data = of({ project });
-      comp.ngOnInit();
+      component.ngOnInit();
 
-      expect(comp.project).toEqual(project);
+      expect(component.project).toEqual(project);
     });
   });
 
@@ -67,21 +67,21 @@ describe('Project Management Update Component', () => {
       const project = { id: 123 };
       jest.spyOn(projectFormService, 'getProject').mockReturnValue(project);
       jest.spyOn(projectService, 'update').mockReturnValue(saveSubject);
-      jest.spyOn(comp, 'previousState');
+      jest.spyOn(component, 'previousState');
       activatedRoute.data = of({ project });
-      comp.ngOnInit();
+      component.ngOnInit();
 
       // WHEN
-      comp.save();
-      expect(comp.isSaving).toEqual(true);
+      component.save();
+      expect(component.isSaving).toEqual(true);
       saveSubject.next(new HttpResponse({ body: project }));
       saveSubject.complete();
 
       // THEN
       expect(projectFormService.getProject).toHaveBeenCalled();
-      expect(comp.previousState).toHaveBeenCalled();
+      expect(component.previousState).toHaveBeenCalled();
       expect(projectService.update).toHaveBeenCalledWith(expect.objectContaining(project));
-      expect(comp.isSaving).toEqual(false);
+      expect(component.isSaving).toEqual(false);
     });
 
     it('Should call create service on save for new entity', () => {
@@ -90,26 +90,26 @@ describe('Project Management Update Component', () => {
       const project = { id: 123 };
       jest.spyOn(projectFormService, 'getProject').mockReturnValue({ id: null });
       jest.spyOn(projectService, 'create').mockReturnValue(saveSubject);
-      jest.spyOn(comp, 'previousState');
+      jest.spyOn(component, 'previousState');
       activatedRoute.data = of({ project: null });
-      comp.ngOnInit();
+      component.ngOnInit();
 
       // WHEN
-      comp.save();
-      expect(comp.isSaving).toEqual(true);
+      component.save();
+      expect(component.isSaving).toEqual(true);
       saveSubject.next(new HttpResponse({ body: project }));
       saveSubject.complete();
 
       // THEN
       expect(projectFormService.getProject).toHaveBeenCalled();
       expect(projectService.create).toHaveBeenCalled();
-      expect(comp.isSaving).toEqual(false);
-      expect(comp.previousState).toHaveBeenCalled();
+      expect(component.isSaving).toEqual(false);
+      expect(component.previousState).toHaveBeenCalled();
     });
 
     it('Should set isSaving to false on error', () => {
       // GIVEN
-      jest.spyOn(comp, 'previousState');
+      jest.spyOn(component, 'previousState');
       jest.spyOn(eventManager, 'broadcast');
 
       const saveSubject = new Subject<HttpResponse<IProject>>();
@@ -118,18 +118,18 @@ describe('Project Management Update Component', () => {
       const project = { id: 123 };
       activatedRoute.data = of({ project });
 
-      comp.ngOnInit();
+      component.ngOnInit();
 
       // WHEN
-      comp.save();
-      expect(comp.isSaving).toEqual(true);
+      component.save();
+      expect(component.isSaving).toEqual(true);
       saveSubject.error('This is an error!');
 
       // THEN
       expect(projectService.update).toHaveBeenCalled();
       expect(eventManager.broadcast).toHaveBeenCalled();
-      expect(comp.isSaving).toEqual(false);
-      expect(comp.previousState).not.toHaveBeenCalled();
+      expect(component.isSaving).toEqual(false);
+      expect(component.previousState).not.toHaveBeenCalled();
     });
   });
 });

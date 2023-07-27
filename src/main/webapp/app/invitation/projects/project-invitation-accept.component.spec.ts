@@ -1,3 +1,5 @@
+import { TranslateModule } from '@ngx-translate/core';
+
 jest.mock('app/core/util/alert.service');
 
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
@@ -15,8 +17,8 @@ import { EventManager } from 'app/core/util/event-manager.service';
 
 import { EntityResponseType, MemberService } from 'app/entities/member/service/member.service';
 
-import { ProjectInvitationAcceptComponent } from './project-invitation-accept.component';
-import { ProjectInvitationComponent } from './project-invitation.component';
+import ProjectInvitationAcceptComponent from './project-invitation-accept.component';
+import ProjectInvitationComponent from './project-invitation.component';
 
 describe('ProjectInvitationAcceptComponent', () => {
   let alertService: AlertService;
@@ -33,8 +35,7 @@ describe('ProjectInvitationAcceptComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ProjectInvitationAcceptComponent],
-      imports: [HttpClientTestingModule],
+      imports: [HttpClientTestingModule, TranslateModule.forRoot(), ProjectInvitationAcceptComponent],
       providers: [AlertService, MemberService, ProjectMemberService],
     })
       .overrideTemplate(ProjectInvitationComponent, '')

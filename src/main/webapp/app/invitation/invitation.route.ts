@@ -4,6 +4,6 @@ export const INVITATION_ROUTES: Route[] = [
   { path: '', redirectTo: '/', pathMatch: 'full' },
   {
     path: 'projects',
-    loadChildren: () => import('./projects/project-invitation.module').then(m => m.ProjectInvitationModule),
+    loadChildren: () => import('./projects/project-invitation.routes'),
   },
 ];

@@ -12,25 +12,25 @@ import { EventManager } from 'app/core/util/event-manager.service';
 import { IProject } from 'app/entities/project/project.model';
 import { ProjectService } from 'app/entities/project/service/project.service';
 
+import { IMember } from '../member.model';
 import { MemberService } from '../service/member.service';
 
-import { IMember } from '../member.model';
 import { MemberFormService } from './member-form.service';
-import { MemberUpdateComponent } from './member-update.component';
+import MemberUpdateComponent from './member-update.component';
 
 describe('Member Management Update Component', () => {
-  let comp: MemberUpdateComponent;
-  let fixture: ComponentFixture<MemberUpdateComponent>;
   let activatedRoute: ActivatedRoute;
   let eventManager: EventManager;
   let memberFormService: MemberFormService;
   let memberService: MemberService;
   let projectService: ProjectService;
 
+  let fixture: ComponentFixture<MemberUpdateComponent>;
+  let component: MemberUpdateComponent;
+
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, RouterTestingModule.withRoutes([])],
-      declarations: [MemberUpdateComponent],
+      imports: [HttpClientTestingModule, RouterTestingModule.withRoutes([]), MemberUpdateComponent],
       providers: [
         FormBuilder,
         {
@@ -51,7 +51,7 @@ describe('Member Management Update Component', () => {
     memberService = TestBed.inject(MemberService);
     projectService = TestBed.inject(ProjectService);
 
-    comp = fixture.componentInstance;
+    component = fixture.componentInstance;
   });
 
   describe('ngOnInit', () => {
@@ -67,14 +67,14 @@ describe('Member Management Update Component', () => {
       jest.spyOn(projectService, 'addProjectToCollectionIfMissing').mockReturnValue(expectedCollection);
 
       activatedRoute.data = of({ member });
-      comp.ngOnInit();
+      component.ngOnInit();
 
       expect(projectService.query).toHaveBeenCalled();
       expect(projectService.addProjectToCollectionIfMissing).toHaveBeenCalledWith(
         projectCollection,
-        ...additionalProjects.map(expect.objectContaining)
+        ...additionalProjects.map(expect.objectContaining),
       );
-      expect(comp.projectsSharedCollection).toEqual(expectedCollection);
+      expect(component.projectsSharedCollection).toEqual(expectedCollection);
     });
 
     it('Should update editForm', () => {
@@ -83,10 +83,10 @@ describe('Member Management Update Component', () => {
       member.project = project;
 
       activatedRoute.data = of({ member });
-      comp.ngOnInit();
+      component.ngOnInit();
 
-      expect(comp.projectsSharedCollection).toContain(project);
-      expect(comp.member).toEqual(member);
+      expect(component.projectsSharedCollection).toContain(project);
+      expect(component.member).toEqual(member);
     });
   });
 
@@ -97,21 +97,21 @@ describe('Member Management Update Component', () => {
       const member = { id: 123 };
       jest.spyOn(memberFormService, 'getMember').mockReturnValue(member);
       jest.spyOn(memberService, 'update').mockReturnValue(saveSubject);
-      jest.spyOn(comp, 'previousState');
+      jest.spyOn(component, 'previousState');
       activatedRoute.data = of({ member });
-      comp.ngOnInit();
+      component.ngOnInit();
 
       // WHEN
-      comp.save();
-      expect(comp.isSaving).toEqual(true);
+      component.save();
+      expect(component.isSaving).toEqual(true);
       saveSubject.next(new HttpResponse({ body: member }));
       saveSubject.complete();
 
       // THEN
       expect(memberFormService.getMember).toHaveBeenCalled();
-      expect(comp.previousState).toHaveBeenCalled();
+      expect(component.previousState).toHaveBeenCalled();
       expect(memberService.update).toHaveBeenCalledWith(expect.objectContaining(member));
-      expect(comp.isSaving).toEqual(false);
+      expect(component.isSaving).toEqual(false);
     });
 
     it('Should call create service on save for new entity', () => {
@@ -120,26 +120,26 @@ describe('Member Management Update Component', () => {
       const member = { id: 123 };
       jest.spyOn(memberFormService, 'getMember').mockReturnValue({ id: null });
       jest.spyOn(memberService, 'create').mockReturnValue(saveSubject);
-      jest.spyOn(comp, 'previousState');
+      jest.spyOn(component, 'previousState');
       activatedRoute.data = of({ member: null });
-      comp.ngOnInit();
+      component.ngOnInit();
 
       // WHEN
-      comp.save();
-      expect(comp.isSaving).toEqual(true);
+      component.save();
+      expect(component.isSaving).toEqual(true);
       saveSubject.next(new HttpResponse({ body: member }));
       saveSubject.complete();
 
       // THEN
       expect(memberFormService.getMember).toHaveBeenCalled();
       expect(memberService.create).toHaveBeenCalled();
-      expect(comp.isSaving).toEqual(false);
-      expect(comp.previousState).toHaveBeenCalled();
+      expect(component.isSaving).toEqual(false);
+      expect(component.previousState).toHaveBeenCalled();
     });
 
     it('Should set isSaving to false on error', () => {
       // GIVEN
-      jest.spyOn(comp, 'previousState');
+      jest.spyOn(component, 'previousState');
       jest.spyOn(eventManager, 'broadcast');
 
       const saveSubject = new Subject<HttpResponse<IMember>>();
@@ -148,18 +148,18 @@ describe('Member Management Update Component', () => {
       const member = { id: 123 };
       activatedRoute.data = of({ member });
 
-      comp.ngOnInit();
+      component.ngOnInit();
 
       // WHEN
-      comp.save();
-      expect(comp.isSaving).toEqual(true);
+      component.save();
+      expect(component.isSaving).toEqual(true);
       saveSubject.error('This is an error!');
 
       // THEN
       expect(memberService.update).toHaveBeenCalled();
       expect(eventManager.broadcast).toHaveBeenCalled();
-      expect(comp.isSaving).toEqual(false);
-      expect(comp.previousState).not.toHaveBeenCalled();
+      expect(component.isSaving).toEqual(false);
+      expect(component.previousState).not.toHaveBeenCalled();
     });
   });
 
@@ -169,7 +169,7 @@ describe('Member Management Update Component', () => {
         const entity = { id: 123 };
         const entity2 = { id: 456 };
         jest.spyOn(projectService, 'compareProject');
-        comp.compareProject(entity, entity2);
+        component.compareProject(entity, entity2);
         expect(projectService.compareProject).toHaveBeenCalledWith(entity, entity2);
       });
     });

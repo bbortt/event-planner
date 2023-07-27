@@ -55,7 +55,7 @@ export class EventFormService {
         {
           nonNullable: true,
           validators: [Validators.required],
-        }
+        },
       ),
       name: new FormControl(eventRawValue.name, {
         validators: [Validators.required, Validators.minLength(1), Validators.maxLength(63)],
@@ -78,7 +78,7 @@ export class EventFormService {
       {
         ...eventRawValue,
         id: { value: eventRawValue.id, disabled: true },
-      } as any /* cast to workaround https://github.com/angular/angular/issues/46458 */
+      } as any /* cast to workaround https://github.com/angular/angular/issues/46458 */,
     );
   }
 
@@ -101,7 +101,7 @@ export class EventFormService {
   }
 
   private convertEventToEventRawValue(
-    event: IEvent | (Partial<NewEvent> & EventFormDefaults)
+    event: IEvent | (Partial<NewEvent> & EventFormDefaults),
   ): EventFormRawValue | PartialWithRequiredKeyOf<NewEventFormRawValue> {
     return {
       ...event,

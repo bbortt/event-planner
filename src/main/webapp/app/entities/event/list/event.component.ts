@@ -1,21 +1,40 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpHeaders } from '@angular/common/http';
-import { ActivatedRoute, Data, ParamMap, Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, Data, ParamMap, Router, RouterModule } from '@angular/router';
+
 import { combineLatest, filter, Observable, switchMap, tap } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { IEvent } from '../event.model';
-
 import { ITEMS_PER_PAGE, PAGE_HEADER, TOTAL_COUNT_RESPONSE_HEADER } from 'app/config/pagination.constants';
 import { ASC, DESC, SORT, ITEM_DELETED_EVENT, DEFAULT_SORT_DATA } from 'app/config/navigation.constants';
+
+import SharedModule from 'app/shared/shared.module';
+import { DurationPipe, FormatMediumDatePipe, FormatMediumDatetimePipe } from 'app/shared/date';
+import { ItemCountComponent } from 'app/shared/pagination';
+import { SortByDirective, SortDirective } from 'app/shared/sort';
+
+import EventDeleteDialogComponent from '../delete/event-delete-dialog.component';
+import { IEvent } from '../event.model';
 import { EntityArrayResponseType, EventService } from '../service/event.service';
-import { EventDeleteDialogComponent } from '../delete/event-delete-dialog.component';
 
 @Component({
+  standalone: true,
   selector: 'jhi-event',
   templateUrl: './event.component.html',
+  imports: [
+    SharedModule,
+    RouterModule,
+    FormsModule,
+    SortDirective,
+    SortByDirective,
+    DurationPipe,
+    FormatMediumDatetimePipe,
+    FormatMediumDatePipe,
+    ItemCountComponent,
+  ],
 })
-export class EventComponent implements OnInit {
+export default class EventComponent implements OnInit {
   events?: IEvent[];
   isLoading = false;
 
@@ -30,7 +49,7 @@ export class EventComponent implements OnInit {
     protected eventService: EventService,
     protected activatedRoute: ActivatedRoute,
     public router: Router,
-    protected modalService: NgbModal
+    protected modalService: NgbModal,
   ) {}
 
   trackId = (_index: number, item: IEvent): number => this.eventService.getEventIdentifier(item);
@@ -46,7 +65,7 @@ export class EventComponent implements OnInit {
     modalRef.closed
       .pipe(
         filter(reason => reason === ITEM_DELETED_EVENT),
-        switchMap(() => this.loadFromBackendWithRouteInformation())
+        switchMap(() => this.loadFromBackendWithRouteInformation()),
       )
       .subscribe({
         next: (res: EntityArrayResponseType) => {
@@ -74,7 +93,7 @@ export class EventComponent implements OnInit {
   protected loadFromBackendWithRouteInformation(): Observable<EntityArrayResponseType> {
     return combineLatest([this.activatedRoute.queryParamMap, this.activatedRoute.data]).pipe(
       tap(([params, data]) => this.fillComponentAttributeFromRoute(params, data)),
-      switchMap(() => this.queryBackend(this.page, this.predicate, this.ascending))
+      switchMap(() => this.queryBackend(this.page, this.predicate, this.ascending)),
     );
   }
 

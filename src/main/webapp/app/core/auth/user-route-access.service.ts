@@ -15,7 +15,7 @@ export class UserRouteAccessService {
     private router: Router,
     private loginService: LoginService,
     private accountService: AccountService,
-    private stateStorageService: StateStorageService
+    private stateStorageService: StateStorageService,
   ) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
@@ -41,7 +41,7 @@ export class UserRouteAccessService {
         this.loginService.login();
 
         return false;
-      })
+      }),
     );
   }
 }

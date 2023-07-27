@@ -5,18 +5,17 @@ import { TranslateModule } from '@ngx-translate/core';
 import { EventManager } from 'app/core/util/event-manager.service';
 import { Alert, AlertService } from 'app/core/util/alert.service';
 
-import { AlertErrorComponent } from './alert-error.component';
+import AlertErrorComponent from './alert-error.component';
 
 describe('Alert Error Component', () => {
-  let comp: AlertErrorComponent;
+  let component: AlertErrorComponent;
   let fixture: ComponentFixture<AlertErrorComponent>;
   let eventManager: EventManager;
   let alertService: AlertService;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [TranslateModule.forRoot()],
-      declarations: [AlertErrorComponent],
+      imports: [TranslateModule.forRoot(), AlertErrorComponent],
       providers: [EventManager, AlertService],
     })
       .overrideTemplate(AlertErrorComponent, '')
@@ -24,8 +23,6 @@ describe('Alert Error Component', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AlertErrorComponent);
-    comp = fixture.componentInstance;
     eventManager = TestBed.inject(EventManager);
     alertService = TestBed.inject(AlertService);
     alertService.addAlert = (alert: Alert, alerts?: Alert[]) => {
@@ -34,6 +31,9 @@ describe('Alert Error Component', () => {
       }
       return alert;
     };
+
+    fixture = TestBed.createComponent(AlertErrorComponent);
+    component = fixture.componentInstance;
   });
 
   describe('Error Handling', () => {
@@ -41,16 +41,16 @@ describe('Alert Error Component', () => {
       // GIVEN
       eventManager.broadcast({ name: 'app.httpError', content: { status: 0 } });
       // THEN
-      expect(comp.alerts.length).toBe(1);
-      expect(comp.alerts[0].translationKey).toBe('error.server.not.reachable');
+      expect(component.alerts.length).toBe(1);
+      expect(component.alerts[0].translationKey).toBe('error.server.not.reachable');
     });
 
     it('Should display an alert on status 404', () => {
       // GIVEN
       eventManager.broadcast({ name: 'app.httpError', content: { status: 404 } });
       // THEN
-      expect(comp.alerts.length).toBe(1);
-      expect(comp.alerts[0].translationKey).toBe('error.url.not.found');
+      expect(component.alerts.length).toBe(1);
+      expect(component.alerts[0].translationKey).toBe('error.url.not.found');
     });
 
     it('Should display an alert on generic error', () => {
@@ -58,9 +58,9 @@ describe('Alert Error Component', () => {
       eventManager.broadcast({ name: 'app.httpError', content: { error: { message: 'Error Message' } } });
       eventManager.broadcast({ name: 'app.httpError', content: { error: 'Second Error Message' } });
       // THEN
-      expect(comp.alerts.length).toBe(2);
-      expect(comp.alerts[0].translationKey).toBe('Error Message');
-      expect(comp.alerts[1].translationKey).toBe('Second Error Message');
+      expect(component.alerts.length).toBe(2);
+      expect(component.alerts[0].translationKey).toBe('Error Message');
+      expect(component.alerts[1].translationKey).toBe('Second Error Message');
     });
 
     it('Should display an alert on status 400 for generic error', () => {
@@ -80,8 +80,8 @@ describe('Alert Error Component', () => {
       });
       eventManager.broadcast({ name: 'app.httpError', content: response });
       // THEN
-      expect(comp.alerts.length).toBe(1);
-      expect(comp.alerts[0].translationKey).toBe('error.validation');
+      expect(component.alerts.length).toBe(1);
+      expect(component.alerts[0].translationKey).toBe('error.validation');
     });
 
     it('Should display an alert on status 400 for generic error without message', () => {
@@ -94,8 +94,8 @@ describe('Alert Error Component', () => {
       });
       eventManager.broadcast({ name: 'app.httpError', content: response });
       // THEN
-      expect(comp.alerts.length).toBe(1);
-      expect(comp.alerts[0].translationKey).toBe('Bad Request');
+      expect(component.alerts.length).toBe(1);
+      expect(component.alerts[0].translationKey).toBe('Bad Request');
     });
 
     it('Should display an alert on status 400 for invalid parameters', () => {
@@ -116,8 +116,8 @@ describe('Alert Error Component', () => {
       });
       eventManager.broadcast({ name: 'app.httpError', content: response });
       // THEN
-      expect(comp.alerts.length).toBe(1);
-      expect(comp.alerts[0].translationKey).toBe('error.Size');
+      expect(component.alerts.length).toBe(1);
+      expect(component.alerts[0].translationKey).toBe('error.Size');
     });
 
     it('Should display an alert on status 400 for error headers', () => {
@@ -134,8 +134,8 @@ describe('Alert Error Component', () => {
       });
       eventManager.broadcast({ name: 'app.httpError', content: response });
       // THEN
-      expect(comp.alerts.length).toBe(1);
-      expect(comp.alerts[0].translationKey).toBe('Error Message');
+      expect(component.alerts.length).toBe(1);
+      expect(component.alerts[0].translationKey).toBe('Error Message');
     });
 
     it('Should display an alert on status 500 with detail', () => {
@@ -153,8 +153,8 @@ describe('Alert Error Component', () => {
       });
       eventManager.broadcast({ name: 'app.httpError', content: response });
       // THEN
-      expect(comp.alerts.length).toBe(1);
-      expect(comp.alerts[0].translationKey).toBe('error.http.500');
+      expect(component.alerts.length).toBe(1);
+      expect(component.alerts[0].translationKey).toBe('error.http.500');
     });
   });
 });

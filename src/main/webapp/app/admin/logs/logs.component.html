@@ -1,7 +1,11 @@
 <div class="table-responsive" *ngIf="loggers">
-  <h2 id="logs-page-heading" jhiTranslate="logs.title" data-cy="logsPageHeading">Protokolle</h2>
+  <h2 id="logs-page-heading" jhiTranslate="logs.title" data-cy="logsPageHeading">Logs</h2>
 
-  <p jhiTranslate="logs.nbloggers" [translateValues]="{ total: loggers.length }">Es existieren {{ loggers.length }} Logger.</p>
+  <div class="float-end me-3" *ngIf="isLoading">
+    <div class="spinner-border"></div>
+  </div>
+
+  <p jhiTranslate="logs.nbloggers" [translateValues]="{ total: loggers.length }">There are {{ loggers.length }} loggers.</p>
 
   <span jhiTranslate="logs.filter">Filter</span>
   <input type="text" [(ngModel)]="filter" (ngModelChange)="filterAndSort()" class="form-control" />
@@ -10,14 +14,14 @@
     <thead>
       <tr jhiSort [(predicate)]="orderProp" [(ascending)]="ascending" (sortChange)="filterAndSort()">
         <th jhiSortBy="name" scope="col"><span jhiTranslate="logs.table.name">Name</span> <fa-icon icon="sort"></fa-icon></th>
-        <th jhiSortBy="level" scope="col"><span jhiTranslate="logs.table.level">Stufe</span> <fa-icon icon="sort"></fa-icon></th>
+        <th jhiSortBy="level" scope="col"><span jhiTranslate="logs.table.level">Level</span> <fa-icon icon="sort"></fa-icon></th>
       </tr>
     </thead>
 
     <tbody>
       <tr *ngFor="let logger of filteredAndOrderedLoggers">
         <td>
-          <small>{{ logger.name | slice : 0 : 140 }}</small>
+          <small>{{ logger.name | slice: 0 : 140 }}</small>
         </td>
         <td>
           <button

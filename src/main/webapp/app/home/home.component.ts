@@ -1,31 +1,44 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
 
-import { Subscription } from 'rxjs';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
-import { AccountService } from 'app/core/auth/account.service';
 import { Account } from 'app/core/auth/account.model';
+import { AccountService } from 'app/core/auth/account.service';
+
+import SharedModule from 'app/shared/shared.module';
 
 @Component({
+  standalone: true,
   selector: 'jhi-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
+  imports: [SharedModule, RouterModule],
 })
-export class HomeComponent implements OnInit, OnDestroy {
+export default class HomeComponent implements OnInit, OnDestroy {
   account: Account | null = null;
 
-  private accountSubscription: Subscription | null = null;
+  private readonly destroy$ = new Subject<void>();
 
-  constructor(private accountService: AccountService) {}
+  constructor(
+    private accountService: AccountService,
+    private router: Router,
+  ) {}
 
   ngOnInit(): void {
-    this.accountSubscription = this.accountService.identity().subscribe(account => {
-      this.account = account;
-    });
+    this.accountService
+      .getAuthenticationState()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(account => (this.account = account));
+  }
+
+  login(): void {
+    this.router.navigate(['/login']);
   }
 
   ngOnDestroy(): void {
-    if (this.accountSubscription) {
-      this.accountSubscription.unsubscribe();
-    }
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

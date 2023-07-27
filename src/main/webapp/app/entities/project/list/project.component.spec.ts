@@ -8,7 +8,7 @@ import { of } from 'rxjs';
 
 import { ProjectService } from '../service/project.service';
 
-import { ProjectComponent } from './project.component';
+import ProjectComponent from './project.component';
 
 import SpyInstance = jest.SpyInstance;
 
@@ -20,8 +20,11 @@ describe('Project Management Component', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule.withRoutes([{ path: 'project', component: ProjectComponent }]), HttpClientTestingModule],
-      declarations: [ProjectComponent],
+      imports: [
+        RouterTestingModule.withRoutes([{ path: 'project', component: ProjectComponent }]),
+        HttpClientTestingModule,
+        ProjectComponent,
+      ],
       providers: [
         {
           provide: ActivatedRoute,
@@ -34,7 +37,7 @@ describe('Project Management Component', () => {
                 page: '1',
                 size: '1',
                 sort: 'id,desc',
-              })
+              }),
             ),
             snapshot: { queryParams: {} },
           },
@@ -55,8 +58,8 @@ describe('Project Management Component', () => {
         new HttpResponse({
           body: [{ id: 123 }],
           headers,
-        })
-      )
+        }),
+      ),
     );
   });
 
@@ -109,7 +112,7 @@ describe('Project Management Component', () => {
         queryParams: expect.objectContaining({
           sort: ['name,asc'],
         }),
-      })
+      }),
     );
   });
 });

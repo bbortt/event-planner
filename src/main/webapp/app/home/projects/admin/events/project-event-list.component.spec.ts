@@ -10,7 +10,7 @@ import { Event, GetProjectEvents200Response, Project, ProjectEventsService } fro
 import { ITEMS_PER_PAGE } from 'app/config/pagination.constants';
 import { EventService } from 'app/entities/event/service/event.service';
 
-import { ProjectEventListComponent } from './project-event-list.component';
+import ProjectEventListComponent from './project-event-list.component';
 
 import SpyInstance = jest.SpyInstance;
 
@@ -25,8 +25,11 @@ describe('Project Event List', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule.withRoutes([{ path: 'event', component: ProjectEventListComponent }]), HttpClientTestingModule],
-      declarations: [ProjectEventListComponent],
+      imports: [
+        RouterTestingModule.withRoutes([{ path: 'event', component: ProjectEventListComponent }]),
+        HttpClientTestingModule,
+        ProjectEventListComponent,
+      ],
       providers: [
         {
           provide: ActivatedRoute,

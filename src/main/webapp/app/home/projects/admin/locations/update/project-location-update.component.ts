@@ -1,5 +1,6 @@
 import { Location } from '@angular/common';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Component } from '@angular/core';
 
 import { Observable } from 'rxjs';
@@ -8,16 +9,21 @@ import { finalize, map, tap } from 'rxjs/operators';
 import { EventManager, EventWithContent } from 'app/core/util/event-manager.service';
 
 import { GetProjectLocations200Response, Location as ApiLocation, ProjectLocationService } from 'app/api';
+
 import { ILocation } from 'app/entities/location/location.model';
 import { LocationService } from 'app/entities/location/service/location.service';
 import { LocationFormGroup, LocationFormService } from 'app/entities/location/update/location-form.service';
 import { IProject } from 'app/entities/project/project.model';
 
+import SharedModule from 'app/shared/shared.module';
+
 @Component({
+  standalone: true,
   selector: 'app-project-location-update',
   templateUrl: './project-location-update.component.html',
+  imports: [SharedModule, FormsModule, ReactiveFormsModule],
 })
-export class ProjectLocationUpdateComponent {
+export default class ProjectLocationUpdateComponent {
   project: IProject | null = null;
   parentLocation: ILocation | null = null;
 
@@ -33,7 +39,7 @@ export class ProjectLocationUpdateComponent {
     private location: Location,
     private locationService: LocationService,
     private locationFormService: LocationFormService,
-    private projectLocationService: ProjectLocationService
+    private projectLocationService: ProjectLocationService,
   ) {
     this.editForm = this.locationFormService.createLocationFormGroup();
   }
@@ -85,14 +91,14 @@ export class ProjectLocationUpdateComponent {
 
     this.locationsSharedCollection = this.locationService.addLocationToCollectionIfMissing<ILocation>(
       this.locationsSharedCollection,
-      location.parent
+      location.parent,
     );
   }
 
   protected loadRelationshipsOptions(): void {
     if (this.project && this.existingLocation) {
       this.prepareRelationshipsOptions(
-        this.projectLocationService.getProjectLocationsWithoutSelf(this.project.id, this.existingLocation.id, 'response')
+        this.projectLocationService.getProjectLocationsWithoutSelf(this.project.id, this.existingLocation.id, 'response'),
       );
     } else if (this.project) {
       this.prepareRelationshipsOptions(this.projectLocationService.getProjectLocations(this.project.id, 'response'));
@@ -106,13 +112,13 @@ export class ProjectLocationUpdateComponent {
         map((locations: ApiLocation[]) => this.flattenLocations(locations)),
         map((locations: ApiLocation[]) =>
           locations.map(
-            (location: ApiLocation) => ({ id: location.id, name: location.name, description: location.description } as ILocation)
-          )
+            (location: ApiLocation) => ({ id: location.id, name: location.name, description: location.description }) as ILocation,
+          ),
         ),
         map((locations: ILocation[]) =>
-          this.locationService.addLocationToCollectionIfMissing<ILocation>(locations, this.existingLocation?.parent)
+          this.locationService.addLocationToCollectionIfMissing<ILocation>(locations, this.existingLocation?.parent),
         ),
-        tap((locations: ILocation[]) => (this.locationsSharedCollection = locations))
+        tap((locations: ILocation[]) => (this.locationsSharedCollection = locations)),
       )
       .subscribe(() => this.updateLocationDefaultValues());
   }

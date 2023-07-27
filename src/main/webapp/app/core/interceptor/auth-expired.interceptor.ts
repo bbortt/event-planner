@@ -14,7 +14,7 @@ export class AuthExpiredInterceptor implements HttpInterceptor {
     private loginService: LoginService,
     private stateStorageService: StateStorageService,
     private router: Router,
-    private accountService: AccountService
+    private accountService: AccountService,
   ) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -26,7 +26,7 @@ export class AuthExpiredInterceptor implements HttpInterceptor {
             this.loginService.login();
           }
         },
-      })
+      }),
     );
   }
 }

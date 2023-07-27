@@ -1,6 +1,7 @@
 import { HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Data, ParamMap, Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, Data, ParamMap, Router, RouterModule } from '@angular/router';
 
 import { combineLatest, filter, Observable, of, Subscription, switchMap, tap } from 'rxjs';
 
@@ -13,16 +14,34 @@ import { GetProjectMembers200Response, Member, Project, ProjectMemberService } f
 import { ASC, DEFAULT_SORT_DATA, DESC, ITEM_DELETED_EVENT, SORT } from 'app/config/navigation.constants';
 import { ITEMS_PER_PAGE, PAGE_HEADER, TOTAL_COUNT_RESPONSE_HEADER } from 'app/config/pagination.constants';
 
+import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { AlertService } from 'app/core/util/alert.service';
-import { MemberDeleteDialogComponent } from 'app/entities/member/delete/member-delete-dialog.component';
+
+import MemberDeleteDialogComponent from 'app/entities/member/delete/member-delete-dialog.component';
 import { MemberService } from 'app/entities/member/service/member.service';
-import { ApplicationConfigService } from '../../../../core/config/application-config.service';
+
+import SharedModule from 'app/shared/shared.module';
+import { DurationPipe, FormatMediumDatePipe, FormatMediumDatetimePipe } from 'app/shared/date';
+import { ItemCountComponent } from 'app/shared/pagination';
+import { SortByDirective, SortDirective } from 'app/shared/sort';
 
 @Component({
-  selector: 'jhi-project-member-list',
+  standalone: true,
+  selector: 'app-project-member-list',
   templateUrl: './project-member-list.component.html',
+  imports: [
+    SharedModule,
+    RouterModule,
+    FormsModule,
+    SortDirective,
+    SortByDirective,
+    DurationPipe,
+    FormatMediumDatetimePipe,
+    FormatMediumDatePipe,
+    ItemCountComponent,
+  ],
 })
-export class ProjectMemberListComponent implements OnDestroy, OnInit {
+export default class ProjectMemberListComponent implements OnDestroy, OnInit {
   project: Project | null = null;
 
   members?: Member[];
@@ -44,7 +63,7 @@ export class ProjectMemberListComponent implements OnDestroy, OnInit {
     private memberService: MemberService,
     private modalService: NgbModal,
     private projectMemberService: ProjectMemberService,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -54,7 +73,7 @@ export class ProjectMemberListComponent implements OnDestroy, OnInit {
           if (project) {
             this.project = project;
           }
-        })
+        }),
       )
       .subscribe(() => this.load());
 
@@ -67,7 +86,7 @@ export class ProjectMemberListComponent implements OnDestroy, OnInit {
     }
   }
 
-  protected trackId = (_index: number, item: Member): number => this.memberService.getMemberIdentifier(item);
+  trackId = (_index: number, item: Member): number => this.memberService.getMemberIdentifier(item);
 
   protected load(): void {
     this.loadFromBackendWithRouteInformation().subscribe({
@@ -85,12 +104,12 @@ export class ProjectMemberListComponent implements OnDestroy, OnInit {
     const projectInvitationUri = `invitation/projects/${this.project!.token}`;
 
     of(
-      navigator.clipboard.writeText(`${window.location.origin}/${this.applicationConfigService.getEndpointFor(projectInvitationUri)}`)
+      navigator.clipboard.writeText(`${window.location.origin}/${this.applicationConfigService.getEndpointFor(projectInvitationUri)}`),
     ).subscribe(() =>
       this.alertService.addAlert({
         type: 'info',
         translationKey: 'app.project.admin.invitationLinkCopied',
-      })
+      }),
     );
   }
 
@@ -101,7 +120,7 @@ export class ProjectMemberListComponent implements OnDestroy, OnInit {
     modalRef.closed
       .pipe(
         filter(reason => reason === ITEM_DELETED_EVENT),
-        switchMap(() => this.loadFromBackendWithRouteInformation())
+        switchMap(() => this.loadFromBackendWithRouteInformation()),
       )
       .subscribe({
         next: (res: HttpResponse<GetProjectMembers200Response>) => {
@@ -121,7 +140,7 @@ export class ProjectMemberListComponent implements OnDestroy, OnInit {
   private loadFromBackendWithRouteInformation(): Observable<HttpResponse<GetProjectMembers200Response>> {
     return combineLatest([this.activatedRoute.queryParamMap, this.activatedRoute.data]).pipe(
       tap(([params, data]) => this.fillComponentAttributeFromRoute(params, data)),
-      switchMap(() => this.queryBackend(this.page, this.predicate, this.ascending))
+      switchMap(() => this.queryBackend(this.page, this.predicate, this.ascending)),
     );
   }
 

@@ -12,25 +12,25 @@ import { EventManager } from 'app/core/util/event-manager.service';
 import { IProject } from 'app/entities/project/project.model';
 import { ProjectService } from 'app/entities/project/service/project.service';
 
+import { ILocation } from '../location.model';
 import { LocationService } from '../service/location.service';
 
-import { ILocation } from '../location.model';
 import { LocationFormService } from './location-form.service';
-import { LocationUpdateComponent } from './location-update.component';
+import LocationUpdateComponent from './location-update.component';
 
 describe('Location Management Update Component', () => {
-  let comp: LocationUpdateComponent;
-  let fixture: ComponentFixture<LocationUpdateComponent>;
   let activatedRoute: ActivatedRoute;
   let eventManager: EventManager;
   let locationFormService: LocationFormService;
   let locationService: LocationService;
   let projectService: ProjectService;
 
+  let fixture: ComponentFixture<LocationUpdateComponent>;
+  let component: LocationUpdateComponent;
+
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, RouterTestingModule.withRoutes([])],
-      declarations: [LocationUpdateComponent],
+      imports: [HttpClientTestingModule, RouterTestingModule.withRoutes([]), LocationUpdateComponent],
       providers: [
         FormBuilder,
         {
@@ -51,7 +51,7 @@ describe('Location Management Update Component', () => {
     locationService = TestBed.inject(LocationService);
     projectService = TestBed.inject(ProjectService);
 
-    comp = fixture.componentInstance;
+    component = fixture.componentInstance;
   });
 
   describe('ngOnInit', () => {
@@ -67,14 +67,14 @@ describe('Location Management Update Component', () => {
       jest.spyOn(projectService, 'addProjectToCollectionIfMissing').mockReturnValue(expectedCollection);
 
       activatedRoute.data = of({ location });
-      comp.ngOnInit();
+      component.ngOnInit();
 
       expect(projectService.query).toHaveBeenCalled();
       expect(projectService.addProjectToCollectionIfMissing).toHaveBeenCalledWith(
         projectCollection,
-        ...additionalProjects.map(expect.objectContaining)
+        ...additionalProjects.map(expect.objectContaining),
       );
-      expect(comp.projectsSharedCollection).toEqual(expectedCollection);
+      expect(component.projectsSharedCollection).toEqual(expectedCollection);
     });
 
     it('Should call Location query and add missing value', () => {
@@ -89,14 +89,14 @@ describe('Location Management Update Component', () => {
       jest.spyOn(locationService, 'addLocationToCollectionIfMissing').mockReturnValue(expectedCollection);
 
       activatedRoute.data = of({ location });
-      comp.ngOnInit();
+      component.ngOnInit();
 
       expect(locationService.query).toHaveBeenCalled();
       expect(locationService.addLocationToCollectionIfMissing).toHaveBeenCalledWith(
         locationCollection,
-        ...additionalLocations.map(expect.objectContaining)
+        ...additionalLocations.map(expect.objectContaining),
       );
-      expect(comp.locationsSharedCollection).toEqual(expectedCollection);
+      expect(component.locationsSharedCollection).toEqual(expectedCollection);
     });
 
     it('Should update editForm', () => {
@@ -107,11 +107,11 @@ describe('Location Management Update Component', () => {
       location.parent = parent;
 
       activatedRoute.data = of({ location });
-      comp.ngOnInit();
+      component.ngOnInit();
 
-      expect(comp.projectsSharedCollection).toContain(project);
-      expect(comp.locationsSharedCollection).toContain(parent);
-      expect(comp.location).toEqual(location);
+      expect(component.projectsSharedCollection).toContain(project);
+      expect(component.locationsSharedCollection).toContain(parent);
+      expect(component.location).toEqual(location);
     });
   });
 
@@ -122,21 +122,21 @@ describe('Location Management Update Component', () => {
       const location = { id: 123 };
       jest.spyOn(locationFormService, 'getLocation').mockReturnValue(location);
       jest.spyOn(locationService, 'update').mockReturnValue(saveSubject);
-      jest.spyOn(comp, 'previousState');
+      jest.spyOn(component, 'previousState');
       activatedRoute.data = of({ location });
-      comp.ngOnInit();
+      component.ngOnInit();
 
       // WHEN
-      comp.save();
-      expect(comp.isSaving).toEqual(true);
+      component.save();
+      expect(component.isSaving).toEqual(true);
       saveSubject.next(new HttpResponse({ body: location }));
       saveSubject.complete();
 
       // THEN
       expect(locationFormService.getLocation).toHaveBeenCalled();
-      expect(comp.previousState).toHaveBeenCalled();
+      expect(component.previousState).toHaveBeenCalled();
       expect(locationService.update).toHaveBeenCalledWith(expect.objectContaining(location));
-      expect(comp.isSaving).toEqual(false);
+      expect(component.isSaving).toEqual(false);
     });
 
     it('Should call create service on save for new entity', () => {
@@ -145,26 +145,26 @@ describe('Location Management Update Component', () => {
       const location = { id: 123 };
       jest.spyOn(locationFormService, 'getLocation').mockReturnValue({ id: null });
       jest.spyOn(locationService, 'create').mockReturnValue(saveSubject);
-      jest.spyOn(comp, 'previousState');
+      jest.spyOn(component, 'previousState');
       activatedRoute.data = of({ location: null });
-      comp.ngOnInit();
+      component.ngOnInit();
 
       // WHEN
-      comp.save();
-      expect(comp.isSaving).toEqual(true);
+      component.save();
+      expect(component.isSaving).toEqual(true);
       saveSubject.next(new HttpResponse({ body: location }));
       saveSubject.complete();
 
       // THEN
       expect(locationFormService.getLocation).toHaveBeenCalled();
       expect(locationService.create).toHaveBeenCalled();
-      expect(comp.isSaving).toEqual(false);
-      expect(comp.previousState).toHaveBeenCalled();
+      expect(component.isSaving).toEqual(false);
+      expect(component.previousState).toHaveBeenCalled();
     });
 
     it('Should set isSaving to false on error', () => {
       // GIVEN
-      jest.spyOn(comp, 'previousState');
+      jest.spyOn(component, 'previousState');
       jest.spyOn(eventManager, 'broadcast');
 
       const saveSubject = new Subject<HttpResponse<ILocation>>();
@@ -173,18 +173,18 @@ describe('Location Management Update Component', () => {
       const location = { id: 123 };
       activatedRoute.data = of({ location });
 
-      comp.ngOnInit();
+      component.ngOnInit();
 
       // WHEN
-      comp.save();
-      expect(comp.isSaving).toEqual(true);
+      component.save();
+      expect(component.isSaving).toEqual(true);
       saveSubject.error('This is an error!');
 
       // THEN
       expect(locationService.update).toHaveBeenCalled();
       expect(eventManager.broadcast).toHaveBeenCalled();
-      expect(comp.isSaving).toEqual(false);
-      expect(comp.previousState).not.toHaveBeenCalled();
+      expect(component.isSaving).toEqual(false);
+      expect(component.previousState).not.toHaveBeenCalled();
     });
   });
 
@@ -194,7 +194,7 @@ describe('Location Management Update Component', () => {
         const entity = { id: 123 };
         const entity2 = { id: 456 };
         jest.spyOn(projectService, 'compareProject');
-        comp.compareProject(entity, entity2);
+        component.compareProject(entity, entity2);
         expect(projectService.compareProject).toHaveBeenCalledWith(entity, entity2);
       });
     });
@@ -204,7 +204,7 @@ describe('Location Management Update Component', () => {
         const entity = { id: 123 };
         const entity2 = { id: 456 };
         jest.spyOn(locationService, 'compareLocation');
-        comp.compareLocation(entity, entity2);
+        component.compareLocation(entity, entity2);
         expect(locationService.compareLocation).toHaveBeenCalledWith(entity, entity2);
       });
     });

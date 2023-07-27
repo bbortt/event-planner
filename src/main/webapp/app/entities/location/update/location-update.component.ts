@@ -1,6 +1,7 @@
 import { Location } from '@angular/common';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { Observable } from 'rxjs';
@@ -11,17 +12,20 @@ import { EventManager, EventWithContent } from 'app/core/util/event-manager.serv
 import { IProject } from 'app/entities/project/project.model';
 import { ProjectService } from 'app/entities/project/service/project.service';
 
-import { LocationService } from '../service/location.service';
+import SharedModule from 'app/shared/shared.module';
 
 import { ILocation } from '../location.model';
+import { LocationService } from '../service/location.service';
 
 import { LocationFormService, LocationFormGroup } from './location-form.service';
 
 @Component({
+  standalone: true,
   selector: 'jhi-location-update',
   templateUrl: './location-update.component.html',
+  imports: [SharedModule, FormsModule, ReactiveFormsModule],
 })
-export class LocationUpdateComponent implements OnInit {
+export default class LocationUpdateComponent implements OnInit {
   isSaving = false;
   location: ILocation | null = null;
 
@@ -36,7 +40,7 @@ export class LocationUpdateComponent implements OnInit {
     protected locationService: LocationService,
     protected locationFormService: LocationFormService,
     protected projectService: ProjectService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
   ) {
     this.editForm = this.locationFormService.createLocationFormGroup();
   }
@@ -95,11 +99,11 @@ export class LocationUpdateComponent implements OnInit {
 
     this.projectsSharedCollection = this.projectService.addProjectToCollectionIfMissing<IProject>(
       this.projectsSharedCollection,
-      location.project
+      location.project,
     );
     this.locationsSharedCollection = this.locationService.addLocationToCollectionIfMissing<ILocation>(
       this.locationsSharedCollection,
-      location.parent
+      location.parent,
     );
   }
 
@@ -114,7 +118,7 @@ export class LocationUpdateComponent implements OnInit {
       .query()
       .pipe(map((res: HttpResponse<ILocation[]>) => res.body ?? []))
       .pipe(
-        map((locations: ILocation[]) => this.locationService.addLocationToCollectionIfMissing<ILocation>(locations, this.location?.parent))
+        map((locations: ILocation[]) => this.locationService.addLocationToCollectionIfMissing<ILocation>(locations, this.location?.parent)),
       )
       .subscribe((locations: ILocation[]) => (this.locationsSharedCollection = locations));
   }

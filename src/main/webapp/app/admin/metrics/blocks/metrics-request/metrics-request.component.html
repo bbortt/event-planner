@@ -1,11 +1,11 @@
-<h3 id="requestMetrics" jhiTranslate="metrics.jvm.http.title">HTTP Anfragen (Ereignisse pro Sekunde)</h3>
+<h3 id="requestMetrics" jhiTranslate="metrics.jvm.http.title">HTTP requests (time in millisecond)</h3>
 
 <table class="table table-striped" *ngIf="!updating && requestMetrics" aria-describedby="requestMetrics">
   <thead>
     <tr>
-      <th scope="col" jhiTranslate="metrics.jvm.http.table.code">Codierung</th>
-      <th scope="col" jhiTranslate="metrics.jvm.http.table.count">Anzahl</th>
-      <th scope="col" class="text-end" jhiTranslate="metrics.jvm.http.table.mean">Durchschnittswert</th>
+      <th scope="col" jhiTranslate="metrics.jvm.http.table.code">Code</th>
+      <th scope="col" jhiTranslate="metrics.jvm.http.table.count">Count</th>
+      <th scope="col" class="text-end" jhiTranslate="metrics.jvm.http.table.mean">Mean</th>
       <th scope="col" class="text-end" jhiTranslate="metrics.jvm.http.table.max">Max</th>
     </tr>
   </thead>
@@ -18,9 +18,9 @@
         </ngb-progressbar>
       </td>
       <td class="text-end">
-        {{ filterNaN(entry.value.mean) | number : '1.0-2' }}
+        {{ filterNaN(entry.value.mean) | number: '1.0-2' }}
       </td>
-      <td class="text-end">{{ entry.value.max | number : '1.0-2' }}</td>
+      <td class="text-end">{{ entry.value.max | number: '1.0-2' }}</td>
     </tr>
   </tbody>
 </table>
