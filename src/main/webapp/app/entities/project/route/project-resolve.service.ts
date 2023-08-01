@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { ActivatedRouteSnapshot, Router, ResolveFn } from '@angular/router';
 
-import { Observable, of, EMPTY, iif } from 'rxjs';
+import { Observable, of, EMPTY, iif, from } from 'rxjs';
 import { catchError, filter, map, mergeMap, tap } from 'rxjs/operators';
 
 import { Project, ProjectService as ApiProjectService } from 'app/api';
@@ -65,7 +65,7 @@ export class ProjectResolveService {
   }
 
   private redirectWithProjectDoesNotExistMessage(): Observable<null> {
-    of(this.router.navigateByUrl('/')).subscribe(() =>
+    from(this.router.navigateByUrl('/')).subscribe(() =>
       this.alertService.addAlert({
         type: 'danger',
         translationKey: 'app.project.invitation.error.invalidToken',

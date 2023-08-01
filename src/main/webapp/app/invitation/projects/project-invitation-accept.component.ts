@@ -2,7 +2,7 @@ import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { Observable, of } from 'rxjs';
+import { from, Observable } from 'rxjs';
 import { finalize, tap } from 'rxjs/operators';
 
 import dayjs from 'dayjs/esm';
@@ -107,7 +107,7 @@ export default class ProjectInvitationAcceptComponent implements OnInit {
   }
 
   private onAccepted(): void {
-    of(this.router.navigate(['/'])).subscribe(() =>
+    from(this.router.navigateByUrl('/')).subscribe(() =>
       this.alertService.addAlert({
         type: 'success',
         translationKey: 'app.project.invitation.accepting.success',

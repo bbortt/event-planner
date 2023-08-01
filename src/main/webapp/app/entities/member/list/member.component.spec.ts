@@ -13,10 +13,11 @@ import MemberComponent from './member.component';
 import SpyInstance = jest.SpyInstance;
 
 describe('Member Management Component', () => {
-  let comp: MemberComponent;
-  let fixture: ComponentFixture<MemberComponent>;
   let service: MemberService;
   let routerNavigateSpy: SpyInstance<Promise<boolean>>;
+
+  let fixture: ComponentFixture<MemberComponent>;
+  let component: MemberComponent;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -43,10 +44,7 @@ describe('Member Management Component', () => {
       .overrideTemplate(MemberComponent, '')
       .compileComponents();
 
-    fixture = TestBed.createComponent(MemberComponent);
-    comp = fixture.componentInstance;
     service = TestBed.inject(MemberService);
-    routerNavigateSpy = jest.spyOn(comp.router, 'navigate');
 
     const headers = new HttpHeaders();
     jest.spyOn(service, 'query').mockReturnValue(
@@ -57,22 +55,28 @@ describe('Member Management Component', () => {
         }),
       ),
     );
+
+    fixture = TestBed.createComponent(MemberComponent);
+    component = fixture.componentInstance;
+
+    // @ts-ignore: force this private property value for testing.
+    routerNavigateSpy = jest.spyOn(component.router, 'navigate');
   });
 
   it('Should call load all on init', () => {
     // WHEN
-    comp.ngOnInit();
+    component.ngOnInit();
 
     // THEN
     expect(service.query).toHaveBeenCalled();
-    expect(comp.members?.[0]).toEqual(expect.objectContaining({ id: 123 }));
+    expect(component.members?.[0]).toEqual(expect.objectContaining({ id: 123 }));
   });
 
   describe('trackId', () => {
     it('Should forward to memberService', () => {
       const entity = { id: 123 };
       jest.spyOn(service, 'getMemberIdentifier');
-      const id = comp.trackId(0, entity);
+      const id = component.trackId(0, entity);
       expect(service.getMemberIdentifier).toHaveBeenCalledWith(entity);
       expect(id).toBe(entity.id);
     });
@@ -80,7 +84,7 @@ describe('Member Management Component', () => {
 
   it('should load a page', () => {
     // WHEN
-    comp.navigateToPage(1);
+    component.navigateToPage(1);
 
     // THEN
     expect(routerNavigateSpy).toHaveBeenCalled();
@@ -88,7 +92,7 @@ describe('Member Management Component', () => {
 
   it('should calculate the sort attribute for an id', () => {
     // WHEN
-    comp.ngOnInit();
+    component.ngOnInit();
 
     // THEN
     expect(service.query).toHaveBeenLastCalledWith(expect.objectContaining({ sort: ['id,desc'] }));
@@ -96,10 +100,10 @@ describe('Member Management Component', () => {
 
   it('should calculate the sort attribute for a non-id attribute', () => {
     // GIVEN
-    comp.predicate = 'name';
+    component.predicate = 'name';
 
     // WHEN
-    comp.navigateToWithComponentValues();
+    component.navigateToWithComponentValues();
 
     // THEN
     expect(routerNavigateSpy).toHaveBeenLastCalledWith(

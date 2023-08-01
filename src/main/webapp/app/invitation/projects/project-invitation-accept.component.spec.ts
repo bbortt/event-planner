@@ -1,13 +1,12 @@
-import { TranslateModule } from '@ngx-translate/core';
-
 jest.mock('app/core/util/alert.service');
 
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { Router } from '@angular/router';
+import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 
 import { of, throwError } from 'rxjs';
+
+import { TranslateModule } from '@ngx-translate/core';
 
 import { Member, Project, ProjectMemberService } from 'app/api';
 
@@ -20,13 +19,15 @@ import { EntityResponseType, MemberService } from 'app/entities/member/service/m
 import ProjectInvitationAcceptComponent from './project-invitation-accept.component';
 import ProjectInvitationComponent from './project-invitation.component';
 
+import SpyInstance = jest.SpyInstance;
+
 describe('ProjectInvitationAcceptComponent', () => {
   let alertService: AlertService;
   let eventManager: EventManager;
   let memberService: MemberService;
   let projectMemberService: ProjectMemberService;
 
-  let mockRouter: Router;
+  let routerNavigateByUrlSpy: SpyInstance<Promise<boolean>>;
 
   let fixture: ComponentFixture<ProjectInvitationAcceptComponent>;
   let component: ProjectInvitationAcceptComponent;
@@ -44,22 +45,25 @@ describe('ProjectInvitationAcceptComponent', () => {
 
   beforeEach(() => {
     alertService = TestBed.inject(AlertService);
+    jest.spyOn(alertService, 'addAlert');
+
     eventManager = TestBed.inject(EventManager);
     memberService = TestBed.inject(MemberService);
     projectMemberService = TestBed.inject(ProjectMemberService);
-
-    mockRouter = TestBed.inject(Router);
-    jest.spyOn(mockRouter, 'navigate').mockImplementation(() => Promise.resolve(true));
 
     fixture = TestBed.createComponent(ProjectInvitationAcceptComponent);
     component = fixture.componentInstance;
 
     project = { id: 1234 } as Project;
     component.project = project;
+
+    // @ts-ignore: force this private property value for testing.
+    routerNavigateByUrlSpy = jest.spyOn(component.router, 'navigateByUrl').mockImplementation(() => Promise.resolve(true));
   });
 
   const verifySuccessResponse = (): void => {
-    expect(mockRouter.navigate).toHaveBeenCalledWith(['/']);
+    expect(routerNavigateByUrlSpy).toHaveBeenCalledWith('/');
+    tick();
     expect(alertService.addAlert).toHaveBeenCalledWith({
       type: 'success',
       translationKey: 'app.project.invitation.accepting.success',
@@ -120,7 +124,7 @@ describe('ProjectInvitationAcceptComponent', () => {
       expect(projectMemberService.findProjectMemberByTokenAndEmail).not.toHaveBeenCalled();
     });
 
-    it('should redirect to home page if membership was already accepted', () => {
+    it('should redirect to home page if membership was already accepted', fakeAsync(() => {
       const member: Member = { accepted: true } as Member;
       jest.spyOn(projectMemberService, 'findProjectMemberByTokenAndEmail').mockReturnValueOnce(of(new HttpResponse({ body: member })));
 
@@ -128,11 +132,11 @@ describe('ProjectInvitationAcceptComponent', () => {
 
       verifySuccessResponse();
       expect(component.isLoading).toBeFalsy();
-    });
+    }));
   });
 
   describe('acceptInvitation', () => {
-    it('should call memberService.partialUpdate when called with a valid member', () => {
+    it('should call memberService.partialUpdate when called with a valid member', fakeAsync(() => {
       const member: Member = { id: 1234 } as Member;
       component.member = member;
 
@@ -144,9 +148,9 @@ describe('ProjectInvitationAcceptComponent', () => {
 
       verifySuccessResponse();
       expect(component.isSaving).toBeFalsy();
-    });
+    }));
 
-    it('should call memberService.create when called with null member', () => {
+    it('should call memberService.create when called with null member', fakeAsync(() => {
       const email = 'dal-damoc@localhost';
       component.email = email;
 
@@ -165,7 +169,7 @@ describe('ProjectInvitationAcceptComponent', () => {
 
       verifySuccessResponse();
       expect(component.isSaving).toBeFalsy();
-    });
+    }));
 
     describe('subscribes to error responses', () => {
       let httpErrorResponse: HttpErrorResponse;

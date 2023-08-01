@@ -1,5 +1,5 @@
 import { HttpHeaders } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Data, ParamMap, Router, RouterModule } from '@angular/router';
 
@@ -50,8 +50,9 @@ export default class MemberComponent implements OnInit {
   constructor(
     protected memberService: MemberService,
     private activatedRoute: ActivatedRoute,
-    public router: Router,
     protected modalService: NgbModal,
+    private ngZone: NgZone,
+    private router: Router,
   ) {}
 
   trackId = (_index: number, item: IMember): number => this.memberService.getMemberIdentifier(item);
@@ -138,10 +139,12 @@ export default class MemberComponent implements OnInit {
       sort: this.getSortQueryParam(predicate, ascending),
     };
 
-    this.router.navigate(['./'], {
-      relativeTo: this.activatedRoute,
-      queryParams: queryParamsObj,
-    });
+    this.ngZone.run(() =>
+      this.router.navigate(['./'], {
+        relativeTo: this.activatedRoute,
+        queryParams: queryParamsObj,
+      }),
+    );
   }
 
   protected getSortQueryParam(predicate = this.predicate, ascending = this.ascending): string[] {
