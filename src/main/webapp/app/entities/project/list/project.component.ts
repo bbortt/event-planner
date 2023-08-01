@@ -49,9 +49,9 @@ export default class ProjectComponent implements OnInit {
   constructor(
     protected projectService: ProjectService,
     private activatedRoute: ActivatedRoute,
-    public router: Router,
     protected modalService: NgbModal,
     private ngZone: NgZone,
+    private router: Router,
   ) {}
 
   trackId = (_index: number, item: IProject): number => this.projectService.getProjectIdentifier(item);
@@ -139,12 +139,14 @@ export default class ProjectComponent implements OnInit {
       sort: this.getSortQueryParam(predicate, ascending),
     };
 
-    this.router
-      .navigate(['./'], {
-        relativeTo: this.activatedRoute,
-        queryParams: queryParamsObj,
-      })
-      .catch(() => window.location.reload());
+    this.ngZone.run(() =>
+      this.router
+        .navigate(['./'], {
+          relativeTo: this.activatedRoute,
+          queryParams: queryParamsObj,
+        })
+        .catch(() => window.location.reload()),
+    );
   }
 
   protected getSortQueryParam(predicate = this.predicate, ascending = this.ascending): string[] {

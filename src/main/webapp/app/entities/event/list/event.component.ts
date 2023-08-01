@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { HttpHeaders } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Data, ParamMap, Router, RouterModule } from '@angular/router';
@@ -48,8 +48,9 @@ export default class EventComponent implements OnInit {
   constructor(
     protected eventService: EventService,
     protected activatedRoute: ActivatedRoute,
-    public router: Router,
     protected modalService: NgbModal,
+    private ngZone: NgZone,
+    private router: Router,
   ) {}
 
   trackId = (_index: number, item: IEvent): number => this.eventService.getEventIdentifier(item);
@@ -138,10 +139,14 @@ export default class EventComponent implements OnInit {
       sort: this.getSortQueryParam(predicate, ascending),
     };
 
-    this.router.navigate(['./'], {
-      relativeTo: this.activatedRoute,
-      queryParams: queryParamsObj,
-    });
+    this.ngZone.run(() =>
+      this.router
+        .navigate(['./'], {
+          relativeTo: this.activatedRoute,
+          queryParams: queryParamsObj,
+        })
+        .catch(() => window.location.reload()),
+    );
   }
 
   protected getSortQueryParam(predicate = this.predicate, ascending = this.ascending): string[] {

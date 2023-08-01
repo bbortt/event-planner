@@ -13,10 +13,11 @@ import LocationComponent from './location.component';
 import SpyInstance = jest.SpyInstance;
 
 describe('Location Management Component', () => {
-  let comp: LocationComponent;
-  let fixture: ComponentFixture<LocationComponent>;
   let service: LocationService;
   let routerNavigateSpy: SpyInstance<Promise<boolean>>;
+
+  let fixture: ComponentFixture<LocationComponent>;
+  let component: LocationComponent;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -47,10 +48,7 @@ describe('Location Management Component', () => {
       .overrideTemplate(LocationComponent, '')
       .compileComponents();
 
-    fixture = TestBed.createComponent(LocationComponent);
-    comp = fixture.componentInstance;
     service = TestBed.inject(LocationService);
-    routerNavigateSpy = jest.spyOn(comp.router, 'navigate');
 
     const headers = new HttpHeaders();
     jest.spyOn(service, 'query').mockReturnValue(
@@ -61,22 +59,28 @@ describe('Location Management Component', () => {
         }),
       ),
     );
+
+    fixture = TestBed.createComponent(LocationComponent);
+    component = fixture.componentInstance;
+
+    // @ts-ignore: force this private property value for testing.
+    routerNavigateSpy = jest.spyOn(component.router, 'navigate');
   });
 
   it('Should call load all on init', () => {
     // WHEN
-    comp.ngOnInit();
+    component.ngOnInit();
 
     // THEN
     expect(service.query).toHaveBeenCalled();
-    expect(comp.locations?.[0]).toEqual(expect.objectContaining({ id: 123 }));
+    expect(component.locations?.[0]).toEqual(expect.objectContaining({ id: 123 }));
   });
 
   describe('trackId', () => {
     it('Should forward to locationService', () => {
       const entity = { id: 123 };
       jest.spyOn(service, 'getLocationIdentifier');
-      const id = comp.trackId(0, entity);
+      const id = component.trackId(0, entity);
       expect(service.getLocationIdentifier).toHaveBeenCalledWith(entity);
       expect(id).toBe(entity.id);
     });
@@ -84,7 +88,7 @@ describe('Location Management Component', () => {
 
   it('should load a page', () => {
     // WHEN
-    comp.navigateToPage(1);
+    component.navigateToPage(1);
 
     // THEN
     expect(routerNavigateSpy).toHaveBeenCalled();
@@ -92,7 +96,7 @@ describe('Location Management Component', () => {
 
   it('should calculate the sort attribute for an id', () => {
     // WHEN
-    comp.ngOnInit();
+    component.ngOnInit();
 
     // THEN
     expect(service.query).toHaveBeenLastCalledWith(expect.objectContaining({ sort: ['id,desc'] }));
@@ -100,10 +104,10 @@ describe('Location Management Component', () => {
 
   it('should calculate the sort attribute for a non-id attribute', () => {
     // GIVEN
-    comp.predicate = 'name';
+    component.predicate = 'name';
 
     // WHEN
-    comp.navigateToWithComponentValues();
+    component.navigateToWithComponentValues();
 
     // THEN
     expect(routerNavigateSpy).toHaveBeenLastCalledWith(
