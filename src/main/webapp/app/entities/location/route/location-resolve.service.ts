@@ -10,10 +10,7 @@ import { LocationService } from '../service/location.service';
 
 @Injectable({ providedIn: 'root' })
 export class LocationResolveService {
-  constructor(
-    private locationService: LocationService,
-    private router: Router,
-  ) {}
+  constructor(private locationService: LocationService, private router: Router) {}
 
   byId(id: string | null): Observable<ILocation | null> {
     if (!id) {
@@ -28,7 +25,7 @@ export class LocationResolveService {
           this.router.navigateByUrl('404').catch(() => (window.location.href = '/404'));
           return EMPTY;
         }
-      }),
+      })
     );
   }
 }

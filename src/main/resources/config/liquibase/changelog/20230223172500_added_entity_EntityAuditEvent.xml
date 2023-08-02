@@ -37,6 +37,5 @@
             <column name="entity_type" type="varchar(255)"/>
         </createIndex>
         <dropDefaultValue tableName="jhi_entity_audit_event" columnName="modified_date" columnDataType="datetime"/>
-        <!-- TODO add an archival job for the table -->
     </changeSet>
 </databaseChangeLog>

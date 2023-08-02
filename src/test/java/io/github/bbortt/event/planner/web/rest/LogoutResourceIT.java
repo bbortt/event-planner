@@ -1,7 +1,18 @@
 package io.github.bbortt.event.planner.web.rest;
 
+import static io.github.bbortt.event.planner.test.util.OAuth2TestUtil.ID_TOKEN;
+import static io.github.bbortt.event.planner.test.util.OAuth2TestUtil.authenticationToken;
+import static io.github.bbortt.event.planner.test.util.OAuth2TestUtil.registerAuthenticationToken;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import io.github.bbortt.event.planner.IntegrationTest;
 import io.github.bbortt.event.planner.security.AuthoritiesConstants;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,18 +26,6 @@ import org.springframework.security.web.servletapi.SecurityContextHolderAwareReq
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
-import static io.github.bbortt.event.planner.test.util.OAuth2TestUtil.ID_TOKEN;
-import static io.github.bbortt.event.planner.test.util.OAuth2TestUtil.authenticationToken;
-import static io.github.bbortt.event.planner.test.util.OAuth2TestUtil.registerAuthenticationToken;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Integration tests for the {@link LogoutResource} REST controller.

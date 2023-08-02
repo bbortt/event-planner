@@ -50,7 +50,7 @@ describe('Member Resolve Service', () => {
 
       const result = await firstValueFrom(
         // @ts-ignore skip conversion for testing
-        TestBed.runInInjectionContext(() => memberById(mockActivatedRouteSnapshot)),
+        TestBed.runInInjectionContext(() => memberById(mockActivatedRouteSnapshot))
       );
 
       expect(result).toEqual({ id: member.id });
@@ -64,7 +64,7 @@ describe('Member Resolve Service', () => {
 
       const result = await firstValueFrom(
         // @ts-ignore skip conversion for testing
-        TestBed.runInInjectionContext(() => memberById(mockActivatedRouteSnapshot)),
+        TestBed.runInInjectionContext(() => memberById(mockActivatedRouteSnapshot))
       );
 
       expect(result).toEqual(null);
@@ -76,7 +76,7 @@ describe('Member Resolve Service', () => {
 
       const result = await firstValueFrom(
         // @ts-ignore skip conversion for testing
-        (TestBed.runInInjectionContext(() => memberById(mockActivatedRouteSnapshot)) as Observable<IMember | null>).pipe(isEmpty()),
+        (TestBed.runInInjectionContext(() => memberById(mockActivatedRouteSnapshot)) as Observable<IMember | null>).pipe(isEmpty())
       );
 
       expect(result).toBeTruthy();

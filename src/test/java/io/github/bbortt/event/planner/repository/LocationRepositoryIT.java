@@ -1,17 +1,16 @@
 package io.github.bbortt.event.planner.repository;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import io.github.bbortt.event.planner.IntegrationTest;
 import io.github.bbortt.event.planner.domain.Location;
 import io.github.bbortt.event.planner.web.rest.LocationResourceIT;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @IntegrationTest
 class LocationRepositoryIT {

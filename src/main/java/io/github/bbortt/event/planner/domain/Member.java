@@ -17,13 +17,12 @@ import jakarta.persistence.Transient;
 import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 /**
  * A Member.
@@ -32,8 +31,8 @@ import java.util.Objects;
 @Table(
     name = "member",
     uniqueConstraints = {
-        @UniqueConstraint(name = "ux_invitation_per_project", columnNames = {"invited_email", "project_id"}),
-        @UniqueConstraint(name = "ux_accepted_per_project", columnNames = {"accepted_by", "project_id"}),
+        @UniqueConstraint(name = "ux_invitation_per_project", columnNames = { "invited_email", "project_id" }),
+        @UniqueConstraint(name = "ux_accepted_per_project", columnNames = { "accepted_by", "project_id" }),
     }
 )
 @EntityListeners({ AuditingEntityListener.class, EntityAuditEventListener.class })

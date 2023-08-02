@@ -33,7 +33,7 @@ describe('Event Management Component', () => {
                 page: '1',
                 size: '1',
                 sort: 'id,desc',
-              }),
+              })
             ),
             snapshot: { queryParams: {} },
           },
@@ -51,8 +51,8 @@ describe('Event Management Component', () => {
         new HttpResponse({
           body: [{ id: 123 }],
           headers,
-        }),
-      ),
+        })
+      )
     );
 
     fixture = TestBed.createComponent(EventComponent);
@@ -111,7 +111,7 @@ describe('Event Management Component', () => {
         queryParams: expect.objectContaining({
           sort: ['name,asc'],
         }),
-      }),
+      })
     );
   });
 });

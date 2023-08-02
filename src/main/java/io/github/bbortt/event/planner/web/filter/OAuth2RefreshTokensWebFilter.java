@@ -4,6 +4,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.OAuth2AuthorizeRequest;
@@ -20,8 +21,6 @@ import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-
-import java.io.IOException;
 
 /**
  * Refresh oauth2 tokens.
@@ -52,9 +51,9 @@ public class OAuth2RefreshTokensWebFilter extends OncePerRequestFilter {
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
         throws IOException, ServletException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if ((authentication instanceof OAuth2AuthenticationToken)) {
+        if ((authentication instanceof OAuth2AuthenticationToken oAuth2AuthenticationToken)) {
             try {
-                OAuth2AuthorizedClient authorizedClient = authorizedClient((OAuth2AuthenticationToken) authentication);
+                OAuth2AuthorizedClient authorizedClient = authorizedClient(oAuth2AuthenticationToken);
                 authorizedClientRepository.saveAuthorizedClient(authorizedClient, authentication, request, response);
             } catch (Exception e) {
                 OAuth2AuthorizationRequest authorizationRequest = authorizationRequestResolver.resolve(request);

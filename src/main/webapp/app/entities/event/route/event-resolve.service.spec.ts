@@ -49,7 +49,7 @@ describe('Event routing resolve service', () => {
 
       const result = await firstValueFrom(
         // @ts-ignore skip conversion for testing
-        TestBed.runInInjectionContext(() => eventById(mockActivatedRouteSnapshot)),
+        TestBed.runInInjectionContext(() => eventById(mockActivatedRouteSnapshot))
       );
 
       expect(result).toEqual({ id: event.id });
@@ -63,7 +63,7 @@ describe('Event routing resolve service', () => {
 
       const result = await firstValueFrom(
         // @ts-ignore skip conversion for testing
-        TestBed.runInInjectionContext(() => eventById(mockActivatedRouteSnapshot)),
+        TestBed.runInInjectionContext(() => eventById(mockActivatedRouteSnapshot))
       );
 
       expect(result).toEqual(null);
@@ -75,7 +75,7 @@ describe('Event routing resolve service', () => {
 
       const result = await firstValueFrom(
         // @ts-ignore skip conversion for testing
-        (TestBed.runInInjectionContext(() => eventById(mockActivatedRouteSnapshot)) as Observable<ILocation | null>).pipe(isEmpty()),
+        (TestBed.runInInjectionContext(() => eventById(mockActivatedRouteSnapshot)) as Observable<ILocation | null>).pipe(isEmpty())
       );
 
       expect(result).toBeTruthy();

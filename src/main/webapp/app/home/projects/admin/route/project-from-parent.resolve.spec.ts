@@ -31,8 +31,8 @@ describe('Project from parent routing resolve service', () => {
         // @ts-ignore skip conversion for testing
         TestBed.runInInjectionContext(() =>
           // @ts-ignore skip conversion for testing
-          projectFromParentRoute({ parent: { data: { project: { id: mockProjectId } } } }, mockRouter.routerState.snapshot),
-        ),
+          projectFromParentRoute({ parent: { data: { project: { id: mockProjectId } } } }, mockRouter.routerState.snapshot)
+        )
       );
 
       expect(result).toEqual({ id: mockProjectId });
@@ -43,7 +43,7 @@ describe('Project from parent routing resolve service', () => {
 
       const result = await firstValueFrom(
         // @ts-ignore skip conversion for testing
-        TestBed.runInInjectionContext(() => projectFromParentRoute({ parent: null }, mockRouter.routerState.snapshot)),
+        TestBed.runInInjectionContext(() => projectFromParentRoute({ parent: null }, mockRouter.routerState.snapshot))
       );
 
       expect(result).toEqual(null);

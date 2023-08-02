@@ -1,6 +1,14 @@
 package io.github.bbortt.event.planner.web.rest.errors;
 
+import static org.springframework.core.annotation.AnnotatedElementUtils.findMergedAnnotation;
+
 import jakarta.servlet.http.HttpServletRequest;
+import java.net.URI;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
@@ -28,15 +36,6 @@ import tech.jhipster.web.rest.errors.ProblemDetailWithCause;
 import tech.jhipster.web.rest.errors.ProblemDetailWithCause.ProblemDetailWithCauseBuilder;
 import tech.jhipster.web.util.HeaderUtil;
 
-import java.net.URI;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
-import static org.springframework.core.annotation.AnnotatedElementUtils.findMergedAnnotation;
-
 /**
  * Controller advice to translate the server side exceptions to client-friendly json structures.
  * The error response follows RFC7807 - Problem Details for HTTP APIs (https://tools.ietf.org/html/rfc7807).
@@ -61,13 +60,7 @@ public class ExceptionTranslator extends ResponseEntityExceptionHandler {
     @ExceptionHandler
     public ResponseEntity<Object> handleAnyException(Throwable ex, NativeWebRequest request) {
         ProblemDetailWithCause pdCause = wrapAndCustomizeProblem(ex, request);
-        return handleExceptionInternal(
-            (Exception) ex,
-            pdCause,
-            buildHeaders(ex),
-            HttpStatusCode.valueOf(pdCause.getStatus()),
-            request
-        );
+        return handleExceptionInternal((Exception) ex, pdCause, buildHeaders(ex), HttpStatusCode.valueOf(pdCause.getStatus()), request);
     }
 
     @Nullable
@@ -79,7 +72,7 @@ public class ExceptionTranslator extends ResponseEntityExceptionHandler {
         HttpStatusCode statusCode,
         WebRequest request
     ) {
-        body = body == null ? wrapAndCustomizeProblem((Throwable) ex, (NativeWebRequest) request) : body;
+        body = body == null ? wrapAndCustomizeProblem(ex, (NativeWebRequest) request) : body;
         return super.handleExceptionInternal(ex, body, headers, statusCode, request);
     }
 
@@ -121,7 +114,7 @@ public class ExceptionTranslator extends ResponseEntityExceptionHandler {
 
         if (
             (err instanceof MethodArgumentNotValidException methodArgumentNotValidException) &&
-                (problemProperties == null || !problemProperties.containsKey(FIELD_ERRORS_KEY))
+            (problemProperties == null || !problemProperties.containsKey(FIELD_ERRORS_KEY))
         ) problem.setProperty(FIELD_ERRORS_KEY, getFieldErrors(methodArgumentNotValidException));
 
         problem.setCause(buildCause(err.getCause(), request).orElse(null));
@@ -170,7 +163,7 @@ public class ExceptionTranslator extends ResponseEntityExceptionHandler {
     }
 
     private ResponseStatus extractResponseStatus(final Throwable throwable) {
-        return Optional.ofNullable(resolveResponseStatus(throwable)).orElse(null);
+        return resolveResponseStatus(throwable);
     }
 
     private ResponseStatus resolveResponseStatus(final Throwable type) {
@@ -184,9 +177,12 @@ public class ExceptionTranslator extends ResponseEntityExceptionHandler {
     }
 
     private String getMappedMessageKey(Throwable err) {
-        if (err instanceof MethodArgumentNotValidException) return ErrorConstants.ERR_VALIDATION; else if (
-            err instanceof ConcurrencyFailureException || err.getCause() instanceof ConcurrencyFailureException
-        ) return ErrorConstants.ERR_CONCURRENCY_FAILURE;
+        if (err instanceof MethodArgumentNotValidException) {
+            return ErrorConstants.ERR_VALIDATION;
+        } else if (err instanceof ConcurrencyFailureException || err.getCause() instanceof ConcurrencyFailureException) {
+            return ErrorConstants.ERR_CONCURRENCY_FAILURE;
+        }
+
         return null;
     }
 
@@ -221,12 +217,12 @@ public class ExceptionTranslator extends ResponseEntityExceptionHandler {
     private HttpHeaders buildHeaders(Throwable err) {
         return err instanceof BadRequestAlertException badRequestAlertException
             ? HeaderUtil.createFailureAlert(
-            applicationName,
-            true,
-            badRequestAlertException.getEntityName(),
-            badRequestAlertException.getErrorKey(),
-            badRequestAlertException.getMessage()
-        )
+                applicationName,
+                true,
+                badRequestAlertException.getEntityName(),
+                badRequestAlertException.getErrorKey(),
+                badRequestAlertException.getMessage()
+            )
             : null;
     }
 
@@ -244,6 +240,17 @@ public class ExceptionTranslator extends ResponseEntityExceptionHandler {
 
     private boolean containsPackageName(String message) {
         // This list is for sure not complete
-        return StringUtils.containsAny(message, "org.", "java.", "net.", "jakarta.", "javax.", "com.", "io.", "de.", "io.github.bbortt.event.planner");
+        return StringUtils.containsAny(
+            message,
+            "org.",
+            "java.",
+            "net.",
+            "jakarta.",
+            "javax.",
+            "com.",
+            "io.",
+            "de.",
+            "io.github.bbortt.event.planner"
+        );
     }
 }

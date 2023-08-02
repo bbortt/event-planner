@@ -3,6 +3,11 @@ package io.github.bbortt.event.planner;
 import io.github.bbortt.event.planner.config.ApplicationProperties;
 import io.github.bbortt.event.planner.config.CRLFLogConverter;
 import jakarta.annotation.PostConstruct;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,14 +19,8 @@ import org.springframework.core.env.Environment;
 import tech.jhipster.config.DefaultProfileUtil;
 import tech.jhipster.config.JHipsterConstants;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Optional;
-
 @SpringBootApplication
-@EnableConfigurationProperties({LiquibaseProperties.class, ApplicationProperties.class})
+@EnableConfigurationProperties({ LiquibaseProperties.class, ApplicationProperties.class })
 public class EventPlannerApp {
 
     private static final Logger logger = LoggerFactory.getLogger(EventPlannerApp.class);
@@ -73,7 +72,7 @@ public class EventPlannerApp {
     }
 
     private static void logApplicationStartup(Environment env) {
-        String applicationName= env.getProperty("spring.application.name");
+        String applicationName = env.getProperty("spring.application.name");
         String protocol = Optional.ofNullable(env.getProperty("server.ssl.key-store")).map(key -> "https").orElse("http");
         String serverPort = env.getProperty("server.port");
         String contextPath = Optional

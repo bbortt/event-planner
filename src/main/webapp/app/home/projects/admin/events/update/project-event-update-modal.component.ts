@@ -17,18 +17,16 @@ import ProjectEventUpdateComponent from './project-event-update.component';
 export default class ProjectEventUpdateModalComponent implements OnInit, OnDestroy {
   private modalRef: NgbModalRef | undefined;
 
-  constructor(
-    private activatedRoute: ActivatedRoute,
-    private location: Location,
-    private modalService: NgbModal,
-  ) {}
+  constructor(private activatedRoute: ActivatedRoute, private location: Location, private modalService: NgbModal) {}
 
   ngOnInit(): void {
     this.modalRef = this.modalService.open(ProjectEventUpdateComponent, { size: 'lg' });
     this.modalRef.result.catch(() => this.location.back());
 
-    this.activatedRoute.data.subscribe(({ event }) => {
-      if (this.modalRef) {
+    this.activatedRoute.data.subscribe(({ event, project }) => {
+      if (this.modalRef && project) {
+        this.modalRef.componentInstance.project = project;
+
         if (event) {
           this.modalRef.componentInstance.event = event;
           this.modalRef.componentInstance.updateForm(event);

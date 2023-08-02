@@ -37,7 +37,7 @@ export class ProjectMemberInviteModalContentComponent {
     private eventManager: EventManager,
     private location: Location,
     private memberService: MemberService,
-    private projectMemberService: ProjectMemberService,
+    private projectMemberService: ProjectMemberService
   ) {
     this.inviteForm = new FormGroup<InviteFormType>({
       email: new FormControl(null, {
@@ -54,7 +54,7 @@ export class ProjectMemberInviteModalContentComponent {
     if (this.project) {
       this.isSaving = true;
       this.subscribeToSaveResponse(
-        this.projectMemberService.inviteMemberToProject(this.project.id, [{ email: this.inviteForm.getRawValue().email! }], 'response'),
+        this.projectMemberService.inviteMemberToProject(this.project.id, [{ email: this.inviteForm.getRawValue().email! }], 'response')
       );
     }
   }
@@ -69,7 +69,7 @@ export class ProjectMemberInviteModalContentComponent {
   protected onSaveSuccess(members: GetProjectMembers200Response | null): void {
     if (members) {
       members.contents?.forEach(member =>
-        this.memberService.notifyMemberUpdates({ id: member.id, invitedEmail: member.email, accepted: false, project: this.project! }),
+        this.memberService.notifyMemberUpdates({ id: member.id, invitedEmail: member.email, accepted: false, project: this.project! })
       );
     }
 
@@ -95,11 +95,7 @@ export class ProjectMemberInviteModalContentComponent {
 export default class ProjectMemberInviteModalComponent implements OnInit, OnDestroy {
   private modalRef: NgbModalRef | undefined;
 
-  constructor(
-    private activatedRoute: ActivatedRoute,
-    private location: Location,
-    private modalService: NgbModal,
-  ) {}
+  constructor(private activatedRoute: ActivatedRoute, private location: Location, private modalService: NgbModal) {}
 
   ngOnInit(): void {
     this.modalRef = this.modalService.open(ProjectMemberInviteModalContentComponent, { size: 'lg' });

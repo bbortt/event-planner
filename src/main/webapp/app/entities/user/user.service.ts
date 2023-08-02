@@ -12,10 +12,7 @@ import { IUser, getUserIdentifier } from './user.model';
 export class UserService {
   private readonly resourceUrl;
 
-  constructor(
-    private http: HttpClient,
-    private applicationConfigService: ApplicationConfigService,
-  ) {
+  constructor(private http: HttpClient, private applicationConfigService: ApplicationConfigService) {
     this.resourceUrl = this.applicationConfigService.getEndpointFor('api/users');
   }
 

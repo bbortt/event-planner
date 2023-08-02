@@ -15,8 +15,6 @@ import { IEvent } from '../event.model';
 export default class EventDetailComponent {
   @Input() event: IEvent | null = null;
 
-  constructor() {}
-
   previousState(): void {
     window.history.back();
   }

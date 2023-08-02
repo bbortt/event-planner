@@ -6,12 +6,15 @@ import { RouterTestingModule } from '@angular/router/testing';
 
 import { of, Subject } from 'rxjs';
 
+import { Location, ProjectLocationService } from 'app/api';
+
 import { IEvent } from 'app/entities/event/event.model';
 import { EventService } from 'app/entities/event/service/event.service';
 import { EventFormService } from 'app/entities/event/update/event-form.service';
 
 import { ILocation } from 'app/entities/location/location.model';
 import { LocationService } from 'app/entities/location/service/location.service';
+import { IProject } from 'app/entities/project/project.model';
 
 import ProjectEventUpdateComponent from './project-event-update.component';
 
@@ -19,6 +22,7 @@ describe('Project Event Update Component', () => {
   let eventFormService: EventFormService;
   let eventService: EventService;
   let locationService: LocationService;
+  let projectLocationService: ProjectLocationService;
 
   let fixture: ComponentFixture<ProjectEventUpdateComponent>;
   let component: ProjectEventUpdateComponent;
@@ -34,6 +38,7 @@ describe('Project Event Update Component', () => {
     eventFormService = TestBed.inject(EventFormService);
     eventService = TestBed.inject(EventService);
     locationService = TestBed.inject(LocationService);
+    projectLocationService = TestBed.inject(ProjectLocationService);
 
     fixture = TestBed.createComponent(ProjectEventUpdateComponent);
     component = fixture.componentInstance;
@@ -47,6 +52,7 @@ describe('Project Event Update Component', () => {
 
       component.updateForm(event);
 
+      // @ts-ignore: force this private property value for testing.
       expect(component.locationsSharedCollection).toContain(location);
       expect(component.event).toEqual(event);
     });
@@ -119,25 +125,31 @@ describe('Project Event Update Component', () => {
   });
 
   describe('loadRelationshipsOptions', () => {
-    it('Should call Location query and add missing value', () => {
-      const event: IEvent = { id: 456 };
-      const location: ILocation = { id: 42887 };
-      event.location = location;
-      component.event = event;
+    it('Should load all Events from Project', () => {
+      const project: IProject = { id: 35176 };
+      const location: ILocation = { id: 42887, project };
+      const event: IEvent = { id: 456, location };
 
-      const locationCollection: ILocation[] = [{ id: 91552 }];
-      jest.spyOn(locationService, 'query').mockReturnValue(of(new HttpResponse({ body: locationCollection })));
+      component.event = event;
+      component.project = project;
+
+      const locationCollection = [{ id: 91552 }] as Location[];
+      jest
+        .spyOn(projectLocationService, 'getProjectLocations')
+        .mockReturnValue(of(new HttpResponse({ body: { contents: locationCollection } })));
       const additionalLocations = [location];
       const expectedCollection: ILocation[] = [...additionalLocations, ...locationCollection];
       jest.spyOn(locationService, 'addLocationToCollectionIfMissing').mockReturnValue(expectedCollection);
 
       component.loadRelationshipsOptions();
 
-      expect(locationService.query).toHaveBeenCalled();
+      expect(projectLocationService.getProjectLocations).toHaveBeenCalledWith(project.id, 'response');
       expect(locationService.addLocationToCollectionIfMissing).toHaveBeenCalledWith(
         locationCollection,
-        ...additionalLocations.map(expect.objectContaining),
+        ...additionalLocations.map(expect.objectContaining)
       );
+
+      // @ts-ignore: force this private property value for testing.
       expect(component.locationsSharedCollection).toEqual(expectedCollection);
     });
   });

@@ -1,7 +1,6 @@
 package io.github.bbortt.event.planner.web.api.mapper;
 
 import jakarta.annotation.Nullable;
-
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;

@@ -1,32 +1,5 @@
 package io.github.bbortt.event.planner.web.rest;
 
-import io.github.bbortt.event.planner.IntegrationTest;
-import io.github.bbortt.event.planner.domain.Location;
-import io.github.bbortt.event.planner.domain.Project;
-import io.github.bbortt.event.planner.repository.LocationRepository;
-import io.github.bbortt.event.planner.service.LocationService;
-import io.github.bbortt.event.planner.service.dto.LocationDTO;
-import io.github.bbortt.event.planner.service.mapper.LocationMapper;
-import jakarta.persistence.EntityManager;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.concurrent.atomic.AtomicLong;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.mockito.Mockito.any;
@@ -42,6 +15,32 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import io.github.bbortt.event.planner.IntegrationTest;
+import io.github.bbortt.event.planner.domain.Location;
+import io.github.bbortt.event.planner.domain.Project;
+import io.github.bbortt.event.planner.repository.LocationRepository;
+import io.github.bbortt.event.planner.service.LocationService;
+import io.github.bbortt.event.planner.service.dto.LocationDTO;
+import io.github.bbortt.event.planner.service.mapper.LocationMapper;
+import jakarta.persistence.EntityManager;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Integration tests for the {@link LocationResource} REST controller.
@@ -266,12 +265,11 @@ public class LocationResourceIT {
         int databaseSizeBeforeUpdate = locationRepository.findAll().size();
 
         // Update the location
-        Location updatedLocation = locationRepository.findById(location.getId()).orElseThrow(IllegalArgumentException::new);;
+        Location updatedLocation = locationRepository.findById(location.getId()).orElseThrow(IllegalArgumentException::new);
         // Disconnect from session so that the updates on updatedLocation are not directly saved in db
         em.detach(updatedLocation);
         updatedLocation.name(UPDATED_NAME).description(UPDATED_DESCRIPTION);
         LocationDTO locationDTO = locationMapper.toDto(updatedLocation);
-
         restLocationMockMvc
             .perform(
                 put(ENTITY_API_URL_ID, locationDTO.getId())
@@ -283,6 +281,7 @@ public class LocationResourceIT {
 
         // Validate the Location in the database
         List<Location> locationList = locationRepository.findAll();
+
         assertThat(locationList).hasSize(databaseSizeBeforeUpdate);
         Location testLocation = locationList.get(locationList.size() - 1);
         assertThat(testLocation.getName()).isEqualTo(UPDATED_NAME);

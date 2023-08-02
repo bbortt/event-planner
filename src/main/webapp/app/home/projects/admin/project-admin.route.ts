@@ -90,6 +90,7 @@ export const PROJECT_ADMIN_ROUTES: Route[] = [
             pathMatch: 'full',
             resolve: {
               event: eventById,
+              project: projectById,
             },
           },
         ],

@@ -16,11 +16,7 @@ import SharedModule from 'app/shared/shared.module';
 export default class ProjectInvitationLoginComponent {
   @Input() invitationEmail: string | null = null;
 
-  constructor(
-    private loginService: LoginService,
-    private stateStorageService: StateStorageService,
-    private router: Router,
-  ) {}
+  constructor(private loginService: LoginService, private stateStorageService: StateStorageService, private router: Router) {}
 
   login(): void {
     this.stateStorageService.storeUrl(this.router.url);

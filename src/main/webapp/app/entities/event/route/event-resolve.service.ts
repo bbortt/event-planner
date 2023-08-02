@@ -10,10 +10,7 @@ import { EventService } from '../service/event.service';
 
 @Injectable({ providedIn: 'root' })
 export class EventResolveService {
-  constructor(
-    protected service: EventService,
-    protected router: Router,
-  ) {}
+  constructor(protected service: EventService, protected router: Router) {}
 
   byId(id: string | null): Observable<IEvent | null> {
     if (!id) {
@@ -28,7 +25,7 @@ export class EventResolveService {
           this.router.navigateByUrl('404').catch(() => (window.location.href = '/404'));
           return EMPTY;
         }
-      }),
+      })
     );
   }
 }

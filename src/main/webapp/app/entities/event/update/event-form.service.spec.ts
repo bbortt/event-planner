@@ -26,7 +26,7 @@ describe('Event Form Service', () => {
             lastModifiedBy: expect.any(Object),
             lastModifiedDate: expect.any(Object),
             location: expect.any(Object),
-          }),
+          })
         );
       });
 
@@ -42,7 +42,7 @@ describe('Event Form Service', () => {
             lastModifiedBy: expect.any(Object),
             lastModifiedDate: expect.any(Object),
             location: expect.any(Object),
-          }),
+          })
         );
       });
     });

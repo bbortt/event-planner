@@ -35,10 +35,7 @@ export class EventService {
   private eventUpdatedSource = new Subject<IEvent>();
   private _eventUpdatedSource$ = this.eventUpdatedSource.asObservable();
 
-  constructor(
-    protected http: HttpClient,
-    protected applicationConfigService: ApplicationConfigService,
-  ) {
+  constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) {
     this.resourceUrl = this.applicationConfigService.getEndpointFor('api/events');
   }
 
@@ -50,7 +47,7 @@ export class EventService {
     const copy = this.convertDateFromClient(event);
     return this.http.post<RestEvent>(this.resourceUrl, copy, { observe: 'response' }).pipe(
       map(res => this.convertResponseFromServer(res)),
-      tap(res => this.notifySubscribersOfChangedEvent(res)),
+      tap(res => this.notifySubscribersOfChangedEvent(res))
     );
   }
 
@@ -58,7 +55,7 @@ export class EventService {
     const copy = this.convertDateFromClient(event);
     return this.http.put<RestEvent>(`${this.resourceUrl}/${this.getEventIdentifier(event)}`, copy, { observe: 'response' }).pipe(
       map(res => this.convertResponseFromServer(res)),
-      tap(res => this.notifySubscribersOfChangedEvent(res)),
+      tap(res => this.notifySubscribersOfChangedEvent(res))
     );
   }
 
@@ -66,7 +63,7 @@ export class EventService {
     const copy = this.convertDateFromClient(event);
     return this.http.patch<RestEvent>(`${this.resourceUrl}/${this.getEventIdentifier(event)}`, copy, { observe: 'response' }).pipe(
       map(res => this.convertResponseFromServer(res)),
-      tap(res => this.notifySubscribersOfChangedEvent(res)),
+      tap(res => this.notifySubscribersOfChangedEvent(res))
     );
   }
 

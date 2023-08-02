@@ -11,10 +11,7 @@ import { IUser } from '../user-management.model';
 export class UserManagementService {
   private readonly resourceUrl;
 
-  constructor(
-    private http: HttpClient,
-    private applicationConfigService: ApplicationConfigService,
-  ) {
+  constructor(private http: HttpClient, private applicationConfigService: ApplicationConfigService) {
     this.resourceUrl = this.applicationConfigService.getEndpointFor('api/admin/users');
   }
 

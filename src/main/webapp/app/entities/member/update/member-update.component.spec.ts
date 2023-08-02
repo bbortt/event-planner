@@ -72,7 +72,7 @@ describe('Member Management Update Component', () => {
       expect(projectService.query).toHaveBeenCalled();
       expect(projectService.addProjectToCollectionIfMissing).toHaveBeenCalledWith(
         projectCollection,
-        ...additionalProjects.map(expect.objectContaining),
+        ...additionalProjects.map(expect.objectContaining)
       );
       expect(component.projectsSharedCollection).toEqual(expectedCollection);
     });

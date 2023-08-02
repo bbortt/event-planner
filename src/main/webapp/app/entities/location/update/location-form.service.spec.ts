@@ -28,7 +28,7 @@ describe('Location Form Service', () => {
             lastModifiedDate: expect.any(Object),
             project: expect.any(Object),
             parent: expect.any(Object),
-          }),
+          })
         );
       });
 
@@ -46,7 +46,7 @@ describe('Location Form Service', () => {
             lastModifiedDate: expect.any(Object),
             project: expect.any(Object),
             parent: expect.any(Object),
-          }),
+          })
         );
       });
     });
