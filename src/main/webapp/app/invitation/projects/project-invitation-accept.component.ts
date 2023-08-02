@@ -30,16 +30,16 @@ export default class ProjectInvitationAcceptComponent implements OnInit {
   @Input() email: string | null = null;
 
   isLoading = true;
-  member: Member | null = null;
-
   isSaving = false;
+
+  member: Member | null = null;
 
   constructor(
     private alertService: AlertService,
     private eventManager: EventManager,
     private memberService: MemberService,
     private projectMemberService: ProjectMemberService,
-    private router: Router,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -56,7 +56,7 @@ export default class ProjectInvitationAcceptComponent implements OnInit {
             if (member.body?.accepted) {
               this.onAccepted();
             }
-          }),
+          })
         )
         .subscribe({
           next: (response: HttpResponse<Member>) => {
@@ -84,7 +84,7 @@ export default class ProjectInvitationAcceptComponent implements OnInit {
           acceptedBy: this.email,
           acceptedDate: dayjs(),
           project: this.getProject(),
-        }),
+        })
       );
     }
   }
@@ -112,7 +112,7 @@ export default class ProjectInvitationAcceptComponent implements OnInit {
         type: 'success',
         translationKey: 'app.project.invitation.accepting.success',
         translationParams: { projectName: this.project?.name },
-      }),
+      })
     );
   }
 

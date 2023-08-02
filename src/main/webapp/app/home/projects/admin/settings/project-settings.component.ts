@@ -1,6 +1,6 @@
 import { Location } from '@angular/common';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
@@ -22,8 +22,9 @@ import SharedModule from 'app/shared/shared.module';
   imports: [SharedModule, FormsModule, ReactiveFormsModule],
 })
 export default class ProjectSettingsComponent implements OnInit {
+  @Input() project: IProject | null = null;
+
   isSaving = false;
-  project: IProject | null = null;
   isProjectArchived = false;
 
   editForm: ProjectFormGroup;
@@ -33,7 +34,7 @@ export default class ProjectSettingsComponent implements OnInit {
     private location: Location,
     protected projectService: ProjectService,
     protected projectFormService: ProjectFormService,
-    private activatedRoute: ActivatedRoute,
+    private activatedRoute: ActivatedRoute
   ) {
     this.editForm = this.projectFormService.createProjectFormGroup();
   }

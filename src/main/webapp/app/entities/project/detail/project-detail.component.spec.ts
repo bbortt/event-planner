@@ -19,7 +19,7 @@ describe('Project Management Detail Component', () => {
               resolve: { project: () => of({ id: 123 }) },
             },
           ],
-          withComponentInputBinding(),
+          withComponentInputBinding()
         ),
       ],
     })

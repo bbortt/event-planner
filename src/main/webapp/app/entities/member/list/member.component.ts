@@ -52,7 +52,7 @@ export default class MemberComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     protected modalService: NgbModal,
     private ngZone: NgZone,
-    private router: Router,
+    private router: Router
   ) {}
 
   trackId = (_index: number, item: IMember): number => this.memberService.getMemberIdentifier(item);
@@ -68,7 +68,7 @@ export default class MemberComponent implements OnInit {
     modalRef.closed
       .pipe(
         filter(reason => reason === ITEM_DELETED_EVENT),
-        switchMap(() => this.loadFromBackendWithRouteInformation()),
+        switchMap(() => this.loadFromBackendWithRouteInformation())
       )
       .subscribe({
         next: (res: EntityArrayResponseType) => {
@@ -96,7 +96,7 @@ export default class MemberComponent implements OnInit {
   protected loadFromBackendWithRouteInformation(): Observable<EntityArrayResponseType> {
     return combineLatest([this.activatedRoute.queryParamMap, this.activatedRoute.data]).pipe(
       tap(([params, data]) => this.fillComponentAttributeFromRoute(params, data)),
-      switchMap(() => this.queryBackend(this.page, this.predicate, this.ascending)),
+      switchMap(() => this.queryBackend(this.page, this.predicate, this.ascending))
     );
   }
 
@@ -143,7 +143,7 @@ export default class MemberComponent implements OnInit {
       this.router.navigate(['./'], {
         relativeTo: this.activatedRoute,
         queryParams: queryParamsObj,
-      }),
+      })
     );
   }
 

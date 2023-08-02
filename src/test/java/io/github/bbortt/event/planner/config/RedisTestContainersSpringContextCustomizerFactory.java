@@ -1,5 +1,6 @@
 package io.github.bbortt.event.planner.config;
 
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -8,8 +9,6 @@ import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.test.context.ContextConfigurationAttributes;
 import org.springframework.test.context.ContextCustomizer;
 import org.springframework.test.context.ContextCustomizerFactory;
-
-import java.util.List;
 
 public class RedisTestContainersSpringContextCustomizerFactory implements ContextCustomizerFactory {
 

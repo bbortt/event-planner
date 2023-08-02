@@ -1,9 +1,11 @@
 import { HttpResponse } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { Observable } from 'rxjs';
 import { finalize, map } from 'rxjs/operators';
+
+import { GetProjectLocations200Response, Location, ProjectLocationService } from 'app/api';
 
 import { IEvent } from 'app/entities/event/event.model';
 import { EventService } from 'app/entities/event/service/event.service';
@@ -13,6 +15,7 @@ import { ILocation } from 'app/entities/location/location.model';
 import { LocationService } from 'app/entities/location/service/location.service';
 
 import SharedModule from 'app/shared/shared.module';
+import { IProject } from '../../../../../entities/project/project.model';
 
 @Component({
   standalone: true,
@@ -21,17 +24,20 @@ import SharedModule from 'app/shared/shared.module';
   imports: [SharedModule, FormsModule, ReactiveFormsModule],
 })
 export default class ProjectEventUpdateComponent {
+  @Input() event: IEvent | null = null;
+  @Input() project: IProject | null = null;
+
   isSaving = false;
-  event: IEvent | null = null;
 
-  locationsSharedCollection: ILocation[] = [];
+  protected locationsSharedCollection: ILocation[] = [];
 
-  editForm: EventFormGroup;
+  protected editForm: EventFormGroup;
 
   constructor(
-    protected eventFormService: EventFormService,
-    protected eventService: EventService,
-    protected locationService: LocationService,
+    private eventFormService: EventFormService,
+    private eventService: EventService,
+    private locationService: LocationService,
+    private projectLocationService: ProjectLocationService
   ) {
     this.editForm = this.eventFormService.createEventFormGroup();
   }
@@ -42,16 +48,17 @@ export default class ProjectEventUpdateComponent {
 
     this.locationsSharedCollection = this.locationService.addLocationToCollectionIfMissing<ILocation>(
       this.locationsSharedCollection,
-      event.location,
+      event.location
     );
   }
 
   public loadRelationshipsOptions(): void {
-    this.locationService
-      .query()
-      .pipe(map((res: HttpResponse<ILocation[]>) => res.body ?? []))
+    this.projectLocationService
+      .getProjectLocations(this.project!.id, 'response')
+      .pipe(map((res: HttpResponse<GetProjectLocations200Response>) => res.body?.contents ?? []))
+      .pipe(map((locations: Location[]) => locations.map(({ id, name, description }) => ({ id, name, description } as ILocation))))
       .pipe(
-        map((locations: ILocation[]) => this.locationService.addLocationToCollectionIfMissing<ILocation>(locations, this.event?.location)),
+        map((locations: ILocation[]) => this.locationService.addLocationToCollectionIfMissing<ILocation>(locations, this.event?.location))
       )
       .subscribe((locations: ILocation[]) => (this.locationsSharedCollection = locations));
   }

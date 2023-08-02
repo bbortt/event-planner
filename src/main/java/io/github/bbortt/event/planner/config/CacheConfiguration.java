@@ -1,5 +1,10 @@
 package io.github.bbortt.event.planner.config;
 
+import java.net.URI;
+import java.util.concurrent.TimeUnit;
+import javax.cache.configuration.MutableConfiguration;
+import javax.cache.expiry.CreatedExpiryPolicy;
+import javax.cache.expiry.Duration;
 import org.hibernate.cache.jcache.ConfigSettings;
 import org.redisson.Redisson;
 import org.redisson.config.ClusterServersConfig;
@@ -20,12 +25,6 @@ import org.springframework.context.annotation.Configuration;
 import tech.jhipster.config.JHipsterProperties;
 import tech.jhipster.config.cache.PrefixedKeyGenerator;
 
-import javax.cache.configuration.MutableConfiguration;
-import javax.cache.expiry.CreatedExpiryPolicy;
-import javax.cache.expiry.Duration;
-import java.net.URI;
-import java.util.concurrent.TimeUnit;
-
 @Configuration
 @EnableCaching
 @ConditionalOnProperty(name = "spring.cache.type", havingValue = "redis")
@@ -34,7 +33,7 @@ public class CacheConfiguration {
     private GitProperties gitProperties;
     private BuildProperties buildProperties;
 
-    public CacheConfiguration(){
+    public CacheConfiguration() {
         LoggerFactory.getLogger(CacheConfiguration.class).info("Caching enabled!");
     }
 

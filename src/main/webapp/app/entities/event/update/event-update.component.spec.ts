@@ -67,7 +67,7 @@ describe('Event Management Update Component', () => {
       expect(locationService.query).toHaveBeenCalled();
       expect(locationService.addLocationToCollectionIfMissing).toHaveBeenCalledWith(
         locationCollection,
-        ...additionalLocations.map(expect.objectContaining),
+        ...additionalLocations.map(expect.objectContaining)
       );
       expect(component.locationsSharedCollection).toEqual(expectedCollection);
     });

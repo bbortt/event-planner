@@ -42,7 +42,7 @@ describe('Project Event List', () => {
                 page: '1',
                 size: '1',
                 sort: 'id,desc',
-              }),
+              })
             ),
             snapshot: { queryParams: {} },
           },
@@ -66,8 +66,8 @@ describe('Project Event List', () => {
         new HttpResponse({
           body: { contents: [{ id: 123 }] as Event[] } as GetProjectEvents200Response,
           headers,
-        }),
-      ),
+        })
+      )
     );
   });
 
@@ -114,7 +114,7 @@ describe('Project Event List', () => {
         queryParams: expect.objectContaining({
           sort: ['name,asc'],
         }),
-      }),
+      })
     );
   });
 });

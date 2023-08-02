@@ -74,7 +74,7 @@ describe('Project Resolve Service', () => {
 
       const result = await firstValueFrom(
         // @ts-ignore skip conversion for testing
-        TestBed.runInInjectionContext(() => projectById(mockActivatedRouteSnapshot)),
+        TestBed.runInInjectionContext(() => projectById(mockActivatedRouteSnapshot))
       );
 
       expect(result).toEqual({ id: project.id });
@@ -88,7 +88,7 @@ describe('Project Resolve Service', () => {
 
       const result = await firstValueFrom(
         // @ts-ignore skip conversion for testing
-        TestBed.runInInjectionContext(() => projectById(mockActivatedRouteSnapshot)),
+        TestBed.runInInjectionContext(() => projectById(mockActivatedRouteSnapshot))
       );
 
       expect(result).toEqual(null);
@@ -100,7 +100,7 @@ describe('Project Resolve Service', () => {
 
       const result = await firstValueFrom(
         // @ts-ignore skip conversion for testing
-        (TestBed.runInInjectionContext(() => projectById(mockActivatedRouteSnapshot)) as Observable<IProject | null>).pipe(isEmpty()),
+        (TestBed.runInInjectionContext(() => projectById(mockActivatedRouteSnapshot)) as Observable<IProject | null>).pipe(isEmpty())
       );
 
       expect(result).toBeTruthy();
@@ -116,7 +116,7 @@ describe('Project Resolve Service', () => {
 
       const result = await firstValueFrom(
         // @ts-ignore skip conversion for testing
-        TestBed.runInInjectionContext(() => projectByToken(mockActivatedRouteSnapshot)),
+        TestBed.runInInjectionContext(() => projectByToken(mockActivatedRouteSnapshot))
       );
 
       expect(mockAccountService.identity).not.toHaveBeenCalled();
@@ -130,7 +130,7 @@ describe('Project Resolve Service', () => {
 
       const result = await firstValueFrom(
         // @ts-ignore skip conversion for testing
-        TestBed.runInInjectionContext(() => projectByToken(mockActivatedRouteSnapshot)),
+        TestBed.runInInjectionContext(() => projectByToken(mockActivatedRouteSnapshot))
       );
 
       expect(mockAccountService.identity).toHaveBeenCalled();
@@ -143,7 +143,7 @@ describe('Project Resolve Service', () => {
 
       const result = await firstValueFrom(
         // @ts-ignore skip conversion for testing
-        TestBed.runInInjectionContext(() => projectByToken(mockActivatedRouteSnapshot)),
+        TestBed.runInInjectionContext(() => projectByToken(mockActivatedRouteSnapshot))
       );
 
       expect(mockAccountService.identity).toHaveBeenCalled();
@@ -159,7 +159,7 @@ describe('Project Resolve Service', () => {
 
       const result = await firstValueFrom(
         // @ts-ignore skip conversion for testing
-        TestBed.runInInjectionContext(() => projectByToken(mockActivatedRouteSnapshot)),
+        TestBed.runInInjectionContext(() => projectByToken(mockActivatedRouteSnapshot))
       );
 
       expect(mockAccountService.identity).toHaveBeenCalled();

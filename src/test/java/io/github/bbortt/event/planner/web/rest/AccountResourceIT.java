@@ -1,5 +1,13 @@
 package io.github.bbortt.event.planner.web.rest;
 
+import static io.github.bbortt.event.planner.test.util.OAuth2TestUtil.TEST_USER_LOGIN;
+import static io.github.bbortt.event.planner.test.util.OAuth2TestUtil.registerAuthenticationToken;
+import static io.github.bbortt.event.planner.test.util.OAuth2TestUtil.testAuthenticationToken;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import io.github.bbortt.event.planner.IntegrationTest;
 import io.github.bbortt.event.planner.security.AuthoritiesConstants;
 import org.junit.jupiter.api.Test;
@@ -12,14 +20,6 @@ import org.springframework.security.test.context.TestSecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-
-import static io.github.bbortt.event.planner.test.util.OAuth2TestUtil.TEST_USER_LOGIN;
-import static io.github.bbortt.event.planner.test.util.OAuth2TestUtil.registerAuthenticationToken;
-import static io.github.bbortt.event.planner.test.util.OAuth2TestUtil.testAuthenticationToken;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Integration tests for the {@link AccountResource} REST controller.

@@ -52,7 +52,7 @@ export default class LocationComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     protected modalService: NgbModal,
     private ngZone: NgZone,
-    private router: Router,
+    private router: Router
   ) {}
 
   trackId = (_index: number, item: ILocation): number => this.locationService.getLocationIdentifier(item);
@@ -68,7 +68,7 @@ export default class LocationComponent implements OnInit {
     modalRef.closed
       .pipe(
         filter(reason => reason === ITEM_DELETED_EVENT),
-        switchMap(() => this.loadFromBackendWithRouteInformation()),
+        switchMap(() => this.loadFromBackendWithRouteInformation())
       )
       .subscribe({
         next: (res: EntityArrayResponseType) => {
@@ -96,7 +96,7 @@ export default class LocationComponent implements OnInit {
   protected loadFromBackendWithRouteInformation(): Observable<EntityArrayResponseType> {
     return combineLatest([this.activatedRoute.queryParamMap, this.activatedRoute.data]).pipe(
       tap(([params, data]) => this.fillComponentAttributeFromRoute(params, data)),
-      switchMap(() => this.queryBackend(this.page, this.predicate, this.ascending)),
+      switchMap(() => this.queryBackend(this.page, this.predicate, this.ascending))
     );
   }
 
@@ -145,7 +145,7 @@ export default class LocationComponent implements OnInit {
           relativeTo: this.activatedRoute,
           queryParams: queryParamsObj,
         })
-        .catch(() => window.location.reload()),
+        .catch(() => window.location.reload())
     );
   }
 

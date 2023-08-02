@@ -1,11 +1,15 @@
 package io.github.bbortt.event.planner.config;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
 import io.github.bbortt.event.planner.security.AuthoritiesConstants;
 import io.github.bbortt.event.planner.security.SecurityUtils;
 import io.github.bbortt.event.planner.security.oauth2.AudienceValidator;
 import io.github.bbortt.event.planner.security.oauth2.CustomClaimConverter;
 import io.github.bbortt.event.planner.security.oauth2.JwtGrantedAuthorityConverter;
 import io.github.bbortt.event.planner.web.filter.SpaWebFilter;
+import java.util.HashSet;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
@@ -34,11 +38,6 @@ import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter;
 import tech.jhipster.config.JHipsterProperties;
 import tech.jhipster.web.filter.CookieCsrfFilter;
-
-import java.util.HashSet;
-import java.util.Set;
-
-import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableMethodSecurity(securedEnabled = true)
@@ -123,8 +122,7 @@ public class SecurityConfiguration {
             authorities.forEach(authority -> {
                 // Check for OidcUserAuthority because Spring Security 5.2 returns
                 // each scope as a GrantedAuthority, which we don't care about.
-                if (authority instanceof OidcUserAuthority) {
-                    OidcUserAuthority oidcUserAuthority = (OidcUserAuthority) authority;
+                if (authority instanceof OidcUserAuthority oidcUserAuthority) {
                     mappedAuthorities.addAll(SecurityUtils.extractAuthorityFromClaims(oidcUserAuthority.getUserInfo().getClaims()));
                 }
             });

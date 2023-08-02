@@ -33,7 +33,7 @@ export default class ProjectUpdateComponent implements OnInit {
     private eventManager: EventManager,
     private location: Location,
     protected projectService: ProjectService,
-    protected projectFormService: ProjectFormService,
+    protected projectFormService: ProjectFormService
   ) {
     this.editForm = this.projectFormService.createProjectFormGroup();
   }

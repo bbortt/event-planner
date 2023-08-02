@@ -19,11 +19,7 @@ export class TrackerService {
   private rxStomp?: RxStomp;
   private routerSubscription: Subscription | null = null;
 
-  constructor(
-    private router: Router,
-    private accountService: AccountService,
-    private location: Location,
-  ) {}
+  constructor(private router: Router, private accountService: AccountService, private location: Location) {}
 
   setup(): void {
     this.rxStomp = new RxStomp();

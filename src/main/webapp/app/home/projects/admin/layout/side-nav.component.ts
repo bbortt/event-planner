@@ -19,11 +19,7 @@ export default class SideNavComponent implements OnDestroy, OnInit {
 
   private routerSubscription: Subscription | null = null;
 
-  constructor(
-    private router: Router,
-    private titleService: Title,
-    private translateService: TranslateService,
-  ) {}
+  constructor(private router: Router, private titleService: Title, private translateService: TranslateService) {}
 
   ngOnInit(): void {
     this.routerSubscription = this.router.events

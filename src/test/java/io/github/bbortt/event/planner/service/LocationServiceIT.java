@@ -1,5 +1,7 @@
 package io.github.bbortt.event.planner.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import io.github.bbortt.event.planner.IntegrationTest;
 import io.github.bbortt.event.planner.domain.Location;
 import io.github.bbortt.event.planner.domain.Project;
@@ -7,16 +9,13 @@ import io.github.bbortt.event.planner.service.dto.LocationDTO;
 import io.github.bbortt.event.planner.web.rest.LocationResourceIT;
 import io.github.bbortt.event.planner.web.rest.ProjectResourceIT;
 import jakarta.persistence.EntityManager;
+import java.util.List;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @IntegrationTest
 @WithMockUser("location-service-it")

@@ -1,3 +1,5 @@
+import { IProject } from '../../../../../entities/project/project.model';
+
 jest.mock('@ng-bootstrap/ng-bootstrap');
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
@@ -22,6 +24,7 @@ class MockNgbModalRef {
 }
 
 const event: IEvent = { id: 1234 };
+const project: IProject = { id: 1234 };
 
 describe('Project Event Update Modal Component', () => {
   let mockActivatedRoute: ActivatedRoute;
@@ -40,7 +43,7 @@ describe('Project Event Update Modal Component', () => {
         {
           provide: ActivatedRoute,
           useValue: {
-            data: of({ event }),
+            data: of({ event, project }),
             url: of([]),
           },
         },
@@ -75,7 +78,7 @@ describe('Project Event Update Modal Component', () => {
   });
 
   it('should open new modal', () => {
-    mockActivatedRoute.data = of({});
+    mockActivatedRoute.data = of({ project });
 
     component.ngOnInit();
 
@@ -84,6 +87,7 @@ describe('Project Event Update Modal Component', () => {
 
     expect(mockModalRef.componentInstance.event).toBeUndefined();
     expect(mockModalRef.componentInstance.updateForm).not.toHaveBeenCalled();
+    expect(mockModalRef.componentInstance.project).toEqual(project);
   });
 
   it('should open update modal', () => {
@@ -94,6 +98,7 @@ describe('Project Event Update Modal Component', () => {
 
     expect(mockModalRef.componentInstance.event).toEqual(event);
     expect(mockModalRef.componentInstance.updateForm).toHaveBeenCalled();
+    expect(mockModalRef.componentInstance.project).toEqual(project);
   });
 
   it('should close modal', () => {

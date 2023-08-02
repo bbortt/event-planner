@@ -34,7 +34,7 @@ export default class EventUpdateComponent implements OnInit {
     protected eventService: EventService,
     protected eventFormService: EventFormService,
     protected locationService: LocationService,
-    protected activatedRoute: ActivatedRoute,
+    protected activatedRoute: ActivatedRoute
   ) {
     this.editForm = this.eventFormService.createEventFormGroup();
   }
@@ -91,7 +91,7 @@ export default class EventUpdateComponent implements OnInit {
 
     this.locationsSharedCollection = this.locationService.addLocationToCollectionIfMissing<ILocation>(
       this.locationsSharedCollection,
-      event.location,
+      event.location
     );
   }
 
@@ -100,7 +100,7 @@ export default class EventUpdateComponent implements OnInit {
       .query()
       .pipe(map((res: HttpResponse<ILocation[]>) => res.body ?? []))
       .pipe(
-        map((locations: ILocation[]) => this.locationService.addLocationToCollectionIfMissing<ILocation>(locations, this.event?.location)),
+        map((locations: ILocation[]) => this.locationService.addLocationToCollectionIfMissing<ILocation>(locations, this.event?.location))
       )
       .subscribe((locations: ILocation[]) => (this.locationsSharedCollection = locations));
   }

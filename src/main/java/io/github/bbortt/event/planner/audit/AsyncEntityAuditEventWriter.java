@@ -45,7 +45,10 @@ public class AsyncEntityAuditEventWriter implements EntityAuditEventWriter {
      */
     @Async
     public void writeAuditEvent(Object target, EntityAuditAction action) {
-        logger.debug("-------------- Post {} audit  --------------", action.value());
+        if (logger.isDebugEnabled()) {
+            logger.debug("-------------- Post {} audit  --------------", action.value());
+        }
+
         try {
             EntityAuditEvent auditedEntity = prepareAuditEntity(target, action);
             if (auditedEntity != null) {
@@ -74,7 +77,7 @@ public class AsyncEntityAuditEventWriter implements EntityAuditEventWriter {
         try {
             Field privateLongField = entityClass.getDeclaredField("id");
             privateLongField.setAccessible(true);
-            entityId = (Object) privateLongField.get(entity);
+            entityId = privateLongField.get(entity);
             privateLongField.setAccessible(false);
             entityData = objectMapper.writeValueAsString(entity);
         } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException | IOException e) {
@@ -94,7 +97,7 @@ public class AsyncEntityAuditEventWriter implements EntityAuditEventWriter {
             auditedEntity.setModifiedDate(abstractAuditEntity.getLastModifiedDate());
             calculateVersion(auditedEntity);
         }
-        logger.trace("Audit Entity --> {} ", auditedEntity.toString());
+        logger.trace("Audit Entity --> {} ", auditedEntity);
         return auditedEntity;
     }
 

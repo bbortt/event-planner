@@ -104,7 +104,7 @@ describe("Project Locations Drag 'n Drop Component", () => {
       mockActivatedRoute.queryParamMap = of(
         jest.requireActual('@angular/router').convertToParamMap({
           activeLocationPath,
-        }),
+        })
       );
 
       component.locations = projectLocations;

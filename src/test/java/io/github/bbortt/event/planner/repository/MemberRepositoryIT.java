@@ -1,21 +1,20 @@
 package io.github.bbortt.event.planner.repository;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import io.github.bbortt.event.planner.IntegrationTest;
 import io.github.bbortt.event.planner.domain.Member;
 import io.github.bbortt.event.planner.domain.Project;
 import io.github.bbortt.event.planner.web.rest.MemberResourceIT;
 import io.github.bbortt.event.planner.web.rest.ProjectResourceIT;
 import jakarta.persistence.EntityManager;
+import java.util.Objects;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Objects;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @IntegrationTest
 class MemberRepositoryIT {

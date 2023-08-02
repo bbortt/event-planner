@@ -18,10 +18,7 @@ import { MemberService } from '../service/member.service';
 export default class MemberDeleteDialogComponent {
   member?: IMember;
 
-  constructor(
-    protected memberService: MemberService,
-    protected activeModal: NgbActiveModal,
-  ) {}
+  constructor(protected memberService: MemberService, protected activeModal: NgbActiveModal) {}
 
   cancel(): void {
     this.activeModal.dismiss();
