@@ -15,8 +15,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 /**
- * Async Entity Audit Event writer
- * This is invoked by Hibernate entity listeners to write audit event for entities
+ * Async Entity Audit Event writer. It will be invoked by Hibernate entity listeners to write audit event for entities.
  */
 @Component
 @Profile("!testdev & !testprod")
@@ -26,7 +25,7 @@ public class AsyncEntityAuditEventWriter implements EntityAuditEventWriter {
 
     private final EntityAuditEventRepository auditingEntityRepository;
 
-    private final ObjectMapper objectMapper; //Jackson object mapper
+    private final ObjectMapper objectMapper;
 
     private final ConversionService conversionService;
 
@@ -55,16 +54,12 @@ public class AsyncEntityAuditEventWriter implements EntityAuditEventWriter {
                 auditingEntityRepository.save(auditedEntity);
             }
         } catch (Exception e) {
-            logger.error("Exception while persisting audit entity for {} error: {}", target, e);
+            logger.error("Exception while persisting audit entity for {} error!", target, e);
         }
     }
 
     /**
      * Method to prepare auditing entity
-     *
-     * @param entity
-     * @param action
-     * @return
      */
     private EntityAuditEvent prepareAuditEntity(final Object entity, EntityAuditAction action) {
         EntityAuditEvent auditedEntity = new EntityAuditEvent();
@@ -81,7 +76,7 @@ public class AsyncEntityAuditEventWriter implements EntityAuditEventWriter {
             privateLongField.setAccessible(false);
             entityData = objectMapper.writeValueAsString(entity);
         } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException | IOException e) {
-            logger.error("Exception while getting entity ID and content {}", e);
+            logger.error("Exception while getting entity ID and content!", e);
             // returning null as we don't want to raise an application exception here
             return null;
         }
