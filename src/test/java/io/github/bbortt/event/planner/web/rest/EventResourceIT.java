@@ -24,6 +24,8 @@ import io.github.bbortt.event.planner.service.EventService;
 import io.github.bbortt.event.planner.service.dto.EventDTO;
 import io.github.bbortt.event.planner.service.mapper.EventMapper;
 import jakarta.persistence.EntityManager;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -53,7 +55,11 @@ public class EventResourceIT {
 
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
+    private static final Instant DEFAULT_START_DATE_TIME = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+    private static final Instant UPDATED_START_DATE_TIME = DEFAULT_START_DATE_TIME.plus(1, ChronoUnit.HOURS);
 
+    private static final Instant DEFAULT_END_DATE_TIME = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+    private static final Instant UPDATED_END_DATE_TIME = DEFAULT_END_DATE_TIME.plus(1, ChronoUnit.HOURS);
     private static final String ENTITY_API_URL = "/api/events";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
@@ -87,7 +93,7 @@ public class EventResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Event createEntity(EntityManager em) {
-        Event event = new Event().name(DEFAULT_NAME);
+        Event event = new Event().name(DEFAULT_NAME).startDateTime(DEFAULT_START_DATE_TIME).endDateTime(DEFAULT_END_DATE_TIME);
         // Add required entity
         Location location;
         if (TestUtil.findAll(em, Location.class).isEmpty()) {
@@ -108,7 +114,7 @@ public class EventResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Event createUpdatedEntity(EntityManager em) {
-        Event event = new Event().name(UPDATED_NAME);
+        Event event = new Event().name(UPDATED_NAME).startDateTime(UPDATED_START_DATE_TIME).endDateTime(UPDATED_END_DATE_TIME);
         // Add required entity
         Location location;
         if (TestUtil.findAll(em, Location.class).isEmpty()) {
@@ -181,6 +187,52 @@ public class EventResourceIT {
         event.setName(null);
 
         // Create the Event, which fails.
+        EventDTO eventDTO = eventMapper.toDto(event);
+
+        restEventMockMvc
+            .perform(
+                post(ENTITY_API_URL)
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(eventDTO))
+            )
+            .andExpect(status().isBadRequest());
+
+        List<Event> eventList = eventRepository.findAll();
+        assertThat(eventList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    void checkStartDateTimeIsRequired() throws Exception {
+        int databaseSizeBeforeTest = eventRepository.findAll().size();
+        // set the field null
+        event.setStartDateTime(null);
+
+        // Create the Project, which fails.
+        EventDTO eventDTO = eventMapper.toDto(event);
+
+        restEventMockMvc
+            .perform(
+                post(ENTITY_API_URL)
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(eventDTO))
+            )
+            .andExpect(status().isBadRequest());
+
+        List<Event> eventList = eventRepository.findAll();
+        assertThat(eventList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    void checkEndDateTimeIsRequired() throws Exception {
+        int databaseSizeBeforeTest = eventRepository.findAll().size();
+        // set the field null
+        event.setEndDateTime(null);
+
+        // Create the Project, which fails.
         EventDTO eventDTO = eventMapper.toDto(event);
 
         restEventMockMvc
@@ -394,6 +446,8 @@ public class EventResourceIT {
         partialUpdatedEvent.setId(event.getId());
 
         partialUpdatedEvent.name(UPDATED_NAME);
+        partialUpdatedEvent.setStartDateTime(UPDATED_START_DATE_TIME);
+        partialUpdatedEvent.setEndDateTime(UPDATED_END_DATE_TIME);
 
         restEventMockMvc
             .perform(

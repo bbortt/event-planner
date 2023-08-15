@@ -11,6 +11,16 @@
       "fieldValidateRulesMinlength": "1"
     },
     {
+      "fieldName": "startDateTime",
+      "fieldType": "Instant",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "endDateTime",
+      "fieldType": "Instant",
+      "fieldValidateRules": ["required"]
+    },
+    {
       "auditField": true,
       "autoGenerate": true,
       "columnType": "varchar(50)",
@@ -55,7 +65,7 @@
       "otherEntityName": "location",
       "relationshipName": "location",
       "relationshipType": "many-to-one",
-      "relationshipValidateRules": ["required"]
+      "relationshipValidateRules": []
     }
   ],
   "service": "serviceClass"

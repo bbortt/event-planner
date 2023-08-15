@@ -18,6 +18,12 @@ public class EventDTO implements Serializable {
     @Size(min = 1, max = 63)
     private String name;
 
+    @NotNull
+    private Instant startDateTime;
+
+    @NotNull
+    private Instant endDateTime;
+
     private String createdBy;
 
     private Instant createdDate;
@@ -42,6 +48,22 @@ public class EventDTO implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Instant getStartDateTime() {
+        return startDateTime;
+    }
+
+    public void setStartDateTime(Instant startDateTime) {
+        this.startDateTime = startDateTime;
+    }
+
+    public Instant getEndDateTime() {
+        return endDateTime;
+    }
+
+    public void setEndDateTime(Instant endDateTime) {
+        this.endDateTime = endDateTime;
     }
 
     public String getCreatedBy() {
@@ -111,6 +133,8 @@ public class EventDTO implements Serializable {
         return "EventDTO{" +
             "id=" + getId() +
             ", name='" + getName() + "'" +
+            ", startDateTime='" +getStartDateTime() + "'" +
+            ", endDateTime='" +getEndDateTime() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +
             ", createdDate='" + getCreatedDate() + "'" +
             ", lastModifiedBy='" + getLastModifiedBy() + "'" +

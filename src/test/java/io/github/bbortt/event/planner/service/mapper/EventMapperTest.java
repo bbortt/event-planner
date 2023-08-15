@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import io.github.bbortt.event.planner.domain.Event;
 import io.github.bbortt.event.planner.domain.Location;
 import io.github.bbortt.event.planner.service.dto.EventDTO;
+import java.time.Instant;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -21,7 +22,12 @@ class EventMapperTest {
     public void setUp() {
         fixture = new EventMapperImpl();
 
-        event = new Event().name("event name").location(new Location().name(LOCATION_NAME));
+        event =
+            new Event()
+                .name("event name")
+                .startDateTime(Instant.now())
+                .endDateTime(Instant.now())
+                .location(new Location().name(LOCATION_NAME));
 
         eventDTO = fixture.toDto(event);
     }

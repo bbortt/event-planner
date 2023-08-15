@@ -9,6 +9,8 @@ import { Subject } from 'rxjs';
 
 const requireRestSample: RestEvent = {
   ...sampleWithRequiredData,
+  startDateTime: sampleWithRequiredData.startDateTime?.toJSON(),
+  endDateTime: sampleWithRequiredData.endDateTime?.toJSON(),
   createdDate: sampleWithRequiredData.createdDate?.toJSON(),
   lastModifiedDate: sampleWithRequiredData.lastModifiedDate?.toJSON(),
 };

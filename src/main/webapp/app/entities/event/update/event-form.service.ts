@@ -19,7 +19,9 @@ type EventFormGroupInput = IEvent | PartialWithRequiredKeyOf<NewEvent>;
 /**
  * Type that converts some properties for forms.
  */
-type FormValueOf<T extends IEvent | NewEvent> = Omit<T, 'createdDate' | 'lastModifiedDate'> & {
+type FormValueOf<T extends IEvent | NewEvent> = Omit<T, 'startDateTime' | 'endDateTime' | 'createdDate' | 'lastModifiedDate'> & {
+  startDateTime?: string | null;
+  endDateTime?: string | null;
   createdDate?: string | null;
   lastModifiedDate?: string | null;
 };
@@ -28,11 +30,13 @@ type EventFormRawValue = FormValueOf<IEvent>;
 
 type NewEventFormRawValue = FormValueOf<NewEvent>;
 
-type EventFormDefaults = Pick<NewEvent, 'id' | 'createdDate' | 'lastModifiedDate'>;
+type EventFormDefaults = Pick<NewEvent, 'id' | 'startDateTime' | 'endDateTime' | 'createdDate' | 'lastModifiedDate'>;
 
 type EventFormGroupContent = {
   id: FormControl<EventFormRawValue['id'] | NewEvent['id']>;
   name: FormControl<EventFormRawValue['name']>;
+  startDateTime: FormControl<EventFormRawValue['startDateTime']>;
+  endDateTime: FormControl<EventFormRawValue['endDateTime']>;
   createdBy: FormControl<EventFormRawValue['createdBy']>;
   createdDate: FormControl<EventFormRawValue['createdDate']>;
   lastModifiedBy: FormControl<EventFormRawValue['lastModifiedBy']>;
@@ -59,6 +63,12 @@ export class EventFormService {
       ),
       name: new FormControl(eventRawValue.name, {
         validators: [Validators.required, Validators.minLength(1), Validators.maxLength(63)],
+      }),
+      startDateTime: new FormControl(eventRawValue.startDateTime, {
+        validators: [Validators.required],
+      }),
+      endDateTime: new FormControl(eventRawValue.endDateTime, {
+        validators: [Validators.required],
       }),
       createdBy: new FormControl(eventRawValue.createdBy),
       createdDate: new FormControl(eventRawValue.createdDate),
@@ -87,6 +97,8 @@ export class EventFormService {
 
     return {
       id: null,
+      startDateTime: currentTime,
+      endDateTime: currentTime,
       createdDate: currentTime,
       lastModifiedDate: currentTime,
     };
@@ -95,6 +107,8 @@ export class EventFormService {
   private convertEventRawValueToEvent(rawEvent: EventFormRawValue | NewEventFormRawValue): IEvent | NewEvent {
     return {
       ...rawEvent,
+      startDateTime: dayjs(rawEvent.startDateTime, DATE_TIME_FORMAT),
+      endDateTime: dayjs(rawEvent.endDateTime, DATE_TIME_FORMAT),
       createdDate: dayjs(rawEvent.createdDate, DATE_TIME_FORMAT),
       lastModifiedDate: dayjs(rawEvent.lastModifiedDate, DATE_TIME_FORMAT),
     };
@@ -105,6 +119,8 @@ export class EventFormService {
   ): EventFormRawValue | PartialWithRequiredKeyOf<NewEventFormRawValue> {
     return {
       ...event,
+      startDateTime: event.startDateTime ? event.startDateTime.format(DATE_TIME_FORMAT) : undefined,
+      endDateTime: event.endDateTime ? event.endDateTime.format(DATE_TIME_FORMAT) : undefined,
       createdDate: event.createdDate ? event.createdDate.format(DATE_TIME_FORMAT) : undefined,
       lastModifiedDate: event.lastModifiedDate ? event.lastModifiedDate.format(DATE_TIME_FORMAT) : undefined,
     };

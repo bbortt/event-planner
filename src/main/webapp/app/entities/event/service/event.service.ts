@@ -14,7 +14,9 @@ import { IEvent, NewEvent } from '../event.model';
 
 export type PartialUpdateEvent = Partial<IEvent> & Pick<IEvent, 'id'>;
 
-type RestOf<T extends IEvent | NewEvent> = Omit<T, 'createdDate' | 'lastModifiedDate'> & {
+type RestOf<T extends IEvent | NewEvent> = Omit<T, 'startDateTime' | 'endDateTime' | 'createdDate' | 'lastModifiedDate'> & {
+  startDateTime?: string | null;
+  endDateTime?: string | null;
   createdDate?: string | null;
   lastModifiedDate?: string | null;
 };
@@ -115,6 +117,8 @@ export class EventService {
   protected convertDateFromClient<T extends IEvent | NewEvent | PartialUpdateEvent>(event: T): RestOf<T> {
     return {
       ...event,
+      startDateTime: event.startDateTime?.toJSON() ?? null,
+      endDateTime: event.endDateTime?.toJSON() ?? null,
       createdDate: event.createdDate?.toJSON() ?? null,
       lastModifiedDate: event.lastModifiedDate?.toJSON() ?? null,
     };
@@ -123,6 +127,8 @@ export class EventService {
   protected convertDateFromServer(restEvent: RestEvent): IEvent {
     return {
       ...restEvent,
+      startDateTime: restEvent.startDateTime ? dayjs(restEvent.startDateTime) : undefined,
+      endDateTime: restEvent.endDateTime ? dayjs(restEvent.endDateTime) : undefined,
       createdDate: restEvent.createdDate ? dayjs(restEvent.createdDate) : undefined,
       lastModifiedDate: restEvent.lastModifiedDate ? dayjs(restEvent.lastModifiedDate) : undefined,
     };

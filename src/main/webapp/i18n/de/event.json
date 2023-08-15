@@ -19,6 +19,8 @@
       },
       "id": "ID",
       "name": "Name",
+      "startDateTime": "Start Zeitpunkt",
+      "endDateTime": "End Zeitpunkt",
       "createdBy": "Erstellt von",
       "createdDate": "Erstellt am",
       "lastModifiedBy": "Zuletzt bearbeitet von",
