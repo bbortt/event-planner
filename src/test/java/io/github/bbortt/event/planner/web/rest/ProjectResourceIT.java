@@ -486,6 +486,7 @@ public class ProjectResourceIT {
     void checkStartDateIsNotUpdatable() throws Exception {
         int databaseSizeBeforeUpdate = projectRepository.findAll().size();
         project.setId(count.incrementAndGet());
+        project.setStartDate(DEFAULT_START_DATE.plus(1, ChronoUnit.HOURS));
 
         // Create the Project
         ProjectDTO projectDTO = projectMapper.toDto(project);
@@ -510,6 +511,7 @@ public class ProjectResourceIT {
     void checkEndDateIsNotUpdatable() throws Exception {
         int databaseSizeBeforeUpdate = projectRepository.findAll().size();
         project.setId(count.incrementAndGet());
+        project.setEndDate(DEFAULT_END_DATE.plus(1, ChronoUnit.HOURS));
 
         // Create the Project
         ProjectDTO projectDTO = projectMapper.toDto(project);
