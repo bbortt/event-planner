@@ -17,30 +17,12 @@
 
         <div class="row mb-3" *ngIf="editForm.controls.id.value !== null">
           <label class="form-label" jhiTranslate="global.field.id" for="field_id">ID</label>
-          <input
-            type="number"
-            class="form-control"
-            name="id"
-            id="field_id"
-            data-cy="id"
-            formControlName="id"
-            [readonly]="true"
-            [disabled]="true"
-          />
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
         </div>
 
         <div class="row mb-3" *ngIf="editForm.controls.token.value !== null">
           <label class="form-label" jhiTranslate="app.project.token" for="field_token">Token</label>
-          <input
-            type="text"
-            class="form-control"
-            name="token"
-            id="field_token"
-            data-cy="token"
-            formControlName="token"
-            [readonly]="true"
-            [disabled]="true"
-          />
+          <input type="text" class="form-control" name="token" id="field_token" data-cy="token" formControlName="token" [readonly]="true" />
         </div>
 
         <div class="row mb-3">
@@ -101,7 +83,7 @@
         </div>
 
         <div class="row mb-3">
-          <label class="form-label" jhiTranslate="app.project.startDate" for="field_startDate">Start Date</label>
+          <label class="form-label" jhiTranslate="app.project.startDate" for="field_startDate">Start Datum</label>
           <input
             id="field_startDate"
             data-cy="startDate"
@@ -131,7 +113,7 @@
         </div>
 
         <div class="row mb-3">
-          <label class="form-label" jhiTranslate="app.project.endDate" for="field_endDate">End Date</label>
+          <label class="form-label" jhiTranslate="app.project.endDate" for="field_endDate">End Datum</label>
           <input
             id="field_endDate"
             data-cy="endDate"
@@ -158,6 +140,60 @@
               Dieses Feld muss eine Datums- und Zeitangabe enthalten.
             </small>
           </div>
+        </div>
+
+        <div class="row mb-3" *ngIf="editForm.controls.createdBy.value !== null">
+          <label class="form-label" jhiTranslate="app.project.createdBy" for="field_createdBy">Erstellt von</label>
+          <input
+            type="text"
+            class="form-control"
+            name="createdBy"
+            id="field_createdBy"
+            data-cy="createdBy"
+            formControlName="createdBy"
+            [readonly]="true"
+          />
+        </div>
+
+        <div class="row mb-3" *ngIf="editForm.controls.createdDate.value !== null">
+          <label class="form-label" jhiTranslate="app.project.createdDate" for="field_createdDate">Erstellt am</label>
+          <input
+            id="field_createdDate"
+            data-cy="createdDate"
+            type="datetime-local"
+            class="form-control"
+            name="createdDate"
+            formControlName="createdDate"
+            placeholder="YYYY-MM-DD HH:mm"
+            [readonly]="true"
+          />
+        </div>
+
+        <div class="row mb-3" *ngIf="editForm.controls.lastModifiedBy.value !== null">
+          <label class="form-label" jhiTranslate="app.project.lastModifiedBy" for="field_lastModifiedBy">Zuletzt bearbeitet von</label>
+          <input
+            type="text"
+            class="form-control"
+            name="lastModifiedBy"
+            id="field_lastModifiedBy"
+            data-cy="lastModifiedBy"
+            formControlName="lastModifiedBy"
+            [readonly]="true"
+          />
+        </div>
+
+        <div class="row mb-3" *ngIf="editForm.controls.lastModifiedDate.value !== null">
+          <label class="form-label" jhiTranslate="app.project.lastModifiedDate" for="field_lastModifiedDate">Zuletzt bearbeitet am</label>
+          <input
+            id="field_lastModifiedDate"
+            data-cy="lastModifiedDate"
+            type="datetime-local"
+            class="form-control"
+            name="lastModifiedDate"
+            formControlName="lastModifiedDate"
+            placeholder="YYYY-MM-DD HH:mm"
+            [readonly]="true"
+          />
         </div>
       </div>
 

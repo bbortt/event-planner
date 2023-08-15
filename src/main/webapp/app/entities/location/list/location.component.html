@@ -12,7 +12,7 @@
         id="jh-create-entity"
         data-cy="entityCreateButton"
         class="btn btn-primary jh-create-entity create-location"
-        [routerLink]="['/location/new']"
+        [routerLink]="['/entities/location/new']"
       >
         <fa-icon icon="plus"></fa-icon>
         <span jhiTranslate="app.location.home.createLabel"> Lokalität erstellen </span>
@@ -52,25 +52,25 @@
           </th>
           <th scope="col" jhiSortBy="createdBy">
             <div class="d-flex">
-              <span jhiTranslate="app.location.createdBy">Created By</span>
+              <span jhiTranslate="app.location.createdBy">Erstellt von</span>
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
           <th scope="col" jhiSortBy="createdDate">
             <div class="d-flex">
-              <span jhiTranslate="app.location.createdDate">Created Date</span>
+              <span jhiTranslate="app.location.createdDate">Erstellt am</span>
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
           <th scope="col" jhiSortBy="lastModifiedBy">
             <div class="d-flex">
-              <span jhiTranslate="app.location.lastModifiedBy">Last Modified By</span>
+              <span jhiTranslate="app.location.lastModifiedBy">Zuletzt bearbeitet von</span>
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
           <th scope="col" jhiSortBy="lastModifiedDate">
             <div class="d-flex">
-              <span jhiTranslate="app.location.lastModifiedDate">Last Modified Date</span>
+              <span jhiTranslate="app.location.lastModifiedDate">Zuletzt bearbeitet am</span>
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
@@ -92,7 +92,7 @@
       <tbody>
         <tr *ngFor="let location of locations; trackBy: trackId" data-cy="entityTable">
           <td>
-            <a [routerLink]="['/location', location.id, 'view']">{{ location.id }}</a>
+            <a [routerLink]="['/entities/location', location.id, 'view']">{{ location.id }}</a>
           </td>
           <td>{{ location.name }}</td>
           <td>{{ location.description }}</td>
@@ -102,19 +102,19 @@
           <td>{{ location.lastModifiedDate | formatMediumDatetime }}</td>
           <td>
             <div *ngIf="location.project">
-              <a [routerLink]="['/project', location.project.id, 'view']">{{ location.project.name }}</a>
+              <a [routerLink]="['/entities/project', location.project.id, 'view']">{{ location.project.name }}</a>
             </div>
           </td>
           <td>
             <div *ngIf="location.parent">
-              <a [routerLink]="['/location', location.parent.id, 'view']">{{ location.parent.name }}</a>
+              <a [routerLink]="['/entities/location', location.parent.id, 'view']">{{ location.parent.name }}</a>
             </div>
           </td>
           <td class="text-end">
             <div class="btn-group">
               <button
                 type="submit"
-                [routerLink]="['/location', location.id, 'view']"
+                [routerLink]="['/entities/location', location.id, 'view']"
                 class="btn btn-info btn-sm"
                 data-cy="entityDetailsButton"
               >
@@ -124,7 +124,7 @@
 
               <button
                 type="submit"
-                [routerLink]="['/location', location.id, 'edit']"
+                [routerLink]="['/entities/location', location.id, 'edit']"
                 class="btn btn-primary btn-sm"
                 data-cy="entityEditButton"
               >

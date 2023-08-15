@@ -43,7 +43,7 @@ public class Project extends AbstractAuditingEntity<Project, Long> implements Se
     private String name;
 
     @Size(max = 255)
-    @Column(name = "description", length = 255)
+    @Column(name = "description")
     private String description;
 
     @NotNull

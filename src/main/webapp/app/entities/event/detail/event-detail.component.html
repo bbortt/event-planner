@@ -18,19 +18,27 @@
         <dd>
           <span>{{ event.name }}</span>
         </dd>
-        <dt><span jhiTranslate="app.event.createdBy">Created By</span></dt>
+        <dt><span jhiTranslate="app.event.startDateTime">Start Zeitpunkt</span></dt>
+        <dd>
+          <span>{{ event.startDateTime | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span jhiTranslate="app.event.endDateTime">End Zeitpunkt</span></dt>
+        <dd>
+          <span>{{ event.endDateTime | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span jhiTranslate="app.event.createdBy">Erstellt von</span></dt>
         <dd>
           <span>{{ event.createdBy }}</span>
         </dd>
-        <dt><span jhiTranslate="app.event.createdDate">Created Date</span></dt>
+        <dt><span jhiTranslate="app.event.createdDate">Erstellt am</span></dt>
         <dd>
           <span>{{ event.createdDate | formatMediumDatetime }}</span>
         </dd>
-        <dt><span jhiTranslate="app.event.lastModifiedBy">Last Modified By</span></dt>
+        <dt><span jhiTranslate="app.event.lastModifiedBy">Zuletzt bearbeitet von</span></dt>
         <dd>
           <span>{{ event.lastModifiedBy }}</span>
         </dd>
-        <dt><span jhiTranslate="app.event.lastModifiedDate">Last Modified Date</span></dt>
+        <dt><span jhiTranslate="app.event.lastModifiedDate">Zuletzt bearbeitet am</span></dt>
         <dd>
           <span>{{ event.lastModifiedDate | formatMediumDatetime }}</span>
         </dd>

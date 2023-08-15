@@ -33,7 +33,7 @@ public class EntityAuditEvent implements Serializable {
 
     @NotNull
     @Size(max = 255)
-    @Column(name = "entity_type", length = 255, nullable = false)
+    @Column(name = "entity_type", nullable = false)
     private String entityType;
 
     @NotNull

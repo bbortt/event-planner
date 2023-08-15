@@ -19,7 +19,7 @@ const locationRoutes: Routes = [
     canActivate: [UserRouteAccessService],
   },
   {
-    path: ':id/view',
+    path: ':locationId/view',
     component: LocationDetailComponent,
     resolve: {
       location: locationById,
@@ -35,7 +35,7 @@ const locationRoutes: Routes = [
     canActivate: [UserRouteAccessService],
   },
   {
-    path: ':id/edit',
+    path: ':locationId/edit',
     component: LocationUpdateComponent,
     resolve: {
       location: locationById,

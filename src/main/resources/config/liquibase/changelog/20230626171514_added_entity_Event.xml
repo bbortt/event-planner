@@ -17,6 +17,12 @@
             <column name="name" type="varchar(63)">
                 <constraints nullable="false" />
             </column>
+            <column name="start_date_time" type="${datetimeType}">
+                <constraints nullable="false" />
+            </column>
+            <column name="end_date_time" type="${datetimeType}">
+                <constraints nullable="false" />
+            </column>
             <column name="created_by" type="varchar(50)">
                 <constraints nullable="false" />
             </column>
@@ -30,10 +36,12 @@
                 <constraints nullable="false" />
             </column>
             <column name="location_id" type="bigint">
-                <constraints nullable="false" />
+                <constraints nullable="true" />
             </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
+        <dropDefaultValue tableName="event" columnName="start_date_time" columnDataType="${datetimeType}"/>
+        <dropDefaultValue tableName="event" columnName="end_date_time" columnDataType="${datetimeType}"/>
         <dropDefaultValue tableName="event" columnName="created_date" columnDataType="${datetimeType}"/>
         <dropDefaultValue tableName="event" columnName="last_modified_date" columnDataType="${datetimeType}"/>
     </changeSet>
@@ -56,6 +64,8 @@
                   usePreparedStatements="true">
             <column name="id" type="numeric"/>
             <column name="name" type="string"/>
+            <column name="start_date_time" type="date"/>
+            <column name="end_date_time" type="date"/>
             <column name="created_by" type="string"/>
             <column name="created_date" type="date"/>
             <column name="last_modified_by" type="string"/>

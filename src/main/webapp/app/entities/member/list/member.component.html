@@ -12,7 +12,7 @@
         id="jh-create-entity"
         data-cy="entityCreateButton"
         class="btn btn-primary jh-create-entity create-member"
-        [routerLink]="['/member/new']"
+        [routerLink]="['/entities/member/new']"
       >
         <fa-icon icon="plus"></fa-icon>
         <span jhiTranslate="app.member.home.createLabel"> Member erstellen </span>
@@ -74,7 +74,7 @@
       <tbody>
         <tr *ngFor="let member of members; trackBy: trackId" data-cy="entityTable">
           <td>
-            <a [routerLink]="['/member', member.id, 'view']">{{ member.id }}</a>
+            <a [routerLink]="['/entities/member', member.id, 'view']">{{ member.id }}</a>
           </td>
           <td>{{ member.invitedEmail }}</td>
           <td>{{ member.accepted }}</td>
@@ -82,17 +82,27 @@
           <td>{{ member.acceptedDate | formatMediumDatetime }}</td>
           <td>
             <div *ngIf="member.project">
-              <a [routerLink]="['/project', member.project.id, 'view']">{{ member.project.name }}</a>
+              <a [routerLink]="['/entities/project', member.project.id, 'view']">{{ member.project.name }}</a>
             </div>
           </td>
           <td class="text-end">
             <div class="btn-group">
-              <button type="submit" [routerLink]="['/member', member.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
+              <button
+                type="submit"
+                [routerLink]="['/entities/member', member.id, 'view']"
+                class="btn btn-info btn-sm"
+                data-cy="entityDetailsButton"
+              >
                 <fa-icon icon="eye"></fa-icon>
                 <span class="d-none d-md-inline" jhiTranslate="entity.action.view">Details</span>
               </button>
 
-              <button type="submit" [routerLink]="['/member', member.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
+              <button
+                type="submit"
+                [routerLink]="['/entities/member', member.id, 'edit']"
+                class="btn btn-primary btn-sm"
+                data-cy="entityEditButton"
+              >
                 <fa-icon icon="pencil-alt"></fa-icon>
                 <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Bearbeiten</span>
               </button>

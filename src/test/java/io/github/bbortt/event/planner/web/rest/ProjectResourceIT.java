@@ -483,6 +483,54 @@ public class ProjectResourceIT {
 
     @Test
     @Transactional
+    void checkStartDateIsNotUpdatable() throws Exception {
+        int databaseSizeBeforeUpdate = projectRepository.findAll().size();
+        project.setId(count.incrementAndGet());
+
+        // Create the Project
+        ProjectDTO projectDTO = projectMapper.toDto(project);
+
+        // If the entity does not respect the startDate, it will throw BadRequestAlertException
+        restProjectMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, projectDTO.getId())
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(projectDTO))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the Project in the database
+        List<Project> projectList = projectRepository.findAll();
+        assertThat(projectList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void checkEndDateIsNotUpdatable() throws Exception {
+        int databaseSizeBeforeUpdate = projectRepository.findAll().size();
+        project.setId(count.incrementAndGet());
+
+        // Create the Project
+        ProjectDTO projectDTO = projectMapper.toDto(project);
+
+        // If the entity does not respect the endDate, it will throw BadRequestAlertException
+        restProjectMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, projectDTO.getId())
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(projectDTO))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the Project in the database
+        List<Project> projectList = projectRepository.findAll();
+        assertThat(projectList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
     void partialUpdateProjectWithPatch() throws Exception {
         // Initialize the database
         projectRepository.saveAndFlush(project);

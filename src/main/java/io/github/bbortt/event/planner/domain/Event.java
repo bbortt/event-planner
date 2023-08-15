@@ -12,6 +12,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
+import java.time.Instant;
 
 /**
  * A Event.
@@ -35,6 +36,13 @@ public class Event extends AbstractAuditingEntity<Event, Long> implements Serial
     private String name;
 
     @NotNull
+    @Column(name = "start_date_time", nullable = false)
+    private Instant startDateTime;
+
+    @NotNull
+    @Column(name = "end_date_time", nullable = false)
+    private Instant endDateTime;
+
     @ManyToOne
     @JsonIgnoreProperties(value = { "project", "parent" }, allowSetters = true)
     private Location location;
@@ -65,6 +73,32 @@ public class Event extends AbstractAuditingEntity<Event, Long> implements Serial
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Instant getStartDateTime() {
+        return startDateTime;
+    }
+
+    public void setStartDateTime(Instant startDateTime) {
+        this.startDateTime = startDateTime;
+    }
+
+    public Event startDateTime(Instant startDateTime) {
+        this.setStartDateTime(startDateTime);
+        return this;
+    }
+
+    public Instant getEndDateTime() {
+        return endDateTime;
+    }
+
+    public void setEndDateTime(Instant endDateTime) {
+        this.endDateTime = endDateTime;
+    }
+
+    public Event endDateTime(Instant endDateTime) {
+        this.endDateTime = endDateTime;
+        return this;
     }
 
     public Location getLocation() {
@@ -105,6 +139,8 @@ public class Event extends AbstractAuditingEntity<Event, Long> implements Serial
         return "Event{" +
             "id=" + getId() +
             ", name='" + getName() + "'" +
+            ", startDateTime='" + getStartDateTime() + "'" +
+            ", endDateTime='" + getEndDateTime() + "'" +
             "}";
     }
 }

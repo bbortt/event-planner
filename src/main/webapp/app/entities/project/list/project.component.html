@@ -12,7 +12,7 @@
         id="jh-create-entity"
         data-cy="entityCreateButton"
         class="btn btn-primary jh-create-entity create-project"
-        [routerLink]="['/project/new']"
+        [routerLink]="['/entities/project/new']"
       >
         <fa-icon icon="plus"></fa-icon>
         <span jhiTranslate="app.project.home.createLabel"> Projekt erstellen </span>
@@ -58,13 +58,13 @@
           </th>
           <th scope="col" jhiSortBy="startDate">
             <div class="d-flex">
-              <span jhiTranslate="app.project.startDate">Start Date</span>
+              <span jhiTranslate="app.project.startDate">Start Datum</span>
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
           <th scope="col" jhiSortBy="endDate">
             <div class="d-flex">
-              <span jhiTranslate="app.project.endDate">End Date</span>
+              <span jhiTranslate="app.project.endDate">End Datum</span>
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
@@ -76,25 +76,25 @@
           </th>
           <th scope="col" jhiSortBy="createdBy">
             <div class="d-flex">
-              <span jhiTranslate="app.project.createdBy">Created By</span>
+              <span jhiTranslate="app.project.createdBy">Erstellt von</span>
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
           <th scope="col" jhiSortBy="createdDate">
             <div class="d-flex">
-              <span jhiTranslate="app.project.createdDate">Created Date</span>
+              <span jhiTranslate="app.project.createdDate">Erstellt am</span>
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
           <th scope="col" jhiSortBy="lastModifiedBy">
             <div class="d-flex">
-              <span jhiTranslate="app.project.lastModifiedBy">Last Modified By</span>
+              <span jhiTranslate="app.project.lastModifiedBy">Zuletzt bearbeitet von</span>
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
           <th scope="col" jhiSortBy="lastModifiedDate">
             <div class="d-flex">
-              <span jhiTranslate="app.project.lastModifiedDate">Last Modified Date</span>
+              <span jhiTranslate="app.project.lastModifiedDate">Zuletzt bearbeitet am</span>
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
@@ -104,7 +104,7 @@
       <tbody>
         <tr *ngFor="let project of projects; trackBy: trackId" data-cy="entityTable">
           <td>
-            <a [routerLink]="['/project', project.id, 'view']">{{ project.id }}</a>
+            <a [routerLink]="['/entities/project', project.id, 'view']">{{ project.id }}</a>
           </td>
           <td>{{ project.token }}</td>
           <td>{{ project.name }}</td>
@@ -120,7 +120,7 @@
             <div class="btn-group">
               <button
                 type="submit"
-                [routerLink]="['/project', project.id, 'view']"
+                [routerLink]="['/entities/project', project.id, 'view']"
                 class="btn btn-info btn-sm"
                 data-cy="entityDetailsButton"
               >
@@ -130,7 +130,7 @@
 
               <button
                 type="submit"
-                [routerLink]="['/project', project.id, 'edit']"
+                [routerLink]="['/entities/project', project.id, 'edit']"
                 class="btn btn-primary btn-sm"
                 data-cy="entityEditButton"
               >

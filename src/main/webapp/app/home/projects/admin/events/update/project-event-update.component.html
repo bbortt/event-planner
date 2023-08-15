@@ -39,8 +39,70 @@
           </div>
         </div>
 
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="app.event.startDateTime" for="field_startDateTime">Start Zeitpunkt</label>
+          <input
+            id="field_startDateTime"
+            data-cy="startDateTime"
+            type="datetime-local"
+            class="form-control"
+            name="startDate"
+            formControlName="startDateTime"
+            placeholder="YYYY-MM-DD"
+          />
+          <div
+            *ngIf="
+              editForm.get('startDateTime')!.invalid && (editForm.get('startDateTime')!.dirty || editForm.get('startDateTime')!.touched)
+            "
+          >
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('startDateTime')?.errors?.required"
+              jhiTranslate="entity.validation.required"
+            >
+              Dieses Feld wird benötigt.
+            </small>
+            <small
+              class="form-text text-danger"
+              [hidden]="!editForm.get('startDateTime')?.errors?.datetimelocal"
+              jhiTranslate="entity.validation.datetimelocal"
+            >
+              Dieses Feld muss eine Datums- und Zeitangabe enthalten.
+            </small>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="app.event.endDateTime" for="field_endDateTime">End Zeitpunkt</label>
+          <input
+            id="field_endDateTime"
+            data-cy="endDateTime"
+            type="datetime-local"
+            class="form-control"
+            name="endDate"
+            formControlName="endDateTime"
+            placeholder="YYYY-MM-DD"
+          />
+          <div *ngIf="editForm.get('endDateTime')!.invalid && (editForm.get('endDateTime')!.dirty || editForm.get('endDateTime')!.touched)">
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('endDateTime')?.errors?.required"
+              jhiTranslate="entity.validation.required"
+            >
+              Dieses Feld wird benötigt.
+            </small>
+            <small
+              class="form-text text-danger"
+              [hidden]="!editForm.get('endDateTime')?.errors?.datetimelocal"
+              jhiTranslate="entity.validation.datetimelocal"
+            >
+              Dieses Feld muss eine Datums- und Zeitangabe enthalten.
+            </small>
+          </div>
+        </div>
+
         <div class="row mb-3" *ngIf="editForm.controls.createdBy.value !== null">
-          <label class="form-label" jhiTranslate="app.event.createdBy" for="field_createdBy">Created By</label>
+          <label class="form-label" jhiTranslate="app.event.createdBy" for="field_createdBy">Erstellt von</label>
           <input
             type="text"
             class="form-control"
@@ -53,7 +115,7 @@
         </div>
 
         <div class="row mb-3" *ngIf="event?.id && editForm.controls.createdDate.value !== null">
-          <label class="form-label" jhiTranslate="app.event.createdDate" for="field_createdDate">Created Date</label>
+          <label class="form-label" jhiTranslate="app.event.createdDate" for="field_createdDate">Erstellt am</label>
           <input
             id="field_createdDate"
             data-cy="createdDate"
@@ -67,7 +129,7 @@
         </div>
 
         <div class="row mb-3" *ngIf="editForm.controls.lastModifiedBy.value !== null">
-          <label class="form-label" jhiTranslate="app.event.lastModifiedBy" for="field_lastModifiedBy">Last Modified By</label>
+          <label class="form-label" jhiTranslate="app.event.lastModifiedBy" for="field_lastModifiedBy">Zuletzt bearbeitet von</label>
           <input
             type="text"
             class="form-control"
@@ -80,7 +142,7 @@
         </div>
 
         <div class="row mb-3" *ngIf="event?.id && editForm.controls.lastModifiedDate.value !== null">
-          <label class="form-label" jhiTranslate="app.event.lastModifiedDate" for="field_lastModifiedDate">Last Modified Date</label>
+          <label class="form-label" jhiTranslate="app.event.lastModifiedDate" for="field_lastModifiedDate">Zuletzt bearbeitet am</label>
           <input
             id="field_lastModifiedDate"
             data-cy="lastModifiedDate"

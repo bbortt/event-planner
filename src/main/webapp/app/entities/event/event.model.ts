@@ -4,6 +4,8 @@ import { ILocation } from 'app/entities/location/location.model';
 export interface IEvent {
   id: number;
   name?: string | null;
+  startDateTime?: dayjs.Dayjs | null;
+  endDateTime?: dayjs.Dayjs | null;
   createdBy?: string | null;
   createdDate?: dayjs.Dayjs | null;
   lastModifiedBy?: string | null;

@@ -19,7 +19,7 @@ const eventRoutes: Routes = [
     canActivate: [UserRouteAccessService],
   },
   {
-    path: ':id/view',
+    path: ':eventId/view',
     component: EventDetailComponent,
     resolve: {
       event: eventById,
@@ -35,7 +35,7 @@ const eventRoutes: Routes = [
     canActivate: [UserRouteAccessService],
   },
   {
-    path: ':id/edit',
+    path: ':eventId/edit',
     component: EventUpdateComponent,
     resolve: {
       event: eventById,

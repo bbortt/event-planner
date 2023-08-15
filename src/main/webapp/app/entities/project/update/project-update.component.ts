@@ -47,8 +47,6 @@ export default class ProjectUpdateComponent implements OnInit {
 
         if (this.isProjectArchived) {
           this.editForm.disable();
-        } else if (project.id) {
-          this.disableInformativeFields();
         }
       }
     });
@@ -90,12 +88,5 @@ export default class ProjectUpdateComponent implements OnInit {
   protected updateForm(project: IProject): void {
     this.project = project;
     this.projectFormService.resetForm(this.editForm, this.project);
-  }
-
-  private disableInformativeFields(): void {
-    this.editForm.controls.id.disable();
-    this.editForm.controls.token.disable();
-    this.editForm.controls.startDate.disable();
-    this.editForm.controls.endDate.disable();
   }
 }
