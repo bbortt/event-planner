@@ -112,7 +112,7 @@
     "@angular/cli": "16.2.0",
     "@angular/compiler-cli": "16.1.4",
     "@angular/service-worker": "16.1.4",
-    "@commitlint/cli": "^17.6.6",
+    "@commitlint/cli": "^17.7.1",
     "@commitlint/config-conventional": "^17.7.0",
     "@types/jest": "29.5.3",
     "@types/node": "20.4.7",
