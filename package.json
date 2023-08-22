@@ -100,7 +100,7 @@
     "ngx-infinite-scroll": "16.0.0",
     "rxjs": "7.8.1",
     "sockjs-client": "1.6.1",
-    "tslib": "2.6.1",
+    "tslib": "2.6.2",
     "webstomp-client": "1.2.6",
     "zone.js": "0.13.1"
   },
