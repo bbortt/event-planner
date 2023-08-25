@@ -133,19 +133,29 @@
   },
   "error": {
     "internalServerError": "Internal server error",
-    "server.not.reachable": "Server not reachable",
-    "url.not.found": "Not found",
-    "NotNull": "Field {{ fieldName }} cannot be empty!",
-    "Size": "Field {{ fieldName }} does not meet min/max size requirements!",
-    "userexists": "Login name already used!",
     "emailexists": "Email is already in use!",
     "idexists": "A new {{ entityName }} cannot already have an ID",
-    "idnull": "Invalid ID",
     "idinvalid": "Invalid ID",
     "idnotfound": "ID cannot be found",
+    "idnull": "Invalid ID",
+    "NotNull": "Field {{ fieldName }} cannot be empty!",
+    "server.not.reachable": "Server not reachable",
+    "Size": "Field {{ fieldName }} does not meet min/max size requirements!",
+    "url.not.found": "Not found",
+    "userexists": "Login name already used!",
+    "event": {
+      "constraints": {
+        "location": "An Event must be associated to a valid Location"
+      }
+    },
     "file": {
       "could.not.extract": "Could not extract file",
       "not.image": "File was expected to be an image but was found to be \"{{ fileType }}\""
+    },
+    "location": {
+      "constraints": {
+        "project": "A Location must be associated to a valid Project"
+      }
     }
   },
   "footer": "This is your footer"

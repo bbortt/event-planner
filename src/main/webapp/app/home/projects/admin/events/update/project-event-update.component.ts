@@ -14,8 +14,9 @@ import { EventFormService, EventFormGroup } from 'app/entities/event/update/even
 import { ILocation } from 'app/entities/location/location.model';
 import { LocationService } from 'app/entities/location/service/location.service';
 
+import { IProject } from 'app/entities/project/project.model';
+
 import SharedModule from 'app/shared/shared.module';
-import { IProject } from '../../../../../entities/project/project.model';
 
 @Component({
   standalone: true,

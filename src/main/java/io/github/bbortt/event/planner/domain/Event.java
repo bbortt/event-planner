@@ -6,11 +6,13 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+
 import java.io.Serializable;
 import java.time.Instant;
 
@@ -43,7 +45,9 @@ public class Event extends AbstractAuditingEntity<Event, Long> implements Serial
     @Column(name = "end_date_time", nullable = false)
     private Instant endDateTime;
 
-    @ManyToOne
+    @NotNull
+    @ManyToOne(optional = false)
+    @JoinColumn(nullable = false)
     @JsonIgnoreProperties(value = { "project", "parent" }, allowSetters = true)
     private Location location;
 

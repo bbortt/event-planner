@@ -202,6 +202,29 @@ public class LocationResourceIT {
 
     @Test
     @Transactional
+    void checkProjectIsRequired() throws Exception {
+        int databaseSizeBeforeTest = locationRepository.findAll().size();
+        // set the field null
+        location.setProject(null);
+
+        // Create the Location, which fails.
+        LocationDTO locationDTO = locationMapper.toDto(location);
+
+        restLocationMockMvc
+            .perform(
+                post(ENTITY_API_URL)
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(locationDTO))
+            )
+            .andExpect(status().isBadRequest());
+
+        List<Location> locationList = locationRepository.findAll();
+        assertThat(locationList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     void getAllLocations() throws Exception {
         // Initialize the database
         locationRepository.saveAndFlush(location);

@@ -82,9 +82,12 @@ export const PROJECT_ADMIN_ROUTES: Route[] = [
             component: ProjectEventUpdateModalComponent,
             outlet: 'modal',
             pathMatch: 'full',
+            resolve: {
+              project: projectById,
+            },
           },
           {
-            path: 'project/:projectId/events/:eventId/new',
+            path: 'project/:projectId/events/:eventId/edit',
             component: ProjectEventUpdateModalComponent,
             outlet: 'modal',
             pathMatch: 'full',

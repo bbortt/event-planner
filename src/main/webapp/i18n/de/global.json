@@ -132,19 +132,29 @@
   },
   "error": {
     "internalServerError": "Interner Serverfehler",
-    "server.not.reachable": "Server ist nicht erreichbar",
-    "url.not.found": "Nicht gefunden",
-    "NotNull": "Feld {{fieldName}} kann nicht leer sein!",
-    "Size": "Feld {{fieldName}} erfüllt nicht die minimalen/maximalen Voraussetzungen!",
-    "userexists": "Benutzername bereits vergeben!",
     "emailexists": "Email wird bereits verwendet!",
     "idexists": "Ein neuer {{entityName}} kann noch keine ID haben",
-    "idnull": "Ungültige ID",
     "idinvalid": "Ungültige ID",
     "idnotfound": "ID konnte nicht gefunden werden",
+    "idnull": "Ungültige ID",
+    "NotNull": "Feld {{fieldName}} kann nicht leer sein!",
+    "server.not.reachable": "Server ist nicht erreichbar",
+    "Size": "Feld {{fieldName}} erfüllt nicht die minimalen/maximalen Voraussetzungen!",
+    "url.not.found": "Nicht gefunden",
+    "userexists": "Benutzername bereits vergeben!",
+    "event": {
+      "constraints": {
+        "location": "Ein Event muss mit einer gültigen Lokalität verbunden sein"
+      }
+    },
     "file": {
       "could.not.extract": "Datei konnte nicht extrahiert werden",
       "not.image": "Es wird erwartet, dass die Datei ein Bild ist. Die Datei ist jedoch vom Typ \"{{ fileType }}\""
+    },
+    "location": {
+      "constraints": {
+        "project": "Eine Lokalität muss mit einem gültigen Projekt verbunden sein"
+      }
     }
   },
   "footer": "Dies ist Ihre Fußzeile"

@@ -204,6 +204,29 @@ public class EventResourceIT {
 
     @Test
     @Transactional
+    void checkLocationIsRequired() throws Exception {
+        int databaseSizeBeforeTest = eventRepository.findAll().size();
+        // set the field null
+        event.setLocation(null);
+
+        // Create the Event, which fails.
+        EventDTO eventDTO = eventMapper.toDto(event);
+
+        restEventMockMvc
+            .perform(
+                post(ENTITY_API_URL)
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(eventDTO))
+            )
+            .andExpect(status().isBadRequest());
+
+        List<Event> eventList = eventRepository.findAll();
+        assertThat(eventList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     void checkStartDateTimeIsRequired() throws Exception {
         int databaseSizeBeforeTest = eventRepository.findAll().size();
         // set the field null
