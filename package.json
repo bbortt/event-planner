@@ -4,6 +4,12 @@
   "private": true,
   "description": "Event planning tool.",
   "license": "Apache-2.0",
+  "licenses": [
+    {
+      "type": "Apache-2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0"
+    }
+  ],
   "scripts": {
     "app:start": "./gradlew",
     "backend:build-cache": "npm run backend:info && npm run backend:nohttp:test && npm run ci:e2e:package",
@@ -92,6 +98,7 @@
     "@ngx-translate/http-loader": "8.0.0",
     "@popperjs/core": "2.11.8",
     "@stomp/rx-stomp": "2.0.0",
+    "angular-calendar": "^0.31.0",
     "bootstrap": "5.3.1",
     "bootswatch": "5.3.1",
     "dayjs": "1.11.9",
@@ -150,19 +157,16 @@
     "webpack-merge": "5.9.0",
     "webpack-notifier": "1.15.0"
   },
-  "engines": {
-    "node": ">=18.16.1"
-  },
   "cacheDirectories": [
     "node_modules"
   ],
-  "licenses": [
-    {
-      "type": "Apache-2.0",
-      "url": "https://www.apache.org/licenses/LICENSE-2.0"
-    }
-  ],
+  "engines": {
+    "node": ">=18.16.1"
+  },
   "overrides": {
     "webpack": "5.74.0"
+  },
+  "scarfSettings": {
+    "enabled": false
   }
 }
