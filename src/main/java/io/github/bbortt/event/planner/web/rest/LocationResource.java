@@ -70,6 +70,11 @@ public class LocationResource {
         if (locationDTO.getId() != null) {
             throw new BadRequestAlertException("A new location cannot already have an ID", ENTITY_NAME, "idexists");
         }
+
+        if (Objects.isNull(locationDTO.getProject()) || Objects.isNull(locationDTO.getProject().getId())){
+            throw new BadRequestAlertException("A Location must be associated to a valid Project", ENTITY_NAME, "location.constraints.project");
+        }
+
         LocationDTO result = locationService.save(locationDTO);
         return ResponseEntity
             .created(new URI("/api/locations/" + result.getId()))

@@ -74,7 +74,9 @@ export class EventFormService {
       createdDate: new FormControl(eventRawValue.createdDate),
       lastModifiedBy: new FormControl(eventRawValue.lastModifiedBy),
       lastModifiedDate: new FormControl(eventRawValue.lastModifiedDate),
-      location: new FormControl(eventRawValue.location),
+      location: new FormControl(eventRawValue.location, {
+        validators: [Validators.required],
+      }),
     });
   }
 
