@@ -3,13 +3,13 @@ import { Component, Input, OnInit } from '@angular/core';
 
 import { TranslateService } from '@ngx-translate/core';
 
-import { CalendarEvent, CalendarView } from 'angular-calendar';
-
-import dayjs from 'dayjs/esm';
+import { CalendarEvent, CalendarView, DAYS_OF_WEEK } from 'angular-calendar';
 
 import { Event, GetProjectEvents200Response, ProjectEventsService } from 'app/api';
 
 import { IProject } from 'app/entities/project/project.model';
+
+import eventToCalendarEvent, { CalendarMetaModel } from './event-to-calendar-event';
 
 @Component({
   templateUrl: './project-calendar.component.html',
@@ -20,10 +20,11 @@ export class ProjectCalendarComponent implements OnInit {
   protected activeCalendarView: CalendarView = CalendarView.Month;
   protected currentLang: string;
 
-  protected viewDate = new Date();
-  protected events: CalendarEvent[] = [];
+  protected viewDate: Date = new Date();
+  protected events: CalendarEvent<CalendarMetaModel>[] = [];
 
   protected readonly CalendarView = CalendarView;
+  protected readonly monday = DAYS_OF_WEEK.MONDAY;
 
   constructor(
     private projectEventsService: ProjectEventsService,
@@ -60,12 +61,7 @@ export class ProjectCalendarComponent implements OnInit {
     this.events = this.fillComponentAttributesFromResponseBody(response.body?.contents);
   }
 
-  private fillComponentAttributesFromResponseBody(data: Array<Event> | undefined): CalendarEvent[] {
-    return (
-      data?.map(
-        (event: Event) =>
-          ({ title: event.name, start: dayjs(event.startDateTime).toDate(), end: dayjs(event.endDateTime).toDate() }) as CalendarEvent,
-      ) ?? []
-    );
+  private fillComponentAttributesFromResponseBody(data: Array<Event> | undefined): CalendarEvent<CalendarMetaModel>[] {
+    return data?.map(eventToCalendarEvent) ?? [];
   }
 }

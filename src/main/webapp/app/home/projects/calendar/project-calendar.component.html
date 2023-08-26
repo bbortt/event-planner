@@ -32,14 +32,14 @@
 
   <div class="row mt-3">
     <div class="col-md-12" [ngSwitch]="activeCalendarView">
-      <mwl-calendar-month-view *ngSwitchCase="CalendarView.Month" [viewDate]="viewDate" [events]="events" [weekStartsOn]="1">
+      <mwl-calendar-month-view *ngSwitchCase="CalendarView.Month" [viewDate]="viewDate" [events]="events" [weekStartsOn]="monday">
       </mwl-calendar-month-view>
 
       <mwl-calendar-week-view
         *ngSwitchCase="CalendarView.Week"
         [viewDate]="viewDate"
         [events]="events"
-        [weekStartsOn]="1"
+        [weekStartsOn]="monday"
       ></mwl-calendar-week-view>
 
       <mwl-calendar-day-view *ngSwitchCase="CalendarView.Day" [viewDate]="viewDate" [events]="events"> </mwl-calendar-day-view>

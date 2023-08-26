@@ -7,6 +7,8 @@ import { combineLatest, filter, Observable, Subscription, switchMap, tap } from 
 
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
+import dayjs from 'dayjs/esm';
+
 import { Event, GetProjectEvents200Response, Project, ProjectEventsService } from 'app/api';
 
 import { ITEMS_PER_PAGE, PAGE_HEADER, TOTAL_COUNT_RESPONSE_HEADER } from 'app/config/pagination.constants';
@@ -16,6 +18,7 @@ import EventDeleteDialogComponent from 'app/entities/event/delete/event-delete-d
 import { EventService } from 'app/entities/event/service/event.service';
 
 import SharedModule from 'app/shared/shared.module';
+
 import { DurationPipe, FormatMediumDatePipe, FormatMediumDatetimePipe } from 'app/shared/date';
 import { ItemCountComponent } from 'app/shared/pagination';
 import { SortByDirective, SortDirective } from 'app/shared/sort';
@@ -106,6 +109,10 @@ export default class ProjectEventListComponent implements OnInit {
 
   navigateToPage(page = this.page): void {
     this.handleNavigation(page, this.predicate, this.ascending);
+  }
+
+  protected toDayjs(date: string): dayjs.Dayjs {
+    return dayjs(date);
   }
 
   private loadFromBackendWithRouteInformation(): Observable<HttpResponse<GetProjectEvents200Response>> {

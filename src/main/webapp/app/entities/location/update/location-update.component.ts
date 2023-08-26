@@ -110,14 +110,16 @@ export default class LocationUpdateComponent implements OnInit {
   protected loadRelationshipsOptions(): void {
     this.projectService
       .query()
-      .pipe(map((res: HttpResponse<IProject[]>) => res.body ?? []))
-      .pipe(map((projects: IProject[]) => this.projectService.addProjectToCollectionIfMissing<IProject>(projects, this.location?.project)))
+      .pipe(
+        map((res: HttpResponse<IProject[]>) => res.body ?? []),
+        map((projects: IProject[]) => this.projectService.addProjectToCollectionIfMissing<IProject>(projects, this.location?.project)),
+      )
       .subscribe((projects: IProject[]) => (this.projectsSharedCollection = projects));
 
     this.locationService
       .query()
-      .pipe(map((res: HttpResponse<ILocation[]>) => res.body ?? []))
       .pipe(
+        map((res: HttpResponse<ILocation[]>) => res.body ?? []),
         map((locations: ILocation[]) => this.locationService.addLocationToCollectionIfMissing<ILocation>(locations, this.location?.parent)),
       )
       .subscribe((locations: ILocation[]) => (this.locationsSharedCollection = locations));

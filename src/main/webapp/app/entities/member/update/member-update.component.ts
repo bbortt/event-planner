@@ -102,8 +102,10 @@ export default class MemberUpdateComponent implements OnInit {
   protected loadRelationshipsOptions(): void {
     this.projectService
       .query()
-      .pipe(map((res: HttpResponse<IProject[]>) => res.body ?? []))
-      .pipe(map((projects: IProject[]) => this.projectService.addProjectToCollectionIfMissing<IProject>(projects, this.member?.project)))
+      .pipe(
+        map((res: HttpResponse<IProject[]>) => res.body ?? []),
+        map((projects: IProject[]) => this.projectService.addProjectToCollectionIfMissing<IProject>(projects, this.member?.project)),
+      )
       .subscribe((projects: IProject[]) => (this.projectsSharedCollection = projects));
   }
 }

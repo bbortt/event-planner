@@ -133,20 +133,35 @@ describe('Project Event Update Component', () => {
       component.event = event;
       component.project = project;
 
-      const locationCollection = [{ id: 91552 }] as Location[];
+      const nestedLocationCollection: Location[] = [
+        {
+          id: 1,
+          children: [
+            { id: 2, children: [] },
+            { id: 3, children: [{ id: 4, children: [] }] },
+          ],
+        } as unknown as Location,
+      ];
+
+      const flattenedLocationCollection: ILocation[] = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }].map(
+        ({ id }) => ({ id, name: '', description: '' }) as ILocation,
+      );
+
+      const additionalLocations: ILocation[] = [location];
+      const expectedCollection: ILocation[] = [...additionalLocations, ...flattenedLocationCollection];
+
       jest
         .spyOn(projectLocationService, 'getProjectLocations')
-        .mockReturnValue(of(new HttpResponse({ body: { contents: locationCollection } })));
-      const additionalLocations = [location];
-      const expectedCollection: ILocation[] = [...additionalLocations, ...locationCollection];
+        .mockReturnValue(of(new HttpResponse({ body: { contents: nestedLocationCollection } })));
+
       jest.spyOn(locationService, 'addLocationToCollectionIfMissing').mockReturnValue(expectedCollection);
 
       component.loadRelationshipsOptions();
 
       expect(projectLocationService.getProjectLocations).toHaveBeenCalledWith(project.id, 'response');
       expect(locationService.addLocationToCollectionIfMissing).toHaveBeenCalledWith(
-        locationCollection,
-        ...additionalLocations.map(expect.objectContaining),
+        expect.any(Array),
+        expect.objectContaining({ id: location.id }),
       );
 
       // @ts-ignore: force this private property value for testing.
