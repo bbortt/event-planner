@@ -277,7 +277,7 @@ You can run a Sonar analysis with using the [sonar-scanner](https://docs.sonarqu
 Then, run a Sonar analysis:
 
 ```
-./gradlew -Pprod clean check jacocoTestReport sonarqube
+./gradlew -Pprod clean check jacocoTestReport sonar
 ```
 
 For more information, refer to the [Code quality page][].
