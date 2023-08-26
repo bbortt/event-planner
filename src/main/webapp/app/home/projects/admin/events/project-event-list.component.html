@@ -32,12 +32,6 @@
     <table class="table table-striped" aria-describedby="page-heading">
       <thead>
         <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="navigateToWithComponentValues()">
-          <th scope="col" jhiSortBy="id">
-            <div class="d-flex">
-              <span jhiTranslate="global.field.id">ID</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
           <th scope="col" jhiSortBy="name">
             <div class="d-flex">
               <span jhiTranslate="app.event.name">Name</span>
@@ -55,18 +49,20 @@
       </thead>
       <tbody>
         <tr *ngFor="let event of events; trackBy: trackId" data-cy="entityTable">
-          <td>
-            <a [routerLink]="['/event', event.id, 'view']">{{ event.id }}</a>
-          </td>
           <td>{{ event.name }}</td>
           <td>
             <div *ngIf="event.location">
-              <a [routerLink]="['/location', event.location.id, 'view']">{{ event.location.name }}</a>
+              <a [routerLink]="['/home', 'projects', project.id, 'admin', 'locations']">{{ event.location.name }}</a>
             </div>
           </td>
           <td class="text-end">
             <div class="btn-group">
-              <button type="submit" [routerLink]="['/event', event.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
+              <button
+                type="submit"
+                [routerLink]="[{ outlets: { modal: ['project', project.id, 'events', event.id, 'edit'] } }]"
+                class="btn btn-primary btn-sm"
+                data-cy="entityEditButton"
+              >
                 <fa-icon icon="pencil-alt"></fa-icon>
                 <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Bearbeiten</span>
               </button>

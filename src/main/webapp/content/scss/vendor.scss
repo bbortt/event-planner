@@ -14,5 +14,7 @@ eg $input-color: red;
 @import 'dragula/dist/dragula.css';
 // Override ng2-dragula variables
 @import 'dragula-variables';
+// Import angular-calendar source files form node_modules
+@import 'angular-calendar/scss/angular-calendar';
 
 /* jhipster-needle-scss-add-vendor JHipster will add new css style */

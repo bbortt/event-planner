@@ -12,7 +12,8 @@
       "mine": {
         "title": "Deine Projekte",
         "action": {
-          "administration": "Administration"
+          "administration": "Administration",
+          "calendar": "Kalender"
         }
       },
       "created": "Projekt mit ID {{ param }} erstellt",

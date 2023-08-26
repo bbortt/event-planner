@@ -2,6 +2,7 @@ package io.github.bbortt.event.planner.web.rest.util;
 
 import static io.github.bbortt.event.planner.config.Constants.DEFAULT_PAGE_SIZE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
@@ -56,7 +57,7 @@ class PaginationUtilTest {
 
     @Test
     void createPagingInformationWithPageNumber() {
-        Integer pageNumber = 33;
+        int pageNumber = 33;
 
         Pageable pageable = fixture.createPagingInformation(
             Optional.empty(),
@@ -84,6 +85,17 @@ class PaginationUtilTest {
         );
 
         assertEquals("Page number is 1-based!", exception.getMessage());
+    }
+
+    @Test
+    void createPagingInformationWithNegativePageNumber() {
+        Optional<Integer> pageSize = Optional.empty();
+        Optional<Integer> pageNumber = Optional.of(-1);
+        Optional<List<String>> sort = Optional.empty();
+
+        Pageable pageable = fixture.createPagingInformation(pageSize, pageNumber, sort, defaultSorgingPropertyName);
+
+        assertFalse(pageable.isPaged());
     }
 
     @Test

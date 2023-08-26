@@ -12,7 +12,8 @@
       "mine": {
         "title": "Your Projects",
         "action": {
-          "administration": "Administration"
+          "administration": "Administration",
+          "calendar": "Calendar"
         }
       },
       "created": "A new Project is created with identifier {{ param }}",

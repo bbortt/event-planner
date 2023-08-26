@@ -1,0 +1,12 @@
+{
+  "app": {
+    "calendar": {
+      "title": "Calendar",
+      "view": {
+        "month": "Month",
+        "week": "Week",
+        "day": "Day"
+      }
+    }
+  }
+}
