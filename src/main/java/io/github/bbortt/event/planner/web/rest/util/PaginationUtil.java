@@ -53,8 +53,11 @@ public class PaginationUtil {
         PageRequest pageRequest = PageRequest.ofSize(pageSizeOrDefault(pageSize));
 
         if (pageNumber.isPresent()) {
-            if (pageNumber.orElseThrow(IllegalArgumentException::new) < 1) {
+            int actualPageNumber = pageNumber.orElseThrow(IllegalArgumentException::new);
+            if (actualPageNumber == 0) {
                 throw new IllegalArgumentException("Page number is 1-based!");
+            } else if (actualPageNumber < 0) {
+                return Pageable.unpaged();
             } else {
                 pageRequest = pageRequest.withPage(pageNumber.orElseThrow(IllegalArgumentException::new) - 1);
             }

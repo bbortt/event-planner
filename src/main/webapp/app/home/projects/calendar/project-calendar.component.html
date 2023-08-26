@@ -1,0 +1,48 @@
+<div *ngIf="project">
+  <h2 id="page-heading" data-cy="myProjectsListHeading" class="mb-3">
+    <span jhiTranslate="app.calendar.title"> Kalender </span>
+    <span class="fst-italic fw-light">{{ project.name }}</span>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div class="row mt-3">
+    <div class="col-md-8">
+      <h3>{{ viewDate | calendarDate: activeCalendarView + 'ViewTitle' : currentLang }}</h3>
+    </div>
+
+    <div class="col-md-4 d-flex justify-content-end">
+      <div class="btn-group ml-auto">
+        <div class="btn btn-primary" (click)="setView(CalendarView.Month)" [class.active]="activeCalendarView === CalendarView.Month">
+          <span jhiTranslate="app.calendar.view.month"> Monat </span>
+        </div>
+
+        <div class="btn btn-primary" (click)="setView(CalendarView.Week)" [class.active]="activeCalendarView === CalendarView.Week">
+          <span jhiTranslate="app.calendar.view.week"> Woche </span>
+        </div>
+
+        <div class="btn btn-primary" (click)="setView(CalendarView.Day)" [class.active]="activeCalendarView === CalendarView.Day">
+          <span jhiTranslate="app.calendar.view.day"> Tag </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-3">
+    <div class="col-md-12" [ngSwitch]="activeCalendarView">
+      <mwl-calendar-month-view *ngSwitchCase="CalendarView.Month" [viewDate]="viewDate" [events]="events" [weekStartsOn]="1">
+      </mwl-calendar-month-view>
+
+      <mwl-calendar-week-view
+        *ngSwitchCase="CalendarView.Week"
+        [viewDate]="viewDate"
+        [events]="events"
+        [weekStartsOn]="1"
+      ></mwl-calendar-week-view>
+
+      <mwl-calendar-day-view *ngSwitchCase="CalendarView.Day" [viewDate]="viewDate" [events]="events"> </mwl-calendar-day-view>
+    </div>
+  </div>
+</div>

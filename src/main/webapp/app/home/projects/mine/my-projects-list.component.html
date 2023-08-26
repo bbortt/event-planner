@@ -6,7 +6,7 @@
       <div class="btn-group">
         <button class="btn btn-info" (click)="load()" [disabled]="isLoading">
           <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
-          <span jhiTranslate="app.project.home.refreshListLabel">Liste aktualisieren</span>
+          <span jhiTranslate="app.project.home.refreshListLabel"> Liste aktualisieren </span>
         </button>
 
         <button
@@ -27,7 +27,7 @@
   <jhi-alert></jhi-alert>
 
   <div class="alert alert-warning" id="no-result" *ngIf="projects?.length === 0">
-    <span jhiTranslate="app.project.home.notFound">Keine Projekte gefunden</span>
+    <span jhiTranslate="app.project.home.notFound"> Keine Projekte gefunden </span>
   </div>
 
   <div *ngIf="projects && projects.length > 0">
@@ -43,7 +43,7 @@
       <div class="col-md-2">
         <button class="btn btn-info" (click)="loadPage(page + 1)" [disabled]="!hasNextPage || isLoading">
           <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
-          <span jhiTranslate="app.project.home.loadMoreLabel">Mehr laden</span>
+          <span jhiTranslate="app.project.home.loadMoreLabel"> Mehr laden </span>
         </button>
       </div>
     </div>

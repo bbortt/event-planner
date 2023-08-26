@@ -14,6 +14,13 @@ const projectRoutes: Route[] = [
       project: projectById,
     },
   },
+  {
+    path: ':projectId/calendar',
+    loadChildren: () => import('./calendar/project-calendar.module').then(m => m.ProjectCalendarModule),
+    resolve: {
+      project: projectById,
+    },
+  },
 ];
 
 export default projectRoutes;
