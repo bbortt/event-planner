@@ -38,6 +38,18 @@
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
+          <th scope="col" jhiSortBy="startDateTime">
+            <div class="d-flex">
+              <span jhiTranslate="app.event.startDateTime">Start Zeitpunkt</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="endDateTime">
+            <div class="d-flex">
+              <span jhiTranslate="app.event.endDateTime">End Zeitpunkt</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
           <th scope="col" jhiSortBy="location.name">
             <div class="d-flex">
               <span jhiTranslate="app.event.location">Location</span>
@@ -50,6 +62,8 @@
       <tbody>
         <tr *ngFor="let event of events; trackBy: trackId" data-cy="entityTable">
           <td>{{ event.name }}</td>
+          <td>{{ toDayjs(event.startDateTime) | formatMediumDatetime }}</td>
+          <td>{{ toDayjs(event.endDateTime) | formatMediumDatetime }}</td>
           <td>
             <div *ngIf="event.location">
               <a [routerLink]="['/home', 'projects', project.id, 'admin', 'locations']">{{ event.location.name }}</a>

@@ -98,8 +98,8 @@ export default class EventUpdateComponent implements OnInit {
   protected loadRelationshipsOptions(): void {
     this.locationService
       .query()
-      .pipe(map((res: HttpResponse<ILocation[]>) => res.body ?? []))
       .pipe(
+        map((res: HttpResponse<ILocation[]>) => res.body ?? []),
         map((locations: ILocation[]) => this.locationService.addLocationToCollectionIfMissing<ILocation>(locations, this.event?.location)),
       )
       .subscribe((locations: ILocation[]) => (this.locationsSharedCollection = locations));

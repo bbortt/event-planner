@@ -9,7 +9,7 @@ import { GetProjectLocations200Response, Location, ProjectLocationService } from
 
 import { IEvent } from 'app/entities/event/event.model';
 import { EventService } from 'app/entities/event/service/event.service';
-import { EventFormService, EventFormGroup } from 'app/entities/event/update/event-form.service';
+import { EventFormGroup, EventFormService } from 'app/entities/event/update/event-form.service';
 
 import { ILocation } from 'app/entities/location/location.model';
 import { LocationService } from 'app/entities/location/service/location.service';
@@ -56,9 +56,10 @@ export default class ProjectEventUpdateComponent {
   public loadRelationshipsOptions(): void {
     this.projectLocationService
       .getProjectLocations(this.project!.id, 'response')
-      .pipe(map((res: HttpResponse<GetProjectLocations200Response>) => res.body?.contents ?? []))
-      .pipe(map((locations: Location[]) => locations.map(({ id, name, description }) => ({ id, name, description }) as ILocation)))
       .pipe(
+        map((res: HttpResponse<GetProjectLocations200Response>) => res.body?.contents ?? []),
+        map((locations: Location[]) => this.flattenLocations(locations)),
+        map((locations: Location[]) => locations.map(({ id, name, description }) => ({ id, name, description }) as ILocation)),
         map((locations: ILocation[]) => this.locationService.addLocationToCollectionIfMissing<ILocation>(locations, this.event?.location)),
       )
       .subscribe((locations: ILocation[]) => (this.locationsSharedCollection = locations));
@@ -97,5 +98,9 @@ export default class ProjectEventUpdateComponent {
 
   protected onSaveFinalize(): void {
     this.isSaving = false;
+  }
+
+  private flattenLocations(locations: Array<Location>): Array<Location> {
+    return locations.reduce((acc: Location[], location: Location) => acc.concat(location, this.flattenLocations(location.children)), []);
   }
 }
