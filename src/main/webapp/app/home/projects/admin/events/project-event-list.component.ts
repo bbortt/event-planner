@@ -57,7 +57,7 @@ export default class ProjectEventListComponent implements OnInit {
     private modalService: NgbModal,
     private ngZone: NgZone,
     private projectEventsService: ProjectEventsService,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -67,7 +67,7 @@ export default class ProjectEventListComponent implements OnInit {
           if (project) {
             this.project = project;
           }
-        })
+        }),
       )
       .subscribe(() => this.load());
 
@@ -83,7 +83,7 @@ export default class ProjectEventListComponent implements OnInit {
     modalRef.closed
       .pipe(
         filter(reason => reason === ITEM_DELETED_EVENT),
-        switchMap(() => this.loadFromBackendWithRouteInformation())
+        switchMap(() => this.loadFromBackendWithRouteInformation()),
       )
       .subscribe({
         next: (res: HttpResponse<GetProjectEvents200Response>) => {
@@ -111,7 +111,7 @@ export default class ProjectEventListComponent implements OnInit {
   private loadFromBackendWithRouteInformation(): Observable<HttpResponse<GetProjectEvents200Response>> {
     return combineLatest([this.activatedRoute.queryParamMap, this.activatedRoute.data]).pipe(
       tap(([params, data]) => this.fillComponentAttributeFromRoute(params, data)),
-      switchMap(() => this.queryBackend(this.page, this.predicate, this.ascending))
+      switchMap(() => this.queryBackend(this.page, this.predicate, this.ascending)),
     );
   }
 
@@ -157,7 +157,7 @@ export default class ProjectEventListComponent implements OnInit {
       this.router.navigate(['./'], {
         relativeTo: this.activatedRoute,
         queryParams: queryParamsObj,
-      })
+      }),
     );
   }
 

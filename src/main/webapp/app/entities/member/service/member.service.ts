@@ -34,7 +34,10 @@ export class MemberService {
   private memberUpdatedSource = new Subject<IMember>();
   private _memberUpdatedSource$ = this.memberUpdatedSource.asObservable();
 
-  constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) {
+  constructor(
+    protected http: HttpClient,
+    protected applicationConfigService: ApplicationConfigService,
+  ) {
     this.resourceUrl = this.applicationConfigService.getEndpointFor('api/members');
   }
 
@@ -50,7 +53,7 @@ export class MemberService {
     const copy = this.convertDateFromClient(member);
     return this.http.post<RestMember>(this.resourceUrl, copy, { observe: 'response' }).pipe(
       map(res => this.convertResponseFromServer(res)),
-      tap(res => this.notifySubscribersOfChangedMember(res))
+      tap(res => this.notifySubscribersOfChangedMember(res)),
     );
   }
 
@@ -58,7 +61,7 @@ export class MemberService {
     const copy = this.convertDateFromClient(member);
     return this.http.put<RestMember>(`${this.resourceUrl}/${this.getMemberIdentifier(member)}`, copy, { observe: 'response' }).pipe(
       map(res => this.convertResponseFromServer(res)),
-      tap(res => this.notifySubscribersOfChangedMember(res))
+      tap(res => this.notifySubscribersOfChangedMember(res)),
     );
   }
 
@@ -66,7 +69,7 @@ export class MemberService {
     const copy = this.convertDateFromClient(member);
     return this.http.patch<RestMember>(`${this.resourceUrl}/${this.getMemberIdentifier(member)}`, copy, { observe: 'response' }).pipe(
       map(res => this.convertResponseFromServer(res)),
-      tap(res => this.notifySubscribersOfChangedMember(res))
+      tap(res => this.notifySubscribersOfChangedMember(res)),
     );
   }
 

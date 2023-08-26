@@ -25,7 +25,10 @@ export class ProjectCreateModalContentComponent {}
 export default class ProjectCreateModalComponent implements OnInit, OnDestroy {
   private modalRef: NgbModalRef | undefined;
 
-  constructor(private location: Location, private modalService: NgbModal) {}
+  constructor(
+    private location: Location,
+    private modalService: NgbModal,
+  ) {}
 
   ngOnInit(): void {
     this.modalRef = this.modalService.open(ProjectCreateModalContentComponent, { size: 'lg' });

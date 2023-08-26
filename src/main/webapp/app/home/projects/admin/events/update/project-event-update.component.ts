@@ -38,7 +38,7 @@ export default class ProjectEventUpdateComponent {
     private eventFormService: EventFormService,
     private eventService: EventService,
     private locationService: LocationService,
-    private projectLocationService: ProjectLocationService
+    private projectLocationService: ProjectLocationService,
   ) {
     this.editForm = this.eventFormService.createEventFormGroup();
   }
@@ -49,7 +49,7 @@ export default class ProjectEventUpdateComponent {
 
     this.locationsSharedCollection = this.locationService.addLocationToCollectionIfMissing<ILocation>(
       this.locationsSharedCollection,
-      event.location
+      event.location,
     );
   }
 
@@ -57,9 +57,9 @@ export default class ProjectEventUpdateComponent {
     this.projectLocationService
       .getProjectLocations(this.project!.id, 'response')
       .pipe(map((res: HttpResponse<GetProjectLocations200Response>) => res.body?.contents ?? []))
-      .pipe(map((locations: Location[]) => locations.map(({ id, name, description }) => ({ id, name, description } as ILocation))))
+      .pipe(map((locations: Location[]) => locations.map(({ id, name, description }) => ({ id, name, description }) as ILocation)))
       .pipe(
-        map((locations: ILocation[]) => this.locationService.addLocationToCollectionIfMissing<ILocation>(locations, this.event?.location))
+        map((locations: ILocation[]) => this.locationService.addLocationToCollectionIfMissing<ILocation>(locations, this.event?.location)),
       )
       .subscribe((locations: ILocation[]) => (this.locationsSharedCollection = locations));
   }

@@ -31,12 +31,12 @@ public class RedisTestContainersSpringContextCustomizerFactory implements Contex
                     // ((DefaultListableBeanFactory)beanFactory).registerDisposableBean(RedisTestContainer.class.getName(), redisBean);
                 }
                 testValues =
-                    testValues.and(
-                        "jhipster.cache.redis.server=redis://" +
-                        redisBean.getRedisContainer().getContainerIpAddress() +
-                        ":" +
-                        redisBean.getRedisContainer().getMappedPort(6379)
-                    );
+                testValues.and(
+                    "jhipster.cache.redis.server=redis://" +
+                    redisBean.getRedisContainer().getContainerIpAddress() +
+                    ":" +
+                    redisBean.getRedisContainer().getMappedPort(6379)
+                );
             }
             testValues.applyTo(context);
         };

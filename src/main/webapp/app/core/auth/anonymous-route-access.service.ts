@@ -8,7 +8,10 @@ import { AccountService } from 'app/core/auth/account.service';
 
 @Injectable({ providedIn: 'root' })
 export class AnonymousRouteAccessService {
-  constructor(private router: Router, private accountService: AccountService) {}
+  constructor(
+    private router: Router,
+    private accountService: AccountService,
+  ) {}
 
   canActivate(): Observable<boolean> {
     return this.accountService.identity().pipe(
@@ -19,7 +22,7 @@ export class AnonymousRouteAccessService {
         }
 
         return true;
-      })
+      }),
     );
   }
 }

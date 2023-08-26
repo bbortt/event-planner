@@ -19,7 +19,7 @@ describe('Location Management Detail Component', () => {
               resolve: { location: () => of({ id: 123 }) },
             },
           ],
-          withComponentInputBinding()
+          withComponentInputBinding(),
         ),
       ],
     })

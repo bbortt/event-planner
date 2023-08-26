@@ -4,6 +4,7 @@ import io.github.bbortt.event.planner.domain.Event;
 import io.github.bbortt.event.planner.repository.EventRepository;
 import io.github.bbortt.event.planner.service.dto.EventDTO;
 import io.github.bbortt.event.planner.service.mapper.EventMapper;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -11,8 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 /**
  * Service Implementation for managing {@link Event}.

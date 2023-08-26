@@ -40,7 +40,7 @@ export default class LocationUpdateComponent implements OnInit {
     protected locationService: LocationService,
     protected locationFormService: LocationFormService,
     protected projectService: ProjectService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
   ) {
     this.editForm = this.locationFormService.createLocationFormGroup();
   }
@@ -99,11 +99,11 @@ export default class LocationUpdateComponent implements OnInit {
 
     this.projectsSharedCollection = this.projectService.addProjectToCollectionIfMissing<IProject>(
       this.projectsSharedCollection,
-      location.project
+      location.project,
     );
     this.locationsSharedCollection = this.locationService.addLocationToCollectionIfMissing<ILocation>(
       this.locationsSharedCollection,
-      location.parent
+      location.parent,
     );
   }
 
@@ -118,7 +118,7 @@ export default class LocationUpdateComponent implements OnInit {
       .query()
       .pipe(map((res: HttpResponse<ILocation[]>) => res.body ?? []))
       .pipe(
-        map((locations: ILocation[]) => this.locationService.addLocationToCollectionIfMissing<ILocation>(locations, this.location?.parent))
+        map((locations: ILocation[]) => this.locationService.addLocationToCollectionIfMissing<ILocation>(locations, this.location?.parent)),
       )
       .subscribe((locations: ILocation[]) => (this.locationsSharedCollection = locations));
   }

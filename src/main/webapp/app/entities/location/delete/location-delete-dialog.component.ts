@@ -17,7 +17,10 @@ import { LocationService } from '../service/location.service';
 export default class LocationDeleteDialogComponent {
   location?: ILocation;
 
-  constructor(protected locationService: LocationService, protected activeModal: NgbActiveModal) {}
+  constructor(
+    protected locationService: LocationService,
+    protected activeModal: NgbActiveModal,
+  ) {}
 
   cancel(): void {
     this.activeModal.dismiss();

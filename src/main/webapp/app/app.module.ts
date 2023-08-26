@@ -58,7 +58,7 @@ export class AppModule {
     applicationConfigService: ApplicationConfigService,
     iconLibrary: FaIconLibrary,
     trackerService: TrackerService,
-    dpConfig: NgbDatepickerConfig
+    dpConfig: NgbDatepickerConfig,
   ) {
     trackerService.setup();
     applicationConfigService.setEndpointPrefix(SERVER_API_URL);

@@ -38,7 +38,7 @@ describe('Project Management Component', () => {
                 page: '1',
                 size: '1',
                 sort: 'id,desc',
-              })
+              }),
             ),
             snapshot: { queryParams: {} },
           },
@@ -56,8 +56,8 @@ describe('Project Management Component', () => {
         new HttpResponse({
           body: [{ id: 123 }],
           headers,
-        })
-      )
+        }),
+      ),
     );
 
     fixture = TestBed.createComponent(ProjectComponent);
@@ -116,7 +116,7 @@ describe('Project Management Component', () => {
         queryParams: expect.objectContaining({
           sort: ['name,asc'],
         }),
-      })
+      }),
     );
   });
 });

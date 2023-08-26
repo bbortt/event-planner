@@ -26,7 +26,7 @@ export const eventById: ResolveFn<IEvent | null> = (route: ActivatedRouteSnapsho
           router.navigateByUrl('404').catch(() => (window.location.href = '/404'));
           return EMPTY;
         }
-      })
+      }),
     );
 };
 

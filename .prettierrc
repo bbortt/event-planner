@@ -16,3 +16,6 @@ overrides:
   - files: "*.java"
     options:
       tabWidth: 4
+
+plugins:
+    - prettier-plugin-java

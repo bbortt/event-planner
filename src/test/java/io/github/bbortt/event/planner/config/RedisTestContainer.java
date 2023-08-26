@@ -24,10 +24,10 @@ public class RedisTestContainer implements InitializingBean, DisposableBean {
     public void afterPropertiesSet() {
         if (null == redisContainer) {
             redisContainer =
-                new GenericContainer("redis:7.0.12-alpine")
-                    .withExposedPorts(6379)
-                    .withLogConsumer(new Slf4jLogConsumer(logger))
-                    .withReuse(true);
+            new GenericContainer("redis:7.0.12-alpine")
+                .withExposedPorts(6379)
+                .withLogConsumer(new Slf4jLogConsumer(logger))
+                .withReuse(true);
         }
         if (!redisContainer.isRunning()) {
             redisContainer.start();

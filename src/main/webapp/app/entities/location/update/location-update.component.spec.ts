@@ -72,7 +72,7 @@ describe('Location Management Update Component', () => {
       expect(projectService.query).toHaveBeenCalled();
       expect(projectService.addProjectToCollectionIfMissing).toHaveBeenCalledWith(
         projectCollection,
-        ...additionalProjects.map(expect.objectContaining)
+        ...additionalProjects.map(expect.objectContaining),
       );
       expect(component.projectsSharedCollection).toEqual(expectedCollection);
     });
@@ -94,7 +94,7 @@ describe('Location Management Update Component', () => {
       expect(locationService.query).toHaveBeenCalled();
       expect(locationService.addLocationToCollectionIfMissing).toHaveBeenCalledWith(
         locationCollection,
-        ...additionalLocations.map(expect.objectContaining)
+        ...additionalLocations.map(expect.objectContaining),
       );
       expect(component.locationsSharedCollection).toEqual(expectedCollection);
     });

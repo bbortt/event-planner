@@ -11,7 +11,10 @@ export class ProfileService {
   private infoUrl;
   private profileInfo$?: Observable<ProfileInfo>;
 
-  constructor(private http: HttpClient, private applicationConfigService: ApplicationConfigService) {
+  constructor(
+    private http: HttpClient,
+    private applicationConfigService: ApplicationConfigService,
+  ) {
     this.infoUrl = this.applicationConfigService.getEndpointFor('management/info');
   }
 
@@ -36,7 +39,7 @@ export class ProfileService {
         }
         return profileInfo;
       }),
-      shareReplay()
+      shareReplay(),
     );
     return this.profileInfo$;
   }

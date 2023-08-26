@@ -63,7 +63,7 @@ export default class ProjectMemberListComponent implements OnDestroy, OnInit {
     private memberService: MemberService,
     private modalService: NgbModal,
     private projectMemberService: ProjectMemberService,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -73,7 +73,7 @@ export default class ProjectMemberListComponent implements OnDestroy, OnInit {
           if (project) {
             this.project = project;
           }
-        })
+        }),
       )
       .subscribe(() => this.load());
 
@@ -104,12 +104,12 @@ export default class ProjectMemberListComponent implements OnDestroy, OnInit {
     const projectInvitationUri = `invitation/projects/${this.project!.token}`;
 
     of(
-      navigator.clipboard.writeText(`${window.location.origin}/${this.applicationConfigService.getEndpointFor(projectInvitationUri)}`)
+      navigator.clipboard.writeText(`${window.location.origin}/${this.applicationConfigService.getEndpointFor(projectInvitationUri)}`),
     ).subscribe(() =>
       this.alertService.addAlert({
         type: 'info',
         translationKey: 'app.project.admin.invitationLinkCopied',
-      })
+      }),
     );
   }
 
@@ -120,7 +120,7 @@ export default class ProjectMemberListComponent implements OnDestroy, OnInit {
     modalRef.closed
       .pipe(
         filter(reason => reason === ITEM_DELETED_EVENT),
-        switchMap(() => this.loadFromBackendWithRouteInformation())
+        switchMap(() => this.loadFromBackendWithRouteInformation()),
       )
       .subscribe({
         next: (res: HttpResponse<GetProjectMembers200Response>) => {
@@ -140,7 +140,7 @@ export default class ProjectMemberListComponent implements OnDestroy, OnInit {
   private loadFromBackendWithRouteInformation(): Observable<HttpResponse<GetProjectMembers200Response>> {
     return combineLatest([this.activatedRoute.queryParamMap, this.activatedRoute.data]).pipe(
       tap(([params, data]) => this.fillComponentAttributeFromRoute(params, data)),
-      switchMap(() => this.queryBackend(this.page, this.predicate, this.ascending))
+      switchMap(() => this.queryBackend(this.page, this.predicate, this.ascending)),
     );
   }
 

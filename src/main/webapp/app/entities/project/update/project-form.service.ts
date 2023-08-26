@@ -61,7 +61,7 @@ export class ProjectFormService {
         {
           nonNullable: true,
           validators: [Validators.required],
-        }
+        },
       ),
       token: new FormControl(projectRawValue.token, {
         validators: [],
@@ -98,7 +98,7 @@ export class ProjectFormService {
       {
         ...projectRawValue,
         id: { value: projectRawValue.id, disabled: true },
-      } as any /* cast to workaround https://github.com/angular/angular/issues/46458 */
+      } as any /* cast to workaround https://github.com/angular/angular/issues/46458 */,
     );
   }
 
@@ -122,7 +122,7 @@ export class ProjectFormService {
   }
 
   private convertProjectToProjectRawValue(
-    project: IProject | (Partial<NewProject> & ProjectFormDefaults)
+    project: IProject | (Partial<NewProject> & ProjectFormDefaults),
   ): ProjectFormRawValue | PartialWithRequiredKeyOf<NewProjectFormRawValue> {
     return {
       ...project,

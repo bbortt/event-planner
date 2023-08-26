@@ -63,7 +63,7 @@ export class ProjectCalendarComponent implements OnInit {
   private fillComponentAttributesFromResponseBody(data: Array<Event> | undefined): CalendarEvent[] {
     return (
       data?.map(
-        event =>
+        (event: Event) =>
           ({ title: event.name, start: dayjs(event.startDateTime).toDate(), end: dayjs(event.endDateTime).toDate() }) as CalendarEvent,
       ) ?? []
     );
