@@ -35,7 +35,10 @@ export class LocationService {
   private locationUpdatedSource = new Subject<ILocation>();
   private _locationUpdatedSource$ = this.locationUpdatedSource.asObservable();
 
-  constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) {
+  constructor(
+    protected http: HttpClient,
+    protected applicationConfigService: ApplicationConfigService,
+  ) {
     this.resourceUrl = this.applicationConfigService.getEndpointFor('api/locations');
   }
 
@@ -51,7 +54,7 @@ export class LocationService {
     const copy = this.convertDateFromClient(location);
     return this.http.post<RestLocation>(this.resourceUrl, copy, { observe: 'response' }).pipe(
       map(res => this.convertResponseFromServer(res)),
-      tap(res => this.notifySubscribersOfChangedMember(res))
+      tap(res => this.notifySubscribersOfChangedMember(res)),
     );
   }
 
@@ -59,7 +62,7 @@ export class LocationService {
     const copy = this.convertDateFromClient(location);
     return this.http.put<RestLocation>(`${this.resourceUrl}/${this.getLocationIdentifier(location)}`, copy, { observe: 'response' }).pipe(
       map(res => this.convertResponseFromServer(res)),
-      tap(res => this.notifySubscribersOfChangedMember(res))
+      tap(res => this.notifySubscribersOfChangedMember(res)),
     );
   }
 
@@ -67,7 +70,7 @@ export class LocationService {
     const copy = this.convertDateFromClient(location);
     return this.http.patch<RestLocation>(`${this.resourceUrl}/${this.getLocationIdentifier(location)}`, copy, { observe: 'response' }).pipe(
       map(res => this.convertResponseFromServer(res)),
-      tap(res => this.notifySubscribersOfChangedMember(res))
+      tap(res => this.notifySubscribersOfChangedMember(res)),
     );
   }
 

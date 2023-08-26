@@ -50,7 +50,7 @@ describe('Location Resolve Service', () => {
 
       const result = await firstValueFrom(
         // @ts-ignore skip conversion for testing
-        TestBed.runInInjectionContext(() => locationById(mockActivatedRouteSnapshot))
+        TestBed.runInInjectionContext(() => locationById(mockActivatedRouteSnapshot)),
       );
 
       expect(result).toEqual({ id: location.id });
@@ -64,7 +64,7 @@ describe('Location Resolve Service', () => {
 
       const result = await firstValueFrom(
         // @ts-ignore skip conversion for testing
-        TestBed.runInInjectionContext(() => locationById(mockActivatedRouteSnapshot))
+        TestBed.runInInjectionContext(() => locationById(mockActivatedRouteSnapshot)),
       );
 
       expect(result).toEqual(null);
@@ -76,7 +76,7 @@ describe('Location Resolve Service', () => {
 
       const result = await firstValueFrom(
         // @ts-ignore skip conversion for testing
-        (TestBed.runInInjectionContext(() => locationById(mockActivatedRouteSnapshot)) as Observable<ILocation | null>).pipe(isEmpty())
+        (TestBed.runInInjectionContext(() => locationById(mockActivatedRouteSnapshot)) as Observable<ILocation | null>).pipe(isEmpty()),
       );
 
       expect(result).toBeTruthy();

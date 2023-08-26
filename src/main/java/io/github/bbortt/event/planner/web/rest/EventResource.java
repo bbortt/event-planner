@@ -71,8 +71,12 @@ public class EventResource {
             throw new BadRequestAlertException("A new event cannot already have an ID", ENTITY_NAME, "idexists");
         }
 
-        if (Objects.isNull(eventDTO.getLocation()) || Objects.isNull(eventDTO.getLocation().getId())){
-            throw new BadRequestAlertException("An Event must be associated to a valid Location", ENTITY_NAME, "event.constraints.location");
+        if (Objects.isNull(eventDTO.getLocation()) || Objects.isNull(eventDTO.getLocation().getId())) {
+            throw new BadRequestAlertException(
+                "An Event must be associated to a valid Location",
+                ENTITY_NAME,
+                "event.constraints.location"
+            );
         }
 
         EventDTO result = eventService.save(eventDTO);

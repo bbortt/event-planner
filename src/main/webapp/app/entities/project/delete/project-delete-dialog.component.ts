@@ -18,7 +18,10 @@ import { ProjectService } from '../service/project.service';
 export default class ProjectDeleteDialogComponent {
   project?: IProject;
 
-  constructor(protected projectService: ProjectService, protected activeModal: NgbActiveModal) {}
+  constructor(
+    protected projectService: ProjectService,
+    protected activeModal: NgbActiveModal,
+  ) {}
 
   cancel(): void {
     this.activeModal.dismiss();

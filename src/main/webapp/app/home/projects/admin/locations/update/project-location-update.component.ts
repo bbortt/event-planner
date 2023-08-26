@@ -39,7 +39,7 @@ export default class ProjectLocationUpdateComponent {
     private location: Location,
     private locationService: LocationService,
     private locationFormService: LocationFormService,
-    private projectLocationService: ProjectLocationService
+    private projectLocationService: ProjectLocationService,
   ) {
     this.editForm = this.locationFormService.createLocationFormGroup();
   }
@@ -91,14 +91,14 @@ export default class ProjectLocationUpdateComponent {
 
     this.locationsSharedCollection = this.locationService.addLocationToCollectionIfMissing<ILocation>(
       this.locationsSharedCollection,
-      location.parent
+      location.parent,
     );
   }
 
   protected loadRelationshipsOptions(): void {
     if (this.project && this.existingLocation) {
       this.prepareRelationshipsOptions(
-        this.projectLocationService.getProjectLocationsWithoutSelf(this.project.id, this.existingLocation.id, 'response')
+        this.projectLocationService.getProjectLocationsWithoutSelf(this.project.id, this.existingLocation.id, 'response'),
       );
     } else if (this.project) {
       this.prepareRelationshipsOptions(this.projectLocationService.getProjectLocations(this.project.id, 'response'));
@@ -112,13 +112,13 @@ export default class ProjectLocationUpdateComponent {
         map((locations: ApiLocation[]) => this.flattenLocations(locations)),
         map((locations: ApiLocation[]) =>
           locations.map(
-            (location: ApiLocation) => ({ id: location.id, name: location.name, description: location.description } as ILocation)
-          )
+            (location: ApiLocation) => ({ id: location.id, name: location.name, description: location.description }) as ILocation,
+          ),
         ),
         map((locations: ILocation[]) =>
-          this.locationService.addLocationToCollectionIfMissing<ILocation>(locations, this.existingLocation?.parent)
+          this.locationService.addLocationToCollectionIfMissing<ILocation>(locations, this.existingLocation?.parent),
         ),
-        tap((locations: ILocation[]) => (this.locationsSharedCollection = locations))
+        tap((locations: ILocation[]) => (this.locationsSharedCollection = locations)),
       )
       .subscribe(() => this.updateLocationDefaultValues());
   }

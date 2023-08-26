@@ -19,7 +19,7 @@ describe('Event Management Detail Component', () => {
               resolve: { event: () => of({ id: 123 }) },
             },
           ],
-          withComponentInputBinding()
+          withComponentInputBinding(),
         ),
       ],
     })

@@ -61,7 +61,7 @@ export default class ProjectLocationsDragAndDropComponent implements OnDestroy, 
     private locationService: LocationService,
     private projectLocationService: ProjectLocationService,
     private router: Router,
-    private translateService: TranslateService
+    private translateService: TranslateService,
   ) {
     dragulaService.destroy(this.locationRootList);
     dragulaService.createGroup(this.locationRootList, {
@@ -89,7 +89,7 @@ export default class ProjectLocationsDragAndDropComponent implements OnDestroy, 
             this.synchronizeActiveLocationPathStringFromRouter(locationIds);
             this.activeLocationPathString = locationIds;
           }
-        })
+        }),
       )
       .subscribe(() => this.load());
 

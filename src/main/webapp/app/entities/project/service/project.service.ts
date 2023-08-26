@@ -37,7 +37,10 @@ export class ProjectService {
   private projectUpdatedSource = new Subject<IProject>();
   private _projectUpdatedSource$ = this.projectUpdatedSource.asObservable();
 
-  constructor(protected http: HttpClient, protected applicationConfigService: ApplicationConfigService) {
+  constructor(
+    protected http: HttpClient,
+    protected applicationConfigService: ApplicationConfigService,
+  ) {
     this.resourceUrl = this.applicationConfigService.getEndpointFor('api/projects');
   }
 
@@ -49,7 +52,7 @@ export class ProjectService {
     const copy = this.convertDateFromClient(project);
     return this.http.post<RestProject>(this.resourceUrl, copy, { observe: 'response' }).pipe(
       map(res => this.convertResponseFromServer(res)),
-      tap(res => this.notifySubscribersOfChangedProject(res))
+      tap(res => this.notifySubscribersOfChangedProject(res)),
     );
   }
 
@@ -57,7 +60,7 @@ export class ProjectService {
     const copy = this.convertDateFromClient(project);
     return this.http.put<RestProject>(`${this.resourceUrl}/${this.getProjectIdentifier(project)}`, copy, { observe: 'response' }).pipe(
       map(res => this.convertResponseFromServer(res)),
-      tap(res => this.notifySubscribersOfChangedProject(res))
+      tap(res => this.notifySubscribersOfChangedProject(res)),
     );
   }
 
@@ -65,7 +68,7 @@ export class ProjectService {
     const copy = this.convertDateFromClient(project);
     return this.http.patch<RestProject>(`${this.resourceUrl}/${this.getProjectIdentifier(project)}`, copy, { observe: 'response' }).pipe(
       map(res => this.convertResponseFromServer(res)),
-      tap(res => this.notifySubscribersOfChangedProject(res))
+      tap(res => this.notifySubscribersOfChangedProject(res)),
     );
   }
 

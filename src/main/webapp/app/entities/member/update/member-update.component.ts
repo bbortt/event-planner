@@ -38,7 +38,7 @@ export default class MemberUpdateComponent implements OnInit {
     protected memberService: MemberService,
     protected memberFormService: MemberFormService,
     protected projectService: ProjectService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
   ) {
     this.editForm = this.memberFormService.createMemberFormGroup();
   }
@@ -95,7 +95,7 @@ export default class MemberUpdateComponent implements OnInit {
 
     this.projectsSharedCollection = this.projectService.addProjectToCollectionIfMissing<IProject>(
       this.projectsSharedCollection,
-      member.project
+      member.project,
     );
   }
 

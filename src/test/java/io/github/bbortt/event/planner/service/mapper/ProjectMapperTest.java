@@ -23,15 +23,15 @@ class ProjectMapperTest {
         fixture = new ProjectMapperImpl();
 
         project =
-            new Project()
-                .token(UUID.fromString("11f46a3a-a360-4841-9c37-8040db5b506c"))
-                .name("project name")
-                .description("a test description")
-                .startDate(Instant.now())
-                .endDate(Instant.now())
-                .archived(false)
-                .createdBy("wade wilson")
-                .createdDate(Instant.now());
+        new Project()
+            .token(UUID.fromString("11f46a3a-a360-4841-9c37-8040db5b506c"))
+            .name("project name")
+            .description("a test description")
+            .startDate(Instant.now())
+            .endDate(Instant.now())
+            .archived(false)
+            .createdBy("wade wilson")
+            .createdDate(Instant.now());
 
         projectDTO = fixture.toDto(project);
     }

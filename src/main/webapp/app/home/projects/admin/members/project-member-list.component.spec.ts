@@ -44,7 +44,7 @@ describe('ProjectMemberListComponent', () => {
                 page: '1',
                 size: '1',
                 sort: 'id,desc',
-              })
+              }),
             ),
           },
         },
@@ -70,8 +70,8 @@ describe('ProjectMemberListComponent', () => {
         new HttpResponse({
           body: { contents: [{ id: 1234 } as Member] },
           headers,
-        })
-      )
+        }),
+      ),
     );
   });
 
@@ -93,7 +93,7 @@ describe('ProjectMemberListComponent', () => {
         jest.requireActual('@angular/router').convertToParamMap({
           page: '1',
           size: '1',
-        })
+        }),
       );
 
       component.ngOnInit();

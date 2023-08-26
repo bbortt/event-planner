@@ -30,17 +30,17 @@ class ApiProjectMemberMapperTest {
         Instant acceptedDate = Instant.parse("2021-03-29T11:22:03.00Z");
 
         member =
-            new Member()
-                .id(1234L)
-                .email("songbird@localhost")
-                .createdBy("Dalls Gibson")
-                .createdDate(OffsetDateTime.parse("2023-04-10T09:50:00.0Z"))
-                .accepted(true)
-                .acceptedDate(OffsetDateTime.ofInstant(acceptedDate, ZONE_ID))
-                .login("melissajoangold")
-                .firstName("melissa joan")
-                .lastName("gold")
-                .imageUrl("http://some.image");
+        new Member()
+            .id(1234L)
+            .email("songbird@localhost")
+            .createdBy("Dalls Gibson")
+            .createdDate(OffsetDateTime.parse("2023-04-10T09:50:00.0Z"))
+            .accepted(true)
+            .acceptedDate(OffsetDateTime.ofInstant(acceptedDate, ZONE_ID))
+            .login("melissajoangold")
+            .firstName("melissa joan")
+            .lastName("gold")
+            .imageUrl("http://some.image");
 
         User user = new User();
         user.setLogin(member.getLogin());

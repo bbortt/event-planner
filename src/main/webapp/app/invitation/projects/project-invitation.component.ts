@@ -24,7 +24,10 @@ export default class ProjectInvitationComponent implements OnInit {
   project: Project | null = null;
   invitationEmail: string | null = null;
 
-  constructor(private activatedRoute: ActivatedRoute, private accountService: AccountService) {}
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private accountService: AccountService,
+  ) {}
 
   ngOnInit(): void {
     combineLatest([this.accountService.identity(), this.activatedRoute.data, this.activatedRoute.queryParams]).subscribe(
@@ -32,7 +35,7 @@ export default class ProjectInvitationComponent implements OnInit {
         this.account = account;
         this.project = project;
         this.invitationEmail = email;
-      }
+      },
     );
   }
 }

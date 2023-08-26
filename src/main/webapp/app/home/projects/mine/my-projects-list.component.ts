@@ -55,7 +55,7 @@ export default class MyProjectsListComponent implements OnInit, OnDestroy {
     protected projectService: ProjectService,
     protected apiProjectService: ApiProjectService,
     private activatedRoute: ActivatedRoute,
-    public router: Router
+    public router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -87,7 +87,7 @@ export default class MyProjectsListComponent implements OnInit, OnDestroy {
   protected loadFromBackendWithRouteInformation(): Observable<HttpResponse<GetUserProjects200Response>> {
     return combineLatest([this.activatedRoute.queryParamMap, this.activatedRoute.data]).pipe(
       tap(([params, data]) => this.fillComponentAttributeFromRoute(params, data)),
-      switchMap(() => this.queryBackend(this.page, this.predicate, this.ascending))
+      switchMap(() => this.queryBackend(this.page, this.predicate, this.ascending)),
     );
   }
 
@@ -111,7 +111,7 @@ export default class MyProjectsListComponent implements OnInit, OnDestroy {
           id: project.id,
           name: project.name,
           description: project.description,
-        } as IProject)
+        }) as IProject,
     );
   }
 

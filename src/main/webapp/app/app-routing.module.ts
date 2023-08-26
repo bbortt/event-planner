@@ -50,7 +50,7 @@ import NavbarComponent from './layouts/navbar/navbar.component';
         },
         ...errorRoute,
       ],
-      { enableTracing: DEBUG_INFO_ENABLED, bindToComponentInputs: true }
+      { enableTracing: DEBUG_INFO_ENABLED, bindToComponentInputs: true },
     ),
   ],
   exports: [RouterModule],

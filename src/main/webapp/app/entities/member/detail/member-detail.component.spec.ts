@@ -19,7 +19,7 @@ describe('Member Management Detail Component', () => {
               resolve: { member: () => of({ id: 123 }) },
             },
           ],
-          withComponentInputBinding()
+          withComponentInputBinding(),
         ),
       ],
     })

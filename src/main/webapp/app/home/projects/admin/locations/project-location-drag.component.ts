@@ -34,7 +34,10 @@ export default class ProjectLocationDragComponent implements OnInit {
   deleteLocationText: string | null = null;
   dragLocationText: string | null = null;
 
-  constructor(private modalService: NgbModal, private translateService: TranslateService) {}
+  constructor(
+    private modalService: NgbModal,
+    private translateService: TranslateService,
+  ) {}
 
   ngOnInit(): void {
     this.translateService

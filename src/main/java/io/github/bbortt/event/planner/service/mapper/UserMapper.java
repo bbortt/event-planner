@@ -68,14 +68,14 @@ public class UserMapper {
 
         if (authoritiesAsString != null) {
             authorities =
-                authoritiesAsString
-                    .stream()
-                    .map(string -> {
-                        Authority auth = new Authority();
-                        auth.setName(string);
-                        return auth;
-                    })
-                    .collect(Collectors.toSet());
+            authoritiesAsString
+                .stream()
+                .map(string -> {
+                    Authority auth = new Authority();
+                    auth.setName(string);
+                    return auth;
+                })
+                .collect(Collectors.toSet());
         }
 
         return authorities;

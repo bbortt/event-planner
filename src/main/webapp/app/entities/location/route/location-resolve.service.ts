@@ -26,7 +26,7 @@ export const locationById: ResolveFn<ILocation | null> = (route: ActivatedRouteS
           router.navigateByUrl('404').catch(() => (window.location.href = '/404'));
           return EMPTY;
         }
-      })
+      }),
     );
 };
 

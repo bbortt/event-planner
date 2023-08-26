@@ -26,7 +26,7 @@ export const memberById: ResolveFn<IMember | null> = (route: ActivatedRouteSnaps
           router.navigateByUrl('404').catch(() => (window.location.href = '/404'));
           return EMPTY;
         }
-      })
+      }),
     );
 };
 

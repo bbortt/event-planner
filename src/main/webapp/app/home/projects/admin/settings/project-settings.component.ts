@@ -34,7 +34,7 @@ export default class ProjectSettingsComponent implements OnInit {
     private location: Location,
     protected projectService: ProjectService,
     protected projectFormService: ProjectFormService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
   ) {
     this.editForm = this.projectFormService.createProjectFormGroup();
   }

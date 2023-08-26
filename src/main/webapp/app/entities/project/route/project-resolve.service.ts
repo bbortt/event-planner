@@ -19,7 +19,7 @@ export class ProjectResolveService {
     private alertService: AlertService,
     private apiProjectService: ApiProjectService,
     private projectService: ProjectService,
-    private router: Router
+    private router: Router,
   ) {}
 
   byId(id: string | null): Observable<IProject | null> {
@@ -35,7 +35,7 @@ export class ProjectResolveService {
           this.router.navigateByUrl('404').catch(() => (window.location.href = '/404'));
           return EMPTY;
         }
-      })
+      }),
     );
   }
 
@@ -55,12 +55,12 @@ export class ProjectResolveService {
               if (project.archived) {
                 this.redirectWithProjectDoesNotExistMessage();
               }
-            })
+            }),
           ),
-          of(null)
-        )
+          of(null),
+        ),
       ),
-      catchError(() => this.redirectWithProjectDoesNotExistMessage())
+      catchError(() => this.redirectWithProjectDoesNotExistMessage()),
     );
   }
 
@@ -69,7 +69,7 @@ export class ProjectResolveService {
       this.alertService.addAlert({
         type: 'danger',
         translationKey: 'app.project.invitation.error.invalidToken',
-      })
+      }),
     );
 
     return of(null);

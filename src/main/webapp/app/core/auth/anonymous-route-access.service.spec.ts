@@ -47,7 +47,7 @@ describe('Anonymous Route Access Service', () => {
 
     const canActivate = await firstValueFrom(
       // @ts-ignore skip conversion for testing
-      TestBed.runInInjectionContext(() => anonymousRouteAccess(mockActivatedRouteSnapshot, mockRouter.routerState.snapshot))
+      TestBed.runInInjectionContext(() => anonymousRouteAccess(mockActivatedRouteSnapshot, mockRouter.routerState.snapshot)),
     );
 
     expect(canActivate).toBeFalsy();
@@ -59,7 +59,7 @@ describe('Anonymous Route Access Service', () => {
 
     const canActivate = await firstValueFrom(
       // @ts-ignore skip conversion for testing
-      TestBed.runInInjectionContext(() => anonymousRouteAccess(mockActivatedRouteSnapshot, mockRouter.routerState.snapshot))
+      TestBed.runInInjectionContext(() => anonymousRouteAccess(mockActivatedRouteSnapshot, mockRouter.routerState.snapshot)),
     );
 
     expect(canActivate).toBeTruthy();

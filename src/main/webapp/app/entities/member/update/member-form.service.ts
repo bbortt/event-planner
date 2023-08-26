@@ -53,7 +53,7 @@ export class MemberFormService {
         {
           nonNullable: true,
           validators: [Validators.required],
-        }
+        },
       ),
       invitedEmail: new FormControl(memberRawValue.invitedEmail, {
         validators: [Validators.required, Validators.minLength(1), Validators.maxLength(191)],
@@ -79,7 +79,7 @@ export class MemberFormService {
       {
         ...memberRawValue,
         id: { value: memberRawValue.id, disabled: true },
-      } as any /* cast to workaround https://github.com/angular/angular/issues/46458 */
+      } as any /* cast to workaround https://github.com/angular/angular/issues/46458 */,
     );
   }
 
@@ -101,7 +101,7 @@ export class MemberFormService {
   }
 
   private convertMemberToMemberRawValue(
-    member: IMember | (Partial<NewMember> & MemberFormDefaults)
+    member: IMember | (Partial<NewMember> & MemberFormDefaults),
   ): MemberFormRawValue | PartialWithRequiredKeyOf<NewMemberFormRawValue> {
     return {
       ...member,

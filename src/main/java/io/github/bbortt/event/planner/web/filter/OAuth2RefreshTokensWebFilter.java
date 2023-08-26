@@ -41,10 +41,10 @@ public class OAuth2RefreshTokensWebFilter extends OncePerRequestFilter {
         this.clientManager = clientManager;
         this.authorizedClientRepository = authorizedClientRepository;
         this.authorizationRequestResolver =
-            new DefaultOAuth2AuthorizationRequestResolver(
-                clientRegistrationRepository,
-                OAuth2AuthorizationRequestRedirectFilter.DEFAULT_AUTHORIZATION_REQUEST_BASE_URI
-            );
+        new DefaultOAuth2AuthorizationRequestResolver(
+            clientRegistrationRepository,
+            OAuth2AuthorizationRequestRedirectFilter.DEFAULT_AUTHORIZATION_REQUEST_BASE_URI
+        );
     }
 
     @Override

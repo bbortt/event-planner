@@ -18,7 +18,11 @@ import ProjectLocationUpdateComponent from './project-location-update.component'
 export default class ProjectLocationUpdateModalComponent implements OnInit, OnDestroy {
   private modalRef: NgbModalRef | undefined;
 
-  constructor(private activatedRoute: ActivatedRoute, private location: Location, private modalService: NgbModal) {}
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private location: Location,
+    private modalService: NgbModal,
+  ) {}
 
   ngOnInit(): void {
     this.modalRef = this.modalService.open(ProjectLocationUpdateComponent, { size: 'lg' });
@@ -30,7 +34,7 @@ export default class ProjectLocationUpdateModalComponent implements OnInit, OnDe
           isNew: url.length > 0 && url[url.length - 1].path.endsWith('new'),
           location,
           project,
-        }))
+        })),
       )
       .subscribe(({ isNew, location, project }) => {
         if (this.modalRef && project) {

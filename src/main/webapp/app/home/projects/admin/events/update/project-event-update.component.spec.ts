@@ -146,7 +146,7 @@ describe('Project Event Update Component', () => {
       expect(projectLocationService.getProjectLocations).toHaveBeenCalledWith(project.id, 'response');
       expect(locationService.addLocationToCollectionIfMissing).toHaveBeenCalledWith(
         locationCollection,
-        ...additionalLocations.map(expect.objectContaining)
+        ...additionalLocations.map(expect.objectContaining),
       );
 
       // @ts-ignore: force this private property value for testing.
