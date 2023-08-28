@@ -23,7 +23,7 @@ export class ProjectCalendarComponent implements OnInit {
   protected viewDate: Date = new Date();
   protected events: CalendarEvent<CalendarMetaModel>[] = [];
 
-  protected readonly CalendarView = CalendarView;
+  protected readonly calendarView = CalendarView;
   protected readonly monday = DAYS_OF_WEEK.MONDAY;
 
   constructor(
