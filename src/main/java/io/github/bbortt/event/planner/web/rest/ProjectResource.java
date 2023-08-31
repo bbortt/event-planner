@@ -42,7 +42,7 @@ public class ProjectResource {
 
     private static final Logger logger = LoggerFactory.getLogger(ProjectResource.class);
 
-    private static final String ENTITY_NAME = "project";
+    public static final String ENTITY_NAME = "project";
 
     @Value("${jhipster.clientApp.name}")
     private String applicationName;

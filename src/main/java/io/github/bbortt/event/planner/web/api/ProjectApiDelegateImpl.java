@@ -21,7 +21,6 @@ public class ProjectApiDelegateImpl implements ProjectApiDelegate {
 
     private static final Logger logger = LoggerFactory.getLogger(ProjectApiDelegateImpl.class);
 
-    public static final String ENTITY_NAME = "project";
     private static final String PROJECT_ID_ATTRIBUTE_NAME = "id";
 
     private final ProjectService projectService;

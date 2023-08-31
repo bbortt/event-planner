@@ -43,7 +43,7 @@ public class EventResource {
 
     private static final Logger logger = LoggerFactory.getLogger(EventResource.class);
 
-    private static final String ENTITY_NAME = "event";
+    public static final String ENTITY_NAME = "event";
 
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
@@ -69,14 +69,6 @@ public class EventResource {
         logger.debug("REST request to save Event : {}", eventDTO);
         if (eventDTO.getId() != null) {
             throw new BadRequestAlertException("A new event cannot already have an ID", ENTITY_NAME, "idexists");
-        }
-
-        if (Objects.isNull(eventDTO.getLocation()) || Objects.isNull(eventDTO.getLocation().getId())) {
-            throw new BadRequestAlertException(
-                "An Event must be associated to a valid Location",
-                ENTITY_NAME,
-                "event.constraints.location"
-            );
         }
 
         EventDTO result = eventService.save(eventDTO);
