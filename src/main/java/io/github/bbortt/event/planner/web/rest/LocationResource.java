@@ -43,7 +43,7 @@ public class LocationResource {
 
     private static final Logger logger = LoggerFactory.getLogger(LocationResource.class);
 
-    private static final String ENTITY_NAME = "location";
+    public static final String ENTITY_NAME = "location";
 
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
@@ -69,14 +69,6 @@ public class LocationResource {
         logger.debug("REST request to save Location : {}", locationDTO);
         if (locationDTO.getId() != null) {
             throw new BadRequestAlertException("A new location cannot already have an ID", ENTITY_NAME, "idexists");
-        }
-
-        if (Objects.isNull(locationDTO.getProject()) || Objects.isNull(locationDTO.getProject().getId())) {
-            throw new BadRequestAlertException(
-                "A Location must be associated to a valid Project",
-                ENTITY_NAME,
-                "location.constraints.project"
-            );
         }
 
         LocationDTO result = locationService.save(locationDTO);

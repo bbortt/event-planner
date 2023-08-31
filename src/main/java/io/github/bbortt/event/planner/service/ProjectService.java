@@ -5,7 +5,7 @@ import io.github.bbortt.event.planner.repository.ProjectRepository;
 import io.github.bbortt.event.planner.security.SecurityUtils;
 import io.github.bbortt.event.planner.service.dto.ProjectDTO;
 import io.github.bbortt.event.planner.service.mapper.ProjectMapper;
-import io.github.bbortt.event.planner.web.api.ProjectApiDelegateImpl;
+import io.github.bbortt.event.planner.web.rest.ProjectResource;
 import io.github.bbortt.event.planner.web.rest.errors.EntityNotFoundAlertException;
 import java.util.Optional;
 import java.util.UUID;
@@ -141,7 +141,7 @@ public class ProjectService {
 
         if (project.isEmpty()) {
             logger.warn("Project {} does not exist!", id);
-            throw new EntityNotFoundAlertException("Entity not found", ProjectApiDelegateImpl.ENTITY_NAME, "idnotfound");
+            throw new EntityNotFoundAlertException("Entity not found", ProjectResource.ENTITY_NAME, "idnotfound");
         }
 
         return project.orElseThrow(IllegalArgumentException::new);

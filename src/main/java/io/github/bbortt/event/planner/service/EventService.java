@@ -1,9 +1,13 @@
 package io.github.bbortt.event.planner.service;
 
+import static io.github.bbortt.event.planner.web.rest.EventResource.ENTITY_NAME;
+
 import io.github.bbortt.event.planner.domain.Event;
 import io.github.bbortt.event.planner.repository.EventRepository;
 import io.github.bbortt.event.planner.service.dto.EventDTO;
 import io.github.bbortt.event.planner.service.mapper.EventMapper;
+import io.github.bbortt.event.planner.web.rest.errors.BadRequestAlertException;
+import java.util.Objects;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,8 +44,23 @@ public class EventService {
     public EventDTO save(EventDTO eventDTO) {
         logger.debug("Request to save Event : {}", eventDTO);
         Event event = eventMapper.toEntity(eventDTO);
+
+        validateEvent(event);
+
         event = eventRepository.save(event);
         return eventMapper.toDto(event);
+    }
+
+    private void validateEvent(Event event) {
+        logger.debug("Validating event : {}", event);
+
+        if (Objects.isNull(event.getLocation()) || Objects.isNull(event.getLocation().getId())) {
+            throw new BadRequestAlertException(
+                "An Event must be associated to a valid Location",
+                ENTITY_NAME,
+                "event.constraints.location"
+            );
+        }
     }
 
     /**

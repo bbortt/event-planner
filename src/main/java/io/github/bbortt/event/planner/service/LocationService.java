@@ -1,10 +1,14 @@
 package io.github.bbortt.event.planner.service;
 
+import static io.github.bbortt.event.planner.web.rest.LocationResource.ENTITY_NAME;
+
 import io.github.bbortt.event.planner.domain.Location;
 import io.github.bbortt.event.planner.repository.LocationRepository;
 import io.github.bbortt.event.planner.service.dto.LocationDTO;
 import io.github.bbortt.event.planner.service.mapper.LocationMapper;
+import io.github.bbortt.event.planner.web.rest.errors.BadRequestAlertException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -43,8 +47,23 @@ public class LocationService {
     public LocationDTO save(LocationDTO locationDTO) {
         logger.debug("Request to save Location : {}", locationDTO);
         Location location = locationMapper.toEntity(locationDTO);
+
+        validateLocation(location);
+
         location = locationRepository.save(location);
         return locationMapper.toDto(location);
+    }
+
+    private void validateLocation(Location location) {
+        logger.debug("Validating Location : {}", location);
+
+        if (Objects.isNull(location.getProject()) || Objects.isNull(location.getProject().getId())) {
+            throw new BadRequestAlertException(
+                "A Location must be associated to a valid Project",
+                ENTITY_NAME,
+                "location.constraints.project"
+            );
+        }
     }
 
     /**

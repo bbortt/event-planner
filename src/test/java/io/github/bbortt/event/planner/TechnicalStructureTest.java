@@ -14,6 +14,7 @@ import io.github.bbortt.event.planner.audit.EntityAuditEventListener;
 import io.github.bbortt.event.planner.domain.AbstractAuditingEntity;
 import io.github.bbortt.event.planner.domain.Member;
 import io.github.bbortt.event.planner.security.SecurityUtils;
+import io.github.bbortt.event.planner.web.rest.errors.BadRequestAlertException;
 import io.github.bbortt.event.planner.web.rest.errors.EntityNotFoundAlertException;
 
 @AnalyzeClasses(packagesOf = EventPlannerApp.class, importOptions = DoNotIncludeTests.class)
@@ -39,7 +40,7 @@ class TechnicalStructureTest {
         .whereLayer("Domain").mayOnlyBeAccessedByLayers("Persistence", "Service", "Security", "Web", "Config")
 
         .ignoreDependency(resideInAPackage("io.github.bbortt.event.planner.audit"), alwaysTrue())
-        .ignoreDependency( resideInAPackage("io.github.bbortt.event.planner.service"),type(EntityNotFoundAlertException.class))
+        .ignoreDependency(resideInAPackage("io.github.bbortt.event.planner.service"), type(EntityNotFoundAlertException.class).or(type(BadRequestAlertException.class)))
         .ignoreDependency(type(AbstractAuditingEntity.class), type(EntityAuditEventListener.class))
         .ignoreDependency(type(Member.class), type(SecurityUtils.class))
         .ignoreDependency(belongToAnyOf(EventPlannerApp.class), alwaysTrue())
