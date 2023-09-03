@@ -13,7 +13,10 @@ import io.github.bbortt.event.planner.domain.Project;
 import io.github.bbortt.event.planner.repository.ProjectRepository;
 import io.github.bbortt.event.planner.service.dto.ProjectDTO;
 import io.github.bbortt.event.planner.service.mapper.ProjectMapper;
+import io.github.bbortt.event.planner.web.rest.ProjectResource;
+import io.github.bbortt.event.planner.web.rest.errors.BadRequestAlertException;
 import io.github.bbortt.event.planner.web.rest.errors.EntityNotFoundAlertException;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -62,6 +65,46 @@ class ProjectServiceTest {
     }
 
     @Test
+    void saveChecksMandatoryStartDateBeforeEndDate() {
+        Project project = new Project().startDate(Instant.MAX).endDate(Instant.MIN);
+
+        ProjectDTO projectDTO = new ProjectDTO();
+
+        doReturn(project).when(projectMapperMock).toEntity(projectDTO);
+
+        BadRequestAlertException exception = assertThrows(BadRequestAlertException.class, () -> fixture.save(projectDTO));
+
+        assertEquals(ProjectResource.ENTITY_NAME, exception.getEntityName());
+        assertEquals("project.validation.startDateBeforeEndDate", exception.getErrorKey());
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
+
+        verifyNoInteractions(projectRepositoryMock);
+    }
+
+    @Test
+    void saveSetsDefaultValues() {
+        Project projectMock = mock(Project.class);
+        doReturn(Instant.MIN).when(projectMock).getStartDate();
+        doReturn(Instant.MAX).when(projectMock).getEndDate();
+
+        ProjectDTO projectDTO = new ProjectDTO();
+
+        doReturn(projectMock).when(projectMock).token(any(UUID.class));
+
+        doReturn(projectMock).when(projectMapperMock).toEntity(projectDTO);
+        doReturn(projectMock).when(projectRepositoryMock).save(projectMock);
+        doReturn(projectDTO).when(projectMapperMock).toDto(projectMock);
+
+        ProjectDTO result = fixture.save(projectDTO);
+
+        assertEquals(projectDTO, result);
+
+        verify(projectMock).token(any(UUID.class));
+        verify(projectMock).archived(Boolean.FALSE);
+        verify(projectRepositoryMock).save(projectMock);
+    }
+
+    @Test
     void constructorRespectsArguments() {
         assertEquals(projectRepositoryMock, ReflectionTestUtils.getField(fixture, "projectRepository"));
         assertEquals(projectMapperMock, ReflectionTestUtils.getField(fixture, "projectMapper"));
@@ -107,9 +150,9 @@ class ProjectServiceTest {
             () -> fixture.findOneOrThrowEntityNotFoundAlertException(projectId)
         );
 
-        assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
+        assertEquals(ProjectResource.ENTITY_NAME, exception.getEntityName());
         assertEquals("idnotfound", exception.getErrorKey());
-        assertEquals("project", exception.getEntityName());
+        assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
 
         verifyNoInteractions(projectMapperMock);
     }
@@ -128,25 +171,6 @@ class ProjectServiceTest {
 
         assertTrue(result.isPresent());
         assertEquals(projectDTO, result.orElseThrow(IllegalArgumentException::new));
-    }
-
-    @Test
-    void saveSetsDefaultValues() {
-        ProjectDTO projectDTO = new ProjectDTO();
-        Project projectMock = mock(Project.class);
-        doReturn(projectMock).when(projectMock).token(any(UUID.class));
-
-        doReturn(projectMock).when(projectMapperMock).toEntity(projectDTO);
-        doReturn(projectMock).when(projectRepositoryMock).save(projectMock);
-        doReturn(projectDTO).when(projectMapperMock).toDto(projectMock);
-
-        ProjectDTO result = fixture.save(projectDTO);
-
-        assertEquals(projectDTO, result);
-
-        verify(projectMock).token(any(UUID.class));
-        verify(projectMock).archived(Boolean.FALSE);
-        verify(projectRepositoryMock).save(projectMock);
     }
 
     @Test

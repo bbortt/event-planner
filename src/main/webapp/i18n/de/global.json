@@ -145,6 +145,9 @@
     "event": {
       "constraints": {
         "location": "Ein Event muss mit einer gültigen Lokalität verbunden sein"
+      },
+      "validation": {
+        "startDateTimeBeforeEndDateTime": "Der Endzeitpunkt kann nicht vor dem Startzeitpunkt liegen."
       }
     },
     "file": {
@@ -154,6 +157,11 @@
     "location": {
       "constraints": {
         "project": "Eine Lokalität muss mit einem gültigen Projekt verbunden sein"
+      }
+    },
+    "project": {
+      "validation": {
+        "startDateBeforeEndDate": "Das Enddatum kann nicht vor dem Startdatum liegen."
       }
     }
   },

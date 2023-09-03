@@ -146,6 +146,9 @@
     "event": {
       "constraints": {
         "location": "An Event must be associated to a valid Location"
+      },
+      "validation": {
+        "startDateTimeBeforeEndDateTime": "End Date cannot occur before Start Date"
       }
     },
     "file": {
@@ -155,6 +158,11 @@
     "location": {
       "constraints": {
         "project": "A Location must be associated to a valid Project"
+      }
+    },
+    "project": {
+      "validation": {
+        "startDateBeforeEndDate": "End Date cannot occur before Start Date"
       }
     }
   },

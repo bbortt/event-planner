@@ -54,18 +54,6 @@ public class LocationService {
         return locationMapper.toDto(location);
     }
 
-    private void validateLocation(Location location) {
-        logger.debug("Validating Location : {}", location);
-
-        if (Objects.isNull(location.getProject()) || Objects.isNull(location.getProject().getId())) {
-            throw new BadRequestAlertException(
-                "A Location must be associated to a valid Project",
-                ENTITY_NAME,
-                "location.constraints.project"
-            );
-        }
-    }
-
     /**
      * Update a location.
      *
@@ -75,6 +63,9 @@ public class LocationService {
     public LocationDTO update(LocationDTO locationDTO) {
         logger.debug("Request to update Location : {}", locationDTO);
         Location location = locationMapper.toEntity(locationDTO);
+
+        validateLocation(location);
+
         location = locationRepository.save(location);
         return locationMapper.toDto(location);
     }
@@ -178,6 +169,18 @@ public class LocationService {
             })
             .map(locationMapper::toDto)
             .toList();
+    }
+
+    private void validateLocation(Location location) {
+        logger.debug("Validating Location : {}", location);
+
+        if (Objects.isNull(location.getProject()) || Objects.isNull(location.getProject().getId())) {
+            throw new BadRequestAlertException(
+                "A Location must be associated to a valid Project",
+                ENTITY_NAME,
+                "location.constraints.project"
+            );
+        }
     }
 
     private Set<Location> dropLocationsMatchingId(Set<Location> locations, Long locationId) {
