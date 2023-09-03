@@ -1,11 +1,10 @@
 package io.github.bbortt.event.planner.service;
 
-import static io.github.bbortt.event.planner.web.rest.EventResource.ENTITY_NAME;
-
 import io.github.bbortt.event.planner.domain.Event;
 import io.github.bbortt.event.planner.repository.EventRepository;
 import io.github.bbortt.event.planner.service.dto.EventDTO;
 import io.github.bbortt.event.planner.service.mapper.EventMapper;
+import io.github.bbortt.event.planner.web.rest.EventResource;
 import io.github.bbortt.event.planner.web.rest.errors.BadRequestAlertException;
 import java.util.Objects;
 import java.util.Optional;
@@ -51,18 +50,6 @@ public class EventService {
         return eventMapper.toDto(event);
     }
 
-    private void validateEvent(Event event) {
-        logger.debug("Validating event : {}", event);
-
-        if (Objects.isNull(event.getLocation()) || Objects.isNull(event.getLocation().getId())) {
-            throw new BadRequestAlertException(
-                "An Event must be associated to a valid Location",
-                ENTITY_NAME,
-                "event.constraints.location"
-            );
-        }
-    }
-
     /**
      * Update an event.
      *
@@ -72,6 +59,9 @@ public class EventService {
     public EventDTO update(EventDTO eventDTO) {
         logger.debug("Request to update Event : {}", eventDTO);
         Event event = eventMapper.toEntity(eventDTO);
+
+        validateEvent(event);
+
         event = eventRepository.save(event);
         return eventMapper.toDto(event);
     }
@@ -150,5 +140,29 @@ public class EventService {
     public Page<EventDTO> findAllInProject(Long projectId, Pageable pageable) {
         logger.debug("Request to get a page of Locations in Project '{}'", projectId);
         return eventRepository.findAllByLocation_Project_IdEquals(projectId, pageable).map(eventMapper::toDto);
+    }
+
+    private void validateEvent(Event event) {
+        logger.debug("Validating Event : {}", event);
+
+        if (Objects.isNull(event.getLocation()) || Objects.isNull(event.getLocation().getId())) {
+            throw new BadRequestAlertException(
+                "An Event must be associated to a valid Location",
+                EventResource.ENTITY_NAME,
+                "event.constraints.location"
+            );
+        }
+
+        if (
+            Objects.isNull(event.getStartDateTime()) ||
+            Objects.isNull(event.getEndDateTime()) ||
+            event.getStartDateTime().isAfter(event.getEndDateTime())
+        ) {
+            throw new BadRequestAlertException(
+                "End Date cannot occur before Start Date",
+                EventResource.ENTITY_NAME,
+                "event.validation.startDateTimeBeforeEndDateTime"
+            );
+        }
     }
 }

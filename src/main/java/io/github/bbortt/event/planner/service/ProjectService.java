@@ -6,7 +6,9 @@ import io.github.bbortt.event.planner.security.SecurityUtils;
 import io.github.bbortt.event.planner.service.dto.ProjectDTO;
 import io.github.bbortt.event.planner.service.mapper.ProjectMapper;
 import io.github.bbortt.event.planner.web.rest.ProjectResource;
+import io.github.bbortt.event.planner.web.rest.errors.BadRequestAlertException;
 import io.github.bbortt.event.planner.web.rest.errors.EntityNotFoundAlertException;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import org.slf4j.Logger;
@@ -51,6 +53,8 @@ public class ProjectService {
         // Sanitize new project
         project.token(UUID.randomUUID()).archived(Boolean.FALSE);
 
+        validateProject(project);
+
         return projectMapper.toDto(projectRepository.save(project));
     }
 
@@ -65,6 +69,9 @@ public class ProjectService {
     public ProjectDTO update(ProjectDTO projectDTO) {
         logger.debug("Request to update Project : {}", projectDTO);
         Project project = projectMapper.toEntity(projectDTO);
+
+        validateProject(project);
+
         project = projectRepository.save(project);
         return projectMapper.toDto(project);
     }
@@ -188,5 +195,21 @@ public class ProjectService {
     public void delete(Long id) {
         logger.debug("Request to delete Project : {}", id);
         projectRepository.deleteById(id);
+    }
+
+    private void validateProject(Project project) {
+        logger.debug("Validating Project : {}", project);
+
+        if (
+            Objects.isNull(project.getStartDate()) ||
+            Objects.isNull(project.getEndDate()) ||
+            project.getStartDate().isAfter(project.getEndDate())
+        ) {
+            throw new BadRequestAlertException(
+                "End Date cannot occur before Start Date",
+                ProjectResource.ENTITY_NAME,
+                "project.validation.startDateBeforeEndDate"
+            );
+        }
     }
 }
