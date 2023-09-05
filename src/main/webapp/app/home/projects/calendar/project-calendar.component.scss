@@ -1,0 +1,11 @@
+@import 'bootswatch/dist/minty/variables';
+
+// Active dates styling
+.cal-month-view .cal-day-number {
+  color: $black;
+}
+
+// Inactive dates styling
+.cal-disabled .cal-day-number {
+  color: $gray-500 !important;
+}
