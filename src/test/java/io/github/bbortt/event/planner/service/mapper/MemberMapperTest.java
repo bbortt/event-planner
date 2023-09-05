@@ -39,12 +39,12 @@ class MemberMapperTest {
         ReflectionTestUtils.setField(fixture, "userMapper", userMapper, UserMapper.class);
 
         member =
-        new Member()
-            .accepted(true)
-            .acceptedBy("natasha romanoff")
-            .acceptedDate(Instant.now())
-            .user(UserResourceIT.createEntity(entityManagerMock))
-            .project(ProjectResourceIT.createEntity(entityManagerMock));
+            new Member()
+                .accepted(true)
+                .acceptedBy("natasha romanoff")
+                .acceptedDate(Instant.now())
+                .user(UserResourceIT.createEntity(entityManagerMock))
+                .project(ProjectResourceIT.createEntity(entityManagerMock));
 
         AdminUserDTO adminUserDTO = new AdminUserDTO(member.getUser());
         doReturn(adminUserDTO).when(userMapper).userToAdminUserDTO(member.getUser());

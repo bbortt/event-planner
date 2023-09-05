@@ -29,13 +29,13 @@ class LocationMapperTest {
         fixture = new LocationMapperImpl();
 
         location =
-        new Location()
-            .name("location name")
-            .description("a test description")
-            .project(new Project().name(PROJECT_NAME))
-            .withEvent(new Event().name(EVENT_NAME))
-            .createdBy("t'challa")
-            .createdDate(Instant.now());
+            new Location()
+                .name("location name")
+                .description("a test description")
+                .project(new Project().name(PROJECT_NAME))
+                .withEvent(new Event().name(EVENT_NAME))
+                .createdBy("t'challa")
+                .createdDate(Instant.now());
 
         locationDTO = fixture.toDto(location);
     }
