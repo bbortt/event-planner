@@ -23,14 +23,14 @@ class ApiProjectMapperTest {
         fixture = new ApiProjectMapperImpl();
 
         project =
-        new Project()
-            .id(1234L)
-            .name("project name")
-            .description("a test description")
-            .token("a47ef93f-b628-4505-9dde-13cdfccc0c64")
-            .startDate(LocalDate.parse("2023-03-29"))
-            .endDate(LocalDate.parse("2023-03-30"))
-            .archived(Boolean.TRUE);
+            new Project()
+                .id(1234L)
+                .name("project name")
+                .description("a test description")
+                .token("a47ef93f-b628-4505-9dde-13cdfccc0c64")
+                .startDate(LocalDate.parse("2023-03-29"))
+                .endDate(LocalDate.parse("2023-03-30"))
+                .archived(Boolean.TRUE);
 
         projectDTO = new ProjectDTO();
         projectDTO.setId(project.getId());

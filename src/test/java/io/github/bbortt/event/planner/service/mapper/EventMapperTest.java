@@ -23,7 +23,11 @@ class EventMapperTest {
         fixture = new EventMapperImpl();
 
         event =
-        new Event().name("event name").startDateTime(Instant.now()).endDateTime(Instant.now()).location(new Location().name(LOCATION_NAME));
+            new Event()
+                .name("event name")
+                .startDateTime(Instant.now())
+                .endDateTime(Instant.now())
+                .location(new Location().name(LOCATION_NAME));
 
         eventDTO = fixture.toDto(event);
     }
