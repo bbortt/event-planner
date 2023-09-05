@@ -10,7 +10,7 @@
 
   <div class="row mt-3">
     <div class="col-md-8">
-      <h3>{{ viewDate | calendarDate: activeCalendarView + 'ViewTitle' : currentLang }}</h3>
+      <h3>{{ viewDate.toDate() | calendarDate: activeCalendarView + 'ViewTitle' : currentLang }}</h3>
     </div>
 
     <div class="col-md-4 d-flex justify-content-end">
@@ -32,17 +32,20 @@
 
   <div class="row mt-3">
     <div class="col-md-12" [ngSwitch]="activeCalendarView">
-      <mwl-calendar-month-view *ngSwitchCase="calendarView.Month" [viewDate]="viewDate" [events]="events" [weekStartsOn]="monday">
-      </mwl-calendar-month-view>
-
-      <mwl-calendar-week-view
-        *ngSwitchCase="calendarView.Week"
-        [viewDate]="viewDate"
+      <mwl-calendar-month-view
+        *ngSwitchCase="calendarView.Month"
+        [viewDate]="viewDate.toDate()"
         [events]="events"
         [weekStartsOn]="monday"
-      ></mwl-calendar-week-view>
+        (beforeViewRender)="beforeMonthViewRender($event)"
+      >
+      </mwl-calendar-month-view>
 
-      <mwl-calendar-day-view *ngSwitchCase="calendarView.Day" [viewDate]="viewDate" [events]="events"> </mwl-calendar-day-view>
+      <mwl-calendar-week-view *ngSwitchCase="calendarView.Week" [viewDate]="viewDate.toDate()" [events]="events" [weekStartsOn]="monday">
+        <!-- TODO: Use daysInWeek -->
+      </mwl-calendar-week-view>
+
+      <mwl-calendar-day-view *ngSwitchCase="calendarView.Day" [viewDate]="viewDate.toDate()" [events]="events"></mwl-calendar-day-view>
     </div>
   </div>
 </div>
