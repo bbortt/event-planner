@@ -64,7 +64,7 @@ describe('Project Resolve Service', () => {
     jest.spyOn(mockRouter, 'navigateByUrl').mockImplementation(() => Promise.resolve(true));
 
     mockActivatedRouteSnapshot = TestBed.inject(ActivatedRoute).snapshot;
-    // @ts-ignore using a natural Map is ok for testing
+    // @ts-ignore: using a natural Map is ok for testing
     mockActivatedRouteSnapshot.paramMap = new Map().set('projectId', project.id).set('token', project.token);
   });
 
@@ -73,7 +73,7 @@ describe('Project Resolve Service', () => {
       projectService.find = jest.fn(id => of(new HttpResponse({ body: { id } })));
 
       const result = await firstValueFrom(
-        // @ts-ignore skip conversion for testing
+        // @ts-ignore: skip conversion for testing
         TestBed.runInInjectionContext(() => projectById(mockActivatedRouteSnapshot)),
       );
 
@@ -83,11 +83,11 @@ describe('Project Resolve Service', () => {
 
     it('should return null if id is not provided', async () => {
       projectService.find = jest.fn();
-      // @ts-ignore using a natural Map is ok for testing
+      // @ts-ignore: using a natural Map is ok for testing
       mockActivatedRouteSnapshot.paramMap = new Map();
 
       const result = await firstValueFrom(
-        // @ts-ignore skip conversion for testing
+        // @ts-ignore: skip conversion for testing
         TestBed.runInInjectionContext(() => projectById(mockActivatedRouteSnapshot)),
       );
 
@@ -99,7 +99,7 @@ describe('Project Resolve Service', () => {
       jest.spyOn(projectService, 'find').mockReturnValue(of(new HttpResponse<IProject>({ body: null })));
 
       const result = await firstValueFrom(
-        // @ts-ignore skip conversion for testing
+        // @ts-ignore: skip conversion for testing
         (TestBed.runInInjectionContext(() => projectById(mockActivatedRouteSnapshot)) as Observable<IProject | null>).pipe(isEmpty()),
       );
 
@@ -111,11 +111,11 @@ describe('Project Resolve Service', () => {
 
   describe('projectByToken', () => {
     it('should return null if token is not provided', async () => {
-      // @ts-ignore using a natural Map is ok for testing
+      // @ts-ignore: using a natural Map is ok for testing
       mockActivatedRouteSnapshot.paramMap = new Map();
 
       const result = await firstValueFrom(
-        // @ts-ignore skip conversion for testing
+        // @ts-ignore: skip conversion for testing
         TestBed.runInInjectionContext(() => projectByToken(mockActivatedRouteSnapshot)),
       );
 
@@ -129,7 +129,7 @@ describe('Project Resolve Service', () => {
       (apiProjectService.findProjectByToken as jest.Mock).mockReturnValueOnce(of({ body: project }));
 
       const result = await firstValueFrom(
-        // @ts-ignore skip conversion for testing
+        // @ts-ignore: skip conversion for testing
         TestBed.runInInjectionContext(() => projectByToken(mockActivatedRouteSnapshot)),
       );
 
@@ -142,7 +142,7 @@ describe('Project Resolve Service', () => {
       (apiProjectService.findProjectByToken as jest.Mock).mockReturnValueOnce(of({ body: project }));
 
       const result = await firstValueFrom(
-        // @ts-ignore skip conversion for testing
+        // @ts-ignore: skip conversion for testing
         TestBed.runInInjectionContext(() => projectByToken(mockActivatedRouteSnapshot)),
       );
 
@@ -158,7 +158,7 @@ describe('Project Resolve Service', () => {
       (apiProjectService.findProjectByToken as jest.Mock).mockReturnValueOnce(of({ body: archivedProject }));
 
       const result = await firstValueFrom(
-        // @ts-ignore skip conversion for testing
+        // @ts-ignore: skip conversion for testing
         TestBed.runInInjectionContext(() => projectByToken(mockActivatedRouteSnapshot)),
       );
 

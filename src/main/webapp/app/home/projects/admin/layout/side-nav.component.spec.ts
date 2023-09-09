@@ -62,7 +62,7 @@ describe('Side Nav Component', () => {
 
     describe('should synchronize title based on current route', () => {
       it('for settings', () => {
-        // @ts-ignore: force this private property value for testing.
+        // @ts-ignore: force this private property value for testing
         mockRouter.url = '/admin/settings';
 
         comp.ngOnInit();
@@ -72,7 +72,7 @@ describe('Side Nav Component', () => {
       });
 
       it('for members', () => {
-        // @ts-ignore: force this private property value for testing.
+        // @ts-ignore: force this private property value for testing
         mockRouter.url = '/admin/members';
 
         comp.ngOnInit();
@@ -103,7 +103,7 @@ describe('Side Nav Component', () => {
     });
 
     test('should unsubscribe from router events', () => {
-      // @ts-ignore: force this private property value for testing.
+      // @ts-ignore: force this private property value for testing
       comp.routerSubscription = routerEventsSubject;
 
       comp.ngOnDestroy();
@@ -112,7 +112,7 @@ describe('Side Nav Component', () => {
     });
 
     test('should not fail if it did not subscribe to router events', () => {
-      // @ts-ignore: force this private property value for testing.
+      // @ts-ignore: force this private property value for testing
       comp.routerSubscription = null;
 
       comp.ngOnDestroy();

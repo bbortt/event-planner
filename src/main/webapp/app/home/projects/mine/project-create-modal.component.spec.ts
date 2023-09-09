@@ -74,7 +74,7 @@ describe('Project Create Modal Component', () => {
 
   describe('ngOnDestroy', () => {
     it('should close modal', () => {
-      // @ts-ignore: force this private property value for testing.
+      // @ts-ignore: force this private property value for testing
       component.modalRef = mockModalRef;
 
       component.ngOnDestroy();

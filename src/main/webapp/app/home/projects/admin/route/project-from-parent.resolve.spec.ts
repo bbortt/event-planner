@@ -28,9 +28,9 @@ describe('Project from parent routing resolve service', () => {
       const mockProjectId = 123;
 
       const result = await firstValueFrom(
-        // @ts-ignore skip conversion for testing
+        // @ts-ignore: skip conversion for testing
         TestBed.runInInjectionContext(() =>
-          // @ts-ignore skip conversion for testing
+          // @ts-ignore: skip conversion for testing
           projectFromParentRoute({ parent: { data: { project: { id: mockProjectId } } } }, mockRouter.routerState.snapshot),
         ),
       );
@@ -42,7 +42,7 @@ describe('Project from parent routing resolve service', () => {
       mockResolveParent.mockReturnValueOnce(null);
 
       const result = await firstValueFrom(
-        // @ts-ignore skip conversion for testing
+        // @ts-ignore: skip conversion for testing
         TestBed.runInInjectionContext(() => projectFromParentRoute({ parent: null }, mockRouter.routerState.snapshot)),
       );
 

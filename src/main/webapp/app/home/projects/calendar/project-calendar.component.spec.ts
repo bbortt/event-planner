@@ -53,7 +53,7 @@ describe('Project Calendar', () => {
 
   describe('constructor', () => {
     it('should read the current language', () => {
-      // @ts-ignore: force this private property value for testing.
+      // @ts-ignore: force this private property value for testing
       expect(component.currentLang).toEqual(mockTranslateService.currentLang);
     });
 
@@ -61,7 +61,7 @@ describe('Project Calendar', () => {
       const anotherLanguage = 'another-language';
       mockTranslateService.onLangChange.next({ lang: anotherLanguage, translations: {} });
 
-      // @ts-ignore: force this private property value for testing.
+      // @ts-ignore: force this private property value for testing
       expect(component.currentLang).toEqual(anotherLanguage);
     });
   });
@@ -83,13 +83,13 @@ describe('Project Calendar', () => {
 
       component.ngOnInit();
 
-      // @ts-ignore: force this private property value for testing.
+      // @ts-ignore: force this private property value for testing
       expect(component.startOfProject.toString()).toEqual('Sun, 27 Aug 2023 00:00:00 GMT');
-      // @ts-ignore: force this private property value for testing.
+      // @ts-ignore: force this private property value for testing
       expect(component.endOfProject.toString()).toEqual('Tue, 29 Aug 2023 23:59:59 GMT');
 
       expect(projectEventsService.getProjectEvents).toHaveBeenCalledWith(project.id, 0, -1, ['startDateTime,asc'], 'response');
-      // @ts-ignore: force this private property value for testing.
+      // @ts-ignore: force this private property value for testing
       expect(component.events.length).toEqual(1);
     });
 
@@ -98,9 +98,9 @@ describe('Project Calendar', () => {
 
       component.ngOnInit();
 
-      // @ts-ignore: force this private property value for testing.
+      // @ts-ignore: force this private property value for testing
       expect(component.startOfProject).toBeUndefined();
-      // @ts-ignore: force this private property value for testing.
+      // @ts-ignore: force this private property value for testing
       expect(component.endOfProject).toBeUndefined();
 
       expect(projectEventsService.getProjectEvents).not.toHaveBeenCalled();

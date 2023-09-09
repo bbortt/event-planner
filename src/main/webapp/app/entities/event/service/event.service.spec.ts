@@ -33,7 +33,7 @@ describe('Event Service', () => {
   });
 
   beforeEach(() => {
-    // @ts-ignore: force this private property value for testing.
+    // @ts-ignore: force this private property value for testing
     service.eventUpdatedSource = eventEventsSubject;
     nextEventEvent.mockReset();
   });

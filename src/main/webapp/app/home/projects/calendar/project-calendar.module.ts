@@ -11,6 +11,9 @@ import SharedModule from 'app/shared/shared.module';
 import { PROJECT_CALENDAR_ROUTES } from './project-calendar.route';
 
 import { ProjectCalendarComponent } from './project-calendar.component';
+import { ProjectCalendarDayViewComponent } from './project-calendar-day-view.component';
+import { ProjectCalendarMonthViewComponent } from './project-calendar-month-view.component';
+import { ProjectCalendarWeekViewComponent } from './project-calendar-week-view.component';
 
 export const dayjsAdapterFactory = (): DateAdapter => adapterFactory(dayjs);
 
@@ -31,7 +34,12 @@ export const dayjsAdapterFactory = (): DateAdapter => adapterFactory(dayjs);
       },
     ),
   ],
-  declarations: [ProjectCalendarComponent],
+  declarations: [
+    ProjectCalendarComponent,
+    ProjectCalendarDayViewComponent,
+    ProjectCalendarMonthViewComponent,
+    ProjectCalendarWeekViewComponent,
+  ],
   providers: [
     {
       provide: MOMENT,

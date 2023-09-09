@@ -102,7 +102,7 @@ describe('Project Event Update Modal Component', () => {
   });
 
   it('should close modal', () => {
-    // @ts-ignore: force this private property value for testing.
+    // @ts-ignore: force this private property value for testing
     component.modalRef = mockModalRef;
 
     component.ngOnDestroy();

@@ -30,22 +30,31 @@
     </div>
   </div>
 
-  <div class="row mt-3">
+  <div class="row mt-3" *ngIf="startOfProject && endOfProject">
     <div class="col-md-12" [ngSwitch]="activeCalendarView">
-      <mwl-calendar-month-view
+      <app-project-calender-month-view
         *ngSwitchCase="calendarView.Month"
-        [viewDate]="viewDate.toDate()"
-        [events]="events"
-        [weekStartsOn]="monday"
-        (beforeViewRender)="beforeMonthViewRender($event)"
-      >
-      </mwl-calendar-month-view>
+        [events]="filteredEvents"
+        [initialViewDate]="viewDate"
+        [projectStartDate]="startOfProject!"
+        [projectEndDate]="endOfProject!"
+      ></app-project-calender-month-view>
 
-      <mwl-calendar-week-view *ngSwitchCase="calendarView.Week" [viewDate]="viewDate.toDate()" [events]="events" [weekStartsOn]="monday">
-        <!-- TODO: Use daysInWeek -->
-      </mwl-calendar-week-view>
+      <app-project-calender-week-view
+        *ngSwitchCase="calendarView.Week"
+        [events]="filteredEvents"
+        [initialViewDate]="viewDate"
+        [projectStartDate]="startOfProject!"
+        [projectEndDate]="endOfProject!"
+      ></app-project-calender-week-view>
 
-      <mwl-calendar-day-view *ngSwitchCase="calendarView.Day" [viewDate]="viewDate.toDate()" [events]="events"></mwl-calendar-day-view>
+      <app-project-calender-day-view
+        *ngSwitchCase="calendarView.Day"
+        [events]="filteredEvents"
+        [initialViewDate]="viewDate"
+        [projectStartDate]="startOfProject!"
+        [projectEndDate]="endOfProject!"
+      ></app-project-calender-day-view>
     </div>
   </div>
 </div>

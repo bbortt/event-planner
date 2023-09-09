@@ -73,7 +73,7 @@ describe("Project Locations Drag 'n Drop Component", () => {
     mockTranslateService = TestBed.inject(TranslateService);
 
     mockLocationService = TestBed.inject(LocationService);
-    // @ts-ignore: force this private property value for testing.
+    // @ts-ignore: force this private property value for testing
     mockLocationService.locationUpdatedSource = locationEventsSubject;
 
     mockProjectLocationService = TestBed.inject(ProjectLocationService);
@@ -111,7 +111,7 @@ describe("Project Locations Drag 'n Drop Component", () => {
 
       component.ngOnInit();
 
-      // @ts-ignore: force this private property value for testing.
+      // @ts-ignore: force this private property value for testing
       expect(component.activeLocationPathString).toEqual(activeLocationPath);
 
       expect(component.activeLocationPath).toEqual([
@@ -133,7 +133,7 @@ describe("Project Locations Drag 'n Drop Component", () => {
     it('subscribes to the location update events', () => {
       component.ngOnInit();
 
-      // @ts-ignore: force this private property value for testing.
+      // @ts-ignore: force this private property value for testing
       expect(component.locationUpdatedSource).not.toBeNull();
     });
 
@@ -156,7 +156,7 @@ describe("Project Locations Drag 'n Drop Component", () => {
     });
 
     test('should unsubscribe from router events', () => {
-      // @ts-ignore: force this private property value for testing.
+      // @ts-ignore: force this private property value for testing
       component.locationUpdatedSource = locationUpdatedSource;
 
       component.ngOnDestroy();
@@ -165,7 +165,7 @@ describe("Project Locations Drag 'n Drop Component", () => {
     });
 
     test('should not fail if it did not subscribe to router events', () => {
-      // @ts-ignore: force this private property value for testing.
+      // @ts-ignore: force this private property value for testing
       component.locationUpdatedSource = null;
 
       component.ngOnDestroy();

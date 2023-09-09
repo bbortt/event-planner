@@ -1,0 +1,10 @@
+<div>
+  <mwl-calendar-week-view
+    [viewDate]="viewDate.toDate()"
+    [events]="events"
+    [weekStartsOn]="monday"
+    (beforeViewRender)="beforeWeekViewRender($event)"
+  >
+    <!-- TODO: Use daysInWeek -->
+  </mwl-calendar-week-view>
+</div>
