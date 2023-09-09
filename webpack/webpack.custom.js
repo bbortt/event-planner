@@ -1,6 +1,6 @@
+const path = require('path');
 const webpack = require('webpack');
 const { merge } = require('webpack-merge');
-const path = require('path');
 const { hashElement } = require('folder-hash');
 const MergeJsonWebpackPlugin = require('merge-jsons-webpack-plugin');
 const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
@@ -31,7 +31,7 @@ module.exports = async (config, options, targetOptions) => {
       }),
       new WebpackNotifierPlugin({
         title: 'Event Planner',
-        contentImage: path.join(__dirname, 'logo-jhipster.png'),
+        contentImage: path.join(__dirname, 'logo-event-planner.png'),
       }),
     );
   }
@@ -97,7 +97,7 @@ module.exports = async (config, options, targetOptions) => {
       globOptions: { ignore: ['**/index.html'] },
     },
     {
-      from: require.resolve('axios/dist/axios.min.js'),
+      from: path.join(path.dirname(require.resolve('axios/package.json')), 'dist/axios.min.js'),
       to: 'swagger-ui/',
     },
     { from: './src/main/webapp/swagger-ui/', to: 'swagger-ui/' },

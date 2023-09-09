@@ -23,7 +23,7 @@ public class PostgreSqlTestContainer implements SqlTestContainer {
     @Override
     public void afterPropertiesSet() {
         if (null == postgreSQLContainer) {
-            try (PostgreSQLContainer postgreSQLContainer = new PostgreSQLContainer<>("postgres:15.3-alpine")) {
+            try (PostgreSQLContainer postgreSQLContainer = new PostgreSQLContainer<>("postgres:15.4-alpine")) {
                 postgreSQLContainer
                     .withDatabaseName("eventplanner")
                     .withTmpFs(Collections.singletonMap("/testtmpfs", "rw"))

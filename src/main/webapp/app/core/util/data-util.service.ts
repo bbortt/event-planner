@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+
+import { Buffer } from 'buffer';
+
 import { Observable, Observer } from 'rxjs';
 
 export type FileLoadErrorType = 'not.image' | 'could.not.extract';
@@ -11,7 +14,7 @@ export interface FileLoadError {
 }
 
 /**
- * An utility service for data.
+ * A utility service for data.
  */
 @Injectable({
   providedIn: 'root',
@@ -30,10 +33,10 @@ export class DataUtils {
   openFile(data: string, contentType: string | null | undefined): void {
     contentType = contentType ?? '';
 
-    const byteCharacters = Buffer.from(data, 'base64');
+    const byteCharacters = Buffer.from(data, 'base64').toString('binary');
     const byteNumbers = new Array(byteCharacters.length);
     for (let i = 0; i < byteCharacters.length; i++) {
-      byteNumbers[i] = byteCharacters.at(i);
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
     }
     const byteArray = new Uint8Array(byteNumbers);
     const blob = new Blob([byteArray], {

@@ -4,6 +4,7 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.pattern.CompositeConverter;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
@@ -16,7 +17,11 @@ public class CRLFLogConverter extends CompositeConverter<ILoggingEvent> {
 
     public static final Marker CRLF_SAFE_MARKER = MarkerFactory.getMarker("CRLF_SAFE");
 
-    private static final String[] SAFE_LOGGERS = { "org.hibernate" };
+    private static final String[] SAFE_LOGGERS = {
+        "org.hibernate",
+        "org.springframework.boot.autoconfigure",
+        "org.springframework.boot.diagnostics",
+    };
     private static final Map<String, AnsiElement> ELEMENTS;
 
     static {
@@ -34,7 +39,8 @@ public class CRLFLogConverter extends CompositeConverter<ILoggingEvent> {
     @Override
     protected String transform(ILoggingEvent event, String in) {
         AnsiElement element = ELEMENTS.get(getFirstOption());
-        if ((event.getMarker() != null && event.getMarker().contains(CRLF_SAFE_MARKER)) || isLoggerSafe(event)) {
+        List<Marker> markers = event.getMarkerList();
+        if ((markers != null && !markers.isEmpty() && markers.get(0).contains(CRLF_SAFE_MARKER)) || isLoggerSafe(event)) {
             return in;
         }
         String replacement = element == null ? "_" : toAnsiString("_", element);
