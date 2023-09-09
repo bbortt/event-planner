@@ -59,7 +59,7 @@ describe('Member Management Component', () => {
     fixture = TestBed.createComponent(MemberComponent);
     component = fixture.componentInstance;
 
-    // @ts-ignore: force this private property value for testing.
+    // @ts-ignore: force this private property value for testing
     routerNavigateSpy = jest.spyOn(component.router, 'navigate');
   });
 

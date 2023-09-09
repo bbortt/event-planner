@@ -1,0 +1,11 @@
+@import 'bootswatch/dist/minty/variables';
+
+// Active dates styling
+.cal-header span {
+  color: $black;
+}
+
+// Inactive dates styling
+.cal-disabled span {
+  color: $gray-500 !important;
+}

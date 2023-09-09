@@ -80,7 +80,7 @@ describe('ProjectMemberListComponent', () => {
       component.ngOnInit();
 
       expect(component.project).toEqual(project);
-      // @ts-ignore: force this private property value for testing.
+      // @ts-ignore: force this private property value for testing
       expect(component.memberUpdatedSource).not.toBeNull();
 
       expect(projectMemberService.getProjectMembers).toHaveBeenCalledWith(project.id, 20, 1, ['id,desc'], 'response');
@@ -99,7 +99,7 @@ describe('ProjectMemberListComponent', () => {
       component.ngOnInit();
 
       expect(component.project).toEqual(project);
-      // @ts-ignore: force this private property value for testing.
+      // @ts-ignore: force this private property value for testing
       expect(component.memberUpdatedSource).not.toBeNull();
 
       expect(projectMemberService.getProjectMembers).toHaveBeenCalledWith(project.id, 20, 1, ['acceptedDate,desc'], 'response');
@@ -117,7 +117,7 @@ describe('ProjectMemberListComponent', () => {
     });
 
     test('should unsubscribe from router events', () => {
-      // @ts-ignore: force this private property value for testing.
+      // @ts-ignore: force this private property value for testing
       component.memberUpdatedSource = memberUpdatedSource;
 
       component.ngOnDestroy();
@@ -126,7 +126,7 @@ describe('ProjectMemberListComponent', () => {
     });
 
     test('should not fail if it did not subscribe to router events', () => {
-      // @ts-ignore: force this private property value for testing.
+      // @ts-ignore: force this private property value for testing
       component.memberUpdatedSource = null;
 
       component.ngOnDestroy();
@@ -160,7 +160,7 @@ describe('ProjectMemberListComponent', () => {
       jest.spyOn(navigator.clipboard, 'writeText').mockReturnValueOnce(Promise.resolve());
       jest.spyOn(applicationConfigService, 'getEndpointFor').mockReturnValueOnce(`invitation/projects/${project.token}`);
 
-      // @ts-ignore: force this private property value for testing.
+      // @ts-ignore: force this private property value for testing
       component.copyInvitationLink();
 
       expect(navigator.clipboard.writeText).toHaveBeenCalledWith(`${window.location.origin}/invitation/projects/${project.token}`);

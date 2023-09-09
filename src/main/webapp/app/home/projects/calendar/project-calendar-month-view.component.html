@@ -1,0 +1,9 @@
+<div>
+  <mwl-calendar-month-view
+    [viewDate]="viewDate.toDate()"
+    [events]="events"
+    [weekStartsOn]="monday"
+    (beforeViewRender)="beforeMonthViewRender($event)"
+  >
+  </mwl-calendar-month-view>
+</div>

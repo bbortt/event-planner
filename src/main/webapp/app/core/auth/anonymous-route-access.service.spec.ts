@@ -46,7 +46,7 @@ describe('Anonymous Route Access Service', () => {
     jest.spyOn(accountService, 'identity').mockReturnValueOnce(of({} as Account));
 
     const canActivate = await firstValueFrom(
-      // @ts-ignore skip conversion for testing
+      // @ts-ignore: skip conversion for testing
       TestBed.runInInjectionContext(() => anonymousRouteAccess(mockActivatedRouteSnapshot, mockRouter.routerState.snapshot)),
     );
 
@@ -58,7 +58,7 @@ describe('Anonymous Route Access Service', () => {
     jest.spyOn(accountService, 'identity').mockReturnValueOnce(of(null));
 
     const canActivate = await firstValueFrom(
-      // @ts-ignore skip conversion for testing
+      // @ts-ignore: skip conversion for testing
       TestBed.runInInjectionContext(() => anonymousRouteAccess(mockActivatedRouteSnapshot, mockRouter.routerState.snapshot)),
     );
 

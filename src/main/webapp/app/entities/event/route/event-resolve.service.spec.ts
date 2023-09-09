@@ -39,7 +39,7 @@ describe('Event routing resolve service', () => {
     jest.spyOn(mockRouter, 'navigateByUrl').mockImplementation(() => Promise.resolve(true));
 
     mockActivatedRouteSnapshot = TestBed.inject(ActivatedRoute).snapshot;
-    // @ts-ignore using a natural Map is ok for testing
+    // @ts-ignore: using a natural Map is ok for testing
     mockActivatedRouteSnapshot.paramMap = new Map().set('eventId', event.id);
   });
 
@@ -48,7 +48,7 @@ describe('Event routing resolve service', () => {
       eventService.find = jest.fn(id => of(new HttpResponse({ body: { id } })));
 
       const result = await firstValueFrom(
-        // @ts-ignore skip conversion for testing
+        // @ts-ignore: skip conversion for testing
         TestBed.runInInjectionContext(() => eventById(mockActivatedRouteSnapshot)),
       );
 
@@ -58,11 +58,11 @@ describe('Event routing resolve service', () => {
 
     it('should return null if id is not provided', async () => {
       eventService.find = jest.fn();
-      // @ts-ignore using a natural Map is ok for testing
+      // @ts-ignore: using a natural Map is ok for testing
       mockActivatedRouteSnapshot.paramMap = new Map();
 
       const result = await firstValueFrom(
-        // @ts-ignore skip conversion for testing
+        // @ts-ignore: skip conversion for testing
         TestBed.runInInjectionContext(() => eventById(mockActivatedRouteSnapshot)),
       );
 
@@ -74,7 +74,7 @@ describe('Event routing resolve service', () => {
       jest.spyOn(eventService, 'find').mockReturnValue(of(new HttpResponse<IEvent>({ body: null })));
 
       const result = await firstValueFrom(
-        // @ts-ignore skip conversion for testing
+        // @ts-ignore: skip conversion for testing
         (TestBed.runInInjectionContext(() => eventById(mockActivatedRouteSnapshot)) as Observable<ILocation | null>).pipe(isEmpty()),
       );
 

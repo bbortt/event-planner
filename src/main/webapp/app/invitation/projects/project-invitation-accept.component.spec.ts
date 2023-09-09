@@ -57,7 +57,7 @@ describe('ProjectInvitationAcceptComponent', () => {
     project = { id: 1234 } as Project;
     component.project = project;
 
-    // @ts-ignore: force this private property value for testing.
+    // @ts-ignore: force this private property value for testing
     routerNavigateByUrlSpy = jest.spyOn(component.router, 'navigateByUrl').mockImplementation(() => Promise.resolve(true));
   });
 

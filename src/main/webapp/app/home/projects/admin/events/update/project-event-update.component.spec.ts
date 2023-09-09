@@ -52,7 +52,7 @@ describe('Project Event Update Component', () => {
 
       component.updateForm(event);
 
-      // @ts-ignore: force this private property value for testing.
+      // @ts-ignore: force this private property value for testing
       expect(component.locationsSharedCollection).toContain(location);
       expect(component.event).toEqual(event);
     });
@@ -164,7 +164,7 @@ describe('Project Event Update Component', () => {
         expect.objectContaining({ id: location.id }),
       );
 
-      // @ts-ignore: force this private property value for testing.
+      // @ts-ignore: force this private property value for testing
       expect(component.locationsSharedCollection).toEqual(expectedCollection);
     });
   });

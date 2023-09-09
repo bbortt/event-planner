@@ -32,7 +32,7 @@ public class EntityAuditEventListener extends AuditingEntityListener {
 
     public void writeEvent(Object target, EntityAuditAction action) {
         if (entityAuditEventWriter == null) {
-            throw new RuntimeException("AsyncEntityAuditEventWriter instace is not set");
+            throw new RuntimeException("AsyncEntityAuditEventWriter instance is not set");
         }
         try {
             entityAuditEventWriter.writeAuditEvent(target, action);

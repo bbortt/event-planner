@@ -57,7 +57,7 @@ describe('Project Event List', () => {
 
     eventService = TestBed.inject(EventService);
     projectEventsService = TestBed.inject(ProjectEventsService);
-    // @ts-ignore: force this private property value for testing.
+    // @ts-ignore: force this private property value for testing
     routerNavigateSpy = jest.spyOn(comp.router, 'navigate');
 
     const headers = new HttpHeaders();
