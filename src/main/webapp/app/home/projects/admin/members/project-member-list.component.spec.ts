@@ -2,6 +2,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 
 jest.mock('app/core/util/alert.service');
 
+import { HttpHeaders, HttpResponse } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
@@ -9,12 +10,15 @@ import { ActivatedRoute } from '@angular/router';
 import { of, Subscription } from 'rxjs';
 
 import { Member, Project, ProjectMemberService } from 'app/api';
+
+import { ITEMS_PER_PAGE } from "app/config/pagination.constants";
+
 import { AlertService } from 'app/core/util/alert.service';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
+
 import { MemberService } from 'app/entities/member/service/member.service';
 
 import ProjectMemberListComponent from './project-member-list.component';
-import { HttpHeaders, HttpResponse } from '@angular/common/http';
 
 const project = { id: 2345, token: '9b1ec8a6-7dc6-46d3-ad02-2890ab95eb09' } as Project;
 
@@ -83,7 +87,7 @@ describe('ProjectMemberListComponent', () => {
       // @ts-ignore: force this private property value for testing
       expect(component.memberUpdatedSource).not.toBeNull();
 
-      expect(projectMemberService.getProjectMembers).toHaveBeenCalledWith(project.id, 20, 1, ['id,desc'], 'response');
+      expect(projectMemberService.getProjectMembers).toHaveBeenCalledWith(project.id, ITEMS_PER_PAGE, 1, ['id,desc'], 'response');
       expect(component.members?.[0]).toEqual(expect.objectContaining({ id: 1234 }));
     });
 
@@ -102,7 +106,7 @@ describe('ProjectMemberListComponent', () => {
       // @ts-ignore: force this private property value for testing
       expect(component.memberUpdatedSource).not.toBeNull();
 
-      expect(projectMemberService.getProjectMembers).toHaveBeenCalledWith(project.id, 20, 1, ['acceptedDate,desc'], 'response');
+      expect(projectMemberService.getProjectMembers).toHaveBeenCalledWith(project.id, ITEMS_PER_PAGE, 1, ['acceptedDate,desc'], 'response');
       expect(component.members?.[0]).toEqual(expect.objectContaining({ id: 1234 }));
     });
   });

@@ -26,7 +26,7 @@
             "outputPath": "build/resources/main/static/",
             "index": "src/main/webapp/index.html",
             "main": "src/main/webapp/main.ts",
-            "polyfills": "src/main/webapp/polyfills.ts",
+            "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -36,10 +36,7 @@
               "src/main/webapp/robots.txt"
             ],
             "styles": ["src/main/webapp/content/scss/vendor.scss", "src/main/webapp/content/scss/global.scss"],
-            "scripts": [],
-            "stylePreprocessorOptions": {
-              "includePaths": ["./node_modules"]
-            }
+            "scripts": []
           },
           "configurations": {
             "production": {

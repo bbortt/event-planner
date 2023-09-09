@@ -19,13 +19,10 @@ import { Configuration } from './api';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { httpInterceptorProviders } from 'app/core/interceptor';
 import { TranslationModule } from 'app/shared/language/translation.module';
-import SharedModule from 'app/shared/shared.module';
 
 import { ApiConfiguration } from './config/api-configuration';
 import { NgbDateDayjsAdapter } from './config/datepicker-adapter';
 import { fontAwesomeIcons } from './config/font-awesome-icons';
-
-import { TrackerService } from './core/tracker/tracker.service';
 
 import MainComponent from './layouts/main/main.component';
 import MainModule from './layouts/main/main.module';
@@ -35,7 +32,6 @@ import MainModule from './layouts/main/main.module';
 @NgModule({
   imports: [
     BrowserModule,
-    SharedModule,
     // jhipster-needle-angular-add-module JHipster will add new module here
     AppRoutingModule,
     // Set this to true to enable service worker (PWA)
@@ -54,13 +50,7 @@ import MainModule from './layouts/main/main.module';
   bootstrap: [MainComponent],
 })
 export class AppModule {
-  constructor(
-    applicationConfigService: ApplicationConfigService,
-    iconLibrary: FaIconLibrary,
-    trackerService: TrackerService,
-    dpConfig: NgbDatepickerConfig,
-  ) {
-    trackerService.setup();
+  constructor(applicationConfigService: ApplicationConfigService, iconLibrary: FaIconLibrary, dpConfig: NgbDatepickerConfig) {
     applicationConfigService.setEndpointPrefix(SERVER_API_URL);
     registerLocaleData(locale);
     iconLibrary.addIcons(...fontAwesomeIcons);

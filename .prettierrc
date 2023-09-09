@@ -19,3 +19,4 @@ overrides:
 
 plugins:
     - prettier-plugin-java
+    - prettier-plugin-packagejson
