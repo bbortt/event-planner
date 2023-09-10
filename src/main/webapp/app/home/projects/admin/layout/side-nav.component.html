@@ -5,7 +5,7 @@
         <i>
           <fa-icon [class.active]="rls.isActive" [fixedWidth]="true" icon="house"></fa-icon>
         </i>
-        <span jhiTranslate="global.menu.account.settings">Einstellungen</span>
+        <span jhiTranslate="global.menu.account.settings"> Einstellungen </span>
       </a>
     </li>
     <li class="nav-item">
@@ -13,15 +13,15 @@
         <i>
           <fa-icon [class.active]="rll.isActive" [fixedWidth]="true" icon="location-dot"></fa-icon>
         </i>
-        <span jhiTranslate="app.location.home.title">Lokalitäten</span>
+        <span jhiTranslate="app.location.home.title"> Lokalitäten </span>
       </a>
     </li>
     <li class="nav-item">
       <a routerLink="events" routerLinkActive="active" class="nav-link link-dark" #rle="routerLinkActive">
         <i>
-          <fa-icon [class.active]="rle.isActive" [fixedWidth]="true" icon="calendar"></fa-icon>
+          <fa-icon [class.active]="rle.isActive" [fixedWidth]="true" icon="handshake"></fa-icon>
         </i>
-        <span jhiTranslate="app.event.home.title">Events</span>
+        <span jhiTranslate="app.event.home.title"> Events </span>
       </a>
     </li>
     <li class="nav-item">
@@ -29,7 +29,15 @@
         <i>
           <fa-icon [class.active]="rlm.isActive" [fixedWidth]="true" icon="user"></fa-icon>
         </i>
-        <span jhiTranslate="app.member.home.title">Mitglieder</span>
+        <span jhiTranslate="app.member.home.title"> Mitglieder </span>
+      </a>
+    </li>
+    <li class="nav-item" *ngIf="project">
+      <a [routerLink]="['/home', 'projects', project.id, 'calendar']" class="nav-link link-dark">
+        <i>
+          <fa-icon [fixedWidth]="true" icon="calendar-days"></fa-icon>
+        </i>
+        <span jhiTranslate="app.calendar.title"> Kalender </span>
       </a>
     </li>
   </ul>

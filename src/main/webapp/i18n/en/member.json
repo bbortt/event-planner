@@ -24,6 +24,8 @@
       "accepted": "Accepted",
       "acceptedBy": "Accepted By",
       "acceptedDate": "Accepted Date",
+      "createdBy": "Created By",
+      "createdDate": "Created Date",
       "project": "Member Of",
       "status": {
         "label": "Status",

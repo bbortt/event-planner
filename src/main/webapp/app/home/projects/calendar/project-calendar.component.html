@@ -2,6 +2,13 @@
   <h2 id="page-heading" data-cy="myProjectsListHeading" class="mb-3">
     <span jhiTranslate="app.calendar.title"> Kalender </span>
     <span class="fst-italic fw-light">{{ project.name }}</span>
+
+    <div class="d-flex justify-content-end">
+      <button type="submit" [routerLink]="['/home', 'projects', project.id, 'admin']" class="btn btn-info" data-cy="projectAdminButton">
+        <fa-icon icon="gears"></fa-icon>
+        <span class="d-none d-md-inline" jhiTranslate="app.project.mine.action.administration"> Administration </span>
+      </button>
+    </div>
   </h2>
 
   <jhi-alert-error></jhi-alert-error>
@@ -14,16 +21,20 @@
     </div>
 
     <div class="col-md-4 d-flex justify-content-end">
-      <div class="btn-group ml-auto">
-        <div class="btn btn-primary" (click)="setView(calendarView.Month)" [class.active]="activeCalendarView === calendarView.Month">
+      <div class="btn-group mt-auto mb-auto">
+        <div
+          class="btn btn-primary btn-sm"
+          (click)="setView(calendarView.Month)"
+          [class.active]="activeCalendarView === calendarView.Month"
+        >
           <span jhiTranslate="app.calendar.view.month"> Monat </span>
         </div>
 
-        <div class="btn btn-primary" (click)="setView(calendarView.Week)" [class.active]="activeCalendarView === calendarView.Week">
+        <div class="btn btn-primary btn-sm" (click)="setView(calendarView.Week)" [class.active]="activeCalendarView === calendarView.Week">
           <span jhiTranslate="app.calendar.view.week"> Woche </span>
         </div>
 
-        <div class="btn btn-primary" (click)="setView(calendarView.Day)" [class.active]="activeCalendarView === calendarView.Day">
+        <div class="btn btn-primary btn-sm" (click)="setView(calendarView.Day)" [class.active]="activeCalendarView === calendarView.Day">
           <span jhiTranslate="app.calendar.view.day"> Tag </span>
         </div>
       </div>
