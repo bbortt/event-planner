@@ -1,38 +1,38 @@
 <div *ngIf="project">
   <h2 id="page-heading" data-cy="projectMembersHeading">
     <span jhiTranslate="app.member.home.title"> Mitglieder </span>
-  </h2>
 
-  <div class="d-flex justify-content-end mb-3">
-    <div class="btn-group">
-      <button id="jh-update-list" data-cy="refreshListButton" class="btn btn-info" type="button" (click)="load()" [disabled]="isLoading">
-        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
-        <span jhiTranslate="app.member.home.refreshListLabel">Liste aktualisieren</span>
-      </button>
+    <div class="d-flex justify-content-end">
+      <div class="btn-group">
+        <button id="jh-update-list" data-cy="refreshListButton" class="btn btn-info" type="button" (click)="load()" [disabled]="isLoading">
+          <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+          <span jhiTranslate="app.member.home.refreshListLabel">Liste aktualisieren</span>
+        </button>
 
-      <button
-        id="jh-create-entity"
-        data-cy="entityCreateButton"
-        class="btn btn-primary jh-create-entity invite-member"
-        type="button"
-        [routerLink]="[{ outlets: { modal: ['project', project.id, 'members', 'invite'] } }]"
-      >
-        <fa-icon icon="plus"></fa-icon>
-        <span jhiTranslate="app.member.home.createLabel"> Mitglied erstellen </span>
-      </button>
+        <button
+          id="jh-create-entity"
+          data-cy="entityCreateButton"
+          class="btn btn-primary jh-create-entity invite-member"
+          type="button"
+          [routerLink]="[{ outlets: { modal: ['project', project.id, 'members', 'invite'] } }]"
+        >
+          <fa-icon icon="plus"></fa-icon>
+          <span jhiTranslate="app.member.home.createLabel"> Mitglied erstellen </span>
+        </button>
 
-      <button
-        id="jh-copy-invitation-link"
-        data-cy="copyInvitationLinkButton"
-        class="btn btn-outline-primary jh-create-entity copy-invitation-link"
-        type="button"
-        (click)="copyInvitationLink()"
-      >
-        <fa-icon icon="copy"></fa-icon>
-        <span jhiTranslate="app.project.admin.copyInvitationLink"> Link kopieren </span>
-      </button>
+        <button
+          id="jh-copy-invitation-link"
+          data-cy="copyInvitationLinkButton"
+          class="btn btn-outline-primary jh-create-entity copy-invitation-link"
+          type="button"
+          (click)="copyInvitationLink()"
+        >
+          <fa-icon icon="copy"></fa-icon>
+          <span jhiTranslate="app.project.admin.copyInvitationLink"> Link kopieren </span>
+        </button>
+      </div>
     </div>
-  </div>
+  </h2>
 
   <jhi-alert-error></jhi-alert-error>
 
@@ -96,7 +96,7 @@
   </div>
 
   <div *ngIf="members && members.length > 0">
-    <div class="d-flex justify-content-center mb-3">
+    <div class="d-flex justify-content-center">
       <jhi-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></jhi-item-count>
     </div>
 
