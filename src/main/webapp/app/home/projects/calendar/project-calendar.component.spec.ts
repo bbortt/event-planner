@@ -1,6 +1,7 @@
 import { HttpResponse } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ActivatedRoute } from '@angular/router';
 
 import { of } from 'rxjs';
 
@@ -23,6 +24,7 @@ const project = {
 } as IProject;
 
 describe('Project Calendar', () => {
+  let activatedRoute: ActivatedRoute;
   let projectEventsService: ProjectEventsService;
   let mockTranslateService: TranslateService;
 
@@ -37,10 +39,19 @@ describe('Project Calendar', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, TranslateModule.forRoot(), ProjectCalendarModule],
-      providers: [],
+      providers: [
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            queryParamMap: of({}),
+          },
+        },
+      ],
     })
       .overrideTemplate(ProjectCalendarComponent, '')
       .compileComponents();
+
+    activatedRoute = TestBed.inject(ActivatedRoute);
 
     projectEventsService = TestBed.inject(ProjectEventsService);
 

@@ -1,5 +1,6 @@
 import { HttpResponse } from '@angular/common/http';
 import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { TranslateService } from '@ngx-translate/core';
 
@@ -7,12 +8,17 @@ import { CalendarEvent, CalendarView, DAYS_OF_WEEK } from 'angular-calendar';
 
 import dayjs from 'dayjs/esm';
 
+import { map } from 'rxjs/operators';
+
 import { Event, GetProjectEvents200Response, ProjectEventsService } from 'app/api';
 
 import { IProject } from 'app/entities/project/project.model';
 
 import { isDateInProjectRange } from './calendar-utils';
 import eventToCalendarEvent, { CalendarMetaModel } from './event-to-calendar-event';
+import { tap } from 'rxjs';
+
+const activeViewQueryParamName = 'activeView';
 
 @Component({
   selector: 'app-project-calender',
@@ -36,7 +42,9 @@ export class ProjectCalendarComponent implements OnInit {
   protected endOfProject: dayjs.Dayjs | undefined;
 
   constructor(
+    private activatedRoute: ActivatedRoute,
     private projectEventsService: ProjectEventsService,
+    private router: Router,
     private translateService: TranslateService,
   ) {
     this.currentLang = translateService.currentLang;
@@ -50,11 +58,26 @@ export class ProjectCalendarComponent implements OnInit {
     this.startOfProject = this.project?.startDate?.utc(true).startOf('day');
     this.endOfProject = this.project?.endDate?.utc(true).endOf('day');
 
+    this.activatedRoute.queryParamMap
+      .pipe(
+        map(queryParams => queryParams.get(activeViewQueryParamName)),
+        map(calendarViewQueryParam => calendarViewQueryParam ?? CalendarView.Month),
+        map(calendarViewQueryParam =>
+          Object.values(CalendarView).includes(calendarViewQueryParam as CalendarView) ? calendarViewQueryParam : CalendarView.Month,
+        ),
+        map(calendarViewQueryParam => calendarViewQueryParam as CalendarView),
+      )
+      .subscribe(calendarView => (this.activeCalendarView = calendarView));
+
     this.load();
   }
 
   protected setView(calendarView: CalendarView): void {
-    this.activeCalendarView = calendarView;
+    this.router
+      .navigate([], {
+        queryParams: { [activeViewQueryParamName]: calendarView },
+      })
+      .catch(() => (this.activeCalendarView = CalendarView.Month));
   }
 
   private load(): void {
