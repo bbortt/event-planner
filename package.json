@@ -96,7 +96,6 @@
     "bootswatch": "5.3.1",
     "dayjs": "1.11.9",
     "ng-diff-match-patch": "3.0.1",
-    "ng2-dragula": "5.0.1",
     "ngx-infinite-scroll": "16.0.0",
     "rxjs": "7.8.1",
     "tslib": "2.6.2",

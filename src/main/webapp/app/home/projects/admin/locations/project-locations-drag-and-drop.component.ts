@@ -7,8 +7,6 @@ import { map } from 'rxjs/operators';
 
 import { TranslateService } from '@ngx-translate/core';
 
-import { DragulaModule, DragulaService } from 'ng2-dragula';
-
 import { GetProjectLocations200Response, Location, Project, ProjectLocationService } from 'app/api';
 
 import { LocationService } from 'app/entities/location/service/location.service';
@@ -34,7 +32,7 @@ export type LocationControl = {
   selector: 'app-project-locations',
   templateUrl: './project-locations-drag-and-drop.component.html',
   styleUrls: ['./project-locations-drag-and-drop.component.scss'],
-  imports: [SharedModule, RouterModule, DragulaModule, ProjectLocationDragComponent],
+  imports: [SharedModule, RouterModule, ProjectLocationDragComponent],
 })
 export default class ProjectLocationsDragAndDropComponent implements OnDestroy, OnInit {
   locationRootList = 'location-root-list';
@@ -57,21 +55,11 @@ export default class ProjectLocationsDragAndDropComponent implements OnDestroy, 
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private dragulaService: DragulaService,
     private locationService: LocationService,
     private projectLocationService: ProjectLocationService,
     private router: Router,
     private translateService: TranslateService,
-  ) {
-    dragulaService.destroy(this.locationRootList);
-    dragulaService.createGroup(this.locationRootList, {
-      moves: this.moveWithHandleOnly,
-    });
-    dragulaService.destroy(this.locationChildrenList);
-    dragulaService.createGroup(this.locationChildrenList, {
-      moves: this.moveWithHandleOnly,
-    });
-  }
+  ) {}
 
   ngOnInit(): void {
     this.locationControlSource.subscribe((location: LocationControl) => this.handleLocationControl(location));
