@@ -1,7 +1,7 @@
 {
   "home": {
     "title": "Welcome, Event Planner!",
-    "subtitle": "This is your homepage",
+    "subtitle": "This is your homepage:",
     "question": "If you have any question on JHipster:",
     "link": {
       "homepage": "JHipster homepage",

@@ -24,7 +24,6 @@ const project = {
 } as IProject;
 
 describe('Project Calendar', () => {
-  let activatedRoute: ActivatedRoute;
   let projectEventsService: ProjectEventsService;
   let mockTranslateService: TranslateService;
 
@@ -50,8 +49,6 @@ describe('Project Calendar', () => {
     })
       .overrideTemplate(ProjectCalendarComponent, '')
       .compileComponents();
-
-    activatedRoute = TestBed.inject(ActivatedRoute);
 
     projectEventsService = TestBed.inject(ProjectEventsService);
 
@@ -102,6 +99,8 @@ describe('Project Calendar', () => {
       expect(projectEventsService.getProjectEvents).toHaveBeenCalledWith(project.id, 0, -1, ['startDateTime,asc'], 'response');
       // @ts-ignore: force this private property value for testing
       expect(component.events.length).toEqual(1);
+      // @ts-ignore: force this private property value for testing
+      expect(component.filteredEvents).toEqual(component.events);
     });
 
     it('loads nothing if no Project is present', () => {

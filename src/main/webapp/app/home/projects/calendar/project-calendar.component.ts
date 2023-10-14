@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { TranslateService } from '@ngx-translate/core';
 
-import { CalendarEvent, CalendarView, DAYS_OF_WEEK } from 'angular-calendar';
+import { CalendarEvent, CalendarView } from 'angular-calendar';
 
 import dayjs from 'dayjs/esm';
 
@@ -16,7 +16,6 @@ import { IProject } from 'app/entities/project/project.model';
 
 import { isDateInProjectRange } from './calendar-utils';
 import eventToCalendarEvent, { CalendarMetaModel } from './event-to-calendar-event';
-import { tap } from 'rxjs';
 
 const activeViewQueryParamName = 'activeView';
 
@@ -36,7 +35,6 @@ export class ProjectCalendarComponent implements OnInit {
   protected filteredEvents: CalendarEvent<CalendarMetaModel>[] = [];
 
   protected readonly calendarView = CalendarView;
-  protected readonly monday = DAYS_OF_WEEK.MONDAY;
 
   protected startOfProject: dayjs.Dayjs | undefined;
   protected endOfProject: dayjs.Dayjs | undefined;
@@ -90,12 +88,18 @@ export class ProjectCalendarComponent implements OnInit {
     this.projectEventsService.getProjectEvents(this.project.id, 0, -1, ['startDateTime,asc'], 'response').subscribe({
       next: (res: HttpResponse<GetProjectEvents200Response>) => {
         this.onResponseSuccess(res);
+        this.applyEventFilter();
       },
     });
   }
 
   private onResponseSuccess(response: HttpResponse<GetProjectEvents200Response>): void {
     this.events = this.fillComponentAttributesFromResponseBody(response.body?.contents);
+  }
+
+  private applyEventFilter(): void {
+    // TODO: For now...
+    this.filteredEvents = this.events;
   }
 
   private fillComponentAttributesFromResponseBody(data: Array<Event> | undefined): CalendarEvent<CalendarMetaModel>[] {
