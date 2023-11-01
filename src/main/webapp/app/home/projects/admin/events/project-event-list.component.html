@@ -68,7 +68,11 @@
           <td>{{ toDayjs(event.endDateTime) | formatMediumDatetime }}</td>
           <td>
             <div *ngIf="event.location">
-              <a [routerLink]="['/home', 'projects', project.id, 'admin', 'locations']">{{ event.location.name }}</a>
+              <a
+                [routerLink]="['/home', 'projects', project.id, 'admin', 'locations']"
+                [queryParams]="{ activeLocationPath: event.location.id }"
+                >{{ event.location.name }}</a
+              >
             </div>
           </td>
           <td class="text-end">
