@@ -6,6 +6,7 @@ const projectRoutes: Route[] = [
   {
     path: '',
     loadChildren: () => import('./mine/my-projects.routes'),
+    title: 'home.title',
   },
   {
     path: ':projectId/admin',
