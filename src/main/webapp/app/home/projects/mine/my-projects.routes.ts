@@ -10,7 +10,6 @@ const myProjectRoutes: Route[] = [
     path: '',
     component: MyProjectsListComponent,
     data: {
-      pageTitle: 'home.title',
       [DEFAULT_SORT_DATA]: 'startDate,asc',
     },
   },

@@ -42,6 +42,10 @@ export default class SideNavComponent implements OnDestroy, OnInit {
   private updateTitleBasedOnUrl(url: string): void {
     if (url.endsWith('/admin/settings')) {
       this.updateTitleWithTranslation('global.menu.account.settings');
+    } else if (url.endsWith('/admin/locations')) {
+      this.updateTitleWithTranslation('app.location.home.title');
+    } else if (url.endsWith('/admin/events')) {
+      this.updateTitleWithTranslation('app.event.home.title');
     } else if (url.endsWith('/admin/members')) {
       this.updateTitleWithTranslation('app.member.home.title');
     }
