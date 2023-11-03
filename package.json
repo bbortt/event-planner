@@ -125,7 +125,7 @@
     "eslint-webpack-plugin": "4.0.1",
     "folder-hash": "4.0.4",
     "generator-jhipster": "8.0.0-rc.1",
-    "generator-jhipster-entity-audit": "4.0.0",
+    "generator-jhipster-entity-audit": "5.0.0",
     "husky": "8.0.3",
     "jest": "29.7.0",
     "jest-date-mock": "1.0.8",
