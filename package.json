@@ -110,7 +110,7 @@
     "@angular/compiler-cli": "16.2.9",
     "@angular/service-worker": "16.2.9",
     "@commitlint/cli": "^18.4.3",
-    "@commitlint/config-conventional": "^18.4.2",
+    "@commitlint/config-conventional": "^18.4.3",
     "@types/jest": "29.5.10",
     "@types/node": "20.9.4",
     "@typescript-eslint/eslint-plugin": "6.12.0",
