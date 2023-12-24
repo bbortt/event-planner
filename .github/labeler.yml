@@ -1,16 +1,37 @@
 ci/cd:
-  - '.github/*'
-  - '.husky/*'
-  - '*.gradle'
-  - './{,**/}Dockerfile'
+  - changed-files:
+      - any-glob-to-any-file:
+          - '.github/*'
+          - '.husky/*'
+          - '*.gradle'
+          - './{,**/}Dockerfile'
 github_actions:
-  - '.github/*'
+  - changed-files:
+      - any-glob-to-any-file:
+          - '.github/*'
 documentation:
-  - '*.md'
+  - changed-files:
+      - any-glob-to-any-file:
+          - '*.md'
 
-java: '*.java'
-javascript: '*.ts{,x}'
+java:
+  - changed-files:
+      - any-glob-to-any-file:
+          - '*.java'
+javascript:
+  - changed-files:
+      - any-glob-to-any-file:
+          - '*.ts{,x}'
 
-backend: 'src/main/java/**'
-frontend: 'src/main/webapp/**'
-testing: 'src/test/**'
+backend:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'src/main/java/**'
+frontend:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'src/main/webapp/**'
+testing:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'src/test/**'
