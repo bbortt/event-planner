@@ -16,6 +16,9 @@ overrides:
   - files: "*.java"
     options:
       tabWidth: 4
+  - files: "*.json"
+    options:
+      trailingComma: none
 
 plugins:
     - prettier-plugin-java
