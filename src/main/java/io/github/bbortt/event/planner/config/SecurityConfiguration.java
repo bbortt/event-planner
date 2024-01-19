@@ -1,11 +1,16 @@
 package io.github.bbortt.event.planner.config;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
+
 import io.github.bbortt.event.planner.security.AuthoritiesConstants;
 import io.github.bbortt.event.planner.security.SecurityUtils;
 import io.github.bbortt.event.planner.security.oauth2.AudienceValidator;
 import io.github.bbortt.event.planner.security.oauth2.CustomClaimConverter;
 import io.github.bbortt.event.planner.security.oauth2.JwtGrantedAuthorityConverter;
 import io.github.bbortt.event.planner.web.filter.SpaWebFilter;
+import java.util.HashSet;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
@@ -40,12 +45,6 @@ import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 import tech.jhipster.config.JHipsterConstants;
 import tech.jhipster.config.JHipsterProperties;
 import tech.jhipster.web.filter.CookieCsrfFilter;
-
-import java.util.HashSet;
-import java.util.Set;
-
-import static org.springframework.security.config.Customizer.withDefaults;
-import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
 @Configuration
 @EnableMethodSecurity(securedEnabled = true)

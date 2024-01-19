@@ -11,7 +11,7 @@ import { of, Subscription } from 'rxjs';
 
 import { Member, Project, ProjectMemberService } from 'app/api';
 
-import { ITEMS_PER_PAGE } from "app/config/pagination.constants";
+import { ITEMS_PER_PAGE } from 'app/config/pagination.constants';
 
 import { AlertService } from 'app/core/util/alert.service';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
