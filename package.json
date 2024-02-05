@@ -135,7 +135,7 @@
     "jest-sonar": "0.2.16",
     "lint-staged": "^15.2.1",
     "merge-jsons-webpack-plugin": "2.0.1",
-    "prettier": "3.2.4",
+    "prettier": "3.2.5",
     "prettier-plugin-java": "2.5.0",
     "prettier-plugin-packagejson": "2.4.10",
     "rimraf": "5.0.5",
