@@ -34,7 +34,7 @@ export class UserService {
   ): IUser[] {
     const users: Type[] = usersToCheck.filter(isPresent);
     if (users.length > 0) {
-      const userCollectionIdentifiers = userCollection.map(userItem => getUserIdentifier(userItem)!);
+      const userCollectionIdentifiers = userCollection.map(userItem => getUserIdentifier(userItem));
       const usersToAdd = users.filter(userItem => {
         const userIdentifier = getUserIdentifier(userItem);
         if (userCollectionIdentifiers.includes(userIdentifier)) {

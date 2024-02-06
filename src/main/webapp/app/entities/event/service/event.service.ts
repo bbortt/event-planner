@@ -103,7 +103,7 @@ export class EventService {
   ): Type[] {
     const events: Type[] = eventsToCheck.filter(isPresent);
     if (events.length > 0) {
-      const eventCollectionIdentifiers = eventCollection.map(eventItem => this.getEventIdentifier(eventItem)!);
+      const eventCollectionIdentifiers = eventCollection.map(eventItem => this.getEventIdentifier(eventItem));
       const eventsToAdd = events.filter(eventItem => {
         const eventIdentifier = this.getEventIdentifier(eventItem);
         if (eventCollectionIdentifiers.includes(eventIdentifier)) {

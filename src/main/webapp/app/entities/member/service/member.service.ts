@@ -104,7 +104,7 @@ export class MemberService {
   ): Type[] {
     const members: Type[] = membersToCheck.filter(isPresent);
     if (members.length > 0) {
-      const memberCollectionIdentifiers = memberCollection.map(memberItem => this.getMemberIdentifier(memberItem)!);
+      const memberCollectionIdentifiers = memberCollection.map(memberItem => this.getMemberIdentifier(memberItem));
       const membersToAdd = members.filter(memberItem => {
         const memberIdentifier = this.getMemberIdentifier(memberItem);
         if (memberCollectionIdentifiers.includes(memberIdentifier)) {
