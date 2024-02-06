@@ -114,7 +114,7 @@
     "@types/jest": "29.5.11",
     "@types/node": "20.11.16",
     "@typescript-eslint/eslint-plugin": "6.20.0",
-    "@typescript-eslint/parser": "6.19.1",
+    "@typescript-eslint/parser": "6.21.0",
     "browser-sync": "3.0.2",
     "browser-sync-webpack-plugin": "https://github.com/G-Rath/browser-sync-webpack-plugin.git#patch-1",
     "buffer": "6.0.3",
