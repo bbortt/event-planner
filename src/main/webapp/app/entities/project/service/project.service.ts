@@ -103,7 +103,7 @@ export class ProjectService {
   ): Type[] {
     const projects: Type[] = projectsToCheck.filter(isPresent);
     if (projects.length > 0) {
-      const projectCollectionIdentifiers = projectCollection.map(projectItem => this.getProjectIdentifier(projectItem)!);
+      const projectCollectionIdentifiers = projectCollection.map(projectItem => this.getProjectIdentifier(projectItem));
       const projectsToAdd = projects.filter(projectItem => {
         const projectIdentifier = this.getProjectIdentifier(projectItem);
         if (projectCollectionIdentifiers.includes(projectIdentifier)) {

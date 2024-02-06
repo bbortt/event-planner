@@ -105,7 +105,7 @@ export class LocationService {
   ): Type[] {
     const locations: Type[] = locationsToCheck.filter(isPresent);
     if (locations.length > 0) {
-      const locationCollectionIdentifiers = locationCollection.map(locationItem => this.getLocationIdentifier(locationItem)!);
+      const locationCollectionIdentifiers = locationCollection.map(locationItem => this.getLocationIdentifier(locationItem));
       const locationsToAdd = locations.filter(locationItem => {
         const locationIdentifier = this.getLocationIdentifier(locationItem);
         if (locationCollectionIdentifiers.includes(locationIdentifier)) {
