@@ -114,11 +114,10 @@ public class MemberDTO implements Serializable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof MemberDTO)) {
+        if (!(o instanceof MemberDTO memberDTO)) {
             return false;
         }
 
-        MemberDTO memberDTO = (MemberDTO) o;
         if (this.id == null) {
             return false;
         }

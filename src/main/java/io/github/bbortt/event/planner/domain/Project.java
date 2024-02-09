@@ -172,10 +172,10 @@ public class Project extends AbstractAuditingEntity<Project, Long> implements Se
         if (this == o) {
             return true;
         }
-        if (!(o instanceof Project)) {
+        if (!(o instanceof Project project)) {
             return false;
         }
-        return id != null && id.equals(((Project) o).id);
+        return id != null && id.equals(project.id);
     }
 
     @Override

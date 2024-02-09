@@ -33,13 +33,13 @@ class ApiProjectMapperTest {
                 .archived(Boolean.TRUE);
 
         projectDTO = new ProjectDTO();
-        projectDTO.setId(project.getId());
+        projectDTO.setId(project.getId().orElseThrow());
         projectDTO.setToken(UUID.fromString(project.getToken()));
         projectDTO.setName(project.getName());
-        projectDTO.setDescription(project.getDescription());
+        projectDTO.setDescription(project.getDescription().orElseThrow());
         projectDTO.setStartDate(Instant.parse("2023-03-29T00:00:00.00Z"));
         projectDTO.setEndDate(Instant.parse("2023-03-30T00:00:00.00Z"));
-        projectDTO.setArchived(project.getArchived());
+        projectDTO.setArchived(project.getArchived().orElseThrow());
         projectDTO.setCreatedBy("Cassandra Eleanore Lang");
         projectDTO.setCreatedDate(Instant.now());
         projectDTO.setLastModifiedBy("Nicholas Joseph \"Nick\" Fury");

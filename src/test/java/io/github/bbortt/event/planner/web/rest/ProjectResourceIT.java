@@ -373,7 +373,7 @@ public class ProjectResourceIT {
         int databaseSizeBeforeUpdate = projectRepository.findAll().size();
 
         // Update the project
-        Project updatedProject = projectRepository.findById(project.getId()).orElseThrow(IllegalArgumentException::new);
+        Project updatedProject = projectRepository.findById(project.getId()).orElseThrow();
         // Disconnect from session so that the updates on updatedProject are not directly saved in db
         em.detach(updatedProject);
         updatedProject

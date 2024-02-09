@@ -42,7 +42,7 @@ class ProjectServiceIT {
         UUID token = UUID.fromString("b0fd5fa3-4675-4f6e-8b0e-c6e6c170cea8");
         Project project = projectRepository.save(ProjectResourceIT.createEntity(entityManager).token(token).archived(Boolean.FALSE));
 
-        ProjectDTO result = projectService.findOneByToken(token.toString()).orElseThrow(IllegalArgumentException::new);
+        ProjectDTO result = projectService.findOneByToken(token.toString()).orElseThrow();
 
         assertEquals(projectMapper.toDto(project), result);
     }

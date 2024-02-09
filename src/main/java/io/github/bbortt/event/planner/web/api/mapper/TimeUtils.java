@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 
-class TimeUtils {
+public class TimeUtils {
 
     private ZoneIdProvider zoneIdProvider;
 
@@ -37,7 +37,7 @@ class TimeUtils {
         return LocalDate.ofInstant(instant, zoneIdProvider.getZoneId());
     }
 
-    static interface ZoneIdProvider {
+    interface ZoneIdProvider {
         ZoneId getZoneId();
     }
 }

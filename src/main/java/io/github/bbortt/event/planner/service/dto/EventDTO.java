@@ -111,11 +111,10 @@ public class EventDTO implements Serializable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof EventDTO)) {
+        if (!(o instanceof EventDTO eventDTO)) {
             return false;
         }
 
-        EventDTO eventDTO = (EventDTO) o;
         if (this.id == null) {
             return false;
         }

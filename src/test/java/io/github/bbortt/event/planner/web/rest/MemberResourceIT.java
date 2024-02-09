@@ -337,7 +337,7 @@ public class MemberResourceIT {
         int databaseSizeBeforeUpdate = memberRepository.findAll().size();
 
         // Update the member
-        Member updatedMember = memberRepository.findById(member.getId()).orElseThrow(IllegalArgumentException::new);
+        Member updatedMember = memberRepository.findById(member.getId()).orElseThrow();
         // Disconnect from session so that the updates on updatedMember are not directly saved in db
         em.detach(updatedMember);
         updatedMember.invitedEmail("hope-pym@localhost").accepted(UPDATED_ACCEPTED);

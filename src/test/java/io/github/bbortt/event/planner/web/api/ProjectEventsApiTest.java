@@ -70,10 +70,7 @@ class ProjectEventsApiTest {
         Optional<Integer> pageNumber = Optional.of(0);
         Optional<List<String>> sort = Optional.of(Collections.singletonList("id,asc"));
 
-        PageRequest pageRequest = PageRequest.of(
-            pageNumber.orElseThrow(IllegalArgumentException::new),
-            pageSize.orElseThrow(IllegalArgumentException::new)
-        );
+        PageRequest pageRequest = PageRequest.of(pageNumber.orElseThrow(), pageSize.orElseThrow());
         doReturn(pageRequest).when(paginationUtilMock).createPagingInformation(pageSize, pageNumber, sort, "id");
 
         // Project by ID exists

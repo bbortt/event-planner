@@ -124,10 +124,10 @@ public class Event extends AbstractAuditingEntity<Event, Long> implements Serial
         if (this == o) {
             return true;
         }
-        if (!(o instanceof Event)) {
+        if (!(o instanceof Event event)) {
             return false;
         }
-        return id != null && id.equals(((Event) o).id);
+        return id != null && id.equals(event.id);
     }
 
     @Override

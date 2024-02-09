@@ -19,4 +19,4 @@ pluginManagement {
     }
 }
 
-rootProject.name = "event-planner"
+rootProject.name = "${rootProject.name}"

@@ -13,6 +13,7 @@ import io.github.bbortt.event.planner.service.dto.ProjectDTO;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -43,10 +44,10 @@ class ApiProjectMemberMapperTest {
                 .imageUrl("http://some.image");
 
         User user = new User();
-        user.setLogin(member.getLogin());
-        user.setFirstName(member.getFirstName());
-        user.setLastName(member.getLastName());
-        user.setImageUrl(member.getImageUrl());
+        user.setLogin(member.getLogin().orElseThrow());
+        user.setFirstName(member.getFirstName().orElseThrow());
+        user.setLastName(member.getLastName().orElseThrow());
+        user.setImageUrl(member.getImageUrl().orElseThrow());
 
         memberDTO = new MemberDTO();
         memberDTO.setId(member.getId());

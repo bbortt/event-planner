@@ -151,10 +151,10 @@ public class User extends AbstractAuditingEntity<User, String> implements Serial
         if (this == o) {
             return true;
         }
-        if (!(o instanceof User)) {
+        if (!(o instanceof User user)) {
             return false;
         }
-        return id != null && id.equals(((User) o).id);
+        return id != null && id.equals(user.id);
     }
 
     @Override

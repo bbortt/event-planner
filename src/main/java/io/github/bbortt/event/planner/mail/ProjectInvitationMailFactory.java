@@ -1,5 +1,7 @@
 package io.github.bbortt.event.planner.mail;
 
+import static java.lang.String.format;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,7 +42,7 @@ public class ProjectInvitationMailFactory {
         return new EmailConfiguration(
             mailProperties.getFrom(),
             invitedEmail,
-            String.format("%s: Invitation to Project '%s'.", applicationName, projectName),
+            format("%s: Invitation to Project '%s'.", applicationName, projectName),
             loadHtmlContent(invitedEmail, projectName, projectToken)
         );
     }

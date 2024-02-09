@@ -288,7 +288,7 @@ public class LocationResourceIT {
         int databaseSizeBeforeUpdate = locationRepository.findAll().size();
 
         // Update the location
-        Location updatedLocation = locationRepository.findById(location.getId()).orElseThrow(IllegalArgumentException::new);
+        Location updatedLocation = locationRepository.findById(location.getId()).orElseThrow();
         // Disconnect from session so that the updates on updatedLocation are not directly saved in db
         em.detach(updatedLocation);
         updatedLocation.name(UPDATED_NAME).description(UPDATED_DESCRIPTION);

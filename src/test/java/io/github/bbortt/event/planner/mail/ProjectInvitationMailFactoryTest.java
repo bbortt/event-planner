@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
+import static org.springframework.web.context.request.RequestContextHolder.setRequestAttributes;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,7 +13,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.LocaleResolver;
 import org.thymeleaf.ITemplateEngine;
@@ -43,7 +43,7 @@ class ProjectInvitationMailFactoryTest {
         jhipsterProperties = new JHipsterProperties();
         jhipsterProperties.getMail().setFrom(FROM_EMAIL);
 
-        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(httpServletRequestMock));
+        setRequestAttributes(new ServletRequestAttributes(httpServletRequestMock));
 
         fixture = new ProjectInvitationMailFactory(APPLICATION_NAME, jhipsterProperties, templateEngineMock, localeResolverMock);
     }
