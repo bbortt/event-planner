@@ -1,6 +1,7 @@
 package io.github.bbortt.event.planner.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 import io.github.bbortt.event.planner.IntegrationTest;
 import io.github.bbortt.event.planner.config.Constants;
@@ -127,7 +128,7 @@ class UserServiceIT {
     }
 
     public static Stream<Arguments> testUserDetailsWithLocale() {
-        return Stream.of(Arguments.of("it-IT", "it"), Arguments.of("en_US", "en"), Arguments.of("en-US", "en"));
+        return Stream.of(arguments("it-IT", "it"), arguments("en_US", "en"), arguments("en-US", "en"));
     }
 
     private OAuth2AuthenticationToken createMockOAuth2AuthenticationToken(Map<String, Object> userDetails) {

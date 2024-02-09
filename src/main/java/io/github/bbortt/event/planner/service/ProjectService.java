@@ -151,7 +151,7 @@ public class ProjectService {
             throw new EntityNotFoundAlertException("Entity not found", ProjectResource.ENTITY_NAME, "idnotfound");
         }
 
-        return project.orElseThrow(IllegalArgumentException::new);
+        return project.orElseThrow();
     }
 
     /**

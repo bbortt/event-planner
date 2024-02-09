@@ -37,10 +37,10 @@ public class Authority implements Serializable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof Authority)) {
+        if (!(o instanceof Authority authority)) {
             return false;
         }
-        return Objects.equals(name, ((Authority) o).name);
+        return Objects.equals(name, authority.name);
     }
 
     @Override

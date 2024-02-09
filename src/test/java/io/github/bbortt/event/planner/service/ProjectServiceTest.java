@@ -123,7 +123,7 @@ class ProjectServiceTest {
         Optional<ProjectDTO> result = fixture.findOne(projectId);
 
         assertTrue(result.isPresent());
-        assertEquals(projectDTO, result.orElseThrow(IllegalArgumentException::new));
+        assertEquals(projectDTO, result.orElseThrow());
     }
 
     @Test
@@ -170,7 +170,7 @@ class ProjectServiceTest {
         Optional<ProjectDTO> result = fixture.findOneByToken(token.toString());
 
         assertTrue(result.isPresent());
-        assertEquals(projectDTO, result.orElseThrow(IllegalArgumentException::new));
+        assertEquals(projectDTO, result.orElseThrow());
     }
 
     @Test

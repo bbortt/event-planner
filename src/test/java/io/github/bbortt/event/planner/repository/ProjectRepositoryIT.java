@@ -121,6 +121,6 @@ class ProjectRepositoryIT {
         Optional<Project> result = projectRepository.findByToken(token);
 
         assertTrue(result.isPresent());
-        assertEquals(project, result.orElseThrow(IllegalArgumentException::new));
+        assertEquals(project, result.orElseThrow());
     }
 }

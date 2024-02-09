@@ -334,7 +334,7 @@ public class EventResourceIT {
         int databaseSizeBeforeUpdate = eventRepository.findAll().size();
 
         // Update the event
-        Event updatedEvent = eventRepository.findById(event.getId()).orElseThrow(IllegalArgumentException::new);
+        Event updatedEvent = eventRepository.findById(event.getId()).orElseThrow();
         // Disconnect from session so that the updates on updatedEvent are not directly saved in db
         em.detach(updatedEvent);
         updatedEvent.name(UPDATED_NAME);

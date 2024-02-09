@@ -131,10 +131,7 @@ class ProjectMemberApiTest {
         // Project by ID exists
         doReturn(new ProjectDTO()).when(projectServiceMock).findOneOrThrowEntityNotFoundAlertException(projectId);
 
-        PageRequest pageRequest = PageRequest.of(
-            pageNumber.orElseThrow(IllegalArgumentException::new),
-            pageSize.orElseThrow(IllegalArgumentException::new)
-        );
+        PageRequest pageRequest = PageRequest.of(pageNumber.orElseThrow(), pageSize.orElseThrow());
         doReturn(pageRequest).when(paginationUtilMock).createPagingInformation(pageSize, pageNumber, sort, "id");
 
         MemberDTO memberDTO = new MemberDTO();

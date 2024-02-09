@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-public interface ApiProjectMapper {
+public interface ApiProjectMapper extends MapperWithOptionals {
     TimeUtils timeUtils = new TimeUtils();
 
     Project toApiDTO(ProjectDTO entity);

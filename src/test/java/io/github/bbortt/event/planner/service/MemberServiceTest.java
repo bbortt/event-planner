@@ -85,7 +85,7 @@ class MemberServiceTest {
         Optional<MemberDTO> result = fixture.findOneInProjectByInvitationEmail(projectId, invitedEmail);
 
         assertTrue(result.isPresent());
-        assertEquals(memberDTO, result.orElseThrow(IllegalArgumentException::new));
+        assertEquals(memberDTO, result.orElseThrow());
     }
 
     @Test

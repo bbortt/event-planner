@@ -5,6 +5,6 @@ import io.github.bbortt.event.planner.service.dto.LocationDTO;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-public interface ApiProjectLocationMapper {
+public interface ApiProjectLocationMapper extends MapperWithOptionals {
     Location toApiDTO(LocationDTO entity);
 }

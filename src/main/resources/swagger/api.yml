@@ -477,6 +477,7 @@ components:
         - email
         - createdBy
         - createdDate
+        - accepted
       properties:
         id:
           type: integer

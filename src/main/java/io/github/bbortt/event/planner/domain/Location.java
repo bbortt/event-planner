@@ -166,10 +166,10 @@ public class Location extends AbstractAuditingEntity<Location, Long> implements 
         if (this == o) {
             return true;
         }
-        if (!(o instanceof Location)) {
+        if (!(o instanceof Location location)) {
             return false;
         }
-        return id != null && id.equals(((Location) o).id);
+        return id != null && id.equals(location.id);
     }
 
     @Override

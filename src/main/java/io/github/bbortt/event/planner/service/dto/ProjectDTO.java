@@ -133,11 +133,10 @@ public class ProjectDTO implements Serializable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof ProjectDTO)) {
+        if (!(o instanceof ProjectDTO projectDTO)) {
             return false;
         }
 
-        ProjectDTO projectDTO = (ProjectDTO) o;
         if (this.id == null) {
             return false;
         }

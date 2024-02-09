@@ -218,10 +218,10 @@ public class Member implements Serializable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof Member)) {
+        if (!(o instanceof Member member)) {
             return false;
         }
-        return id != null && id.equals(((Member) o).id);
+        return id != null && id.equals(member.id);
     }
 
     @Override
