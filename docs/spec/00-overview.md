@@ -1,6 +1,6 @@
 # Event Planner — Specification Overview
 
-**Status:** Draft — open questions must be resolved before implementation begins.
+**Status:** Active — core decisions resolved; specs being written.
 
 ---
 
@@ -14,50 +14,60 @@ A REST API that allows users to plan and coordinate events. An organizer creates
 
 | Concept       | Description                                                              |
 |---------------|--------------------------------------------------------------------------|
-| **User**      | An authenticated principal. Can be an organizer and/or a participant.    |
-| **Event**     | A named happening with a time range and optional location.               |
-| **Invitation**| A relationship between an Event and a User with an RSVP status.          |
-| **Location**  | A named venue or address associated with zero or more events.            |
-| **Schedule**  | (TBD) A set of time slots or sub-events within a parent event.           |
+| **User**       | An authenticated principal with a verified email address. Carries one or more roles. |
+| **Role**       | `ORGANIZER` (committee member) or `VOLUNTEER`. Stored on the User; same entity in DB. |
+| **Event**      | A named happening with a time range and optional location.                            |
+| **Invitation** | A pending invite to an email address for an event. Becomes linked to a User on registration/login. Has an RSVP status. |
+| **Location**   | A named venue or address associated with zero or more events.                         |
+| **Schedule**   | (TBD) A set of time slots or sub-events within a parent event.                        |
 
 ---
 
 ## Core capabilities (planned)
 
-- [ ] User registration and authentication
-- [ ] Create / read / update / delete events
-- [ ] Invite participants to an event
+- [ ] User registration with email verification
+- [ ] Local login (username/password) and session/token management
+- [ ] Role assignment (`ORGANIZER`, `VOLUNTEER`)
+- [ ] Create / read / update / delete events (organizers only)
+- [ ] Invite volunteers to an event by email (email-first — account not required)
 - [ ] RSVP (accept / decline / tentative)
 - [ ] View events I own
 - [ ] View events I am invited to
+- [ ] Transactional email via SMTP (verification, invitation, RSVP notifications)
 - [ ] Location management
 - [ ] (stretch) Recurring events
-- [ ] (stretch) Email notifications
+- [ ] (stretch) Committee-member invite flow (separate from volunteer invite)
 
 ---
 
-## Open questions
+## Resolved decisions
 
-These must be answered before the relevant spec is written.
+| Question                   | Decision                                                      |
+|----------------------------|---------------------------------------------------------------|
+| Authentication mechanism   | Local credentials — Spring Security, we own email verification |
+| Invitation model           | Email-first — invite any address; pending-invite state machine |
+| Email infrastructure       | Spring Mail + SMTP (Mailhog locally, real SMTP in prod)        |
+| Role model                 | Single User entity; role field distinguishes organizer/volunteer |
 
-1. **Authentication mechanism** — OAuth2 / OIDC (external IdP) or local username+password?
-2. **Invitation model** — invite by email (user may not exist yet) or only registered users?
-3. **Event visibility** — public events anyone can discover, or always private (invite-only)?
-4. **Schedule granularity** — does an event have one time range, or multiple sessions/slots?
-5. **Multi-tenancy** — are events scoped to an organisation/team, or flat per-user?
-6. **API versioning** — `/api/v1/...` prefix from day one, or add later?
+## Remaining open questions
+
+4. **Event visibility** — public events anyone can discover, or always invite-only?
+5. **Schedule granularity** — single time range per event, or multiple sessions/slots?
+6. **Multi-tenancy** — events scoped to an organisation, or flat per-user?
+7. **API versioning** — `/api/v1/...` from day one?
 
 ---
 
 ## Spec index
 
-| File                          | Topic                  | Status  |
-|-------------------------------|------------------------|---------|
-| `00-overview.md` (this file)  | Vision & open Qs       | Draft   |
-| `01-authentication.md`        | Auth & identity        | Pending |
-| `02-events.md`                | Event CRUD             | Pending |
-| `03-invitations.md`           | Invite & RSVP flow     | Pending |
-| `04-locations.md`             | Location management    | Pending |
+| File                          | Topic                       | Status   |
+|-------------------------------|-----------------------------|----------|
+| `00-overview.md` (this file)  | Vision & decisions          | Active   |
+| `01-authentication.md`        | Registration, login, email verification | Written |
+| `02-invitations.md`           | Invite & RSVP state machine | Written  |
+| `03-email.md`                 | Transactional email via SMTP| Written  |
+| `04-events.md`                | Event CRUD                  | Pending  |
+| `05-locations.md`             | Location management         | Pending  |
 
 ---
 
