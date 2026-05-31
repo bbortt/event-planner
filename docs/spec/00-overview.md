@@ -14,12 +14,14 @@ A REST API that allows users to plan and coordinate events. An organizer creates
 
 | Concept       | Description                                                              |
 |---------------|--------------------------------------------------------------------------|
-| **User**       | An authenticated principal with a verified email address. Carries one or more roles. |
-| **Role**       | `ORGANIZER` (committee member) or `VOLUNTEER`. Stored on the User; same entity in DB. |
-| **Event**      | A named happening with a time range and optional location.                            |
-| **Invitation** | A pending invite to an email address for an event. Becomes linked to a User on registration/login. Has an RSVP status. |
-| **Location**   | A named venue or address associated with zero or more events.                         |
-| **Schedule**   | (TBD) A set of time slots or sub-events within a parent event.                        |
+| **User**          | An authenticated principal with a verified email address. Has a platform role and zero or more event roles. |
+| **Platform role** | `PLATFORM_ADMIN` (global superuser) or `USER` (default). Stored on the User node. |
+| **Event role**    | Per-event role on the User↔Event relationship: `EVENT_ADMIN`, `ORGANIZER`, `COORDINATOR`, `STAFF`, `VOLUNTEER`, `SPEAKER`, `VIEWER`. A user can have different roles in different events. |
+| **Location role** | `LOCATION_ADMIN` — scoped to a specific Location within a specific event. Grants location-level management without event-wide powers. |
+| **Event**         | A named happening with a status lifecycle (DRAFT → PUBLISHED → COMPLETED / CANCELLED). |
+| **Invitation**    | A pending invite to an email address for an event with a specific event role. Has its own state machine. |
+| **Location**      | A named venue or address. Can be shared across events. |
+| **Schedule**      | (TBD) A set of time slots or sub-events within a parent event. |
 
 ---
 
@@ -60,14 +62,14 @@ A REST API that allows users to plan and coordinate events. An organizer creates
 
 ## Spec index
 
-| File                          | Topic                       | Status   |
-|-------------------------------|-----------------------------|----------|
-| `00-overview.md` (this file)  | Vision & decisions          | Active   |
-| `01-authentication.md`        | Registration, login, email verification | Written |
-| `02-invitations.md`           | Invite & RSVP state machine | Written  |
-| `03-email.md`                 | Transactional email via SMTP| Written  |
-| `04-events.md`                | Event CRUD                  | Pending  |
-| `05-locations.md`             | Location management         | Pending  |
+| File                          | Topic                                   | Status   |
+|-------------------------------|-----------------------------------------|----------|
+| `00-overview.md` (this file)  | Vision & decisions                      | Active   |
+| `01-authentication.md`        | Registration, login, email verification | Written  |
+| `02-invitations.md`           | Invite & RSVP state machine             | Written  |
+| `03-email.md`                 | Transactional email via SMTP            | Written  |
+| `04-events.md`                | Event CRUD, role model, member mgmt     | Written  |
+| `05-locations.md`             | Location management                     | Pending  |
 
 ---
 

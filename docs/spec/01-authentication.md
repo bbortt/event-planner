@@ -17,23 +17,25 @@ Define how users register, verify their email, log in, and are authorised to act
 
 A `User` is the single identity entity. Fields:
 
-| Field              | Type      | Constraints                        |
-|--------------------|-----------|------------------------------------|
-| `id`               | UUID      | system-generated, immutable        |
-| `email`            | String    | unique, required, verified         |
-| `passwordHash`     | String    | BCrypt, never exposed in responses |
-| `roles`            | Set<Role> | min 1; values: `ORGANIZER`, `VOLUNTEER` |
-| `emailVerified`    | boolean   | `false` until verification link clicked |
-| `verificationToken`| String   | UUID; null after verification      |
-| `createdAt`        | Instant   | system-generated                   |
+| Field               | Type         | Constraints                                          |
+|---------------------|--------------|------------------------------------------------------|
+| `id`                | UUID         | system-generated, immutable                          |
+| `email`             | String       | unique, required, verified                           |
+| `passwordHash`      | String       | BCrypt, never exposed in responses                   |
+| `platformRole`      | PlatformRole | `PLATFORM_ADMIN` or `USER` (default)                 |
+| `emailVerified`     | boolean      | `false` until verification link clicked              |
+| `verificationToken` | String       | UUID; null after verification                        |
+| `createdAt`         | Instant      | system-generated                                     |
 
-### Role
+Event-level roles (`EVENT_ADMIN`, `ORGANIZER`, `COORDINATOR`, `STAFF`, `VOLUNTEER`, `SPEAKER`, `VIEWER`) are **not** stored on the User node — they live on the `HAS_EVENT_ROLE` relationship between the User and each Event. See Spec 04.
 
-`Role` is an enum stored on the `User` node. A user can hold both roles simultaneously (e.g. a committee member who also volunteers at another event).
+### Platform role
+
+`PlatformRole` is an enum stored on the `User` node.
 
 ```
-ORGANIZER   — can create/edit/delete events; can invite volunteers
-VOLUNTEER   — can view events they are invited to; can RSVP
+PLATFORM_ADMIN  — superuser; implicit EVENT_ADMIN on all events
+USER            — default; can create events and be invited to events
 ```
 
 ---
@@ -50,14 +52,13 @@ Request body:
 ```json
 {
   "email": "alice@example.com",
-  "password": "...",
-  "role": "ORGANIZER"          // or "VOLUNTEER"
+  "password": "..."
 }
 ```
 
 - `email` must be unique; 409 if already taken.
 - `password` must be ≥ 12 characters.
-- `role` defaults to `VOLUNTEER` if omitted.
+- `role` is ignored at registration — all new users receive `platformRole = USER`. Event roles are assigned via invitations or member management after the fact.
 - On success: creates User with `emailVerified=false`, sends verification email, returns `202 Accepted`.
 - Response body: `{ "message": "Verification email sent." }` — no tokens yet.
 
@@ -101,7 +102,7 @@ Request body:
 
 - Rejects login if `emailVerified=false` → `403 Forbidden` with body `{ "error": "EMAIL_NOT_VERIFIED" }`.
 - On success: returns a signed JWT (access token) and a refresh token.
-- JWT payload: `sub` (userId), `email`, `roles`, `iat`, `exp` (15 min).
+- JWT payload: `sub` (userId), `email`, `platformRole`, `iat`, `exp` (15 min). Event roles are resolved per-request from the database, not embedded in the token.
 - Refresh token: opaque, stored server-side (Neo4j), 30-day TTL.
 
 ### Token refresh
@@ -131,7 +132,7 @@ POST /api/auth/logout
 1. Email addresses are case-insensitive; store and compare in lowercase.
 2. Passwords are never stored or logged in plain text.
 3. A user who has not verified their email cannot log in or perform any authenticated action.
-4. The `ORGANIZER` role is self-selected at registration; there is no admin promotion flow in v1.
+4. `PLATFORM_ADMIN` promotion is an out-of-band operation (direct database or a future admin API); there is no self-service path to it.
 5. An unverified account whose token has expired can request a new verification email. The old token is invalidated on resend.
 
 ---

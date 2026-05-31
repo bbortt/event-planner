@@ -7,7 +7,7 @@
 
 ## Purpose
 
-Define how organizers invite volunteers to events by email, the pending-invite state machine, and how invitees respond (RSVP).
+Define how organizers invite members to events by email, the pending-invite state machine, and how invitees respond (RSVP). Invitations target a specific event role (see Spec 04 for the full role hierarchy).
 
 ---
 
@@ -15,17 +15,17 @@ Define how organizers invite volunteers to events by email, the pending-invite s
 
 ### Invitation
 
-An `Invitation` represents a request for a specific email address to participate in an event as a volunteer.
+An `Invitation` represents a request for a specific email address to participate in an event with a given event role.
 
-| Field          | Type              | Description                                          |
-|----------------|-------------------|------------------------------------------------------|
-| `id`           | UUID              | system-generated                                     |
-| `email`        | String            | the invited address (lowercased)                     |
-| `token`        | String            | UUID; included in the invite link; single-use        |
-| `status`       | InvitationStatus  | see state machine below                              |
-| `role`         | Role              | always `VOLUNTEER` for the volunteer invite endpoint |
-| `invitedBy`    | User (ref)        | the organizer who sent the invite                    |
-| `event`        | Event (ref)       | the event this invitation belongs to                 |
+| Field          | Type              | Description                                                              |
+|----------------|-------------------|--------------------------------------------------------------------------|
+| `id`           | UUID              | system-generated                                                         |
+| `email`        | String            | the invited address (lowercased)                                         |
+| `token`        | String            | UUID; included in the invite link; single-use                            |
+| `status`       | InvitationStatus  | see state machine below                                                  |
+| `role`         | EventRole         | the event role to assign on acceptance: `ORGANIZER`, `COORDINATOR`, `STAFF`, `VOLUNTEER`, `SPEAKER`, or `VIEWER` |
+| `invitedBy`    | User (ref)        | the member who sent the invite                                           |
+| `event`        | Event (ref)       | the event this invitation belongs to                                     |
 | `createdAt`    | Instant           | system-generated                                     |
 | `expiresAt`    | Instant           | `createdAt + 7 days`; null after acceptance          |
 | `respondedAt`  | Instant           | null until RSVP                                      |
@@ -50,15 +50,17 @@ DECLINED  → PENDING   (organizer can re-invite)
 POST /api/events/{eventId}/invitations
 ```
 
-Authorization: requires `ORGANIZER` role and ownership of `eventId`.
+Authorization: `EVENT_ADMIN` or `ORGANIZER` of the event, or `PLATFORM_ADMIN`. `COORDINATOR` may invite only `VOLUNTEER`, `STAFF`, `SPEAKER`, and `VIEWER`.
 
 Request body:
 ```json
 {
-  "email": "bob@example.com"
+  "email": "bob@example.com",
+  "role": "VOLUNTEER"
 }
 ```
 
+- `role` is required. Only roles below the caller's own role in the hierarchy may be invited (an `ORGANIZER` cannot invite an `EVENT_ADMIN`).
 - Creates an `Invitation` with status `PENDING` and a fresh `token`.
 - If an active (non-expired, non-declined) invitation for this email+event already exists: `409 Conflict`.
 - If the email belongs to an existing verified user: link the invitation to that user immediately.
