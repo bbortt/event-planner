@@ -55,11 +55,20 @@ A REST API that allows users to plan and coordinate events. An organizer creates
 
 ## Remaining open questions
 
-4. **Event visibility** — resolved: publicly visible within the tool; only volunteer role is self-applicable; all other roles require explicit invitation.
-5. **Schedule granularity** — single time range per event, or multiple sessions/slots?
-6. **Multi-tenancy** — events scoped to an organisation, or flat per-user?
-7. **API versioning** — `/api/v1/...` from day one?
-8. **Coordinator scope** — how is a COORDINATOR's scope of locations/applications defined? (shared open question, Specs 05 & 06)
+All original open questions are now resolved:
+
+| Question | Decision |
+|---|---|
+| Event visibility | Public within the tool; VOLUNTEER is self-applicable via registration window; all other roles require invitation |
+| Time range model | `setupAt` (opt) / `startAt` / `endAt` / `teardownUntil` (opt) on both events and location time slots |
+| Multi-tenancy | Flat — no organisation layer |
+| API versioning | `/api/v1/` prefix on all routes |
+| Coordinator scope | Permission level, not a scoped assignment — full operational access, no event-level settings |
+| Password reset | Not in v1 |
+| TENTATIVE RSVP | Not in v1 |
+| COMPLETED auto-set | Not in v1 — manual organizer action only |
+| i18n email | Not in v1 |
+| Delivery log | Not in v1 |
 
 ---
 
@@ -74,6 +83,8 @@ A REST API that allows users to plan and coordinate events. An organizer creates
 | `04-events.md`                | Event CRUD, role model, member mgmt     | Written  |
 | `05-locations.md`             | Location hierarchy, time slots, volunteer shifts | Written  |
 | `06-volunteer-management.md`  | Registration window, application flow, age enforcement | Written  |
+| `07-tasks.md`                 | Auto-generated tasks, hierarchy, notification escalation | Written  |
+| `08-personas.md`              | Role personas and user stories                           | Written  |
 
 ---
 

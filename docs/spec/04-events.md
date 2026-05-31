@@ -30,7 +30,7 @@ Stored as a property on the `HAS_EVENT_ROLE` relationship between `User` and `Ev
 |---------------|-------------------------------------------------------------------------------------|
 | `EVENT_ADMIN` | Full control of the event: edit details, manage members, delete event.              |
 | `ORGANIZER`   | Can edit event details, manage locations, invite members, manage schedules.         |
-| `COORDINATOR` | Can manage volunteers assigned to their area; can check in attendees. Cannot edit event-level details. |
+| `COORDINATOR` | Full operational access: manage locations, time slots, volunteer shifts, and applications. Cannot modify event-level settings (name, dates, description, registration period) or invite members above VOLUNTEER level. |
 | `STAFF`       | Paid/contracted worker. Same data access as `VOLUNTEER`; semantically distinct.     |
 | `VOLUNTEER`   | Helper. Can view event details, see their assignments, update their own RSVP.       |
 | `SPEAKER`     | Scheduled presenter/performer. Read-only access to the event; visible on the programme. |
@@ -65,19 +65,23 @@ A user can be `LOCATION_ADMIN` at a location regardless of their event role (a `
 
 ## Event entity
 
-| Field                   | Type           | Constraints                                                  |
-|-------------------------|----------------|--------------------------------------------------------------|
-| `id`                    | UUID           | system-generated, immutable                                  |
-| `name`                  | String         | required, max 200 chars                                      |
-| `description`           | String         | optional, max 5000 chars                                     |
-| `status`                | EventStatus    | see lifecycle below                                          |
-| `startAt`               | OffsetDateTime | required; must be in the future at creation                  |
-| `endAt`                 | OffsetDateTime | required; must be after `startAt`                            |
-| `registrationOpensAt`   | OffsetDateTime | optional; when volunteer self-registration opens             |
-| `registrationClosesAt`  | OffsetDateTime | optional; when volunteer self-registration nominally closes  |
-| `registrationForceOpen` | boolean        | default `false`; keeps registration open past `registrationClosesAt` |
-| `createdAt`             | OffsetDateTime | system-generated                                             |
-| `updatedAt`             | OffsetDateTime | system-updated on every write                                |
+| Field                   | Type           | Constraints                                                                     |
+|-------------------------|----------------|---------------------------------------------------------------------------------|
+| `id`                    | UUID           | system-generated, immutable                                                     |
+| `name`                  | String         | required, max 200 chars                                                         |
+| `description`           | String         | optional, max 5000 chars                                                        |
+| `status`                | EventStatus    | see lifecycle below                                                             |
+| `setupAt`               | OffsetDateTime | optional; when setup begins — must be ≤ `startAt`                              |
+| `startAt`               | OffsetDateTime | required; official event open time                                              |
+| `endAt`                 | OffsetDateTime | required; official event close time; must be after `startAt`                   |
+| `teardownUntil`         | OffsetDateTime | optional; when teardown finishes — must be ≥ `endAt`                           |
+| `registrationOpensAt`   | OffsetDateTime | optional; when volunteer self-registration opens                                |
+| `registrationClosesAt`  | OffsetDateTime | optional; when volunteer self-registration nominally closes                     |
+| `registrationForceOpen` | boolean        | default `false`; keeps registration open past `registrationClosesAt`            |
+| `createdAt`             | OffsetDateTime | system-generated                                                                |
+| `updatedAt`             | OffsetDateTime | system-updated on every write                                                   |
+
+**Full event time span** (used for constraint validation): from `min(setupAt, startAt)` to `max(endAt, teardownUntil)`. Location time slots and volunteer shifts must fall within this span.
 
 ### EventStatus lifecycle
 
@@ -126,19 +130,37 @@ Request body:
 GET /api/events/{eventId}
 ```
 
-Authorization: any member of the event (any event role), or `PLATFORM_ADMIN`.
+Authorization: any authenticated user — events are publicly visible within the tool.
 
-Returns the event resource including current status and the caller's role.
+Returns the event resource including current status and the caller's role (null if not a member).
 
-### List my events
+### Discover all events
 
 ```
-GET /api/events
+GET /api/v1/events
 ```
 
 Authorization: any authenticated user.
 
-Returns all events where the caller has any event role. Supports query parameters:
+Returns all events visible to the caller (all PUBLISHED events system-wide, plus any DRAFT events where the caller is a member). Supports filtering:
+
+| Parameter   | Description                                            |
+|-------------|--------------------------------------------------------|
+| `status`    | Filter by EventStatus (e.g. `?status=PUBLISHED`)       |
+| `name`      | Case-insensitive substring search on event name        |
+| `from`      | Filter events whose `startAt` is on or after this date |
+| `until`     | Filter events whose `endAt` is on or before this date  |
+| `myRole`    | Only return events where caller holds the given role   |
+| `page`      | Pagination (0-indexed)                                 |
+| `size`      | Page size (default 20, max 100)                        |
+
+### List my events
+
+```
+GET /api/v1/events?myRole=any
+```
+
+Convenience filter — equivalent to discovering events scoped to the caller's own memberships. Supports the same parameters:
 
 | Parameter  | Description                                      |
 |------------|--------------------------------------------------|
@@ -222,7 +244,7 @@ Authorization: `EVENT_ADMIN` or `ORGANIZER` of this event, or `PLATFORM_ADMIN`.
 ```
 (:User {platformRole})
   -[:HAS_EVENT_ROLE {role}]->
-(:Event {id, name, description, status, startAt, endAt, createdAt, updatedAt})
+(:Event {id, name, description, status, setupAt, startAt, endAt, teardownUntil, registrationOpensAt, registrationClosesAt, registrationForceOpen, createdAt, updatedAt})
 
 (:User)
   -[:IS_LOCATION_ADMIN {eventId}]->
@@ -249,9 +271,11 @@ The `HAS_EVENT_ROLE` relationship is the event membership edge. Every member of 
 
 ---
 
-## Open questions
+## Resolved decisions
 
-- Should `GET /api/events` support searching/filtering by name or date range?
-- Should events have a maximum-capacity field (max number of volunteers/attendees)?
-- How does `COMPLETED` status get set — scheduled job, manual organizer action, or both?
-- **Event visibility**: events are publicly visible within the tool. Any authenticated user can see the event exists and its public details. Self-application as volunteer requires the registration window to be open. All other roles require explicit invitation (Spec 02).
+- **Event visibility**: publicly visible within the tool. Any authenticated user can discover and view PUBLISHED events. Self-application as VOLUNTEER requires the registration window to be open. All other roles require explicit invitation.
+- **Search / filtering**: supported on `GET /api/v1/events` (name substring, date range, status, caller's role).
+- **Maximum capacity**: not in v1.
+- **COMPLETED status**: manual organizer action only (no scheduled job in v1). `ORGANIZER` or `EVENT_ADMIN` sets `status = COMPLETED` after `endAt` has passed.
+- **Multi-tenancy**: flat — no organisation layer.
+- **API versioning**: `/api/v1/` prefix on all routes.

@@ -118,16 +118,6 @@ View the event: {BASE_URL}/api/events/{eventId}
 
 ---
 
-## Implementation notes
-
-- Use `JavaMailSender` and `MimeMessage`; HTML content via `MimeMessageHelper`.
-- Extract email content into Thymeleaf templates (under `resources/templates/mail/`) — do not build HTML by string concatenation.
-- Create an `EmailService` interface with one method per email type; implementation uses `@Async` so callers are not blocked.
-- Template variables are passed as a `Map<String, Object>` to Thymeleaf.
-- Log a `WARN` if sending fails; do not throw from the async method.
-
----
-
 ## Local development setup
 
 Add to `docker-compose.yml` (to be created):
@@ -142,7 +132,82 @@ mailhog:
 
 ---
 
-## Open questions
+### 5. Task overdue escalation
 
-- Should email templates support internationalisation (i18n) in v1?
-- Should we store a delivery log (sent-at, message-id) on the Invitation node?
+**Trigger:** task transitions to `OVERDUE` (15 minutes after `dueAt` with no completion)
+
+**To:** parent task assignee (and task assignee if different)
+**Subject:** `[ACTION REQUIRED] {task.title} is overdue at {eventName}`
+
+**Body (text/html):**
+```
+Hello,
+
+The following task is overdue:
+
+  Task:      {task.title}
+  Location:  {location.name}
+  Due at:    {task.dueAt}
+  Assigned to: {assignee.name}
+
+Please check in with your team.
+
+View event tasks: {BASE_URL}/api/v1/events/{eventId}/tasks
+```
+
+---
+
+### 6. Volunteer application received
+
+**Trigger:** `POST /api/v1/events/{eventId}/applications`
+
+**To:** applicant email
+**Subject:** `Your volunteer application for {eventName} is under review`
+
+---
+
+### 7. Volunteer application approved
+
+**Trigger:** application status → `APPROVED`
+
+**To:** applicant email
+**Subject:** `You're approved as a volunteer for {eventName}`
+
+---
+
+### 8. Volunteer application rejected
+
+**Trigger:** application status → `REJECTED`
+
+**To:** applicant email
+**Subject:** `Update on your volunteer application for {eventName}`
+
+Body includes `reviewNote` if provided by the reviewer.
+
+---
+
+### 9. Volunteer assigned to shift
+
+**Trigger:** volunteer assigned to a `VolunteerShift`
+
+**To:** volunteer email
+**Subject:** `You've been assigned a shift at {eventName}`
+
+Body includes: location name and path in the hierarchy, shift start/end time, shift lead name and contact (if set).
+
+---
+
+## Resolved decisions
+
+- i18n: not in v1 — English only.
+- Delivery log: not in v1 — failures logged to application log only.
+
+---
+
+## Implementation notes
+
+- Use `JavaMailSender` and `MimeMessage`; HTML content via `MimeMessageHelper`.
+- Extract email content into Thymeleaf templates (under `resources/templates/mail/`) — do not build HTML by string concatenation.
+- Create an `EmailService` interface with one method per email type; implementation uses `@Async` so callers are not blocked.
+- Template variables are passed as a `Map<String, Object>` to Thymeleaf.
+- Log a `WARN` if sending fails; do not throw from the async method.

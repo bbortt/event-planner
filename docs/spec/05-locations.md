@@ -49,33 +49,51 @@ A physical place where part of the event happens. Locations are **event-specific
 
 ### LocationTimeSlot
 
-A contiguous open/active window for a location. A location can have multiple non-overlapping time slots — it opens, closes, and can reopen within the event's overall time range. Each slot has exactly one optional shift lead.
+A contiguous window of activity for a location, with optional setup and teardown phases. A location can have multiple non-overlapping time slots — it opens, closes, and can reopen within the event's full time span. Each slot has exactly one optional shift lead.
 
-| Field       | Type               | Constraints                                              |
-|-------------|--------------------|---------------------------------------------------------|
-| `id`        | UUID               | system-generated                                         |
-| `startAt`   | OffsetDateTime     | required; must be ≥ event `startAt`                      |
-| `endAt`     | OffsetDateTime     | required; must be ≤ event `endAt`; must be after `startAt` |
-| `status`    | SlotStatus         | see lifecycle below                                      |
-| `location`  | Location (ref)     | the location this slot belongs to                        |
-| `shiftLead` | User (ref)         | optional; the on-the-ground responsible person during this window |
+| Field            | Type           | Constraints                                                                      |
+|------------------|----------------|----------------------------------------------------------------------------------|
+| `id`             | UUID           | system-generated                                                                 |
+| `setupAt`        | OffsetDateTime | optional; when location setup begins — must be ≥ event full-span start           |
+| `opensAt`        | OffsetDateTime | required; when the location officially opens — must be ≥ `setupAt` if set        |
+| `closesAt`       | OffsetDateTime | required; when the location officially closes — must be after `opensAt`           |
+| `teardownUntil`  | OffsetDateTime | optional; when teardown finishes — must be ≤ event full-span end                 |
+| `status`         | SlotStatus     | computed from current time and phase transitions (see below)                     |
+| `location`       | Location (ref) | the location this slot belongs to                                                |
+| `shiftLead`      | User (ref)     | optional; on-the-ground responsible person for the open window (`opensAt`→`closesAt`) |
 
-**SlotStatus lifecycle:**
+**SlotStatus lifecycle** (computed from wall-clock time or set manually):
+
 ```
-SCHEDULED ──► OPEN ──► CLOSED
-     │                    ▲
-     └────────────────────┘  (cancelled slot skips OPEN)
-     │
-     ▼
-CANCELLED
+PRE_SETUP
+  │  (setupAt reached, or opensAt if no setup)
+  ▼
+SETUP ──► (opensAt reached)
+  │
+  ▼
+OPEN ──► (closesAt reached)
+  │
+  ▼
+TEARDOWN ──► (teardownUntil reached, or closesAt if no teardown)
+  │
+  ▼
+CLOSED
+
+Any state ──► CANCELLED
 ```
 
-- `SCHEDULED`: planned but not yet started.
-- `OPEN`: currently active; status may be set manually or by a future scheduled job.
-- `CLOSED`: finished; no further volunteer shifts can start.
+- `PRE_SETUP`: not yet started; slot is in the future.
+- `SETUP`: location is being prepared; not yet open to participants.
+- `OPEN`: location is active and open. Volunteer shifts run during this phase.
+- `TEARDOWN`: location has closed; being packed down.
+- `CLOSED`: slot is fully finished.
 - `CANCELLED`: slot will not happen; volunteer shifts within it are also cancelled.
 
-**Invariant:** no two time slots for the same location may overlap.
+Status transitions happen automatically (system sets based on time) or can be set manually by `LOCATION_ADMIN` or higher. Manual transitions must follow the forward-only order above.
+
+**Live view:** during an event, a dashboard query can show every location with its current `SlotStatus`, enabling real-time event operations tracking.
+
+**Invariant:** no two time slots for the same location may have overlapping full spans (`min(setupAt, opensAt)` to `max(closesAt, teardownUntil)`).
 
 ---
 
@@ -86,11 +104,11 @@ A sub-period within a `LocationTimeSlot` to which one or more volunteers are ass
 | Field            | Type               | Constraints                                                      |
 |------------------|--------------------|------------------------------------------------------------------|
 | `id`             | UUID               | system-generated                                                 |
-| `startAt`        | OffsetDateTime     | required; must be ≥ parent `LocationTimeSlot.startAt`            |
-| `endAt`          | OffsetDateTime     | required; must be ≤ parent `LocationTimeSlot.endAt`; after `startAt` |
+| `startAt`        | OffsetDateTime     | required; must be ≥ parent slot's full-span start (`min(setupAt, opensAt)`)   |
+| `endAt`          | OffsetDateTime     | required; must be ≤ parent slot's full-span end (`max(closesAt, teardownUntil)`); after `startAt` |
 | `locationTimeSlot` | LocationTimeSlot (ref) | the containing open window                               |
 
-A `VolunteerShift` belongs to exactly one `LocationTimeSlot`. Multiple shifts may cover the same period (multiple volunteers working simultaneously). Shifts may not extend beyond the slot's bounds.
+A `VolunteerShift` belongs to exactly one `LocationTimeSlot`. Multiple shifts may cover the same period (multiple volunteers working simultaneously). Shifts must fall within the slot's **full time span** — including setup and teardown phases. A volunteer may be needed to fetch equipment during setup or store items during teardown just as much as during the open window.
 
 **Assignment:** A volunteer (any user with an event role) is assigned to a `VolunteerShift` via the `ASSIGNED_TO` relationship. A single user can be assigned to multiple shifts across different locations and slots.
 
@@ -110,7 +128,7 @@ A `VolunteerShift` belongs to exactly one `LocationTimeSlot`. Multiple shifts ma
 
 (:Location)
   -[:HAS_TIME_SLOT]->
-(:LocationTimeSlot {id, startAt, endAt, status})
+(:LocationTimeSlot {id, setupAt, opensAt, closesAt, teardownUntil, status})
   -[:HAS_SHIFT_LEAD]->  (:User)           // optional; 0 or 1
 
 (:LocationTimeSlot)
@@ -231,8 +249,8 @@ Returns the created shift; volunteer assignment is a separate call.
 
 1. `LocationType` must belong to the same event as the location that uses it. Cross-event type references are rejected.
 2. A location's time slots must not overlap. The API rejects any slot whose `[startAt, endAt)` interval intersects an existing slot for the same location.
-3. All time slot times must fall within the parent event's `[startAt, endAt]` window.
-4. A volunteer shift's `[startAt, endAt)` must fall entirely within its parent `LocationTimeSlot`'s bounds. A shift cannot span across two location time slots.
+3. All time slot timestamps must fall within the parent event's full time span (`min(setupAt, startAt)` to `max(endAt, teardownUntil)`).
+4. A volunteer shift's `[startAt, endAt)` must fall entirely within the parent `LocationTimeSlot`'s full time span (`[min(setupAt, opensAt), max(closesAt, teardownUntil)]`). Volunteers may work during setup and teardown phases — fetching equipment, storing items, cleaning up — not only during the open window.
 5. A user can be assigned to multiple volunteer shifts (at the same or different locations) as long as the time windows do not overlap with other shifts at the *same* location. Overlap across different locations is permitted (a user might be floating).
 6. Deleting a location cascades to all its time slots, all volunteer shifts within those slots, and all volunteer assignments. Child locations must be deleted first (no cascade up the tree).
 7. The shift lead of a time slot must be a member of the event (have any event role). They do not need to be `LOCATION_ADMIN`.
@@ -244,6 +262,6 @@ Returns the created shift; volunteer assignment is a separate call.
 
 ---
 
-## Open questions
+## Resolved decisions
 
-- **Coordinator scope**: how is a `COORDINATOR`'s scope of locations defined? Is it explicit (a list of locations assigned to them), or derived from the volunteer shifts they manage?
+- **Coordinator scope**: `COORDINATOR` is a permission level, not a scoped assignment. A `COORDINATOR` has full operational access across all locations in the event — creating/editing time slots, managing volunteer shifts, approving applications — but cannot modify event-level settings or invite members above VOLUNTEER level.
