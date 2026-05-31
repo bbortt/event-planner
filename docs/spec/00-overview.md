@@ -20,8 +20,10 @@ A REST API that allows users to plan and coordinate events. An organizer creates
 | **Location role** | `LOCATION_ADMIN` — scoped to a specific Location within a specific event. Grants location-level management without event-wide powers. |
 | **Event**         | A named happening with a status lifecycle (DRAFT → PUBLISHED → COMPLETED / CANCELLED). |
 | **Invitation**    | A pending invite to an email address for an event with a specific event role. Has its own state machine. |
-| **Location**      | A named venue or address. Can be shared across events. |
-| **Schedule**      | (TBD) A set of time slots or sub-events within a parent event. |
+| **LocationType**      | An event-scoped label for locations (e.g. "Stage", "Booth"). Reusable within the event. |
+| **Location**          | A physical place, event-specific, forming an unbounded tree (child locations nest inside parents). Has a type and optional capacity. |
+| **LocationTimeSlot**  | A contiguous open/close window for a location (multiple per location). Has a status and one optional shift lead. |
+| **VolunteerShift**    | A working period within a LocationTimeSlot. Volunteers are assigned to shifts, not directly to slots. |
 
 ---
 
@@ -69,7 +71,7 @@ A REST API that allows users to plan and coordinate events. An organizer creates
 | `02-invitations.md`           | Invite & RSVP state machine             | Written  |
 | `03-email.md`                 | Transactional email via SMTP            | Written  |
 | `04-events.md`                | Event CRUD, role model, member mgmt     | Written  |
-| `05-locations.md`             | Location management                     | Pending  |
+| `05-locations.md`             | Location hierarchy, time slots, volunteer shifts | Written  |
 
 ---
 
