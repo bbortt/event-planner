@@ -38,7 +38,8 @@ A physical place where part of the event happens. Locations are **event-specific
 | `name`        | String       | required; unique within its parent scope (siblings)  |
 | `description` | String       | optional                                             |
 | `type`        | LocationType | required; must belong to the same event              |
-| `capacity`    | Integer      | optional; max number of volunteers/staff on-site simultaneously |
+| `capacity`    | Integer      | optional; informational only — not enforced by the system       |
+| `minimumAge`  | Integer      | optional; minimum volunteer age in years (e.g. 18); null = no restriction |
 | `event`       | Event (ref)  | the owning event                                     |
 | `parent`      | Location (ref) | optional; null for root locations                  |
 

@@ -65,16 +65,19 @@ A user can be `LOCATION_ADMIN` at a location regardless of their event role (a `
 
 ## Event entity
 
-| Field         | Type          | Constraints                                                  |
-|---------------|---------------|--------------------------------------------------------------|
-| `id`          | UUID          | system-generated, immutable                                  |
-| `name`        | String        | required, max 200 chars                                      |
-| `description` | String        | optional, max 5000 chars                                     |
-| `status`      | EventStatus   | see lifecycle below                                          |
-| `startAt`     | OffsetDateTime| required; must be in the future at creation                  |
-| `endAt`       | OffsetDateTime| required; must be after `startAt`                            |
-| `createdAt`   | OffsetDateTime| system-generated                                             |
-| `updatedAt`   | OffsetDateTime| system-updated on every write                                |
+| Field                   | Type           | Constraints                                                  |
+|-------------------------|----------------|--------------------------------------------------------------|
+| `id`                    | UUID           | system-generated, immutable                                  |
+| `name`                  | String         | required, max 200 chars                                      |
+| `description`           | String         | optional, max 5000 chars                                     |
+| `status`                | EventStatus    | see lifecycle below                                          |
+| `startAt`               | OffsetDateTime | required; must be in the future at creation                  |
+| `endAt`                 | OffsetDateTime | required; must be after `startAt`                            |
+| `registrationOpensAt`   | OffsetDateTime | optional; when volunteer self-registration opens             |
+| `registrationClosesAt`  | OffsetDateTime | optional; when volunteer self-registration nominally closes  |
+| `registrationForceOpen` | boolean        | default `false`; keeps registration open past `registrationClosesAt` |
+| `createdAt`             | OffsetDateTime | system-generated                                             |
+| `updatedAt`             | OffsetDateTime | system-updated on every write                                |
 
 ### EventStatus lifecycle
 
@@ -235,6 +238,7 @@ The `HAS_EVENT_ROLE` relationship is the event membership edge. Every member of 
 ## Business rules
 
 1. Every event must have at least one `EVENT_ADMIN` at all times.
+1a. **Single role per event**: a user holds exactly one event role per event. Holding a role blocks submitting a volunteer application, and approval of a volunteer application blocks any other role assignment.
 2. A `PLATFORM_ADMIN` acts as an implicit `EVENT_ADMIN` on all events and cannot be removed from one.
 3. `status` transitions are one-way except `DRAFT` → `PUBLISHED` → `CANCELLED` (no re-opening a cancelled event).
 4. `startAt` must be before `endAt`; both must be future timestamps at creation time (not enforced on update to allow minor corrections).
@@ -250,3 +254,4 @@ The `HAS_EVENT_ROLE` relationship is the event membership edge. Every member of 
 - Should `GET /api/events` support searching/filtering by name or date range?
 - Should events have a maximum-capacity field (max number of volunteers/attendees)?
 - How does `COMPLETED` status get set — scheduled job, manual organizer action, or both?
+- **Event visibility**: events are publicly visible within the tool. Any authenticated user can see the event exists and its public details. Self-application as volunteer requires the registration window to be open. All other roles require explicit invitation (Spec 02).

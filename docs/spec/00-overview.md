@@ -55,10 +55,11 @@ A REST API that allows users to plan and coordinate events. An organizer creates
 
 ## Remaining open questions
 
-4. **Event visibility** — public events anyone can discover, or always invite-only?
+4. **Event visibility** — resolved: publicly visible within the tool; only volunteer role is self-applicable; all other roles require explicit invitation.
 5. **Schedule granularity** — single time range per event, or multiple sessions/slots?
 6. **Multi-tenancy** — events scoped to an organisation, or flat per-user?
 7. **API versioning** — `/api/v1/...` from day one?
+8. **Coordinator scope** — how is a COORDINATOR's scope of locations/applications defined? (shared open question, Specs 05 & 06)
 
 ---
 
@@ -72,6 +73,7 @@ A REST API that allows users to plan and coordinate events. An organizer creates
 | `03-email.md`                 | Transactional email via SMTP            | Written  |
 | `04-events.md`                | Event CRUD, role model, member mgmt     | Written  |
 | `05-locations.md`             | Location hierarchy, time slots, volunteer shifts | Written  |
+| `06-volunteer-management.md`  | Registration window, application flow, age enforcement | Written  |
 
 ---
 
